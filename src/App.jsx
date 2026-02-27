@@ -20,6 +20,14 @@ const App = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeCategory, setActiveCategory] = useState('all');
+  const [contactForm, setContactForm] = useState({
+    name: '',
+    phone: '',
+    email: '',
+    inquiryType: '10-dollar-bot',
+    details: ''
+  });
+  const [contactStatus, setContactStatus] = useState('');
 
   useEffect(() => {
     const handleScroll = () => {
@@ -121,6 +129,49 @@ const App = () => {
       element.scrollIntoView({ behavior: 'smooth' });
       setIsMenuOpen(false);
     }
+  };
+
+  const handleContactFieldChange = (field) => (event) => {
+    const value = event.target.value;
+    setContactForm((prev) => ({ ...prev, [field]: value }));
+    if (contactStatus) {
+      setContactStatus('');
+    }
+  };
+
+  const handleContactSubmit = (event) => {
+    event.preventDefault();
+
+    const name = contactForm.name.trim();
+    const email = contactForm.email.trim();
+    const details = contactForm.details.trim();
+
+    if (!name || !email || !details) {
+      setContactStatus('Please complete name, email, and project details before submitting.');
+      return;
+    }
+
+    const inquiryLabels = {
+      '10-dollar-bot': '$10 Private AI Starter Setup',
+      'on-prem': 'On-Premise LLM Infrastructure',
+      'private-cloud': 'Private Cloud AI Instance (eb28.co)',
+      'revenue-automation': 'Lead + Revenue Automation Systems',
+      consultation: 'Full AI Strategy Consultation'
+    };
+    const inquiryLabel = inquiryLabels[contactForm.inquiryType] || contactForm.inquiryType;
+    const subject = encodeURIComponent(`${inquiryLabel} inquiry from ${name}`);
+    const body = encodeURIComponent([
+      `Name: ${name}`,
+      `Phone: ${contactForm.phone.trim() || 'Not provided'}`,
+      `Email: ${email}`,
+      `Inquiry Type: ${inquiryLabel}`,
+      '',
+      'Project Details:',
+      details
+    ].join('\n'));
+
+    window.location.href = `mailto:contact@eb28.co?subject=${subject}&body=${body}`;
+    setContactStatus('Opening your email app with a prefilled request.');
   };
 
   return (
@@ -385,26 +436,50 @@ const App = () => {
               <p className="text-slate-400">Tell us your goals and current stack. We reply to Florida-based inquiries within 2 business hours.</p>
             </div>
 
-            <form className="space-y-6">
+            <form className="space-y-6" onSubmit={handleContactSubmit}>
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
                   <label className="block text-sm font-medium text-slate-400 mb-2">Name</label>
-                  <input type="text" className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all" placeholder="John Doe" />
+                  <input
+                    type="text"
+                    className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                    placeholder="John Doe"
+                    value={contactForm.name}
+                    onChange={handleContactFieldChange('name')}
+                    required
+                  />
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-slate-400 mb-2">Phone (SMS Enabled)</label>
-                  <input type="tel" className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all" placeholder="(555) 000-0000" />
+                  <input
+                    type="tel"
+                    className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                    placeholder="(555) 000-0000"
+                    value={contactForm.phone}
+                    onChange={handleContactFieldChange('phone')}
+                  />
                 </div>
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-slate-400 mb-2">Email</label>
-                <input type="email" className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all" placeholder="john@example.com" />
+                <input
+                  type="email"
+                  className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                  placeholder="john@example.com"
+                  value={contactForm.email}
+                  onChange={handleContactFieldChange('email')}
+                  required
+                />
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-slate-400 mb-2">I want to...</label>
-                <select className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all">
+                <select
+                  className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                  value={contactForm.inquiryType}
+                  onChange={handleContactFieldChange('inquiryType')}
+                >
                   <option value="10-dollar-bot">🔥 Buy the $10 Private AI Starter Setup</option>
                   <option value="on-prem">Deploy On-Premise LLM Infrastructure</option>
                   <option value="private-cloud">Launch a Private Cloud AI Instance (eb28.co)</option>
@@ -415,12 +490,22 @@ const App = () => {
 
               <div>
                 <label className="block text-sm font-medium text-slate-400 mb-2">Project Details</label>
-                <textarea rows="4" className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all" placeholder="Share your industry, current software/tools, and where you want AI to reduce workload or increase client generation..."></textarea>
+                <textarea
+                  rows="4"
+                  className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                  placeholder="Share your industry, current software/tools, and where you want AI to reduce workload or increase client generation..."
+                  value={contactForm.details}
+                  onChange={handleContactFieldChange('details')}
+                  required
+                ></textarea>
               </div>
 
-              <button type="button" className="w-full py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-bold rounded-lg text-lg transition-all shadow-lg shadow-blue-600/20 flex items-center justify-center group">
+              <button type="submit" className="w-full py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-bold rounded-lg text-lg transition-all shadow-lg shadow-blue-600/20 flex items-center justify-center group">
                 Request Consultation <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </button>
+              {contactStatus && (
+                <p className="text-sm text-blue-300">{contactStatus}</p>
+              )}
             </form>
           </div>
         </div>

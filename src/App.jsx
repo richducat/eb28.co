@@ -104,6 +104,81 @@ const App = () => {
     }
   ];
 
+  const portfolioProjects = [
+    {
+      id: 0,
+      title: "Tesla Helper App",
+      type: "Utility App",
+      url: "https://teslahelper.app"
+    },
+    {
+      id: 1,
+      title: "Push to Skate Earn",
+      type: "Web Game",
+      url: "https://push-skate-to-earn-brotp1ofe-eb28-llcs-projects.vercel.app/"
+    },
+    {
+      id: 2,
+      title: "Echo Drift",
+      type: "Web Game",
+      url: "https://cosmicchat-hf9y6ds2w-eb28-llcs-projects.vercel.app/echodrift"
+    },
+    {
+      id: 3,
+      title: "FC Street",
+      type: "Web Game",
+      url: "https://fc-street.vercel.app/"
+    },
+    {
+      id: 4,
+      title: "Pixel Sort",
+      type: "Web Game",
+      url: "https://cosmicchat-five.vercel.app/game"
+    },
+    {
+      id: 5,
+      title: "Cosmic Chat",
+      type: "AI Chat App",
+      url: "https://cosmicchat-five.vercel.app"
+    },
+    {
+      id: 6,
+      title: "Veteran Claim App",
+      type: "Claims Platform",
+      url: "https://tyfys.net/app"
+    },
+    {
+      id: 7,
+      title: "Toby AI + Lab App",
+      type: "AI Fitness App",
+      url: "https://app.labstudio.fit"
+    },
+    {
+      id: 8,
+      title: "VoltGuard",
+      type: "Business Website",
+      url: "https://voltguard.homes/#services"
+    },
+    {
+      id: 9,
+      title: "Daily Disspatch",
+      type: "Content Website",
+      url: "https://dailydisspatch.com"
+    },
+    {
+      id: 10,
+      title: "Best Deals Online",
+      type: "Ecommerce Website",
+      url: "https://bestdealsonline.us/"
+    },
+    {
+      id: 11,
+      title: "Best Mobile VPN",
+      type: "Affiliate Website",
+      url: "https://www.bestmobilevpn.net/"
+    }
+  ];
+
   const categories = [
     { id: 'all', label: 'All Systems' },
     { id: 'infrastructure', label: 'Private Infrastructure' },
@@ -140,7 +215,8 @@ const App = () => {
             {/* Desktop Menu */}
             <div className="hidden md:flex space-x-8 items-center">
               <button onClick={() => scrollToSection('services')} className="text-slate-300 hover:text-white transition-colors text-sm font-medium uppercase tracking-wide">Infrastructure</button>
-              <button onClick={() => scrollToSection('portfolio')} className="text-slate-300 hover:text-white transition-colors text-sm font-medium uppercase tracking-wide">Deployments</button>
+              <button onClick={() => scrollToSection('portfolio')} className="text-slate-300 hover:text-white transition-colors text-sm font-medium uppercase tracking-wide">Portfolio</button>
+              <button onClick={() => scrollToSection('deployments')} className="text-slate-300 hover:text-white transition-colors text-sm font-medium uppercase tracking-wide">Deployments</button>
               <button onClick={() => scrollToSection('packages')} className="text-slate-300 hover:text-white transition-colors text-sm font-medium uppercase tracking-wide text-blue-400">$10 AI Offer</button>
               <button onClick={() => scrollToSection('contact')} className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-full font-bold text-sm transition-all transform hover:scale-105 shadow-lg shadow-blue-600/30">
                 Architect Your System
@@ -161,7 +237,8 @@ const App = () => {
           <div className="md:hidden bg-slate-800 border-b border-slate-700 shadow-xl">
             <div className="px-4 pt-2 pb-6 space-y-2">
               <button onClick={() => scrollToSection('services')} className="block w-full text-left px-3 py-3 text-slate-300 hover:bg-slate-700 rounded-md font-medium">Infrastructure</button>
-              <button onClick={() => scrollToSection('portfolio')} className="block w-full text-left px-3 py-3 text-slate-300 hover:bg-slate-700 rounded-md font-medium">Deployments</button>
+              <button onClick={() => scrollToSection('portfolio')} className="block w-full text-left px-3 py-3 text-slate-300 hover:bg-slate-700 rounded-md font-medium">Portfolio</button>
+              <button onClick={() => scrollToSection('deployments')} className="block w-full text-left px-3 py-3 text-slate-300 hover:bg-slate-700 rounded-md font-medium">Deployments</button>
               <button onClick={() => scrollToSection('packages')} className="block w-full text-left px-3 py-3 text-blue-400 hover:bg-slate-700 rounded-md font-bold">$10 AI Offer</button>
               <button onClick={() => scrollToSection('contact')} className="block w-full text-left px-3 py-3 bg-blue-600 text-white hover:bg-blue-700 rounded-md font-bold mt-4">Architect Your System</button>
             </div>
@@ -325,8 +402,44 @@ const App = () => {
         </div>
       </section>
 
+      {/* --- LIVE APP PORTFOLIO --- */}
+      <section id="portfolio" className="py-20 bg-slate-950 border-y border-slate-800/60">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-14">
+            <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">Live App Portfolio</h2>
+            <p className="text-slate-400 max-w-3xl mx-auto">
+              Direct access to the apps, websites, and games we have been building. Every project is live so clients can experience the execution quality firsthand.
+            </p>
+          </div>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {portfolioProjects.map((project) => (
+              <a
+                key={project.id}
+                href={project.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group block rounded-2xl border border-slate-800 bg-slate-900 p-6 hover:border-blue-500/60 hover:bg-slate-800/70 transition-all"
+              >
+                <div className="flex items-start justify-between mb-4">
+                  <span className="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wider bg-slate-800 text-slate-300 border border-slate-700">
+                    {project.type}
+                  </span>
+                  <Globe className="w-4 h-4 text-slate-500 group-hover:text-blue-400 transition-colors" />
+                </div>
+                <h3 className="text-xl font-bold text-white mb-3">{project.title}</h3>
+                <p className="text-slate-400 text-sm break-all">{project.url}</p>
+                <div className="mt-5 inline-flex items-center text-blue-400 font-semibold text-sm">
+                  Open Project <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* --- MARKETPLACE SECTION --- */}
-      <section id="portfolio" className="py-20 bg-slate-950">
+      <section id="deployments" className="py-20 bg-slate-950">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row md:items-end justify-between mb-12">
             <div>

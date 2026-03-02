@@ -6,10 +6,12 @@ const LiveAgentDemo = ({ scrollToSection }) => {
   const [isTyping, setIsTyping] = useState(false);
   const [options, setOptions] = useState([]);
   const [hasStarted, setHasStarted] = useState(false);
-  const messagesEndRef = useRef(null);
+  const chatContainerRef = useRef(null);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    const container = chatContainerRef.current;
+    if (!container) return;
+    container.scrollTo({ top: container.scrollHeight, behavior: 'smooth' });
   };
 
   useEffect(scrollToBottom, [messages, isTyping]);
@@ -109,7 +111,7 @@ const LiveAgentDemo = ({ scrollToSection }) => {
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-slate-900 custom-scrollbar">
+      <div ref={chatContainerRef} className="flex-1 overflow-y-auto p-6 space-y-4 bg-slate-900 custom-scrollbar">
         {!hasStarted ? (
           <div className="h-full flex flex-col items-center justify-center text-center p-6">
             <div className="w-20 h-20 bg-blue-900/20 rounded-full flex items-center justify-center mb-6">
@@ -154,7 +156,6 @@ const LiveAgentDemo = ({ scrollToSection }) => {
                 </div>
               </div>
             )}
-            <div ref={messagesEndRef} />
           </>
         )}
       </div>

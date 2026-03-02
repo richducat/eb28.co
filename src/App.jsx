@@ -23,6 +23,7 @@ import {
   Cloud,
   HardDrive
 } from 'lucide-react';
+import LiveAgentDemo from './components/LiveAgentDemo';
 
 const App = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -278,24 +279,8 @@ const App = () => {
             </button>
           </div>
 
-          {/* Social Proof / Metrics */}
-          <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8 border-t border-slate-800/50 pt-8">
-            <div className="flex flex-col items-center">
-              <div className="text-3xl font-bold text-white mb-1">100%</div>
-              <div className="text-slate-500 text-xs uppercase tracking-wider font-semibold">Data Sovereignty</div>
-            </div>
-            <div className="flex flex-col items-center">
-              <div className="text-3xl font-bold text-white mb-1">On-Prem</div>
-              <div className="text-slate-500 text-xs uppercase tracking-wider font-semibold">Hardware Setup</div>
-            </div>
-            <div className="flex flex-col items-center">
-              <div className="text-3xl font-bold text-white mb-1">Cloud</div>
-              <div className="text-slate-500 text-xs uppercase tracking-wider font-semibold">eb28.co Hosting</div>
-            </div>
-            <div className="flex flex-col items-center">
-              <div className="text-3xl font-bold text-white mb-1">10x</div>
-              <div className="text-slate-500 text-xs uppercase tracking-wider font-semibold">Lead Gen ROI</div>
-            </div>
+          <div className="mt-16">
+            <LiveAgentDemo scrollToSection={scrollToSection} />
           </div>
         </div>
       </section>

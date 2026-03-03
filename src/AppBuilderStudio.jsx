@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import JSZip from 'jszip';
 import {
   Bot,
@@ -17,6 +17,17 @@ import {
 } from 'lucide-react';
 
 const STORAGE_KEY = 'eb28-appbuilder-studio-v2';
+const MAX_REFERENCE_IMAGE_DATA_URL_CHARS = 1_600_000;
+const VARIANT_LABELS = ['Variant A', 'Variant B', 'Variant C'];
+
+const VARIANT_DIRECTION_PLANS = {
+  'editorial-bold': ['editorial-bold', 'conversion-luxe', 'minimal-architectural'],
+  'bento-tech': ['bento-tech', 'playful-futurist', 'minimal-architectural'],
+  'neo-brutalist': ['neo-brutalist', 'editorial-bold', 'playful-futurist'],
+  'conversion-luxe': ['conversion-luxe', 'minimal-architectural', 'editorial-bold'],
+  'playful-futurist': ['playful-futurist', 'neo-brutalist', 'bento-tech'],
+  'minimal-architectural': ['minimal-architectural', 'editorial-bold', 'bento-tech'],
+};
 
 const QUICK_STARTS = [
   {
@@ -153,6 +164,149 @@ const DEFAULT_PREVIEW = {
   ],
 };
 
+function sanitizePaletteColor(value) {
+  const normalized = String(value || '').trim();
+  if (!/^#[0-9a-fA-F]{6}$/.test(normalized)) {
+    return '';
+  }
+  return normalized.toUpperCase();
+}
+
+function inferMimeTypeFromDataUrl(dataUrl) {
+  const match = String(dataUrl || '').match(/^data:(image\/[-+.a-zA-Z0-9]+);base64,/);
+  return match ? match[1] : 'image/jpeg';
+}
+
+function fileToDataUrl(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result || ''));
+    reader.onerror = () => reject(new Error('Unable to read image file.'));
+    reader.readAsDataURL(file);
+  });
+}
+
+function loadImageFromDataUrl(dataUrl) {
+  return new Promise((resolve, reject) => {
+    const image = new Image();
+    image.onload = () => resolve(image);
+    image.onerror = () => reject(new Error('Unable to decode the image.'));
+    image.src = dataUrl;
+  });
+}
+
+async function compressReferenceImageDataUrl(dataUrl, maxDimension = 1200, quality = 0.88) {
+  const image = await loadImageFromDataUrl(dataUrl);
+  const longest = Math.max(image.width, image.height);
+  const scale = longest > maxDimension ? maxDimension / longest : 1;
+  const width = Math.max(1, Math.round(image.width * scale));
+  const height = Math.max(1, Math.round(image.height * scale));
+
+  const canvas = document.createElement('canvas');
+  canvas.width = width;
+  canvas.height = height;
+  const context = canvas.getContext('2d', { alpha: false });
+  if (!context) {
+    return dataUrl;
+  }
+  context.drawImage(image, 0, 0, width, height);
+  return canvas.toDataURL('image/jpeg', quality);
+}
+
+async function extractPaletteFromDataUrl(dataUrl, maxColors = 5) {
+  const image = await loadImageFromDataUrl(dataUrl);
+  const canvas = document.createElement('canvas');
+  canvas.width = 72;
+  canvas.height = 72;
+  const context = canvas.getContext('2d');
+  if (!context) {
+    return [];
+  }
+  context.drawImage(image, 0, 0, canvas.width, canvas.height);
+  const { data } = context.getImageData(0, 0, canvas.width, canvas.height);
+  const buckets = new Map();
+
+  for (let index = 0; index < data.length; index += 16) {
+    const alpha = data[index + 3];
+    if (alpha < 130) {
+      continue;
+    }
+
+    const baseR = data[index];
+    const baseG = data[index + 1];
+    const baseB = data[index + 2];
+    const average = (baseR + baseG + baseB) / 3;
+    if (average < 16 || average > 240) {
+      continue;
+    }
+
+    const r = Math.max(0, Math.min(255, Math.round(baseR / 24) * 24));
+    const g = Math.max(0, Math.min(255, Math.round(baseG / 24) * 24));
+    const b = Math.max(0, Math.min(255, Math.round(baseB / 24) * 24));
+    const key = `${r}-${g}-${b}`;
+    buckets.set(key, (buckets.get(key) || 0) + 1);
+  }
+
+  return [...buckets.entries()]
+    .sort((left, right) => right[1] - left[1])
+    .map(([key]) => {
+      const [r, g, b] = key.split('-').map((value) => Number(value));
+      return `#${[r, g, b].map((value) => value.toString(16).padStart(2, '0')).join('')}`;
+    })
+    .map(sanitizePaletteColor)
+    .filter(Boolean)
+    .filter((color, index, source) => source.indexOf(color) === index)
+    .slice(0, maxColors);
+}
+
+async function optimizeReferenceImage(file) {
+  const rawDataUrl = await fileToDataUrl(file);
+  let compressed = await compressReferenceImageDataUrl(rawDataUrl, 1280, 0.88);
+
+  if (compressed.length > MAX_REFERENCE_IMAGE_DATA_URL_CHARS) {
+    compressed = await compressReferenceImageDataUrl(compressed, 1000, 0.78);
+  }
+  if (compressed.length > MAX_REFERENCE_IMAGE_DATA_URL_CHARS) {
+    compressed = await compressReferenceImageDataUrl(compressed, 860, 0.68);
+  }
+  if (compressed.length > MAX_REFERENCE_IMAGE_DATA_URL_CHARS) {
+    throw new Error('Image is too large after compression. Try a smaller screenshot.');
+  }
+
+  const palette = await extractPaletteFromDataUrl(compressed, 5).catch(() => []);
+
+  return {
+    name: String(file?.name || 'reference-image').slice(0, 120),
+    mimeType: String(file?.type || inferMimeTypeFromDataUrl(compressed) || 'image/jpeg'),
+    dataUrl: compressed,
+    palette,
+  };
+}
+
+function pickVariantDirections(baseDirection) {
+  const planned = VARIANT_DIRECTION_PLANS[baseDirection];
+  if (Array.isArray(planned) && planned.length === 3) {
+    return planned;
+  }
+
+  const allDirections = VISUAL_DIRECTION_OPTIONS.map((option) => option.value);
+  const unique = [baseDirection, ...allDirections.filter((direction) => direction !== baseDirection)];
+  return unique.slice(0, 3);
+}
+
+function buildReferenceImageSummary(referenceImage) {
+  if (!referenceImage) {
+    return 'No reference image attached.';
+  }
+
+  const palette = Array.isArray(referenceImage.palette)
+    ? referenceImage.palette.map(sanitizePaletteColor).filter(Boolean)
+    : [];
+
+  const paletteText = palette.length > 0 ? palette.join(', ') : 'palette unavailable';
+  return `Reference image: ${referenceImage.name || 'uploaded'}; extracted palette: ${paletteText}.`;
+}
+
 function formatTimestamp(value) {
   try {
     return new Date(value).toLocaleString('en-US', {
@@ -282,7 +436,83 @@ function buildFundamentalsReport(selectedFundamentals) {
   }));
 }
 
-function buildPromptExpansion({ userPrompt, settings }) {
+function estimateLocalQuality({ settings, fundamentals, referenceImage, regenerated = false }) {
+  const required = (Array.isArray(settings.fundamentals) && settings.fundamentals.length > 0
+    ? settings.fundamentals
+    : DEFAULT_SETTINGS.fundamentals).length;
+  const covered = Array.isArray(fundamentals)
+    ? fundamentals.filter((item) => String(item.status || '').toLowerCase() === 'covered').length
+    : 0;
+
+  const fundamentalsScore = Math.max(65, Math.min(100, Math.round(65 + (covered / Math.max(required, 1)) * 35)));
+  const vibeScore = Math.max(
+    60,
+    Math.min(100, Math.round(68 + settings.complexity * 4 + (referenceImage ? 8 : 0)))
+  );
+  const uxScore = Math.max(
+    62,
+    Math.min(100, Math.round(70 + Math.min(10, required * 2) + (settings.template === 'custom' ? 3 : 0)))
+  );
+  const uniquenessScore = Math.max(
+    60,
+    Math.min(100, Math.round(69 + settings.complexity * 3 + (referenceImage ? 7 : 0)))
+  );
+  const totalScore = Math.round((vibeScore + uxScore + fundamentalsScore + uniquenessScore) / 4);
+
+  const strengths = [
+    `Visual direction: ${titleCase(String(settings.visualDirection || 'editorial-bold').replace(/-/g, ' '))}.`,
+    `${covered}/${Math.max(required, 1)} required fundamentals are explicitly covered.`,
+    referenceImage
+      ? 'Reference screenshot palette was used to guide vibe and contrast.'
+      : 'Prompt expansion generated a structured brief from concise input.',
+  ].slice(0, 3);
+
+  const issues = [];
+  if (!referenceImage) {
+    issues.push('Upload a reference screenshot to improve style match precision.');
+  }
+  if (!settings.fundamentals.includes('analytics_events')) {
+    issues.push('Analytics events are not enforced in the fundamentals checklist.');
+  }
+  if (settings.complexity >= 4 && !settings.fundamentals.includes('states_feedback')) {
+    issues.push('Complex flows should include explicit empty/loading/error states.');
+  }
+
+  return {
+    totalScore,
+    vibeScore,
+    uxScore,
+    fundamentalsScore,
+    uniquenessScore,
+    strengths,
+    issues: issues.slice(0, 4),
+    regenerated,
+  };
+}
+
+function buildReferencePayload(referenceImage) {
+  if (!referenceImage || typeof referenceImage !== 'object') {
+    return null;
+  }
+
+  const dataUrl = String(referenceImage.dataUrl || '');
+  if (!dataUrl.startsWith('data:image/')) {
+    return null;
+  }
+
+  const palette = Array.isArray(referenceImage.palette)
+    ? referenceImage.palette.map(sanitizePaletteColor).filter(Boolean).slice(0, 6)
+    : [];
+
+  return {
+    name: String(referenceImage.name || 'reference-image').slice(0, 120),
+    mimeType: String(referenceImage.mimeType || inferMimeTypeFromDataUrl(dataUrl)).slice(0, 80),
+    dataUrl,
+    palette,
+  };
+}
+
+function buildPromptExpansion({ userPrompt, settings, referenceImage, variantLabel = '' }) {
   const cleanedPrompt = String(userPrompt || '').trim();
   const capabilities = settings.capabilities.length > 0
     ? settings.capabilities
@@ -307,10 +537,15 @@ function buildPromptExpansion({ userPrompt, settings }) {
     `Primary brand color: ${sanitizeHexColor(settings.primaryColor)}`,
     `Core capabilities: ${capabilityList}`,
     `Required fundamentals: ${fundamentals}`,
+    buildReferenceImageSummary(referenceImage),
     '',
     'User direction:',
     cleanedPrompt || 'No prompt provided.',
   ];
+
+  if (variantLabel) {
+    lines.push('', `Variant target: ${variantLabel}. Explore this direction distinctly while preserving usability.`);
+  }
 
   if (concisePrompt) {
     lines.push('', 'Interpretation rule: prompt is intentionally concise, infer missing UX details while preserving clarity and conversion intent.');
@@ -319,9 +554,12 @@ function buildPromptExpansion({ userPrompt, settings }) {
   return lines.join('\n');
 }
 
-function buildLocalFallback({ prompt, settings, currentFiles }) {
+function buildLocalFallback({ prompt, settings, currentFiles, referenceImage, variantLabel = '' }) {
   const inferredAppName = settings.appName || guessAppName(prompt);
-  const accent = sanitizeHexColor(settings.primaryColor);
+  const referencePalette = Array.isArray(referenceImage?.palette)
+    ? referenceImage.palette.map(sanitizePaletteColor).filter(Boolean)
+    : [];
+  const accent = sanitizeHexColor(referencePalette[0] || settings.primaryColor);
   const inferredCapabilities = settings.capabilities.length > 0
     ? settings.capabilities
     : inferCapabilitiesFromPrompt(prompt);
@@ -484,9 +722,19 @@ function buildLocalFallback({ prompt, settings, currentFiles }) {
     visualDirection: settings.visualDirection,
     complexity: settings.complexity,
     complexityLabel: COMPLEXITY_LABELS[settings.complexity] || COMPLEXITY_LABELS[3],
-    signature: describeVisualDirection(settings.visualDirection),
-    palette: [accent, '#050816', '#e2e8f0'],
+    signature: referenceImage
+      ? `${describeVisualDirection(settings.visualDirection)} Style rhythm calibrated from uploaded reference screenshot.`
+      : describeVisualDirection(settings.visualDirection),
+    palette: referencePalette.length > 0
+      ? [accent, ...referencePalette.slice(1), '#050816', '#e2e8f0'].slice(0, 6)
+      : [accent, '#050816', '#e2e8f0'],
   };
+
+  const quality = estimateLocalQuality({
+    settings: { ...settings, primaryColor: accent },
+    fundamentals,
+    referenceImage,
+  });
 
   return {
     assistantMessage: hasExistingFiles
@@ -527,6 +775,7 @@ function buildLocalFallback({ prompt, settings, currentFiles }) {
       'Expanded short prompt into structured design brief automatically.',
       'Embedded visual direction tokens and conversion-focused hierarchy.',
       'Included explicit fundamentals coverage report.',
+      referenceImage ? 'Reference screenshot palette and mood cues were applied to this build.' : 'No reference screenshot provided; style was inferred from prompt.',
     ],
     fundamentals,
     designRecipe,
@@ -535,6 +784,8 @@ function buildLocalFallback({ prompt, settings, currentFiles }) {
       'Request stricter conversion flow with stronger objection-handling sections.',
       'Add event schema details for analytics implementation.',
     ],
+    quality,
+    variantLabel,
     source: 'browser-template',
     model: 'browser-template-v3',
   };
@@ -548,10 +799,14 @@ const AppBuilderStudio = () => {
   const [activeVersionId, setActiveVersionId] = useState('');
   const [activeFile, setActiveFile] = useState('');
   const [fileQuery, setFileQuery] = useState('');
+  const [referenceImage, setReferenceImage] = useState(null);
+  const [isAnalyzingImage, setIsAnalyzingImage] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
+  const [batchProgress, setBatchProgress] = useState(null);
   const [statusNote, setStatusNote] = useState('Ready to build');
   const [error, setError] = useState('');
+  const referenceInputRef = useRef(null);
 
   useEffect(() => {
     try {
@@ -644,8 +899,8 @@ const AppBuilderStudio = () => {
   const currentFileContent = currentFilePath ? activeFiles[currentFilePath] : '';
 
   const expandedPrompt = useMemo(
-    () => buildPromptExpansion({ userPrompt: prompt, settings }),
-    [prompt, settings]
+    () => buildPromptExpansion({ userPrompt: prompt, settings, referenceImage }),
+    [prompt, settings, referenceImage]
   );
 
   const selectedCapabilityLabels = settings.capabilities
@@ -656,6 +911,9 @@ const AppBuilderStudio = () => {
     ? activeVersion.fundamentals
     : buildFundamentalsReport(settings.fundamentals);
   const coveredFundamentals = fundamentalsReport.filter((item) => item.status === 'covered').length;
+  const activeQuality = activeVersion?.quality && typeof activeVersion.quality === 'object'
+    ? activeVersion.quality
+    : null;
 
   const updateSettings = (patch) => {
     setSettings((previous) => ({ ...previous, ...patch }));
@@ -695,33 +953,56 @@ const AppBuilderStudio = () => {
     });
   };
 
-  const applyPayload = (payload, visiblePrompt) => {
+  const applyPayload = (payload, visiblePrompt, options = {}) => {
     const now = Date.now();
     const files = payload?.files && typeof payload.files === 'object' ? payload.files : {};
+    const settingsSnapshot = options?.settingsSnapshot && typeof options.settingsSnapshot === 'object'
+      ? options.settingsSnapshot
+      : settings;
+    const variantLabel = String(payload?.variantLabel || options?.variantLabel || '').trim();
 
-    const projectName = String(payload?.project?.name || settings.appName || `Build ${versions.length + 1}`).trim();
+    const projectName = String(
+      payload?.project?.name ||
+      settingsSnapshot.appName ||
+      settings.appName ||
+      'EB28 Build'
+    ).trim();
+    const versionName = variantLabel ? `${projectName} · ${variantLabel}` : projectName;
+
+    const fundamentals = Array.isArray(payload?.fundamentals)
+      ? payload.fundamentals.slice(0, 12)
+      : [];
+    const quality = payload?.quality && typeof payload.quality === 'object'
+      ? payload.quality
+      : estimateLocalQuality({
+          settings: settingsSnapshot,
+          fundamentals,
+          referenceImage,
+        });
 
     const version = {
-      id: `version-${now}`,
-      name: projectName,
-      prompt: visiblePrompt,
+      id: `version-${now}-${Math.round(Math.random() * 10_000)}`,
+      name: versionName,
+      variantLabel,
+      prompt: variantLabel ? `${visiblePrompt} (${variantLabel})` : visiblePrompt,
       createdAt: now,
       project: payload?.project || { name: projectName, description: '' },
       preview: payload?.preview || DEFAULT_PREVIEW,
       files,
       changes: Array.isArray(payload?.changes) ? payload.changes.slice(0, 12) : [],
-      fundamentals: Array.isArray(payload?.fundamentals) ? payload.fundamentals.slice(0, 12) : [],
+      fundamentals,
       designRecipe: payload?.designRecipe && typeof payload.designRecipe === 'object' ? payload.designRecipe : null,
       nextActions: Array.isArray(payload?.nextActions) ? payload.nextActions.slice(0, 6) : [],
+      quality,
       source: payload?.source || 'unknown',
       model: payload?.model || '',
-      settingsSnapshot: settings,
+      settingsSnapshot,
     };
 
     const assistantMessage = {
-      id: `assistant-${now}`,
+      id: `assistant-${now}-${Math.round(Math.random() * 10_000)}`,
       role: 'assistant',
-      content: payload?.assistantMessage || `Generated ${Object.keys(files).length} files for ${projectName}.`,
+      content: payload?.assistantMessage || `Generated ${Object.keys(files).length} files for ${versionName}.`,
       createdAt: now,
       changes: version.changes,
     };
@@ -735,15 +1016,20 @@ const AppBuilderStudio = () => {
       updateSettings({ appName: projectName });
     }
 
-    const runtimeLabel =
-      version.source === 'openai'
-        ? 'OpenAI generation'
-        : version.source === 'fallback-template' || version.source === 'browser-template'
-          ? 'Template generation'
-          : 'Generation complete';
+    if (!options?.skipStatusUpdate) {
+      const runtimeLabel =
+        version.source === 'openai'
+          ? 'OpenAI generation'
+          : version.source === 'fallback-template' || version.source === 'browser-template'
+            ? 'Template generation'
+            : 'Generation complete';
 
-    const modelLabel = version.model ? ` (${version.model})` : '';
-    setStatusNote(`${runtimeLabel}${modelLabel}`);
+      const modelLabel = version.model ? ` (${version.model})` : '';
+      const qualityLabel = Number.isFinite(Number(quality?.totalScore))
+        ? ` · Score ${Math.round(Number(quality.totalScore))}/100`
+        : '';
+      setStatusNote(`${runtimeLabel}${modelLabel}${qualityLabel}`);
+    }
   };
 
   const handleQuickStart = (preset) => {
@@ -758,11 +1044,104 @@ const AppBuilderStudio = () => {
     setStatusNote(`Preset loaded: ${preset.title}`);
   };
 
+  const handleReferenceImageUpload = async (event) => {
+    const file = event?.target?.files?.[0];
+    if (!file) {
+      return;
+    }
+
+    if (!String(file.type || '').startsWith('image/')) {
+      setError('Please upload an image file (PNG, JPG, WebP, etc).');
+      event.target.value = '';
+      return;
+    }
+
+    setError('');
+    setIsAnalyzingImage(true);
+    setStatusNote('Analyzing reference screenshot...');
+
+    try {
+      const optimized = await optimizeReferenceImage(file);
+      setReferenceImage(optimized);
+
+      if (
+        settings.primaryColor === DEFAULT_SETTINGS.primaryColor &&
+        Array.isArray(optimized.palette) &&
+        optimized.palette[0]
+      ) {
+        updateSettings({ primaryColor: optimized.palette[0] });
+      }
+
+      setStatusNote(`Reference loaded: ${optimized.name}`);
+    } catch (processingError) {
+      setError(processingError?.message || 'Unable to process this screenshot.');
+      setStatusNote('Reference image failed to load');
+    } finally {
+      setIsAnalyzingImage(false);
+      event.target.value = '';
+    }
+  };
+
+  const handleRemoveReferenceImage = () => {
+    setReferenceImage(null);
+    setStatusNote('Reference image removed');
+  };
+
+  const runBuildRequest = async ({
+    visiblePrompt,
+    settingsForRun,
+    currentFiles,
+    historyPayload,
+    variantLabel = '',
+  }) => {
+    const fullPrompt = buildPromptExpansion({
+      userPrompt: visiblePrompt,
+      settings: settingsForRun,
+      referenceImage,
+      variantLabel,
+    });
+
+    try {
+      const response = await fetch('/api/appbuilder-build', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          prompt: fullPrompt,
+          rawPrompt: visiblePrompt,
+          config: settingsForRun,
+          variantLabel,
+          currentFiles,
+          referenceImage: buildReferencePayload(referenceImage),
+          history: historyPayload,
+        }),
+      });
+
+      const payload = await response.json();
+      if (!response.ok) {
+        throw new Error(payload?.error || 'Generation failed');
+      }
+
+      return payload;
+    } catch {
+      const fallbackPayload = buildLocalFallback({
+        prompt: visiblePrompt,
+        settings: settingsForRun,
+        currentFiles,
+        referenceImage,
+        variantLabel,
+      });
+      fallbackPayload.assistantMessage = `${fallbackPayload.assistantMessage} API unavailable, local mode used.`;
+      return fallbackPayload;
+    }
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     const visiblePrompt = prompt.trim();
-    if (!visiblePrompt || isGenerating) {
+    if (!visiblePrompt || isGenerating || isAnalyzingImage) {
       return;
     }
 
@@ -775,47 +1154,92 @@ const AppBuilderStudio = () => {
     };
 
     const currentFiles = activeVersion?.files || {};
-    const fullPrompt = buildPromptExpansion({ userPrompt: visiblePrompt, settings });
+    const historyPayload = [...messages.slice(-8), userMessage].map((message) => ({
+      role: message.role,
+      content: message.content,
+    }));
 
-    setPrompt('');
     setError('');
     setMessages((previous) => [...previous, userMessage].slice(-40));
     setIsGenerating(true);
+    setBatchProgress(null);
     setStatusNote('Generating scaffold...');
 
     try {
-      const response = await fetch('/api/appbuilder-build', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          prompt: fullPrompt,
-          rawPrompt: visiblePrompt,
-          config: settings,
-          currentFiles,
-          history: [...messages.slice(-8), userMessage].map((message) => ({
-            role: message.role,
-            content: message.content,
-          })),
-        }),
+      const payload = await runBuildRequest({
+        visiblePrompt,
+        settingsForRun: settings,
+        currentFiles,
+        historyPayload,
       });
+      applyPayload(payload, visiblePrompt, {
+        settingsSnapshot: settings,
+      });
+    } catch (generationError) {
+      setError(generationError?.message || 'Generation failed.');
+      setStatusNote('Generation failed');
+    } finally {
+      setIsGenerating(false);
+    }
+  };
 
-      const payload = await response.json();
-      if (!response.ok) {
-        throw new Error(payload?.error || 'Generation failed');
+  const handleGenerateVariants = async () => {
+    const visiblePrompt = prompt.trim();
+    if (!visiblePrompt || isGenerating || isAnalyzingImage) {
+      return;
+    }
+
+    const now = Date.now();
+    const userMessage = {
+      id: `user-variants-${now}`,
+      role: 'user',
+      content: `${visiblePrompt} (Generate 3 stylistic variants)`,
+      createdAt: now,
+    };
+
+    const directions = pickVariantDirections(settings.visualDirection);
+    const currentFiles = activeVersion?.files || {};
+    const historyPayload = [...messages.slice(-8), userMessage].map((message) => ({
+      role: message.role,
+      content: message.content,
+    }));
+
+    setError('');
+    setMessages((previous) => [...previous, userMessage].slice(-40));
+    setIsGenerating(true);
+    setBatchProgress({ current: 0, total: 3, label: 'Starting' });
+    setStatusNote('Generating style variants...');
+
+    try {
+      for (let index = 0; index < 3; index += 1) {
+        const variantLabel = VARIANT_LABELS[index];
+        const variantDirection = directions[index] || settings.visualDirection;
+        const settingsForRun = { ...settings, visualDirection: variantDirection };
+
+        setBatchProgress({ current: index + 1, total: 3, label: variantLabel });
+        setStatusNote(`${variantLabel}: building ${titleCase(variantDirection.replace(/-/g, ' '))} style (${index + 1}/3)...`);
+
+        const payload = await runBuildRequest({
+          visiblePrompt,
+          settingsForRun,
+          currentFiles,
+          historyPayload,
+          variantLabel,
+        });
+
+        applyPayload(payload, visiblePrompt, {
+          settingsSnapshot: settingsForRun,
+          variantLabel,
+          skipStatusUpdate: true,
+        });
       }
 
-      applyPayload(payload, visiblePrompt);
-    } catch {
-      const fallbackPayload = buildLocalFallback({
-        prompt: visiblePrompt,
-        settings,
-        currentFiles,
-      });
-      fallbackPayload.assistantMessage = `${fallbackPayload.assistantMessage} API unavailable, local mode used.`;
-      applyPayload(fallbackPayload, visiblePrompt);
+      setStatusNote('3 variants ready for comparison');
+    } catch (errorValue) {
+      setError(errorValue?.message || 'Variant generation failed.');
+      setStatusNote('Variant generation failed');
     } finally {
+      setBatchProgress(null);
       setIsGenerating(false);
     }
   };
@@ -921,6 +1345,8 @@ const AppBuilderStudio = () => {
     setActiveVersionId('');
     setActiveFile('');
     setFileQuery('');
+    setReferenceImage(null);
+    setBatchProgress(null);
     setError('');
     setStatusNote('Session reset');
     try {
@@ -1138,6 +1564,68 @@ const AppBuilderStudio = () => {
               </div>
 
               <div>
+                <div className="mb-2 flex items-center justify-between gap-2">
+                  <p className="font-body text-xs uppercase tracking-[0.12em] text-slate-400">
+                    Reference Vibe Screenshot
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => referenceInputRef.current?.click()}
+                    disabled={isAnalyzingImage}
+                    className="font-body rounded-full border border-cyan-300/35 bg-cyan-500/10 px-3 py-1 text-[11px] text-cyan-100 transition hover:bg-cyan-500/20 disabled:cursor-not-allowed disabled:opacity-60"
+                  >
+                    {isAnalyzingImage ? 'Analyzing...' : referenceImage ? 'Replace' : 'Upload'}
+                  </button>
+                </div>
+
+                <input
+                  ref={referenceInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={handleReferenceImageUpload}
+                  className="hidden"
+                />
+
+                {!referenceImage && (
+                  <p className="font-body rounded-xl border border-dashed border-white/20 bg-slate-900/50 px-3 py-2 text-xs text-slate-300">
+                    Add one screenshot and the builder will mirror tone, spacing rhythm, and color mood.
+                  </p>
+                )}
+
+                {referenceImage && (
+                  <article className="rounded-2xl border border-cyan-300/25 bg-slate-900/60 p-3">
+                    <img
+                      src={referenceImage.dataUrl}
+                      alt={referenceImage.name || 'Reference screenshot preview'}
+                      className="h-28 w-full rounded-xl border border-white/10 object-cover"
+                    />
+                    <p className="font-body mt-2 truncate text-xs text-slate-200">{referenceImage.name}</p>
+                    <div className="mt-2 flex flex-wrap gap-1">
+                      {(referenceImage.palette || []).map((color) => (
+                        <span
+                          key={`reference-color-${color}`}
+                          className="inline-flex items-center gap-1 rounded-full border border-white/20 px-2 py-1 text-[10px] text-slate-100"
+                        >
+                          <span
+                            className="h-3 w-3 rounded-full border border-white/40"
+                            style={{ backgroundColor: color }}
+                          />
+                          <span className="font-code">{color}</span>
+                        </span>
+                      ))}
+                    </div>
+                    <button
+                      type="button"
+                      onClick={handleRemoveReferenceImage}
+                      className="font-body mt-2 rounded-full border border-white/20 px-3 py-1 text-[11px] text-slate-300 transition hover:border-rose-300 hover:text-rose-200"
+                    >
+                      Remove reference
+                    </button>
+                  </article>
+                )}
+              </div>
+
+              <div>
                 <p className="font-body mb-2 text-xs uppercase tracking-[0.12em] text-slate-400">Quick Starts</p>
                 <div className="grid gap-2 sm:grid-cols-2">
                   {QUICK_STARTS.map((preset) => (
@@ -1166,14 +1654,31 @@ const AppBuilderStudio = () => {
                   className="font-body h-28 w-full resize-none rounded-2xl border border-white/15 bg-slate-900/70 px-3 py-3 text-sm text-white outline-none focus:border-cyan-300"
                 />
 
-                <button
-                  type="submit"
-                  disabled={isGenerating}
-                  className="font-brand inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-cyan-500 px-4 py-3 text-sm font-bold text-slate-950 transition hover:bg-cyan-400 disabled:cursor-not-allowed disabled:bg-slate-500"
-                >
-                  {isGenerating ? <RefreshCw size={16} className="animate-spin" /> : <SendHorizontal size={16} />}
-                  {isGenerating ? 'Generating Build...' : 'Generate EB28 Build'}
-                </button>
+                <div className="grid gap-2 sm:grid-cols-2">
+                  <button
+                    type="submit"
+                    disabled={isGenerating || isAnalyzingImage}
+                    className="font-brand inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-cyan-500 px-4 py-3 text-sm font-bold text-slate-950 transition hover:bg-cyan-400 disabled:cursor-not-allowed disabled:bg-slate-500"
+                  >
+                    {isGenerating && !batchProgress ? <RefreshCw size={16} className="animate-spin" /> : <SendHorizontal size={16} />}
+                    {isGenerating && !batchProgress ? 'Generating Build...' : 'Generate EB28 Build'}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleGenerateVariants}
+                    disabled={isGenerating || isAnalyzingImage || !prompt.trim()}
+                    className="font-brand inline-flex w-full items-center justify-center gap-2 rounded-2xl border border-amber-300/40 bg-amber-500/15 px-4 py-3 text-sm font-bold text-amber-100 transition hover:bg-amber-500/25 disabled:cursor-not-allowed disabled:opacity-60"
+                  >
+                    {isGenerating && batchProgress ? <RefreshCw size={16} className="animate-spin" /> : <Sparkles size={16} />}
+                    Generate 3 Variants
+                  </button>
+                </div>
+
+                {batchProgress && (
+                  <p className="font-body rounded-xl border border-amber-300/25 bg-amber-500/10 px-3 py-2 text-xs text-amber-100">
+                    Running {batchProgress.label} ({batchProgress.current}/{batchProgress.total})
+                  </p>
+                )}
               </form>
 
               <article className="rounded-2xl border border-white/10 bg-slate-950/50 p-3">
@@ -1288,6 +1793,32 @@ const AppBuilderStudio = () => {
                         Complexity: {activeVersion?.designRecipe?.complexity || settings.complexity}/5
                       </p>
                     </article>
+
+                    {activeQuality && (
+                      <article className="rounded-2xl border border-fuchsia-300/25 bg-fuchsia-500/10 p-3">
+                        <div className="flex items-center justify-between gap-2">
+                          <p className="font-brand text-xs uppercase tracking-[0.14em] text-fuchsia-100">
+                            Critic score
+                          </p>
+                          <p className="font-brand text-sm text-fuchsia-50">
+                            {Math.round(Number(activeQuality.totalScore) || 0)}/100
+                          </p>
+                        </div>
+                        <p className="font-body mt-1 text-xs text-fuchsia-50">
+                          Vibe {Math.round(Number(activeQuality.vibeScore) || 0)} · UX {Math.round(Number(activeQuality.uxScore) || 0)} · Fundamentals {Math.round(Number(activeQuality.fundamentalsScore) || 0)} · Uniqueness {Math.round(Number(activeQuality.uniquenessScore) || 0)}
+                        </p>
+                        {activeQuality.regenerated && (
+                          <p className="font-body mt-1 text-[11px] text-fuchsia-100">
+                            Auto-regenerated once after critic feedback.
+                          </p>
+                        )}
+                        {Array.isArray(activeQuality.issues) && activeQuality.issues.length > 0 && (
+                          <p className="font-body mt-1 text-[11px] text-fuchsia-100">
+                            Watchouts: {activeQuality.issues.slice(0, 2).join(' · ')}
+                          </p>
+                        )}
+                      </article>
+                    )}
 
                     <article className="rounded-2xl border border-emerald-300/25 bg-emerald-500/10 p-3">
                       <p className="font-brand mb-1 text-xs uppercase tracking-[0.14em] text-emerald-100">Fundamentals coverage</p>

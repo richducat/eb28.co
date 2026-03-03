@@ -1,7 +1,10 @@
 const DEFAULT_MODEL = process.env.APPBUILDER_MODEL || 'gpt-4.1-mini';
+const CRITIC_MODEL = process.env.APPBUILDER_CRITIC_MODEL || DEFAULT_MODEL;
 const MAX_HISTORY_ITEMS = 8;
 const MAX_FILE_CONTEXT = 8;
 const MAX_FILE_CONTENT_CHARS = 1800;
+const MAX_REFERENCE_IMAGE_DATA_URL_CHARS = 1_600_000;
+const CRITIC_REGEN_THRESHOLD = Number.parseInt(process.env.APPBUILDER_CRITIC_THRESHOLD || '84', 10);
 
 const VISUAL_DIRECTION_HINTS = {
   'editorial-bold': 'Large expressive typography, asymmetrical layout, clear hierarchy.',
@@ -73,6 +76,11 @@ function sanitizeHexColor(value) {
   return /^#[0-9a-fA-F]{6}$/.test(candidate) ? candidate : '#0891B2';
 }
 
+function sanitizePaletteColor(value) {
+  const candidate = String(value || '').trim();
+  return /^#[0-9a-fA-F]{6}$/.test(candidate) ? candidate.toUpperCase() : '';
+}
+
 function sanitizeFilePath(filePath) {
   return String(filePath || '')
     .replace(/^\/+/, '')
@@ -100,6 +108,62 @@ function sanitizeFiles(files) {
   }
 
   return output;
+}
+
+function clampScore(value, fallback = 0) {
+  const numeric = Number(value);
+  if (!Number.isFinite(numeric)) {
+    return fallback;
+  }
+  return Math.max(0, Math.min(100, Math.round(numeric)));
+}
+
+function normalizeQuality(quality, { regenerated = false } = {}) {
+  if (!quality || typeof quality !== 'object') {
+    return null;
+  }
+
+  return {
+    totalScore: clampScore(quality.totalScore),
+    vibeScore: clampScore(quality.vibeScore),
+    uxScore: clampScore(quality.uxScore),
+    fundamentalsScore: clampScore(quality.fundamentalsScore),
+    uniquenessScore: clampScore(quality.uniquenessScore),
+    strengths: Array.isArray(quality.strengths)
+      ? quality.strengths.slice(0, 5).map((item) => toSafeString(item)).filter(Boolean)
+      : [],
+    issues: Array.isArray(quality.issues)
+      ? quality.issues.slice(0, 5).map((item) => toSafeString(item)).filter(Boolean)
+      : [],
+    regenerated,
+  };
+}
+
+function normalizeReferenceImage(referenceImage) {
+  if (!referenceImage || typeof referenceImage !== 'object') {
+    return null;
+  }
+
+  const palette = Array.isArray(referenceImage.palette)
+    ? referenceImage.palette
+        .map((item) => sanitizePaletteColor(item))
+        .filter(Boolean)
+        .slice(0, 6)
+    : [];
+
+  const dataUrl = toSafeString(referenceImage.dataUrl);
+  const hasDataUrl = dataUrl.startsWith('data:image/') && dataUrl.length <= MAX_REFERENCE_IMAGE_DATA_URL_CHARS;
+
+  if (!hasDataUrl && palette.length === 0) {
+    return null;
+  }
+
+  return {
+    name: toSafeString(referenceImage.name, 'reference-image').slice(0, 120),
+    mimeType: toSafeString(referenceImage.mimeType || '', 'image/jpeg').slice(0, 80),
+    dataUrl: hasDataUrl ? dataUrl : '',
+    palette,
+  };
 }
 
 function normalizeConfig(config) {
@@ -168,12 +232,15 @@ function normalizePayload(payload, config) {
     : [];
 
   const fundamentals = Array.isArray(payload?.fundamentals)
-    ? payload.fundamentals.slice(0, 12).map((item) => ({
-        id: toSafeString(item?.id),
-        label: toSafeString(item?.label, 'Fundamental'),
-        status: toSafeString(item?.status, 'covered'),
-        note: toSafeString(item?.note, 'Included in generation plan.'),
-      })).filter((item) => item.id)
+    ? payload.fundamentals
+        .slice(0, 12)
+        .map((item) => ({
+          id: toSafeString(item?.id),
+          label: toSafeString(item?.label, 'Fundamental'),
+          status: toSafeString(item?.status, 'covered'),
+          note: toSafeString(item?.note, 'Included in generation plan.'),
+        }))
+        .filter((item) => item.id)
     : [];
 
   const designRecipe = payload?.designRecipe && typeof payload.designRecipe === 'object'
@@ -255,6 +322,15 @@ function compactCurrentFiles(currentFiles) {
     .join('\n\n');
 }
 
+function compactOutputFilesForCritic(files) {
+  const safeFiles = sanitizeFiles(files);
+  return Object.keys(safeFiles)
+    .sort()
+    .slice(0, 8)
+    .map((filePath) => `FILE: ${filePath}\n${safeFiles[filePath].slice(0, 1200)}`)
+    .join('\n\n');
+}
+
 function inferAppName(prompt) {
   const words = String(prompt || '')
     .replace(/[^a-zA-Z0-9\s]/g, ' ')
@@ -283,12 +359,53 @@ function fallbackFundamentals(config) {
   }));
 }
 
-function buildFallbackProject({ prompt, rawPrompt, currentFiles, config }) {
+function buildHeuristicQuality({ config, fundamentals, referenceImage, regenerated = false }) {
+  const required = (config.fundamentals.length > 0 ? config.fundamentals : Object.keys(FUNDAMENTAL_LABELS)).length;
+  const covered = Array.isArray(fundamentals)
+    ? fundamentals.filter((item) => String(item.status || '').toLowerCase() === 'covered').length
+    : 0;
+
+  const fundamentalsScore = Math.max(65, Math.min(100, Math.round(65 + (covered / Math.max(required, 1)) * 35)));
+  const vibeScore = Math.max(60, Math.min(100, Math.round(69 + config.complexity * 4 + (referenceImage ? 8 : 0))));
+  const uxScore = Math.max(60, Math.min(100, Math.round(70 + Math.min(10, required * 2))));
+  const uniquenessScore = Math.max(60, Math.min(100, Math.round(68 + config.complexity * 3 + (referenceImage ? 7 : 0))));
+  const totalScore = Math.round((vibeScore + uxScore + fundamentalsScore + uniquenessScore) / 4);
+
+  const issues = [];
+  if (!referenceImage) {
+    issues.push('No reference screenshot provided for tighter vibe matching.');
+  }
+  if (!config.fundamentals.includes('analytics_events')) {
+    issues.push('Analytics events are not explicitly required.');
+  }
+
+  return {
+    totalScore,
+    vibeScore,
+    uxScore,
+    fundamentalsScore,
+    uniquenessScore,
+    strengths: [
+      `Visual direction is constrained to ${toTitleCase(config.visualDirection.replace(/-/g, ' '))}.`,
+      `${covered}/${Math.max(1, required)} fundamentals are covered in output notes.`,
+      'Design and conversion hierarchy are explicitly scaffolded.',
+    ],
+    issues: issues.slice(0, 5),
+    regenerated,
+  };
+}
+
+function buildFallbackProject({ prompt, rawPrompt, currentFiles, config, referenceImage, variantLabel }) {
   const appName = config.appName || inferAppName(rawPrompt || prompt);
   const capabilities = config.capabilities.length > 0
     ? config.capabilities
     : ['auth', 'dashboard', 'notifications'];
   const featureLabels = capabilities.map((id) => CAPABILITY_LABELS[id] || toTitleCase(id)).slice(0, 6);
+
+  const referencePalette = Array.isArray(referenceImage?.palette)
+    ? referenceImage.palette.map(sanitizePaletteColor).filter(Boolean)
+    : [];
+  const accent = sanitizeHexColor(referencePalette[0] || config.primaryColor);
 
   const featureRows = featureLabels
     .map((feature, index) => `        <p className="itemText">${index + 1}. ${feature}</p>`)
@@ -370,7 +487,7 @@ function buildFallbackProject({ prompt, rawPrompt, currentFiles, config }) {
     ].join('\n'),
     'src/styles.css': [
       ':root {',
-      `  --accent: ${config.primaryColor};`,
+      `  --accent: ${accent};`,
       '  --bg: #050816;',
       '  --panel: rgba(15, 23, 42, 0.78);',
       '}',
@@ -431,6 +548,7 @@ function buildFallbackProject({ prompt, rawPrompt, currentFiles, config }) {
   };
 
   const hasExistingFiles = currentFiles && Object.keys(sanitizeFiles(currentFiles)).length > 0;
+  const fundamentals = fallbackFundamentals(config);
 
   return {
     assistantMessage: hasExistingFiles
@@ -444,7 +562,7 @@ function buildFallbackProject({ prompt, rawPrompt, currentFiles, config }) {
     preview: {
       appName,
       tagline: featureLabels[0] || 'High-conversion experience scaffold',
-      primaryColor: config.primaryColor,
+      primaryColor: accent,
       screens: [
         {
           name: 'Hero',
@@ -466,38 +584,40 @@ function buildFallbackProject({ prompt, rawPrompt, currentFiles, config }) {
       'Expanded prompt into structured design intent automatically.',
       'Applied selected visual direction and complexity constraints.',
       'Included explicit fundamentals coverage report.',
+      referenceImage
+        ? 'Reference screenshot palette and style cues were incorporated.'
+        : 'No reference screenshot provided; style was inferred from prompt.',
     ],
-    fundamentals: fallbackFundamentals(config),
+    fundamentals,
     designRecipe: {
       visualDirection: config.visualDirection,
       complexity: config.complexity,
       complexityLabel: `Level ${config.complexity} complexity`,
-      signature: VISUAL_DIRECTION_HINTS[config.visualDirection],
-      palette: [config.primaryColor, '#050816', '#e2e8f0'],
+      signature: referenceImage
+        ? `${VISUAL_DIRECTION_HINTS[config.visualDirection]} Style rhythm aligned with uploaded reference.`
+        : VISUAL_DIRECTION_HINTS[config.visualDirection],
+      palette: referencePalette.length > 0
+        ? [accent, ...referencePalette.slice(1), '#050816', '#e2e8f0'].slice(0, 6)
+        : [accent, '#050816', '#e2e8f0'],
     },
     nextActions: [
       'Generate a second variant with a different visual direction.',
       'Request stronger conversion objection-handling sections.',
       'Add analytics event map and naming conventions.',
     ],
+    quality: buildHeuristicQuality({
+      config: { ...config, primaryColor: accent },
+      fundamentals,
+      referenceImage,
+    }),
+    variantLabel,
     source: 'fallback-template',
-    model: 'template-v3',
+    model: 'template-v4',
   };
 }
 
-async function generateWithOpenAI({ prompt, rawPrompt, history, currentFiles, config }) {
-  const apiKey = process.env.OPENAI_API_KEY;
-  if (!apiKey) {
-    return null;
-  }
-
-  const historyLines = normalizeHistory(history)
-    .map((entry) => `${entry.role.toUpperCase()}: ${entry.content}`)
-    .join('\n');
-
-  const fileContext = compactCurrentFiles(currentFiles);
-
-  const schema = {
+function buildGenerationSchema() {
+  return {
     name: 'eb28_app_builder_output',
     strict: true,
     schema: {
@@ -605,6 +725,130 @@ async function generateWithOpenAI({ prompt, rawPrompt, history, currentFiles, co
       ],
     },
   };
+}
+
+function buildCriticSchema() {
+  return {
+    name: 'eb28_app_builder_critic',
+    strict: true,
+    schema: {
+      type: 'object',
+      additionalProperties: false,
+      properties: {
+        totalScore: { type: 'number' },
+        vibeScore: { type: 'number' },
+        uxScore: { type: 'number' },
+        fundamentalsScore: { type: 'number' },
+        uniquenessScore: { type: 'number' },
+        strengths: {
+          type: 'array',
+          maxItems: 5,
+          items: { type: 'string' },
+        },
+        issues: {
+          type: 'array',
+          maxItems: 5,
+          items: { type: 'string' },
+        },
+        shouldRegenerate: { type: 'boolean' },
+        regenerationBrief: { type: 'string' },
+      },
+      required: [
+        'totalScore',
+        'vibeScore',
+        'uxScore',
+        'fundamentalsScore',
+        'uniquenessScore',
+        'strengths',
+        'issues',
+        'shouldRegenerate',
+        'regenerationBrief',
+      ],
+    },
+  };
+}
+
+function parseModelJson(payload) {
+  const rawContent = payload?.choices?.[0]?.message?.content;
+  if (typeof rawContent === 'string') {
+    return JSON.parse(rawContent || '{}');
+  }
+
+  if (Array.isArray(rawContent)) {
+    const textPart = rawContent.find((part) => typeof part?.text === 'string');
+    return JSON.parse(textPart?.text || '{}');
+  }
+
+  return {};
+}
+
+function buildReferenceDetails(referenceImage) {
+  if (!referenceImage) {
+    return 'No reference image was provided.';
+  }
+
+  const paletteText = Array.isArray(referenceImage.palette) && referenceImage.palette.length > 0
+    ? referenceImage.palette.join(', ')
+    : 'palette unavailable';
+
+  return `Reference image provided (${referenceImage.name || 'uploaded'}). Palette: ${paletteText}.`;
+}
+
+async function generateWithOpenAI({
+  prompt,
+  rawPrompt,
+  history,
+  currentFiles,
+  config,
+  referenceImage,
+  variantLabel,
+  criticFeedback,
+}) {
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey) {
+    return null;
+  }
+
+  const historyLines = normalizeHistory(history)
+    .map((entry) => `${entry.role.toUpperCase()}: ${entry.content}`)
+    .join('\n');
+
+  const fileContext = compactCurrentFiles(currentFiles);
+  const schema = buildGenerationSchema();
+
+  const userText = [
+    `Build brief: ${prompt}`,
+    '',
+    `Raw direction: ${rawPrompt || prompt}`,
+    '',
+    `Variant label: ${variantLabel || 'None'}`,
+    '',
+    `Config: ${JSON.stringify(config)}`,
+    '',
+    `Visual direction hint: ${VISUAL_DIRECTION_HINTS[config.visualDirection]}`,
+    '',
+    buildReferenceDetails(referenceImage),
+    '',
+    'Recent history:',
+    historyLines || '(no history)',
+    '',
+    'Current file context (trimmed):',
+    fileContext || '(no existing files)',
+  ];
+
+  if (criticFeedback) {
+    userText.push('', 'Critic feedback for this retry:', criticFeedback);
+  }
+
+  const content = [{ type: 'text', text: userText.join('\n') }];
+  if (referenceImage?.dataUrl) {
+    content.push({
+      type: 'image_url',
+      image_url: {
+        url: referenceImage.dataUrl,
+      },
+    });
+  }
 
   const response = await fetch('https://api.openai.com/v1/chat/completions', {
     method: 'POST',
@@ -614,7 +858,7 @@ async function generateWithOpenAI({ prompt, rawPrompt, history, currentFiles, co
     },
     body: JSON.stringify({
       model: DEFAULT_MODEL,
-      temperature: 0.25,
+      temperature: criticFeedback ? 0.2 : 0.28,
       response_format: {
         type: 'json_schema',
         json_schema: schema,
@@ -624,9 +868,11 @@ async function generateWithOpenAI({ prompt, rawPrompt, history, currentFiles, co
           role: 'system',
           content: [
             'You are EB28 App Builder, generating React web project scaffolds from concise prompts.',
-            'Your output must feel distinctive and intentional, not boilerplate.',
+            'Output must feel distinctive, premium, and intentional.',
             'Always produce runnable files including package.json, index.html, src/main.jsx, src/App.jsx, src/styles.css, README.md.',
-            'Use the provided visual direction and complexity level to shape typography, layout, spacing, and motion notes.',
+            'Do not mention Rork or any third-party brand names.',
+            'Prioritize conversion hierarchy, usability, and responsive behavior.',
+            'Use provided visual direction, complexity, and reference image to shape typography, layout, and color rhythm.',
             'Return a fundamentals report that confirms coverage for each required fundamental.',
             'When current files are provided, return a full updated file set, not a diff.',
             'Output valid JSON only via the enforced schema.',
@@ -634,21 +880,7 @@ async function generateWithOpenAI({ prompt, rawPrompt, history, currentFiles, co
         },
         {
           role: 'user',
-          content: [
-            `Build brief: ${prompt}`,
-            '',
-            `Raw direction: ${rawPrompt || prompt}`,
-            '',
-            `Config: ${JSON.stringify(config)}`,
-            '',
-            `Visual direction hint: ${VISUAL_DIRECTION_HINTS[config.visualDirection]}`,
-            '',
-            'Recent history:',
-            historyLines || '(no history)',
-            '',
-            'Current file context (trimmed):',
-            fileContext || '(no existing files)',
-          ].join('\n'),
+          content,
         },
       ],
     }),
@@ -660,8 +892,7 @@ async function generateWithOpenAI({ prompt, rawPrompt, history, currentFiles, co
     throw new Error(payload?.error?.message || 'OpenAI request failed');
   }
 
-  const rawContent = payload?.choices?.[0]?.message?.content;
-  const parsed = JSON.parse(rawContent || '{}');
+  const parsed = parseModelJson(payload);
   const normalized = normalizePayload(parsed, config);
 
   return {
@@ -669,6 +900,125 @@ async function generateWithOpenAI({ prompt, rawPrompt, history, currentFiles, co
     source: 'openai',
     model: payload?.model || DEFAULT_MODEL,
   };
+}
+
+async function runCriticPass({ prompt, rawPrompt, config, referenceImage, variantLabel, generated }) {
+  const apiKey = process.env.OPENAI_API_KEY;
+  if (!apiKey) {
+    return null;
+  }
+
+  const schema = buildCriticSchema();
+  const fileSummary = compactOutputFilesForCritic(generated.files || {});
+  const fundamentals = Array.isArray(generated.fundamentals)
+    ? generated.fundamentals.map((item) => `${item.id}:${item.status}`).join(', ')
+    : '(none)';
+
+  const criticText = [
+    `User prompt: ${rawPrompt || prompt}`,
+    `Variant label: ${variantLabel || 'None'}`,
+    `Config: ${JSON.stringify(config)}`,
+    buildReferenceDetails(referenceImage),
+    '',
+    'Generated output summary:',
+    `Project: ${generated?.project?.name || 'Unknown'}`,
+    `Description: ${generated?.project?.description || 'Unknown'}`,
+    `Design signature: ${generated?.designRecipe?.signature || 'Unknown'}`,
+    `Fundamentals: ${fundamentals}`,
+    '',
+    'Generated files (trimmed):',
+    fileSummary || '(no files)',
+    '',
+    'Score this output on: vibe match, usability, fundamentals coverage, and uniqueness.',
+    'Set shouldRegenerate=true if there are material quality gaps or score is below production quality.',
+    'regenerationBrief must be concrete and implementation-focused.',
+  ].join('\n');
+
+  const content = [{ type: 'text', text: criticText }];
+  if (referenceImage?.dataUrl) {
+    content.push({
+      type: 'image_url',
+      image_url: {
+        url: referenceImage.dataUrl,
+      },
+    });
+  }
+
+  const response = await fetch('https://api.openai.com/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      model: CRITIC_MODEL,
+      temperature: 0.1,
+      response_format: {
+        type: 'json_schema',
+        json_schema: schema,
+      },
+      messages: [
+        {
+          role: 'system',
+          content: [
+            'You are the EB28 design and UX critic.',
+            'Score strictly and prioritize usefulness over politeness.',
+            'Assess vibe fit, usability, fundamentals coverage, and uniqueness.',
+            'Request regeneration only when meaningful quality gains are likely.',
+            'Output only JSON that matches the schema.',
+          ].join(' '),
+        },
+        {
+          role: 'user',
+          content,
+        },
+      ],
+    }),
+  });
+
+  const payload = await response.json();
+  if (!response.ok) {
+    throw new Error(payload?.error?.message || 'Critic request failed');
+  }
+
+  const parsed = parseModelJson(payload);
+  const quality = normalizeQuality(parsed);
+  if (!quality) {
+    return null;
+  }
+
+  const scoreTriggered =
+    quality.totalScore < CRITIC_REGEN_THRESHOLD ||
+    quality.fundamentalsScore < 80 ||
+    quality.uniquenessScore < 74;
+
+  const shouldRegenerate = Boolean(parsed.shouldRegenerate) || scoreTriggered;
+  const regenerationBrief = toSafeString(parsed.regenerationBrief);
+
+  return {
+    quality,
+    shouldRegenerate,
+    regenerationBrief,
+  };
+}
+
+function buildRegenerationFeedback(critic) {
+  const lines = [];
+  if (critic?.quality) {
+    lines.push(
+      `Current scores: total ${critic.quality.totalScore}, vibe ${critic.quality.vibeScore}, UX ${critic.quality.uxScore}, fundamentals ${critic.quality.fundamentalsScore}, uniqueness ${critic.quality.uniquenessScore}.`
+    );
+    if (Array.isArray(critic.quality.issues) && critic.quality.issues.length > 0) {
+      lines.push(`Issues: ${critic.quality.issues.join(' | ')}`);
+    }
+  }
+
+  if (critic?.regenerationBrief) {
+    lines.push(`Required fixes: ${critic.regenerationBrief}`);
+  }
+
+  lines.push('Regenerate once with clearer hierarchy, stronger differentiation, and explicit fundamentals coverage.');
+  return lines.join('\n');
 }
 
 export default async function handler(req, res) {
@@ -680,41 +1030,118 @@ export default async function handler(req, res) {
   const body = parseRequestBody(req.body);
   const prompt = toSafeString(body?.prompt);
   const rawPrompt = toSafeString(body?.rawPrompt, prompt);
+  const variantLabel = toSafeString(body?.variantLabel).slice(0, 32);
   const currentFiles = sanitizeFiles(body?.currentFiles);
   const history = normalizeHistory(body?.history);
   const config = normalizeConfig(body?.config);
+  const referenceImage = normalizeReferenceImage(body?.referenceImage);
 
   if (!prompt) {
     return res.status(400).json({ error: 'Prompt is required.' });
   }
 
   try {
-    const openAIResult = await generateWithOpenAI({
+    let generated = await generateWithOpenAI({
       prompt,
       rawPrompt,
       history,
       currentFiles,
       config,
+      referenceImage,
+      variantLabel,
     });
 
-    if (openAIResult) {
-      return res.status(200).json(openAIResult);
+    if (!generated) {
+      return res.status(200).json(
+        buildFallbackProject({
+          prompt,
+          rawPrompt,
+          currentFiles,
+          config,
+          referenceImage,
+          variantLabel,
+        })
+      );
     }
 
-    return res.status(200).json(
-      buildFallbackProject({
+    let critic = null;
+    let finalQuality = null;
+
+    try {
+      critic = await runCriticPass({
         prompt,
         rawPrompt,
-        currentFiles,
         config,
-      })
-    );
+        referenceImage,
+        variantLabel,
+        generated,
+      });
+    } catch {
+      critic = null;
+    }
+
+    if (critic?.shouldRegenerate) {
+      try {
+        const regenerated = await generateWithOpenAI({
+          prompt,
+          rawPrompt,
+          history,
+          currentFiles,
+          config,
+          referenceImage,
+          variantLabel,
+          criticFeedback: buildRegenerationFeedback(critic),
+        });
+
+        if (regenerated) {
+          generated = regenerated;
+          const secondCritic = await runCriticPass({
+            prompt,
+            rawPrompt,
+            config,
+            referenceImage,
+            variantLabel,
+            generated,
+          }).catch(() => null);
+
+          if (secondCritic?.quality) {
+            finalQuality = normalizeQuality(secondCritic.quality, { regenerated: true });
+          } else if (critic?.quality) {
+            finalQuality = normalizeQuality(critic.quality, { regenerated: true });
+          }
+
+          generated.assistantMessage = `${generated.assistantMessage} A critic pass requested one regeneration and it was applied.`;
+        }
+      } catch {
+        // If regeneration fails, preserve first pass and original critic score.
+      }
+    }
+
+    if (!finalQuality && critic?.quality) {
+      finalQuality = normalizeQuality(critic.quality, { regenerated: false });
+    }
+
+    if (!finalQuality) {
+      finalQuality = buildHeuristicQuality({
+        config,
+        fundamentals: generated.fundamentals,
+        referenceImage,
+      });
+    }
+
+    return res.status(200).json({
+      ...generated,
+      quality: finalQuality,
+      variantLabel,
+    });
   } catch (error) {
     const fallback = buildFallbackProject({
       prompt,
       rawPrompt,
       currentFiles,
       config,
+      referenceImage,
+      variantLabel,
     });
 
     return res.status(200).json({

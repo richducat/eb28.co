@@ -794,6 +794,60 @@ function buildReferenceDetails(referenceImage) {
   return `Reference image provided (${referenceImage.name || 'uploaded'}). Palette: ${paletteText}.`;
 }
 
+function enforceDesignDirection(generated, config, variantLabel = '') {
+  const output = generated && typeof generated === 'object' ? { ...generated } : {};
+  const visualDirection = toSafeString(config?.visualDirection, 'editorial-bold');
+  const complexity = Number.isFinite(Number(config?.complexity))
+    ? Math.max(1, Math.min(5, Number(config.complexity)))
+    : 3;
+  const primaryColor = sanitizeHexColor(config?.primaryColor);
+
+  const recipe = output?.designRecipe && typeof output.designRecipe === 'object'
+    ? output.designRecipe
+    : {};
+
+  output.designRecipe = {
+    ...recipe,
+    visualDirection,
+    complexity,
+    complexityLabel: toSafeString(
+      recipe.complexityLabel,
+      `Level ${complexity} complexity`
+    ),
+    signature: `${toTitleCase(visualDirection.replace(/-/g, ' '))}: ${VISUAL_DIRECTION_HINTS[visualDirection] || VISUAL_DIRECTION_HINTS['editorial-bold']}`,
+    palette: Array.isArray(recipe.palette) && recipe.palette.length > 0
+      ? recipe.palette
+      : [primaryColor, '#050816', '#e2e8f0'],
+  };
+
+  output.preview = output?.preview && typeof output.preview === 'object'
+    ? {
+        ...output.preview,
+        primaryColor: sanitizeHexColor(output.preview.primaryColor || primaryColor),
+      }
+    : {
+        appName: output?.project?.name || 'EB28 Experience',
+        tagline: 'High-conversion experience scaffold',
+        primaryColor,
+        screens: [
+          {
+            name: 'Hero',
+            purpose: 'Primary value proposition and CTA',
+            elements: ['Headline', 'Trust proof', 'Action trigger'],
+          },
+        ],
+      };
+
+  if (variantLabel) {
+    output.variantLabel = variantLabel;
+    const directionNote = `Variant locked to ${toTitleCase(visualDirection.replace(/-/g, ' '))} style direction.`;
+    const currentChanges = Array.isArray(output.changes) ? output.changes.slice(0, 11) : [];
+    output.changes = [directionNote, ...currentChanges].slice(0, 12);
+  }
+
+  return output;
+}
+
 async function generateWithOpenAI({
   prompt,
   rawPrompt,
@@ -836,6 +890,14 @@ async function generateWithOpenAI({
     fileContext || '(no existing files)',
   ];
 
+  if (variantLabel) {
+    userText.push(
+      '',
+      `Hard variant requirement: this output MUST be visually distinct and explicitly aligned to ${config.visualDirection}.`,
+      `Set designRecipe.visualDirection to exactly "${config.visualDirection}".`
+    );
+  }
+
   if (criticFeedback) {
     userText.push('', 'Critic feedback for this retry:', criticFeedback);
   }
@@ -873,6 +935,7 @@ async function generateWithOpenAI({
             'Do not mention Rork or any third-party brand names.',
             'Prioritize conversion hierarchy, usability, and responsive behavior.',
             'Use provided visual direction, complexity, and reference image to shape typography, layout, and color rhythm.',
+            'When variant label exists, force a clearly distinct treatment for that variant direction.',
             'Return a fundamentals report that confirms coverage for each required fundamental.',
             'When current files are provided, return a full updated file set, not a diff.',
             'Output valid JSON only via the enforced schema.',
@@ -1053,16 +1116,18 @@ export default async function handler(req, res) {
 
     if (!generated) {
       return res.status(200).json(
-        buildFallbackProject({
+        enforceDesignDirection(buildFallbackProject({
           prompt,
           rawPrompt,
           currentFiles,
           config,
           referenceImage,
           variantLabel,
-        })
+        }), config, variantLabel)
       );
     }
+
+    generated = enforceDesignDirection(generated, config, variantLabel);
 
     let critic = null;
     let finalQuality = null;
@@ -1094,7 +1159,7 @@ export default async function handler(req, res) {
         });
 
         if (regenerated) {
-          generated = regenerated;
+          generated = enforceDesignDirection(regenerated, config, variantLabel);
           const secondCritic = await runCriticPass({
             prompt,
             rawPrompt,
@@ -1145,7 +1210,7 @@ export default async function handler(req, res) {
     });
 
     return res.status(200).json({
-      ...fallback,
+      ...enforceDesignDirection(fallback, config, variantLabel),
       assistantMessage: `${fallback.assistantMessage} OpenAI generation failed, so template mode was used instead.`,
       warning: error.message,
     });

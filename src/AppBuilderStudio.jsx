@@ -512,6 +512,48 @@ function buildReferencePayload(referenceImage) {
   };
 }
 
+function enforceVariantDirection(payload, settingsForRun, variantLabel = '') {
+  const output = payload && typeof payload === 'object' ? { ...payload } : {};
+  const visualDirection = String(settingsForRun?.visualDirection || DEFAULT_SETTINGS.visualDirection);
+  const primaryColor = sanitizeHexColor(settingsForRun?.primaryColor || DEFAULT_SETTINGS.primaryColor);
+  const complexity = Number.isFinite(Number(settingsForRun?.complexity))
+    ? Math.max(1, Math.min(5, Number(settingsForRun.complexity)))
+    : DEFAULT_SETTINGS.complexity;
+
+  const existingRecipe = output?.designRecipe && typeof output.designRecipe === 'object'
+    ? output.designRecipe
+    : {};
+  output.designRecipe = {
+    ...existingRecipe,
+    visualDirection,
+    complexity,
+    complexityLabel: existingRecipe?.complexityLabel || COMPLEXITY_LABELS[complexity] || COMPLEXITY_LABELS[3],
+    signature: `${titleCase(visualDirection.replace(/-/g, ' '))}: ${describeVisualDirection(visualDirection)}`,
+    palette: Array.isArray(existingRecipe?.palette) && existingRecipe.palette.length > 0
+      ? existingRecipe.palette
+      : [primaryColor, '#050816', '#e2e8f0'],
+  };
+
+  output.preview = output?.preview && typeof output.preview === 'object'
+    ? {
+        ...output.preview,
+        primaryColor: sanitizeHexColor(output.preview.primaryColor || primaryColor),
+      }
+    : {
+        ...DEFAULT_PREVIEW,
+        primaryColor,
+      };
+
+  if (variantLabel) {
+    output.variantLabel = variantLabel;
+    const nextChanges = Array.isArray(output.changes) ? output.changes.slice(0, 11) : [];
+    nextChanges.unshift(`Variant locked to ${titleCase(visualDirection.replace(/-/g, ' '))} style direction.`);
+    output.changes = nextChanges.slice(0, 12);
+  }
+
+  return output;
+}
+
 function buildPromptExpansion({ userPrompt, settings, referenceImage, variantLabel = '' }) {
   const cleanedPrompt = String(userPrompt || '').trim();
   const capabilities = settings.capabilities.length > 0
@@ -1123,7 +1165,7 @@ const AppBuilderStudio = () => {
         throw new Error(payload?.error || 'Generation failed');
       }
 
-      return payload;
+      return enforceVariantDirection(payload, settingsForRun, variantLabel);
     } catch {
       const fallbackPayload = buildLocalFallback({
         prompt: visiblePrompt,
@@ -1133,7 +1175,7 @@ const AppBuilderStudio = () => {
         variantLabel,
       });
       fallbackPayload.assistantMessage = `${fallbackPayload.assistantMessage} API unavailable, local mode used.`;
-      return fallbackPayload;
+      return enforceVariantDirection(fallbackPayload, settingsForRun, variantLabel);
     }
   };
 
@@ -1198,7 +1240,6 @@ const AppBuilderStudio = () => {
     };
 
     const directions = pickVariantDirections(settings.visualDirection);
-    const currentFiles = activeVersion?.files || {};
     const historyPayload = [...messages.slice(-8), userMessage].map((message) => ({
       role: message.role,
       content: message.content,
@@ -1222,7 +1263,7 @@ const AppBuilderStudio = () => {
         const payload = await runBuildRequest({
           visiblePrompt,
           settingsForRun,
-          currentFiles,
+          currentFiles: {},
           historyPayload,
           variantLabel,
         });
@@ -1854,6 +1895,9 @@ const AppBuilderStudio = () => {
                         )}
                         {versions.map((version) => {
                           const active = activeVersion?.id === version.id;
+                          const versionDirection = version?.settingsSnapshot?.visualDirection
+                            ? titleCase(String(version.settingsSnapshot.visualDirection).replace(/-/g, ' '))
+                            : '';
                           return (
                             <button
                               key={version.id}
@@ -1868,6 +1912,11 @@ const AppBuilderStudio = () => {
                               <p className="font-brand truncate text-xs uppercase tracking-[0.12em] text-white">
                                 {version.name}
                               </p>
+                              {versionDirection && (
+                                <p className="font-body truncate text-[10px] uppercase tracking-[0.12em] text-cyan-200">
+                                  {versionDirection}
+                                </p>
+                              )}
                               <p className="font-body truncate text-xs text-slate-300">{version.prompt}</p>
                             </button>
                           );

@@ -242,6 +242,28 @@ const Dashboard = () => {
 
     const theme = THEMES[themeKey];
 
+    const [tyfysFeed, setTyfysFeed] = useState(null);
+
+    useEffect(() => {
+        let mounted = true;
+        const loadFeed = async () => {
+            try {
+                const r = await fetch('/api/tyfys/feed');
+                const data = await r.json();
+                if (mounted) setTyfysFeed(data);
+            } catch {
+                try {
+                    const r2 = await fetch('/data/tyfys-feed.json');
+                    const data2 = await r2.json();
+                    if (mounted) setTyfysFeed(data2);
+                } catch {}
+            }
+        };
+        loadFeed();
+        const t = setInterval(loadFeed, 60000);
+        return () => { mounted = false; clearInterval(t); };
+    }, []);
+
     useEffect(() => {
         const timer = setInterval(() => setTime(new Date()), 1000);
         return () => clearInterval(timer);
@@ -253,21 +275,23 @@ const Dashboard = () => {
             hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false,
         });
 
-    const metrics = { revenue: '$124,500', calls: '42/50', conversion: '18.5%' };
+    const metrics = {
+        revenue: `${tyfysFeed?.pipeline?.total || 0} Leads`,
+        calls: `${Object.keys(tyfysFeed?.pipeline?.byPhase || {}).length} phases`,
+        conversion: `${(tyfysFeed?.now?.progressPct ?? 0)}%`
+    };
 
-    const pipeline = [
-        { stage: 'Discovery', count: 12, value: '$45k' },
-        { stage: 'Demo', count: 8, value: '$80k' },
-        { stage: 'Negotiation', count: 3, value: '$120k' },
-    ];
+    const pipeline = Object.entries(tyfysFeed?.pipeline?.byPhase || {}).map(([stage, count]) => ({
+        stage, count, value: `${Math.round((count / Math.max(1, tyfysFeed?.pipeline?.total || 1)) * 100)}%`
+    }));
 
     const conflicts = [
         { time: '14:00', event1: 'Client Sync', event2: 'Internal Review' },
     ];
 
     const missedComms = [
-        { type: 'Call', from: 'Sarah Jenkins', time: '10:45 AM' },
-        { type: 'Email', from: 'Finance Dept', time: '11:20 AM', urgent: true },
+        ...(tyfysFeed?.approvals || []).slice(0, 2).map((a) => ({ type: 'Approval', from: a.projectId, time: a.approvalType || 'approval needed', urgent: true })),
+        ...(tyfysFeed?.blocked || []).slice(0, 1).map((b) => ({ type: 'Blocked', from: b.projectId, time: (b.blockers || []).join(', '), urgent: true }))
     ];
 
     /* ── Command handler ── */
@@ -409,6 +433,22 @@ const Dashboard = () => {
                         <div className="text-right text-lg md:text-xl">{formatDate(time)}</div>
                     </div>
                 </header>
+
+
+                <div
+                    className="border p-4 retro-text transition-all"
+                    style={{ borderColor: theme.accent || theme.primary, background: theme.panelBg }}
+                >
+                    <h2 className="text-xl font-bold mb-2 flex items-center gap-2" style={{ color: theme.accent || theme.primary }}>
+                        <Activity size={20} /> NOW FOCUS
+                    </h2>
+                    <div className="text-sm opacity-90">Project: {tyfysFeed?.now?.projectId || 'n/a'}</div>
+                    <div className="text-sm opacity-90">Action: {tyfysFeed?.now?.nowAction || 'n/a'}</div>
+                    <div className="mt-2 h-3 w-full bg-black border" style={{ borderColor: `${theme.primary}80` }}>
+                        <div className="h-full transition-all duration-700" style={{ width: `${tyfysFeed?.now?.progressPct || 0}%`, background: theme.accent || theme.primary }}></div>
+                    </div>
+                    <div className="text-xs mt-1">{tyfysFeed?.now?.progressLabel || '0% - idle'} {tyfysFeed?.now?.needsApproval ? ' • APPROVAL NEEDED' : ''}</div>
+                </div>
 
                 {/* Grid Layout */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-2">

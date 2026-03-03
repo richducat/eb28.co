@@ -3,6 +3,37 @@ const MAX_HISTORY_ITEMS = 8;
 const MAX_FILE_CONTEXT = 8;
 const MAX_FILE_CONTENT_CHARS = 1800;
 
+const VISUAL_DIRECTION_HINTS = {
+  'editorial-bold': 'Large expressive typography, asymmetrical layout, clear hierarchy.',
+  'bento-tech': 'Modular card grid, crisp spacing, system-like polish.',
+  'neo-brutalist': 'High contrast blocks, bold borders, playful confidence.',
+  'conversion-luxe': 'Premium look with clear high-conversion CTA rhythm.',
+  'playful-futurist': 'Energetic gradients, modern motion cues, approachable interaction.',
+  'minimal-architectural': 'Quiet palette, geometric restraint, strong structure.',
+};
+
+const FUNDAMENTAL_LABELS = {
+  information_architecture: 'Information Architecture',
+  conversion_path: 'Conversion Path',
+  responsive_behavior: 'Responsive Behavior',
+  accessibility: 'Accessibility',
+  performance_budget: 'Performance Budget',
+  states_feedback: 'Error/Empty/Loading States',
+  analytics_events: 'Analytics Events',
+  content_hierarchy: 'Content Hierarchy',
+};
+
+const CAPABILITY_LABELS = {
+  auth: 'Sign In and onboarding',
+  dashboard: 'Operational dashboard cards',
+  payments: 'Checkout and payment flow',
+  notifications: 'Notification center',
+  chat: 'In-app messaging',
+  analytics: 'Usage analytics surfaces',
+  bookings: 'Scheduling and bookings',
+  map: 'Map and location workflows',
+};
+
 function parseRequestBody(body) {
   if (!body) {
     return {};
@@ -75,16 +106,16 @@ function normalizeConfig(config) {
   const input = config && typeof config === 'object' ? config : {};
   const allowedTemplates = new Set(['custom', 'commerce', 'operations', 'community', 'content']);
   const allowedAudiences = new Set(['consumers', 'members', 'field-team', 'internal-team', 'hybrid']);
-  const allowedCapabilities = new Set([
-    'auth',
-    'dashboard',
-    'payments',
-    'notifications',
-    'chat',
-    'analytics',
-    'bookings',
-    'map',
+  const allowedVisualDirections = new Set([
+    'editorial-bold',
+    'bento-tech',
+    'neo-brutalist',
+    'conversion-luxe',
+    'playful-futurist',
+    'minimal-architectural',
   ]);
+  const allowedCapabilities = new Set(Object.keys(CAPABILITY_LABELS));
+  const allowedFundamentals = new Set(Object.keys(FUNDAMENTAL_LABELS));
 
   const capabilities = Array.isArray(input.capabilities)
     ? input.capabilities
@@ -92,6 +123,15 @@ function normalizeConfig(config) {
         .filter((capability) => allowedCapabilities.has(capability))
         .slice(0, 8)
     : [];
+
+  const fundamentals = Array.isArray(input.fundamentals)
+    ? input.fundamentals
+        .map((fundamental) => String(fundamental || '').trim().toLowerCase())
+        .filter((fundamental) => allowedFundamentals.has(fundamental))
+        .slice(0, 8)
+    : [];
+
+  const complexityRaw = Number.parseInt(input.complexity, 10);
 
   return {
     appName: toSafeString(input.appName),
@@ -103,12 +143,20 @@ function normalizeConfig(config) {
       : 'consumers',
     businessGoal: toSafeString(input.businessGoal, 'Ship quickly and validate demand'),
     primaryColor: sanitizeHexColor(input.primaryColor),
+    visualDirection: allowedVisualDirections.has(String(input.visualDirection || '').toLowerCase())
+      ? String(input.visualDirection || '').toLowerCase()
+      : 'editorial-bold',
+    complexity: Number.isFinite(complexityRaw)
+      ? Math.max(1, Math.min(5, complexityRaw))
+      : 3,
     capabilities,
+    fundamentals,
   };
 }
 
-function normalizePayload(payload) {
+function normalizePayload(payload, config) {
   const files = sanitizeFiles(payload?.files);
+
   const screens = Array.isArray(payload?.preview?.screens)
     ? payload.preview.screens.slice(0, 5).map((screen, index) => ({
         name: toSafeString(screen?.name, `Screen ${index + 1}`),
@@ -119,30 +167,64 @@ function normalizePayload(payload) {
       }))
     : [];
 
+  const fundamentals = Array.isArray(payload?.fundamentals)
+    ? payload.fundamentals.slice(0, 12).map((item) => ({
+        id: toSafeString(item?.id),
+        label: toSafeString(item?.label, 'Fundamental'),
+        status: toSafeString(item?.status, 'covered'),
+        note: toSafeString(item?.note, 'Included in generation plan.'),
+      })).filter((item) => item.id)
+    : [];
+
+  const designRecipe = payload?.designRecipe && typeof payload.designRecipe === 'object'
+    ? {
+        visualDirection: toSafeString(payload.designRecipe.visualDirection, config.visualDirection),
+        complexity: Number.isFinite(Number(payload.designRecipe.complexity))
+          ? Math.max(1, Math.min(5, Number(payload.designRecipe.complexity)))
+          : config.complexity,
+        complexityLabel: toSafeString(payload.designRecipe.complexityLabel, 'Balanced complexity'),
+        signature: toSafeString(payload.designRecipe.signature, VISUAL_DIRECTION_HINTS[config.visualDirection]),
+        palette: Array.isArray(payload.designRecipe.palette)
+          ? payload.designRecipe.palette.slice(0, 6).map((value) => toSafeString(value)).filter(Boolean)
+          : [config.primaryColor, '#050816', '#e2e8f0'],
+      }
+    : {
+        visualDirection: config.visualDirection,
+        complexity: config.complexity,
+        complexityLabel: 'Balanced complexity',
+        signature: VISUAL_DIRECTION_HINTS[config.visualDirection],
+        palette: [config.primaryColor, '#050816', '#e2e8f0'],
+      };
+
   return {
     assistantMessage: toSafeString(payload?.assistantMessage, 'Generated project update.'),
     project: {
-      name: toSafeString(payload?.project?.name, 'EB28 Mobile App'),
-      description: toSafeString(payload?.project?.description, 'Expo React Native project generated from brief.'),
-      platform: toSafeString(payload?.project?.platform, 'expo-react-native'),
+      name: toSafeString(payload?.project?.name, 'EB28 Experience'),
+      description: toSafeString(payload?.project?.description, 'React web project generated from brief.'),
+      platform: toSafeString(payload?.project?.platform, 'react-web'),
     },
     preview: {
-      appName: toSafeString(payload?.preview?.appName, payload?.project?.name || 'EB28 Mobile App'),
-      tagline: toSafeString(payload?.preview?.tagline, 'Product scaffold generated by EB28 App Builder'),
-      primaryColor: sanitizeHexColor(payload?.preview?.primaryColor),
+      appName: toSafeString(payload?.preview?.appName, payload?.project?.name || 'EB28 Experience'),
+      tagline: toSafeString(payload?.preview?.tagline, 'High-conversion experience scaffold'),
+      primaryColor: sanitizeHexColor(payload?.preview?.primaryColor || config.primaryColor),
       screens: screens.length > 0
         ? screens
         : [
             {
-              name: 'Home',
-              purpose: 'Primary app experience',
-              elements: ['Headline', 'Quick actions', 'Status cards'],
+              name: 'Hero',
+              purpose: 'Primary value proposition and CTA',
+              elements: ['Headline', 'Trust proof', 'Action trigger'],
             },
           ],
     },
     files,
     changes: Array.isArray(payload?.changes)
       ? payload.changes.slice(0, 12).map((item) => toSafeString(item)).filter(Boolean)
+      : [],
+    fundamentals,
+    designRecipe,
+    nextActions: Array.isArray(payload?.nextActions)
+      ? payload.nextActions.slice(0, 6).map((item) => toSafeString(item)).filter(Boolean)
       : [],
   };
 }
@@ -182,190 +264,166 @@ function inferAppName(prompt) {
 
   const candidate = toTitleCase(words.join(' '));
   if (candidate.length >= 3) {
-    return `${candidate} App`;
+    return `${candidate} Experience`;
   }
 
-  return 'EB28 Mobile App';
+  return 'EB28 Experience';
 }
 
-function capabilityLabel(id) {
-  const map = {
-    auth: 'Sign In and onboarding',
-    dashboard: 'Operational dashboard cards',
-    payments: 'Checkout and payment flow',
-    notifications: 'Notification center',
-    chat: 'In-app messaging',
-    analytics: 'Usage analytics surfaces',
-    bookings: 'Scheduling and bookings',
-    map: 'Map and location workflows',
-  };
-  return map[id] || toTitleCase(id);
-}
+function fallbackFundamentals(config) {
+  const selected = config.fundamentals.length > 0
+    ? config.fundamentals
+    : ['information_architecture', 'conversion_path', 'responsive_behavior', 'accessibility'];
 
-function escapeTemplateString(value) {
-  return String(value || '')
-    .replace(/\\/g, '\\\\')
-    .replace(/`/g, '\\`')
-    .replace(/\$/g, '\\$');
+  return selected.map((id) => ({
+    id,
+    label: FUNDAMENTAL_LABELS[id] || toTitleCase(String(id || '').replace(/_/g, ' ')),
+    status: 'covered',
+    note: `This output explicitly considers ${FUNDAMENTAL_LABELS[id] || id}.`,
+  }));
 }
 
 function buildFallbackProject({ prompt, rawPrompt, currentFiles, config }) {
   const appName = config.appName || inferAppName(rawPrompt || prompt);
-  const capabilities = config.capabilities.length > 0 ? config.capabilities : ['auth', 'dashboard', 'notifications'];
-  const featureLabels = capabilities.map(capabilityLabel).slice(0, 6);
+  const capabilities = config.capabilities.length > 0
+    ? config.capabilities
+    : ['auth', 'dashboard', 'notifications'];
+  const featureLabels = capabilities.map((id) => CAPABILITY_LABELS[id] || toTitleCase(id)).slice(0, 6);
 
-  const description = `EB28 App Builder scaffold for ${config.audience}.`;
-  const featureItems = featureLabels
-    .map((feature, index) => `            <Text style={styles.itemText}>${index + 1}. ${escapeTemplateString(feature)}</Text>`)
+  const featureRows = featureLabels
+    .map((feature, index) => `        <p className="itemText">${index + 1}. ${feature}</p>`)
     .join('\n');
 
   const files = {
-    '.gitignore': 'node_modules\\n.expo\\n.DS_Store\\n',
+    '.gitignore': 'node_modules\\n.DS_Store\\n',
     'package.json': JSON.stringify(
       {
-        name: appName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '').slice(0, 40) || 'eb28-mobile-app',
+        name: appName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '').slice(0, 40) || 'eb28-experience',
         version: '1.0.0',
         private: true,
-        main: 'node_modules/expo/AppEntry.js',
         scripts: {
-          start: 'expo start',
-          android: 'expo start --android',
-          ios: 'expo start --ios',
-          web: 'expo start --web',
+          dev: 'vite',
+          build: 'vite build',
+          preview: 'vite preview',
         },
         dependencies: {
-          expo: '^53.0.0',
-          react: '^19.0.0',
-          'react-native': '^0.79.0',
-          'expo-status-bar': '~2.2.0',
+          react: '^18.3.1',
+          'react-dom': '^18.3.1',
+        },
+        devDependencies: {
+          '@vitejs/plugin-react': '^4.3.3',
+          vite: '^5.4.11',
         },
       },
       null,
       2
     ),
-    'app.json': JSON.stringify(
-      {
-        expo: {
-          name: appName,
-          slug: appName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '').slice(0, 40) || 'eb28-mobile-app',
-          version: '1.0.0',
-          orientation: 'portrait',
-          userInterfaceStyle: 'automatic',
-          ios: {
-            supportsTablet: true,
-          },
-          android: {
-            adaptiveIcon: {
-              backgroundColor: '#ffffff',
-            },
-          },
-          web: {
-            bundler: 'metro',
-          },
-        },
-      },
-      null,
-      2
-    ),
-    'babel.config.js': [
-      'module.exports = function(api) {',
-      '  api.cache(true);',
-      '  return {',
-      "    presets: ['babel-preset-expo'],",
-      '  };',
-      '};',
+    'index.html': [
+      '<!doctype html>',
+      '<html lang="en">',
+      '  <head>',
+      '    <meta charset="UTF-8" />',
+      '    <meta name="viewport" content="width=device-width, initial-scale=1.0" />',
+      `    <title>${appName}</title>`,
+      '  </head>',
+      '  <body>',
+      '    <div id="root"></div>',
+      '    <script type="module" src="/src/main.jsx"></script>',
+      '  </body>',
+      '</html>',
       '',
     ].join('\n'),
-    'App.js': [
+    'src/main.jsx': [
       "import React from 'react';",
-      "import { SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, View } from 'react-native';",
+      "import ReactDOM from 'react-dom/client';",
+      "import App from './App';",
+      "import './styles.css';",
       '',
-      `const accent = '${config.primaryColor}';`,
+      "ReactDOM.createRoot(document.getElementById('root')).render(",
+      '  <React.StrictMode>',
+      '    <App />',
+      '  </React.StrictMode>',
+      ');',
+      '',
+    ].join('\n'),
+    'src/App.jsx': [
+      "import React from 'react';",
       '',
       'export default function App() {',
       '  return (',
-      '    <SafeAreaView style={styles.safe}>',
-      '      <StatusBar barStyle="light-content" />',
-      '      <ScrollView contentContainerStyle={styles.container}>',
-      '        <View style={styles.hero}>',
-      `          <Text style={styles.title}>${escapeTemplateString(appName)}</Text>`,
-      `          <Text style={styles.subtitle}>${escapeTemplateString(config.businessGoal)}</Text>`,
-      '        </View>',
-      '        <View style={styles.card}>',
-      `          <Text style={styles.sectionLabel}>${escapeTemplateString(toTitleCase(config.template))} capability set</Text>`,
-      featureItems,
-      '        </View>',
-      '      </ScrollView>',
-      '    </SafeAreaView>',
+      '    <main className="shell">',
+      '      <section className="hero">',
+      `        <h1>${appName}</h1>`,
+      `        <p>${config.businessGoal}</p>`,
+      '        <button className="cta">Start Now</button>',
+      '      </section>',
+      '      <section className="panel">',
+      `        <h2>${toTitleCase(config.visualDirection.replace(/-/g, ' '))} Direction</h2>`,
+      '        <div className="featureList">',
+      featureRows,
+      '        </div>',
+      '      </section>',
+      '    </main>',
       '  );',
       '}',
       '',
-      'const styles = StyleSheet.create({',
-      '  safe: {',
-      '    flex: 1,',
-      '    backgroundColor: "#030712",',
-      '  },',
-      '  container: {',
-      '    padding: 20,',
-      '    gap: 16,',
-      '  },',
-      '  hero: {',
-      '    borderRadius: 16,',
-      '    padding: 18,',
-      '    backgroundColor: accent,',
-      '  },',
-      '  title: {',
-      '    color: "white",',
-      '    fontSize: 28,',
-      '    fontWeight: "700",',
-      '  },',
-      '  subtitle: {',
-      '    marginTop: 6,',
-      '    color: "#e2e8f0",',
-      '    fontSize: 14,',
-      '    lineHeight: 20,',
-      '  },',
-      '  card: {',
-      '    borderRadius: 16,',
-      '    backgroundColor: "#111827",',
-      '    borderWidth: 1,',
-      '    borderColor: "#1f2937",',
-      '    padding: 16,',
-      '    gap: 10,',
-      '  },',
-      '  sectionLabel: {',
-      '    color: "#f8fafc",',
-      '    fontWeight: "700",',
-      '    fontSize: 16,',
-      '  },',
-      '  itemText: {',
-      '    color: "#cbd5e1",',
-      '    fontSize: 14,',
-      '    lineHeight: 20,',
-      '  },',
-      '});',
+    ].join('\n'),
+    'src/styles.css': [
+      ':root {',
+      `  --accent: ${config.primaryColor};`,
+      '  --bg: #050816;',
+      '  --panel: rgba(15, 23, 42, 0.78);',
+      '}',
+      '* { box-sizing: border-box; }',
+      'body {',
+      '  margin: 0;',
+      '  font-family: "Space Grotesk", "Inter", sans-serif;',
+      '  color: #e2e8f0;',
+      '  min-height: 100vh;',
+      '  background:',
+      '    radial-gradient(circle at 12% 16%, color-mix(in srgb, var(--accent) 28%, transparent), transparent 45%),',
+      '    radial-gradient(circle at 84% 82%, rgba(251, 191, 36, 0.12), transparent 36%),',
+      '    linear-gradient(140deg, #020617, #0f172a);',
+      '}',
+      '.shell { max-width: 1080px; margin: 0 auto; padding: 2rem 1rem; display: grid; gap: 1rem; }',
+      '.hero, .panel {',
+      '  border: 1px solid rgba(148, 163, 184, 0.24);',
+      '  border-radius: 1.2rem;',
+      '  background: var(--panel);',
+      '  backdrop-filter: blur(10px);',
+      '  padding: 1.2rem;',
+      '}',
+      '.hero h1 { margin: 0; font-size: clamp(2rem, 6vw, 3.4rem); }',
+      '.hero p { color: #cbd5e1; max-width: 55ch; }',
+      '.cta {',
+      '  border: 0;',
+      '  background: var(--accent);',
+      '  color: #001018;',
+      '  font-weight: 700;',
+      '  border-radius: 999px;',
+      '  padding: 0.6rem 1rem;',
+      '}',
+      '.featureList { display: grid; gap: 0.6rem; }',
+      '.itemText { margin: 0; color: #dbeafe; }',
+      '@media (max-width: 720px) { .shell { padding: 1rem; } }',
       '',
     ].join('\n'),
     'README.md': [
       `# ${appName}`,
       '',
-      description,
+      'Generated by EB28 App Builder in fallback mode.',
       '',
       '## Run locally',
       '',
       '```bash',
       'npm install',
-      'npm run start',
+      'npm run dev',
       '```',
-      '',
-      'Scan the Expo Go QR code to preview on device.',
-      '',
-      '## Build brief',
       '',
       `Template: ${toTitleCase(config.template)}`,
       `Audience: ${toTitleCase(config.audience.replace('-', ' '))}`,
-      `Goal: ${config.businessGoal}`,
-      `Color: ${config.primaryColor}`,
+      `Visual direction: ${toTitleCase(config.visualDirection.replace(/-/g, ' '))}`,
+      `Complexity: ${config.complexity}/5`,
       '',
       rawPrompt || prompt,
       '',
@@ -380,37 +438,50 @@ function buildFallbackProject({ prompt, rawPrompt, currentFiles, config }) {
       : `Created the first EB28 App Builder scaffold for ${appName}.`,
     project: {
       name: appName,
-      description,
-      platform: 'expo-react-native',
+      description: `EB28 App Builder scaffold for ${config.audience}.`,
+      platform: 'react-web',
     },
     preview: {
       appName,
-      tagline: featureLabels[0] || 'Product scaffold generated by EB28',
+      tagline: featureLabels[0] || 'High-conversion experience scaffold',
       primaryColor: config.primaryColor,
       screens: [
         {
-          name: 'Home',
-          purpose: 'Primary value delivery surface',
-          elements: featureLabels.slice(0, 3),
+          name: 'Hero',
+          purpose: 'Primary value proposition and CTA',
+          elements: ['Headline', 'Trust proof', 'Action trigger'],
         },
         {
-          name: 'Operations',
-          purpose: 'Execution and management workflow',
-          elements: featureLabels.slice(1, 4),
+          name: 'Journey',
+          purpose: 'Core workflow walkthrough',
+          elements: featureLabels.slice(0, 3),
         },
       ],
     },
     files,
     changes: [
       hasExistingFiles
-        ? 'Applied your latest brief as a new scaffold version.'
-        : 'Generated full Expo scaffold from your build brief.',
-      'Configured runtime scripts and app metadata.',
-      'Aligned screens and features with selected template and audience.',
-      'Prepared handoff README with run instructions.',
+        ? 'Applied the latest brief as a higher-fidelity iteration.'
+        : 'Generated complete React web scaffold from concise brief.',
+      'Expanded prompt into structured design intent automatically.',
+      'Applied selected visual direction and complexity constraints.',
+      'Included explicit fundamentals coverage report.',
+    ],
+    fundamentals: fallbackFundamentals(config),
+    designRecipe: {
+      visualDirection: config.visualDirection,
+      complexity: config.complexity,
+      complexityLabel: `Level ${config.complexity} complexity`,
+      signature: VISUAL_DIRECTION_HINTS[config.visualDirection],
+      palette: [config.primaryColor, '#050816', '#e2e8f0'],
+    },
+    nextActions: [
+      'Generate a second variant with a different visual direction.',
+      'Request stronger conversion objection-handling sections.',
+      'Add analytics event map and naming conventions.',
     ],
     source: 'fallback-template',
-    model: 'template-v2',
+    model: 'template-v3',
   };
 }
 
@@ -485,8 +556,53 @@ async function generateWithOpenAI({ prompt, rawPrompt, history, currentFiles, co
           maxItems: 12,
           items: { type: 'string' },
         },
+        fundamentals: {
+          type: 'array',
+          maxItems: 12,
+          items: {
+            type: 'object',
+            additionalProperties: false,
+            properties: {
+              id: { type: 'string' },
+              label: { type: 'string' },
+              status: { type: 'string' },
+              note: { type: 'string' },
+            },
+            required: ['id', 'label', 'status', 'note'],
+          },
+        },
+        designRecipe: {
+          type: 'object',
+          additionalProperties: false,
+          properties: {
+            visualDirection: { type: 'string' },
+            complexity: { type: 'number' },
+            complexityLabel: { type: 'string' },
+            signature: { type: 'string' },
+            palette: {
+              type: 'array',
+              maxItems: 6,
+              items: { type: 'string' },
+            },
+          },
+          required: ['visualDirection', 'complexity', 'complexityLabel', 'signature', 'palette'],
+        },
+        nextActions: {
+          type: 'array',
+          maxItems: 6,
+          items: { type: 'string' },
+        },
       },
-      required: ['assistantMessage', 'project', 'preview', 'files', 'changes'],
+      required: [
+        'assistantMessage',
+        'project',
+        'preview',
+        'files',
+        'changes',
+        'fundamentals',
+        'designRecipe',
+        'nextActions',
+      ],
     },
   };
 
@@ -498,7 +614,7 @@ async function generateWithOpenAI({ prompt, rawPrompt, history, currentFiles, co
     },
     body: JSON.stringify({
       model: DEFAULT_MODEL,
-      temperature: 0.2,
+      temperature: 0.25,
       response_format: {
         type: 'json_schema',
         json_schema: schema,
@@ -507,11 +623,12 @@ async function generateWithOpenAI({ prompt, rawPrompt, history, currentFiles, co
         {
           role: 'system',
           content: [
-            'You are EB28 App Builder, generating Expo React Native project scaffolds.',
-            'Return a compact but runnable project structure with coherent files.',
-            'Always include package.json, app.json, App.js, README.md, and any additional supporting files.',
-            'When current files are provided, produce a full updated file set instead of only a diff.',
-            'Respect user configuration for app name, color, audience, template, and capabilities.',
+            'You are EB28 App Builder, generating React web project scaffolds from concise prompts.',
+            'Your output must feel distinctive and intentional, not boilerplate.',
+            'Always produce runnable files including package.json, index.html, src/main.jsx, src/App.jsx, src/styles.css, README.md.',
+            'Use the provided visual direction and complexity level to shape typography, layout, spacing, and motion notes.',
+            'Return a fundamentals report that confirms coverage for each required fundamental.',
+            'When current files are provided, return a full updated file set, not a diff.',
             'Output valid JSON only via the enforced schema.',
           ].join(' '),
         },
@@ -523,6 +640,8 @@ async function generateWithOpenAI({ prompt, rawPrompt, history, currentFiles, co
             `Raw direction: ${rawPrompt || prompt}`,
             '',
             `Config: ${JSON.stringify(config)}`,
+            '',
+            `Visual direction hint: ${VISUAL_DIRECTION_HINTS[config.visualDirection]}`,
             '',
             'Recent history:',
             historyLines || '(no history)',
@@ -543,7 +662,7 @@ async function generateWithOpenAI({ prompt, rawPrompt, history, currentFiles, co
 
   const rawContent = payload?.choices?.[0]?.message?.content;
   const parsed = JSON.parse(rawContent || '{}');
-  const normalized = normalizePayload(parsed);
+  const normalized = normalizePayload(parsed, config);
 
   return {
     ...normalized,
@@ -582,12 +701,14 @@ export default async function handler(req, res) {
       return res.status(200).json(openAIResult);
     }
 
-    return res.status(200).json(buildFallbackProject({
-      prompt,
-      rawPrompt,
-      currentFiles,
-      config,
-    }));
+    return res.status(200).json(
+      buildFallbackProject({
+        prompt,
+        rawPrompt,
+        currentFiles,
+        config,
+      })
+    );
   } catch (error) {
     const fallback = buildFallbackProject({
       prompt,

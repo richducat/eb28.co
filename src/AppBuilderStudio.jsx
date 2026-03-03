@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import JSZip from 'jszip';
 import {
   Bot,
-  Brush,
+  CheckCircle2,
   Clipboard,
   Download,
   FileCode2,
@@ -16,36 +16,40 @@ import {
   WandSparkles,
 } from 'lucide-react';
 
-const STORAGE_KEY = 'eb28-appbuilder-studio-v1';
+const STORAGE_KEY = 'eb28-appbuilder-studio-v2';
 
 const QUICK_STARTS = [
   {
-    title: 'Service Business CRM',
-    prompt:
-      'Build a field-service mobile CRM with lead intake, appointment scheduling, route map, and job completion checklist.',
-    template: 'operations',
-    audience: 'field-team',
-  },
-  {
-    title: 'Subscription Commerce',
-    prompt:
-      'Create a subscription ecommerce app with product feed, checkout, account portal, and retention-focused push notifications.',
-    template: 'commerce',
-    audience: 'consumers',
-  },
-  {
-    title: 'Coaching Platform',
-    prompt:
-      'Build a coaching app with onboarding quiz, daily task feed, progress dashboard, and in-app messaging.',
+    title: 'Premium Coaching Hub',
+    prompt: 'Build a premium coaching website with onboarding quiz, progress dashboard, and member chat.',
     template: 'community',
     audience: 'members',
+    visualDirection: 'editorial-bold',
+    complexity: 3,
   },
   {
-    title: 'Internal Ops Hub',
-    prompt:
-      'Create an internal operations app for staff with ticket queue, KPI board, shift logs, and escalation workflow.',
+    title: 'High-Ticket Service Funnel',
+    prompt: 'Create a service business site with instant quote flow, trust proof, and booking checkout.',
+    template: 'commerce',
+    audience: 'consumers',
+    visualDirection: 'conversion-luxe',
+    complexity: 4,
+  },
+  {
+    title: 'Operations Command UI',
+    prompt: 'Design an internal operations app with ticket queue, KPI cards, and escalation workflows.',
     template: 'operations',
     audience: 'internal-team',
+    visualDirection: 'bento-tech',
+    complexity: 4,
+  },
+  {
+    title: 'Creator Product Site',
+    prompt: 'Build a media-rich creator website with episodes, lead magnet funnel, and paid membership upsell.',
+    template: 'content',
+    audience: 'hybrid',
+    visualDirection: 'neo-brutalist',
+    complexity: 3,
   },
 ];
 
@@ -65,6 +69,23 @@ const AUDIENCE_OPTIONS = [
   { value: 'hybrid', label: 'Hybrid' },
 ];
 
+const VISUAL_DIRECTION_OPTIONS = [
+  { value: 'editorial-bold', label: 'Editorial Bold' },
+  { value: 'bento-tech', label: 'Bento Tech' },
+  { value: 'neo-brutalist', label: 'Neo Brutalist' },
+  { value: 'conversion-luxe', label: 'Conversion Luxe' },
+  { value: 'playful-futurist', label: 'Playful Futurist' },
+  { value: 'minimal-architectural', label: 'Minimal Architectural' },
+];
+
+const COMPLEXITY_LABELS = {
+  1: 'Simple landing flow',
+  2: 'Structured single experience',
+  3: 'Multi-section product',
+  4: 'Advanced interactive system',
+  5: 'Complex design language + flows',
+};
+
 const CAPABILITY_OPTIONS = [
   { id: 'auth', label: 'Sign In' },
   { id: 'dashboard', label: 'Dashboard' },
@@ -76,11 +97,22 @@ const CAPABILITY_OPTIONS = [
   { id: 'map', label: 'Map/Location' },
 ];
 
+const FUNDAMENTAL_OPTIONS = [
+  { id: 'information_architecture', label: 'Information Architecture' },
+  { id: 'conversion_path', label: 'Conversion Path' },
+  { id: 'responsive_behavior', label: 'Responsive Behavior' },
+  { id: 'accessibility', label: 'Accessibility' },
+  { id: 'performance_budget', label: 'Performance Budget' },
+  { id: 'states_feedback', label: 'Error/Empty/Loading States' },
+  { id: 'analytics_events', label: 'Analytics Events' },
+  { id: 'content_hierarchy', label: 'Content Hierarchy' },
+];
+
 const INTRO_MESSAGE = {
   id: 'intro',
   role: 'assistant',
   content:
-    'Welcome to EB28 App Builder. Share your concept and I will generate a mobile app scaffold you can iterate, restore, and export instantly.',
+    'Welcome to EB28 App Builder. Drop a short prompt and I will expand it into a stronger design brief, then generate a unique scaffold with fundamentals covered.',
   createdAt: Date.now(),
 };
 
@@ -90,23 +122,33 @@ const DEFAULT_SETTINGS = {
   template: 'custom',
   audience: 'consumers',
   businessGoal: 'Ship quickly and validate demand',
+  visualDirection: 'editorial-bold',
+  complexity: 3,
   capabilities: ['auth', 'dashboard', 'notifications'],
+  fundamentals: [
+    'information_architecture',
+    'conversion_path',
+    'responsive_behavior',
+    'accessibility',
+    'performance_budget',
+    'states_feedback',
+  ],
 };
 
 const DEFAULT_PREVIEW = {
-  appName: 'Your App',
-  tagline: 'Mobile product scaffold by EB28',
+  appName: 'Your Product',
+  tagline: 'Experience scaffold by EB28',
   primaryColor: '#0891B2',
   screens: [
     {
-      name: 'Home',
-      purpose: 'Primary user dashboard',
-      elements: ['Headline', 'Quick actions', 'Core metrics'],
+      name: 'Hero',
+      purpose: 'Core value proposition and action',
+      elements: ['Dominant headline', 'Primary CTA', 'Trust proof'],
     },
     {
-      name: 'Activity',
-      purpose: 'Track progress and status',
-      elements: ['Timeline feed', 'Filters', 'Action buttons'],
+      name: 'Workflow',
+      purpose: 'Main user journey',
+      elements: ['Progressive steps', 'Supporting media', 'Secondary CTA'],
     },
   ],
 };
@@ -131,11 +173,11 @@ function sanitizeHexColor(value) {
 }
 
 function slugify(value) {
-  return String(value || 'eb28-mobile-app')
+  return String(value || 'eb28-site')
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/(^-|-$)/g, '')
-    .slice(0, 60) || 'eb28-mobile-app';
+    .slice(0, 60) || 'eb28-site';
 }
 
 function titleCase(value) {
@@ -155,7 +197,7 @@ function guessAppName(prompt) {
     .slice(0, 3);
 
   const candidate = titleCase(words.join(' '));
-  return candidate ? `${candidate} App` : 'EB28 Mobile App';
+  return candidate ? `${candidate} Experience` : 'EB28 Experience';
 }
 
 function asFileList(files) {
@@ -185,22 +227,26 @@ function sanitizeFiles(files) {
   return output;
 }
 
-function buildCompositePrompt({ userPrompt, settings }) {
-  const capabilityLabels = settings.capabilities
-    .map((capabilityId) => CAPABILITY_OPTIONS.find((item) => item.id === capabilityId)?.label || capabilityId)
-    .join(', ');
+function describeVisualDirection(direction) {
+  const map = {
+    'editorial-bold': 'Large expressive typography, asymmetrical composition, strong editorial rhythm.',
+    'bento-tech': 'Modular bento grid, high legibility cards, product-system clarity.',
+    'neo-brutalist': 'High contrast blocks, playful borders, deliberate visual tension.',
+    'conversion-luxe': 'Premium spacing, polished contrast, high-conversion CTA hierarchy.',
+    'playful-futurist': 'Energetic gradients, kinetic accents, modern motion cues.',
+    'minimal-architectural': 'Precise spacing, restrained palette, architectural calm.',
+  };
+  return map[direction] || map['editorial-bold'];
+}
 
-  return [
-    `Build an Expo React Native app for EB28 named "${settings.appName || guessAppName(userPrompt)}".`,
-    `Template: ${settings.template}.`,
-    `Audience: ${settings.audience}.`,
-    `Primary brand color: ${sanitizeHexColor(settings.primaryColor)}.`,
-    `Business goal: ${settings.businessGoal || 'Ship quickly and validate demand'}.`,
-    `Priority capabilities: ${capabilityLabels || 'Sign In, Dashboard, Notifications'}.`,
-    '',
-    'Requested direction:',
-    userPrompt,
-  ].join('\n');
+function capabilityLabel(id) {
+  const option = CAPABILITY_OPTIONS.find((item) => item.id === id);
+  return option ? option.label : titleCase(id);
+}
+
+function fundamentalLabel(id) {
+  const option = FUNDAMENTAL_OPTIONS.find((item) => item.id === id);
+  return option ? option.label : titleCase(String(id || '').replace(/_/g, ' '));
 }
 
 function inferCapabilitiesFromPrompt(prompt) {
@@ -220,11 +266,57 @@ function inferCapabilitiesFromPrompt(prompt) {
     { key: 'dashboard', value: 'dashboard' },
   ];
 
-  const inferred = map
-    .filter((item) => text.includes(item.key))
-    .map((item) => item.value);
+  return [...new Set(map.filter((item) => text.includes(item.key)).map((item) => item.value))].slice(0, 6);
+}
 
-  return [...new Set(inferred)].slice(0, 5);
+function buildFundamentalsReport(selectedFundamentals) {
+  const list = selectedFundamentals.length > 0
+    ? selectedFundamentals
+    : DEFAULT_SETTINGS.fundamentals;
+
+  return list.map((id) => ({
+    id,
+    label: fundamentalLabel(id),
+    status: 'covered',
+    note: `Generation plan explicitly includes ${fundamentalLabel(id).toLowerCase()}.`,
+  }));
+}
+
+function buildPromptExpansion({ userPrompt, settings }) {
+  const cleanedPrompt = String(userPrompt || '').trim();
+  const capabilities = settings.capabilities.length > 0
+    ? settings.capabilities
+    : inferCapabilitiesFromPrompt(cleanedPrompt);
+  const capabilityList = (capabilities.length > 0 ? capabilities : DEFAULT_SETTINGS.capabilities)
+    .map(capabilityLabel)
+    .join(', ');
+
+  const fundamentals = (settings.fundamentals.length > 0 ? settings.fundamentals : DEFAULT_SETTINGS.fundamentals)
+    .map(fundamentalLabel)
+    .join(', ');
+
+  const concisePrompt = cleanedPrompt.split(/\s+/).filter(Boolean).length <= 14;
+
+  const lines = [
+    `Project: ${settings.appName || guessAppName(cleanedPrompt)}`,
+    `Template: ${settings.template}`,
+    `Audience: ${settings.audience}`,
+    `Business goal: ${settings.businessGoal}`,
+    `Visual direction: ${settings.visualDirection} (${describeVisualDirection(settings.visualDirection)})`,
+    `Complexity target: ${settings.complexity}/5 (${COMPLEXITY_LABELS[settings.complexity] || COMPLEXITY_LABELS[3]})`,
+    `Primary brand color: ${sanitizeHexColor(settings.primaryColor)}`,
+    `Core capabilities: ${capabilityList}`,
+    `Required fundamentals: ${fundamentals}`,
+    '',
+    'User direction:',
+    cleanedPrompt || 'No prompt provided.',
+  ];
+
+  if (concisePrompt) {
+    lines.push('', 'Interpretation rule: prompt is intentionally concise, infer missing UX details while preserving clarity and conversion intent.');
+  }
+
+  return lines.join('\n');
 }
 
 function buildLocalFallback({ prompt, settings, currentFiles }) {
@@ -233,168 +325,154 @@ function buildLocalFallback({ prompt, settings, currentFiles }) {
   const inferredCapabilities = settings.capabilities.length > 0
     ? settings.capabilities
     : inferCapabilitiesFromPrompt(prompt);
-  const capabilityLabels = inferredCapabilities.map((id) => {
-    const match = CAPABILITY_OPTIONS.find((item) => item.id === id);
-    return match ? match.label : titleCase(id);
-  });
+  const capabilityLabels = (inferredCapabilities.length > 0 ? inferredCapabilities : DEFAULT_SETTINGS.capabilities)
+    .map(capabilityLabel);
 
   const hasExistingFiles = Object.keys(sanitizeFiles(currentFiles)).length > 0;
-  const firstMessage =
-    capabilityLabels[0] ||
-    `${titleCase(settings.template)} workflow`; 
+  const fundamentals = buildFundamentalsReport(settings.fundamentals);
 
-  const capabilityRows = capabilityLabels
+  const featureRows = capabilityLabels
     .slice(0, 6)
-    .map((label, index) => `          <Text style={styles.itemText}>${index + 1}. ${label}</Text>`)
+    .map((label, index) => `          <p className=\"itemText\">${index + 1}. ${label}</p>`)
     .join('\n');
 
   const files = {
-    '.gitignore': 'node_modules\n.expo\n.DS_Store\n',
+    '.gitignore': 'node_modules\\n.DS_Store\\n',
     'package.json': JSON.stringify(
       {
         name: slugify(inferredAppName),
         version: '1.0.0',
         private: true,
-        main: 'node_modules/expo/AppEntry.js',
         scripts: {
-          start: 'expo start',
-          android: 'expo start --android',
-          ios: 'expo start --ios',
-          web: 'expo start --web',
+          dev: 'vite',
+          build: 'vite build',
+          preview: 'vite preview',
         },
         dependencies: {
-          expo: '^53.0.0',
-          react: '^19.0.0',
-          'react-native': '^0.79.0',
-          'expo-status-bar': '~2.2.0',
+          react: '^18.3.1',
+          'react-dom': '^18.3.1',
+        },
+        devDependencies: {
+          vite: '^5.4.11',
+          '@vitejs/plugin-react': '^4.3.3',
         },
       },
       null,
       2
     ),
-    'app.json': JSON.stringify(
-      {
-        expo: {
-          name: inferredAppName,
-          slug: slugify(inferredAppName),
-          version: '1.0.0',
-          orientation: 'portrait',
-          userInterfaceStyle: 'automatic',
-          ios: {
-            supportsTablet: true,
-          },
-          android: {
-            adaptiveIcon: {
-              backgroundColor: '#ffffff',
-            },
-          },
-          web: {
-            bundler: 'metro',
-          },
-        },
-      },
-      null,
-      2
-    ),
-    'babel.config.js': [
-      'module.exports = function(api) {',
-      '  api.cache(true);',
-      '  return {',
-      "    presets: ['babel-preset-expo'],",
-      '  };',
-      '};',
+    'index.html': [
+      '<!doctype html>',
+      '<html lang="en">',
+      '  <head>',
+      '    <meta charset="UTF-8" />',
+      '    <meta name="viewport" content="width=device-width, initial-scale=1.0" />',
+      `    <title>${inferredAppName}</title>`,
+      '  </head>',
+      '  <body>',
+      '    <div id="root"></div>',
+      '    <script type="module" src="/src/main.jsx"></script>',
+      '  </body>',
+      '</html>',
       '',
     ].join('\n'),
-    'App.js': [
+    'src/main.jsx': [
       "import React from 'react';",
-      "import { SafeAreaView, ScrollView, StatusBar, StyleSheet, Text, View } from 'react-native';",
+      "import ReactDOM from 'react-dom/client';",
+      "import App from './App';",
+      "import './styles.css';",
       '',
-      `const accent = '${accent}';`,
+      "ReactDOM.createRoot(document.getElementById('root')).render(",
+      '  <React.StrictMode>',
+      '    <App />',
+      '  </React.StrictMode>',
+      ');',
+      '',
+    ].join('\n'),
+    'src/App.jsx': [
+      "import React from 'react';",
       '',
       'export default function App() {',
       '  return (',
-      '    <SafeAreaView style={styles.safe}>',
-      '      <StatusBar barStyle="light-content" />',
-      '      <ScrollView contentContainerStyle={styles.container}>',
-      '        <View style={styles.hero}>',
-      `          <Text style={styles.title}>${inferredAppName}</Text>`,
-      `          <Text style={styles.subtitle}>${settings.businessGoal || 'Ship quickly and validate demand'}</Text>`,
-      '        </View>',
-      '        <View style={styles.card}>',
-      `          <Text style={styles.sectionLabel}>${titleCase(settings.template)} Capability Set</Text>`,
-      capabilityRows,
-      '        </View>',
-      '      </ScrollView>',
-      '    </SafeAreaView>',
+      '    <main className="shell">',
+      '      <section className="hero">',
+      `        <h1>${inferredAppName}</h1>`,
+      `        <p>${settings.businessGoal || 'Ship quickly and validate demand'}.</p>`,
+      '        <button className="cta">Launch Experience</button>',
+      '      </section>',
+      '      <section className="panel">',
+      `        <h2>${titleCase(settings.visualDirection)} System</h2>`,
+      '        <div className="featureList">',
+      featureRows,
+      '        </div>',
+      '      </section>',
+      '    </main>',
       '  );',
       '}',
       '',
-      'const styles = StyleSheet.create({',
-      '  safe: {',
-      '    flex: 1,',
-      '    backgroundColor: "#030712",',
-      '  },',
-      '  container: {',
-      '    padding: 20,',
-      '    gap: 16,',
-      '  },',
-      '  hero: {',
-      '    borderRadius: 16,',
-      '    padding: 18,',
-      '    backgroundColor: accent,',
-      '  },',
-      '  title: {',
-      '    color: "white",',
-      '    fontSize: 28,',
-      '    fontWeight: "700",',
-      '  },',
-      '  subtitle: {',
-      '    marginTop: 6,',
-      '    color: "#e2e8f0",',
-      '    fontSize: 14,',
-      '    lineHeight: 20,',
-      '  },',
-      '  card: {',
-      '    borderRadius: 16,',
-      '    backgroundColor: "#111827",',
-      '    borderWidth: 1,',
-      '    borderColor: "#1f2937",',
-      '    padding: 16,',
-      '    gap: 10,',
-      '  },',
-      '  sectionLabel: {',
-      '    color: "#f8fafc",',
-      '    fontWeight: "700",',
-      '    fontSize: 16,',
-      '  },',
-      '  itemText: {',
-      '    color: "#cbd5e1",',
-      '    fontSize: 14,',
-      '    lineHeight: 20,',
-      '  },',
-      '});',
+    ].join('\n'),
+    'src/styles.css': [
+      ':root {',
+      `  --accent: ${accent};`,
+      '  --bg: #050816;',
+      '  --panel: rgba(15, 23, 42, 0.78);',
+      '}',
+      '',
+      '* { box-sizing: border-box; }',
+      'body {',
+      '  margin: 0;',
+      '  font-family: "Space Grotesk", "Inter", sans-serif;',
+      '  color: #e2e8f0;',
+      '  background:',
+      '    radial-gradient(circle at 10% 15%, color-mix(in srgb, var(--accent) 28%, transparent), transparent 40%),',
+      '    radial-gradient(circle at 80% 85%, rgba(251, 191, 36, 0.12), transparent 35%),',
+      '    linear-gradient(135deg, var(--bg), #0b1025);',
+      '  min-height: 100vh;',
+      '}',
+      '.shell {',
+      '  max-width: 1080px;',
+      '  margin: 0 auto;',
+      '  padding: 3rem 1rem;',
+      '  display: grid;',
+      '  gap: 1rem;',
+      '}',
+      '.hero, .panel {',
+      '  border: 1px solid rgba(148, 163, 184, 0.2);',
+      '  border-radius: 1.25rem;',
+      '  background: var(--panel);',
+      '  backdrop-filter: blur(10px);',
+      '  padding: 1.25rem;',
+      '}',
+      '.hero h1 { margin: 0; font-size: clamp(2rem, 6vw, 3.4rem); }',
+      '.hero p { color: #cbd5e1; max-width: 55ch; }',
+      '.cta {',
+      '  background: var(--accent);',
+      '  border: 0;',
+      '  color: #001018;',
+      '  font-weight: 700;',
+      '  border-radius: 999px;',
+      '  padding: 0.65rem 1rem;',
+      '}',
+      '.featureList { display: grid; gap: 0.6rem; }',
+      '.itemText { color: #dbeafe; margin: 0; }',
+      '@media (max-width: 720px) { .shell { padding: 1rem; } }',
       '',
     ].join('\n'),
     'README.md': [
       `# ${inferredAppName}`,
       '',
-      `Generated by EB28 App Builder for ${settings.audience}.`,
+      'Generated by EB28 App Builder in local template mode.',
       '',
       '## Run locally',
       '',
       '```bash',
       'npm install',
-      'npm run start',
+      'npm run dev',
       '```',
-      '',
-      'Scan the Expo Go QR code to preview on device.',
-      '',
-      '## Build brief',
       '',
       `Template: ${titleCase(settings.template)}`,
       `Audience: ${titleCase(settings.audience.replace('-', ' '))}`,
-      `Goal: ${settings.businessGoal}`,
-      `Primary color: ${accent}`,
+      `Visual direction: ${titleCase(settings.visualDirection.replace(/-/g, ' '))}`,
+      `Complexity: ${settings.complexity}/5`,
       '',
       'Prompt:',
       prompt,
@@ -402,48 +480,63 @@ function buildLocalFallback({ prompt, settings, currentFiles }) {
     ].join('\n'),
   };
 
+  const designRecipe = {
+    visualDirection: settings.visualDirection,
+    complexity: settings.complexity,
+    complexityLabel: COMPLEXITY_LABELS[settings.complexity] || COMPLEXITY_LABELS[3],
+    signature: describeVisualDirection(settings.visualDirection),
+    palette: [accent, '#050816', '#e2e8f0'],
+  };
+
   return {
     assistantMessage: hasExistingFiles
-      ? `Iteration generated for ${inferredAppName}. I refreshed the scaffold around your latest brief.`
-      : `First build generated for ${inferredAppName}. Your scaffold is ready to run in Expo.`,
+      ? `Applied a new design pass for ${inferredAppName} with stronger vibe + fundamentals alignment.`
+      : `Generated first pass for ${inferredAppName} with unique design direction and fundamentals baked in.`,
     project: {
       name: inferredAppName,
-      description: `EB28 App Builder project for ${settings.audience}.`,
-      platform: 'expo-react-native',
+      description: `EB28 App Builder output for ${settings.audience}.`,
+      platform: 'react-web',
     },
     preview: {
       appName: inferredAppName,
-      tagline: firstMessage,
+      tagline: capabilityLabels[0] || 'High-conversion interactive product shell',
       primaryColor: accent,
       screens: [
         {
-          name: 'Home',
-          purpose: 'Primary value delivery screen',
+          name: 'Landing',
+          purpose: 'Immediate value proposition and CTA',
+          elements: ['Primary headline', 'Proof strip', 'CTA'],
+        },
+        {
+          name: 'Workflow',
+          purpose: 'Core use-case walkthrough',
           elements: capabilityLabels.slice(0, 3),
         },
         {
-          name: 'Operations',
-          purpose: 'Execution and workflow screen',
-          elements: capabilityLabels.slice(1, 4),
-        },
-        {
-          name: 'Account',
-          purpose: 'Profile and settings screen',
-          elements: ['Profile', 'Preferences', 'Support access'],
+          name: 'Conversion',
+          purpose: 'Decision and checkout / booking path',
+          elements: ['Offer framing', 'Urgency or trust', 'Action trigger'],
         },
       ],
     },
     files,
     changes: [
       hasExistingFiles
-        ? 'Applied your latest build brief as a new version of the scaffold.'
-        : 'Generated a complete Expo starter scaffold from your build brief.',
-      'Prepared app configuration files and build scripts.',
-      'Updated App.js with audience and capability-aligned structure.',
-      'Added handoff-ready README and runtime instructions.',
+        ? 'Ran a higher-fidelity design iteration based on the latest prompt.'
+        : 'Generated a complete React web scaffold from a concise prompt.',
+      'Expanded short prompt into structured design brief automatically.',
+      'Embedded visual direction tokens and conversion-focused hierarchy.',
+      'Included explicit fundamentals coverage report.',
+    ],
+    fundamentals,
+    designRecipe,
+    nextActions: [
+      'Ask for a second variant with a different visual direction for A/B comparison.',
+      'Request stricter conversion flow with stronger objection-handling sections.',
+      'Add event schema details for analytics implementation.',
     ],
     source: 'browser-template',
-    model: 'browser-template-v2',
+    model: 'browser-template-v3',
   };
 }
 
@@ -472,11 +565,18 @@ const AppBuilderStudio = () => {
         setSettings({
           ...DEFAULT_SETTINGS,
           ...parsed.settings,
+          complexity: Number.isFinite(parsed.settings.complexity)
+            ? Math.max(1, Math.min(5, Number(parsed.settings.complexity)))
+            : DEFAULT_SETTINGS.complexity,
           capabilities: Array.isArray(parsed.settings.capabilities)
             ? parsed.settings.capabilities.slice(0, 8)
             : DEFAULT_SETTINGS.capabilities,
+          fundamentals: Array.isArray(parsed.settings.fundamentals)
+            ? parsed.settings.fundamentals.slice(0, 8)
+            : DEFAULT_SETTINGS.fundamentals,
         });
       }
+
       if (typeof parsed?.prompt === 'string') {
         setPrompt(parsed.prompt);
       }
@@ -493,7 +593,7 @@ const AppBuilderStudio = () => {
         setActiveFile(parsed.activeFile);
       }
     } catch {
-      // ignore invalid local cache
+      // ignore invalid cache
     }
   }, []);
 
@@ -525,8 +625,10 @@ const AppBuilderStudio = () => {
     appName: settings.appName || DEFAULT_PREVIEW.appName,
     primaryColor: sanitizeHexColor(settings.primaryColor),
   };
+
   const activeFiles = activeVersion?.files || {};
   const allFilePaths = useMemo(() => asFileList(activeFiles), [activeFiles]);
+
   const filteredFilePaths = useMemo(() => {
     const query = fileQuery.trim().toLowerCase();
     if (!query) {
@@ -541,12 +643,19 @@ const AppBuilderStudio = () => {
       : filteredFilePaths[0] || allFilePaths[0] || '';
   const currentFileContent = currentFilePath ? activeFiles[currentFilePath] : '';
 
+  const expandedPrompt = useMemo(
+    () => buildPromptExpansion({ userPrompt: prompt, settings }),
+    [prompt, settings]
+  );
+
   const selectedCapabilityLabels = settings.capabilities
-    .map((id) => CAPABILITY_OPTIONS.find((option) => option.id === id)?.label || id)
+    .map(capabilityLabel)
     .slice(0, 6);
 
-  const versionCount = versions.length;
-  const fileCount = Object.keys(activeFiles).length;
+  const fundamentalsReport = Array.isArray(activeVersion?.fundamentals)
+    ? activeVersion.fundamentals
+    : buildFundamentalsReport(settings.fundamentals);
+  const coveredFundamentals = fundamentalsReport.filter((item) => item.status === 'covered').length;
 
   const updateSettings = (patch) => {
     setSettings((previous) => ({ ...previous, ...patch }));
@@ -569,12 +678,28 @@ const AppBuilderStudio = () => {
     });
   };
 
+  const toggleFundamental = (fundamentalId) => {
+    setSettings((previous) => {
+      const alreadyIncluded = previous.fundamentals.includes(fundamentalId);
+      if (alreadyIncluded) {
+        return {
+          ...previous,
+          fundamentals: previous.fundamentals.filter((id) => id !== fundamentalId),
+        };
+      }
+
+      return {
+        ...previous,
+        fundamentals: [...previous.fundamentals, fundamentalId].slice(-8),
+      };
+    });
+  };
+
   const applyPayload = (payload, visiblePrompt) => {
     const now = Date.now();
     const files = payload?.files && typeof payload.files === 'object' ? payload.files : {};
 
-    const projectName = String(payload?.project?.name || settings.appName || `Build ${versions.length + 1}`)
-      .trim();
+    const projectName = String(payload?.project?.name || settings.appName || `Build ${versions.length + 1}`).trim();
 
     const version = {
       id: `version-${now}`,
@@ -585,6 +710,9 @@ const AppBuilderStudio = () => {
       preview: payload?.preview || DEFAULT_PREVIEW,
       files,
       changes: Array.isArray(payload?.changes) ? payload.changes.slice(0, 12) : [],
+      fundamentals: Array.isArray(payload?.fundamentals) ? payload.fundamentals.slice(0, 12) : [],
+      designRecipe: payload?.designRecipe && typeof payload.designRecipe === 'object' ? payload.designRecipe : null,
+      nextActions: Array.isArray(payload?.nextActions) ? payload.nextActions.slice(0, 6) : [],
       source: payload?.source || 'unknown',
       model: payload?.model || '',
       settingsSnapshot: settings,
@@ -593,8 +721,7 @@ const AppBuilderStudio = () => {
     const assistantMessage = {
       id: `assistant-${now}`,
       role: 'assistant',
-      content:
-        payload?.assistantMessage || `Generated ${Object.keys(files).length} files for ${projectName}.`,
+      content: payload?.assistantMessage || `Generated ${Object.keys(files).length} files for ${projectName}.`,
       createdAt: now,
       changes: version.changes,
     };
@@ -624,6 +751,8 @@ const AppBuilderStudio = () => {
       template: preset.template,
       audience: preset.audience,
       appName: preset.title,
+      visualDirection: preset.visualDirection,
+      complexity: preset.complexity,
     });
     setPrompt(preset.prompt);
     setStatusNote(`Preset loaded: ${preset.title}`);
@@ -646,7 +775,7 @@ const AppBuilderStudio = () => {
     };
 
     const currentFiles = activeVersion?.files || {};
-    const fullPrompt = buildCompositePrompt({ userPrompt: visiblePrompt, settings });
+    const fullPrompt = buildPromptExpansion({ userPrompt: visiblePrompt, settings });
 
     setPrompt('');
     setError('');
@@ -725,7 +854,7 @@ const AppBuilderStudio = () => {
 
     try {
       const zip = new JSZip();
-      const rootDir = slugify(activeVersion.project?.name || settings.appName || 'eb28-mobile-app');
+      const rootDir = slugify(activeVersion.project?.name || settings.appName || 'eb28-experience');
 
       Object.entries(activeVersion.files || {}).forEach(([filePath, content]) => {
         if (typeof content === 'string') {
@@ -741,6 +870,8 @@ const AppBuilderStudio = () => {
           `Generated at: ${new Date(activeVersion.createdAt).toISOString()}`,
           `Template: ${settings.template}`,
           `Audience: ${settings.audience}`,
+          `Visual direction: ${settings.visualDirection}`,
+          `Complexity: ${settings.complexity}/5`,
           `Goal: ${settings.businessGoal}`,
           `Prompt: ${activeVersion.prompt}`,
           '',
@@ -748,7 +879,7 @@ const AppBuilderStudio = () => {
           '',
           '```bash',
           'npm install',
-          'npm run start',
+          'npm run dev',
           '```',
           '',
         ].join('\n')
@@ -810,25 +941,25 @@ const AppBuilderStudio = () => {
                 <WandSparkles size={14} /> EB28 APP BUILDER
               </p>
               <h1 className="font-brand mt-3 text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
-                Ship mobile app prototypes clients can buy into
+                Vibe-first generation with fundamentals enforced
               </h1>
               <p className="font-body mt-3 max-w-3xl text-sm text-slate-200 sm:text-base">
-                Convert a brief into an Expo-ready source scaffold, iterate in minutes, and export
-                handoff code. Built as an EB28 offering for fast product validation and client delivery.
+                Start with a short prompt. The builder expands it into a richer creative brief,
+                generates a distinct design system, and returns source with an explicit fundamentals report.
               </p>
             </div>
             <div className="grid gap-2 sm:grid-cols-3 lg:grid-cols-1 xl:grid-cols-3">
               <article className="rounded-2xl border border-cyan-400/25 bg-slate-950/60 p-3">
-                <p className="font-brand text-xs uppercase tracking-[0.14em] text-cyan-200">Speed</p>
-                <p className="font-brand mt-1 text-lg font-bold text-white">10-minute build loop</p>
+                <p className="font-brand text-xs uppercase tracking-[0.14em] text-cyan-200">Prompt</p>
+                <p className="font-brand mt-1 text-lg font-bold text-white">Short inputs accepted</p>
               </article>
               <article className="rounded-2xl border border-amber-300/25 bg-slate-950/60 p-3">
                 <p className="font-brand text-xs uppercase tracking-[0.14em] text-amber-200">Output</p>
-                <p className="font-brand mt-1 text-lg font-bold text-white">Expo-ready source</p>
+                <p className="font-brand mt-1 text-lg font-bold text-white">Unique visual direction</p>
               </article>
               <article className="rounded-2xl border border-emerald-300/25 bg-slate-950/60 p-3">
-                <p className="font-brand text-xs uppercase tracking-[0.14em] text-emerald-200">Positioning</p>
-                <p className="font-brand mt-1 text-lg font-bold text-white">EB28 white-label offer</p>
+                <p className="font-brand text-xs uppercase tracking-[0.14em] text-emerald-200">Guardrails</p>
+                <p className="font-brand mt-1 text-lg font-bold text-white">Fundamentals checklist</p>
               </article>
             </div>
           </div>
@@ -849,7 +980,7 @@ const AppBuilderStudio = () => {
                   id="builder-app-name"
                   value={settings.appName}
                   onChange={(event) => updateSettings({ appName: event.target.value })}
-                  placeholder="EB28 Field Ops"
+                  placeholder="EB28 Experience"
                   className="font-body w-full rounded-xl border border-white/15 bg-slate-900/70 px-3 py-2 text-sm text-white outline-none focus:border-cyan-300"
                 />
               </div>
@@ -889,6 +1020,45 @@ const AppBuilderStudio = () => {
                       </option>
                     ))}
                   </select>
+                </div>
+              </div>
+
+              <div className="grid gap-3 sm:grid-cols-2">
+                <div>
+                  <label htmlFor="builder-visual" className="font-body mb-1 block text-xs uppercase tracking-[0.12em] text-slate-400">
+                    Visual Direction
+                  </label>
+                  <select
+                    id="builder-visual"
+                    value={settings.visualDirection}
+                    onChange={(event) => updateSettings({ visualDirection: event.target.value })}
+                    className="font-body w-full rounded-xl border border-white/15 bg-slate-900/70 px-3 py-2 text-sm text-white outline-none focus:border-cyan-300"
+                  >
+                    {VISUAL_DIRECTION_OPTIONS.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label htmlFor="builder-complexity" className="font-body mb-1 block text-xs uppercase tracking-[0.12em] text-slate-400">
+                    Complexity ({settings.complexity}/5)
+                  </label>
+                  <input
+                    id="builder-complexity"
+                    type="range"
+                    min="1"
+                    max="5"
+                    step="1"
+                    value={settings.complexity}
+                    onChange={(event) => updateSettings({ complexity: Number(event.target.value) })}
+                    className="w-full"
+                  />
+                  <p className="font-body mt-1 text-[11px] text-slate-300">
+                    {COMPLEXITY_LABELS[settings.complexity] || COMPLEXITY_LABELS[3]}
+                  </p>
                 </div>
               </div>
 
@@ -945,6 +1115,29 @@ const AppBuilderStudio = () => {
               </div>
 
               <div>
+                <p className="font-body mb-2 text-xs uppercase tracking-[0.12em] text-slate-400">Fundamentals to enforce</p>
+                <div className="flex flex-wrap gap-2">
+                  {FUNDAMENTAL_OPTIONS.map((option) => {
+                    const selected = settings.fundamentals.includes(option.id);
+                    return (
+                      <button
+                        key={option.id}
+                        type="button"
+                        onClick={() => toggleFundamental(option.id)}
+                        className={`font-body rounded-full border px-3 py-1 text-xs transition ${
+                          selected
+                            ? 'border-emerald-300 bg-emerald-400/20 text-emerald-100'
+                            : 'border-white/15 bg-slate-900/50 text-slate-300 hover:border-slate-300'
+                        }`}
+                      >
+                        {option.label}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div>
                 <p className="font-body mb-2 text-xs uppercase tracking-[0.12em] text-slate-400">Quick Starts</p>
                 <div className="grid gap-2 sm:grid-cols-2">
                   {QUICK_STARTS.map((preset) => (
@@ -955,7 +1148,7 @@ const AppBuilderStudio = () => {
                       className="rounded-xl border border-white/10 bg-slate-900/55 px-3 py-2 text-left transition hover:border-cyan-300/60"
                     >
                       <p className="font-brand text-xs text-white">{preset.title}</p>
-                      <p className="font-body mt-1 text-[11px] text-slate-400">Load brief preset</p>
+                      <p className="font-body mt-1 text-[11px] text-slate-400">Load preset</p>
                     </button>
                   ))}
                 </div>
@@ -969,8 +1162,8 @@ const AppBuilderStudio = () => {
                   id="builder-prompt"
                   value={prompt}
                   onChange={(event) => setPrompt(event.target.value)}
-                  placeholder="Describe the workflows, retention loop, and what this app should help users do in under 30 seconds."
-                  className="font-body h-32 w-full resize-none rounded-2xl border border-white/15 bg-slate-900/70 px-3 py-3 text-sm text-white outline-none focus:border-cyan-300"
+                  placeholder="ex: redesign a finance dashboard for independent contractors"
+                  className="font-body h-28 w-full resize-none rounded-2xl border border-white/15 bg-slate-900/70 px-3 py-3 text-sm text-white outline-none focus:border-cyan-300"
                 />
 
                 <button
@@ -982,6 +1175,15 @@ const AppBuilderStudio = () => {
                   {isGenerating ? 'Generating Build...' : 'Generate EB28 Build'}
                 </button>
               </form>
+
+              <article className="rounded-2xl border border-white/10 bg-slate-950/50 p-3">
+                <p className="font-brand mb-1 text-xs uppercase tracking-[0.14em] text-slate-200">
+                  Prompt Expansion Preview
+                </p>
+                <pre className="font-code max-h-[180px] overflow-auto whitespace-pre-wrap text-[11px] leading-relaxed text-slate-300">
+                  {expandedPrompt}
+                </pre>
+              </article>
 
               {error && (
                 <p className="font-body rounded-xl border border-rose-400/40 bg-rose-500/15 px-3 py-2 text-sm text-rose-100">
@@ -1008,7 +1210,7 @@ const AppBuilderStudio = () => {
                 <h2 className="font-brand mb-2 flex items-center gap-2 text-sm uppercase tracking-[0.14em] text-slate-200">
                   <Bot size={16} /> Builder Timeline
                 </h2>
-                <div className="max-h-[230px] space-y-2 overflow-y-auto pr-1">
+                <div className="max-h-[210px] space-y-2 overflow-y-auto pr-1">
                   {messages.map((message) => {
                     const assistant = message.role === 'assistant';
                     return (
@@ -1024,15 +1226,6 @@ const AppBuilderStudio = () => {
                           {assistant ? 'Builder' : 'You'} · {formatTimestamp(message.createdAt)}
                         </p>
                         <p className="font-body whitespace-pre-wrap text-sm leading-relaxed">{message.content}</p>
-                        {Array.isArray(message.changes) && message.changes.length > 0 && (
-                          <div className="mt-2 flex flex-wrap gap-1">
-                            {message.changes.slice(0, 4).map((change, index) => (
-                              <span key={`${message.id}-chip-${index}`} className="font-body rounded-full bg-slate-900/70 px-2 py-1 text-[11px] text-slate-200">
-                                {change}
-                              </span>
-                            ))}
-                          </div>
-                        )}
                       </article>
                     );
                   })}
@@ -1042,11 +1235,11 @@ const AppBuilderStudio = () => {
               <article className="rounded-2xl border border-white/10 bg-slate-900/50 p-4">
                 <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
                   <h2 className="font-brand flex items-center gap-2 text-sm uppercase tracking-[0.14em] text-slate-200">
-                    <Smartphone size={16} /> Live Product Preview
+                    <Smartphone size={16} /> Live Experience Preview
                   </h2>
                   <div className="flex gap-2">
-                    <span className="font-body rounded-full bg-white/10 px-3 py-1 text-xs text-slate-200">{versionCount} versions</span>
-                    <span className="font-body rounded-full bg-white/10 px-3 py-1 text-xs text-slate-200">{fileCount} files</span>
+                    <span className="font-body rounded-full bg-white/10 px-3 py-1 text-xs text-slate-200">{versions.length} versions</span>
+                    <span className="font-body rounded-full bg-white/10 px-3 py-1 text-xs text-slate-200">{Object.keys(activeFiles).length} files</span>
                   </div>
                 </div>
 
@@ -1060,10 +1253,10 @@ const AppBuilderStudio = () => {
                         }}
                       >
                         <p className="font-brand text-xs uppercase tracking-[0.16em]">
-                          {activePreview.appName || 'EB28 App'}
+                          {activePreview.appName || 'EB28 Experience'}
                         </p>
                         <p className="font-body mt-1 text-sm leading-snug opacity-95">
-                          {activePreview.tagline || 'App preview'}
+                          {activePreview.tagline || 'Generated preview'}
                         </p>
                       </div>
 
@@ -1071,9 +1264,9 @@ const AppBuilderStudio = () => {
                         {(activePreview.screens || []).slice(0, 3).map((screen, index) => (
                           <article key={`${screen.name}-${index}`} className="rounded-xl border border-slate-200 bg-white p-3">
                             <p className="font-brand text-xs uppercase tracking-[0.12em] text-slate-900">
-                              {screen.name || `Screen ${index + 1}`}
+                              {screen.name || `Section ${index + 1}`}
                             </p>
-                            <p className="font-body mt-1 text-xs text-slate-600">{screen.purpose || 'Core screen'}</p>
+                            <p className="font-body mt-1 text-xs text-slate-600">{screen.purpose || 'Core section'}</p>
                             {Array.isArray(screen.elements) && screen.elements.length > 0 && (
                               <p className="font-body mt-1 text-[11px] text-slate-500">
                                 {screen.elements.slice(0, 3).join(' • ')}
@@ -1087,8 +1280,32 @@ const AppBuilderStudio = () => {
 
                   <div className="space-y-3">
                     <article className="rounded-2xl border border-cyan-400/25 bg-cyan-500/10 p-3">
-                      <p className="font-brand mb-1 text-xs uppercase tracking-[0.14em] text-cyan-100">This build includes</p>
+                      <p className="font-brand mb-1 text-xs uppercase tracking-[0.14em] text-cyan-100">Design recipe</p>
                       <p className="font-body text-sm text-cyan-50">
+                        {activeVersion?.designRecipe?.signature || describeVisualDirection(settings.visualDirection)}
+                      </p>
+                      <p className="font-body mt-1 text-xs text-cyan-100">
+                        Complexity: {activeVersion?.designRecipe?.complexity || settings.complexity}/5
+                      </p>
+                    </article>
+
+                    <article className="rounded-2xl border border-emerald-300/25 bg-emerald-500/10 p-3">
+                      <p className="font-brand mb-1 text-xs uppercase tracking-[0.14em] text-emerald-100">Fundamentals coverage</p>
+                      <p className="font-body text-sm text-emerald-50">
+                        {coveredFundamentals}/{fundamentalsReport.length} fundamentals explicitly covered.
+                      </p>
+                      <div className="mt-2 flex flex-wrap gap-1">
+                        {fundamentalsReport.slice(0, 4).map((item) => (
+                          <span key={item.id} className="font-body inline-flex items-center gap-1 rounded-full bg-emerald-900/40 px-2 py-1 text-[11px] text-emerald-100">
+                            <CheckCircle2 size={12} /> {item.label}
+                          </span>
+                        ))}
+                      </div>
+                    </article>
+
+                    <article className="rounded-2xl border border-amber-300/25 bg-amber-500/10 p-3">
+                      <p className="font-brand mb-1 text-xs uppercase tracking-[0.14em] text-amber-100">This build includes</p>
+                      <p className="font-body text-sm text-amber-50">
                         {(selectedCapabilityLabels.length > 0
                           ? selectedCapabilityLabels
                           : ['Sign In', 'Dashboard', 'Notifications']
@@ -1096,17 +1313,9 @@ const AppBuilderStudio = () => {
                       </p>
                     </article>
 
-                    <article className="rounded-2xl border border-emerald-300/25 bg-emerald-500/10 p-3">
-                      <p className="font-brand mb-1 text-xs uppercase tracking-[0.14em] text-emerald-100">How this sells</p>
-                      <p className="font-body text-sm text-emerald-50">
-                        Position as a rapid prototype sprint: custom UX direction, working source export,
-                        and a path to white-glove production implementation by EB28.
-                      </p>
-                    </article>
-
                     <div>
                       <p className="font-brand mb-2 text-xs uppercase tracking-[0.14em] text-slate-300">Version history</p>
-                      <div className="max-h-[140px] space-y-2 overflow-y-auto pr-1">
+                      <div className="max-h-[120px] space-y-2 overflow-y-auto pr-1">
                         {versions.length === 0 && (
                           <p className="font-body rounded-xl border border-dashed border-white/20 px-3 py-2 text-xs text-slate-400">
                             No versions yet. Generate your first build.
@@ -1174,7 +1383,7 @@ const AppBuilderStudio = () => {
                   id="file-query"
                   value={fileQuery}
                   onChange={(event) => setFileQuery(event.target.value)}
-                  placeholder="App.js"
+                  placeholder="src/App.jsx"
                   className="font-code w-full bg-transparent text-xs text-slate-100 outline-none"
                 />
               </div>
@@ -1213,16 +1422,18 @@ const AppBuilderStudio = () => {
             </div>
 
             <article className="mt-3 rounded-2xl border border-amber-300/35 bg-amber-500/10 p-3">
-              <p className="font-brand text-xs uppercase tracking-[0.14em] text-amber-100">EB28 Upsell Layer</p>
-              <p className="font-body mt-1 text-xs leading-relaxed text-amber-50">
-                Package this as a paid strategy sprint, then offer implementation + maintenance as a monthly service.
-              </p>
-              <a
-                href="/#contact"
-                className="font-body mt-2 inline-flex items-center gap-1 text-xs font-semibold text-amber-100 underline underline-offset-4"
-              >
-                <Sparkles size={12} /> Open contact section
-              </a>
+              <p className="font-brand text-xs uppercase tracking-[0.14em] text-amber-100">Suggested next prompts</p>
+              <ul className="mt-1 list-disc space-y-1 pl-5">
+                {(activeVersion?.nextActions || [
+                  'Ask for an alternate visual direction.',
+                  'Request stricter conversion and CTA copy.',
+                  'Add analytics event naming and tracking points.',
+                ]).map((item, index) => (
+                  <li key={`next-action-${index}`} className="font-body text-xs text-amber-50">
+                    {item}
+                  </li>
+                ))}
+              </ul>
             </article>
           </section>
         </div>

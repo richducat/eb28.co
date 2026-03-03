@@ -8,7 +8,13 @@ This repo is a Vite + React site configured for GitHub Pages.
 - API endpoint: `/api/appbuilder-build`
 - Optional env var: `OPENAI_API_KEY` (used for model-backed generation)
 
-If `OPENAI_API_KEY` is not set, the builder still works using a deterministic Expo project template mode.
+Key behavior:
+- Accepts short prompts and expands them into a richer internal build brief.
+- Applies visual-direction + complexity controls for more distinct output styles.
+- Enforces a fundamentals checklist (UX, conversion, accessibility, responsiveness, performance, and more).
+- Exports runnable source as ZIP.
+
+If `OPENAI_API_KEY` is not set, the builder still works using a deterministic template mode.
 
 ## Deploying to GitHub Pages
 

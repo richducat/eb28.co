@@ -2,6 +2,14 @@
 
 This repo is a Vite + React site configured for GitHub Pages.
 
+## Rork-Style Builder Tool
+
+- Route: `/rork`
+- API endpoint: `/api/rork-build`
+- Optional env var: `OPENAI_API_KEY` (used for model-backed generation)
+
+If `OPENAI_API_KEY` is not set, the builder still works using a deterministic Expo project template mode.
+
 ## Deploying to GitHub Pages
 
 1. Build the static site:

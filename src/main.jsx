@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import Dashboard from './Dashboard';
-import RorkStudio from './RorkStudio';
+import AppBuilderStudio from './AppBuilderStudio';
 import './index.css';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -13,11 +13,7 @@ const isDashboardRoute =
   pathname === '/dash/' ||
   hostname === 'dashboard.eb28.co' ||
   hostname === 'command-center.eb28.co';
-const isRorkRoute =
-  pathname === '/rork' ||
-  pathname === '/rork/' ||
-  pathname === '/appbuilder' ||
-  pathname === '/appbuilder/';
+const isAppBuilderRoute = pathname === '/appbuilder' || pathname === '/appbuilder/';
 
 if (isDashboardRoute) {
   root.render(
@@ -25,10 +21,10 @@ if (isDashboardRoute) {
       <Dashboard />
     </React.StrictMode>
   );
-} else if (isRorkRoute) {
+} else if (isAppBuilderRoute) {
   root.render(
     <React.StrictMode>
-      <RorkStudio />
+      <AppBuilderStudio />
     </React.StrictMode>
   );
 } else {

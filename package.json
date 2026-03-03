@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && cp docs/index.html docs/404.html && mkdir -p docs/appbuilder docs/rork && cp docs/index.html docs/appbuilder/index.html && cp docs/index.html docs/rork/index.html",
+    "build": "vite build && cp docs/index.html docs/404.html && mkdir -p docs/appbuilder && cp docs/index.html docs/appbuilder/index.html",
     "preview": "vite preview"
   },
   "dependencies": {

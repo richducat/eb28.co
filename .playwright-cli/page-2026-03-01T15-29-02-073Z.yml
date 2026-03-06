@@ -1,0 +1,154 @@
+- generic [ref=e1]:
+  - navigation [ref=e2]:
+    - img [ref=e4] [cursor=pointer]
+    - generic [ref=e6]:
+      - button [active] [ref=e7] [cursor=pointer]:
+        - img [ref=e8]
+      - button [ref=e13] [cursor=pointer]:
+        - img [ref=e14]
+      - button [ref=e16] [cursor=pointer]:
+        - img [ref=e17]
+      - button [ref=e20] [cursor=pointer]:
+        - img [ref=e21]
+      - button [ref=e25] [cursor=pointer]:
+        - img [ref=e26]
+    - generic [ref=e28]:
+      - button [ref=e29] [cursor=pointer]:
+        - img [ref=e30]
+      - generic [ref=e33]: RD
+  - main [ref=e34]:
+    - generic [ref=e37]:
+      - generic [ref=e38]:
+        - heading "Good Evening, Richard" [level=1] [ref=e39]
+        - paragraph [ref=e40]: Thursday, February 26, 2026
+      - generic [ref=e41]:
+        - button "Command... ⌘K" [ref=e42] [cursor=pointer]:
+          - img [ref=e43]
+          - generic [ref=e46]: Command...
+          - generic [ref=e47]: ⌘K
+        - generic [ref=e48]:
+          - img [ref=e49]
+          - generic [ref=e52]: "2"
+    - generic [ref=e53]:
+      - generic [ref=e54]:
+        - generic [ref=e55] [cursor=pointer]:
+          - generic [ref=e56]:
+            - paragraph [ref=e57]: Monthly Revenue
+            - img [ref=e58]
+          - paragraph [ref=e61]: $8,750
+        - generic [ref=e62]:
+          - generic [ref=e63]:
+            - paragraph [ref=e64]: Active Subs
+            - img [ref=e65]
+          - generic [ref=e70]:
+            - paragraph [ref=e71]: "26"
+            - generic [ref=e72]:
+              - img [ref=e73]
+              - text: "+2"
+        - generic [ref=e76]:
+          - generic [ref=e77]:
+            - paragraph [ref=e78]: Total Customers
+            - img [ref=e79]
+          - generic [ref=e82]:
+            - paragraph [ref=e83]: "100"
+            - generic [ref=e84]:
+              - img [ref=e85]
+              - text: "+12"
+        - generic [ref=e88]:
+          - generic [ref=e89]:
+            - paragraph [ref=e90]: Goal Progress
+            - img [ref=e91]
+          - generic [ref=e95]:
+            - paragraph [ref=e96]: 29%
+            - generic [ref=e97]: of $30K
+      - generic [ref=e98]:
+        - generic [ref=e99]:
+          - generic [ref=e100]:
+            - generic [ref=e102]:
+              - img [ref=e103]
+              - heading "Your Only 3 Tasks" [level=3] [ref=e107]
+            - generic [ref=e108]:
+              - generic [ref=e110]:
+                - generic [ref=e111]:
+                  - generic [ref=e112]: "1"
+                  - generic [ref=e113]:
+                    - paragraph [ref=e114]: Check TYFYS intake flow with Codex
+                    - generic [ref=e115]:
+                      - generic [ref=e116]: High
+                      - generic [ref=e117]: Revenue
+                - button "Complete" [ref=e118] [cursor=pointer]
+              - generic [ref=e120]:
+                - generic [ref=e121]: "2"
+                - generic [ref=e122]:
+                  - paragraph [ref=e123]: Review Devin onboarding queue
+                  - generic [ref=e124]:
+                    - generic [ref=e125]: Med
+                    - generic [ref=e126]: Operations
+              - generic [ref=e128]:
+                - generic [ref=e129]: "3"
+                - generic [ref=e130]:
+                  - paragraph [ref=e131]: Sync with sales team
+                  - generic [ref=e132]:
+                    - generic [ref=e133]: Low
+                    - generic [ref=e134]: Team
+          - generic [ref=e135]:
+            - generic [ref=e137]:
+              - img [ref=e138]
+              - heading "Revenue Trend" [level=3] [ref=e141]
+            - generic [ref=e142]:
+              - generic [ref=e144]: Mon
+              - generic [ref=e146]: Tue
+              - generic [ref=e148]: Wed
+              - generic [ref=e150]: Thu
+              - generic [ref=e152]: Fri
+              - generic [ref=e154]: Sat
+              - generic [ref=e156]: Sun
+        - generic [ref=e157]:
+          - generic [ref=e158]:
+            - generic [ref=e160]:
+              - img [ref=e161]
+              - heading "Today's Schedule" [level=3] [ref=e163]
+            - generic [ref=e164]:
+              - generic [ref=e165]:
+                - paragraph [ref=e167]: 2:00 PM
+                - generic [ref=e168]:
+                  - paragraph [ref=e169]: Call hottest lead
+                  - paragraph [ref=e170]: 30m
+                - generic [ref=e171]: Next
+              - generic [ref=e172]:
+                - paragraph [ref=e174]: 4:00 PM
+                - generic [ref=e175]:
+                  - paragraph [ref=e176]: Check pipeline with Devin
+                  - paragraph [ref=e177]: 15m
+                - generic [ref=e178]: Upcoming
+          - generic [ref=e179]:
+            - generic [ref=e181]:
+              - img [ref=e182]
+              - heading "Kids" [level=3] [ref=e184]
+            - generic [ref=e185]:
+              - generic [ref=e186]:
+                - generic [ref=e188]: E
+                - generic [ref=e189]:
+                  - paragraph [ref=e190]: Everett (11)
+                  - paragraph [ref=e191]: School day - nothing special
+              - generic [ref=e192]:
+                - generic [ref=e194]: B
+                - generic [ref=e195]:
+                  - paragraph [ref=e196]: Berkeley (5)
+                  - paragraph [ref=e197]: Quest Elementary
+                  - paragraph [ref=e198]: "SLP: Danielle Ryba"
+            - paragraph [ref=e200]: "💡 Tuesday: Berkeley SLP session"
+          - generic [ref=e201]:
+            - generic [ref=e203]:
+              - img [ref=e204]
+              - heading "Notifications" [level=3] [ref=e207]
+            - generic [ref=e208]:
+              - generic [ref=e211]:
+                - paragraph [ref=e212]: 3 leads not contacted in 24h
+                - paragraph [ref=e213]: Now
+              - generic [ref=e216]:
+                - paragraph [ref=e217]: "Stripe revenue updated: $8,750 MRR"
+                - paragraph [ref=e218]: 15m ago
+          - generic [ref=e220]:
+            - paragraph [ref=e221]: Feeling Lost?
+            - button "Tell Me What To Do" [ref=e222] [cursor=pointer]

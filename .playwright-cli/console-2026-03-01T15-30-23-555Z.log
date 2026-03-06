@@ -1,0 +1,44 @@
+[     741ms] [WARNING] cdn.tailwindcss.com should not be used in production. To use Tailwind CSS in production, install it as a PostCSS plugin or use the Tailwind CLI: https://tailwindcss.com/docs/installation @ https://cdn.tailwindcss.com/:63
+[     996ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://dashboard.eb28.co/api/dashboard/data:0
+[    1000ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://dashboard.eb28.co/favicon.ico:0
+[  301043ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://dashboard.eb28.co/api/dashboard/data:0
+[  600989ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://dashboard.eb28.co/api/dashboard/data:0
+[  900981ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://dashboard.eb28.co/api/dashboard/data:0
+[ 1200986ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://dashboard.eb28.co/api/dashboard/data:0
+[ 1500981ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://dashboard.eb28.co/api/dashboard/data:0
+[ 1801042ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://dashboard.eb28.co/api/dashboard/data:0
+[ 2101015ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://dashboard.eb28.co/api/dashboard/data:0
+[ 2401031ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://dashboard.eb28.co/api/dashboard/data:0
+[ 2701002ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://dashboard.eb28.co/api/dashboard/data:0
+[ 3001077ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://dashboard.eb28.co/api/dashboard/data:0
+[ 3301040ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://dashboard.eb28.co/api/dashboard/data:0
+[ 3600990ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://dashboard.eb28.co/api/dashboard/data:0
+[ 3900996ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://dashboard.eb28.co/api/dashboard/data:0
+[ 4200993ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://dashboard.eb28.co/api/dashboard/data:0
+[ 4501082ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://dashboard.eb28.co/api/dashboard/data:0
+[ 4801130ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://dashboard.eb28.co/api/dashboard/data:0
+[ 5101003ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://dashboard.eb28.co/api/dashboard/data:0
+[ 5401002ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://dashboard.eb28.co/api/dashboard/data:0
+[ 5701221ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://dashboard.eb28.co/api/dashboard/data:0
+[ 6001076ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://dashboard.eb28.co/api/dashboard/data:0
+[ 6301031ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://dashboard.eb28.co/api/dashboard/data:0
+[ 6601025ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://dashboard.eb28.co/api/dashboard/data:0
+[ 6901021ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://dashboard.eb28.co/api/dashboard/data:0
+[ 7201005ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://dashboard.eb28.co/api/dashboard/data:0
+[ 7501124ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://dashboard.eb28.co/api/dashboard/data:0
+[ 7801024ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://dashboard.eb28.co/api/dashboard/data:0
+[ 8101018ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://dashboard.eb28.co/api/dashboard/data:0
+[ 8401039ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://dashboard.eb28.co/api/dashboard/data:0
+[ 8701034ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://dashboard.eb28.co/api/dashboard/data:0
+[ 9001051ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://dashboard.eb28.co/api/dashboard/data:0
+[ 9301017ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://dashboard.eb28.co/api/dashboard/data:0
+[ 9601012ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://dashboard.eb28.co/api/dashboard/data:0
+[ 9901009ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://dashboard.eb28.co/api/dashboard/data:0
+[10201014ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://dashboard.eb28.co/api/dashboard/data:0
+[10501048ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://dashboard.eb28.co/api/dashboard/data:0
+[10801025ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://dashboard.eb28.co/api/dashboard/data:0
+[11101018ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://dashboard.eb28.co/api/dashboard/data:0
+[11401311ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://dashboard.eb28.co/api/dashboard/data:0
+[11701016ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://dashboard.eb28.co/api/dashboard/data:0
+[12001082ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://dashboard.eb28.co/api/dashboard/data:0
+[12301015ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://dashboard.eb28.co/api/dashboard/data:0

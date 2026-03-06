@@ -1,0 +1,127 @@
+- generic [ref=e4]:
+  - banner [ref=e5]:
+    - generic [ref=e6]:
+      - heading "EB28.OS" [level=1] [ref=e7]:
+        - img [ref=e8]
+        - text: EB28.OS
+      - paragraph [ref=e10]: System Control Terminal v2.4█
+    - generic [ref=e11]:
+      - generic [ref=e12]:
+        - img [ref=e13]
+        - button "MATRIX" [ref=e19] [cursor=pointer]
+        - button "AMBER" [ref=e20] [cursor=pointer]
+        - button "CYBERPUNK" [ref=e21] [cursor=pointer]
+      - generic [ref=e22]: Sun, Mar 1, 2026, 10:29:50
+  - generic [ref=e23]:
+    - generic [ref=e24]:
+      - heading "TODAY'S PRIORITIES" [level=2] [ref=e25]:
+        - img [ref=e26]
+        - text: TODAY'S PRIORITIES
+      - list [ref=e30]:
+        - listitem [ref=e31]:
+          - generic [ref=e32]: "1."
+          - generic [ref=e33]: "[ ]"
+          - generic [ref=e34]: Finalize Q3 Strategy Deck
+        - listitem [ref=e35]:
+          - generic [ref=e36]: "2."
+          - generic [ref=e37]: "[ ]"
+          - generic [ref=e38]: Review Enterprise Contracts
+        - listitem [ref=e39]:
+          - generic [ref=e40]: "3."
+          - generic [ref=e41]: "[X]"
+          - generic [ref=e42]: Sync w/ Engineering Lead
+    - generic [ref=e43]:
+      - heading "ZOHO / RINGCENTRAL" [level=2] [ref=e44]:
+        - img [ref=e45]
+        - text: ZOHO / RINGCENTRAL
+      - generic [ref=e48]:
+        - generic [ref=e49]:
+          - generic [ref=e50]: MRR
+          - generic [ref=e51]: $124,500
+        - generic [ref=e52]:
+          - generic [ref=e53]: CALLS
+          - generic [ref=e54]: 42/50
+        - generic [ref=e55]:
+          - generic [ref=e56]: CONVERSION
+          - generic [ref=e57]: 18.5%
+    - generic [ref=e58]:
+      - heading "PIPELINE STATUS" [level=2] [ref=e59]:
+        - img [ref=e60]
+        - text: PIPELINE STATUS
+      - generic [ref=e62]:
+        - generic [ref=e64]:
+          - generic [ref=e65]: Discovery (12)
+          - generic [ref=e66]: $45k
+        - generic [ref=e70]:
+          - generic [ref=e71]: Demo (8)
+          - generic [ref=e72]: $80k
+        - generic [ref=e76]:
+          - generic [ref=e77]: Negotiation (3)
+          - generic [ref=e78]: $120k
+    - generic [ref=e81]:
+      - heading "MISSED COMMS" [level=2] [ref=e82]:
+        - img [ref=e83]
+        - text: MISSED COMMS
+      - list [ref=e87]:
+        - listitem [ref=e88]:
+          - generic [ref=e89]:
+            - generic [ref=e90]: "[Call] Sarah Jenkins"
+            - generic [ref=e91]: Standard
+          - generic [ref=e92]: 10:45 AM
+        - listitem [ref=e93]:
+          - generic [ref=e94]:
+            - generic [ref=e95]: "[Email] Finance Dept"
+            - generic [ref=e96]: URGENT
+          - generic [ref=e97]: 11:20 AM
+    - generic [ref=e98]:
+      - heading "SCHEDULING CONFLICTS" [level=2] [ref=e99]:
+        - img [ref=e100]
+        - text: SCHEDULING CONFLICTS
+      - list [ref=e102]:
+        - listitem [ref=e103]:
+          - generic [ref=e104]: 14:00
+          - generic [ref=e105]: "ERR: Client Sync"
+          - generic [ref=e106]: "ERR: Internal Review"
+    - generic [ref=e107]:
+      - heading "SYSTEM HEALTH" [level=2] [ref=e108]:
+        - img [ref=e109]
+        - text: SYSTEM HEALTH
+      - generic [ref=e111]:
+        - generic [ref=e112]:
+          - generic [ref=e113]: Zoho API
+          - generic [ref=e114]:
+            - img [ref=e115]
+            - text: ONLINE
+        - generic [ref=e118]:
+          - generic [ref=e119]: RingCentral
+          - generic [ref=e120]:
+            - img [ref=e121]
+            - text: ONLINE
+        - generic [ref=e124]:
+          - generic [ref=e125]: IMAP Sync
+          - generic [ref=e126]:
+            - img [ref=e127]
+            - text: LAGGING
+        - generic [ref=e129]:
+          - generic [ref=e130]: DB Latency
+          - generic [ref=e131]: 24ms
+        - generic [ref=e132]:
+          - generic [ref=e133]: Memory Use
+          - generic [ref=e134]: 64%
+  - generic [ref=e135]:
+    - heading "ACTIVITY LOG" [level=2] [ref=e136]:
+      - img [ref=e137]
+      - text: ACTIVITY LOG
+    - generic [ref=e139]:
+      - generic [ref=e140]:
+        - generic [ref=e141]: "[21:30:12]"
+        - generic [ref=e142]: System boot complete
+      - generic [ref=e143]:
+        - generic [ref=e144]: "[21:30:14]"
+        - generic [ref=e145]: Dashboard modules loaded
+      - generic [ref=e146]:
+        - generic [ref=e147]: "[21:30:18]"
+        - generic [ref=e148]: "IMAP sync: 3 new messages"
+  - generic [ref=e150]:
+    - generic [ref=e151]: root@eb28:~$
+    - textbox [active] [ref=e152]

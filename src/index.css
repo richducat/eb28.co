@@ -61,6 +61,10 @@
     linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask-composite: exclude;
   pointer-events: none;
 }
 
@@ -121,5 +125,10 @@
   .custom-scrollbar::-webkit-scrollbar-thumb {
     background-color: #334155;
     border-radius: 9999px;
+  }
+
+  .pixel-art {
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
   }
 }

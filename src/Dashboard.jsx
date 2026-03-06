@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
     Terminal, Activity, Calendar as CalendarIcon, PhoneMissed,
-    Target, TrendingUp, AlertTriangle, CheckCircle2, Palette
+    Target, TrendingUp, AlertTriangle, CheckCircle2, Palette,
+    Search as SearchIcon, Play, Pause, RefreshCw
 } from 'lucide-react';
 
 /* ───────────────────────── Theme Definitions ───────────────────────── */
@@ -62,6 +63,16 @@ const BOOT_LINES = [
     '',
 ];
 
+const ACTIVITY_FILTERS = [
+    { key: 'all', label: 'ALL' },
+    { key: 'success', label: 'SUCCESS' },
+    { key: 'warning', label: 'WARNING' },
+    { key: 'cron', label: 'CRON' },
+    { key: 'info', label: 'INFO' },
+];
+
+const SEARCH_HISTORY_KEY = 'eb28-command-center-search-history';
+
 /* ───────────────────────── Boot Screen Component ───────────────────── */
 const BootScreen = ({ onComplete, theme }) => {
     const [lines, setLines] = useState([]);
@@ -116,41 +127,242 @@ const BootScreen = ({ onComplete, theme }) => {
     );
 };
 
+const formatTimeLabel = (value) => {
+    if (!value) {
+        return '--:--:--';
+    }
+
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) {
+        return String(value).slice(0, 8);
+    }
+
+    return date.toLocaleTimeString('en-US', { hour12: false });
+};
+
+const formatDateTimeLabel = (value) => {
+    if (!value) {
+        return 'n/a';
+    }
+
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) {
+        return String(value);
+    }
+
+    return date.toLocaleString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false,
+    });
+};
+
+const typeColor = (theme, type) => {
+    if (type === 'warning') {
+        return theme.warn;
+    }
+    if (type === 'cron') {
+        return theme.accent;
+    }
+    if (type === 'success') {
+        return theme.primary;
+    }
+    return `${theme.primary}cc`;
+};
+
 /* ───────────────────────── Activity Log Component ──────────────────── */
 const ActivityLog = ({ theme }) => {
-    const [entries, setEntries] = useState([
-        { time: '21:30:12', msg: 'System boot complete' },
-        { time: '21:30:14', msg: 'Dashboard modules loaded' },
-        { time: '21:30:18', msg: 'IMAP sync: 3 new messages' },
-    ]);
+    const [entries, setEntries] = useState([]);
+    const [filter, setFilter] = useState('all');
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState('');
+    const [meta, setMeta] = useState({ source: '', workspace: '' });
     const logRef = useRef(null);
 
-    const LOG_MESSAGES = [
-        'Heartbeat pulse OK',
-        'Zoho CRM: lead updated',
-        'RingCentral: call queued',
-        'Calendar sync complete',
-        'Pipeline stage change detected',
-        'IMAP: new message received',
-        'DB checkpoint written',
-        'Memory GC completed',
-        'API rate limit: 842/1000',
-        'Lead score recalculated',
-    ];
+    const loadFeed = useCallback(async () => {
+        setLoading(true);
+        setError('');
 
-    useEffect(() => {
-        const interval = setInterval(() => {
-            const now = new Date();
-            const ts = now.toLocaleTimeString('en-US', { hour12: false });
-            const msg = LOG_MESSAGES[Math.floor(Math.random() * LOG_MESSAGES.length)];
-            setEntries(prev => [...prev.slice(-15), { time: ts, msg }]);
-        }, 3000 + Math.random() * 4000);
-        return () => clearInterval(interval);
+        try {
+            const response = await fetch('/api/activity-feed?limit=80', { cache: 'no-store' });
+            const payload = await response.json();
+
+            if (!response.ok) {
+                throw new Error(payload.error || 'Unable to load activity feed');
+            }
+
+            setEntries(Array.isArray(payload.items) ? payload.items : []);
+            setMeta({
+                source: payload.source || '',
+                workspace: payload.workspace || '',
+            });
+        } catch (fetchError) {
+            setEntries([]);
+            setError(fetchError.message);
+        } finally {
+            setLoading(false);
+        }
     }, []);
 
     useEffect(() => {
-        if (logRef.current) logRef.current.scrollTop = logRef.current.scrollHeight;
-    }, [entries]);
+        loadFeed();
+        const interval = setInterval(loadFeed, 60_000);
+        return () => clearInterval(interval);
+    }, [loadFeed]);
+
+    useEffect(() => {
+        if (logRef.current) {
+            logRef.current.scrollTop = 0;
+        }
+    }, [filter, entries.length]);
+
+    const filteredEntries = filter === 'all'
+        ? entries
+        : entries.filter((entry) => String(entry.type || '').toLowerCase() === filter);
+
+    return (
+        <div
+            className="border p-4 retro-text transition-all h-full"
+            style={{ borderColor: theme.primary, background: theme.panelBg, color: theme.primary }}
+        >
+            <div className="mb-3 border-b pb-2 flex flex-wrap items-center justify-between gap-2"
+                style={{ borderColor: `${theme.primary}80` }}>
+                <h2 className="text-xl font-bold flex items-center gap-2">
+                    <Terminal size={20} /> ACTIVITY FEED
+                </h2>
+                <button
+                    type="button"
+                    onClick={loadFeed}
+                    className="text-xs border px-2 py-1 transition-all hover:opacity-80"
+                    style={{ borderColor: `${theme.primary}99` }}
+                >
+                    <span className="inline-flex items-center gap-1">
+                        <RefreshCw size={12} />
+                        REFRESH
+                    </span>
+                </button>
+            </div>
+
+            <div className="mb-3 flex flex-wrap gap-2">
+                {ACTIVITY_FILTERS.map((option) => (
+                    <button
+                        key={option.key}
+                        type="button"
+                        onClick={() => setFilter(option.key)}
+                        className="text-xs border px-2 py-1 transition-all"
+                        style={{
+                            borderColor: filter === option.key ? typeColor(theme, option.key) : `${theme.primary}66`,
+                            color: filter === option.key ? typeColor(theme, option.key) : `${theme.primary}cc`,
+                            background: filter === option.key ? `${theme.primary}14` : 'transparent',
+                        }}
+                    >
+                        {option.label}
+                    </button>
+                ))}
+            </div>
+
+            <div ref={logRef} className="space-y-2 text-xs max-h-48 overflow-y-auto scrollbar-hide">
+                {loading && <div className="opacity-70">Loading activity feed...</div>}
+                {!loading && error && (
+                    <div style={{ color: theme.danger }}>ERROR: {error}</div>
+                )}
+                {!loading && !error && filteredEntries.length === 0 && (
+                    <div className="opacity-70">No matching activity records.</div>
+                )}
+                {!loading && !error && filteredEntries.map((entry) => {
+                    const type = String(entry.type || 'info').toLowerCase();
+                    return (
+                        <div key={entry.id} className="flex gap-3 opacity-90">
+                            <span style={{ color: `${theme.primary}99` }}>[{formatTimeLabel(entry.timestamp)}]</span>
+                            <span
+                                className="min-w-16"
+                                style={{ color: typeColor(theme, type) }}
+                            >
+                                {type.toUpperCase()}
+                            </span>
+                            <span className="flex-1">{entry.message}</span>
+                        </div>
+                    );
+                })}
+            </div>
+
+            {(meta.source || meta.workspace) && (
+                <div className="mt-3 text-[10px] opacity-60">
+                    {meta.source ? `SOURCE: ${meta.source}` : ''}
+                    {meta.source && meta.workspace ? ' | ' : ''}
+                    {meta.workspace ? `WORKSPACE: ${meta.workspace}` : ''}
+                </div>
+            )}
+        </div>
+    );
+};
+
+/* ───────────────────────── Cron Status Panel ──────────────────────── */
+const CronPanel = ({ theme }) => {
+    const [jobs, setJobs] = useState([]);
+    const [schedulerStatus, setSchedulerStatus] = useState('');
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState('');
+    const [activeAction, setActiveAction] = useState('');
+
+    const loadCronStatus = useCallback(async () => {
+        setLoading(true);
+        setError('');
+
+        try {
+            const response = await fetch('/api/cron-status', { cache: 'no-store' });
+            const payload = await response.json();
+
+            if (!response.ok) {
+                throw new Error(payload.error || 'Unable to load cron status');
+            }
+
+            setJobs(Array.isArray(payload.jobs) ? payload.jobs : []);
+            setSchedulerStatus(payload.scheduler?.status || '');
+
+            if (Array.isArray(payload.errors) && payload.errors.length) {
+                setError(payload.errors.join(' | '));
+            }
+        } catch (fetchError) {
+            setJobs([]);
+            setError(fetchError.message);
+        } finally {
+            setLoading(false);
+        }
+    }, []);
+
+    useEffect(() => {
+        loadCronStatus();
+        const interval = setInterval(loadCronStatus, 60_000);
+        return () => clearInterval(interval);
+    }, [loadCronStatus]);
+
+    const runAction = useCallback(async (action, id) => {
+        setActiveAction(`${action}:${id}`);
+        setError('');
+
+        try {
+            const response = await fetch('/api/cron-status', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ action, id }),
+            });
+            const payload = await response.json();
+
+            if (!response.ok) {
+                throw new Error(payload.error || 'Cron command failed');
+            }
+
+            setJobs(Array.isArray(payload.jobs) ? payload.jobs : []);
+            setSchedulerStatus(payload.scheduler?.status || '');
+        } catch (actionError) {
+            setError(actionError.message);
+        } finally {
+            setActiveAction('');
+        }
+    }, []);
 
     return (
         <div
@@ -159,16 +371,225 @@ const ActivityLog = ({ theme }) => {
         >
             <h2 className="text-xl font-bold mb-3 border-b pb-2 flex items-center gap-2"
                 style={{ borderColor: `${theme.primary}80` }}>
-                <Terminal size={20} /> ACTIVITY LOG
+                <CalendarIcon size={20} /> CRON SCHEDULE
             </h2>
-            <div ref={logRef} className="space-y-1 text-xs max-h-40 overflow-y-auto scrollbar-hide">
-                {entries.map((e, i) => (
-                    <div key={i} className="flex gap-3 opacity-80 hover:opacity-100 transition-opacity">
-                        <span style={{ color: `${theme.primary}99` }}>[{e.time}]</span>
-                        <span>{e.msg}</span>
+
+            <div className="mb-3 text-xs opacity-80">
+                Scheduler: {schedulerStatus || 'unknown'}
+            </div>
+
+            <div className="space-y-3 max-h-72 overflow-y-auto scrollbar-hide">
+                {loading && <div className="opacity-70 text-sm">Loading cron jobs...</div>}
+                {!loading && error && (
+                    <div className="text-sm" style={{ color: theme.warn }}>WARN: {error}</div>
+                )}
+                {!loading && !error && jobs.length === 0 && (
+                    <div className="opacity-70 text-sm">No cron jobs returned.</div>
+                )}
+                {jobs.map((job) => {
+                    const pauseAction = job.enabled ? 'pause' : 'resume';
+                    const runNowBusy = activeAction === `run:${job.id}`;
+                    const pauseBusy = activeAction === `${pauseAction}:${job.id}`;
+
+                    return (
+                        <div
+                            key={job.id}
+                            className="border p-3"
+                            style={{ borderColor: `${theme.primary}55` }}
+                        >
+                            <div className="flex items-start justify-between gap-2">
+                                <div>
+                                    <div className="text-sm font-bold">{job.name}</div>
+                                    <div className="text-xs opacity-70">ID: {job.id}</div>
+                                </div>
+                                <span
+                                    className="text-xs px-2 py-1 border"
+                                    style={{
+                                        borderColor: job.enabled ? `${theme.primary}80` : `${theme.warn}80`,
+                                        color: job.enabled ? theme.primary : theme.warn,
+                                    }}
+                                >
+                                    {job.enabled ? 'ACTIVE' : 'PAUSED'}
+                                </span>
+                            </div>
+                            <div className="mt-2 text-xs opacity-80">Schedule: {job.schedule || 'n/a'}</div>
+                            <div className="text-xs opacity-80">Next: {formatDateTimeLabel(job.nextRun)}</div>
+                            <div className="mt-3 flex flex-wrap gap-2">
+                                <button
+                                    type="button"
+                                    onClick={() => runAction('run', job.id)}
+                                    disabled={runNowBusy || Boolean(activeAction)}
+                                    className="border px-2 py-1 text-xs transition-all disabled:opacity-50"
+                                    style={{ borderColor: `${theme.primary}99` }}
+                                >
+                                    <span className="inline-flex items-center gap-1">
+                                        <Play size={12} />
+                                        {runNowBusy ? 'RUNNING...' : 'RUN NOW'}
+                                    </span>
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={() => runAction(pauseAction, job.id)}
+                                    disabled={pauseBusy || Boolean(activeAction)}
+                                    className="border px-2 py-1 text-xs transition-all disabled:opacity-50"
+                                    style={{ borderColor: `${theme.warn}99`, color: theme.warn }}
+                                >
+                                    <span className="inline-flex items-center gap-1">
+                                        <Pause size={12} />
+                                        {pauseBusy ? 'UPDATING...' : (job.enabled ? 'PAUSE' : 'RESUME')}
+                                    </span>
+                                </button>
+                            </div>
+                        </div>
+                    );
+                })}
+            </div>
+        </div>
+    );
+};
+
+/* ───────────────────────── Search Panel ───────────────────────────── */
+const GlobalSearchPanel = ({ theme }) => {
+    const [query, setQuery] = useState('');
+    const [results, setResults] = useState([]);
+    const [history, setHistory] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
+    const [meta, setMeta] = useState({ workspace: '', indexedFiles: 0 });
+
+    useEffect(() => {
+        try {
+            const saved = JSON.parse(window.localStorage.getItem(SEARCH_HISTORY_KEY) || '[]');
+            if (Array.isArray(saved)) {
+                setHistory(saved.slice(0, 8));
+            }
+        } catch {
+            setHistory([]);
+        }
+    }, []);
+
+    const persistHistory = useCallback((term) => {
+        const trimmed = term.trim();
+        if (!trimmed) {
+            return;
+        }
+
+        setHistory((previous) => {
+            const next = [trimmed, ...previous.filter((entry) => entry !== trimmed)].slice(0, 8);
+            window.localStorage.setItem(SEARCH_HISTORY_KEY, JSON.stringify(next));
+            return next;
+        });
+    }, []);
+
+    const runSearch = useCallback(async (term) => {
+        const trimmed = term.trim();
+        if (!trimmed) {
+            setResults([]);
+            setError('');
+            return;
+        }
+
+        setLoading(true);
+        setError('');
+
+        try {
+            const response = await fetch(`/api/search?q=${encodeURIComponent(trimmed)}&limit=20`, { cache: 'no-store' });
+            const payload = await response.json();
+
+            if (!response.ok) {
+                throw new Error(payload.error || 'Search failed');
+            }
+
+            setResults(Array.isArray(payload.items) ? payload.items : []);
+            setMeta({
+                workspace: payload.workspace || '',
+                indexedFiles: Number(payload.indexedFiles) || 0,
+            });
+            persistHistory(trimmed);
+        } catch (searchError) {
+            setResults([]);
+            setError(searchError.message);
+        } finally {
+            setLoading(false);
+        }
+    }, [persistHistory]);
+
+    const onSubmit = useCallback((event) => {
+        event.preventDefault();
+        runSearch(query);
+    }, [query, runSearch]);
+
+    return (
+        <div
+            className="border p-4 retro-text transition-all h-full"
+            style={{ borderColor: theme.primary, background: theme.panelBg, color: theme.primary }}
+        >
+            <h2 className="text-xl font-bold mb-3 border-b pb-2 flex items-center gap-2"
+                style={{ borderColor: `${theme.primary}80` }}>
+                <SearchIcon size={20} /> GLOBAL SEARCH
+            </h2>
+
+            <form onSubmit={onSubmit} className="flex items-center gap-2 mb-3">
+                <input
+                    type="text"
+                    value={query}
+                    onChange={(event) => setQuery(event.target.value)}
+                    className="flex-1 bg-transparent border px-3 py-2 text-sm outline-none"
+                    style={{ borderColor: `${theme.primary}80`, color: theme.primary }}
+                    placeholder="Search memory, MEMORY.md, TODO*.json"
+                />
+                <button
+                    type="submit"
+                    className="border px-3 py-2 text-xs transition-all"
+                    style={{ borderColor: `${theme.primary}99` }}
+                >
+                    SEARCH
+                </button>
+            </form>
+
+            {history.length > 0 && (
+                <div className="mb-3 flex flex-wrap gap-2">
+                    {history.map((item) => (
+                        <button
+                            key={item}
+                            type="button"
+                            onClick={() => {
+                                setQuery(item);
+                                runSearch(item);
+                            }}
+                            className="text-xs border px-2 py-1 transition-all hover:opacity-80"
+                            style={{ borderColor: `${theme.primary}66` }}
+                        >
+                            {item}
+                        </button>
+                    ))}
+                </div>
+            )}
+
+            <div className="space-y-3 text-sm max-h-72 overflow-y-auto scrollbar-hide">
+                {loading && <div className="opacity-70">Searching...</div>}
+                {!loading && error && (
+                    <div style={{ color: theme.warn }}>WARN: {error}</div>
+                )}
+                {!loading && !error && results.length === 0 && query.trim() && (
+                    <div className="opacity-70">No results found.</div>
+                )}
+                {results.map((result) => (
+                    <div key={result.id} className="border p-3" style={{ borderColor: `${theme.primary}55` }}>
+                        <div className="text-xs opacity-70">{result.source}</div>
+                        <div className="font-bold">{result.title}</div>
+                        <div className="text-xs opacity-80 mt-1">{result.snippet}</div>
                     </div>
                 ))}
             </div>
+
+            {(meta.workspace || meta.indexedFiles > 0) && (
+                <div className="mt-3 text-[10px] opacity-60">
+                    {meta.indexedFiles > 0 ? `INDEXED FILES: ${meta.indexedFiles}` : ''}
+                    {meta.indexedFiles > 0 && meta.workspace ? ' | ' : ''}
+                    {meta.workspace ? `WORKSPACE: ${meta.workspace}` : ''}
+                </div>
+            )}
         </div>
     );
 };
@@ -604,6 +1025,12 @@ const Dashboard = () => {
                         </div>
                     </div>
 
+                </div>
+
+                {/* ─── Command Center Panels ─── */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <CronPanel theme={theme} />
+                    <GlobalSearchPanel theme={theme} />
                 </div>
 
                 {/* ─── Activity Log (full width) ─── */}

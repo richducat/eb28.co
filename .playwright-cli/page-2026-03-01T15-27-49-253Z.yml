@@ -1,0 +1,504 @@
+- generic [ref=e3]:
+  - navigation [ref=e4]:
+    - generic [ref=e6]:
+      - generic [ref=e7]:
+        - generic [ref=e8]: EB
+        - generic [ref=e9]: EB 28
+      - generic [ref=e10]:
+        - button "Infrastructure" [ref=e11] [cursor=pointer]
+        - button "Portfolio" [ref=e12] [cursor=pointer]
+        - button "Deployments" [ref=e13] [cursor=pointer]
+        - button "$10 AI Offer" [ref=e14] [cursor=pointer]
+        - button "Architect Your System" [ref=e15] [cursor=pointer]
+  - generic [ref=e19]:
+    - generic [ref=e22]: eb28.co | Private AI Infrastructure
+    - heading "Deploy Private AI. Automate Your Revenue." [level=1] [ref=e23]:
+      - text: Deploy Private AI.
+      - text: Automate Your Revenue.
+    - paragraph [ref=e24]: EB 28 engineers secure, local LLMs and custom AI infrastructure. We deploy on your hardware or our secure cloud to automate your internal processes and drive hyper-targeted client generation.
+    - generic [ref=e25]:
+      - button "Start Your AI Core for $10" [ref=e26] [cursor=pointer]:
+        - text: Start Your AI Core for $10
+        - img [ref=e27]
+      - button "Consult on Infrastructure" [ref=e29] [cursor=pointer]
+    - generic [ref=e30]:
+      - generic [ref=e31]:
+        - generic [ref=e32]: 100%
+        - generic [ref=e33]: Data Sovereignty
+      - generic [ref=e34]:
+        - generic [ref=e35]: On-Prem
+        - generic [ref=e36]: Hardware Setup
+      - generic [ref=e37]:
+        - generic [ref=e38]: Cloud
+        - generic [ref=e39]: eb28.co Hosting
+      - generic [ref=e40]:
+        - generic [ref=e41]: 10x
+        - generic [ref=e42]: Lead Gen ROI
+  - generic [ref=e44]:
+    - generic [ref=e45]:
+      - heading "Strategic Artificial Intelligence" [level=2] [ref=e46]
+      - paragraph [ref=e47]: Public AI leaks your company secrets. We build military-grade, localized intelligence ecosystems that protect your data while scaling your output.
+    - generic [ref=e48]:
+      - generic [ref=e49]:
+        - img [ref=e51]
+        - heading "Private LLM Infrastructure" [level=3] [ref=e53]
+        - paragraph [ref=e54]:
+          - text: Run powerful, customized open-source models directly from
+          - strong [ref=e55]: your own local hardware
+          - text: or our highly secure
+          - strong [ref=e56]: eb28.co cloud servers
+          - text: . Total privacy for your internal operations and data.
+      - generic [ref=e57]:
+        - img [ref=e59]
+        - heading "Custom AI Agents & RAG" [level=3] [ref=e62]
+        - paragraph [ref=e63]:
+          - text: We develop strategic AI agents that actually know your business. By integrating
+          - strong [ref=e64]: Local RAG (Retrieval-Augmented Generation)
+          - text: ", your AI can securely chat with your private SOPs, CRM records, and company documents."
+      - generic [ref=e65]:
+        - img [ref=e67]
+        - heading "Revenue & Lead Automation" [level=3] [ref=e70]
+        - paragraph [ref=e71]:
+          - text: AI is useless if it doesn't make money. We fuse our custom intelligence builds with
+          - strong [ref=e72]: high-intent paid media and automated customer journeys
+          - text: to flood your business with qualified leads and seamless onboarding.
+  - generic [ref=e75]:
+    - generic [ref=e76]:
+      - heading "The EB 28 Advantage" [level=3] [ref=e77]
+      - heading "Deep Tech Meets Client Generation." [level=2] [ref=e78]
+      - generic [ref=e79]:
+        - generic [ref=e80]:
+          - img [ref=e82]
+          - generic [ref=e85]:
+            - heading "Absolute Data Sovereignty" [level=4] [ref=e86]
+            - paragraph [ref=e87]: Stop feeding ChatGPT your client lists and financial data. We build air-gapped and secure-cloud systems where your proprietary data remains entirely yours.
+        - generic [ref=e88]:
+          - img [ref=e90]
+          - generic [ref=e93]:
+            - heading "Hardware & Cloud Flexibility" [level=4] [ref=e94]
+            - paragraph [ref=e95]:
+              - text: You choose the deployment. Run AI locally on your own business hardware, or rent highly scalable, secure GPU infrastructure directly from
+              - strong [ref=e96]: eb28.co
+              - text: .
+        - generic [ref=e97]:
+          - img [ref=e99]
+          - generic [ref=e102]:
+            - heading "Revenue-Driven Architecture" [level=4] [ref=e103]
+            - paragraph [ref=e104]: Our deployments aren't just parlor tricks. They are systematically engineered to capture leads, convert traffic, and automate onboarding workflows.
+    - generic [ref=e108]:
+      - generic [ref=e109]:
+        - generic [ref=e110]: Data Leakage to Big Tech
+        - generic [ref=e111]: 0%
+      - generic [ref=e112]:
+        - generic [ref=e113]: Custom Process Automation
+        - generic [ref=e114]: 99%
+      - generic [ref=e115]:
+        - generic [ref=e116]: Lead Gen Systems
+        - generic [ref=e117]: Always Active
+      - paragraph [ref=e118]: Tailor-fit for small businesses scaling in Florida and nationwide.
+  - generic [ref=e120]:
+    - generic [ref=e121]:
+      - heading "Live App Portfolio" [level=2] [ref=e122]
+      - paragraph [ref=e123]: Direct access to the apps, websites, and games we have been building. Every project is live so clients can experience the execution quality firsthand.
+    - generic [ref=e124]:
+      - link "Utility App Tesla Helper App https://teslahelper.app Open Project" [ref=e125] [cursor=pointer]:
+        - /url: https://teslahelper.app
+        - generic [ref=e126]:
+          - generic [ref=e127]: Utility App
+          - img [ref=e128]
+        - heading "Tesla Helper App" [level=3] [ref=e131]
+        - paragraph [ref=e132]: https://teslahelper.app
+        - generic [ref=e133]:
+          - text: Open Project
+          - img [ref=e134]
+      - link "Web Game Push to Skate Earn https://push-skate-to-earn-brotp1ofe-eb28-llcs-projects.vercel.app/ Open Project" [ref=e136] [cursor=pointer]:
+        - /url: https://push-skate-to-earn-brotp1ofe-eb28-llcs-projects.vercel.app/
+        - generic [ref=e137]:
+          - generic [ref=e138]: Web Game
+          - img [ref=e139]
+        - heading "Push to Skate Earn" [level=3] [ref=e142]
+        - paragraph [ref=e143]: https://push-skate-to-earn-brotp1ofe-eb28-llcs-projects.vercel.app/
+        - generic [ref=e144]:
+          - text: Open Project
+          - img [ref=e145]
+      - link "Web Game Echo Drift https://cosmicchat-hf9y6ds2w-eb28-llcs-projects.vercel.app/echodrift Open Project" [ref=e147] [cursor=pointer]:
+        - /url: https://cosmicchat-hf9y6ds2w-eb28-llcs-projects.vercel.app/echodrift
+        - generic [ref=e148]:
+          - generic [ref=e149]: Web Game
+          - img [ref=e150]
+        - heading "Echo Drift" [level=3] [ref=e153]
+        - paragraph [ref=e154]: https://cosmicchat-hf9y6ds2w-eb28-llcs-projects.vercel.app/echodrift
+        - generic [ref=e155]:
+          - text: Open Project
+          - img [ref=e156]
+      - link "Web Game FC Street https://fc-street.vercel.app/ Open Project" [ref=e158] [cursor=pointer]:
+        - /url: https://fc-street.vercel.app/
+        - generic [ref=e159]:
+          - generic [ref=e160]: Web Game
+          - img [ref=e161]
+        - heading "FC Street" [level=3] [ref=e164]
+        - paragraph [ref=e165]: https://fc-street.vercel.app/
+        - generic [ref=e166]:
+          - text: Open Project
+          - img [ref=e167]
+      - link "Web Game Pixel Sort https://cosmicchat-five.vercel.app/game Open Project" [ref=e169] [cursor=pointer]:
+        - /url: https://cosmicchat-five.vercel.app/game
+        - generic [ref=e170]:
+          - generic [ref=e171]: Web Game
+          - img [ref=e172]
+        - heading "Pixel Sort" [level=3] [ref=e175]
+        - paragraph [ref=e176]: https://cosmicchat-five.vercel.app/game
+        - generic [ref=e177]:
+          - text: Open Project
+          - img [ref=e178]
+      - link "AI Chat App Cosmic Chat https://cosmicchat-five.vercel.app Open Project" [ref=e180] [cursor=pointer]:
+        - /url: https://cosmicchat-five.vercel.app
+        - generic [ref=e181]:
+          - generic [ref=e182]: AI Chat App
+          - img [ref=e183]
+        - heading "Cosmic Chat" [level=3] [ref=e186]
+        - paragraph [ref=e187]: https://cosmicchat-five.vercel.app
+        - generic [ref=e188]:
+          - text: Open Project
+          - img [ref=e189]
+      - link "Claims Platform Veteran Claim App https://tyfys.net/app Open Project" [ref=e191] [cursor=pointer]:
+        - /url: https://tyfys.net/app
+        - generic [ref=e192]:
+          - generic [ref=e193]: Claims Platform
+          - img [ref=e194]
+        - heading "Veteran Claim App" [level=3] [ref=e197]
+        - paragraph [ref=e198]: https://tyfys.net/app
+        - generic [ref=e199]:
+          - text: Open Project
+          - img [ref=e200]
+      - link "AI Fitness App Toby AI + Lab App https://app.labstudio.fit Open Project" [ref=e202] [cursor=pointer]:
+        - /url: https://app.labstudio.fit
+        - generic [ref=e203]:
+          - generic [ref=e204]: AI Fitness App
+          - img [ref=e205]
+        - heading "Toby AI + Lab App" [level=3] [ref=e208]
+        - paragraph [ref=e209]: https://app.labstudio.fit
+        - generic [ref=e210]:
+          - text: Open Project
+          - img [ref=e211]
+      - link "Business Website VoltGuard https://voltguard.homes/#services Open Project" [ref=e213] [cursor=pointer]:
+        - /url: https://voltguard.homes/#services
+        - generic [ref=e214]:
+          - generic [ref=e215]: Business Website
+          - img [ref=e216]
+        - heading "VoltGuard" [level=3] [ref=e219]
+        - paragraph [ref=e220]: https://voltguard.homes/#services
+        - generic [ref=e221]:
+          - text: Open Project
+          - img [ref=e222]
+      - link "Content Website Daily Disspatch https://dailydisspatch.com Open Project" [ref=e224] [cursor=pointer]:
+        - /url: https://dailydisspatch.com
+        - generic [ref=e225]:
+          - generic [ref=e226]: Content Website
+          - img [ref=e227]
+        - heading "Daily Disspatch" [level=3] [ref=e230]
+        - paragraph [ref=e231]: https://dailydisspatch.com
+        - generic [ref=e232]:
+          - text: Open Project
+          - img [ref=e233]
+      - link "Ecommerce Website Best Deals Online https://bestdealsonline.us/ Open Project" [ref=e235] [cursor=pointer]:
+        - /url: https://bestdealsonline.us/
+        - generic [ref=e236]:
+          - generic [ref=e237]: Ecommerce Website
+          - img [ref=e238]
+        - heading "Best Deals Online" [level=3] [ref=e241]
+        - paragraph [ref=e242]: https://bestdealsonline.us/
+        - generic [ref=e243]:
+          - text: Open Project
+          - img [ref=e244]
+      - link "Affiliate Website Best Mobile VPN https://www.bestmobilevpn.net/ Open Project" [ref=e246] [cursor=pointer]:
+        - /url: https://www.bestmobilevpn.net/
+        - generic [ref=e247]:
+          - generic [ref=e248]: Affiliate Website
+          - img [ref=e249]
+        - heading "Best Mobile VPN" [level=3] [ref=e252]
+        - paragraph [ref=e253]: https://www.bestmobilevpn.net/
+        - generic [ref=e254]:
+          - text: Open Project
+          - img [ref=e255]
+  - generic [ref=e258]:
+    - generic [ref=e259]:
+      - generic [ref=e260]:
+        - heading "Infrastructure & Deployments" [level=2] [ref=e261]
+        - paragraph [ref=e262]: From local server builds to revenue-generating ad funnels, explore the architectures we build for our partners.
+      - generic [ref=e263]:
+        - button "All Systems" [ref=e264] [cursor=pointer]
+        - button "Private Infrastructure" [ref=e265] [cursor=pointer]
+        - button "Custom LLMs & Agents" [ref=e266] [cursor=pointer]
+        - button "Revenue & Lead Gen" [ref=e267] [cursor=pointer]
+    - generic [ref=e268]:
+      - generic [ref=e269]:
+        - generic [ref=e270]:
+          - generic [ref=e271]:
+            - img [ref=e273]
+            - generic [ref=e276]: ai agents
+          - heading "DIY AI Foundation Build" [level=3] [ref=e277]
+          - paragraph [ref=e278]: The perfect proof-of-concept. I will personally set up a foundational AI agent to demonstrate how private logic can transform your workflow.
+          - generic [ref=e279]:
+            - generic [ref=e280]:
+              - img [ref=e281]
+              - text: Secure Account Setup
+            - generic [ref=e283]:
+              - img [ref=e284]
+              - text: Basic Knowledge Base Link
+            - generic [ref=e286]:
+              - img [ref=e287]
+              - text: Custom System Prompt
+        - generic [ref=e289]:
+          - generic [ref=e290]: $10.00
+          - button "Build It" [ref=e291] [cursor=pointer]:
+            - text: Build It
+            - img [ref=e292]
+      - generic [ref=e294]:
+        - generic [ref=e295]:
+          - generic [ref=e296]:
+            - img [ref=e298]
+            - generic [ref=e301]: infrastructure
+          - heading "On-Premise LLM Server" [level=3] [ref=e302]
+          - paragraph [ref=e303]: Run advanced AI models (Llama, Mistral) directly on your own office hardware. Zero cloud dependency. Absolute data sovereignty.
+          - generic [ref=e304]:
+            - generic [ref=e305]:
+              - img [ref=e306]
+              - text: Hardware Spec & Setup
+            - generic [ref=e308]:
+              - img [ref=e309]
+              - text: Local Model Deployment
+            - generic [ref=e311]:
+              - img [ref=e312]
+              - text: Offline Capability
+        - generic [ref=e314]:
+          - generic [ref=e315]: Custom Quote
+          - button "Deploy" [ref=e316] [cursor=pointer]:
+            - text: Deploy
+            - img [ref=e317]
+      - generic [ref=e319]:
+        - generic [ref=e320]:
+          - generic [ref=e321]:
+            - img [ref=e323]
+            - generic [ref=e325]: infrastructure
+          - heading "eb28.co Cloud AI Hosting" [level=3] [ref=e326]
+          - paragraph [ref=e327]: Rent partitioned, highly-secure GPU instances on our proprietary cloud to run your customized LLMs without the hardware upfront cost.
+          - generic [ref=e328]:
+            - generic [ref=e329]:
+              - img [ref=e330]
+              - text: High-Performance Compute
+            - generic [ref=e332]:
+              - img [ref=e333]
+              - text: Encrypted Data Pipelines
+            - generic [ref=e335]:
+              - img [ref=e336]
+              - text: Managed Maintenance
+        - generic [ref=e338]:
+          - generic [ref=e339]: Custom Quote
+          - button "Deploy" [ref=e340] [cursor=pointer]:
+            - text: Deploy
+            - img [ref=e341]
+      - generic [ref=e343]:
+        - generic [ref=e344]:
+          - generic [ref=e345]:
+            - img [ref=e347]
+            - generic [ref=e351]: ai agents
+          - heading "Local RAG Knowledge Base" [level=3] [ref=e352]
+          - paragraph [ref=e353]: Chat securely with your internal documents, SOPs, and client histories. Your data never leaves your private infrastructure.
+          - generic [ref=e354]:
+            - generic [ref=e355]:
+              - img [ref=e356]
+              - text: Vector Database Setup
+            - generic [ref=e358]:
+              - img [ref=e359]
+              - text: Semantic Search Integration
+            - generic [ref=e361]:
+              - img [ref=e362]
+              - text: Role-Based Access
+        - generic [ref=e364]:
+          - generic [ref=e365]: Custom Quote
+          - button "Deploy" [ref=e366] [cursor=pointer]:
+            - text: Deploy
+            - img [ref=e367]
+      - generic [ref=e369]:
+        - generic [ref=e370]:
+          - generic [ref=e371]:
+            - img [ref=e373]
+            - generic [ref=e378]: revenue
+          - heading "Automated Client Gen Matrix" [level=3] [ref=e379]
+          - paragraph [ref=e380]: High-intent lead capture systems infused with AI qualification that feed directly into automated CRM customer journeys.
+          - generic [ref=e381]:
+            - generic [ref=e382]:
+              - img [ref=e383]
+              - text: AI Lead Qualification
+            - generic [ref=e385]:
+              - img [ref=e386]
+              - text: Dynamic Email Sequences
+            - generic [ref=e388]:
+              - img [ref=e389]
+              - text: Florida Market SEO
+        - generic [ref=e391]:
+          - generic [ref=e392]: Custom Quote
+          - button "Deploy" [ref=e393] [cursor=pointer]:
+            - text: Deploy
+            - img [ref=e394]
+      - generic [ref=e396]:
+        - generic [ref=e397]:
+          - generic [ref=e398]:
+            - img [ref=e400]
+            - generic [ref=e404]: revenue
+          - heading "Ad-to-AI Conversion Funnel" [level=3] [ref=e405]
+          - paragraph [ref=e406]: We buy the ads and route the traffic to an autonomous AI agent that closes deals and manages onboarding automatically.
+          - generic [ref=e407]:
+            - generic [ref=e408]:
+              - img [ref=e409]
+              - text: Paid Media Management
+            - generic [ref=e411]:
+              - img [ref=e412]
+              - text: Instant AI Response
+            - generic [ref=e414]:
+              - img [ref=e415]
+              - text: ROAS Analytics
+        - generic [ref=e417]:
+          - generic [ref=e418]: Custom Quote
+          - button "Deploy" [ref=e419] [cursor=pointer]:
+            - text: Deploy
+            - img [ref=e420]
+  - generic [ref=e424]:
+    - generic [ref=e425]:
+      - heading "Deployment Models" [level=2] [ref=e426]
+      - paragraph [ref=e427]: Start with a low-risk proof of concept or engage us to architect your entire private intelligence and revenue ecosystem.
+    - generic [ref=e428]:
+      - generic [ref=e429]:
+        - generic [ref=e430]: Proof of Concept
+        - heading "AI Agent Foundation" [level=3] [ref=e431]
+        - generic [ref=e432]: $10/one-time
+        - paragraph [ref=e433]: The perfect entry point. I will personally set up a foundational AI logic agent to prove how custom prompts and data linkage can automate your tasks.
+        - generic [ref=e434]:
+          - paragraph [ref=e435]: "What's Included:"
+          - list [ref=e436]:
+            - listitem [ref=e437]:
+              - img [ref=e438]
+              - generic [ref=e441]: Secure Account Architecture
+            - listitem [ref=e442]:
+              - img [ref=e443]
+              - generic [ref=e446]: Basic Local Data Linkage
+            - listitem [ref=e447]:
+              - img [ref=e448]
+              - generic [ref=e451]: 1 Custom Strategic Prompt
+            - listitem [ref=e452]:
+              - img [ref=e453]
+              - generic [ref=e456]: System Integration Guide
+        - button "Build Prototype for $10" [ref=e457] [cursor=pointer]
+        - paragraph [ref=e458]: Delivered securely within 24 hours.
+      - generic [ref=e459]:
+        - heading "Private AI Infrastructure" [level=3] [ref=e460]
+        - generic [ref=e461]: Consultation/First
+        - paragraph [ref=e462]: For businesses ready to deploy local LLMs and secure internal AI tools.
+        - list [ref=e463]:
+          - listitem [ref=e464]:
+            - img [ref=e465]
+            - generic [ref=e468]: On-Prem Hardware Selection & Setup
+          - listitem [ref=e469]:
+            - img [ref=e470]
+            - generic [ref=e473]: eb28.co Cloud Hosting Provisioning
+          - listitem [ref=e474]:
+            - img [ref=e475]
+            - generic [ref=e478]: Local RAG / Document Integration
+        - button "Discuss Infrastructure" [ref=e479] [cursor=pointer]
+      - generic [ref=e480]:
+        - heading "The Revenue Ecosystem" [level=3] [ref=e481]
+        - generic [ref=e482]: Consultation/First
+        - paragraph [ref=e483]: We tie your private AI directly to client generation and lead conversion.
+        - list [ref=e484]:
+          - listitem [ref=e485]:
+            - img [ref=e486]
+            - generic [ref=e489]: Custom AI Sales Agents
+          - listitem [ref=e490]:
+            - img [ref=e491]
+            - generic [ref=e494]: Paid Media & Ad Spend Management
+          - listitem [ref=e495]:
+            - img [ref=e496]
+            - generic [ref=e499]: Automated CRM Onboarding Flows
+        - button "Architect Revenue" [ref=e500] [cursor=pointer]
+  - generic [ref=e503]:
+    - generic [ref=e504]:
+      - heading "Initialize Your Build." [level=2] [ref=e505]
+      - paragraph [ref=e506]: Whether you need a $10 proof-of-concept or a full on-premise LLM server deployment, submit your specs below.
+    - generic [ref=e507]:
+      - generic [ref=e508]:
+        - generic [ref=e509]:
+          - generic [ref=e510]: Name
+          - textbox "John Doe" [ref=e511]
+        - generic [ref=e512]:
+          - generic [ref=e513]: Phone (SMS Enabled)
+          - textbox "(555) 000-0000" [ref=e514]
+      - generic [ref=e515]:
+        - generic [ref=e516]: Email
+        - textbox "john@example.com" [ref=e517]
+      - generic [ref=e518]:
+        - generic [ref=e519]: Infrastructure Need
+        - combobox [ref=e520]:
+          - option "🔥 Deploy $10 Proof of Concept Bot" [selected]
+          - option "On-Premise Local LLM Setup"
+          - option "eb28.co Cloud AI Hosting"
+          - option "Revenue Automation & Paid Ads"
+          - option "General Tech/Strategy Consultation"
+      - generic [ref=e521]:
+        - generic [ref=e522]: Project Specs / Business Goals
+        - textbox "Tell us about your data privacy needs or revenue goals..." [ref=e523]
+      - button "Submit Architecture Request" [ref=e524] [cursor=pointer]:
+        - text: Submit Architecture Request
+        - img [ref=e525]
+      - paragraph [ref=e527]: 🔒 Transmission encrypted. For the $10 Setup, you will be redirected to a secure payment portal immediately.
+  - contentinfo [ref=e528]:
+    - generic [ref=e529]:
+      - generic [ref=e530]:
+        - generic [ref=e531]:
+          - generic [ref=e532]: EB 28 | eb28.co
+          - paragraph [ref=e533]:
+            - text: EB 28 builds
+            - strong [ref=e534]: Private AI Infrastructure
+            - text: for small businesses. Whether you need on-premise open-source LLMs, secure cloud hosting via eb28.co, or high-intent revenue automation, we engineer the systems that scale your operations.
+          - generic [ref=e535]:
+            - img [ref=e536]
+            - generic [ref=e539]: Serving Florida & National Markets
+        - generic [ref=e540]:
+          - heading "Infrastructure" [level=4] [ref=e541]
+          - list [ref=e542]:
+            - listitem [ref=e543]:
+              - link "On-Premise Server Builds" [ref=e544] [cursor=pointer]:
+                - /url: "#"
+            - listitem [ref=e545]:
+              - link "eb28.co Cloud Hosting" [ref=e546] [cursor=pointer]:
+                - /url: "#"
+            - listitem [ref=e547]:
+              - link "Local RAG Knowledge Bases" [ref=e548] [cursor=pointer]:
+                - /url: "#"
+            - listitem [ref=e549]:
+              - link "Automated CRM Integrations" [ref=e550] [cursor=pointer]:
+                - /url: "#"
+        - generic [ref=e551]:
+          - heading "Agency" [level=4] [ref=e552]
+          - list [ref=e553]:
+            - listitem [ref=e554]:
+              - link "Our Tech Stack" [ref=e555] [cursor=pointer]:
+                - /url: "#"
+            - listitem [ref=e556]:
+              - link "Revenue Case Studies" [ref=e557] [cursor=pointer]:
+                - /url: "#"
+            - listitem [ref=e558]:
+              - link "Security & Privacy" [ref=e559] [cursor=pointer]:
+                - /url: "#"
+            - listitem [ref=e560]:
+              - link "Consultation Booking" [ref=e561] [cursor=pointer]:
+                - /url: "#"
+      - generic [ref=e562]:
+        - paragraph [ref=e563]: © 2026 EB 28. All rights reserved. | Private AI & Revenue Architecture.
+        - generic [ref=e564]:
+          - generic [ref=e565] [cursor=pointer]:
+            - generic [ref=e566]: Twitter
+            - img [ref=e567]
+          - generic [ref=e569] [cursor=pointer]:
+            - generic [ref=e570]: LinkedIn
+            - img [ref=e571]

@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 import Dashboard from './Dashboard';
 import AppBuilderStudio from './AppBuilderStudio';
+import FundManager from './FundManager';
 import './index.css';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -14,6 +15,10 @@ const isDashboardRoute =
   hostname === 'dashboard.eb28.co' ||
   hostname === 'command-center.eb28.co';
 const isAppBuilderRoute = pathname === '/appbuilder' || pathname === '/appbuilder/';
+const isFundManagerRoute =
+  pathname === '/fundmanager' ||
+  pathname === '/fundmanager/' ||
+  hostname === 'fundmanager.eb28.co';
 
 if (isDashboardRoute) {
   root.render(
@@ -25,6 +30,12 @@ if (isDashboardRoute) {
   root.render(
     <React.StrictMode>
       <AppBuilderStudio />
+    </React.StrictMode>
+  );
+} else if (isFundManagerRoute) {
+  root.render(
+    <React.StrictMode>
+      <FundManager />
     </React.StrictMode>
   );
 } else {

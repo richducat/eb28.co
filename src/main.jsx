@@ -7,17 +7,18 @@ import FundManager from './FundManager';
 import './index.css';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
-const pathname = window.location.pathname;
-const hostname = window.location.hostname;
+const pathname = window.location.pathname.toLowerCase().replace(/\/$/, "");
+const hostname = window.location.hostname.toLowerCase();
+
+console.log('DEBUG: routing', { pathname, hostname });
+
 const isDashboardRoute =
   pathname === '/dash' ||
-  pathname === '/dash/' ||
   hostname === 'dashboard.eb28.co' ||
   hostname === 'command-center.eb28.co';
-const isAppBuilderRoute = pathname === '/appbuilder' || pathname === '/appbuilder/';
+const isAppBuilderRoute = pathname === '/appbuilder';
 const isFundManagerRoute =
   pathname === '/fundmanager' ||
-  pathname === '/fundmanager/' ||
   hostname === 'fundmanager.eb28.co';
 
 if (isDashboardRoute) {

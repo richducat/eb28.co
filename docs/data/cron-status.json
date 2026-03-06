@@ -1,8 +1,10 @@
 {
   "scheduler": {
     "status": "static-cache",
-    "generatedAt": "2026-03-06T23:02:29.203Z"
+    "generatedAt": "2026-03-06T23:18:57.067Z"
   },
   "jobs": [],
-  "errors": []
+  "errors": [
+    "cron unavailable: spawn openclaw ENOENT"
+  ]
 }

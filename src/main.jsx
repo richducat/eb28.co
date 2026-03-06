@@ -10,8 +10,6 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 const pathname = window.location.pathname.toLowerCase().replace(/\/$/, "");
 const hostname = window.location.hostname.toLowerCase();
 
-console.log('DEBUG: routing', { pathname, hostname });
-
 const isDashboardRoute =
   pathname === '/dash' ||
   hostname === 'dashboard.eb28.co' ||

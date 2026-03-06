@@ -1,3 +1,19 @@
+import { promises as fs } from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+
+async function readJsonSafe(filePath) {
+    try {
+        return JSON.parse(await fs.readFile(filePath, 'utf8'));
+    } catch {
+        return null;
+    }
+}
+
+function resolveWorkspacePath() {
+    return process.env.OPENCLAW_WORKSPACE || path.join(os.homedir(), '.openclaw', 'workspace-ocdev');
+}
+
 export default async function handler(req, res) {
     if (req.method !== 'GET') {
         res.setHeader('Allow', 'GET');
@@ -80,6 +96,10 @@ export default async function handler(req, res) {
             }
         }
 
+        const workspace = resolveWorkspacePath();
+        const committee = await readJsonSafe(path.join(workspace, 'ops', 'committee', 'outputs', 'committee_decision.json'));
+        const orchestrator = await readJsonSafe(path.join(workspace, 'ops', 'reports', 'live_orchestrator_state.json'));
+
         res.setHeader('Cache-Control', 'no-store');
         res.setHeader('Access-Control-Allow-Origin', '*');
         return res.status(200).json({
@@ -101,6 +121,17 @@ export default async function handler(req, res) {
             botPerf: tickerData.botPerf || '',
             accountStatus: tickerData.accountStatus || 'UNKNOWN',
             latency: tickerData.latency || '--',
+            committee: committee ? {
+                decision: committee.decision,
+                direction: committee.direction,
+                confidence: committee.confidence,
+                blockers: committee.blockers || [],
+            } : null,
+            orchestrator: orchestrator ? {
+                status: orchestrator?.result?.ran ? 'RUNNING' : 'IDLE',
+                lastCycle: orchestrator?.lastCycle || null,
+                detail: orchestrator?.result || null,
+            } : null,
         });
     } catch (error) {
         res.setHeader('Cache-Control', 'no-store');

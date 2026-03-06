@@ -1,0 +1,90 @@
+{
+  "ok": true,
+  "source": "freeopenclawtrader.com",
+  "updatedAt": "2/18/2026, 11:59:42 PM ET",
+  "portfolio": {
+    "balance": "$0.00",
+    "exposure": "$18.26",
+    "totalPnl": "-$33.44",
+    "positionsCount": 12,
+    "winRate": "8.3%",
+    "profitFactor": "0.27",
+    "drawdown": "-78.6%"
+  },
+  "bots": [
+    {
+      "name": "AUTOTRADER",
+      "status": "FAIL"
+    },
+    {
+      "name": "POSITION MANAGER",
+      "status": "FAIL"
+    },
+    {
+      "name": "MEMEBOT",
+      "status": "FAIL"
+    },
+    {
+      "name": "COPYTRADING",
+      "status": "FAIL"
+    },
+    {
+      "name": "OPPORTUNITIES",
+      "status": "FAIL"
+    }
+  ],
+  "trades": [
+    "[03:37:18] BUY NO Bitcoin Up or Down - February 18, 10PM ET",
+    "[02:47:59] SELL NO Trump out as President before GTA VI?",
+    "[02:47:58] SELL NO New Rihanna Album before GTA VI?",
+    "[02:47:57] SELL NO Will bitcoin hit $1m before GTA VI?",
+    "[00:51:57] BUY YES Will NVIDIA (NVDA) finish week of February 16 above $190?"
+  ],
+  "botPerf": "Copytrading PnL: -$10.42 | Opportunities PnL: -$10.03 | Memebot: total 39, closed 4 (TP 2/SL 2), open 35, unroutable 1",
+  "accountStatus": "ACTIVE",
+  "latency": "24ms",
+  "committee": {
+    "decision": "NO_TRADE",
+    "direction": "NA",
+    "confidence": 54,
+    "blockers": [
+      "risk_veto",
+      "insufficient_quorum",
+      "no_direction_majority"
+    ]
+  },
+  "orchestrator": {
+    "status": "RUNNING",
+    "lastCycle": "2026-03-06T09:12:26.072086",
+    "detail": {
+      "ran": true,
+      "runs": [
+        {
+          "name": "committee_runner",
+          "code": 0,
+          "out": "{\"committee\": \"12-agent-v1\", \"decision\": \"NO_TRADE\", \"direction\": \"NA\", \"confidence\": 54, \"blockers\": [\"risk_veto\", \"insufficient_quorum\", \"no_direction_majority\"]}\n"
+        },
+        {
+          "name": "fastloop",
+          "code": 0,
+          "out": "ASTLOOP_ENTRY_THRESHOLD=0.05, SIMMER_FASTLOOP_MOMENTUM_THRESHOLD=0.03, SIMMER_FASTLOOP_MAX_POSITION_USD=10, SIMMER_FASTLOOP_LOOKBACK_MINUTES=30, SIMMER_FASTLOOP_MIN_TIME_BETWEEN_TRADES_SEC=60, SIMMER_FASTLOOP_DAILY_BUDGET_USD=50, SIMMER_FASTLOOP_VOL_CONFIDENCE_MIN=0.5\n  ❌ Failed to fetch price data\n"
+        },
+        {
+          "name": "copytrading",
+          "code": 0,
+          "out": "────────────\n📋 1 BUY trade(s) skipped - position sizes too small. With $15.69 balance and top_n=2, each position gets ~$7.85 which is below the 5-share minimum (~$2.50). Try: lower top_n (e.g., top_n=2-3) or increase balance to ~$5+. (15 SELL trades also filtered by buy_only=True.)\n\n✅ Scan complete\n"
+        },
+        {
+          "name": "divergence",
+          "code": 0,
+          "out": "MER_DIVERGENCE_MIN_EDGE=0.05, SIMMER_DIVERGENCE_MAX_BET_USD=50, SIMMER_DIVERGENCE_KELLY_CAP=0.25, SIMMER_DIVERGENCE_DAILY_BUDGET_USD=100, SIMMER_DIVERGENCE_MAX_TRADES_PER_RUN=5, SIMMER_DIVERGENCE_DIRECTION_FILTER=any\n  ❌ Trade failed: Order too small: 1.53 shares after rounding is below minimum (5)\n"
+        },
+        {
+          "name": "weather",
+          "code": 0,
+          "out": "[automaton] Config applied for polymarket-weather-trader: SIMMER_WEATHER_ENTRY_THRESHOLD=0.05, SIMMER_WEATHER_EXIT_THRESHOLD=0.85, SIMMER_WEATHER_MAX_POSITION_USD=50, SIMMER_WEATHER_SIZING_PCT=0.1, SIMMER_WEATHER_MAX_TRADES_PER_RUN=5\n"
+        }
+      ]
+    }
+  }
+}

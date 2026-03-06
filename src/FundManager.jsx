@@ -1,5 +1,19 @@
 import React, { useState, useEffect, useCallback } from 'react';
 
+const fetchJsonWithFallback = async (primaryUrl, fallbackUrl) => {
+    try {
+        const response = await fetch(primaryUrl, { cache: 'no-store' });
+        const payload = await response.json();
+        if (!response.ok) throw new Error(payload?.error || `HTTP ${response.status}`);
+        return { payload, source: 'api' };
+    } catch (_err) {
+        const fallbackResponse = await fetch(fallbackUrl, { cache: 'no-store' });
+        const fallbackPayload = await fallbackResponse.json();
+        if (!fallbackResponse.ok) throw new Error(fallbackPayload?.error || `Fallback HTTP ${fallbackResponse.status}`);
+        return { payload: fallbackPayload, source: 'static' };
+    }
+};
+
 const AGENTS = [
     { id: 'goldman', name: 'Goldman Fundamental', roles: ['trading-research', 'quant-analyst'], color: '#22d3ee', gridPos: { x: 0, y: 0 }, botMatch: 'autotrader' },
     { id: 'jpm', name: 'JPM Technical', roles: ['crypto-levels', 'trading-research', 'ccxt'], color: '#818cf8', gridPos: { x: 1, y: 0 }, botMatch: 'position manager' },
@@ -26,17 +40,15 @@ const STATUS_TYPES = ['ACTIVE', 'RESEARCHING', 'CALCULATING', 'IDLE', 'TRADING']
 const FundManager = () => {
     const [agentStatus, setAgentStatus] = useState({});
     const [logs, setLogs] = useState([]);
-    const [systemStatus, setSystemStatus] = useState({ state: 'CONNECTING', uptime: '--', pnl: '--', balance: '--', exposure: '--', winRate: '--' });
+    const [systemStatus, setSystemStatus] = useState({ state: 'CONNECTING', uptime: '--', pnl: '--', balance: '--', exposure: '--', winRate: '--', committee: '--', orchestrator: '--' });
     const [isLive, setIsLive] = useState(false);
 
     const loadLiveData = useCallback(async () => {
         try {
-            const res = await fetch('/api/fundmanager-data', { cache: 'no-store' });
-            if (!res.ok) throw new Error(`API returned ${res.status}`);
-            const data = await res.json();
+            const { payload: data, source } = await fetchJsonWithFallback('/api/fundmanager-data', '/data/fundmanager-data.json');
             if (!data.ok) throw new Error(data.error || 'No data');
 
-            setIsLive(true);
+            setIsLive(source === 'api' || data.source === 'freeopenclawtrader.com');
 
             // Update system status from portfolio data
             setSystemStatus({
@@ -46,6 +58,8 @@ const FundManager = () => {
                 balance: data.portfolio.balance,
                 exposure: data.portfolio.exposure,
                 winRate: data.portfolio.winRate,
+                committee: data.committee?.decision || '--',
+                orchestrator: data.orchestrator?.status || '--',
             });
 
             // Map bot statuses to agents
@@ -75,6 +89,12 @@ const FundManager = () => {
             // Trade logs for telemetry
             const formattedLogs = data.trades?.map(t => t) || [];
             if (data.botPerf) formattedLogs.unshift(`[PERF] ${data.botPerf}`);
+            if (data.committee?.decision) {
+                formattedLogs.unshift(`[COMMITTEE] ${data.committee.decision} ${data.committee.direction || 'NA'} conf=${data.committee.confidence ?? '--'} blockers=${(data.committee.blockers || []).join(',') || 'none'}`);
+            }
+            if (data.orchestrator?.status) {
+                formattedLogs.unshift(`[ORCHESTRATOR] ${data.orchestrator.status} @ ${data.orchestrator.lastCycle || '--'}`);
+            }
             formattedLogs.unshift(`[SYSTEM] Updated: ${data.updatedAt} | P&L: ${data.portfolio.totalPnl} | Positions: ${data.portfolio.positionsCount}`);
             setLogs(formattedLogs.slice(0, 12));
         } catch (err) {
@@ -149,6 +169,14 @@ const FundManager = () => {
                     <div className="flex flex-col items-end">
                         <span className="opacity-50">WIN RATE</span>
                         <span className="text-blue-400">{systemStatus.winRate}</span>
+                    </div>
+                    <div className="flex flex-col items-end">
+                        <span className="opacity-50">COMMITTEE</span>
+                        <span className="text-purple-400">{systemStatus.committee}</span>
+                    </div>
+                    <div className="flex flex-col items-end">
+                        <span className="opacity-50">ORCH</span>
+                        <span className="text-cyan-400">{systemStatus.orchestrator}</span>
                     </div>
                 </div>
             </header>

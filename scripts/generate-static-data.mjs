@@ -94,14 +94,30 @@ function parseTickerDataFromHtml(html) {
 
 async function buildFundManagerData() {
   let tickerData = null;
+
+  // 1) Prefer the ticker-site generated JSON (fresh workflow output)
   try {
-    const res = await fetch('https://freeopenclawtrader.com', { headers: { 'User-Agent': 'FundManager-StaticBuilder/1.0' } });
+    const res = await fetch('https://raw.githubusercontent.com/richducat/ticker-site/main/docs/data.json', {
+      headers: { 'User-Agent': 'FundManager-StaticBuilder/1.0' }
+    });
     if (res.ok) {
-      const html = await res.text();
-      tickerData = parseTickerDataFromHtml(html);
+      tickerData = await res.json();
     }
   } catch {
-    // ignore network errors and fallback below
+    // continue to fallback
+  }
+
+  // 2) Fallback to legacy site HTML parsing
+  if (!tickerData) {
+    try {
+      const res = await fetch('https://freeopenclawtrader.com', { headers: { 'User-Agent': 'FundManager-StaticBuilder/1.0' } });
+      if (res.ok) {
+        const html = await res.text();
+        tickerData = parseTickerDataFromHtml(html);
+      }
+    } catch {
+      // ignore network errors and fallback below
+    }
   }
 
   const committee = await readJsonSafe(path.join(workspace, 'ops', 'committee', 'outputs', 'committee_decision.json')) || {
@@ -127,7 +143,7 @@ async function buildFundManagerData() {
 
   return {
     ok: true,
-    source: tickerData ? 'freeopenclawtrader.com' : 'static-cache',
+    source: tickerData ? (tickerData.balanceUsd !== undefined ? 'ticker-site/data.json' : 'freeopenclawtrader.com') : 'static-cache',
     updatedAt: tickerData?.updatedAt || nowIso(),
     portfolio: {
       balance: tickerData?.balanceUsd || '$0.00',

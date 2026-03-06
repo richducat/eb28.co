@@ -1,59 +1,46 @@
 {
   "ok": true,
-  "source": "freeopenclawtrader.com",
-  "updatedAt": "2/18/2026, 11:59:42 PM ET",
+  "source": "ticker-site/data.json",
+  "updatedAt": "3/6/2026, 5:33:09 PM ET",
   "portfolio": {
     "balance": "$0.00",
-    "exposure": "$18.26",
-    "totalPnl": "-$33.44",
-    "positionsCount": 12,
-    "winRate": "8.3%",
-    "profitFactor": "0.27",
-    "drawdown": "-78.6%"
+    "exposure": "$4.08",
+    "totalPnl": "$0.34",
+    "positionsCount": 2,
+    "winRate": "--",
+    "profitFactor": "--",
+    "drawdown": "--"
   },
-  "bots": [
-    {
-      "name": "AUTOTRADER",
-      "status": "FAIL"
-    },
-    {
-      "name": "POSITION MANAGER",
-      "status": "FAIL"
-    },
-    {
-      "name": "MEMEBOT",
-      "status": "FAIL"
-    },
-    {
-      "name": "COPYTRADING",
-      "status": "FAIL"
-    },
-    {
-      "name": "OPPORTUNITIES",
-      "status": "FAIL"
-    }
-  ],
-  "trades": [
-    "[03:37:18] BUY NO Bitcoin Up or Down - February 18, 10PM ET",
-    "[02:47:59] SELL NO Trump out as President before GTA VI?",
-    "[02:47:58] SELL NO New Rihanna Album before GTA VI?",
-    "[02:47:57] SELL NO Will bitcoin hit $1m before GTA VI?",
-    "[00:51:57] BUY YES Will NVIDIA (NVDA) finish week of February 16 above $190?"
-  ],
-  "botPerf": "Copytrading PnL: -$10.42 | Opportunities PnL: -$10.03 | Memebot: total 39, closed 4 (TP 2/SL 2), open 35, unroutable 1",
-  "accountStatus": "ACTIVE",
-  "latency": "24ms",
+  "bots": [],
+  "trades": [],
+  "botPerf": "",
+  "accountStatus": "UNKNOWN",
+  "latency": "--",
   "committee": {
     "decision": "NO_TRADE",
-    "direction": "NA",
-    "confidence": 0,
+    "direction": "YES",
+    "confidence": 55,
     "blockers": [
-      "missing_committee_output"
+      "insufficient_quorum"
     ]
   },
   "orchestrator": {
-    "status": "IDLE",
-    "lastCycle": "2026-03-06T22:52:25.347Z",
-    "detail": null
+    "status": "RUNNING",
+    "lastCycle": "2026-03-06T17:59:18.239922",
+    "detail": {
+      "ran": true,
+      "runs": [
+        {
+          "name": "committee_runner",
+          "code": 0,
+          "out": "{\"committee\": \"12-agent-v1\", \"decision\": \"NO_TRADE\", \"direction\": \"YES\", \"confidence\": 55, \"blockers\": [\"insufficient_quorum\"]}\n"
+        },
+        {
+          "name": "fastloop",
+          "code": 0,
+          "out": ""
+        }
+      ]
+    }
   }
 }

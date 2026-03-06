@@ -26,40 +26,70 @@ const STATUS_TYPES = ['ACTIVE', 'RESEARCHING', 'CALCULATING', 'IDLE', 'TRADING']
 const FundManager = () => {
     const [agentStatus, setAgentStatus] = useState({});
     const [logs, setLogs] = useState([]);
+    const [systemStatus, setSystemStatus] = useState({ state: 'NOMINAL', uptime: '99.98%' });
+
+    const loadData = useCallback(async () => {
+        try {
+            // Fetch Activity Feed for Logs
+            const feedRes = await fetch('/api/activity-feed?limit=20', { cache: 'no-store' });
+            if (feedRes.ok) {
+                const feed = await feedRes.json();
+                if (feed.items) {
+                    const formattedLogs = feed.items.map(item =>
+                        `[${new Date(item.timestamp).toLocaleTimeString()}] ${item.type?.toUpperCase() || 'INFO'}: ${item.message}`
+                    );
+                    setLogs(formattedLogs);
+                }
+            }
+
+            // Fetch Cron Status for Agents
+            const cronRes = await fetch('/api/cron-status', { cache: 'no-store' });
+            if (cronRes.ok) {
+                const cronData = await cronRes.json();
+                const newStatus = {};
+
+                // Set Scheduler Status
+                if (cronData.scheduler) {
+                    setSystemStatus(prev => ({
+                        ...prev,
+                        state: cronData.scheduler.status === 'running' ? 'NOMINAL' : 'IDLE'
+                    }));
+                }
+
+                AGENTS.forEach(agent => {
+                    // Try to find a matching cron job
+                    const job = cronData.jobs?.find(j =>
+                        j.name.toLowerCase().includes(agent.id.toLowerCase()) ||
+                        j.name.toLowerCase().includes(agent.name.split(' ')[0].toLowerCase())
+                    );
+
+                    if (job) {
+                        newStatus[agent.id] = {
+                            status: job.enabled ? 'ACTIVE' : 'IDLE',
+                            task: job.name,
+                            activity: job.enabled ? 100 : 0
+                        };
+                    } else {
+                        // Fallback fallback simulation for demo purposes if no job matched
+                        newStatus[agent.id] = {
+                            status: 'IDLE',
+                            task: 'No active job found...',
+                            activity: 0
+                        };
+                    }
+                });
+                setAgentStatus(newStatus);
+            }
+        } catch (err) {
+            console.error('Failed to fetch live data:', err);
+        }
+    }, []);
 
     useEffect(() => {
-        // Initialize statuses
-        const initialStatus = {};
-        AGENTS.forEach(agent => {
-            initialStatus[agent.id] = {
-                status: 'IDLE',
-                task: 'Waiting for signal...',
-                activity: 0
-            };
-        });
-        setAgentStatus(initialStatus);
-
-        // Simulation loop
-        const interval = setInterval(() => {
-            const randomAgent = AGENTS[Math.floor(Math.random() * AGENTS.length)];
-            const newStatus = STATUS_TYPES[Math.floor(Math.random() * STATUS_TYPES.length)];
-
-            setAgentStatus(prev => ({
-                ...prev,
-                [randomAgent.id]: {
-                    status: newStatus,
-                    task: `Performing ${randomAgent.roles[Math.floor(Math.random() * randomAgent.roles.length)]}...`,
-                    activity: Math.random() * 100
-                }
-            }));
-
-            // Update logs
-            const logEntry = `[${new Date().toLocaleTimeString()}] ${randomAgent.name.split(' ')[0].toUpperCase()}: ${newStatus} - Running ${randomAgent.roles[0]}`;
-            setLogs(prev => [logEntry, ...prev].slice(0, 10));
-        }, 2000);
-
+        loadData();
+        const interval = setInterval(loadData, 30000); // Refresh every 30s
         return () => clearInterval(interval);
-    }, []);
+    }, [loadData]);
 
     return (
         <div className="min-h-screen bg-[#020617] text-[#22d3ee] font-mono p-4 overflow-hidden relative selection:bg-[#22d3ee] selection:text-[#020617]">
@@ -82,7 +112,9 @@ const FundManager = () => {
                 <div className="md:col-span-2 flex items-center justify-end gap-6 text-[11px]">
                     <div className="flex flex-col items-end">
                         <span className="opacity-50">SYSTEM STATUS</span>
-                        <span className="text-green-400">● NOMINAL</span>
+                        <span className={systemStatus.state === 'NOMINAL' ? 'text-green-400' : 'text-yellow-400'}>
+                            ● {systemStatus.state}
+                        </span>
                     </div>
                     <div className="flex flex-col items-end">
                         <span className="opacity-50">PORTFOLIO HEAT</span>
@@ -90,7 +122,7 @@ const FundManager = () => {
                     </div>
                     <div className="flex flex-col items-end">
                         <span className="opacity-50">UPTIME</span>
-                        <span className="text-blue-400">99.98%</span>
+                        <span className="text-blue-400">{systemStatus.uptime}</span>
                     </div>
                 </div>
             </header>

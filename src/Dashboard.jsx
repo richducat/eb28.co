@@ -73,6 +73,24 @@ const ACTIVITY_FILTERS = [
 
 const SEARCH_HISTORY_KEY = 'eb28-command-center-search-history';
 
+const fetchJsonWithFallback = async (primaryUrl, fallbackUrl) => {
+    try {
+        const response = await fetch(primaryUrl, { cache: 'no-store' });
+        const payload = await response.json();
+        if (!response.ok) {
+            throw new Error(payload?.error || `HTTP ${response.status}`);
+        }
+        return { payload, source: 'api' };
+    } catch (_primaryErr) {
+        const fallbackResponse = await fetch(fallbackUrl, { cache: 'no-store' });
+        const fallbackPayload = await fallbackResponse.json();
+        if (!fallbackResponse.ok) {
+            throw new Error(fallbackPayload?.error || `Fallback HTTP ${fallbackResponse.status}`);
+        }
+        return { payload: fallbackPayload, source: 'static' };
+    }
+};
+
 /* ───────────────────────── Boot Screen Component ───────────────────── */
 const BootScreen = ({ onComplete, theme }) => {
     const [lines, setLines] = useState([]);
@@ -186,16 +204,14 @@ const ActivityLog = ({ theme }) => {
         setError('');
 
         try {
-            const response = await fetch('/api/activity-feed?limit=80', { cache: 'no-store' });
-            const payload = await response.json();
-
-            if (!response.ok) {
-                throw new Error(payload.error || 'Unable to load activity feed');
-            }
+            const { payload, source } = await fetchJsonWithFallback(
+                '/api/activity-feed?limit=80',
+                '/data/activity-feed.json'
+            );
 
             setEntries(Array.isArray(payload.items) ? payload.items : []);
             setMeta({
-                source: payload.source || '',
+                source: payload.source || source,
                 workspace: payload.workspace || '',
             });
         } catch (fetchError) {
@@ -306,21 +322,21 @@ const CronPanel = ({ theme }) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [activeAction, setActiveAction] = useState('');
+    const [readOnlyMode, setReadOnlyMode] = useState(false);
 
     const loadCronStatus = useCallback(async () => {
         setLoading(true);
         setError('');
 
         try {
-            const response = await fetch('/api/cron-status', { cache: 'no-store' });
-            const payload = await response.json();
+            const { payload, source } = await fetchJsonWithFallback(
+                '/api/cron-status',
+                '/data/cron-status.json'
+            );
 
-            if (!response.ok) {
-                throw new Error(payload.error || 'Unable to load cron status');
-            }
-
+            setReadOnlyMode(source === 'static');
             setJobs(Array.isArray(payload.jobs) ? payload.jobs : []);
-            setSchedulerStatus(payload.scheduler?.status || '');
+            setSchedulerStatus(payload.scheduler?.status || (source === 'static' ? 'static-cache' : ''));
 
             if (Array.isArray(payload.errors) && payload.errors.length) {
                 setError(payload.errors.join(' | '));
@@ -340,6 +356,11 @@ const CronPanel = ({ theme }) => {
     }, [loadCronStatus]);
 
     const runAction = useCallback(async (action, id) => {
+        if (readOnlyMode) {
+            setError('Cron controls are disabled in static-cache mode.');
+            return;
+        }
+
         setActiveAction(`${action}:${id}`);
         setError('');
 
@@ -362,7 +383,7 @@ const CronPanel = ({ theme }) => {
         } finally {
             setActiveAction('');
         }
-    }, []);
+    }, [readOnlyMode]);
 
     return (
         <div
@@ -418,7 +439,7 @@ const CronPanel = ({ theme }) => {
                                 <button
                                     type="button"
                                     onClick={() => runAction('run', job.id)}
-                                    disabled={runNowBusy || Boolean(activeAction)}
+                                    disabled={readOnlyMode || runNowBusy || Boolean(activeAction)}
                                     className="border px-2 py-1 text-xs transition-all disabled:opacity-50"
                                     style={{ borderColor: `${theme.primary}99` }}
                                 >
@@ -430,7 +451,7 @@ const CronPanel = ({ theme }) => {
                                 <button
                                     type="button"
                                     onClick={() => runAction(pauseAction, job.id)}
-                                    disabled={pauseBusy || Boolean(activeAction)}
+                                    disabled={readOnlyMode || pauseBusy || Boolean(activeAction)}
                                     className="border px-2 py-1 text-xs transition-all disabled:opacity-50"
                                     style={{ borderColor: `${theme.warn}99`, color: theme.warn }}
                                 >
@@ -493,12 +514,10 @@ const GlobalSearchPanel = ({ theme }) => {
         setError('');
 
         try {
-            const response = await fetch(`/api/search?q=${encodeURIComponent(trimmed)}&limit=20`, { cache: 'no-store' });
-            const payload = await response.json();
-
-            if (!response.ok) {
-                throw new Error(payload.error || 'Search failed');
-            }
+            const { payload } = await fetchJsonWithFallback(
+                `/api/search?q=${encodeURIComponent(trimmed)}&limit=20`,
+                `/data/search.json?q=${encodeURIComponent(trimmed)}&limit=20`
+            );
 
             setResults(Array.isArray(payload.items) ? payload.items : []);
             setMeta({

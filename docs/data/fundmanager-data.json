@@ -46,45 +46,14 @@
   "committee": {
     "decision": "NO_TRADE",
     "direction": "NA",
-    "confidence": 54,
+    "confidence": 0,
     "blockers": [
-      "risk_veto",
-      "insufficient_quorum",
-      "no_direction_majority"
+      "missing_committee_output"
     ]
   },
   "orchestrator": {
-    "status": "RUNNING",
-    "lastCycle": "2026-03-06T09:12:26.072086",
-    "detail": {
-      "ran": true,
-      "runs": [
-        {
-          "name": "committee_runner",
-          "code": 0,
-          "out": "{\"committee\": \"12-agent-v1\", \"decision\": \"NO_TRADE\", \"direction\": \"NA\", \"confidence\": 54, \"blockers\": [\"risk_veto\", \"insufficient_quorum\", \"no_direction_majority\"]}\n"
-        },
-        {
-          "name": "fastloop",
-          "code": 0,
-          "out": "ASTLOOP_ENTRY_THRESHOLD=0.05, SIMMER_FASTLOOP_MOMENTUM_THRESHOLD=0.03, SIMMER_FASTLOOP_MAX_POSITION_USD=10, SIMMER_FASTLOOP_LOOKBACK_MINUTES=30, SIMMER_FASTLOOP_MIN_TIME_BETWEEN_TRADES_SEC=60, SIMMER_FASTLOOP_DAILY_BUDGET_USD=50, SIMMER_FASTLOOP_VOL_CONFIDENCE_MIN=0.5\n  ❌ Failed to fetch price data\n"
-        },
-        {
-          "name": "copytrading",
-          "code": 0,
-          "out": "────────────\n📋 1 BUY trade(s) skipped - position sizes too small. With $15.69 balance and top_n=2, each position gets ~$7.85 which is below the 5-share minimum (~$2.50). Try: lower top_n (e.g., top_n=2-3) or increase balance to ~$5+. (15 SELL trades also filtered by buy_only=True.)\n\n✅ Scan complete\n"
-        },
-        {
-          "name": "divergence",
-          "code": 0,
-          "out": "MER_DIVERGENCE_MIN_EDGE=0.05, SIMMER_DIVERGENCE_MAX_BET_USD=50, SIMMER_DIVERGENCE_KELLY_CAP=0.25, SIMMER_DIVERGENCE_DAILY_BUDGET_USD=100, SIMMER_DIVERGENCE_MAX_TRADES_PER_RUN=5, SIMMER_DIVERGENCE_DIRECTION_FILTER=any\n  ❌ Trade failed: Order too small: 1.53 shares after rounding is below minimum (5)\n"
-        },
-        {
-          "name": "weather",
-          "code": 0,
-          "out": "[automaton] Config applied for polymarket-weather-trader: SIMMER_WEATHER_ENTRY_THRESHOLD=0.05, SIMMER_WEATHER_EXIT_THRESHOLD=0.85, SIMMER_WEATHER_MAX_POSITION_USD=50, SIMMER_WEATHER_SIZING_PCT=0.1, SIMMER_WEATHER_MAX_TRADES_PER_RUN=5\n"
-        }
-      ]
-    }
+    "status": "IDLE",
+    "lastCycle": "2026-03-06T14:29:36.345Z",
+    "detail": null
   }
 }

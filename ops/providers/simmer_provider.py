@@ -15,9 +15,12 @@ from ops.fundmanager.types import (
     MarketSnapshot,
     OrderIntent,
     PlatformLimits,
+    REASON_LANE_DISABLED,
+    REASON_NO_ELIGIBLE_MARKET,
     REASON_ORDER_FAILED,
     REASON_ORDER_REJECTED,
     REASON_PROVIDER_UNAVAILABLE,
+    REASON_WATCH_ONLY,
     WalletState,
 )
 
@@ -26,6 +29,11 @@ DEFAULT_COMMITTEE_STATE_PATH = "ops/state/committee-state.json"
 DEFAULT_PROVIDER_CACHE_PATH = "ops/state/fundmanager-provider-cache.json"
 DEFAULT_MARKET_LIMIT = 50
 SOURCE_PREFIX = "sdk:"
+IGNORED_PROVIDER_REASON_CODES = {
+    REASON_LANE_DISABLED,
+    REASON_NO_ELIGIBLE_MARKET,
+    REASON_WATCH_ONLY,
+}
 
 
 def _load_optional_json(path: str | Path) -> dict:
@@ -379,7 +387,7 @@ class SimmerFundProvider:
             if lane.get("last_reason_code"):
                 reason_codes.add(lane["last_reason_code"])
             reason_codes.update(code for code in (lane.get("provider_reason_codes") or []) if code)
-        return sorted(reason_codes)
+        return sorted(code for code in reason_codes if code and code not in IGNORED_PROVIDER_REASON_CODES)
 
     def _success_health(
         self,
@@ -390,7 +398,7 @@ class SimmerFundProvider:
         committee_state: dict,
     ) -> dict[str, Any]:
         return {
-            "status": "RUNNING",
+            "status": "OK",
             "degraded": False,
             "last_checked_at": now_iso,
             "last_success_ts": now_iso,

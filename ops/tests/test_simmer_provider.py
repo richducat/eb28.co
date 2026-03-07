@@ -189,9 +189,9 @@ class SimmerFundProviderTests(unittest.TestCase):
         payload = self._provider(FakeSimmerClient()).build_fundmanager_state()
 
         self.assertFalse(payload["degraded"])
-        self.assertEqual(payload["provider_health"]["status"], "RUNNING")
+        self.assertEqual(payload["provider_health"]["status"], "OK")
         self.assertEqual(payload["last_success_ts"], isoformat(self.now))
-        self.assertIn("NO_ELIGIBLE_MARKET", payload["reason_codes"])
+        self.assertEqual(payload["reason_codes"], [])
         self.assertEqual(payload["account"]["position_count"], 1)
         self.assertEqual(payload["trades"]["open_order_count"], 1)
         self.assertEqual(payload["lanes"]["fast-loop"]["provider_live_status"], "DEGRADED")

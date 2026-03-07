@@ -1,12 +1,11 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
 const PROD_REMOTE_SNAPSHOT_HOSTS = new Set(['eb28.co', 'www.eb28.co', 'fundmanager.eb28.co']);
-const STATIC_PREVIEW_HOSTS = new Set(['localhost', '127.0.0.1']);
 const PROD_REMOTE_SNAPSHOT_URL = 'https://fundstate.eb28.co/fund-state.json';
-const SOURCE_TIMEOUT_MS = 4500;
-const IS_PROD_REMOTE_SNAPSHOT_HOST =
-    typeof window !== 'undefined' && PROD_REMOTE_SNAPSHOT_HOSTS.has(window.location.hostname.toLowerCase());
-const detectedProdRemoteSnapshotUrl = IS_PROD_REMOTE_SNAPSHOT_HOST ? PROD_REMOTE_SNAPSHOT_URL : '';
+const detectedProdRemoteSnapshotUrl =
+    typeof window !== 'undefined' && PROD_REMOTE_SNAPSHOT_HOSTS.has(window.location.hostname.toLowerCase())
+        ? PROD_REMOTE_SNAPSHOT_URL
+        : '';
 const REMOTE_SNAPSHOT_URL = import.meta.env.VITE_FUNDMANAGER_PUBLIC_STATE_URL || detectedProdRemoteSnapshotUrl;
 
 const AGENTS = [
@@ -63,14 +62,6 @@ const LANE_MODE_LABEL = {
 
 function getStatusTone(status) {
     return STATUS_TONE[status] || STATUS_TONE.MONITORING;
-}
-
-function isApiBackedHost(hostname) {
-    return hostname === 'dashboard.eb28.co' || hostname === 'command-center.eb28.co' || hostname.endsWith('.vercel.app');
-}
-
-function uniqueSources(sources) {
-    return sources.filter(Boolean).filter((value, index, list) => list.indexOf(value) === index);
 }
 
 function humanizeToken(value, fallback = 'None') {
@@ -220,7 +211,6 @@ function normalizeRemoteSnapshot(raw) {
 
     const updatedAt = raw.generated_at || null;
     const cycleIntervalMinutes = Number(summary.cycle_interval_minutes || 10);
-    const providerHealthy = raw?.degraded === false && raw?.provider_health?.status === 'OK';
 
     return {
         ok: true,
@@ -229,7 +219,7 @@ function normalizeRemoteSnapshot(raw) {
         updatedAt,
         stale: isSnapshotStaleClient(updatedAt, cycleIntervalMinutes),
         summary: {
-            status: providerHealthy ? 'RUNNING' : (summary.status || 'PAUSED'),
+            status: summary.status || 'PAUSED',
             cycleIntervalMinutes,
             activeLanes: Number(summary.active_lanes || 0),
             topBlockers: Array.isArray(summary.top_blockers)
@@ -245,146 +235,13 @@ function normalizeRemoteSnapshot(raw) {
     };
 }
 
-function normalizeTickerSnapshot(raw, sourceUrl) {
-    if (!raw || typeof raw !== 'object' || raw.ok !== true || !raw.portfolio || !raw.orchestrator) {
-        throw new Error('Invalid ticker snapshot payload.');
-    }
-
-    const updatedAt = raw.orchestrator?.lastCycle || raw.updatedAt || null;
-    const orchestratorStatus = String(raw.orchestrator?.status || 'IDLE').toUpperCase();
-    const laneStatus = orchestratorStatus === 'RUNNING' ? 'RUNNING' : 'PAUSED';
-    const laneMode = orchestratorStatus === 'RUNNING' ? 'active' : 'watch-only';
-    const blockerCode = Array.isArray(raw.committee?.blockers) && raw.committee.blockers.length > 0
-        ? raw.committee.blockers[0]
-        : null;
-    const confidence = Number(raw.committee?.confidence || 0);
-    const balance = raw.portfolio?.balance || '$0.00';
-    const totalPnl = raw.portfolio?.totalPnl || '$0.00';
-    const positionsCount = Number(raw.portfolio?.positionsCount || 0);
-    const cycleIntervalMinutes = 10;
-    const recentActions = [
-        {
-            timestamp: updatedAt,
-            laneId: 'portfolio-monitor',
-            message: `Account ${humanizeToken(raw.accountStatus || 'UNKNOWN')}. Balance ${balance}. Total PnL ${totalPnl}. Positions ${positionsCount}.`,
-            details: null,
-        },
-        {
-            timestamp: updatedAt,
-            laneId: 'committee',
-            message: `Committee ${humanizeToken(raw.committee?.decision || 'NO_TRADE')}. Direction ${humanizeToken(raw.committee?.direction || 'NA')}. Confidence ${confidence}.`,
-            details: null,
-        },
-    ].filter((action) => action.timestamp || action.message);
-
-    if (Array.isArray(raw.trades)) {
-        raw.trades.slice(0, 4).forEach((tradeLine) => {
-            if (tradeLine) {
-                recentActions.push({
-                    timestamp: updatedAt,
-                    laneId: 'trade-log',
-                    message: String(tradeLine),
-                    details: null,
-                });
-            }
-        });
-    }
-
-    return {
-        ok: true,
-        source: raw.source || sourceUrl || 'fundmanager-data',
-        sourceType: sourceUrl?.startsWith('/data/') ? 'cache' : 'url',
-        updatedAt,
-        stale: isSnapshotStaleClient(updatedAt, cycleIntervalMinutes),
-        summary: {
-            status: laneStatus,
-            cycleIntervalMinutes,
-            activeLanes: laneMode === 'active' ? 1 : 0,
-            topBlockers: Array.isArray(raw.committee?.blockers)
-                ? raw.committee.blockers.slice(0, 3).map((reasonCode) => ({
-                    reasonCode: reasonCode || 'UNKNOWN',
-                    count: 1,
-                }))
-                : [],
-            lastSuccessfulFillAt: null,
-        },
-        lanes: [
-            {
-                id: 'portfolio-monitor',
-                name: 'Portfolio Monitor',
-                mode: laneMode,
-                status: laneStatus,
-                lastCycleAt: updatedAt,
-                lastReasonCode: blockerCode,
-                lastErrorClass: null,
-                lastSuccessfulFillAt: null,
-                nextAction: raw.committee?.decision === 'NO_TRADE' ? 'wait' : 'review_trade',
-                consecutiveFailures: 0,
-                metrics: raw.portfolio,
-                reasonMetrics: {},
-                cooldowns: [],
-                circuitBreaker: {
-                    open: false,
-                    openUntil: null,
-                    threshold: 0,
-                    cooloffMinutes: 0,
-                },
-                recentEvents: [],
-            },
-        ],
-        recentActions,
-    };
-}
-
-function normalizeSnapshotPayload(raw, sourceUrl) {
-    if (raw && typeof raw === 'object' && raw.portfolio && raw.orchestrator) {
-        return normalizeTickerSnapshot(raw, sourceUrl);
-    }
-
-    return normalizeRemoteSnapshot(raw);
-}
-
 async function fetchSnapshotJson(url) {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), SOURCE_TIMEOUT_MS);
-
-    try {
-        const response = await fetch(url, {
-            cache: 'no-store',
-            signal: controller.signal,
-        });
-        const data = await response.json();
-        if (!response.ok || data?.ok === false) {
-            throw new Error(data?.error || `Snapshot request failed: ${response.status}`);
-        }
-        return normalizeSnapshotPayload(data, url);
-    } catch (error) {
-        if (error?.name === 'AbortError') {
-            throw new Error(`Snapshot request timed out: ${url}`);
-        }
-        throw error;
-    } finally {
-        clearTimeout(timeoutId);
+    const response = await fetch(url, { cache: 'no-store' });
+    const data = await response.json();
+    if (!response.ok || data?.ok === false) {
+        throw new Error(data?.error || `Snapshot request failed: ${response.status}`);
     }
-}
-
-function getSnapshotSourceUrls() {
-    const hostname =
-        typeof window === 'undefined' ? '' : window.location.hostname.toLowerCase();
-
-    if (IS_PROD_REMOTE_SNAPSHOT_HOST) {
-        return uniqueSources([REMOTE_SNAPSHOT_URL, '/data/fundmanager-data.json', '/data/fundmanager-public.json']);
-    }
-
-    if (STATIC_PREVIEW_HOSTS.has(hostname)) {
-        return uniqueSources(['/data/fundmanager-data.json', '/data/fundmanager-public.json', REMOTE_SNAPSHOT_URL]);
-    }
-
-    if (isApiBackedHost(hostname)) {
-        return uniqueSources(['/api/fundmanager-data', REMOTE_SNAPSHOT_URL, '/data/fundmanager-data.json', '/data/fundmanager-public.json']);
-    }
-
-    return uniqueSources([REMOTE_SNAPSHOT_URL, '/data/fundmanager-data.json', '/data/fundmanager-public.json', '/api/fundmanager-data']);
+    return normalizeRemoteSnapshot(data);
 }
 
 const FundManager = () => {
@@ -394,25 +251,20 @@ const FundManager = () => {
 
     const loadLiveData = useCallback(async () => {
         try {
-            const sourceErrors = [];
-
-            for (const sourceUrl of getSnapshotSourceUrls()) {
-                try {
-                    const data = await fetchSnapshotJson(sourceUrl);
-
-                    if (sourceErrors.length > 0) {
-                        data.fallbackReason = sourceErrors[0];
-                    }
-
-                    setSnapshot(data);
-                    setErrorMessage('');
-                    return;
-                } catch (error) {
-                    sourceErrors.push(error.message || `Failed to load ${sourceUrl}`);
+            let data;
+            try {
+                data = await fetchSnapshotJson('/api/fundmanager-data');
+            } catch (apiError) {
+                if (REMOTE_SNAPSHOT_URL) {
+                    data = await fetchSnapshotJson(REMOTE_SNAPSHOT_URL);
+                } else {
+                    data = await fetchSnapshotJson('/data/fundmanager-public.json');
                 }
+                data.fallbackReason = apiError.message || 'api_unavailable';
             }
 
-            throw new Error(sourceErrors[sourceErrors.length - 1] || 'Failed to load orchestrator snapshot.');
+            setSnapshot(data);
+            setErrorMessage('');
         } catch (error) {
             setSnapshot(null);
             setErrorMessage(error.message || 'Failed to load orchestrator snapshot.');
@@ -482,13 +334,13 @@ const FundManager = () => {
                                                 {systemState}
                                             </span>
                                         </div>
-                                        <p className="mt-2 text-[10px] uppercase tracking-[0.22em] text-cyan-100/75 sm:text-[11px]">
+                                        <p className="mt-2 text-[10px] uppercase tracking-[0.22em] opacity-55 sm:text-[11px]">
                                             Autonomous Trading Matrix v3.3
                                         </p>
                                         <p className="mt-3 max-w-2xl text-[12px] leading-relaxed text-white/65 sm:text-sm">
                                             Live health view for the orchestrator snapshot, lane guardrails, and recent execution blockers.
                                         </p>
-                                        <div className="mt-4 flex flex-wrap gap-2 text-[10px] uppercase tracking-[0.18em] text-white/75">
+                                        <div className="mt-4 flex flex-wrap gap-2 text-[10px] uppercase tracking-[0.18em] text-white/55">
                                             <span className="rounded-full border border-[#22d3ee]/10 bg-black/20 px-2.5 py-1">
                                                 Source {snapshot?.sourceType || 'snapshot'}
                                             </span>
@@ -512,7 +364,7 @@ const FundManager = () => {
                             <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:w-[28rem]">
                                 {systemCards.map((card) => (
                                     <div key={card.label} className="rounded-2xl border border-[#22d3ee]/10 bg-black/20 p-3 sm:p-4">
-                                        <div className="text-[10px] uppercase tracking-[0.22em] text-cyan-100/75">{card.label}</div>
+                                        <div className="text-[10px] uppercase tracking-[0.22em] opacity-50">{card.label}</div>
                                         <div className={`mt-3 text-sm font-bold sm:text-base ${card.tone}`}>
                                             {card.value}
                                         </div>
@@ -526,10 +378,10 @@ const FundManager = () => {
                 <section className="mb-6">
                     <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
                         <div>
-                            <p className="text-[10px] uppercase tracking-[0.24em] text-cyan-100/75">Research agents</p>
+                            <p className="text-[10px] uppercase tracking-[0.24em] opacity-45">Research agents</p>
                             <h2 className="text-lg font-bold text-white/90 sm:text-xl">Agent roster</h2>
                         </div>
-                        <p className="text-[11px] uppercase tracking-[0.22em] text-white/75">
+                        <p className="text-[11px] uppercase tracking-[0.22em] text-white/50">
                             Linked lanes inherit live orchestrator status
                         </p>
                     </div>
@@ -560,7 +412,7 @@ const FundManager = () => {
                                             <div className="min-w-0 flex-1">
                                                 <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                                                     <div className="min-w-0">
-                                                        <p className="mb-2 text-[10px] uppercase tracking-[0.24em] text-cyan-100/75">Research agent</p>
+                                                        <p className="mb-2 text-[10px] uppercase tracking-[0.24em] opacity-40">Research agent</p>
                                                         <h3
                                                             className="text-base font-bold leading-tight break-words sm:text-lg xl:text-base"
                                                             style={{ color: agent.color }}
@@ -579,7 +431,7 @@ const FundManager = () => {
                                                     {agent.roles.map((role) => (
                                                         <span
                                                             key={role}
-                                                            className="rounded-full border border-[#22d3ee]/10 bg-[#22d3ee]/8 px-2 py-1 text-[10px] uppercase tracking-[0.14em] text-white/80"
+                                                            className="rounded-full border border-[#22d3ee]/10 bg-[#22d3ee]/8 px-2 py-1 text-[10px] uppercase tracking-[0.14em] text-white/60"
                                                         >
                                                             {role.replace(/-/g, ' ')}
                                                         </span>
@@ -589,7 +441,7 @@ const FundManager = () => {
                                         </div>
 
                                         <div className="rounded-2xl border border-white/5 bg-black/20 p-3">
-                                            <div className="mb-2 text-[10px] uppercase tracking-[0.2em] text-white/75">Live assignment</div>
+                                            <div className="mb-2 text-[10px] uppercase tracking-[0.2em] text-white/50">Live assignment</div>
                                             <p className="text-[11px] font-bold leading-relaxed text-white/85 sm:text-xs">
                                                 {health.summary}
                                             </p>
@@ -607,7 +459,7 @@ const FundManager = () => {
                 <section className="grid grid-cols-1 gap-4 pb-8 xl:grid-cols-4">
                     <div className="eb28-panel rounded-[28px] border border-[#22d3ee]/10 p-4 sm:p-5 xl:col-span-1">
                         <div className="mb-4">
-                            <p className="text-[10px] uppercase tracking-[0.24em] text-cyan-100/75">Lane health</p>
+                            <p className="text-[10px] uppercase tracking-[0.24em] opacity-45">Lane health</p>
                             <h2 className="mt-1 text-lg font-bold text-white/90">Execution truth</h2>
                         </div>
 
@@ -621,7 +473,7 @@ const FundManager = () => {
                                                 <div className="text-[11px] font-bold uppercase tracking-[0.18em] text-white/85">
                                                     {lane.name}
                                                 </div>
-                                                <div className="mt-1 text-[10px] uppercase tracking-[0.18em] text-white/75">
+                                                <div className="mt-1 text-[10px] uppercase tracking-[0.18em] text-white/45">
                                                     {LANE_MODE_LABEL[lane.mode] || humanizeToken(lane.mode)}
                                                 </div>
                                             </div>
@@ -661,7 +513,7 @@ const FundManager = () => {
                     <div className="eb28-panel rounded-[28px] border border-[#22d3ee]/10 p-4 sm:p-5 xl:col-span-3">
                         <div className="mb-4 flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
                             <div>
-                                <p className="text-[10px] uppercase tracking-[0.24em] text-cyan-100/75">Live system telemetry</p>
+                                <p className="text-[10px] uppercase tracking-[0.24em] opacity-45">Live system telemetry</p>
                                 <h2 className="mt-1 text-lg font-bold text-white/90">Top blockers and recent actions</h2>
                             </div>
                             <span className={`inline-flex items-center gap-2 rounded-full border px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.2em] ${systemTone.badge}`}>
@@ -672,11 +524,11 @@ const FundManager = () => {
 
                         <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,17rem)_minmax(0,1fr)]">
                             <div className="rounded-2xl border border-[#22d3ee]/10 bg-black/20 p-3">
-                                <div className="mb-3 text-[10px] uppercase tracking-[0.2em] text-white/75">Top blockers</div>
+                                <div className="mb-3 text-[10px] uppercase tracking-[0.2em] text-white/45">Top blockers</div>
                                 <div className="space-y-2">
                                     {topBlockers.length ? topBlockers.map((blocker) => (
                                         <div key={blocker.reasonCode} className="rounded-xl border border-amber-400/15 bg-amber-500/5 p-3">
-                                            <div className="text-[10px] uppercase tracking-[0.18em] text-amber-100">
+                                            <div className="text-[10px] uppercase tracking-[0.18em] text-amber-200/70">
                                                 {humanizeToken(blocker.reasonCode)}
                                             </div>
                                             <div className="mt-1 text-lg font-bold text-amber-200">
@@ -695,10 +547,10 @@ const FundManager = () => {
                                 {recentActions.length ? recentActions.map((action, index) => (
                                     <div key={`${action.timestamp || 'na'}-${index}`} className={`mb-3 rounded-xl border px-3 py-2 ${index === 0 ? 'border-[#22d3ee]/20 bg-[#22d3ee]/8 text-[#22d3ee]' : 'border-white/5 bg-black/10 text-white/60'}`}>
                                         <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
-                                            <span className="text-[10px] uppercase tracking-[0.18em] text-white/80">
+                                            <span className="text-[10px] uppercase tracking-[0.18em] opacity-60">
                                                 {action.laneId ? humanizeToken(action.laneId) : 'System'}
                                             </span>
-                                            <span className="text-[10px] uppercase tracking-[0.18em] text-white/75">
+                                            <span className="text-[10px] uppercase tracking-[0.18em] opacity-45">
                                                 {formatTimestamp(action.timestamp)}
                                             </span>
                                         </div>
@@ -709,7 +561,7 @@ const FundManager = () => {
                                         No recent actions have been published yet.
                                     </div>
                                 )}
-                                <div className="cursor-blink mt-3 text-[10px] text-white/75">
+                                <div className="cursor-blink mt-3 text-[10px] text-white/40">
                                     SYSTEM://ORCHESTRATOR_STATE_STREAM
                                 </div>
                             </div>

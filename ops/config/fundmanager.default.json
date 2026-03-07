@@ -1,0 +1,84 @@
+{
+  "global": {
+    "cycle_interval_minutes": 10,
+    "allowed_venues": ["polymarket"],
+    "max_active_lanes": 2,
+    "price_cache_ttl_seconds": 20,
+    "public_refresh_seconds": 60,
+    "public_snapshot_include_recent_actions": 12,
+    "transient_retry_attempts": 2,
+    "retry_backoff_seconds": 2,
+    "retry_backoff_cap_seconds": 12,
+    "failure_circuit_threshold": 3,
+    "failure_circuit_cooloff_minutes": 30,
+    "failure_cooldown_minutes": 30
+  },
+  "wallet": {
+    "min_usdc_buffer": 15.0,
+    "min_gas_native": 0.03
+  },
+  "platform_limits": {
+    "min_order_usd": 5.0,
+    "min_shares": 5.0,
+    "max_spread_bps": 200,
+    "max_slippage_bps": 125
+  },
+  "lanes": {
+    "copytrading": {
+      "name": "Copytrading",
+      "mode": "active",
+      "priority": 10,
+      "order_usd": 8.0,
+      "max_bankroll_fraction": 0.18,
+      "target_rotation": true,
+      "candidate_limit": 4,
+      "market_cooldown_minutes": 30
+    },
+    "fast-loop": {
+      "name": "Fast Loop",
+      "mode": "active",
+      "priority": 20,
+      "order_usd": 6.0,
+      "max_bankroll_fraction": 0.15,
+      "target_rotation": true,
+      "candidate_limit": 5,
+      "market_cooldown_minutes": 20
+    },
+    "divergence": {
+      "name": "AI Divergence",
+      "mode": "watch-only",
+      "priority": 30,
+      "order_usd": 0.0,
+      "target_rotation": true,
+      "candidate_limit": 3,
+      "market_cooldown_minutes": 20
+    },
+    "weather": {
+      "name": "Weather",
+      "mode": "watch-only",
+      "priority": 40,
+      "order_usd": 0.0,
+      "target_rotation": true,
+      "candidate_limit": 3,
+      "market_cooldown_minutes": 20
+    },
+    "opportunities": {
+      "name": "Opportunities",
+      "mode": "disabled",
+      "priority": 90,
+      "order_usd": 0.0,
+      "target_rotation": false,
+      "candidate_limit": 0,
+      "market_cooldown_minutes": 30
+    },
+    "memebot": {
+      "name": "Memebot",
+      "mode": "disabled",
+      "priority": 100,
+      "order_usd": 0.0,
+      "target_rotation": false,
+      "candidate_limit": 0,
+      "market_cooldown_minutes": 30
+    }
+  }
+}

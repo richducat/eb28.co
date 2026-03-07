@@ -1,305 +1,568 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
-const fetchJsonWithFallback = async (primaryUrl, fallbackUrl) => {
-    try {
-        const response = await fetch(primaryUrl, { cache: 'no-store' });
-        const payload = await response.json();
-        if (!response.ok) throw new Error(payload?.error || `HTTP ${response.status}`);
-        return { payload, source: 'api' };
-    } catch (_err) {
-        const fallbackResponse = await fetch(fallbackUrl, { cache: 'no-store' });
-        const fallbackPayload = await fallbackResponse.json();
-        if (!fallbackResponse.ok) throw new Error(fallbackPayload?.error || `Fallback HTTP ${fallbackResponse.status}`);
-        return { payload: fallbackPayload, source: 'static' };
-    }
-};
+const REMOTE_SNAPSHOT_URL = import.meta.env.VITE_FUNDMANAGER_PUBLIC_STATE_URL;
 
 const AGENTS = [
-    { id: 'goldman', name: 'Goldman Fundamental', roles: ['trading-research', 'quant-analyst'], color: '#22d3ee', gridPos: { x: 0, y: 0 }, botMatch: 'autotrader' },
-    { id: 'jpm', name: 'JPM Technical', roles: ['crypto-levels', 'trading-research', 'ccxt'], color: '#818cf8', gridPos: { x: 1, y: 0 }, botMatch: 'position manager' },
-    { id: 'ms', name: 'Morgan Stanley DCF', roles: ['quant-analyst', 'valuation-templates'], color: '#fbbf24', gridPos: { x: 2, y: 0 }, botMatch: 'memebot' },
-    { id: 'bridgewater', name: 'Bridgewater Macro', roles: ['trading-research', 'polymarket-signal-sniper'], color: '#34d399', gridPos: { x: 3, y: 0 }, botMatch: 'copytrading' },
-    { id: 'cathie', name: 'Cathie Wood Disruption', roles: ['polymarket-signal-sniper', 'trading-research'], color: '#f472b6', gridPos: { x: 0, y: 1 }, botMatch: 'opportunities' },
-    { id: 'buffett', name: 'Buffett Value', roles: ['quant-analyst', 'trading-research'], color: '#94a3b8', gridPos: { x: 1, y: 1 } },
-    { id: 'renaissance', name: 'Renaissance Quant', roles: ['polymarket-fast-loop', 'polymarket-ai-divergence', 'ccxt'], color: '#a78bfa', gridPos: { x: 2, y: 1 } },
-    { id: 'blackrock', name: 'BlackRock Risk Matrix', roles: ['prediction-trade-journal', 'openclaw-security-monitor', 'risk-runbooks'], color: '#f87171', gridPos: { x: 3, y: 1 } },
-    { id: 'lynch', name: 'Peter Lynch Deep Dive', roles: ['trading-research', 'polymarket-signal-sniper'], color: '#fb923c', gridPos: { x: 0, y: 2 } },
-    { id: 'ackman', name: 'Bill Ackman Activist', roles: ['polymarket-signal-sniper', 'trading-research'], color: '#e879f9', gridPos: { x: 1, y: 2 } },
-    { id: 'citadel', name: 'Citadel Options Architect', roles: ['funding-rate-trader', 'hummingbot'], color: '#2dd4bf', gridPos: { x: 2, y: 2 } },
-    { id: 'sequoia', name: 'Sequoia VC Lens', roles: ['trading-research', 'quant-analyst'], color: '#4ade80', gridPos: { x: 3, y: 2 } },
+    { id: 'goldman', name: 'Goldman Fundamental', roles: ['trading-research', 'quant-analyst'], color: '#22d3ee', gridPos: { x: 0, y: 0 }, laneIds: [] },
+    { id: 'jpm', name: 'JPM Technical', roles: ['crypto-levels', 'trading-research', 'ccxt'], color: '#818cf8', gridPos: { x: 1, y: 0 }, laneIds: [] },
+    { id: 'ms', name: 'Morgan Stanley DCF', roles: ['quant-analyst', 'valuation-templates'], color: '#fbbf24', gridPos: { x: 2, y: 0 }, laneIds: ['memebot'] },
+    { id: 'bridgewater', name: 'Bridgewater Macro', roles: ['trading-research', 'polymarket-signal-sniper'], color: '#34d399', gridPos: { x: 3, y: 0 }, laneIds: ['copytrading'] },
+    { id: 'cathie', name: 'Cathie Wood Disruption', roles: ['polymarket-signal-sniper', 'trading-research'], color: '#f472b6', gridPos: { x: 0, y: 1 }, laneIds: ['opportunities'] },
+    { id: 'buffett', name: 'Buffett Value', roles: ['quant-analyst', 'trading-research'], color: '#94a3b8', gridPos: { x: 1, y: 1 }, laneIds: [] },
+    { id: 'renaissance', name: 'Renaissance Quant', roles: ['polymarket-fast-loop', 'polymarket-ai-divergence', 'ccxt'], color: '#a78bfa', gridPos: { x: 2, y: 1 }, laneIds: ['fast-loop', 'divergence'] },
+    { id: 'blackrock', name: 'BlackRock Risk Matrix', roles: ['prediction-trade-journal', 'openclaw-security-monitor', 'risk-runbooks'], color: '#f87171', gridPos: { x: 3, y: 1 }, laneIds: [] },
+    { id: 'lynch', name: 'Peter Lynch Deep Dive', roles: ['trading-research', 'polymarket-signal-sniper'], color: '#fb923c', gridPos: { x: 0, y: 2 }, laneIds: [] },
+    { id: 'ackman', name: 'Bill Ackman Activist', roles: ['polymarket-signal-sniper', 'trading-research'], color: '#e879f9', gridPos: { x: 1, y: 2 }, laneIds: [] },
+    { id: 'citadel', name: 'Citadel Options Architect', roles: ['funding-rate-trader', 'hummingbot'], color: '#2dd4bf', gridPos: { x: 2, y: 2 }, laneIds: [] },
+    { id: 'sequoia', name: 'Sequoia VC Lens', roles: ['trading-research', 'quant-analyst'], color: '#4ade80', gridPos: { x: 3, y: 2 }, laneIds: [] },
 ];
 
-const EXECUTION_ROLES = [
-    { id: 'pm', name: 'PM Orchestrator', task: 'Combining outputs and optimizing capital allocation...', iconPos: { x: 0, y: 0 } },
-    { id: 'exec', name: 'Execution Agent', task: 'Executing Polymarket & Kalshi trades...', iconPos: { x: 1, y: 0 } },
-    { id: 'wallet', name: 'Wallet/Payments Ops', task: 'Managing crypto-wallet cycles and 1ly-payments...', iconPos: { x: 1, y: 1 } },
-];
+const STATUS_TONE = {
+    RUNNING: {
+        badge: 'border-green-400/30 bg-green-500/10 text-green-300',
+        dot: 'bg-green-400',
+    },
+    DEGRADED: {
+        badge: 'border-amber-400/30 bg-amber-500/10 text-amber-300',
+        dot: 'bg-amber-400',
+    },
+    PAUSED: {
+        badge: 'border-rose-400/30 bg-rose-500/10 text-rose-300',
+        dot: 'bg-rose-400',
+    },
+    STALE: {
+        badge: 'border-orange-400/30 bg-orange-500/10 text-orange-300',
+        dot: 'bg-orange-400',
+    },
+    OFFLINE: {
+        badge: 'border-slate-400/30 bg-slate-500/10 text-slate-300',
+        dot: 'bg-slate-400',
+    },
+    MONITORING: {
+        badge: 'border-cyan-400/30 bg-cyan-500/10 text-cyan-300',
+        dot: 'bg-cyan-400',
+    },
+    CONNECTING: {
+        badge: 'border-slate-400/30 bg-slate-500/10 text-slate-300',
+        dot: 'bg-slate-400',
+    },
+};
 
-const STATUS_TYPES = ['ACTIVE', 'RESEARCHING', 'CALCULATING', 'IDLE', 'TRADING'];
+const LANE_MODE_LABEL = {
+    active: 'Active',
+    'watch-only': 'Watch only',
+    disabled: 'Disabled',
+};
+
+function getStatusTone(status) {
+    return STATUS_TONE[status] || STATUS_TONE.MONITORING;
+}
+
+function humanizeToken(value, fallback = 'None') {
+    if (!value) {
+        return fallback;
+    }
+
+    return String(value)
+        .replace(/[_-]+/g, ' ')
+        .toLowerCase()
+        .replace(/\b\w/g, (char) => char.toUpperCase());
+}
+
+function formatTimestamp(value, fallback = '--') {
+    if (!value) {
+        return fallback;
+    }
+
+    const parsed = new Date(value);
+    if (Number.isNaN(parsed.getTime())) {
+        return fallback;
+    }
+
+    return new Intl.DateTimeFormat('en-US', {
+        month: 'short',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: '2-digit',
+    }).format(parsed);
+}
+
+function formatRelativeTimestamp(value, fallback = '--') {
+    if (!value) {
+        return fallback;
+    }
+
+    const parsed = new Date(value);
+    if (Number.isNaN(parsed.getTime())) {
+        return fallback;
+    }
+
+    const diffMs = Date.now() - parsed.getTime();
+    const diffMinutes = Math.round(diffMs / 60_000);
+
+    if (Math.abs(diffMinutes) < 1) {
+        return 'Just now';
+    }
+    if (Math.abs(diffMinutes) < 60) {
+        return `${diffMinutes}m ago`;
+    }
+
+    const diffHours = Math.round(diffMinutes / 60);
+    if (Math.abs(diffHours) < 24) {
+        return `${diffHours}h ago`;
+    }
+
+    const diffDays = Math.round(diffHours / 24);
+    return `${diffDays}d ago`;
+}
+
+function isSnapshotStaleClient(updatedAt, cycleIntervalMinutes) {
+    if (!updatedAt) {
+        return true;
+    }
+
+    const parsed = new Date(updatedAt);
+    if (Number.isNaN(parsed.getTime())) {
+        return true;
+    }
+
+    const intervalMinutes = Math.max(1, Number(cycleIntervalMinutes) || 10);
+    const maxAgeMs = Math.max(15 * 60_000, intervalMinutes * 2 * 60_000);
+    return Date.now() - parsed.getTime() > maxAgeMs;
+}
+
+function deriveAgentHealth(agent, laneMap, systemStatus) {
+    const linkedLanes = agent.laneIds.map((laneId) => laneMap[laneId]).filter(Boolean);
+
+    if (linkedLanes.length === 0) {
+        return {
+            status: systemStatus === 'OFFLINE' ? 'OFFLINE' : 'MONITORING',
+            summary: 'Research-only roster; no direct live lane assignment.',
+            detail: 'Watching upstream strategy inputs and route conditions.',
+        };
+    }
+
+    const severity = ['RUNNING', 'DEGRADED', 'PAUSED'];
+    const chosenLane = linkedLanes
+        .slice()
+        .sort((left, right) => severity.indexOf(right.status) - severity.indexOf(left.status))[0];
+    const laneNames = linkedLanes.map((lane) => lane.name).join(', ');
+
+    return {
+        status: chosenLane.status || 'DEGRADED',
+        summary: laneNames,
+        detail: chosenLane.lastReasonCode
+            ? `Blocker: ${humanizeToken(chosenLane.lastReasonCode)}`
+            : `Next action: ${humanizeToken(chosenLane.nextAction)}`,
+    };
+}
+
+function normalizeRemoteSnapshot(raw) {
+    if (!raw || typeof raw !== 'object') {
+        throw new Error('Invalid fundmanager snapshot payload.');
+    }
+
+    if (raw.ok && raw.summary && Array.isArray(raw.lanes)) {
+        return raw;
+    }
+
+    const summary = raw.summary || {};
+    const lanes = Object.entries(raw.lanes || {}).map(([laneId, lane]) => ({
+        id: lane.id || laneId,
+        name: lane.name || laneId,
+        mode: lane.mode || 'disabled',
+        status: lane.status || 'PAUSED',
+        lastCycleAt: lane.last_cycle_at || null,
+        lastReasonCode: lane.last_reason_code || null,
+        lastErrorClass: lane.last_error_class || null,
+        lastSuccessfulFillAt: lane.last_successful_fill_at || null,
+        nextAction: lane.next_action || null,
+        consecutiveFailures: Number(lane.consecutive_failures || 0),
+        metrics: lane.metrics || {},
+        reasonMetrics: lane.reason_metrics || {},
+        cooldowns: Object.entries(lane.market_cooldowns || {}).map(([marketId, details]) => ({
+            marketId,
+            until: details?.until || null,
+            reasonCode: details?.reason_code || null,
+        })),
+        circuitBreaker: {
+            open: Boolean(lane.circuit_breaker?.open),
+            openUntil: lane.circuit_breaker?.open_until || null,
+            threshold: Number(lane.circuit_breaker?.threshold || 0),
+            cooloffMinutes: Number(lane.circuit_breaker?.cooloff_minutes || 0),
+        },
+        recentEvents: Array.isArray(lane.recent_events) ? lane.recent_events : [],
+    }));
+
+    const recentActions = Array.isArray(raw.recent_actions)
+        ? raw.recent_actions.map((action) => ({
+            timestamp: action.timestamp || null,
+            laneId: action.lane_id || null,
+            message: action.message || '',
+            details: action.details || null,
+        }))
+        : [];
+
+    const updatedAt = raw.generated_at || null;
+    const cycleIntervalMinutes = Number(summary.cycle_interval_minutes || 10);
+
+    return {
+        ok: true,
+        source: 'remote-public-snapshot',
+        sourceType: 'url',
+        updatedAt,
+        stale: isSnapshotStaleClient(updatedAt, cycleIntervalMinutes),
+        summary: {
+            status: summary.status || 'PAUSED',
+            cycleIntervalMinutes,
+            activeLanes: Number(summary.active_lanes || 0),
+            topBlockers: Array.isArray(summary.top_blockers)
+                ? summary.top_blockers.map((blocker) => ({
+                    reasonCode: blocker.reason_code || 'UNKNOWN',
+                    count: Number(blocker.count || 0),
+                }))
+                : [],
+            lastSuccessfulFillAt: summary.last_successful_fill_at || null,
+        },
+        lanes,
+        recentActions,
+    };
+}
+
+async function fetchSnapshotJson(url) {
+    const response = await fetch(url, { cache: 'no-store' });
+    const data = await response.json();
+    if (!response.ok || data?.ok === false) {
+        throw new Error(data?.error || `Snapshot request failed: ${response.status}`);
+    }
+    return normalizeRemoteSnapshot(data);
+}
 
 const FundManager = () => {
-    const [agentStatus, setAgentStatus] = useState({});
-    const [logs, setLogs] = useState([]);
-    const [systemStatus, setSystemStatus] = useState({ state: 'CONNECTING', uptime: '--', pnl: '--', balance: '--', exposure: '--', winRate: '--', committee: '--', orchestrator: '--' });
-    const [isLive, setIsLive] = useState(false);
+    const [snapshot, setSnapshot] = useState(null);
+    const [errorMessage, setErrorMessage] = useState('');
+    const [loading, setLoading] = useState(true);
 
     const loadLiveData = useCallback(async () => {
         try {
-            const { payload: data, source } = await fetchJsonWithFallback('/api/fundmanager-data', '/data/fundmanager-data.json');
-            if (!data.ok) throw new Error(data.error || 'No data');
-
-            setIsLive(source === 'api' || data.source === 'freeopenclawtrader.com');
-
-            // Update system status from portfolio data
-            setSystemStatus({
-                state: data.accountStatus === 'ACTIVE' ? 'NOMINAL' : data.accountStatus,
-                uptime: data.latency || '--',
-                pnl: data.portfolio.totalPnl,
-                balance: data.portfolio.balance,
-                exposure: data.portfolio.exposure,
-                winRate: data.portfolio.winRate,
-                committee: data.committee?.decision || '--',
-                orchestrator: data.orchestrator?.status || '--',
-            });
-
-            // Map bot statuses to agents
-            const newStatus = {};
-            AGENTS.forEach(agent => {
-                if (agent.botMatch) {
-                    const bot = data.bots?.find(b => b.name.toLowerCase().includes(agent.botMatch));
-                    if (bot) {
-                        const isActive = bot.status.toLowerCase() !== 'fail';
-                        newStatus[agent.id] = {
-                            status: isActive ? 'ACTIVE' : 'OFFLINE',
-                            task: `${bot.name}: ${bot.status}`,
-                            activity: isActive ? 100 : 0,
-                        };
-                        return;
-                    }
+            let data;
+            try {
+                data = await fetchSnapshotJson('/api/fundmanager-data');
+            } catch (apiError) {
+                if (REMOTE_SNAPSHOT_URL) {
+                    data = await fetchSnapshotJson(REMOTE_SNAPSHOT_URL);
+                } else {
+                    data = await fetchSnapshotJson('/data/fundmanager-public.json');
                 }
-                // Agents without a direct bot match show as monitoring
-                newStatus[agent.id] = {
-                    status: 'RESEARCHING',
-                    task: `Monitoring ${agent.roles[0]}...`,
-                    activity: Math.floor(Math.random() * 60) + 20,
-                };
-            });
-            setAgentStatus(newStatus);
+                data.fallbackReason = apiError.message || 'api_unavailable';
+            }
 
-            // Trade logs for telemetry
-            const formattedLogs = data.trades?.map(t => t) || [];
-            if (data.botPerf) formattedLogs.unshift(`[PERF] ${data.botPerf}`);
-            if (data.committee?.decision) {
-                formattedLogs.unshift(`[COMMITTEE] ${data.committee.decision} ${data.committee.direction || 'NA'} conf=${data.committee.confidence ?? '--'} blockers=${(data.committee.blockers || []).join(',') || 'none'}`);
-            }
-            if (data.orchestrator?.status) {
-                formattedLogs.unshift(`[ORCHESTRATOR] ${data.orchestrator.status} @ ${data.orchestrator.lastCycle || '--'}`);
-            }
-            formattedLogs.unshift(`[SYSTEM] Updated: ${data.updatedAt} | P&L: ${data.portfolio.totalPnl} | Positions: ${data.portfolio.positionsCount}`);
-            setLogs(formattedLogs.slice(0, 12));
-        } catch (err) {
-            console.warn('Live data unavailable, using simulation:', err.message);
-            setIsLive(false);
-            runSimulation();
+            setSnapshot(data);
+            setErrorMessage('');
+        } catch (error) {
+            setSnapshot(null);
+            setErrorMessage(error.message || 'Failed to load orchestrator snapshot.');
+        } finally {
+            setLoading(false);
         }
-    }, []);
-
-    const runSimulation = useCallback(() => {
-        const newStatus = {};
-        AGENTS.forEach(agent => {
-            newStatus[agent.id] = {
-                status: STATUS_TYPES[Math.floor(Math.random() * STATUS_TYPES.length)],
-                task: `Performing ${agent.roles[Math.floor(Math.random() * agent.roles.length)]}...`,
-                activity: Math.random() * 100,
-            };
-        });
-        setAgentStatus(newStatus);
-
-        const simLogs = AGENTS.slice(0, 6).map(a =>
-            `[${new Date().toLocaleTimeString()}] ${a.name.split(' ')[0].toUpperCase()}: ${STATUS_TYPES[Math.floor(Math.random() * STATUS_TYPES.length)]} - ${a.roles[0]}`
-        );
-        setLogs(simLogs);
-        setSystemStatus(prev => ({ ...prev, state: 'SIMULATED' }));
     }, []);
 
     useEffect(() => {
         loadLiveData();
-        const interval = setInterval(loadLiveData, 30000);
+        const interval = setInterval(loadLiveData, 30_000);
         return () => clearInterval(interval);
     }, [loadLiveData]);
 
-    return (
-        <div className="min-h-screen bg-[#020617] text-[#22d3ee] font-mono p-4 overflow-hidden relative selection:bg-[#22d3ee] selection:text-[#020617]">
-            {/* CRT Scanline Overlay */}
-            <div className="fixed inset-0 crt-overlay opacity-10 pointer-events-none z-50"></div>
+    const laneMap = Object.fromEntries((snapshot?.lanes || []).map((lane) => [lane.id, lane]));
+    const summary = snapshot?.summary || null;
+    const recentActions = snapshot?.recentActions || [];
+    const topBlockers = summary?.topBlockers || [];
+    const totalLiveLanes = (snapshot?.lanes || []).filter((lane) => lane.mode === 'active').length;
+    const systemState = snapshot
+        ? (snapshot.stale ? 'STALE' : summary?.status || 'DEGRADED')
+        : (errorMessage ? 'OFFLINE' : 'CONNECTING');
+    const systemTone = getStatusTone(systemState);
 
-            {/* Background Noise/Grid */}
+    const systemCards = [
+        {
+            label: 'System',
+            value: systemState,
+            tone: getStatusTone(systemState).dot.replace('bg-', 'text-'),
+        },
+        {
+            label: 'Updated',
+            value: snapshot?.updatedAt ? formatRelativeTimestamp(snapshot.updatedAt) : (loading ? 'Loading...' : '--'),
+            tone: snapshot?.stale ? 'text-orange-300' : 'text-cyan-300',
+        },
+        {
+            label: 'Last Fill',
+            value: summary?.lastSuccessfulFillAt ? formatTimestamp(summary.lastSuccessfulFillAt) : 'No fills yet',
+            tone: summary?.lastSuccessfulFillAt ? 'text-green-300' : 'text-amber-300',
+        },
+        {
+            label: 'Active Lanes',
+            value: `${summary?.activeLanes ?? 0} / ${totalLiveLanes || 0}`,
+            tone: 'text-blue-300',
+        },
+    ];
+
+    return (
+        <div className="min-h-screen overflow-x-hidden bg-[#020617] text-[#22d3ee] font-mono relative selection:bg-[#22d3ee] selection:text-[#020617]">
+            <div className="fixed inset-0 crt-overlay opacity-10 pointer-events-none z-50"></div>
             <div className="fixed inset-0 eb28-appbuilder-noise opacity-5 pointer-events-none"></div>
 
-            {/* Header / PM Orchestrator */}
-            <header className="mb-6 grid grid-cols-1 md:grid-cols-3 gap-4 border-b border-[#22d3ee]/20 pb-4">
-                <div className="flex items-center gap-4">
-                    <div className="text-4xl animate-pulse">ᗧ</div>
-                    <div>
-                        <h1 className="text-2xl font-bold tracking-tighter">FUNDMANAGER.EB28.CO</h1>
-                        <p className="text-[10px] opacity-50 uppercase flex items-center gap-2">
-                            Autonomous Trading Matrix v3.2
-                            <span className={`px-1 py-0.5 text-[8px] border ${isLive ? 'border-green-500 text-green-400' : 'border-yellow-500 text-yellow-400'}`}>
-                                {isLive ? '● LIVE' : '○ SIM'}
-                            </span>
+            <div className="relative z-10 mx-auto max-w-7xl px-3 py-4 sm:px-4 sm:py-5 lg:px-6 lg:py-6">
+                <header className="mb-6">
+                    <section className="eb28-panel rounded-[28px] border border-[#22d3ee]/15 p-4 sm:p-6">
+                        <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+                            <div className="min-w-0">
+                                <div className="flex items-start gap-3 sm:gap-4">
+                                    <div className="text-[2.4rem] leading-none text-[#22d3ee]/80 animate-pulse sm:text-[2.9rem]">&gt;</div>
+                                    <div className="min-w-0">
+                                        <div className="flex flex-wrap items-center gap-2">
+                                            <h1 className="text-[clamp(1.8rem,7vw,3rem)] font-bold tracking-[-0.08em] leading-none break-words">
+                                                FUNDMANAGER.EB28.CO
+                                            </h1>
+                                            <span className={`inline-flex items-center gap-2 rounded-full border px-2 py-1 text-[9px] font-bold uppercase tracking-[0.18em] ${systemTone.badge}`}>
+                                                <span className={`h-2 w-2 rounded-full ${systemTone.dot}`}></span>
+                                                {systemState}
+                                            </span>
+                                        </div>
+                                        <p className="mt-2 text-[10px] uppercase tracking-[0.22em] opacity-55 sm:text-[11px]">
+                                            Autonomous Trading Matrix v3.3
+                                        </p>
+                                        <p className="mt-3 max-w-2xl text-[12px] leading-relaxed text-white/65 sm:text-sm">
+                                            Live health view for the orchestrator snapshot, lane guardrails, and recent execution blockers.
+                                        </p>
+                                        <div className="mt-4 flex flex-wrap gap-2 text-[10px] uppercase tracking-[0.18em] text-white/55">
+                                            <span className="rounded-full border border-[#22d3ee]/10 bg-black/20 px-2.5 py-1">
+                                                Source {snapshot?.sourceType || 'snapshot'}
+                                            </span>
+                                            <span className="rounded-full border border-[#22d3ee]/10 bg-black/20 px-2.5 py-1">
+                                                Cycle {(summary?.cycleIntervalMinutes || 10)}m
+                                            </span>
+                                            <span className="rounded-full border border-[#22d3ee]/10 bg-black/20 px-2.5 py-1">
+                                                Updated {formatTimestamp(snapshot?.updatedAt)}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {errorMessage ? (
+                                    <div className="mt-5 rounded-2xl border border-rose-500/20 bg-rose-500/10 p-3 text-[11px] leading-relaxed text-rose-200">
+                                        Snapshot unavailable: {errorMessage}
+                                    </div>
+                                ) : null}
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:w-[28rem]">
+                                {systemCards.map((card) => (
+                                    <div key={card.label} className="rounded-2xl border border-[#22d3ee]/10 bg-black/20 p-3 sm:p-4">
+                                        <div className="text-[10px] uppercase tracking-[0.22em] opacity-50">{card.label}</div>
+                                        <div className={`mt-3 text-sm font-bold sm:text-base ${card.tone}`}>
+                                            {card.value}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </section>
+                </header>
+
+                <section className="mb-6">
+                    <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+                        <div>
+                            <p className="text-[10px] uppercase tracking-[0.24em] opacity-45">Research agents</p>
+                            <h2 className="text-lg font-bold text-white/90 sm:text-xl">Agent roster</h2>
+                        </div>
+                        <p className="text-[11px] uppercase tracking-[0.22em] text-white/50">
+                            Linked lanes inherit live orchestrator status
                         </p>
                     </div>
-                </div>
 
-                <div className="md:col-span-2 flex items-center justify-end gap-6 text-[11px]">
-                    <div className="flex flex-col items-end">
-                        <span className="opacity-50">SYSTEM</span>
-                        <span className={systemStatus.state === 'NOMINAL' ? 'text-green-400' : systemStatus.state === 'SIMULATED' ? 'text-yellow-400' : 'text-orange-400'}>
-                            ● {systemStatus.state}
-                        </span>
-                    </div>
-                    <div className="flex flex-col items-end">
-                        <span className="opacity-50">P&L</span>
-                        <span className={systemStatus.pnl?.startsWith('-') ? 'text-red-400' : 'text-green-400'}>{systemStatus.pnl}</span>
-                    </div>
-                    <div className="flex flex-col items-end">
-                        <span className="opacity-50">EXPOSURE</span>
-                        <span className="text-orange-400">{systemStatus.exposure}</span>
-                    </div>
-                    <div className="flex flex-col items-end">
-                        <span className="opacity-50">WIN RATE</span>
-                        <span className="text-blue-400">{systemStatus.winRate}</span>
-                    </div>
-                    <div className="flex flex-col items-end">
-                        <span className="opacity-50">COMMITTEE</span>
-                        <span className="text-purple-400">{systemStatus.committee}</span>
-                    </div>
-                    <div className="flex flex-col items-end">
-                        <span className="opacity-50">ORCH</span>
-                        <span className="text-cyan-400">{systemStatus.orchestrator}</span>
-                    </div>
-                </div>
-            </header>
+                    <main className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
+                        {AGENTS.map((agent) => {
+                            const health = deriveAgentHealth(agent, laneMap, systemState);
+                            const statusTone = getStatusTone(health.status);
 
-            {/* Main Grid: Research Agents */}
-            <main className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 pb-20 overflow-y-auto custom-scrollbar h-[calc(100vh-280px)]">
-                {AGENTS.map(agent => (
-                    <div
-                        key={agent.id}
-                        className="eb28-panel border border-[#22d3ee]/10 p-3 hover:border-[#22d3ee]/40 transition-all group overflow-hidden relative"
-                    >
-                        {/* Status Indicator */}
-                        <div className="absolute top-2 right-2 flex items-center gap-1">
-                            <span className={`w-1.5 h-1.5 rounded-full animate-pulse ${agentStatus[agent.id]?.status === 'ACTIVE' || agentStatus[agent.id]?.status === 'TRADING' ? 'bg-green-400' : 'bg-yellow-400'
-                                }`}></span>
-                            <span className="text-[9px] font-bold opacity-70">{agentStatus[agent.id]?.status || 'IDLE'}</span>
+                            return (
+                                <article
+                                    key={agent.id}
+                                    className="eb28-panel rounded-[26px] border border-[#22d3ee]/10 p-4 transition-all hover:border-[#22d3ee]/30 hover:shadow-[0_16px_36px_rgba(3,7,18,0.45)] sm:p-5"
+                                >
+                                    <div className="flex flex-col gap-4">
+                                        <div className="flex items-start gap-3 sm:gap-4">
+                                            <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-2xl border border-[#22d3ee]/20 bg-[#0f172a] pixel-art ring-1 ring-[#22d3ee]/10 sm:h-[4.5rem] sm:w-[4.5rem]">
+                                                <div
+                                                    className="h-full w-full scale-110 bg-no-repeat transition-all duration-300"
+                                                    style={{
+                                                        backgroundImage: `url('/assets/agents_grid.png')`,
+                                                        backgroundSize: '400% 300%',
+                                                        backgroundPosition: `${(agent.gridPos.x * 100) / 3}% ${(agent.gridPos.y * 100) / 2}%`,
+                                                    }}
+                                                ></div>
+                                            </div>
+
+                                            <div className="min-w-0 flex-1">
+                                                <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                                                    <div className="min-w-0">
+                                                        <p className="mb-2 text-[10px] uppercase tracking-[0.24em] opacity-40">Research agent</p>
+                                                        <h3
+                                                            className="text-base font-bold leading-tight break-words sm:text-lg xl:text-base"
+                                                            style={{ color: agent.color }}
+                                                        >
+                                                            {agent.name.toUpperCase()}
+                                                        </h3>
+                                                    </div>
+
+                                                    <span className={`inline-flex items-center gap-2 self-start rounded-full border px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.2em] ${statusTone.badge}`}>
+                                                        <span className={`h-2 w-2 rounded-full ${statusTone.dot}`}></span>
+                                                        {health.status}
+                                                    </span>
+                                                </div>
+
+                                                <div className="mt-3 flex flex-wrap gap-1.5">
+                                                    {agent.roles.map((role) => (
+                                                        <span
+                                                            key={role}
+                                                            className="rounded-full border border-[#22d3ee]/10 bg-[#22d3ee]/8 px-2 py-1 text-[10px] uppercase tracking-[0.14em] text-white/60"
+                                                        >
+                                                            {role.replace(/-/g, ' ')}
+                                                        </span>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div className="rounded-2xl border border-white/5 bg-black/20 p-3">
+                                            <div className="mb-2 text-[10px] uppercase tracking-[0.2em] text-white/50">Live assignment</div>
+                                            <p className="text-[11px] font-bold leading-relaxed text-white/85 sm:text-xs">
+                                                {health.summary}
+                                            </p>
+                                            <p className="mt-2 text-[11px] leading-relaxed text-white/65 sm:text-xs">
+                                                {health.detail}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </article>
+                            );
+                        })}
+                    </main>
+                </section>
+
+                <section className="grid grid-cols-1 gap-4 pb-8 xl:grid-cols-4">
+                    <div className="eb28-panel rounded-[28px] border border-[#22d3ee]/10 p-4 sm:p-5 xl:col-span-1">
+                        <div className="mb-4">
+                            <p className="text-[10px] uppercase tracking-[0.24em] opacity-45">Lane health</p>
+                            <h2 className="mt-1 text-lg font-bold text-white/90">Execution truth</h2>
                         </div>
 
-                        <div className="flex items-start gap-4">
-                            {/* Agent Avatar (Pixel Art Grid Slicing) */}
-                            <div className="w-16 h-16 bg-[#0f172a] border border-[#22d3ee]/20 flex-shrink-0 pixel-art overflow-hidden rounded-sm ring-1 ring-[#22d3ee]/10">
-                                <div
-                                    className="w-full h-full bg-no-repeat grayscale group-hover:grayscale-0 transition-all duration-300 transform scale-110"
-                                    style={{
-                                        backgroundImage: `url('/assets/agents_grid.png')`,
-                                        backgroundSize: '400% 300%',
-                                        backgroundPosition: `${(agent.gridPos.x * 100) / 3}% ${(agent.gridPos.y * 100) / 2}%`
-                                    }}
-                                ></div>
+                        <div className="space-y-3">
+                            {(snapshot?.lanes || []).map((lane) => {
+                                const tone = getStatusTone(lane.status);
+                                return (
+                                    <div key={lane.id} className="rounded-2xl border border-[#22d3ee]/10 bg-black/20 p-3">
+                                        <div className="flex items-start justify-between gap-3">
+                                            <div className="min-w-0">
+                                                <div className="text-[11px] font-bold uppercase tracking-[0.18em] text-white/85">
+                                                    {lane.name}
+                                                </div>
+                                                <div className="mt-1 text-[10px] uppercase tracking-[0.18em] text-white/45">
+                                                    {LANE_MODE_LABEL[lane.mode] || humanizeToken(lane.mode)}
+                                                </div>
+                                            </div>
+                                            <span className={`inline-flex items-center gap-2 rounded-full border px-2 py-1 text-[9px] font-bold uppercase tracking-[0.18em] ${tone.badge}`}>
+                                                <span className={`h-2 w-2 rounded-full ${tone.dot}`}></span>
+                                                {lane.status}
+                                            </span>
+                                        </div>
+
+                                        <div className="mt-3 space-y-2 text-[11px] leading-relaxed text-white/65">
+                                            <div>Next: {humanizeToken(lane.nextAction)}</div>
+                                            <div>Blocker: {humanizeToken(lane.lastReasonCode)}</div>
+                                            <div>Last fill: {formatTimestamp(lane.lastSuccessfulFillAt, 'No fills')}</div>
+                                            {lane.circuitBreaker?.open ? (
+                                                <div className="text-rose-200">
+                                                    Circuit open until {formatTimestamp(lane.circuitBreaker.openUntil)}
+                                                </div>
+                                            ) : null}
+                                            {lane.cooldowns?.length ? (
+                                                <div className="text-amber-200">
+                                                    Cooldowns: {lane.cooldowns.length}
+                                                </div>
+                                            ) : null}
+                                        </div>
+                                    </div>
+                                );
+                            })}
+
+                            {!snapshot?.lanes?.length ? (
+                                <div className="rounded-2xl border border-[#22d3ee]/10 bg-black/20 p-3 text-[11px] leading-relaxed text-white/60">
+                                    No orchestrator lanes available yet.
+                                </div>
+                            ) : null}
+                        </div>
+                    </div>
+
+                    <div className="eb28-panel rounded-[28px] border border-[#22d3ee]/10 p-4 sm:p-5 xl:col-span-3">
+                        <div className="mb-4 flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+                            <div>
+                                <p className="text-[10px] uppercase tracking-[0.24em] opacity-45">Live system telemetry</p>
+                                <h2 className="mt-1 text-lg font-bold text-white/90">Top blockers and recent actions</h2>
+                            </div>
+                            <span className={`inline-flex items-center gap-2 rounded-full border px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.2em] ${systemTone.badge}`}>
+                                <span className={`h-2 w-2 rounded-full ${systemTone.dot}`}></span>
+                                {snapshot ? (snapshot.stale ? 'Snapshot stale' : 'Snapshot live') : (loading ? 'Loading snapshot' : 'Snapshot unavailable')}
+                            </span>
+                        </div>
+
+                        <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,17rem)_minmax(0,1fr)]">
+                            <div className="rounded-2xl border border-[#22d3ee]/10 bg-black/20 p-3">
+                                <div className="mb-3 text-[10px] uppercase tracking-[0.2em] text-white/45">Top blockers</div>
+                                <div className="space-y-2">
+                                    {topBlockers.length ? topBlockers.map((blocker) => (
+                                        <div key={blocker.reasonCode} className="rounded-xl border border-amber-400/15 bg-amber-500/5 p-3">
+                                            <div className="text-[10px] uppercase tracking-[0.18em] text-amber-200/70">
+                                                {humanizeToken(blocker.reasonCode)}
+                                            </div>
+                                            <div className="mt-1 text-lg font-bold text-amber-200">
+                                                {blocker.count}
+                                            </div>
+                                        </div>
+                                    )) : (
+                                        <div className="rounded-xl border border-[#22d3ee]/10 bg-[#22d3ee]/5 p-3 text-[11px] leading-relaxed text-white/60">
+                                            No blockers recorded in the latest snapshot.
+                                        </div>
+                                    )}
+                                </div>
                             </div>
 
-                            <div className="flex-1 min-w-0">
-                                <h3 className="text-sm font-bold truncate leading-tight mb-1" style={{ color: agent.color }}>
-                                    {agent.name.toUpperCase()}
-                                </h3>
-                                <div className="flex flex-wrap gap-1 mb-2">
-                                    {agent.roles.map(role => (
-                                        <span key={role} className="text-[8px] bg-[#22d3ee]/10 px-1 border border-[#22d3ee]/5 opacity-60">
-                                            {role.replace('-', ' ')}
-                                        </span>
-                                    ))}
+                            <div className="custom-scrollbar max-h-[26rem] overflow-y-auto rounded-2xl border border-[#22d3ee]/10 bg-[#22d3ee]/5 p-3 text-[11px] leading-relaxed sm:p-4">
+                                {recentActions.length ? recentActions.map((action, index) => (
+                                    <div key={`${action.timestamp || 'na'}-${index}`} className={`mb-3 rounded-xl border px-3 py-2 ${index === 0 ? 'border-[#22d3ee]/20 bg-[#22d3ee]/8 text-[#22d3ee]' : 'border-white/5 bg-black/10 text-white/60'}`}>
+                                        <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
+                                            <span className="text-[10px] uppercase tracking-[0.18em] opacity-60">
+                                                {action.laneId ? humanizeToken(action.laneId) : 'System'}
+                                            </span>
+                                            <span className="text-[10px] uppercase tracking-[0.18em] opacity-45">
+                                                {formatTimestamp(action.timestamp)}
+                                            </span>
+                                        </div>
+                                        <div className="mt-1">{action.message}</div>
+                                    </div>
+                                )) : (
+                                    <div className="rounded-xl border border-[#22d3ee]/10 bg-black/10 p-3 text-white/60">
+                                        No recent actions have been published yet.
+                                    </div>
+                                )}
+                                <div className="cursor-blink mt-3 text-[10px] text-white/40">
+                                    SYSTEM://ORCHESTRATOR_STATE_STREAM
                                 </div>
                             </div>
                         </div>
-
-                        {/* Task Activity Bar */}
-                        <div className="mt-3">
-                            <div className="flex justify-between items-center text-[9px] mb-1 opacity-70">
-                                <span className="truncate w-3/4">{agentStatus[agent.id]?.task}</span>
-                                <span>{Math.round(agentStatus[agent.id]?.activity || 0)}%</span>
-                            </div>
-                            <div className="w-full h-[3px] bg-slate-900 border border-[#22d3ee]/5 rounded-full overflow-hidden">
-                                <div
-                                    className="h-full bg-[#22d3ee] transition-all duration-1000"
-                                    style={{ width: `${agentStatus[agent.id]?.activity || 0}%`, backgroundColor: agent.color }}
-                                ></div>
-                            </div>
-                        </div>
                     </div>
-                ))}
-            </main>
-
-            {/* Footer: Execution & Terminal */}
-            <footer className="fixed bottom-0 left-0 right-0 h-48 bg-[#020617]/95 border-t border-[#22d3ee]/20 p-4 grid grid-cols-1 md:grid-cols-4 gap-6 z-40 backdrop-blur-xl">
-                <div className="md:col-span-1 border-r border-[#22d3ee]/10 pr-4">
-                    <h4 className="text-[10px] font-bold opacity-50 mb-3 tracking-widest uppercase flex items-center gap-2">
-                        <span className="w-1.5 h-1.5 bg-[#22d3ee] rounded-full"></span>
-                        Execution Layer
-                    </h4>
-                    <div className="space-y-3">
-                        {EXECUTION_ROLES.map(role => (
-                            <div key={role.id} className="flex items-center gap-3 group">
-                                <div className="w-8 h-8 rounded border border-[#22d3ee]/20 overflow-hidden pixel-art bg-[#0f172a]">
-                                    <div
-                                        className="w-full h-full bg-no-repeat"
-                                        style={{
-                                            backgroundImage: `url('/assets/execution_grid.png')`,
-                                            backgroundSize: '200% 200%',
-                                            backgroundPosition: `${role.iconPos.x * 100}% ${role.iconPos.y * 100}%`
-                                        }}
-                                    ></div>
-                                </div>
-                                <div className="flex-1 min-w-0">
-                                    <div className="text-[10px] font-bold group-hover:text-white transition-colors uppercase">{role.name}</div>
-                                    <div className="text-[8px] opacity-60 truncate">{role.task}</div>
-                                </div>
-                                <div className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse"></div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-
-                <div className="md:col-span-3">
-                    <h4 className="text-[10px] font-bold opacity-50 mb-2 tracking-widest uppercase flex justify-between">
-                        <span>Live System Telemetry</span>
-                        <span className="text-red-500 animate-pulse">● REC</span>
-                    </h4>
-                    <div className="bg-[#22d3ee]/5 border border-[#22d3ee]/10 p-2 h-32 overflow-hidden text-[11px] font-mono leading-relaxed custom-scrollbar">
-                        {logs.map((log, i) => (
-                            <div key={i} className={`mb-1 ${i === 0 ? 'text-[#22d3ee]' : 'opacity-40'}`}>
-                                <span className="opacity-30 mr-2 text-[9px]">{i === 0 ? '>' : ' '}</span>
-                                {log}
-                            </div>
-                        ))}
-                        <div className="cursor-blink opacity-60 text-[10px] mt-2 text-white/40">SYSTEM://RESOURCING_AGENT_MATRICES_...</div>
-                    </div>
-                </div>
-            </footer>
-
-            <style dangerouslySetInnerHTML={{
-                __html: `
-        .crt-overlay {
-          background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%),
-                      linear-gradient(90deg, rgba(255, 0, 0, .03), rgba(0, 255, 0, .01), rgba(0, 0, 255, .03));
-          background-size: 100% 3px, 3px 100%;
-        }
-        .pixel-art {
-          image-rendering: -moz-crisp-edges;
-          image-rendering: -webkit-optimize-contrast;
-          image-rendering: pixelated;
-          image-rendering: optimize-speed;
-        }
-      `}} />
+                </section>
+            </div>
         </div>
     );
 };

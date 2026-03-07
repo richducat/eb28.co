@@ -1,0 +1,12 @@
+{
+  "generated_at": "2026-03-07T00:00:00Z",
+  "summary": {
+    "status": "PAUSED",
+    "cycle_interval_minutes": 10,
+    "active_lanes": 0,
+    "top_blockers": [],
+    "last_successful_fill_at": null
+  },
+  "lanes": {},
+  "recent_actions": []
+}

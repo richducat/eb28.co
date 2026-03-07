@@ -1,0 +1,1 @@
+"""Fundmanager tests."""

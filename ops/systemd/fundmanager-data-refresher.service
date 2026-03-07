@@ -1,0 +1,23 @@
+[Unit]
+Description=eb28 Fundmanager Public State Refresher
+After=network-online.target fundmanager-orchestrator.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/eb28.co
+EnvironmentFile=-/opt/eb28.co/ops/systemd/fundmanager.env
+Environment=PYTHONUNBUFFERED=1
+Environment=FUNDMANAGER_CONFIG=/opt/eb28.co/ops/config/fundmanager.default.json
+Environment=FUNDMANAGER_STATE_PATH=/var/lib/fundmanager/fundmanager-state.json
+Environment=FUNDMANAGER_PUBLIC_STATE_PATH=/var/lib/fundmanager/public/fundmanager-public.json
+ExecStart=/usr/bin/env python3 -m ops.scripts.data_refresher
+Restart=always
+RestartSec=20
+StateDirectory=fundmanager
+LogsDirectory=fundmanager
+StandardOutput=append:/var/log/fundmanager/data-refresher.log
+StandardError=append:/var/log/fundmanager/data-refresher.log
+
+[Install]
+WantedBy=multi-user.target

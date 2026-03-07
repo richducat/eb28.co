@@ -2,6 +2,13 @@
 
 This repo is a Vite + React site configured for GitHub Pages.
 
+## Fundmanager Ops
+
+- VPS install/runbook: `ops/systemd/README.md`
+- Validation commands:
+  - `python3 -m unittest ops.tests.test_fundmanager_runtime -v`
+  - `python3 -m ops.scripts.validate_runtime`
+
 ## EB28 App Builder
 
 - Route: `/appbuilder`

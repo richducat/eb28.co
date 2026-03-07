@@ -205,6 +205,7 @@ function normalizeRemoteSnapshot(raw) {
 
     const updatedAt = raw.generated_at || null;
     const cycleIntervalMinutes = Number(summary.cycle_interval_minutes || 10);
+    const providerHealthy = raw?.degraded === false && raw?.provider_health?.status === 'OK';
 
     return {
         ok: true,
@@ -213,7 +214,7 @@ function normalizeRemoteSnapshot(raw) {
         updatedAt,
         stale: isSnapshotStaleClient(updatedAt, cycleIntervalMinutes),
         summary: {
-            status: summary.status || 'PAUSED',
+            status: providerHealthy ? 'RUNNING' : (summary.status || 'PAUSED'),
             cycleIntervalMinutes,
             activeLanes: Number(summary.active_lanes || 0),
             topBlockers: Array.isArray(summary.top_blockers)

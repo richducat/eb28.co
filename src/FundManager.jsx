@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
-const REMOTE_SNAPSHOT_URL = import.meta.env.VITE_FUNDMANAGER_PUBLIC_STATE_URL;
+const REMOTE_SNAPSHOT_URL = import.meta.env.VITE_FUNDMANAGER_PUBLIC_STATE_URL || 'https://fundstate.eb28.co/fund-state.json';
 
 const AGENTS = [
     { id: 'goldman', name: 'Goldman Fundamental', roles: ['trading-research', 'quant-analyst'], color: '#22d3ee', gridPos: { x: 0, y: 0 }, laneIds: [] },

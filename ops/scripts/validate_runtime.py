@@ -1,11 +1,13 @@
 from __future__ import annotations
 
 import json
+import os
 from datetime import datetime, timezone
 
 from ops.fundmanager.config import get_lane_policies, load_config
-from ops.fundmanager.providers import DryRunProvider
+from ops.fundmanager.providers import DryRunProvider, load_provider
 from ops.fundmanager.reliability import ReliabilityLayer
+from ops.fundmanager.state import validate_state_payload
 from ops.fundmanager.types import (
     REASON_MARKET_COOLDOWN,
     REASON_MIN_SHARES,
@@ -41,6 +43,39 @@ def _run_case(*, config: dict, now: datetime, scenario: dict, lane_state: dict, 
         },
         "quote_calls": provider.quote_calls,
         "submit_calls": provider.submit_calls,
+    }
+
+
+def _validate_configured_provider(config: dict) -> dict | None:
+    module_path = os.environ.get("FUNDMANAGER_PROVIDER_MODULE")
+    if not module_path:
+        return None
+
+    provider = load_provider(config)
+    provider_builder = getattr(provider, "build_fundmanager_state", None) or getattr(provider, "get_fundmanager_state", None)
+    if not callable(provider_builder):
+        return {
+            "name": "configured provider import",
+            "passed": False,
+            "module": module_path,
+            "class": os.environ.get("FUNDMANAGER_PROVIDER_CLASS"),
+            "error": "provider does not expose build_fundmanager_state()",
+        }
+
+    payload = provider_builder()
+    validate_state_payload(payload, require_provider_fields=True)
+    provider_health = payload.get("provider_health", {})
+    api_key_present = bool(provider_health.get("preflight", {}).get("simmer_api_key", {}).get("present"))
+    degraded = bool(payload.get("degraded"))
+    return {
+        "name": "configured provider import",
+        "passed": api_key_present and not degraded,
+        "module": module_path,
+        "class": os.environ.get("FUNDMANAGER_PROVIDER_CLASS"),
+        "degraded": degraded,
+        "provider_health": provider_health.get("status"),
+        "api_key_present": api_key_present,
+        "lane_count": len(payload.get("lanes", {})),
     }
 
 
@@ -211,6 +246,10 @@ def run_validation() -> dict:
             **watch_case,
         }
     )
+
+    provider_validation = _validate_configured_provider(config)
+    if provider_validation is not None:
+        cases.append(provider_validation)
 
     return {
         "generated_at": now.replace(microsecond=0).isoformat().replace("+00:00", "Z"),

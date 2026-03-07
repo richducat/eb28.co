@@ -256,3 +256,63 @@ def to_public_snapshot(state: dict, *, include_recent_actions: int = 12) -> dict
     public_state = deepcopy(state)
     public_state["recent_actions"] = public_state.get("recent_actions", [])[:include_recent_actions]
     return public_state
+
+
+def validate_state_payload(payload: dict, *, require_provider_fields: bool = False) -> None:
+    if not isinstance(payload, dict):
+        raise ValueError("fundmanager payload must be a dict")
+
+    for key in ("generated_at", "summary", "lanes", "recent_actions"):
+        if key not in payload:
+            raise ValueError(f"fundmanager payload missing `{key}`")
+
+    summary = payload.get("summary")
+    if not isinstance(summary, dict):
+        raise ValueError("fundmanager payload summary must be a dict")
+
+    for key in ("status", "cycle_interval_minutes", "active_lanes", "top_blockers", "last_successful_fill_at"):
+        if key not in summary:
+            raise ValueError(f"fundmanager payload summary missing `{key}`")
+
+    lanes = payload.get("lanes")
+    if not isinstance(lanes, dict):
+        raise ValueError("fundmanager payload lanes must be a dict")
+
+    for lane_id, lane in lanes.items():
+        if not isinstance(lane, dict):
+            raise ValueError(f"lane `{lane_id}` must be a dict")
+        for key in (
+            "id",
+            "name",
+            "mode",
+            "status",
+            "last_cycle_at",
+            "last_reason_code",
+            "last_error_class",
+            "last_successful_fill_at",
+            "next_action",
+            "consecutive_failures",
+            "metrics",
+            "reason_metrics",
+            "market_cooldowns",
+            "recent_events",
+            "circuit_breaker",
+        ):
+            if key not in lane:
+                raise ValueError(f"lane `{lane_id}` missing `{key}`")
+
+    recent_actions = payload.get("recent_actions")
+    if not isinstance(recent_actions, list):
+        raise ValueError("fundmanager payload recent_actions must be a list")
+
+    if not require_provider_fields:
+        return
+
+    for key in ("provider_health", "last_success_ts", "reason_codes", "degraded"):
+        if key not in payload:
+            raise ValueError(f"provider payload missing `{key}`")
+
+    if not isinstance(payload.get("provider_health"), dict):
+        raise ValueError("provider payload provider_health must be a dict")
+    if not isinstance(payload.get("reason_codes"), list):
+        raise ValueError("provider payload reason_codes must be a list")

@@ -5,7 +5,8 @@ import os
 import time
 
 from ops.fundmanager.config import load_config
-from ops.fundmanager.state import load_state, save_state, summarize_state, to_public_snapshot
+from ops.fundmanager.providers import load_provider
+from ops.fundmanager.state import load_state, save_state, summarize_state, to_public_snapshot, validate_state_payload
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -28,7 +29,17 @@ def build_parser() -> argparse.ArgumentParser:
 def refresh(config_path: str | None, state_path: str, output_path: str) -> None:
     config = load_config(config_path)
     state = load_state(state_path)
-    summarize_state(state, config)
+    provider_module = os.environ.get("FUNDMANAGER_PROVIDER_MODULE")
+    if provider_module:
+        provider = load_provider(config)
+        provider_builder = getattr(provider, "build_fundmanager_state", None) or getattr(provider, "get_fundmanager_state", None)
+        if callable(provider_builder):
+            state = provider_builder()
+            validate_state_payload(state, require_provider_fields=True)
+        else:
+            summarize_state(state, config)
+    else:
+        summarize_state(state, config)
     include_recent_actions = int(config.get("global", {}).get("public_snapshot_include_recent_actions", 12))
     public_state = to_public_snapshot(state, include_recent_actions=include_recent_actions)
     save_state(output_path, public_state)

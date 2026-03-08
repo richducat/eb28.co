@@ -331,12 +331,15 @@ class ReliabilityLayer:
                     details={"message": str(error)},
                 )
 
+            min_order_floor = max(limits.min_order_usd, market.min_order_usd or 0.0)
+            intended_order_usd = max(lane_policy.order_usd, min_order_floor)
+
             intent = OrderIntent(
                 lane_id=lane_policy.lane_id,
                 market_id=market.market_id,
                 venue=market.venue,
                 side=lane_policy.default_side,
-                order_usd=lane_policy.order_usd,
+                order_usd=intended_order_usd,
             )
             guard = self.market_guard(
                 lane_policy=lane_policy,

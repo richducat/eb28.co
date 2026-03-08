@@ -2,9 +2,11 @@ from __future__ import annotations
 
 import importlib
 import importlib.metadata
+import json
 import os
 from pathlib import Path
 from typing import Any
+from urllib import request as urllib_request
 
 from ops.fundmanager.config import load_config
 from ops.fundmanager.providers import ProviderError
@@ -188,6 +190,43 @@ class SimmerFundProvider:
         self._client = client_cls(api_key=self.api_key, base_url=self.base_url, venue=self.venue)
         return self._client
 
+    def _fetch_briefing(self) -> dict[str, Any]:
+        get_briefing = getattr(self._get_client(), "get_briefing", None)
+        if not callable(get_briefing):
+            return {}
+        try:
+            return get_briefing() or {}
+        except Exception:
+            return {}
+
+    def _troubleshoot_error(self, error_text: str) -> str | None:
+        try:
+            payload = json.dumps({"error_text": error_text}).encode("utf-8")
+            req = urllib_request.Request(
+                f"{self.base_url.rstrip('/')}/api/sdk/troubleshoot",
+                data=payload,
+                headers={"Content-Type": "application/json"},
+                method="POST",
+            )
+            with urllib_request.urlopen(req, timeout=4) as response:
+                data = json.loads(response.read().decode("utf-8"))
+            fix = _get_value(data, "fix", default=None)
+            return str(fix) if fix else None
+        except Exception:
+            return None
+
+    def _build_reasoning(self, *, intent: OrderIntent, context: dict | None) -> str:
+        market = context.get("market") if isinstance(context, dict) else {}
+        question = _get_value(market, "question", default="market")
+        prob = _float_or_none(_get_value(market, "price_yes", "external_price_yes", default=None))
+        warnings = _get_value(context, "warnings", default=None) if isinstance(context, dict) else None
+        warning_note = "no context warnings" if not warnings else f"warnings observed: {warnings}"
+        prob_note = f"yes_prob={prob:.3f}" if prob is not None else "yes_prob=unknown"
+        return (
+            f"{intent.lane_id} signal accepted after Simmer context check ({warning_note}); "
+            f"executing {intent.side.upper()} with risk controls, {prob_note}, market='{question}'."
+        )
+
     def _preflight(self) -> dict[str, Any]:
         kalshi_key_path = os.environ.get("KALSHI_PRIVATE_KEY_PATH")
         return {
@@ -275,6 +314,7 @@ class SimmerFundProvider:
                 "is_live_now": _truthy(_get_value(context_market, "is_live_now", default=None))
                 if _get_value(context_market, "is_live_now", default=None) is not None
                 else _get_value(market, "is_live_now", default=None),
+                "context_warnings": _get_value(context, "warnings", default=[]) if isinstance(context, dict) else [],
             },
         )
 
@@ -457,6 +497,7 @@ class SimmerFundProvider:
         now_iso = isoformat(self.now_fn())
         client = self._get_client()
         portfolio = client.get_portfolio() or {}
+        briefing = self._fetch_briefing()
         self._positions_cache = [self._position_to_dict(position) for position in client.get_positions()]
         open_orders = client.get_open_orders() or {}
         self._orders_cache = list(open_orders.get("orders") or [])
@@ -479,6 +520,11 @@ class SimmerFundProvider:
         payload["committee"] = committee_state
         payload["degraded"] = False
         payload["last_success_ts"] = now_iso
+        payload["briefing"] = {
+            "risk_alerts": _get_value(briefing, "risk_alerts", default=[]) or [],
+            "venues": _get_value(briefing, "venues", default={}) or {},
+            "opportunities": _get_value(briefing, "opportunities", default={}) or {},
+        }
         self._augment_lanes(payload, committee_state)
         payload["provider_health"] = self._success_health(
             now_iso=now_iso,
@@ -567,6 +613,16 @@ class SimmerFundProvider:
         return self._to_market_snapshot(market_id, market, context)
 
     def submit_order(self, intent: OrderIntent, limit_price: float, shares: float) -> ExecutionReceipt:
+        context = {}
+        get_market_context = getattr(self._get_client(), "get_market_context", None)
+        if callable(get_market_context):
+            try:
+                context = get_market_context(intent.market_id) or {}
+            except Exception:
+                context = {}
+
+        reasoning = self._build_reasoning(intent=intent, context=context)
+
         try:
             result = self._get_client().trade(
                 market_id=intent.market_id,
@@ -575,9 +631,12 @@ class SimmerFundProvider:
                 venue=intent.venue or self.venue,
                 price=float(limit_price),
                 source=f"{SOURCE_PREFIX}{intent.lane_id}",
+                reasoning=reasoning,
             )
         except Exception as error:
-            raise ProviderError(str(error), transient=True, reason_code=REASON_ORDER_FAILED) from error
+            troubleshoot_fix = self._troubleshoot_error(str(error))
+            message = str(error) if not troubleshoot_fix else f"{error} | suggested_fix={troubleshoot_fix}"
+            raise ProviderError(message, transient=True, reason_code=REASON_ORDER_FAILED) from error
 
         if not getattr(result, "success", False):
             message = _get_value(result, "error", "skip_reason", default="Simmer trade failed")

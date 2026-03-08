@@ -1,6 +1,11 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
-const REMOTE_SNAPSHOT_URL = import.meta.env.VITE_FUNDMANAGER_PUBLIC_STATE_URL || 'https://fundstate.eb28.co/fund-state.json';
+const PROD_REMOTE_SNAPSHOT_HOSTS = new Set(['eb28.co', 'www.eb28.co', 'fundmanager.eb28.co']);
+const PROD_REMOTE_SNAPSHOT_URL = 'https://fundstate.eb28.co/fund-state.json';
+const IS_PROD_REMOTE_SNAPSHOT_HOST =
+    typeof window !== 'undefined' && PROD_REMOTE_SNAPSHOT_HOSTS.has(window.location.hostname.toLowerCase());
+const detectedProdRemoteSnapshotUrl = IS_PROD_REMOTE_SNAPSHOT_HOST ? PROD_REMOTE_SNAPSHOT_URL : '';
+const REMOTE_SNAPSHOT_URL = import.meta.env.VITE_FUNDMANAGER_PUBLIC_STATE_URL || detectedProdRemoteSnapshotUrl;
 
 const AGENTS = [
     { id: 'goldman', name: 'Goldman Fundamental', roles: ['trading-research', 'quant-analyst'], color: '#22d3ee', gridPos: { x: 0, y: 0 }, laneIds: [] },
@@ -239,6 +244,26 @@ async function fetchSnapshotJson(url) {
     return normalizeRemoteSnapshot(data);
 }
 
+function getSnapshotSourceUrls() {
+    const sources = [];
+
+    if (IS_PROD_REMOTE_SNAPSHOT_HOST && REMOTE_SNAPSHOT_URL) {
+        sources.push(REMOTE_SNAPSHOT_URL);
+    }
+
+    sources.push('/api/fundmanager-data');
+
+    if (REMOTE_SNAPSHOT_URL && !sources.includes(REMOTE_SNAPSHOT_URL)) {
+        sources.push(REMOTE_SNAPSHOT_URL);
+    }
+
+    if (!sources.includes('/data/fundmanager-public.json')) {
+        sources.push('/data/fundmanager-public.json');
+    }
+
+    return sources;
+}
+
 const FundManager = () => {
     const [snapshot, setSnapshot] = useState(null);
     const [errorMessage, setErrorMessage] = useState('');
@@ -246,20 +271,25 @@ const FundManager = () => {
 
     const loadLiveData = useCallback(async () => {
         try {
-            let data;
-            try {
-                data = await fetchSnapshotJson('/api/fundmanager-data');
-            } catch (apiError) {
-                if (REMOTE_SNAPSHOT_URL) {
-                    data = await fetchSnapshotJson(REMOTE_SNAPSHOT_URL);
-                } else {
-                    data = await fetchSnapshotJson('/data/fundmanager-public.json');
+            const sourceErrors = [];
+
+            for (const sourceUrl of getSnapshotSourceUrls()) {
+                try {
+                    const data = await fetchSnapshotJson(sourceUrl);
+
+                    if (sourceErrors.length > 0) {
+                        data.fallbackReason = sourceErrors[0];
+                    }
+
+                    setSnapshot(data);
+                    setErrorMessage('');
+                    return;
+                } catch (error) {
+                    sourceErrors.push(error.message || `Failed to load ${sourceUrl}`);
                 }
-                data.fallbackReason = apiError.message || 'api_unavailable';
             }
 
-            setSnapshot(data);
-            setErrorMessage('');
+            throw new Error(sourceErrors[sourceErrors.length - 1] || 'Failed to load orchestrator snapshot.');
         } catch (error) {
             setSnapshot(null);
             setErrorMessage(error.message || 'Failed to load orchestrator snapshot.');

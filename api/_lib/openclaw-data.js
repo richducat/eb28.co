@@ -390,9 +390,42 @@ function extractJsonPayload(outputText) {
     }
 }
 
+let openclawBinCache = null;
+
+async function resolveOpenclawBin() {
+    if (openclawBinCache) {
+        return openclawBinCache;
+    }
+
+    const candidates = [
+        process.env.OPENCLAW_BIN,
+        '/opt/homebrew/bin/openclaw',
+        '/usr/local/bin/openclaw',
+        '/usr/bin/openclaw',
+        'openclaw',
+    ].filter(Boolean);
+
+    for (const candidate of candidates) {
+        if (candidate === 'openclaw') {
+            openclawBinCache = candidate;
+            return candidate;
+        }
+
+        if (await pathExists(candidate)) {
+            openclawBinCache = candidate;
+            return candidate;
+        }
+    }
+
+    openclawBinCache = 'openclaw';
+    return openclawBinCache;
+}
+
 async function runCronCommand(args, timeoutMs = 30_000) {
+    const openclawBin = await resolveOpenclawBin();
+
     try {
-        const { stdout, stderr } = await execFileAsync('openclaw', ['cron', ...args], {
+        const { stdout, stderr } = await execFileAsync(openclawBin, ['cron', ...args], {
             timeout: timeoutMs,
             maxBuffer: 1024 * 1024,
         });

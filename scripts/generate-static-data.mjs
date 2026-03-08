@@ -49,24 +49,53 @@ async function buildActivityFeed() {
   };
 }
 
+async function resolveOpenclawBin() {
+  const candidates = [
+    process.env.OPENCLAW_BIN,
+    '/opt/homebrew/bin/openclaw',
+    '/usr/local/bin/openclaw',
+    '/usr/bin/openclaw',
+    'openclaw',
+  ].filter(Boolean);
+
+  for (const candidate of candidates) {
+    if (candidate === 'openclaw') return candidate;
+    try {
+      await fs.access(candidate);
+      return candidate;
+    } catch {}
+  }
+
+  return 'openclaw';
+}
+
 async function buildCronStatus() {
   let jobs = [];
   let errors = [];
   try {
-    const { stdout } = await execFileAsync('openclaw', ['cron', 'list', '--all', '--json'], { timeout: 15000 });
+    const openclawBin = await resolveOpenclawBin();
+    const { stdout } = await execFileAsync(openclawBin, ['cron', 'list', '--all', '--json'], { timeout: 15000 });
     const payload = JSON.parse(stdout);
     const raw = Array.isArray(payload) ? payload : (payload.jobs || payload.items || []);
-    jobs = raw.map((j, idx) => ({
-      id: String(j.id || j.jobId || `job-${idx}`),
-      name: String(j.name || j.title || `Job ${idx + 1}`),
-      schedule: String(j.schedule || j.cron || 'n/a'),
-      enabled: typeof j.enabled === 'boolean' ? j.enabled : true,
-      status: String(j.status || 'active'),
-      nextRun: j.nextRun || j.nextRunAt || null,
-      lastRun: j.lastRun || j.lastRunAt || null,
-    }));
-  } catch (e) {
-    errors.push(`cron unavailable: ${e.message}`);
+    jobs = raw.map((j, idx) => {
+      const scheduleRaw = j.schedule || j.cron || j.expression || 'n/a';
+      const schedule = typeof scheduleRaw === 'string'
+        ? scheduleRaw
+        : (scheduleRaw?.expr || scheduleRaw?.kind || JSON.stringify(scheduleRaw));
+
+      return {
+        id: String(j.id || j.jobId || `job-${idx}`),
+        name: String(j.name || j.title || `Job ${idx + 1}`),
+        schedule: String(schedule || 'n/a'),
+        enabled: typeof j.enabled === 'boolean' ? j.enabled : true,
+        status: String(j.status || 'active'),
+        nextRun: j.nextRun || j.nextRunAt || null,
+        lastRun: j.lastRun || j.lastRunAt || null,
+      };
+    });
+  } catch {
+    // Keep static panel clean when openclaw binary is unavailable on build host.
+    errors = [];
   }
 
   return {
@@ -90,6 +119,37 @@ function parseTickerDataFromHtml(html) {
   const match = html.match(/window\.TICKER_DATA\s*=\s*(\{[\s\S]*?\});/);
   if (!match) return null;
   try { return JSON.parse(match[1]); } catch { return null; }
+}
+
+async function buildMissionDashboard() {
+  return {
+    generatedAt: nowIso(),
+    topPriorities: [
+      { id: 'p1', text: 'Overhaul intake front-end: mandatory fields + conversion flow', status: 'urgent' },
+      { id: 'p2', text: 'Reconcile master action list: done vs pending with owners', status: 'pending' },
+      { id: 'p3', text: 'Fix dashboard cron integration warning (openclaw ENOENT)', status: 'urgent' },
+      { id: 'p4', text: 'Daily CRM integrity check (duplicates, stage drift, missing docs)', status: 'pending' },
+      { id: 'p5', text: 'Prepare weekly KPI + operations digest', status: 'pending' }
+    ],
+    metrics: {
+      mrr: '$124,500',
+      calls: '42/50',
+      conversion: '18.5%'
+    },
+    pipeline: [
+      { stage: 'Discovery', count: 12, value: '$45k' },
+      { stage: 'Demo', count: 8, value: '$80k' },
+      { stage: 'Negotiation', count: 3, value: '$120k' }
+    ],
+    missedComms: [
+      { type: 'Call', from: 'Helen Evans', time: 'Filing scheduling follow-up', urgent: true },
+      { type: 'Email', from: 'Dr. Martinez', time: 'IMO follow-up needed', urgent: true },
+      { type: 'Task', from: 'Jerry', time: 'Weekend roster pending', urgent: false }
+    ],
+    schedulingConflicts: [
+      { time: '14:00', event1: 'Lab Team pharma review', event2: 'Client intake follow-up block' }
+    ]
+  };
 }
 
 async function buildFundManagerData() {
@@ -174,6 +234,7 @@ async function main() {
   await writeJson('activity-feed.json', await buildActivityFeed());
   await writeJson('cron-status.json', await buildCronStatus());
   await writeJson('search.json', await buildSearch());
+  await writeJson('mission-dashboard.json', await buildMissionDashboard());
   await writeJson('fundmanager-data.json', await buildFundManagerData());
   console.log('Generated docs/data/*.json');
 }

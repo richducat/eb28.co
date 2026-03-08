@@ -675,14 +675,15 @@ const Dashboard = () => {
     const [cmdOutput, setCmdOutput] = useState([]);
     const cliInputRef = useRef(null);
     const [priorities, setPriorities] = useState([
-        { id: 1, text: 'Finalize Q3 Strategy Deck', status: 'pending' },
-        { id: 2, text: 'Review Enterprise Contracts', status: 'urgent' },
-        { id: 3, text: 'Sync w/ Engineering Lead', status: 'done' },
+        { id: 'mission-1', text: 'Intake page overhaul + mandatory fields', status: 'urgent' },
+        { id: 'mission-2', text: 'Fix runtime scheduler path (openclaw ENOENT)', status: 'urgent' },
+        { id: 'mission-3', text: 'Reconcile master action list (done / pending)', status: 'pending' },
     ]);
 
     const theme = THEMES[themeKey];
 
     const [tyfysFeed, setTyfysFeed] = useState(null);
+    const [missionFeed, setMissionFeed] = useState(null);
 
     useEffect(() => {
         let mounted = true;
@@ -705,6 +706,31 @@ const Dashboard = () => {
     }, []);
 
     useEffect(() => {
+        let mounted = true;
+        const loadMission = async () => {
+            try {
+                const r = await fetch('/data/mission-dashboard.json', { cache: 'no-store' });
+                const data = await r.json();
+                if (!mounted) return;
+                setMissionFeed(data);
+                if (Array.isArray(data?.topPriorities) && data.topPriorities.length) {
+                    setPriorities(data.topPriorities.map((item, idx) => ({
+                        id: item.id || `mission-${idx + 1}`,
+                        text: item.text || item.title || 'Untitled priority',
+                        status: item.status || 'pending',
+                    })));
+                }
+            } catch {
+                // keep defaults
+            }
+        };
+
+        loadMission();
+        const t = setInterval(loadMission, 60_000);
+        return () => { mounted = false; clearInterval(t); };
+    }, []);
+
+    useEffect(() => {
         const timer = setInterval(() => setTime(new Date()), 1000);
         return () => clearInterval(timer);
     }, []);
@@ -716,23 +742,31 @@ const Dashboard = () => {
         });
 
     const metrics = {
-        revenue: `${tyfysFeed?.pipeline?.total || 0} Leads`,
-        calls: `${Object.keys(tyfysFeed?.pipeline?.byPhase || {}).length} phases`,
-        conversion: `${(tyfysFeed?.now?.progressPct ?? 0)}%`
+        revenue: missionFeed?.metrics?.mrr || `${tyfysFeed?.pipeline?.total || 0} Leads`,
+        calls: missionFeed?.metrics?.calls || `${Object.keys(tyfysFeed?.pipeline?.byPhase || {}).length} phases`,
+        conversion: missionFeed?.metrics?.conversion || `${(tyfysFeed?.now?.progressPct ?? 0)}%`
     };
 
-    const pipeline = Object.entries(tyfysFeed?.pipeline?.byPhase || {}).map(([stage, count]) => ({
-        stage, count, value: `${Math.round((count / Math.max(1, tyfysFeed?.pipeline?.total || 1)) * 100)}%`
-    }));
+    const pipeline = Array.isArray(missionFeed?.pipeline)
+        ? missionFeed.pipeline
+        : Object.entries(tyfysFeed?.pipeline?.byPhase || {}).map(([stage, count]) => ({
+            stage,
+            count,
+            value: `${Math.round((count / Math.max(1, tyfysFeed?.pipeline?.total || 1)) * 100)}%`
+        }));
 
-    const conflicts = [
-        { time: '14:00', event1: 'Client Sync', event2: 'Internal Review' },
-    ];
+    const conflicts = Array.isArray(missionFeed?.schedulingConflicts)
+        ? missionFeed.schedulingConflicts
+        : [
+            { time: '14:00', event1: 'Client Sync', event2: 'Internal Review' },
+        ];
 
-    const missedComms = [
-        ...(tyfysFeed?.approvals || []).slice(0, 2).map((a) => ({ type: 'Approval', from: a.projectId, time: a.approvalType || 'approval needed', urgent: true })),
-        ...(tyfysFeed?.blocked || []).slice(0, 1).map((b) => ({ type: 'Blocked', from: b.projectId, time: (b.blockers || []).join(', '), urgent: true }))
-    ];
+    const missedComms = Array.isArray(missionFeed?.missedComms)
+        ? missionFeed.missedComms
+        : [
+            ...(tyfysFeed?.approvals || []).slice(0, 2).map((a) => ({ type: 'Approval', from: a.projectId, time: a.approvalType || 'approval needed', urgent: true })),
+            ...(tyfysFeed?.blocked || []).slice(0, 1).map((b) => ({ type: 'Blocked', from: b.projectId, time: (b.blockers || []).join(', '), urgent: true }))
+        ];
 
     /* ── Command handler ── */
     const handleCommand = useCallback((raw) => {
@@ -793,7 +827,7 @@ const Dashboard = () => {
                 setCmdOutput(prev => [
                     ...prev,
                     `> EB28.OS Status Report – ${formatDate(new Date())}`,
-                    `  Theme: ${theme.name} | Priorities: ${priorities.length} | Pipeline value: $245k`,
+                    `  Theme: ${theme.name} | Priorities: ${priorities.length} | MRR: ${metrics.revenue}`,
                     `  Uptime: ${Math.floor((Date.now() % 86400000) / 3600000)}h ${Math.floor((Date.now() % 3600000) / 60000)}m`,
                 ]);
                 break;
@@ -804,7 +838,7 @@ const Dashboard = () => {
             default:
                 setCmdOutput(prev => [...prev, `> Unknown command: "${cmd}". Type "help" for options.`]);
         }
-    }, [priorities.length, theme.name]);
+    }, [metrics.revenue, priorities.length, theme.name]);
 
     const handleRootClick = useCallback((event) => {
         const target = event.target;

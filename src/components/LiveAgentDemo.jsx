@@ -102,7 +102,7 @@ const LiveAgentDemo = ({ scrollToSection }) => {
             <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-slate-800 rounded-full animate-pulse"></div>
           </div>
           <div>
-            <h3 className="text-white font-bold text-sm">EB 28 Autonomous Agent</h3>
+            <p className="text-white font-bold text-sm">EB 28 Autonomous Agent</p>
             <p className="text-slate-400 text-xs font-medium">Live Demonstration • Private Server</p>
           </div>
         </div>
@@ -117,7 +117,7 @@ const LiveAgentDemo = ({ scrollToSection }) => {
             <div className="w-20 h-20 bg-blue-900/20 rounded-full flex items-center justify-center mb-6">
               <MessageSquare className="text-blue-500 w-10 h-10" />
             </div>
-            <h3 className="text-2xl font-bold text-white mb-2">Experience the AI</h3>
+            <h2 className="text-2xl font-bold text-white mb-2">Experience the AI</h2>
             <p className="text-slate-400 text-sm max-w-md mb-8">
               Interact with our live agent to see how custom LLMs handle logic, objections, and sales routing autonomously.
             </p>

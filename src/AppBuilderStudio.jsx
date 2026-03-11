@@ -1398,7 +1398,7 @@ const AppBuilderStudio = () => {
   };
 
   return (
-    <div className="eb28-appbuilder relative min-h-screen overflow-x-hidden text-slate-100">
+    <main className="eb28-appbuilder relative min-h-screen overflow-x-hidden text-slate-100" aria-labelledby="appbuilder-studio-title">
       <div className="eb28-appbuilder-noise pointer-events-none absolute inset-0" aria-hidden="true" />
       <div className="relative mx-auto max-w-[1700px] px-4 py-6 sm:px-6 lg:px-8">
         <header className="eb28-panel eb28-gradient-border mb-6 overflow-hidden rounded-3xl">
@@ -1407,7 +1407,7 @@ const AppBuilderStudio = () => {
               <p className="font-brand inline-flex items-center gap-2 rounded-full bg-cyan-500/15 px-3 py-1 text-xs tracking-[0.2em] text-cyan-200">
                 <WandSparkles size={14} /> EB28 APP BUILDER
               </p>
-              <h1 className="font-brand mt-3 text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
+              <h1 id="appbuilder-studio-title" className="font-brand mt-3 text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
                 Vibe-first generation with fundamentals enforced
               </h1>
               <p className="font-body mt-3 max-w-3xl text-sm text-slate-200 sm:text-base">
@@ -2018,7 +2018,7 @@ const AppBuilderStudio = () => {
           </section>
         </div>
       </div>
-    </div>
+    </main>
   );
 };
 

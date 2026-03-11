@@ -5,10 +5,13 @@ import Dashboard from './Dashboard';
 import AppBuilderStudio from './AppBuilderStudio';
 import FundManager from './FundManager';
 import './index.css';
+import { applyDocumentSeo } from './seo.js';
+import { detectRouteKey } from './siteMeta.js';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 const pathname = window.location.pathname.toLowerCase().replace(/\/$/, "");
 const hostname = window.location.hostname.toLowerCase();
+const routeKey = detectRouteKey({ pathname, hostname });
 
 const isDashboardRoute =
   pathname === '/dash' ||
@@ -18,6 +21,8 @@ const isAppBuilderRoute = pathname === '/appbuilder';
 const isFundManagerRoute =
   pathname === '/fundmanager' ||
   hostname === 'fundmanager.eb28.co';
+
+applyDocumentSeo(routeKey);
 
 if (isDashboardRoute) {
   root.render(

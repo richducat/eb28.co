@@ -29,6 +29,15 @@ const App = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeCategory, setActiveCategory] = useState('all');
+  const [contactForm, setContactForm] = useState({
+    name: '',
+    phone: '',
+    email: '',
+    infrastructureNeed: '10-dollar-bot',
+    projectSpecs: '',
+  });
+  const [contactRequestStatus, setContactRequestStatus] = useState('');
+  const [contactRequestSummary, setContactRequestSummary] = useState('');
 
   // Handle scroll effect for navbar
   useEffect(() => {
@@ -106,6 +115,18 @@ const App = () => {
   ];
 
   const portfolioProjects = [
+    {
+      id: 'tool-appbuilder',
+      title: "EB28 App Builder",
+      type: "AI Builder",
+      url: "/appbuilder/"
+    },
+    {
+      id: 'tool-fundmanager',
+      title: "Fund Manager Live",
+      type: "Live Dashboard",
+      url: "/fundmanager/"
+    },
     {
       id: 0,
       title: "Tesla Helper App",
@@ -199,6 +220,37 @@ const App = () => {
     }
   };
 
+  const updateContactField = (field) => (event) => {
+    setContactForm((current) => ({
+      ...current,
+      [field]: event.target.value,
+    }));
+  };
+
+  const handleContactSubmit = async (event) => {
+    event.preventDefault();
+
+    const summary = [
+      'EB28 Architecture Request',
+      `Name: ${contactForm.name}`,
+      `Phone: ${contactForm.phone || 'Not provided'}`,
+      `Email: ${contactForm.email}`,
+      `Infrastructure Need: ${contactForm.infrastructureNeed}`,
+      '',
+      'Project Specs / Business Goals',
+      contactForm.projectSpecs,
+    ].join('\n');
+
+    setContactRequestSummary(summary);
+
+    try {
+      await navigator.clipboard.writeText(summary);
+      setContactRequestStatus('Architecture request summary copied to your clipboard.');
+    } catch {
+      setContactRequestStatus('Architecture request summary generated below.');
+    }
+  };
+
   return (
     <div className="min-h-screen bg-slate-900 text-slate-100 font-sans selection:bg-blue-500 selection:text-white">
       
@@ -226,7 +278,13 @@ const App = () => {
 
             {/* Mobile Menu Button */}
             <div className="md:hidden">
-              <button onClick={toggleMenu} className="text-slate-300 hover:text-white">
+              <button
+                onClick={toggleMenu}
+                className="text-slate-300 hover:text-white"
+                aria-label={isMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+                aria-expanded={isMenuOpen}
+                aria-controls="mobile-navigation"
+              >
                 {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
               </button>
             </div>
@@ -235,7 +293,7 @@ const App = () => {
 
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className="md:hidden bg-slate-800 border-b border-slate-700 shadow-xl">
+          <div id="mobile-navigation" className="md:hidden bg-slate-800 border-b border-slate-700 shadow-xl">
             <div className="px-4 pt-2 pb-6 space-y-2">
               <button onClick={() => scrollToSection('services')} className="block w-full text-left px-3 py-3 text-slate-300 hover:bg-slate-700 rounded-md font-medium">Infrastructure</button>
               <button onClick={() => scrollToSection('portfolio')} className="block w-full text-left px-3 py-3 text-slate-300 hover:bg-slate-700 rounded-md font-medium">Portfolio</button>
@@ -247,6 +305,7 @@ const App = () => {
         )}
       </nav>
 
+      <main id="main-content">
       {/* --- HERO SECTION --- */}
       <section className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
         {/* Background Gradients */}
@@ -343,21 +402,21 @@ const App = () => {
                 <div className="flex">
                   <div className="mr-4 mt-1"><Lock className="text-green-400 w-6 h-6" /></div>
                   <div>
-                    <h4 className="text-white font-bold text-lg">Absolute Data Sovereignty</h4>
+                    <h3 className="text-white font-bold text-lg">Absolute Data Sovereignty</h3>
                     <p className="text-slate-400 text-sm">Stop feeding ChatGPT your client lists and financial data. We build air-gapped and secure-cloud systems where your proprietary data remains entirely yours.</p>
                   </div>
                 </div>
                 <div className="flex">
                   <div className="mr-4 mt-1"><Server className="text-blue-400 w-6 h-6" /></div>
                   <div>
-                    <h4 className="text-white font-bold text-lg">Hardware & Cloud Flexibility</h4>
+                    <h3 className="text-white font-bold text-lg">Hardware & Cloud Flexibility</h3>
                     <p className="text-slate-400 text-sm">You choose the deployment. Run AI locally on your own business hardware, or rent highly scalable, secure GPU infrastructure directly from <strong>eb28.co</strong>.</p>
                   </div>
                 </div>
                 <div className="flex">
                   <div className="mr-4 mt-1"><ShieldCheck className="text-purple-400 w-6 h-6" /></div>
                   <div>
-                    <h4 className="text-white font-bold text-lg">Revenue-Driven Architecture</h4>
+                    <h3 className="text-white font-bold text-lg">Revenue-Driven Architecture</h3>
                     <p className="text-slate-400 text-sm">Our deployments aren't just parlor tricks. They are systematically engineered to capture leads, convert traffic, and automate onboarding workflows.</p>
                   </div>
                 </div>
@@ -379,7 +438,7 @@ const App = () => {
                     <span className="text-slate-300 font-medium">Lead Gen Systems</span>
                     <span className="text-purple-400 font-bold text-sm">Always Active</span>
                   </div>
-                  <p className="text-center text-xs text-slate-500 mt-4 italic">Tailor-fit for small businesses scaling in Florida and nationwide.</p>
+                  <p className="text-center text-xs text-slate-400 mt-4 italic">Tailor-fit for small businesses scaling in Florida and nationwide.</p>
                 </div>
               </div>
             </div>
@@ -398,12 +457,15 @@ const App = () => {
           </div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {portfolioProjects.map((project) => (
+            {portfolioProjects.map((project) => {
+              const isExternal = project.url.startsWith('http');
+
+              return (
               <a
                 key={project.id}
                 href={project.url}
-                target="_blank"
-                rel="noopener noreferrer"
+                target={isExternal ? "_blank" : undefined}
+                rel={isExternal ? "noopener noreferrer" : undefined}
                 className="group block rounded-2xl border border-slate-800 bg-slate-900 p-6 hover:border-blue-500/60 hover:bg-slate-800/70 transition-all"
               >
                 <div className="flex items-start justify-between mb-4">
@@ -418,7 +480,8 @@ const App = () => {
                   Open Project <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
                 </div>
               </a>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>
@@ -481,7 +544,7 @@ const App = () => {
                 <div className="p-6 bg-slate-800/50 border-t border-slate-800 flex items-center justify-between">
                   <span className={`text-2xl font-bold ${item.highlight ? 'text-blue-400' : 'text-white'}`}>{item.price}</span>
                   {item.highlight ? (
-                     <button onClick={() => scrollToSection('contact')} className="px-4 py-2 bg-blue-500 text-white rounded-lg font-bold text-sm hover:bg-blue-400 transition-colors flex items-center shadow-lg shadow-blue-500/50">
+                     <button onClick={() => scrollToSection('contact')} className="px-4 py-2 bg-blue-700 text-white rounded-lg font-bold text-sm hover:bg-blue-600 transition-colors flex items-center shadow-lg shadow-blue-700/40">
                      Build It <ArrowRight className="w-4 h-4 ml-1" />
                    </button>
                   ) : (
@@ -551,7 +614,7 @@ const App = () => {
             {/* Infrastructure Build */}
             <div className="p-8 rounded-2xl bg-slate-800 border border-slate-700 flex flex-col lg:order-first">
               <h3 className="text-xl font-medium text-slate-300 mb-2">Private AI Infrastructure</h3>
-              <div className="text-3xl font-bold text-white mb-6">Consultation<span className="text-lg text-slate-500 font-normal">/First</span></div>
+              <div className="text-3xl font-bold text-white mb-6">Consultation<span className="text-lg text-slate-300 font-normal">/First</span></div>
               <p className="text-slate-400 text-sm mb-8">For businesses ready to deploy local LLMs and secure internal AI tools.</p>
               
               <ul className="space-y-4 mb-8 flex-1">
@@ -575,7 +638,7 @@ const App = () => {
             {/* The Ecosystem */}
             <div className="p-8 rounded-2xl bg-slate-800 border border-slate-700 flex flex-col">
               <h3 className="text-xl font-medium text-slate-300 mb-2">The Revenue Ecosystem</h3>
-              <div className="text-3xl font-bold text-white mb-6">Consultation<span className="text-lg text-slate-500 font-normal">/First</span></div>
+              <div className="text-3xl font-bold text-white mb-6">Consultation<span className="text-lg text-slate-300 font-normal">/First</span></div>
               <p className="text-slate-400 text-sm mb-8">We tie your private AI directly to client generation and lead conversion.</p>
               
               <ul className="space-y-4 mb-8 flex-1">
@@ -610,26 +673,26 @@ const App = () => {
               </p>
             </div>
 
-            <form className="space-y-6">
+            <form className="space-y-6" onSubmit={handleContactSubmit}>
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-medium text-slate-400 mb-2">Name</label>
-                  <input type="text" className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all" placeholder="John Doe" />
+                  <label htmlFor="contact-name" className="block text-sm font-medium text-slate-300 mb-2">Name</label>
+                  <input id="contact-name" name="name" autoComplete="name" type="text" value={contactForm.name} onChange={updateContactField('name')} required className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all" placeholder="John Doe" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-slate-400 mb-2">Phone (SMS Enabled)</label>
-                  <input type="tel" className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all" placeholder="(555) 000-0000" />
+                  <label htmlFor="contact-phone" className="block text-sm font-medium text-slate-300 mb-2">Phone (SMS Enabled)</label>
+                  <input id="contact-phone" name="phone" autoComplete="tel" inputMode="tel" type="tel" value={contactForm.phone} onChange={updateContactField('phone')} className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all" placeholder="(555) 000-0000" />
                 </div>
               </div>
               
               <div>
-                <label className="block text-sm font-medium text-slate-400 mb-2">Email</label>
-                <input type="email" className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all" placeholder="john@example.com" />
+                <label htmlFor="contact-email" className="block text-sm font-medium text-slate-300 mb-2">Email</label>
+                <input id="contact-email" name="email" autoComplete="email" type="email" value={contactForm.email} onChange={updateContactField('email')} required className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all" placeholder="john@example.com" />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-400 mb-2">Infrastructure Need</label>
-                <select className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all">
+                <label htmlFor="contact-need" className="block text-sm font-medium text-slate-300 mb-2">Infrastructure Need</label>
+                <select id="contact-need" name="infrastructureNeed" value={contactForm.infrastructureNeed} onChange={updateContactField('infrastructureNeed')} className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all">
                   <option value="10-dollar-bot">🔥 Deploy $10 Proof of Concept Bot</option>
                   <option value="on-prem">On-Premise Local LLM Setup</option>
                   <option value="cloud">eb28.co Cloud AI Hosting</option>
@@ -639,29 +702,43 @@ const App = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-400 mb-2">Project Specs / Business Goals</label>
-                <textarea rows="4" className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all" placeholder="Tell us about your data privacy needs or revenue goals..."></textarea>
+                <label htmlFor="contact-project" className="block text-sm font-medium text-slate-300 mb-2">Project Specs / Business Goals</label>
+                <textarea id="contact-project" name="projectSpecs" value={contactForm.projectSpecs} onChange={updateContactField('projectSpecs')} required rows="4" className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all" placeholder="Tell us about your data privacy needs or revenue goals..."></textarea>
               </div>
 
-              <button type="button" className="w-full py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-bold rounded-lg text-lg transition-all shadow-lg shadow-blue-600/20 flex items-center justify-center group">
-                Submit Architecture Request <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              <button type="submit" className="w-full py-4 bg-gradient-to-r from-blue-700 to-purple-700 hover:from-blue-600 hover:to-purple-600 text-white font-bold rounded-lg text-lg transition-all shadow-lg shadow-blue-700/20 flex items-center justify-center group">
+                Prepare Architecture Request <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </button>
               
-              <p className="text-center text-xs text-slate-500 mt-4">
-                🔒 Transmission encrypted. For the $10 Setup, you will be redirected to a secure payment portal immediately.
+              <p id="contact-form-note" className="text-center text-xs text-slate-400 mt-4">
+                🔒 Your request summary is prepared locally and copied for quick handoff through your preferred EB28 contact channel.
               </p>
+
+              {contactRequestStatus ? (
+                <div aria-live="polite" className="rounded-2xl border border-blue-500/30 bg-blue-500/10 px-4 py-3 text-sm text-blue-100">
+                  {contactRequestStatus}
+                </div>
+              ) : null}
+
+              {contactRequestSummary ? (
+                <pre className="overflow-x-auto rounded-2xl border border-slate-700 bg-slate-950/80 p-4 text-xs leading-relaxed text-slate-300">
+                  {contactRequestSummary}
+                </pre>
+              ) : null}
             </form>
           </div>
         </div>
       </section>
+      </main>
 
       {/* --- FOOTER (SEO OPTIMIZED) --- */}
       <footer className="bg-slate-950 py-12 border-t border-slate-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="sr-only">Footer navigation</h2>
           <div className="grid md:grid-cols-4 gap-8 mb-8">
             <div className="col-span-1 md:col-span-2">
               <span className="text-2xl font-bold text-white block mb-4">EB 28 | eb28.co</span>
-              <p className="text-slate-500 max-w-sm mb-4 leading-relaxed">
+              <p className="text-slate-400 max-w-sm mb-4 leading-relaxed">
                 EB 28 builds <strong>Private AI Infrastructure</strong> for small businesses. Whether you need on-premise open-source LLMs, secure cloud hosting via eb28.co, or high-intent revenue automation, we engineer the systems that scale your operations.
               </p>
               <div className="flex items-center text-slate-400 text-sm">
@@ -671,28 +748,28 @@ const App = () => {
             </div>
             
             <div>
-              <h4 className="text-white font-bold mb-4">Infrastructure</h4>
+              <h3 className="text-white font-bold mb-4">Infrastructure</h3>
               <ul className="space-y-2 text-sm text-slate-400">
-                <li><a href="#" className="hover:text-blue-400 transition-colors">On-Premise Server Builds</a></li>
-                <li><a href="#" className="hover:text-blue-400 transition-colors">eb28.co Cloud Hosting</a></li>
-                <li><a href="#" className="hover:text-blue-400 transition-colors">Local RAG Knowledge Bases</a></li>
-                <li><a href="#" className="hover:text-blue-400 transition-colors">Automated CRM Integrations</a></li>
+                <li><a href="#services" className="hover:text-blue-400 transition-colors">On-Premise Server Builds</a></li>
+                <li><a href="#deployments" className="hover:text-blue-400 transition-colors">eb28.co Cloud Hosting</a></li>
+                <li><a href="/appbuilder/" className="hover:text-blue-400 transition-colors">EB28 App Builder</a></li>
+                <li><a href="/fundmanager/" className="hover:text-blue-400 transition-colors">Fund Manager Live</a></li>
               </ul>
             </div>
 
             <div>
-              <h4 className="text-white font-bold mb-4">Agency</h4>
+              <h3 className="text-white font-bold mb-4">Agency</h3>
               <ul className="space-y-2 text-sm text-slate-400">
-                <li><a href="#" className="hover:text-blue-400 transition-colors">Our Tech Stack</a></li>
-                <li><a href="#" className="hover:text-blue-400 transition-colors">Revenue Case Studies</a></li>
-                <li><a href="#" className="hover:text-blue-400 transition-colors">Security & Privacy</a></li>
-                <li><a href="#" className="hover:text-blue-400 transition-colors">Consultation Booking</a></li>
+                <li><a href="#portfolio" className="hover:text-blue-400 transition-colors">Live Portfolio</a></li>
+                <li><a href="#packages" className="hover:text-blue-400 transition-colors">$10 Proof of Concept</a></li>
+                <li><a href="#services" className="hover:text-blue-400 transition-colors">Security & Privacy</a></li>
+                <li><a href="#contact" className="hover:text-blue-400 transition-colors">Consultation Intake</a></li>
               </ul>
             </div>
           </div>
           
           <div className="border-t border-slate-900 pt-8 flex flex-col md:flex-row justify-between items-center">
-            <p className="text-slate-600 text-sm text-center md:text-left">
+            <p className="text-slate-400 text-sm text-center md:text-left">
               &copy; {new Date().getFullYear()} EB 28. All rights reserved. | Private AI & Revenue Architecture.
             </p>
             <div className="flex space-x-6 mt-4 md:mt-0">

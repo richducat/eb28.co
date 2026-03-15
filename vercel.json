@@ -9,6 +9,10 @@
       "destination": "/api/$1"
     },
     {
+      "source": "/catnap/(.*)",
+      "destination": "/catnap/$1"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }

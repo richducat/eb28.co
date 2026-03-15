@@ -1,8 +1,10 @@
 {
   "scheduler": {
     "status": "static-cache",
-    "generatedAt": "2026-03-07T21:55:32.751Z"
+    "generatedAt": "2026-03-15T15:11:04.313Z"
   },
   "jobs": [],
-  "errors": []
+  "errors": [
+    "cron unavailable: Command failed: openclaw cron list --all --json\nError: gateway closed (1006 abnormal closure (no close frame)): no close reason\nGateway target: ws://127.0.0.1:18789\nSource: local loopback\nConfig: /Users/richardducat/.openclaw/openclaw.json\nBind: loopback\n"
+  ]
 }

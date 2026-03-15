@@ -29,15 +29,16 @@ const App = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeCategory, setActiveCategory] = useState('all');
-  const [contactForm, setContactForm] = useState({
+  // ── Lead capture form state ──
+  const [formData, setFormData] = useState({
     name: '',
     phone: '',
     email: '',
-    infrastructureNeed: '10-dollar-bot',
-    projectSpecs: '',
+    serviceNeed: '10-dollar-bot',
+    message: '',
   });
-  const [contactRequestStatus, setContactRequestStatus] = useState('');
-  const [contactRequestSummary, setContactRequestSummary] = useState('');
+  const [formStatus, setFormStatus] = useState('idle'); // idle | submitting | success | error
+  const [formError, setFormError] = useState('');
 
   // Handle scroll effect for navbar
   useEffect(() => {
@@ -220,34 +221,34 @@ const App = () => {
     }
   };
 
-  const updateContactField = (field) => (event) => {
-    setContactForm((current) => ({
-      ...current,
-      [field]: event.target.value,
-    }));
+  const updateField = (field, value) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
   };
 
-  const handleContactSubmit = async (event) => {
-    event.preventDefault();
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+    setFormError('');
 
-    const summary = [
-      'EB28 Architecture Request',
-      `Name: ${contactForm.name}`,
-      `Phone: ${contactForm.phone || 'Not provided'}`,
-      `Email: ${contactForm.email}`,
-      `Infrastructure Need: ${contactForm.infrastructureNeed}`,
-      '',
-      'Project Specs / Business Goals',
-      contactForm.projectSpecs,
-    ].join('\n');
+    // Client-side validation
+    if (!formData.name.trim()) { setFormError('Please enter your name.'); return; }
+    if (!formData.email.trim()) { setFormError('Please enter your email.'); return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email.trim())) {
+      setFormError('Please enter a valid email address.'); return;
+    }
 
-    setContactRequestSummary(summary);
-
+    setFormStatus('submitting');
     try {
-      await navigator.clipboard.writeText(summary);
-      setContactRequestStatus('Architecture request summary copied to your clipboard.');
-    } catch {
-      setContactRequestStatus('Architecture request summary generated below.');
+      const res = await fetch('/api/submit-lead', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...formData, sourcePage: 'eb28.co' }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Submission failed.');
+      setFormStatus('success');
+    } catch (err) {
+      setFormError(err.message || 'Something went wrong. Please try again.');
+      setFormStatus('error');
     }
   };
 
@@ -673,59 +674,87 @@ const App = () => {
               </p>
             </div>
 
-            <form className="space-y-6" onSubmit={handleContactSubmit}>
-              <div className="grid md:grid-cols-2 gap-6">
+            {formStatus === 'success' ? (
+              <div className="text-center py-16">
+                <div className="inline-flex items-center justify-center w-20 h-20 bg-green-500/20 rounded-full mb-6">
+                  <CheckCircle className="w-10 h-10 text-green-400" />
+                </div>
+                <h3 className="text-2xl font-bold text-white mb-3">Request Received!</h3>
+                <p className="text-slate-400 max-w-md mx-auto mb-8">
+                  We'll review your submission and reach out shortly. For the $10 AI Setup, expect a follow-up within 24 hours.
+                </p>
+                <button
+                  onClick={() => { setFormStatus('idle'); setFormData({ name: '', phone: '', email: '', serviceNeed: '10-dollar-bot', message: '' }); }}
+                  className="px-6 py-3 bg-slate-800 hover:bg-slate-700 text-white rounded-lg font-medium transition-colors"
+                >
+                  Submit Another Request
+                </button>
+              </div>
+            ) : (
+              <form onSubmit={handleFormSubmit} className="space-y-6">
+                {formError && (
+                  <div className="p-4 bg-red-500/10 border border-red-500/30 rounded-lg text-red-300 text-sm">
+                    {formError}
+                  </div>
+                )}
+
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div>
+                    <label htmlFor="contact-name" className="block text-sm font-medium text-slate-300 mb-2">Name *</label>
+                    <input id="contact-name" name="name" autoComplete="name" type="text" value={formData.name} onChange={(e) => updateField('name', e.target.value)} required className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all" placeholder="John Doe" />
+                  </div>
+                  <div>
+                    <label htmlFor="contact-phone" className="block text-sm font-medium text-slate-300 mb-2">Phone (SMS Enabled)</label>
+                    <input id="contact-phone" name="phone" autoComplete="tel" inputMode="tel" type="tel" value={formData.phone} onChange={(e) => updateField('phone', e.target.value)} className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all" placeholder="(555) 000-0000" />
+                  </div>
+                </div>
+                
                 <div>
-                  <label htmlFor="contact-name" className="block text-sm font-medium text-slate-300 mb-2">Name</label>
-                  <input id="contact-name" name="name" autoComplete="name" type="text" value={contactForm.name} onChange={updateContactField('name')} required className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all" placeholder="John Doe" />
+                  <label htmlFor="contact-email" className="block text-sm font-medium text-slate-300 mb-2">Email *</label>
+                  <input id="contact-email" name="email" autoComplete="email" type="email" value={formData.email} onChange={(e) => updateField('email', e.target.value)} required className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all" placeholder="john@example.com" />
                 </div>
+
                 <div>
-                  <label htmlFor="contact-phone" className="block text-sm font-medium text-slate-300 mb-2">Phone (SMS Enabled)</label>
-                  <input id="contact-phone" name="phone" autoComplete="tel" inputMode="tel" type="tel" value={contactForm.phone} onChange={updateContactField('phone')} className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all" placeholder="(555) 000-0000" />
+                  <label htmlFor="contact-need" className="block text-sm font-medium text-slate-300 mb-2">Infrastructure Need</label>
+                  <select id="contact-need" name="serviceNeed" value={formData.serviceNeed} onChange={(e) => updateField('serviceNeed', e.target.value)} className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all">
+                    <option value="10-dollar-bot">🔥 Deploy $10 Proof of Concept Bot</option>
+                    <option value="on-prem">On-Premise Local LLM Setup</option>
+                    <option value="cloud">eb28.co Cloud AI Hosting</option>
+                    <option value="revenue">Revenue Automation & Paid Ads</option>
+                    <option value="consultation">General Tech/Strategy Consultation</option>
+                  </select>
                 </div>
-              </div>
-              
-              <div>
-                <label htmlFor="contact-email" className="block text-sm font-medium text-slate-300 mb-2">Email</label>
-                <input id="contact-email" name="email" autoComplete="email" type="email" value={contactForm.email} onChange={updateContactField('email')} required className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all" placeholder="john@example.com" />
-              </div>
 
-              <div>
-                <label htmlFor="contact-need" className="block text-sm font-medium text-slate-300 mb-2">Infrastructure Need</label>
-                <select id="contact-need" name="infrastructureNeed" value={contactForm.infrastructureNeed} onChange={updateContactField('infrastructureNeed')} className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all">
-                  <option value="10-dollar-bot">🔥 Deploy $10 Proof of Concept Bot</option>
-                  <option value="on-prem">On-Premise Local LLM Setup</option>
-                  <option value="cloud">eb28.co Cloud AI Hosting</option>
-                  <option value="revenue">Revenue Automation & Paid Ads</option>
-                  <option value="consultation">General Tech/Strategy Consultation</option>
-                </select>
-              </div>
-
-              <div>
-                <label htmlFor="contact-project" className="block text-sm font-medium text-slate-300 mb-2">Project Specs / Business Goals</label>
-                <textarea id="contact-project" name="projectSpecs" value={contactForm.projectSpecs} onChange={updateContactField('projectSpecs')} required rows="4" className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all" placeholder="Tell us about your data privacy needs or revenue goals..."></textarea>
-              </div>
-
-              <button type="submit" className="w-full py-4 bg-gradient-to-r from-blue-700 to-purple-700 hover:from-blue-600 hover:to-purple-600 text-white font-bold rounded-lg text-lg transition-all shadow-lg shadow-blue-700/20 flex items-center justify-center group">
-                Prepare Architecture Request <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-              </button>
-              
-              <p id="contact-form-note" className="text-center text-xs text-slate-400 mt-4">
-                🔒 Your request summary is prepared locally and copied for quick handoff through your preferred EB28 contact channel.
-              </p>
-
-              {contactRequestStatus ? (
-                <div aria-live="polite" className="rounded-2xl border border-blue-500/30 bg-blue-500/10 px-4 py-3 text-sm text-blue-100">
-                  {contactRequestStatus}
+                <div>
+                  <label htmlFor="contact-project" className="block text-sm font-medium text-slate-300 mb-2">Project Specs / Business Goals</label>
+                  <textarea id="contact-project" name="message" value={formData.message} onChange={(e) => updateField('message', e.target.value)} rows="4" className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all" placeholder="Tell us about your data privacy needs or revenue goals..."></textarea>
                 </div>
-              ) : null}
 
-              {contactRequestSummary ? (
-                <pre className="overflow-x-auto rounded-2xl border border-slate-700 bg-slate-950/80 p-4 text-xs leading-relaxed text-slate-300">
-                  {contactRequestSummary}
-                </pre>
-              ) : null}
-            </form>
+                <button
+                  type="submit"
+                  disabled={formStatus === 'submitting'}
+                  className="w-full py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-bold rounded-lg text-lg transition-all shadow-lg shadow-blue-600/20 flex items-center justify-center group disabled:opacity-60 disabled:cursor-not-allowed"
+                >
+                  {formStatus === 'submitting' ? (
+                    <>
+                      <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      Submitting...
+                    </>
+                  ) : (
+                    <>
+                      Submit Architecture Request <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                    </>
+                  )}
+                </button>
+                
+                <p className="text-center text-xs text-slate-500 mt-4">
+                  🔒 Transmission encrypted. For the $10 Setup, you will be redirected to a secure payment portal immediately.
+                </p>
+              </form>
+            )}
           </div>
         </div>
       </section>

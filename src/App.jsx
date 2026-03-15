@@ -238,16 +238,20 @@ const App = () => {
 
     setFormStatus('submitting');
     try {
-      const res = await fetch('/api/submit-lead', {
+      // Using the direct Google Apps Script URL to support GitHub Pages hosting
+      await fetch('https://script.google.com/macros/s/AKfycby7-ZUZYpzwmKA6Y2IFgJXwpHpmSWh35eGuNEa_ASxsGmIrV5y5NqTGW6vGl4XJgEqmgg/exec', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        mode: 'no-cors', // Essential for direct GAS calls from static frontend
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify({ ...formData, sourcePage: 'eb28.co' }),
       });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Submission failed.');
+      
+      // Since no-cors returns an opaque response, we assume success if no error was thrown
       setFormStatus('success');
     } catch (err) {
-      setFormError(err.message || 'Something went wrong. Please try again.');
+      setFormError('Something went wrong. Please try again.');
       setFormStatus('error');
     }
   };

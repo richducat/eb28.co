@@ -18,15 +18,15 @@
   "latency": "--",
   "committee": {
     "decision": "NO_TRADE",
-    "direction": "YES",
-    "confidence": 55,
+    "direction": "NA",
+    "confidence": 0,
     "blockers": [
-      "insufficient_quorum"
+      "missing_committee_output"
     ]
   },
   "orchestrator": {
     "status": "IDLE",
-    "lastCycle": "2026-03-20T22:52:54.804Z",
+    "lastCycle": "2026-03-20T23:19:43.303Z",
     "detail": null
   }
 }

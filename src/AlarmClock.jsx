@@ -3,16 +3,23 @@ import { Volume2, VolumeX, Settings, Clock, User, Zap, Lock, BellRing, ChevronUp
 
 // Skin/Voice options
 const ALARM_VOICES = [
-  { id: 'standard', name: 'Classic Beep', type: 'free', icon: '🔔' },
-  { id: 'nuclear', name: 'Nuclear Countdown', type: 'premium', icon: '☢️' },
-  { id: 'rocky', name: 'Boxing Champion Theme', type: 'premium', icon: '🥊' },
-  { id: 'jerky', name: '"Hey Loser, Wake Up!"', type: 'premium', icon: '🤬' },
-  { id: 'zen', name: 'Zen Master (Gentle)', type: 'free', icon: '☯️' }
+  { id: 'standard', name: 'Classic Beep', type: 'free', icon: '🔔', sample: 'Beep beep beep... time to wake up.' },
+  { id: 'nuclear', name: 'Nuclear Countdown', type: 'premium', icon: '☢️', sample: 'Warning. Nuclear launch sequence initiated. 10, 9, 8...' },
+  { id: 'rocky', name: 'Boxing Champion Theme', type: 'premium', icon: '🥊', sample: 'Dun dun dun... Get up champ, it is time to train!' },
+  { id: 'jerky', name: '"Hey Loser, Wake Up!"', type: 'premium', icon: '🤬', sample: 'Hey loser! Yeah, you! Get out of bed!' },
+  { id: 'zen', name: 'Zen Master (Gentle)', type: 'free', icon: '☯️', sample: 'Breathe in... Breathe out... Welcome to a new day.' }
 ];
 
 export default function AlarmClock() {
   const [time, setTime] = useState(new Date());
   
+  // Premium / Login state
+  const [isUnlocked, setIsUnlocked] = useState(false);
+  const [showLogin, setShowLogin] = useState(false);
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [loginError, setLoginError] = useState('');
+
   // Alarm state
   const [alarmHours, setAlarmHours] = useState('06');
   const [alarmMinutes, setAlarmMinutes] = useState('00');
@@ -59,19 +66,55 @@ export default function AlarmClock() {
 
   const triggerAlarm = () => {
     setIsRinging(true);
-    // In a real app, play actual audio here based on selectedVoice
     if (!isMuted) {
-      console.log(`Playing alarm: ${selectedVoice}`);
+      playSample(selectedVoice);
     }
   };
 
   const stopAlarm = () => {
     setIsRinging(false);
     setIsAlarmActive(false); // Turn off after ringing once
+    window.speechSynthesis.cancel();
   };
 
   const toggleAlarm = () => {
     setIsAlarmActive(!isAlarmActive);
+  };
+
+  const playSample = (voiceId, e) => {
+    if (e) {
+      e.stopPropagation();
+    }
+    window.speechSynthesis.cancel();
+    const voice = ALARM_VOICES.find(v => v.id === voiceId);
+    if (voice) {
+      const utterance = new SpeechSynthesisUtterance(voice.sample);
+      utterance.rate = 0.9;
+      if (voice.id === 'jerky') utterance.rate = 1.2;
+      if (voice.id === 'nuclear') utterance.pitch = 0.5;
+      window.speechSynthesis.speak(utterance);
+    }
+  };
+
+  const handleVoiceSelect = (voice) => {
+    if (voice.type === 'premium' && !isUnlocked) {
+      setShowLogin(true);
+      return;
+    }
+    setSelectedVoice(voice.id);
+  };
+
+  const handleLoginSubmit = (e) => {
+    e.preventDefault();
+    if (username === 'admin' && password === 'admin') {
+      setIsUnlocked(true);
+      setShowLogin(false);
+      setUsername('');
+      setPassword('');
+      setLoginError('');
+    } else {
+      setLoginError('Invalid credentials');
+    }
   };
 
   // Time formatters for Display
@@ -122,13 +165,15 @@ export default function AlarmClock() {
          }}>
       
       {/* Premium Subscription Banner */}
-      <div className="absolute top-0 w-full bg-gradient-to-r from-red-600 via-yellow-600 to-red-600 p-3 text-center text-white text-sm font-bold shadow-2xl z-20 flex justify-center items-center gap-2">
-        <Zap className="w-4 h-4" />
-        Unlock Premium Alarms (Nuclear, Boxing Theme) for just $1/month!
-        <button className="ml-4 px-4 py-1 bg-white text-red-700 rounded-full text-xs hover:bg-red-50 hover:scale-105 transition-transform uppercase tracking-wider">
-          Subscribe Now
-        </button>
-      </div>
+      {!isUnlocked && (
+        <div className="absolute top-0 w-full bg-gradient-to-r from-red-600 via-yellow-600 to-red-600 p-3 text-center text-white text-sm font-bold shadow-2xl z-20 flex justify-center items-center gap-2">
+          <Zap className="w-4 h-4" />
+          Unlock Premium Alarms (Nuclear, Boxing Theme) for just $1/month!
+          <button onClick={() => setShowLogin(true)} className="ml-4 px-4 py-1 bg-white text-red-700 rounded-full text-xs hover:bg-red-50 hover:scale-105 transition-transform uppercase tracking-wider">
+            Subscribe Now
+          </button>
+        </div>
+      )}
 
       <div className="max-w-2xl w-full perspective-1000 mt-16">
         
@@ -287,16 +332,24 @@ export default function AlarmClock() {
                   {ALARM_VOICES.map((voice) => (
                     <button 
                       key={voice.id}
-                      onClick={() => setSelectedVoice(voice.id)}
+                      onClick={() => handleVoiceSelect(voice)}
                       className={`w-full text-left p-3 rounded-lg border flex items-center justify-between transition-all ${selectedVoice === voice.id ? 'bg-blue-600/20 border-blue-500' : 'bg-slate-900 border-slate-700 hover:border-slate-500'}`}
                     >
                       <div className="flex items-center">
                         <span className="text-xl mr-3">{voice.icon}</span>
-                        <span className={`font-medium ${selectedVoice === voice.id ? 'text-white' : 'text-slate-300'}`}>{voice.name}</span>
+                        <div className="flex flex-col">
+                          <span className={`font-medium ${selectedVoice === voice.id ? 'text-white' : 'text-slate-300'}`}>{voice.name}</span>
+                          <span 
+                            onClick={(e) => playSample(voice.id, e)} 
+                            className="text-xs text-blue-400 hover:text-blue-300 flex items-center mt-1 cursor-pointer w-max"
+                          >
+                            <Volume2 className="w-3 h-3 mr-1" /> Sample
+                          </span>
+                        </div>
                       </div>
-                      {voice.type === 'premium' && selectedVoice !== voice.id && (
+                      {voice.type === 'premium' && !isUnlocked && (
                          <span className="flex items-center text-xs text-yellow-500 bg-yellow-500/10 px-2 py-1 rounded">
-                           <Lock className="w-3 h-3 mr-1" /> $1/mo
+                           <Lock className="w-3 h-3 mr-1" /> Locked
                          </span>
                       )}
                     </button>
@@ -312,7 +365,57 @@ export default function AlarmClock() {
             </div>
           </div>
         )}
+        {/* Bottom Login Trigger */}
+        <div className="mt-12 text-center pb-8">
+          <button 
+            onClick={() => setShowLogin(true)}
+            className="text-slate-500 hover:text-slate-300 text-sm flex items-center mx-auto transition-colors"
+          >
+            <User className="w-4 h-4 mr-2" />
+            {isUnlocked ? 'Admin Mode Active' : 'Admin Login'}
+          </button>
+        </div>
+
       </div>
+
+      {/* Login Overlay */}
+      {showLogin && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+          <div className="bg-slate-900 border border-slate-700 rounded-xl max-w-sm w-full p-6 shadow-2xl relative">
+            <button onClick={() => setShowLogin(false)} className="absolute top-4 right-4 text-slate-400 hover:text-white">
+              ✕
+            </button>
+            <h2 className="text-2xl font-bold text-white mb-6 flex items-center">
+              <Lock className="w-5 h-5 mr-3 text-blue-500" /> Admin Access
+            </h2>
+            <form onSubmit={handleLoginSubmit} className="space-y-4">
+              {loginError && <div className="p-2 bg-red-500/20 border border-red-500 text-red-400 text-sm rounded">{loginError}</div>}
+              <div>
+                <label className="block text-slate-400 text-xs uppercase mb-1">Username</label>
+                <input 
+                  type="text" 
+                  value={username}
+                  onChange={e => setUsername(e.target.value)}
+                  className="w-full bg-slate-800 border border-slate-700 rounded px-3 py-2 text-white focus:outline-none focus:border-blue-500"
+                  autoFocus
+                />
+              </div>
+              <div>
+                <label className="block text-slate-400 text-xs uppercase mb-1">Password</label>
+                <input 
+                  type="password" 
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
+                  className="w-full bg-slate-800 border border-slate-700 rounded px-3 py-2 text-white focus:outline-none focus:border-blue-500"
+                />
+              </div>
+              <button type="submit" className="w-full py-2 bg-blue-600 hover:bg-blue-500 text-white rounded font-bold transition-colors mt-4">
+                Unlock Premium
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
 
     </div>
   );

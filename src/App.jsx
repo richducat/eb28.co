@@ -238,12 +238,12 @@ const App = () => {
 
     setFormStatus('submitting');
     try {
-      // Using the direct Google Apps Script URL to support GitHub Pages hosting
-      await fetch('https://script.google.com/macros/s/AKfycby7-ZUZYpzwmKA6Y2IFgJXwpHpmSWh35eGuNEa_ASxsGmIrV5y5NqTGW6vGl4XJgEqmgg/exec', {
+      // Using FormSubmit to email leads directly to richducat@gmail.com
+      await fetch('https://formsubmit.co/ajax/richducat@gmail.com', {
         method: 'POST',
-        mode: 'no-cors', // Essential for direct GAS calls from static frontend
         headers: {
           'Content-Type': 'application/json',
+          'Accept': 'application/json'
         },
         body: JSON.stringify({ ...formData, sourcePage: 'eb28.co' }),
       });
@@ -324,14 +324,14 @@ const App = () => {
           </div>
           
           <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 leading-tight">
-            Deploy Private AI. <br className="hidden md:block"/>
+            Top App Development &amp; <br className="hidden md:block"/>
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-white via-blue-100 to-slate-300">
-              Automate Your Revenue.
+              Website Builder Near Me.
             </span>
           </h1>
           
           <p className="mt-4 max-w-2xl mx-auto text-xl text-slate-400 leading-relaxed font-light">
-            EB 28 engineers secure, local LLMs and custom AI infrastructure. We deploy on your hardware or our secure cloud to automate your internal processes and drive hyper-targeted client generation.
+            EB 28 is the premier app development and website builder near me in Melbourne, FL. We engineer secure, high-performance apps and automated platforms to scale your local operations and drive targeted client generation.
           </p>
 
           <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
@@ -776,7 +776,7 @@ const App = () => {
               </p>
               <div className="flex items-center text-slate-400 text-sm">
                 <MapPin className="w-4 h-4 mr-2" />
-                <span>Serving Florida & National Markets</span>
+                <span>Serving Melbourne, FL & National Markets</span>
               </div>
             </div>
             

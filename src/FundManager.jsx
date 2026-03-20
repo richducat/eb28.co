@@ -338,6 +338,10 @@ const FundManager = () => {
 
     return (
         <div className="min-h-screen overflow-x-hidden bg-[#020617] text-[#22d3ee] font-mono relative selection:bg-[#22d3ee] selection:text-[#020617]">
+            {/* Background Image */}
+            <div className="absolute inset-0 -z-20">
+                <img src="/images/fundmanager_bg.png" alt="Fund Manager Data" className="w-full h-full object-cover opacity-[0.05]" />
+            </div>
             <div className="fixed inset-0 crt-overlay opacity-10 pointer-events-none z-50"></div>
             <div className="fixed inset-0 eb28-appbuilder-noise opacity-5 pointer-events-none"></div>
 

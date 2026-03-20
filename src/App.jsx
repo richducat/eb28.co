@@ -313,9 +313,13 @@ const App = () => {
       <main id="main-content">
       {/* --- HERO SECTION --- */}
       <section className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
+        {/* Background Image */}
+        <div className="absolute inset-0 -z-20">
+          <img src="/images/hero_bg_app.png" alt="AI Core" className="w-full h-full object-cover opacity-20" />
+        </div>
         {/* Background Gradients */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-blue-600/20 rounded-full blur-[100px] -z-10"></div>
-        <div className="absolute bottom-0 right-0 w-[800px] h-[600px] bg-purple-600/10 rounded-full blur-[120px] -z-10"></div>
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-blue-600/30 rounded-full blur-[100px] -z-10"></div>
+        <div className="absolute bottom-0 right-0 w-[800px] h-[600px] bg-purple-600/20 rounded-full blur-[120px] -z-10"></div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="inline-flex items-center px-4 py-2 rounded-full bg-slate-800/80 border border-slate-700 mb-8 backdrop-blur-md shadow-lg">
@@ -361,34 +365,43 @@ const App = () => {
 
           <div className="grid md:grid-cols-3 gap-8">
             {/* Service 1 */}
-            <div className="p-8 rounded-2xl bg-slate-800/30 border border-slate-700 hover:border-blue-500/50 transition-all hover:bg-slate-800 group">
-              <div className="w-14 h-14 bg-blue-900/30 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform ring-1 ring-blue-500/30">
+            <div className="relative p-8 rounded-2xl bg-slate-800/60 border border-slate-700 hover:border-blue-500/50 transition-all hover:bg-slate-800/80 group overflow-hidden shadow-xl backdrop-blur-sm">
+              <div className="absolute inset-0 -z-10">
+                <img src="/images/service_llm_infra.png" alt="LLM Infra" className="w-full h-full object-cover opacity-20 mix-blend-overlay group-hover:scale-105 transition-transform duration-700" />
+              </div>
+              <div className="w-14 h-14 bg-blue-900/50 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform ring-1 ring-blue-500/30 backdrop-blur-md">
                 <HardDrive className="w-7 h-7 text-blue-400" />
               </div>
               <h3 className="text-xl font-bold text-white mb-3">Private LLM Infrastructure</h3>
-              <p className="text-slate-400 mb-4 text-sm leading-relaxed">
+              <p className="text-slate-300 mb-4 text-sm leading-relaxed">
                 Run powerful, customized open-source models directly from <strong>your own local hardware</strong> or our highly secure <strong>eb28.co cloud servers</strong>. Total privacy for your internal operations and data.
               </p>
             </div>
 
             {/* Service 2 */}
-            <div className="p-8 rounded-2xl bg-slate-800/30 border border-slate-700 hover:border-purple-500/50 transition-all hover:bg-slate-800 group">
-              <div className="w-14 h-14 bg-purple-900/30 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform ring-1 ring-purple-500/30">
+            <div className="relative p-8 rounded-2xl bg-slate-800/60 border border-slate-700 hover:border-purple-500/50 transition-all hover:bg-slate-800/80 group overflow-hidden shadow-xl backdrop-blur-sm">
+              <div className="absolute inset-0 -z-10">
+                <img src="/images/service_ai_agents.png" alt="AI Agents" className="w-full h-full object-cover opacity-20 mix-blend-overlay group-hover:scale-105 transition-transform duration-700" />
+              </div>
+              <div className="w-14 h-14 bg-purple-900/50 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform ring-1 ring-purple-500/30 backdrop-blur-md">
                 <Cpu className="w-7 h-7 text-purple-400" />
               </div>
               <h3 className="text-xl font-bold text-white mb-3">Custom AI Agents & RAG</h3>
-              <p className="text-slate-400 mb-4 text-sm leading-relaxed">
+              <p className="text-slate-300 mb-4 text-sm leading-relaxed">
                 We develop strategic AI agents that actually know your business. By integrating <strong>Local RAG (Retrieval-Augmented Generation)</strong>, your AI can securely chat with your private SOPs, CRM records, and company documents.
               </p>
             </div>
 
             {/* Service 3 */}
-            <div className="p-8 rounded-2xl bg-slate-800/30 border border-slate-700 hover:border-green-500/50 transition-all hover:bg-slate-800 group">
-              <div className="w-14 h-14 bg-green-900/30 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform ring-1 ring-green-500/30">
+            <div className="relative p-8 rounded-2xl bg-slate-800/60 border border-slate-700 hover:border-green-500/50 transition-all hover:bg-slate-800/80 group overflow-hidden shadow-xl backdrop-blur-sm">
+              <div className="absolute inset-0 -z-10">
+                <img src="/images/service_revenue.png" alt="Revenue Automation" className="w-full h-full object-cover opacity-20 mix-blend-overlay group-hover:scale-105 transition-transform duration-700" />
+              </div>
+              <div className="w-14 h-14 bg-green-900/50 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform ring-1 ring-green-500/30 backdrop-blur-md">
                 <TrendingUp className="w-7 h-7 text-green-400" />
               </div>
               <h3 className="text-xl font-bold text-white mb-3">Revenue & Lead Automation</h3>
-              <p className="text-slate-400 mb-4 text-sm leading-relaxed">
+              <p className="text-slate-300 mb-4 text-sm leading-relaxed">
                 AI is useless if it doesn't make money. We fuse our custom intelligence builds with <strong>high-intent paid media and automated customer journeys</strong> to flood your business with qualified leads and seamless onboarding.
               </p>
             </div>
@@ -428,18 +441,24 @@ const App = () => {
               </div>
             </div>
             <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 blur-[60px] opacity-20 rounded-full"></div>
-              <div className="relative bg-slate-800 border border-slate-700 rounded-2xl p-8 shadow-2xl">
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 blur-[80px] opacity-20 rounded-full"></div>
+              
+              <div className="relative z-0 mb-6 rounded-3xl overflow-hidden border border-slate-700 shadow-2xl group">
+                <img src="/images/advantage_security.png" alt="Data Sovereignty" className="w-full h-auto object-cover opacity-90 group-hover:scale-105 transition-transform duration-700" />
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/40 to-transparent"></div>
+              </div>
+
+              <div className="relative bg-slate-800/80 backdrop-blur-md border border-slate-700 rounded-2xl p-8 shadow-2xl -mt-20 z-10">
                 <div className="space-y-4">
-                  <div className="flex items-center justify-between p-4 bg-slate-900 rounded-lg border border-slate-700">
+                  <div className="flex items-center justify-between p-4 bg-slate-900/80 rounded-lg border border-slate-700">
                     <span className="text-slate-300 font-medium">Data Leakage to Big Tech</span>
                     <span className="text-green-400 font-bold">0%</span>
                   </div>
-                  <div className="flex items-center justify-between p-4 bg-slate-900 rounded-lg border border-slate-700">
+                  <div className="flex items-center justify-between p-4 bg-slate-900/80 rounded-lg border border-slate-700">
                     <span className="text-slate-300 font-medium">Custom Process Automation</span>
                     <span className="text-blue-400 font-bold">99%</span>
                   </div>
-                  <div className="flex items-center justify-between p-4 bg-slate-900 rounded-lg border border-slate-700">
+                  <div className="flex items-center justify-between p-4 bg-slate-900/80 rounded-lg border border-slate-700">
                     <span className="text-slate-300 font-medium">Lead Gen Systems</span>
                     <span className="text-purple-400 font-bold text-sm">Always Active</span>
                   </div>

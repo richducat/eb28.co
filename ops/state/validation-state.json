@@ -1,0 +1,337 @@
+{
+  "generated_at": "2026-03-07T00:39:41Z",
+  "lanes": {
+    "copytrading": {
+      "circuit_breaker": {
+        "cooloff_minutes": 30,
+        "open": false,
+        "open_until": null,
+        "threshold": 3
+      },
+      "consecutive_failures": 0,
+      "id": "copytrading",
+      "last_cycle_at": "2026-03-07T00:39:41Z",
+      "last_error_class": null,
+      "last_reason_code": "NO_ELIGIBLE_MARKET",
+      "last_successful_fill_at": null,
+      "market_cooldowns": {},
+      "metrics": {
+        "failed": 0,
+        "filled": 0,
+        "skipped": 2,
+        "submitted": 0,
+        "watched": 0
+      },
+      "mode": "active",
+      "name": "Copytrading",
+      "next_action": "await_next_cycle",
+      "reason_metrics": {
+        "NO_ELIGIBLE_MARKET": 2
+      },
+      "recent_events": [
+        {
+          "message": "Copytrading | SKIPPED | NO_ELIGIBLE_MARKET",
+          "timestamp": "2026-03-07T00:39:41Z"
+        },
+        {
+          "message": "Copytrading | SKIPPED | NO_ELIGIBLE_MARKET",
+          "timestamp": "2026-03-06T18:08:39Z"
+        }
+      ],
+      "status": "DEGRADED"
+    },
+    "divergence": {
+      "circuit_breaker": {
+        "cooloff_minutes": 30,
+        "open": false,
+        "open_until": null,
+        "threshold": 3
+      },
+      "consecutive_failures": 0,
+      "id": "divergence",
+      "last_cycle_at": "2026-03-07T00:39:41Z",
+      "last_error_class": null,
+      "last_reason_code": "MIN_ORDER_USD",
+      "last_successful_fill_at": null,
+      "market_cooldowns": {},
+      "metrics": {
+        "failed": 0,
+        "filled": 0,
+        "skipped": 2,
+        "submitted": 0,
+        "watched": 0
+      },
+      "mode": "watch-only",
+      "name": "AI Divergence",
+      "next_action": "rotate_market",
+      "reason_metrics": {
+        "MIN_ORDER_USD": 2
+      },
+      "recent_events": [
+        {
+          "details": {
+            "min_order_usd": 5.0,
+            "order_usd": 0.0
+          },
+          "message": "AI Divergence | SKIPPED | pm-eligible | MIN_ORDER_USD",
+          "timestamp": "2026-03-07T00:39:41Z"
+        },
+        {
+          "details": {
+            "min_order_usd": 5.0,
+            "order_usd": 0.0
+          },
+          "message": "AI Divergence | SKIPPED | pm-eligible | MIN_ORDER_USD",
+          "timestamp": "2026-03-06T18:08:39Z"
+        }
+      ],
+      "status": "DEGRADED"
+    },
+    "fast-loop": {
+      "circuit_breaker": {
+        "cooloff_minutes": 30,
+        "open": false,
+        "open_until": null,
+        "threshold": 3
+      },
+      "consecutive_failures": 0,
+      "id": "fast-loop",
+      "last_cycle_at": "2026-03-07T00:39:41Z",
+      "last_error_class": null,
+      "last_reason_code": "NO_ELIGIBLE_MARKET",
+      "last_successful_fill_at": null,
+      "market_cooldowns": {},
+      "metrics": {
+        "failed": 0,
+        "filled": 0,
+        "skipped": 2,
+        "submitted": 0,
+        "watched": 0
+      },
+      "mode": "active",
+      "name": "Fast Loop",
+      "next_action": "await_next_cycle",
+      "reason_metrics": {
+        "NO_ELIGIBLE_MARKET": 2
+      },
+      "recent_events": [
+        {
+          "message": "Fast Loop | SKIPPED | NO_ELIGIBLE_MARKET",
+          "timestamp": "2026-03-07T00:39:41Z"
+        },
+        {
+          "message": "Fast Loop | SKIPPED | NO_ELIGIBLE_MARKET",
+          "timestamp": "2026-03-06T18:08:39Z"
+        }
+      ],
+      "status": "DEGRADED"
+    },
+    "memebot": {
+      "circuit_breaker": {
+        "cooloff_minutes": 30,
+        "open": false,
+        "open_until": null,
+        "threshold": 3
+      },
+      "consecutive_failures": 0,
+      "id": "memebot",
+      "last_cycle_at": "2026-03-07T00:39:41Z",
+      "last_error_class": null,
+      "last_reason_code": "LANE_DISABLED",
+      "last_successful_fill_at": null,
+      "market_cooldowns": {},
+      "metrics": {
+        "failed": 0,
+        "filled": 0,
+        "skipped": 0,
+        "submitted": 0,
+        "watched": 0
+      },
+      "mode": "disabled",
+      "name": "Memebot",
+      "next_action": "disabled_by_policy",
+      "reason_metrics": {},
+      "recent_events": [
+        {
+          "details": {
+            "reason_code": "LANE_DISABLED"
+          },
+          "message": "Memebot disabled by lane policy",
+          "timestamp": "2026-03-07T00:39:41Z"
+        },
+        {
+          "details": {
+            "reason_code": "LANE_DISABLED"
+          },
+          "message": "Memebot disabled by lane policy",
+          "timestamp": "2026-03-06T18:08:39Z"
+        }
+      ],
+      "status": "PAUSED"
+    },
+    "opportunities": {
+      "circuit_breaker": {
+        "cooloff_minutes": 30,
+        "open": false,
+        "open_until": null,
+        "threshold": 3
+      },
+      "consecutive_failures": 0,
+      "id": "opportunities",
+      "last_cycle_at": "2026-03-07T00:39:41Z",
+      "last_error_class": null,
+      "last_reason_code": "LANE_DISABLED",
+      "last_successful_fill_at": null,
+      "market_cooldowns": {},
+      "metrics": {
+        "failed": 0,
+        "filled": 0,
+        "skipped": 0,
+        "submitted": 0,
+        "watched": 0
+      },
+      "mode": "disabled",
+      "name": "Opportunities",
+      "next_action": "disabled_by_policy",
+      "reason_metrics": {},
+      "recent_events": [
+        {
+          "details": {
+            "reason_code": "LANE_DISABLED"
+          },
+          "message": "Opportunities disabled by lane policy",
+          "timestamp": "2026-03-07T00:39:41Z"
+        },
+        {
+          "details": {
+            "reason_code": "LANE_DISABLED"
+          },
+          "message": "Opportunities disabled by lane policy",
+          "timestamp": "2026-03-06T18:08:39Z"
+        }
+      ],
+      "status": "PAUSED"
+    },
+    "weather": {
+      "circuit_breaker": {
+        "cooloff_minutes": 30,
+        "open": false,
+        "open_until": null,
+        "threshold": 3
+      },
+      "consecutive_failures": 0,
+      "id": "weather",
+      "last_cycle_at": "2026-03-07T00:39:41Z",
+      "last_error_class": null,
+      "last_reason_code": "MIN_ORDER_USD",
+      "last_successful_fill_at": null,
+      "market_cooldowns": {},
+      "metrics": {
+        "failed": 0,
+        "filled": 0,
+        "skipped": 2,
+        "submitted": 0,
+        "watched": 0
+      },
+      "mode": "watch-only",
+      "name": "Weather",
+      "next_action": "rotate_market",
+      "reason_metrics": {
+        "MIN_ORDER_USD": 2
+      },
+      "recent_events": [
+        {
+          "details": {
+            "min_order_usd": 5.0,
+            "order_usd": 0.0
+          },
+          "message": "Weather | SKIPPED | pm-eligible | MIN_ORDER_USD",
+          "timestamp": "2026-03-07T00:39:41Z"
+        },
+        {
+          "details": {
+            "min_order_usd": 5.0,
+            "order_usd": 0.0
+          },
+          "message": "Weather | SKIPPED | pm-eligible | MIN_ORDER_USD",
+          "timestamp": "2026-03-06T18:08:39Z"
+        }
+      ],
+      "status": "DEGRADED"
+    }
+  },
+  "recent_actions": [
+    {
+      "details": {
+        "min_order_usd": 5.0,
+        "order_usd": 0.0
+      },
+      "lane_id": "weather",
+      "message": "Weather | SKIPPED | pm-eligible | MIN_ORDER_USD",
+      "timestamp": "2026-03-07T00:39:41Z"
+    },
+    {
+      "details": {
+        "min_order_usd": 5.0,
+        "order_usd": 0.0
+      },
+      "lane_id": "divergence",
+      "message": "AI Divergence | SKIPPED | pm-eligible | MIN_ORDER_USD",
+      "timestamp": "2026-03-07T00:39:41Z"
+    },
+    {
+      "lane_id": "fast-loop",
+      "message": "Fast Loop | SKIPPED | NO_ELIGIBLE_MARKET",
+      "timestamp": "2026-03-07T00:39:41Z"
+    },
+    {
+      "lane_id": "copytrading",
+      "message": "Copytrading | SKIPPED | NO_ELIGIBLE_MARKET",
+      "timestamp": "2026-03-07T00:39:41Z"
+    },
+    {
+      "details": {
+        "min_order_usd": 5.0,
+        "order_usd": 0.0
+      },
+      "lane_id": "weather",
+      "message": "Weather | SKIPPED | pm-eligible | MIN_ORDER_USD",
+      "timestamp": "2026-03-06T18:08:39Z"
+    },
+    {
+      "details": {
+        "min_order_usd": 5.0,
+        "order_usd": 0.0
+      },
+      "lane_id": "divergence",
+      "message": "AI Divergence | SKIPPED | pm-eligible | MIN_ORDER_USD",
+      "timestamp": "2026-03-06T18:08:39Z"
+    },
+    {
+      "lane_id": "fast-loop",
+      "message": "Fast Loop | SKIPPED | NO_ELIGIBLE_MARKET",
+      "timestamp": "2026-03-06T18:08:39Z"
+    },
+    {
+      "lane_id": "copytrading",
+      "message": "Copytrading | SKIPPED | NO_ELIGIBLE_MARKET",
+      "timestamp": "2026-03-06T18:08:39Z"
+    }
+  ],
+  "summary": {
+    "active_lanes": 2,
+    "cycle_interval_minutes": 10,
+    "last_successful_fill_at": null,
+    "status": "DEGRADED",
+    "top_blockers": [
+      {
+        "count": 4,
+        "reason_code": "MIN_ORDER_USD"
+      },
+      {
+        "count": 4,
+        "reason_code": "NO_ELIGIBLE_MARKET"
+      }
+    ]
+  }
+}

@@ -1,0 +1,18 @@
+[     710ms] [WARNING] Live data unavailable, using simulation: Unexpected token 'e', "export def"... is not valid JSON @ http://127.0.0.1:4174/src/FundManager.jsx:85
+[     737ms] [WARNING] Live data unavailable, using simulation: Unexpected token 'e', "export def"... is not valid JSON @ http://127.0.0.1:4174/src/FundManager.jsx:85
+[   30712ms] [WARNING] Live data unavailable, using simulation: Unexpected token 'e', "export def"... is not valid JSON @ http://127.0.0.1:4174/src/FundManager.jsx:85
+[   60710ms] [WARNING] Live data unavailable, using simulation: Unexpected token 'e', "export def"... is not valid JSON @ http://127.0.0.1:4174/src/FundManager.jsx:85
+[   90712ms] [WARNING] Live data unavailable, using simulation: Unexpected token 'e', "export def"... is not valid JSON @ http://127.0.0.1:4174/src/FundManager.jsx:85
+[  120710ms] [WARNING] Live data unavailable, using simulation: Unexpected token 'e', "export def"... is not valid JSON @ http://127.0.0.1:4174/src/FundManager.jsx:85
+[  150712ms] [WARNING] Live data unavailable, using simulation: Unexpected token 'e', "export def"... is not valid JSON @ http://127.0.0.1:4174/src/FundManager.jsx:85
+[  151933ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://127.0.0.1:4174/src/FundManager.jsx?t=1772820281994:0
+[  151933ms] [ERROR] [hmr] Failed to reload /src/FundManager.jsx. This could be due to syntax errors or importing non-existent modules. (see errors above) @ http://127.0.0.1:4174/@vite/client:175
+[  180710ms] [WARNING] Live data unavailable, using simulation: Unexpected token 'e', "export def"... is not valid JSON @ http://127.0.0.1:4174/src/FundManager.jsx:85
+[  210712ms] [WARNING] Live data unavailable, using simulation: Unexpected token 'e', "export def"... is not valid JSON @ http://127.0.0.1:4174/src/FundManager.jsx:85
+[  240710ms] [WARNING] Live data unavailable, using simulation: Unexpected token 'e', "export def"... is not valid JSON @ http://127.0.0.1:4174/src/FundManager.jsx:85
+[  250604ms] [WARNING] Live data unavailable, using simulation: Unexpected token 'e', "export def"... is not valid JSON @ http://127.0.0.1:4174/src/FundManager.jsx?t=1772820380601:120
+[  280607ms] [WARNING] Live data unavailable, using simulation: Unexpected token 'e', "export def"... is not valid JSON @ http://127.0.0.1:4174/src/FundManager.jsx?t=1772820380601:120
+[  288038ms] [WARNING] Live data unavailable, using simulation: Unexpected token 'e', "export def"... is not valid JSON @ http://127.0.0.1:4174/src/FundManager.jsx?t=1772820380601:120
+[  288038ms] [WARNING] Live data unavailable, using simulation: Unexpected token 'e', "export def"... is not valid JSON @ http://127.0.0.1:4174/src/FundManager.jsx?t=1772820380601:120
+[  318037ms] [WARNING] Live data unavailable, using simulation: Unexpected token 'e', "export def"... is not valid JSON @ http://127.0.0.1:4174/src/FundManager.jsx?t=1772820380601:120
+[  348034ms] [WARNING] Live data unavailable, using simulation: Unexpected token 'e', "export def"... is not valid JSON @ http://127.0.0.1:4174/src/FundManager.jsx?t=1772820380601:120

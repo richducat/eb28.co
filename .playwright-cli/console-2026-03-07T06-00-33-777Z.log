@@ -1,0 +1,30 @@
+[     769ms] [WARNING] GetShoppingCartSummary returned null. @ https://static.nc-img.com/uilayout2/app.a6d77156e92549162122.js:0
+[   14741ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://files.namecheap.com/cdn/1270/assets/css/fonts/museo-sans-700-webfont.woff2:0
+[   14741ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://files.namecheap.com/cdn/1270/assets/css/fonts/museo-sans-500-webfont.woff2:0
+[   14741ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://files.namecheap.com/cdn/1270/assets/css/fonts/museo-sans-300-webfont.woff2:0
+[   14741ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://files.namecheap.com/cdn/1270/assets/css/fonts/gb-icon-font.woff2:0
+[   14742ms] [ERROR] Failed to load resource: the server responded with a status of 404 () @ https://files.namecheap.com/cdn/1270/assets/css/fonts/gb-icon.woff2:0
+[   14876ms] Uncaught SyntaxError: Invalid regular expression: /^/support(/: Unterminated group
+    at String.startsWith (https://files.namecheap.com/cdn/0/assets/js/v1270.global-script.min.js:81:9061)
+    at <anonymous> (https://cdn.engagement.ai/production/static/js/sdk/chatSDK.d1e8863153905a663a5a.js:0:17561)
+    at isPageMatching (https://cdn.engagement.ai/production/static/js/sdk/chatSDK.d1e8863153905a663a5a.js:0:17413)
+    at isPageAllowed (https://cdn.engagement.ai/production/static/js/sdk/chatSDK.d1e8863153905a663a5a.js:0:17709)
+    at <anonymous> (https://cdn.engagement.ai/production/static/js/sdk/chatSDK.d1e8863153905a663a5a.js:0:5788)
+    at <anonymous> (https://cdn.engagement.ai/production/static/js/sdk/chatSDK.d1e8863153905a663a5a.js:0:5212)
+    at <anonymous> (https://cdn.engagement.ai/production/static/js/sdk/chatSDK.d1e8863153905a663a5a.js:0:5443)
+    at init (https://cdn.engagement.ai/production/static/js/sdk/chatSDK.d1e8863153905a663a5a.js:0:7200)
+    at <anonymous> (https://cdn.engagement.ai/production/static/js/sdk/chatSDK.d1e8863153905a663a5a.js:0:23440)
+    at n (https://cdn.engagement.ai/production/static/js/sdk/chatSDK.d1e8863153905a663a5a.js:0:109)
+    at <anonymous> (https://cdn.engagement.ai/production/static/js/sdk/chatSDK.d1e8863153905a663a5a.js:0:901)
+    at <anonymous> (https://cdn.engagement.ai/production/static/js/sdk/chatSDK.d1e8863153905a663a5a.js:0:911)
+[   41001ms] SyntaxError: Invalid regular expression: /^/support(/: Unterminated group
+    at String.match (<anonymous>)
+    at String.startsWith (https://files.namecheap.com/cdn/0/assets/js/v1270.global-script.min.js:82:9062)
+    at https://cdn.engagement.ai/production/static/js/sdk/chatSDK.d1e8863153905a663a5a.js:1:17562
+    at Array.some (<anonymous>)
+    at i.isPageMatching (https://cdn.engagement.ai/production/static/js/sdk/chatSDK.d1e8863153905a663a5a.js:1:17414)
+    at i.isPageAllowed (https://cdn.engagement.ai/production/static/js/sdk/chatSDK.d1e8863153905a663a5a.js:1:17710)
+    at v.shouldRemoveWidget (https://cdn.engagement.ai/production/static/js/sdk/chatSDK.d1e8863153905a663a5a.js:1:5789)
+    at HTMLDocument.<anonymous> (https://cdn.engagement.ai/production/static/js/sdk/chatSDK.d1e8863153905a663a5a.js:1:5213)
+    at HTMLDocument.nrWrapper (<anonymous>:1:16540)
+[   41087ms] [WARNING] GetShoppingCartSummary returned null. @ https://static.nc-img.com/uilayout2/app.a6d77156e92549162122.js:0

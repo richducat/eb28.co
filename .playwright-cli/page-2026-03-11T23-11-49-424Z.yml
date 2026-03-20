@@ -1,0 +1,212 @@
+- generic [ref=e4]:
+  - banner [ref=e5]:
+    - generic [ref=e6]:
+      - generic [ref=e7]:
+        - paragraph [ref=e8]:
+          - img [ref=e9]
+          - text: EB28 APP BUILDER
+        - heading "Vibe-first generation with fundamentals enforced" [level=1] [ref=e12]
+        - paragraph [ref=e13]: Start with a short prompt. The builder expands it into a richer creative brief, generates a distinct design system, and returns source with an explicit fundamentals report.
+      - generic [ref=e14]:
+        - article [ref=e15]:
+          - paragraph [ref=e16]: Prompt
+          - paragraph [ref=e17]: Short inputs accepted
+        - article [ref=e18]:
+          - paragraph [ref=e19]: Output
+          - paragraph [ref=e20]: Unique visual direction
+        - article [ref=e21]:
+          - paragraph [ref=e22]: Guardrails
+          - paragraph [ref=e23]: Fundamentals checklist
+  - generic [ref=e24]:
+    - generic [ref=e25]:
+      - heading "1. Build Brief" [level=2] [ref=e26]:
+        - img [ref=e27]
+        - text: 1. Build Brief
+      - generic [ref=e32]:
+        - generic [ref=e33]:
+          - generic [ref=e34]: App Name
+          - textbox "App Name" [ref=e35]:
+            - /placeholder: EB28 Experience
+        - generic [ref=e36]:
+          - generic [ref=e37]:
+            - generic [ref=e38]: Template
+            - combobox "Template" [ref=e39]:
+              - option "Custom Build" [selected]
+              - option "Commerce"
+              - option "Operations"
+              - option "Community"
+              - option "Content + Media"
+          - generic [ref=e40]:
+            - generic [ref=e41]: Audience
+            - combobox "Audience" [ref=e42]:
+              - option "Consumers" [selected]
+              - option "Members"
+              - option "Field Team"
+              - option "Internal Team"
+              - option "Hybrid"
+        - generic [ref=e43]:
+          - generic [ref=e44]:
+            - generic [ref=e45]: Visual Direction
+            - combobox "Visual Direction" [ref=e46]:
+              - option "Editorial Bold" [selected]
+              - option "Bento Tech"
+              - option "Neo Brutalist"
+              - option "Conversion Luxe"
+              - option "Playful Futurist"
+              - option "Minimal Architectural"
+          - generic [ref=e47]:
+            - generic [ref=e48]: Complexity (3/5)
+            - slider "Complexity (3/5)" [ref=e49]: "3"
+            - paragraph [ref=e50]: Multi-section product
+        - generic [ref=e51]:
+          - generic [ref=e52]:
+            - generic [ref=e53]: Business Goal
+            - textbox "Business Goal" [ref=e54]: Ship quickly and validate demand
+          - generic [ref=e55]:
+            - generic [ref=e56]: Brand Color
+            - generic [ref=e57]:
+              - textbox "Brand Color" [ref=e58]: "#0891b2"
+              - generic [ref=e59]: "#0891B2"
+        - generic [ref=e60]:
+          - paragraph [ref=e61]: Capabilities
+          - generic [ref=e62]:
+            - button "Sign In" [ref=e63] [cursor=pointer]
+            - button "Dashboard" [ref=e64] [cursor=pointer]
+            - button "Payments" [ref=e65] [cursor=pointer]
+            - button "Notifications" [ref=e66] [cursor=pointer]
+            - button "Chat" [ref=e67] [cursor=pointer]
+            - button "Analytics" [ref=e68] [cursor=pointer]
+            - button "Bookings" [ref=e69] [cursor=pointer]
+            - button "Map/Location" [ref=e70] [cursor=pointer]
+        - generic [ref=e71]:
+          - paragraph [ref=e72]: Fundamentals to enforce
+          - generic [ref=e73]:
+            - button "Information Architecture" [ref=e74] [cursor=pointer]
+            - button "Conversion Path" [ref=e75] [cursor=pointer]
+            - button "Responsive Behavior" [ref=e76] [cursor=pointer]
+            - button "Accessibility" [ref=e77] [cursor=pointer]
+            - button "Performance Budget" [ref=e78] [cursor=pointer]
+            - button "Error/Empty/Loading States" [ref=e79] [cursor=pointer]
+            - button "Analytics Events" [ref=e80] [cursor=pointer]
+            - button "Content Hierarchy" [ref=e81] [cursor=pointer]
+        - generic [ref=e82]:
+          - generic [ref=e83]:
+            - paragraph [ref=e84]: Reference Vibe Screenshot
+            - button "Upload" [ref=e85] [cursor=pointer]
+          - paragraph [ref=e86]: Add one screenshot and the builder will mirror tone, spacing rhythm, and color mood.
+        - generic [ref=e87]:
+          - paragraph [ref=e88]: Quick Starts
+          - generic [ref=e89]:
+            - button "Premium Coaching Hub Load preset" [ref=e90] [cursor=pointer]:
+              - paragraph [ref=e91]: Premium Coaching Hub
+              - paragraph [ref=e92]: Load preset
+            - button "High-Ticket Service Funnel Load preset" [ref=e93] [cursor=pointer]:
+              - paragraph [ref=e94]: High-Ticket Service Funnel
+              - paragraph [ref=e95]: Load preset
+            - button "Operations Command UI Load preset" [ref=e96] [cursor=pointer]:
+              - paragraph [ref=e97]: Operations Command UI
+              - paragraph [ref=e98]: Load preset
+            - button "Creator Product Site Load preset" [ref=e99] [cursor=pointer]:
+              - paragraph [ref=e100]: Creator Product Site
+              - paragraph [ref=e101]: Load preset
+        - generic [ref=e102]:
+          - generic [ref=e103]: 2. Product Direction Prompt
+          - textbox "2. Product Direction Prompt" [ref=e104]:
+            - /placeholder: "ex: redesign a finance dashboard for independent contractors"
+          - generic [ref=e105]:
+            - button "Generate EB28 Build" [ref=e106] [cursor=pointer]:
+              - img [ref=e107]
+              - text: Generate EB28 Build
+            - button "Generate 3 Variants" [disabled] [ref=e109]:
+              - img [ref=e110]
+              - text: Generate 3 Variants
+        - article [ref=e112]:
+          - paragraph [ref=e113]: Prompt Expansion Preview
+          - generic [ref=e114]: "Project: EB28 Experience Template: custom Audience: consumers Business goal: Ship quickly and validate demand Visual direction: editorial-bold (Large expressive typography, asymmetrical composition, strong editorial rhythm.) Complexity target: 3/5 (Multi-section product) Primary brand color: #0891B2 Core capabilities: Sign In, Dashboard, Notifications Required fundamentals: Information Architecture, Conversion Path, Responsive Behavior, Accessibility, Performance Budget, Error/Empty/Loading States No reference image attached. User direction: No prompt provided. Interpretation rule: prompt is intentionally concise, infer missing UX details while preserving clarity and conversion intent."
+        - generic [ref=e115]:
+          - paragraph [ref=e116]: Ready to build
+          - button "Reset Session" [ref=e117] [cursor=pointer]
+    - generic [ref=e119]:
+      - article [ref=e120]:
+        - heading "Builder Timeline" [level=2] [ref=e121]:
+          - img [ref=e122]
+          - text: Builder Timeline
+        - article [ref=e126]:
+          - paragraph [ref=e127]: Builder · Mar 11, 19:11
+          - paragraph [ref=e128]: Welcome to EB28 App Builder. Drop a short prompt and I will expand it into a stronger design brief, then generate a unique scaffold with fundamentals covered.
+      - article [ref=e129]:
+        - generic [ref=e130]:
+          - heading "Live Experience Preview" [level=2] [ref=e131]:
+            - img [ref=e132]
+            - text: Live Experience Preview
+          - generic [ref=e134]:
+            - generic [ref=e135]: 0 versions
+            - generic [ref=e136]: 0 files
+        - generic [ref=e137]:
+          - generic [ref=e139]:
+            - generic [ref=e140]:
+              - paragraph [ref=e141]: Your Product
+              - paragraph [ref=e142]: Experience scaffold by EB28
+            - generic [ref=e143]:
+              - article [ref=e144]:
+                - paragraph [ref=e145]: Hero
+                - paragraph [ref=e146]: Core value proposition and action
+                - paragraph [ref=e147]: Dominant headline • Primary CTA • Trust proof
+              - article [ref=e148]:
+                - paragraph [ref=e149]: Workflow
+                - paragraph [ref=e150]: Main user journey
+                - paragraph [ref=e151]: Progressive steps • Supporting media • Secondary CTA
+          - generic [ref=e152]:
+            - article [ref=e153]:
+              - paragraph [ref=e154]: Design recipe
+              - paragraph [ref=e155]: Large expressive typography, asymmetrical composition, strong editorial rhythm.
+              - paragraph [ref=e156]: "Complexity: 3/5"
+            - article [ref=e157]:
+              - paragraph [ref=e158]: Fundamentals coverage
+              - paragraph [ref=e159]: 6/6 fundamentals explicitly covered.
+              - generic [ref=e160]:
+                - generic [ref=e161]:
+                  - img [ref=e162]
+                  - text: Information Architecture
+                - generic [ref=e165]:
+                  - img [ref=e166]
+                  - text: Conversion Path
+                - generic [ref=e169]:
+                  - img [ref=e170]
+                  - text: Responsive Behavior
+                - generic [ref=e173]:
+                  - img [ref=e174]
+                  - text: Accessibility
+            - article [ref=e177]:
+              - paragraph [ref=e178]: This build includes
+              - paragraph [ref=e179]: Sign In • Dashboard • Notifications
+            - generic [ref=e180]:
+              - paragraph [ref=e181]: Version history
+              - paragraph [ref=e183]: No versions yet. Generate your first build.
+    - generic [ref=e184]:
+      - heading "Source Workspace" [level=2] [ref=e185]:
+        - img [ref=e186]
+        - text: Source Workspace
+      - generic [ref=e190]:
+        - button "Export ZIP" [disabled] [ref=e191]:
+          - img [ref=e192]
+          - text: Export ZIP
+        - button "Copy File" [disabled] [ref=e195]:
+          - img [ref=e196]
+          - text: Copy File
+      - generic [ref=e199]:
+        - generic [ref=e200]: Search file
+        - generic [ref=e201]:
+          - img [ref=e202]
+          - textbox "Search file" [ref=e207]:
+            - /placeholder: src/App.jsx
+      - paragraph [ref=e209]: No files found
+      - generic [ref=e210]:
+        - paragraph [ref=e211]: No file selected
+        - generic [ref=e212]: Generate a build to inspect source files.
+      - article [ref=e213]:
+        - paragraph [ref=e214]: Suggested next prompts
+        - list [ref=e215]:
+          - listitem [ref=e216]: Ask for an alternate visual direction.
+          - listitem [ref=e217]: Request stricter conversion and CTA copy.
+          - listitem [ref=e218]: Add analytics event naming and tracking points.

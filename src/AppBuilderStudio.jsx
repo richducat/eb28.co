@@ -1399,6 +1399,10 @@ const AppBuilderStudio = () => {
 
   return (
     <main className="eb28-appbuilder relative min-h-screen overflow-x-hidden text-slate-100" aria-labelledby="appbuilder-studio-title">
+      {/* Background Image */}
+      <div className="absolute inset-0 -z-20">
+        <img src="/images/appbuilder_bg.png" alt="App Builder Engine" className="w-full h-full object-cover opacity-[0.03] opacity-20" />
+      </div>
       <div className="eb28-appbuilder-noise pointer-events-none absolute inset-0" aria-hidden="true" />
       <div className="relative mx-auto max-w-[1700px] px-4 py-6 sm:px-6 lg:px-8">
         <header className="eb28-panel eb28-gradient-border mb-6 overflow-hidden rounded-3xl">

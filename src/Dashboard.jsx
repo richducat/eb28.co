@@ -864,6 +864,11 @@ const Dashboard = () => {
             style={{ background: theme.bg, color: theme.primary }}
             onClick={handleRootClick}
         >
+            {/* Background Image */}
+            <div className="absolute inset-0 -z-20">
+                <img src="/images/dashboard_bg.png" alt="Dashboard Hub" className="w-full h-full object-cover opacity-[0.05]" />
+            </div>
+
             {/* CRT Scanline Overlay */}
             <div className="absolute inset-0 crt-overlay"></div>
 

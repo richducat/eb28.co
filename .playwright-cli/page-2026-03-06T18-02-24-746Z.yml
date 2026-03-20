@@ -1,0 +1,171 @@
+- generic [ref=e3]:
+  - banner [ref=e4]:
+    - generic [ref=e5]:
+      - generic [ref=e6]: ᗧ
+      - generic [ref=e7]:
+        - heading "FUNDMANAGER.EB28.CO" [level=1] [ref=e8]
+        - paragraph [ref=e9]:
+          - text: Autonomous Trading Matrix v3.2
+          - generic [ref=e10]: ○ SIM
+    - generic [ref=e11]:
+      - generic [ref=e12]:
+        - generic [ref=e13]: SYSTEM
+        - generic [ref=e14]: ● SIMULATED
+      - generic [ref=e15]:
+        - generic [ref=e16]: P&L
+        - generic [ref=e17]: "--"
+      - generic [ref=e18]:
+        - generic [ref=e19]: EXPOSURE
+        - generic [ref=e20]: "--"
+      - generic [ref=e21]:
+        - generic [ref=e22]: WIN RATE
+        - generic [ref=e23]: "--"
+  - main [ref=e24]:
+    - generic [ref=e25]:
+      - generic [ref=e28]: TRADING
+      - generic [ref=e32]:
+        - heading "GOLDMAN FUNDAMENTAL" [level=3] [ref=e33]
+        - generic [ref=e34]:
+          - generic [ref=e35]: trading research
+          - generic [ref=e36]: quant analyst
+      - generic [ref=e38]:
+        - generic [ref=e39]: Performing quant-analyst...
+        - generic [ref=e40]: 67%
+    - generic [ref=e43]:
+      - generic [ref=e46]: ACTIVE
+      - generic [ref=e50]:
+        - heading "JPM TECHNICAL" [level=3] [ref=e51]
+        - generic [ref=e52]:
+          - generic [ref=e53]: crypto levels
+          - generic [ref=e54]: trading research
+          - generic [ref=e55]: ccxt
+      - generic [ref=e57]:
+        - generic [ref=e58]: Performing trading-research...
+        - generic [ref=e59]: 93%
+    - generic [ref=e62]:
+      - generic [ref=e65]: TRADING
+      - generic [ref=e69]:
+        - heading "MORGAN STANLEY DCF" [level=3] [ref=e70]
+        - generic [ref=e71]:
+          - generic [ref=e72]: quant analyst
+          - generic [ref=e73]: valuation templates
+      - generic [ref=e75]:
+        - generic [ref=e76]: Performing valuation-templates...
+        - generic [ref=e77]: 62%
+    - generic [ref=e80]:
+      - generic [ref=e83]: CALCULATING
+      - generic [ref=e87]:
+        - heading "BRIDGEWATER MACRO" [level=3] [ref=e88]
+        - generic [ref=e89]:
+          - generic [ref=e90]: trading research
+          - generic [ref=e91]: polymarket signal-sniper
+      - generic [ref=e93]:
+        - generic [ref=e94]: Performing trading-research...
+        - generic [ref=e95]: 38%
+    - generic [ref=e98]:
+      - generic [ref=e101]: TRADING
+      - generic [ref=e105]:
+        - heading "CATHIE WOOD DISRUPTION" [level=3] [ref=e106]
+        - generic [ref=e107]:
+          - generic [ref=e108]: polymarket signal-sniper
+          - generic [ref=e109]: trading research
+      - generic [ref=e111]:
+        - generic [ref=e112]: Performing polymarket-signal-sniper...
+        - generic [ref=e113]: 87%
+    - generic [ref=e116]:
+      - generic [ref=e119]: TRADING
+      - generic [ref=e123]:
+        - heading "BUFFETT VALUE" [level=3] [ref=e124]
+        - generic [ref=e125]:
+          - generic [ref=e126]: quant analyst
+          - generic [ref=e127]: trading research
+      - generic [ref=e129]:
+        - generic [ref=e130]: Performing trading-research...
+        - generic [ref=e131]: 72%
+    - generic [ref=e134]:
+      - generic [ref=e137]: RESEARCHING
+      - generic [ref=e141]:
+        - heading "RENAISSANCE QUANT" [level=3] [ref=e142]
+        - generic [ref=e143]:
+          - generic [ref=e144]: polymarket fast-loop
+          - generic [ref=e145]: polymarket ai-divergence
+          - generic [ref=e146]: ccxt
+      - generic [ref=e148]:
+        - generic [ref=e149]: Performing polymarket-fast-loop...
+        - generic [ref=e150]: 52%
+    - generic [ref=e153]:
+      - generic [ref=e156]: RESEARCHING
+      - generic [ref=e160]:
+        - heading "BLACKROCK RISK MATRIX" [level=3] [ref=e161]
+        - generic [ref=e162]:
+          - generic [ref=e163]: prediction trade-journal
+          - generic [ref=e164]: openclaw security-monitor
+          - generic [ref=e165]: risk runbooks
+      - generic [ref=e167]:
+        - generic [ref=e168]: Performing openclaw-security-monitor...
+        - generic [ref=e169]: 35%
+    - generic [ref=e172]:
+      - generic [ref=e175]: RESEARCHING
+      - generic [ref=e179]:
+        - heading "PETER LYNCH DEEP DIVE" [level=3] [ref=e180]
+        - generic [ref=e181]:
+          - generic [ref=e182]: trading research
+          - generic [ref=e183]: polymarket signal-sniper
+      - generic [ref=e185]:
+        - generic [ref=e186]: Performing polymarket-signal-sniper...
+        - generic [ref=e187]: 7%
+    - generic [ref=e190]:
+      - generic [ref=e193]: TRADING
+      - generic [ref=e197]:
+        - heading "BILL ACKMAN ACTIVIST" [level=3] [ref=e198]
+        - generic [ref=e199]:
+          - generic [ref=e200]: polymarket signal-sniper
+          - generic [ref=e201]: trading research
+      - generic [ref=e203]:
+        - generic [ref=e204]: Performing trading-research...
+        - generic [ref=e205]: 92%
+    - generic [ref=e208]:
+      - generic [ref=e211]: IDLE
+      - generic [ref=e215]:
+        - heading "CITADEL OPTIONS ARCHITECT" [level=3] [ref=e216]
+        - generic [ref=e217]:
+          - generic [ref=e218]: funding rate-trader
+          - generic [ref=e219]: hummingbot
+      - generic [ref=e221]:
+        - generic [ref=e222]: Performing hummingbot...
+        - generic [ref=e223]: 25%
+    - generic [ref=e226]:
+      - generic [ref=e229]: RESEARCHING
+      - generic [ref=e233]:
+        - heading "SEQUOIA VC LENS" [level=3] [ref=e234]
+        - generic [ref=e235]:
+          - generic [ref=e236]: trading research
+          - generic [ref=e237]: quant analyst
+      - generic [ref=e239]:
+        - generic [ref=e240]: Performing trading-research...
+        - generic [ref=e241]: 78%
+  - contentinfo [ref=e244]:
+    - generic [ref=e245]:
+      - heading "Execution Layer" [level=4] [ref=e246]: Execution Layer
+      - generic [ref=e248]:
+        - generic [ref=e252]:
+          - generic [ref=e253]: PM Orchestrator
+          - generic [ref=e254]: Combining outputs and optimizing capital allocation...
+        - generic [ref=e259]:
+          - generic [ref=e260]: Execution Agent
+          - generic [ref=e261]: Executing Polymarket & Kalshi trades...
+        - generic [ref=e266]:
+          - generic [ref=e267]: Wallet/Payments Ops
+          - generic [ref=e268]: Managing crypto-wallet cycles and 1ly-payments...
+    - generic [ref=e270]:
+      - heading "Live System Telemetry ● REC" [level=4] [ref=e271]:
+        - generic [ref=e272]: Live System Telemetry
+        - generic [ref=e273]: ● REC
+      - generic [ref=e274]:
+        - generic [ref=e275]: ">[1:02:10 PM] GOLDMAN: RESEARCHING - trading-research"
+        - generic [ref=e276]: "[1:02:10 PM] JPM: IDLE - crypto-levels"
+        - generic [ref=e277]: "[1:02:10 PM] MORGAN: RESEARCHING - quant-analyst"
+        - generic [ref=e278]: "[1:02:10 PM] BRIDGEWATER: ACTIVE - trading-research"
+        - generic [ref=e279]: "[1:02:10 PM] CATHIE: CALCULATING - polymarket-signal-sniper"
+        - generic [ref=e280]: "[1:02:10 PM] BUFFETT: ACTIVE - quant-analyst"
+        - generic [ref=e281]: SYSTEM://RESOURCING_AGENT_MATRICES_...█

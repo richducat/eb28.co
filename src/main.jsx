@@ -4,6 +4,7 @@ import App from './App';
 import Dashboard from './Dashboard';
 import AppBuilderStudio from './AppBuilderStudio';
 import FundManager from './FundManager';
+import AlarmClock from './AlarmClock';
 import './index.css';
 import { applyDocumentSeo } from './seo.js';
 import { detectRouteKey } from './siteMeta.js';
@@ -21,6 +22,7 @@ const isAppBuilderRoute = pathname === '/appbuilder';
 const isFundManagerRoute =
   pathname === '/fundmanager' ||
   hostname === 'fundmanager.eb28.co';
+const isAlarmClockRoute = pathname === '/alarmclock';
 
 applyDocumentSeo(routeKey);
 
@@ -40,6 +42,12 @@ if (isDashboardRoute) {
   root.render(
     <React.StrictMode>
       <FundManager />
+    </React.StrictMode>
+  );
+} else if (isAlarmClockRoute) {
+  root.render(
+    <React.StrictMode>
+      <AlarmClock />
     </React.StrictMode>
   );
 } else {

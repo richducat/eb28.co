@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "vite",
     "generate:data": "node scripts/generate-static-data.mjs",
-    "build": "vite build && npm run generate:data && cp docs/index.html docs/404.html && mkdir -p docs/appbuilder && cp docs/index.html docs/appbuilder/index.html && mkdir -p docs/fundmanager && cp docs/index.html docs/fundmanager/index.html",
+    "build": "vite build && npm run generate:data && cp docs/index.html docs/404.html && mkdir -p docs/appbuilder && cp docs/index.html docs/appbuilder/index.html && mkdir -p docs/fundmanager && cp docs/index.html docs/fundmanager/index.html && mkdir -p docs/alarmclock && cp docs/index.html docs/alarmclock/index.html",
     "preview": "vite preview"
   },
   "dependencies": {

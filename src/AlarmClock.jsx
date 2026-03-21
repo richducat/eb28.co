@@ -122,61 +122,82 @@ export default function AlarmClock() {
   const formatHours = (date) => (date.getHours() % 12 || 12).toString().padStart(2, '0');
   const formatMinutes = (date) => date.getMinutes().toString().padStart(2, '0');
   const getAmPm = (date) => date.getHours() >= 12 ? 'PM' : 'AM';
-  const displayDateStr = time.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' }).toUpperCase();
+  const displayDateStr = time.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }).toUpperCase();
+  const displayDateStrFull = time.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' }).toUpperCase();
 
-  // STYLES TO PERFECTLY MATCH THE IMAGE
+  // PRECISE STYLES
+  const colorNeon = '#ff4444';
+  const colorNeonBright = '#ff6b6b';
+  const colorNeonDark = '#a01212';
+  
   const neonBorderStyle = {
-    borderColor: '#ff1f1f',
-    boxShadow: '0 0 8px rgba(255, 30, 30, 0.4), inset 0 0 8px rgba(255, 30, 30, 0.4)'
+    borderColor: colorNeon,
+    boxShadow: `0 0 10px rgba(255, 68, 68, 0.4), inset 0 0 10px rgba(255, 68, 68, 0.2)`
   };
   const neonTextStyle = {
-    color: '#ff3030',
-    textShadow: '0 0 4px #ff3030, 0 0 8px #ff0000',
+    color: colorNeonBright,
+    textShadow: `0 0 5px ${colorNeon}, 0 0 10px ${colorNeon}`,
     letterSpacing: '0.15em',
     fontWeight: '800',
     fontFamily: '"Inter", sans-serif'
   };
+  const neonTextSoft = {
+    color: colorNeon,
+    textShadow: `0 0 4px ${colorNeonDark}`,
+    letterSpacing: '0.1em',
+    fontWeight: '700',
+    fontFamily: '"Inter", sans-serif'
+  };
   const digitalFont = {
-    fontFamily: '"Digital-7 Mono", "Digital-7", "Share Tech Mono", monospace',
-    color: '#ff2525',
-    textShadow: '0 0 10px #ff0000, 0 0 20px #ff0000, 0 0 40px #ff0000'
+    fontFamily: '"DSEG7Classic", "Orbitron", monospace',
+    color: colorNeonBright,
+    textShadow: `0 0 8px ${colorNeon}, 0 0 15px ${colorNeon}, 0 0 25px ${colorNeonDark}`,
+    WebkitTextStroke: `2px ${colorNeon}`
+  };
+  
+  const digitalFontSmall = {
+    fontFamily: '"DSEG7Classic", "Orbitron", monospace',
+    color: colorNeonBright,
+    textShadow: `0 0 5px ${colorNeon}, 0 0 10px ${colorNeonDark}`,
+    WebkitTextStroke: `1px ${colorNeon}`
   };
 
   return (
-    <div className="relative w-full min-h-screen bg-black flex justify-center items-center overflow-x-hidden" style={{ fontFamily: '"Inter", sans-serif' }}>
+    <div className="relative w-full overflow-hidden min-h-screen bg-black flex justify-center items-center" style={{ fontFamily: '"Inter", sans-serif' }}>
       
-      {/* Import Inter and Digital-7 fonts */}
+      {/* Import Inter and reliable DSEG7 Classic font */}
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800;900&display=swap');
-        @import url('https://fonts.cdnfonts.com/css/digital-7-mono');
-        .squircle { border-radius: 12px; }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800;900&family=Orbitron:wght@700;900&display=swap');
+        @font-face {
+          font-family: 'DSEG7Classic';
+          src: url('https://cdn.jsdelivr.net/npm/dseg@0.46.0/fonts/DSEG7-Classic/DSEG7Classic-Regular.woff2') format('woff2');
+        }
+        .custom-squircle { border-radius: 14px; }
       `}</style>
 
       {/* Background synthwave image */}
-      <div className="fixed inset-0 bg-[url('/synthwave-bg.png')] bg-cover bg-center bg-no-repeat opacity-80" />
+      <div className="fixed inset-0 bg-[url('/synthwave-bg.png')] bg-cover bg-center bg-no-repeat opacity-90" />
       
       {/* Phone container mockup boundaries */}
-      <div className="relative w-full h-[100dvh] md:max-w-[420px] md:h-[850px] bg-black/50 backdrop-blur-[2px] md:rounded-[40px] border-y-0 md:border-2 border-slate-800 shadow-[0_0_30px_#000] flex flex-col mx-auto overflow-hidden">
+      <div className="relative w-full h-[100dvh] md:max-w-[420px] md:h-[880px] bg-black/40 backdrop-blur-[3px] md:rounded-[45px] md:border-4 border-slate-900 shadow-[0_0_50px_#000] flex flex-col mx-auto overflow-hidden">
         
         {/* TOP STATUS/PREMIUM BAR */}
         {!isUnlocked && (
-          <div className="w-full bg-[#ef4444] pt-[env(safe-area-inset-top,10px)] pb-3 px-4 flex justify-between items-center shadow-[0_2px_15px_#ff0000] z-20" style={{borderBottomRightRadius: '10px', borderBottomLeftRadius: '10px'}}>
-            <div className="w-full text-center">
-              <span className="text-white text-[10px] font-bold tracking-[0.1em] uppercase shadow-sm">
-                UNLOCK PREMIUM FOR $1/MO 
-              </span>
-              <button onClick={() => setShowLogin(true)} className="ml-2 bg-black text-[#ef4444] text-[9px] font-black px-2 py-1 rounded tracking-widest shadow-inner">
-                SUBSCRIBE
-              </button>
-            </div>
+          <div className="w-full bg-[#e63946] pt-[env(safe-area-inset-top,20px)] pb-2 px-5 flex justify-center items-center rounded-b-2xl shadow-[0_5px_15px_rgba(255,0,0,0.4)] z-50">
+            <span className="text-white text-[9px] font-black tracking-[0.1em] uppercase shadow-sm">
+              UNLOCK PREMIUM FOR $1/MO 
+            </span>
+            <button onClick={() => setShowLogin(true)} className="ml-3 bg-[#111] text-[#e63946] text-[8px] font-black px-3 py-1.5 rounded uppercase tracking-[0.2em] shadow-[0_0_5px_rgba(0,0,0,0.5)] cursor-pointer">
+              SUBSCRIBE
+            </button>
           </div>
         )}
 
-        <div className="flex-1 flex flex-col px-5 pt-6 pb-6 w-full">
+        <div className="flex-1 flex flex-col px-5 pt-8 pb-8 w-full relative">
           
           {/* TOAST SYSTEM */}
           {toastMessage && (
-            <div className="absolute top-20 left-1/2 -translate-x-1/2 bg-red-600/90 backdrop-blur text-white px-6 py-2 rounded-full font-bold uppercase tracking-widest z-50 animate-bounce shadow-[0_0_15px_#ff0000] text-xs">
+            <div className="absolute top-10 left-1/2 -translate-x-1/2 bg-[#ff2222]/90 backdrop-blur text-white px-6 py-2 rounded-full font-bold uppercase tracking-widest z-[60] animate-bounce shadow-[0_0_20px_#ff0000] text-[10px]">
               {toastMessage}
             </div>
           )}
@@ -184,64 +205,71 @@ export default function AlarmClock() {
           {/* VIEW ROUTER */}
           {showSettings ? (
             /* EXACT SETTINGS MODAL MATCH */
-            <div className="flex-1 flex flex-col animate-fade-in z-10 w-full h-full pb-[80px]">
-              <div className="flex justify-between items-start mb-8 border-b border-red-900/40 pb-4">
-                <button onClick={() => setShowSettings(false)} className="text-[#ff3030] hover:text-red-400 font-bold uppercase tracking-[0.2em] text-[11px] pt-1" style={neonTextStyle}>
+            <div className="flex-1 flex flex-col animate-fade-in z-10 w-full h-full pb-[20px]">
+              <div className="flex justify-between items-start mb-10 border-b border-red-900/50 pb-5">
+                <button onClick={() => setShowSettings(false)} className="text-[#ff5555] hover:text-[#fff] font-bold uppercase tracking-[0.2em] text-[10px] pt-1 transition-colors drop-shadow-[0_0_5px_#ff0000]">
                   &larr; BACK
                 </button>
                 <div className="text-right flex flex-col items-end">
-                  <span className="text-[9px] text-red-500/80 font-bold uppercase tracking-[0.3em] mb-1">80S ALARM</span>
-                  <span className="text-[22px] font-black uppercase tracking-[0.2em]" style={neonTextStyle}>SETTINGS</span>
+                  <span className="text-[9px] text-[#ff4444]/80 font-bold uppercase tracking-[0.3em] mb-1">80S ALARM</span>
+                  <span className="text-[24px] font-black uppercase tracking-[0.2em]" style={neonTextStyle}>SETTINGS</span>
                 </div>
               </div>
               
-              <h2 className="text-center font-black uppercase tracking-[0.2em] mb-4 text-[12px]" style={neonTextStyle}>MOTIVATOR AUDIO</h2>
+              <h2 className="text-center font-black uppercase tracking-[0.2em] mb-6 text-[11px]" style={neonTextStyle}>MOTIVATOR AUDIO</h2>
               
-              <div className="space-y-4 flex-1 overflow-y-auto custom-scrollbar pr-1 mb-6">
+              <div className="space-y-4 flex-1 overflow-y-auto pr-2 pb-6">
                 {ALARM_VOICES.map((voice) => (
-                  <button 
-                    key={voice.id}
-                    onClick={() => {
-                       if (voice.type === 'premium' && !isUnlocked) setShowLogin(true);
-                       else setSelectedVoice(voice.id);
-                    }}
-                    className="w-full relative flex items-center justify-between p-4 rounded-[16px] border-[1.5px] transition-all group bg-black/60"
-                    style={selectedVoice === voice.id ? neonBorderStyle : { borderColor: 'rgba(255,45,45,0.3)' }}
-                  >
-                    <div className="flex items-center gap-4">
-                      <span className="text-2xl drop-shadow-[0_0_5px_rgba(255,255,255,0.8)]">{voice.icon}</span>
-                      <div className="flex flex-col text-left">
-                        <span className="font-bold tracking-[0.1em] text-[13px] text-[#ff3030] group-hover:drop-shadow-[0_0_5px_#ff0000] transition-all">
-                          {voice.name}
-                        </span>
-                        {(voice.type === 'premium' && !isUnlocked) && (
-                          <span className="text-[9px] text-[#ffaa00] font-black uppercase tracking-[0.2em] mt-1 drop-shadow-[0_0_2px_#ffaa00]">
-                            <Lock className="w-2 h-2 inline mr-1 -mt-0.5"/> LOCKED
+                  <div key={voice.id} className="relative flex flex-col mb-1 group">
+                    <button 
+                      onClick={() => {
+                        if (voice.type === 'premium' && !isUnlocked) setShowLogin(true);
+                        else setSelectedVoice(voice.id);
+                      }}
+                      className="w-full relative flex items-center justify-between p-4 rounded-[18px] border-[1.5px] transition-all bg-[#0a0000]/70"
+                      style={selectedVoice === voice.id ? neonBorderStyle : { borderColor: 'rgba(255,45,45,0.2)' }}
+                    >
+                      <div className="flex items-center gap-4">
+                        <span className="text-2xl drop-shadow-[0_0_8px_rgba(255,255,255,0.6)]">{voice.icon}</span>
+                        <div className="flex flex-col text-left">
+                          <span className="font-bold tracking-[0.15em] text-[13px] text-[#ff5555] drop-shadow-[0_0_4px_#ff0000]">
+                            {voice.name}
                           </span>
-                        )}
+                          {(voice.type === 'premium' && !isUnlocked) && (
+                            <span className="text-[8px] text-[#ffcc00] font-black uppercase tracking-[0.2em] mt-1 drop-shadow-[0_0_3px_#ffcc00]">
+                              <Lock className="w-2.5 h-2.5 inline mr-1 -mt-0.5"/> LOCKED
+                            </span>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                    <div className="w-8 h-8 rounded-full border border-red-700 flex justify-center items-center text-[#ff3030] hover:bg-[#ff3030]/20 transition-all">
-                      <Volume2 className="w-[14px] h-[14px]" />
-                    </div>
-                  </button>
+                      <div className="w-[34px] h-[34px] rounded-full border-[1.5px] border-[#ff2222]/50 flex justify-center items-center text-[#ff4444] hover:bg-[#ff3030]/20 transition-all cursor-pointer shadow-[inset_0_0_8px_rgba(255,0,0,0.3)]">
+                        <Volume2 className="w-[15px] h-[15px] drop-shadow-[0_0_3px_#ff0000]" />
+                      </div>
+                    </button>
+                    {isUnlocked && selectedVoice === voice.id && (
+                       <label className="text-[9px] text-[#ff6666] uppercase tracking-[0.1em] cursor-pointer hover:text-white mt-1 pt-2 pb-1 text-center w-full transition-colors drop-shadow-[0_0_3px_#ff0000]">
+                         {customAudioMap[voice.id] ? '(Custom Audio Active - Click to Replace)' : '+ Upload Custom Optional Audio'}
+                         <input type="file" accept="audio/*" className="hidden" onChange={(e) => handleAudioUpload(voice.id, e)} />
+                       </label>
+                    )}
+                  </div>
                 ))}
               </div>
 
-              <div className="mt-auto border-t border-red-900/40 pt-5 space-y-5 pb-2 w-full px-2">
+              <div className="mt-auto border-t border-red-900/50 pt-5 space-y-6 pb-2 w-full px-2">
                 <div className="flex justify-between items-center w-full">
-                  <span className="text-[10px] font-black uppercase tracking-[0.1em] text-[#ff3030]">VOLUME CONTROL</span>
-                  <input type="range" min="0" max="100" defaultValue="80" className="w-[100px] h-1.5 bg-red-900 rounded-lg appearance-none cursor-pointer accent-[#ff3030]" />
+                  <span className="text-[10px] font-black uppercase tracking-[0.15em] text-[#ff5555] drop-shadow-[0_0_3px_#ff0000]">VOLUME CONTROL</span>
+                  <input type="range" min="0" max="100" defaultValue="80" className="w-[120px] h-2 bg-[#4a0a0a] rounded-lg appearance-none cursor-pointer accent-[#ff3333] shadow-[0_0_5px_#ff0000]" />
                 </div>
                 <div className="flex justify-between items-center w-full">
-                  <span className="text-[10px] font-black uppercase tracking-[0.1em] text-[#ff3030]">MUTE MODE</span>
-                  <button onClick={() => setIsMuted(!isMuted)} className={`w-[40px] h-[22px] rounded-full relative transition-all shadow-[0_0_5px_#ff0000_inset] ${isMuted ? 'bg-[#ff3030]' : 'bg-[#1a1a1a] border border-red-900'}`}>
-                    <div className={`w-[16px] h-[16px] rounded-full bg-white absolute top-[2px] transition-all shadow-md ${isMuted ? 'right-[3px]' : 'left-[3px]'}`} />
+                  <span className="text-[10px] font-black uppercase tracking-[0.15em] text-[#ff5555] drop-shadow-[0_0_3px_#ff0000]">MUTE MODE</span>
+                  <button onClick={() => setIsMuted(!isMuted)} className={`w-[44px] h-[24px] rounded-full relative transition-all shadow-[0_0_8px_#ff0000_inset] border border-[#ff3333]/50 ${isMuted ? 'bg-[#ff3333]' : 'bg-[#111]'}`}>
+                    <div className={`w-[18px] h-[18px] rounded-full bg-white absolute top-[2px] transition-all shadow-md ${isMuted ? 'right-[2px]' : 'left-[2px]'}`} />
                   </button>
                 </div>
-                <div className="flex justify-between items-center w-full pt-2">
-                  <span className="text-[10px] font-black uppercase tracking-[0.1em] text-[#ff3030]">CUSTOM PACKS</span>
-                  <span className="text-[10px] text-white font-black hover:text-red-400 cursor-pointer tracking-[0.2em] uppercase">EXPLORE</span>
+                <div className="flex justify-between items-center w-full pt-1">
+                  <span className="text-[10px] font-black uppercase tracking-[0.15em] text-[#ff5555] drop-shadow-[0_0_3px_#ff0000]">CUSTOM PACKS</span>
+                  <span className="text-[10px] text-white font-black hover:text-[#ff3333] cursor-pointer tracking-[0.2em] uppercase drop-shadow-[0_0_2px_#fff]">EXPLORE</span>
                 </div>
               </div>
             </div>
@@ -249,62 +277,64 @@ export default function AlarmClock() {
             /* EXACT MAIN PAGE MOCKUP MATCH */
             <div className="flex flex-col flex-1 z-10 w-full items-center relative h-full">
               
-              {/* CLOCK BOX */}
-              <div className="w-full relative border-[2px] rounded-[30px] p-6 lg:p-8 flex flex-col items-center justify-center bg-[#0a0000]/40 backdrop-blur-[1px]" style={neonBorderStyle}>
-                 <div className="text-[10px] md:text-[11px] font-bold tracking-[0.2em] text-[#ffffff] uppercase mb-1 drop-shadow-md">
-                   {displayDateStr}
+              {/* CLOCK BOX - Precisely aligned to mockup */}
+              <div className="w-full relative border-[2px] rounded-[30px] p-6 lg:p-7 flex flex-col items-center justify-center bg-[#0d0202]/60 backdrop-blur-[2px]" style={neonBorderStyle}>
+                 <div className="text-[10px] lg:text-[11px] font-black tracking-[0.2em] text-[#fff] uppercase mb-4 drop-shadow-[0_0_4px_#fff]">
+                   {displayDateStrFull}
                  </div>
-                 <div className="flex items-baseline w-full justify-center mt-[-5px]">
-                   <div className="leading-none text-[6.5rem] md:text-[7.5rem] tracking-tight" style={digitalFont}>
+                 
+                 <div className="flex items-end w-full justify-center">
+                   <div className="leading-[0.8] mb-1 z-10" style={{ ...digitalFont, fontSize: 'min(7rem, 28vw)' }}>
                      {formatHours(time)}
-                     <span className={`mx-0.5 ${time.getSeconds() % 2 === 0 ? 'opacity-100' : 'opacity-[0.25]'}`}>:</span>
+                     <span className={`mx-0.5 ${time.getSeconds() % 2 === 0 ? 'opacity-100' : 'opacity-[0.15]'}`}>:</span>
                      {formatMinutes(time)}
                    </div>
-                   <div className="text-[1.8rem] ml-1 mb-5" style={digitalFont}>
+                   <div className="mb-2 ml-1 z-10" style={{ ...digitalFontSmall, fontSize: 'min(2rem, 8vw)' }}>
                      {getAmPm(time)}
                    </div>
                  </div>
               </div>
 
               {/* MIDDLE ROW (ALARM / SNOOZE / TOGGLES) */}
-              <div className="w-full flex justify-between items-center mt-4 px-1">
+              <div className="w-full flex justify-between items-center mt-6 px-1">
                  {/* Left Column */}
-                 <div className="flex flex-col w-[30%] gap-1.5">
-                    <span className="text-[7.5px] whitespace-nowrap lg:text-[8px] text-[#ff3030] font-black tracking-[0.15em] uppercase" style={{textShadow: '0 0 5px #ff0000'}}>
+                 <div className="flex flex-col w-[30%] gap-2 items-start pl-1">
+                    <span className="text-[7.5px] lg:text-[8px] text-[#ff4444] font-black tracking-[0.15em] uppercase whitespace-nowrap" style={{textShadow: '0 0 4px #ff0000'}}>
                       ALARM: {alarmHours}:{alarmMinutes} {alarmAmPm}
                     </span>
-                    <div className="flex items-center gap-1.5">
-                      <button onClick={() => setIsAlarmActive(!isAlarmActive)} className={`w-8 h-4 rounded-full relative transition-all ${isAlarmActive ? 'bg-[#ff3030]' : 'bg-[#1a1a1a] border border-red-900'}`}>
-                        <div className={`w-3 h-3 rounded-full bg-white absolute top-[2px] transition-all shadow-[0_0_3px_#000] ${isAlarmActive ? 'right-[2px]' : 'left-[2px]'}`} />
+                    <div className="flex items-center gap-2">
+                      <button onClick={() => setIsAlarmActive(!isAlarmActive)} className={`w-[26px] h-[14px] rounded-full relative transition-all border border-red-900 ${isAlarmActive ? 'bg-[#ff3333]' : 'bg-[#111]'}`}>
+                        <div className={`w-[10px] h-[10px] rounded-full bg-white absolute top-[1px] transition-all shadow-[0_0_3px_#000] ${isAlarmActive ? 'right-[1px]' : 'left-[1px]'}`} />
                       </button>
-                      <span className="text-[7.5px] font-black text-[#ff3030] tracking-[0.2em]">ON</span>
+                      <span className="text-[7.5px] font-black text-[#ff4444] tracking-[0.15em] uppercase">ON</span>
                     </div>
                  </div>
 
-                 {/* Center Pill */}
+                 {/* Center Pill - Thick Hollow Glow */}
                  <div className="flex-1 flex justify-center min-w-max mx-2">
                     <button 
-                      onClick={() => isRinging ? stopAlarm() : setShowSettings(true)}
-                      className="border-[2px] border-[#ff2a2a] rounded-[30px] px-8 py-2.5 bg-[#0a0000]/60 shadow-[0_0_15px_rgba(255,0,0,0.5),inset_0_0_10px_rgba(255,0,0,0.3)] transition-transform active:scale-95"
+                      onClick={() => isRinging ? stopAlarm() : null}
+                      className="border-[2px] rounded-[30px] px-8 py-3 bg-[#0a0000]/60 transition-transform active:scale-95"
+                      style={neonBorderStyle}
                     >
-                      <span className="text-[13px] font-black tracking-[0.3em] uppercase" style={neonTextStyle}>
+                      <span className="text-[14px] font-black tracking-[0.3em] uppercase" style={neonTextStyle}>
                         {isRinging ? 'STOP' : 'SNOOZE'}
                       </span>
                     </button>
                  </div>
 
                  {/* Right Column */}
-                 <div className="flex flex-col w-[30%] gap-1.5 items-end">
-                    <div className="flex items-center gap-2">
-                      <span className="text-[7.5px] text-[#ff3030] font-black tracking-[0.1em] uppercase" style={{textShadow: '0 0 5px #ff0000'}}>MOTIVATION:</span>
-                      <button onClick={() => setMotivationState(!motivationState)} className={`w-6 h-3 rounded-full relative transition-all ${motivationState ? 'bg-[#ff3030]' : 'bg-[#1a1a1a] border border-red-900'}`}>
-                        <div className={`w-2 h-2 rounded-full bg-white absolute top-[2px] transition-all ${motivationState ? 'right-[2px]' : 'left-[2px]'}`} />
+                 <div className="flex flex-col w-[30%] gap-2 items-end pr-1">
+                    <div className="flex items-center gap-2 justify-end">
+                      <span className="text-[7.5px] text-[#ff4444] font-black tracking-[0.1em] uppercase" style={{textShadow: '0 0 4px #ff0000'}}>MOTIVATION:</span>
+                      <button onClick={() => setMotivationState(!motivationState)} className={`w-[26px] h-[14px] rounded-full relative transition-all border border-red-900 ${motivationState ? 'bg-[#ff3333]' : 'bg-[#111]'}`}>
+                        <div className={`w-[10px] h-[10px] rounded-full bg-white absolute top-[1px] transition-all ${motivationState ? 'right-[1px]' : 'left-[1px]'}`} />
                       </button>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-[7.5px] text-[#ff3030] font-black tracking-[0.1em] uppercase" style={{textShadow: '0 0 5px #ff0000'}}>VOLUME:</span>
-                      <button onClick={() => setIsMuted(!isMuted)} className={`w-6 h-3 rounded-full relative transition-all ${!isMuted ? 'bg-[#ff3030]' : 'bg-[#1a1a1a] border border-red-900'}`}>
-                        <div className={`w-2 h-2 rounded-full bg-white absolute top-[2px] transition-all ${!isMuted ? 'right-[2px]' : 'left-[2px]'}`} />
+                    <div className="flex items-center gap-2 justify-end">
+                      <span className="text-[7.5px] text-[#ff4444] font-black tracking-[0.1em] uppercase" style={{textShadow: '0 0 4px #ff0000'}}>VOLUME:</span>
+                      <button onClick={() => setIsMuted(!isMuted)} className={`w-[26px] h-[14px] rounded-full relative transition-all border border-red-900 ${!isMuted ? 'bg-[#ff3333]' : 'bg-[#111]'}`}>
+                        <div className={`w-[10px] h-[10px] rounded-full bg-white absolute top-[1px] transition-all ${!isMuted ? 'right-[1px]' : 'left-[1px]'}`} />
                       </button>
                     </div>
                  </div>
@@ -312,25 +342,25 @@ export default function AlarmClock() {
 
               {/* MOTIVATION BOX */}
               {isRinging ? (
-                <div className="mt-8 relative w-full border-[2px] rounded-[30px] p-6 bg-[#ff0000]/30 backdrop-blur-md flex flex-col justify-center items-center flex-1 shadow-[0_0_50px_#ff0000]" style={neonBorderStyle}>
-                  <BellRing className="w-16 h-16 text-white animate-bounce drop-shadow-[0_0_20px_#ff0000]" />
-                  <div className="text-3xl font-black mt-4 text-white uppercase tracking-[0.2em] drop-shadow-[0_0_15px_#ff0000]">WAKE UP!</div>
+                <div className="mt-8 relative w-full border-[2px] rounded-[30px] p-6 bg-[#aa0000]/40 backdrop-blur-md flex flex-col justify-center items-center flex-1" style={neonBorderStyle}>
+                  <BellRing className="w-20 h-20 text-[#fff] animate-ping drop-shadow-[0_0_25px_#ff0000]" />
+                  <div className="text-4xl font-black mt-6 text-white uppercase tracking-[0.2em] drop-shadow-[0_0_20px_#ff0000]">WAKE UP!</div>
                 </div>
               ) : (
-                <div className="mt-6 w-full relative border-[2px] rounded-[30px] flex flex-col items-center justify-center flex-1 bg-[#0a0000]/40 text-center px-6 pb-4" style={neonBorderStyle}>
+                <div className="mt-8 w-full relative border-[2px] rounded-[32px] flex flex-col items-center justify-between flex-1 bg-[#0d0202]/60 text-center px-4 py-8 mb-20" style={neonBorderStyle}>
                   
-                  {/* Floating Title intersecting border */}
-                  <div className="absolute -top-[14px] left-1/2 -translate-x-1/2 border-[2px] border-[#ff1f1f] bg-[#0d0404] rounded-[20px] px-5 py-1.5 whitespace-nowrap shadow-[0_0_10px_rgba(255,0,0,0.5)] z-20">
-                    <span className="text-[10px] font-black tracking-[0.2em] uppercase text-white drop-shadow-[0_0_3px_#ffffff]">
+                  {/* Floating Title intersecting border exactly */}
+                  <div className="absolute -top-[14px] left-1/2 -translate-x-1/2 border-[2px] border-[#ff2222] bg-[#0c0303] rounded-full px-5 py-[-2px] whitespace-nowrap z-20 shadow-[0_0_8px_rgba(255,0,0,0.4)] flex items-center justify-center min-h-[26px]">
+                    <span className="text-[10px] font-black tracking-[0.15em] uppercase text-white drop-shadow-[0_0_3px_#fff] pb-0.5">
                       WAKE UP LIKE A CHAMPION
                     </span>
                   </div>
 
-                  <div className="w-full flex-1 flex flex-col justify-center gap-5 mt-4">
-                    <span className="text-[12px] md:text-[14px] font-black tracking-[0.25em] uppercase" style={neonTextStyle}>RISE & GRIND!</span>
-                    <span className="text-[12px] md:text-[14px] font-black tracking-[0.25em] uppercase" style={neonTextStyle}>STAY HUNGRY</span>
-                    <span className="text-[12px] md:text-[14px] font-black tracking-[0.25em] uppercase" style={neonTextStyle}>EMBRACE THE DAY</span>
-                    <span className="text-[12px] md:text-[14px] font-black tracking-[0.25em] uppercase" style={neonTextStyle}>YOUR GOALS WAIT</span>
+                  <div className="w-full flex-1 flex flex-col justify-evenly items-center my-4 h-full">
+                    <span className="text-[13px] md:text-[15px] font-black tracking-[0.3em] uppercase" style={neonTextStyle}>RISE & GRIND!</span>
+                    <span className="text-[13px] md:text-[15px] font-black tracking-[0.3em] uppercase" style={neonTextStyle}>STAY HUNGRY</span>
+                    <span className="text-[13px] md:text-[15px] font-black tracking-[0.3em] uppercase" style={neonTextStyle}>EMBRACE THE DAY</span>
+                    <span className="text-[13px] md:text-[15px] font-black tracking-[0.3em] uppercase" style={neonTextStyle}>YOUR GOALS WAIT</span>
                   </div>
                 </div>
               )}
@@ -338,17 +368,17 @@ export default function AlarmClock() {
           )}
         </div>
 
-        {/* BOTTOM NAV TABS (FLOATING OVER BACKGROUND) */}
-        {!showLogin && (
-          <div className="absolute bottom-[20px] left-0 w-full flex justify-between items-center px-12 z-20 pb-[env(safe-area-inset-bottom,0px)]">
-            <button onClick={() => setShowSettings(!showSettings)} className="w-12 h-12 rounded-full border-[1.5px] bg-[#0a0000]/80 flex justify-center items-center hover:bg-[#ff3030]/20 transition-all text-[#ff3030]" style={neonBorderStyle}>
-              <Settings className="w-5 h-5 drop-shadow-[0_0_3px_#ff0000]" />
+        {/* BOTTOM NAV TABS (FLOATING OVER BACKGROUND, Absolute to phone container) */}
+        {!showLogin && !showSettings && (
+          <div className="absolute bottom-[28px] left-0 w-full flex justify-between items-center px-12 z-20 pb-[env(safe-area-inset-bottom,0px)]">
+            <button onClick={() => setShowSettings(true)} className="w-[50px] h-[50px] rounded-full border-[2px] bg-[#0c0303]/80 flex justify-center items-center hover:bg-[#ff4444]/30 transition-all text-[#ff4444]" style={neonBorderStyle}>
+              <Settings className="w-[20px] h-[20px] drop-shadow-[0_0_5px_#ff0000]" />
             </button>
-            <button onClick={cycleCategory} className="w-[60px] h-11 squircle border-[1.5px] bg-[#0a0000]/80 flex justify-center items-center hover:bg-[#ff3030]/20 transition-all text-[#ff3030]" style={neonBorderStyle}>
-              <List className="w-6 h-6 drop-shadow-[0_0_3px_#ff0000]" />
+            <button onClick={cycleCategory} className="w-[65px] h-[48px] custom-squircle border-[2px] bg-[#0c0303]/80 flex justify-center items-center hover:bg-[#ff4444]/30 transition-all text-[#ff4444]" style={neonBorderStyle}>
+              <List className="w-[24px] h-[24px] drop-shadow-[0_0_5px_#ff0000]" />
             </button>
-            <button onClick={() => setShowLogin(true)} className="w-12 h-12 rounded-full border-[1.5px] bg-[#0a0000]/80 flex justify-center items-center hover:bg-[#ff3030]/20 transition-all text-[#ff3030]" style={neonBorderStyle}>
-              <User className="w-5 h-5 drop-shadow-[0_0_3px_#ff0000]" />
+            <button onClick={() => setShowLogin(true)} className="w-[50px] h-[50px] rounded-full border-[2px] bg-[#0c0303]/80 flex justify-center items-center hover:bg-[#ff4444]/30 transition-all text-[#ff4444]" style={neonBorderStyle}>
+              <User className="w-[20px] h-[20px] drop-shadow-[0_0_5px_#ff0000]" />
             </button>
           </div>
         )}
@@ -358,21 +388,21 @@ export default function AlarmClock() {
       {/* LOGIN OVERLAY */}
       {showLogin && (
         <div className="absolute inset-0 z-[100] flex items-center justify-center p-6 bg-black/80 backdrop-blur-md">
-          <div className="bg-black border-[2px] border-[#ff2a2a] rounded-[24px] w-full max-w-[320px] p-6 shadow-[0_0_40px_rgba(255,0,0,0.4)] relative">
-            <button onClick={() => setShowLogin(false)} className="absolute top-4 right-5 text-[#ff3030] hover:text-white font-bold text-lg drop-shadow-[0_0_4px_#ff3030]">✕</button>
-            <h2 className="text-lg font-black uppercase tracking-[0.1em] text-white flex items-center mb-1 drop-shadow-[0_0_3px_#ffffff]"><Lock className="w-4 h-4 mr-2 text-[#ff3030]"/> ADMIN LOGIN</h2>
-            <p className="text-[9px] text-red-500 font-bold mb-6 uppercase tracking-[0.15em]" style={neonTextStyle}>Access custom sounds & packs.</p>
+          <div className="bg-[#050000] border-[2px] border-[#ff3333] rounded-[24px] w-full max-w-[320px] p-6 shadow-[0_0_40px_rgba(255,0,0,0.5)] relative">
+            <button onClick={() => setShowLogin(false)} className="absolute top-4 right-5 text-[#ff4444] hover:text-white font-bold text-lg drop-shadow-[0_0_5px_#ff0000]">✕</button>
+            <h2 className="text-lg font-black uppercase tracking-[0.1em] text-white flex items-center mb-1 drop-shadow-[0_0_4px_#ffffff]"><Lock className="w-4 h-4 mr-2 text-[#ff4444]"/> ADMIN LOGIN</h2>
+            <p className="text-[9px] text-[#ff5555] font-bold mb-6 uppercase tracking-[0.15em] drop-shadow-[0_0_2px_#ff0000]">Access custom sounds & packs.</p>
             
             <form onSubmit={handleLoginSubmit} className="space-y-4">
               <div>
-                <label className="block text-[10px] text-[#ff3030] font-black tracking-[0.15em] mb-1.5 uppercase" style={{textShadow: '0 0 5px #ff0000'}}>Username</label>
-                <input type="text" value={username} onChange={e => setUsername(e.target.value)} className="w-full bg-[#0a0000] border border-red-900 focus:border-[#ff3030] rounded-xl px-4 py-2 text-white outline-none shadow-[inset_0_0_10px_rgba(255,0,0,0.2)]" autoFocus />
+                <label className="block text-[10px] text-[#ff4444] font-black tracking-[0.15em] mb-1.5 uppercase drop-shadow-[0_0_3px_#ff0000]">Username</label>
+                <input type="text" value={username} onChange={e => setUsername(e.target.value)} className="w-full bg-[#0a0000] border border-red-900 focus:border-[#ff4444] rounded-xl px-4 py-3 text-white outline-none shadow-[inset_0_0_15px_rgba(255,0,0,0.3)] transition-all font-['Inter'] font-bold tracking-widest" autoFocus />
               </div>
               <div>
-                <label className="block text-[10px] text-[#ff3030] font-black tracking-[0.15em] mb-1.5 uppercase" style={{textShadow: '0 0 5px #ff0000'}}>Password</label>
-                <input type="password" value={password} onChange={e => setPassword(e.target.value)} className="w-full bg-[#0a0000] border border-red-900 focus:border-[#ff3030] rounded-xl px-4 py-2 text-white outline-none shadow-[inset_0_0_10px_rgba(255,0,0,0.2)]" />
+                <label className="block text-[10px] text-[#ff4444] font-black tracking-[0.15em] mb-1.5 uppercase drop-shadow-[0_0_3px_#ff0000]">Password</label>
+                <input type="password" value={password} onChange={e => setPassword(e.target.value)} className="w-full bg-[#0a0000] border border-red-900 focus:border-[#ff4444] rounded-xl px-4 py-3 text-white outline-none shadow-[inset_0_0_15px_rgba(255,0,0,0.3)] transition-all font-['Inter'] font-bold tracking-widest" />
               </div>
-              <button type="submit" className="w-full py-3 bg-[#ff3030] hover:bg-red-500 text-white font-black uppercase tracking-[0.2em] rounded-xl transition-all mt-4 shadow-[0_0_20px_rgba(255,0,0,0.6)]">UNLOCK</button>
+              <button type="submit" className="w-full py-4 bg-[#ff3333] hover:bg-red-500 text-white font-black uppercase tracking-[0.2em] rounded-xl transition-all mt-6 shadow-[0_0_25px_rgba(255,0,0,0.6)]">UNLOCK</button>
             </form>
           </div>
         </div>

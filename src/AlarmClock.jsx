@@ -19,6 +19,20 @@ export default function AlarmClock() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState('');
+  const [customAudioMap, setCustomAudioMap] = useState({});
+  const [activeAudioObj, setActiveAudioObj] = useState(null);
+
+  // Load custom audio on mount
+  useEffect(() => {
+    try {
+      const savedAudio = localStorage.getItem('eb28_custom_audio');
+      if (savedAudio) {
+        setCustomAudioMap(JSON.parse(savedAudio));
+      }
+    } catch (e) {
+      console.warn('Failed to load custom audio', e);
+    }
+  }, []);
 
   // Alarm state
   const [alarmHours, setAlarmHours] = useState('06');
@@ -75,6 +89,11 @@ export default function AlarmClock() {
     setIsRinging(false);
     setIsAlarmActive(false); // Turn off after ringing once
     window.speechSynthesis.cancel();
+    if (activeAudioObj) {
+      activeAudioObj.pause();
+      activeAudioObj.currentTime = 0;
+      setActiveAudioObj(null);
+    }
   };
 
   const toggleAlarm = () => {
@@ -85,7 +104,22 @@ export default function AlarmClock() {
     if (e) {
       e.stopPropagation();
     }
+    // Stop any existing audio
     window.speechSynthesis.cancel();
+    if (activeAudioObj) {
+      activeAudioObj.pause();
+      activeAudioObj.currentTime = 0;
+    }
+
+    // Check for custom audio override
+    if (customAudioMap[voiceId]) {
+      const audio = new Audio(customAudioMap[voiceId]);
+      audio.play().catch(err => console.error('Audio play failed', err));
+      setActiveAudioObj(audio);
+      return;
+    }
+
+    // Fallback to TTS
     const voice = ALARM_VOICES.find(v => v.id === voiceId);
     if (voice) {
       const utterance = new SpeechSynthesisUtterance(voice.sample);
@@ -94,6 +128,30 @@ export default function AlarmClock() {
       if (voice.id === 'nuclear') utterance.pitch = 0.5;
       window.speechSynthesis.speak(utterance);
     }
+  };
+
+  const handleAudioUpload = (voiceId, e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (file.size > 2 * 1024 * 1024) {
+      alert("Please upload a file smaller than 2MB.");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const base64Audio = event.target.result;
+      const newMap = { ...customAudioMap, [voiceId]: base64Audio };
+      setCustomAudioMap(newMap);
+      try {
+        localStorage.setItem('eb28_custom_audio', JSON.stringify(newMap));
+      } catch (err) {
+        alert("Audio file is too large to save to browser storage. Try a shorter clip.");
+        console.error(err);
+      }
+    };
+    reader.readAsDataURL(file);
   };
 
   const handleVoiceSelect = (voice) => {
@@ -351,6 +409,22 @@ export default function AlarmClock() {
                          <span className="flex items-center text-xs text-yellow-500 bg-yellow-500/10 px-2 py-1 rounded">
                            <Lock className="w-3 h-3 mr-1" /> Locked
                          </span>
+                      )}
+                      {isUnlocked && (
+                         <div className="flex flex-col ml-4 border-l border-slate-700 pl-4" onClick={e => e.stopPropagation()}>
+                           <label className="text-[10px] text-slate-500 uppercase tracking-wider mb-1 cursor-pointer hover:text-white transition-colors">
+                             {customAudioMap[voice.id] ? 'Change Custom Audio' : 'Upload Custom Audio'}
+                             <input 
+                               type="file" 
+                               accept="audio/*" 
+                               className="hidden" 
+                               onChange={(e) => handleAudioUpload(voice.id, e)}
+                             />
+                           </label>
+                           {customAudioMap[voice.id] && (
+                             <span className="text-[10px] text-green-400">Custom Audio Set</span>
+                           )}
+                         </div>
                       )}
                     </button>
                   ))}

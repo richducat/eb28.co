@@ -4,10 +4,11 @@ import { Volume2, VolumeX, Settings, Clock, User, Zap, Lock, BellRing, ChevronUp
 // Skin/Voice options
 const ALARM_VOICES = [
   { id: 'standard', name: 'Classic Beep', type: 'free', icon: '🔔', sample: 'Beep beep beep... time to wake up.' },
+  { id: 'zen', name: 'Zen Master (Gentle)', type: 'free', icon: '☯️', sample: 'Breathe in... Breathe out... Welcome to a new day.' },
+  { id: 'retro', name: 'Retro Synth', type: 'free', icon: '🎹', sample: 'Synthesizer sounds fading in...' },
   { id: 'nuclear', name: 'Nuclear Countdown', type: 'premium', icon: '☢️', sample: 'Warning. Nuclear launch sequence initiated. 10, 9, 8...' },
   { id: 'rocky', name: 'Boxing Champion Theme', type: 'premium', icon: '🥊', sample: 'Dun dun dun... Get up champ, it is time to train!' },
   { id: 'jerky', name: '"Hey Loser, Wake Up!"', type: 'premium', icon: '🤬', sample: 'Hey loser! Yeah, you! Get out of bed!' },
-  { id: 'zen', name: 'Zen Master (Gentle)', type: 'free', icon: '☯️', sample: 'Breathe in... Breathe out... Welcome to a new day.' }
 ];
 
 export default function AlarmClock() {
@@ -226,7 +227,7 @@ export default function AlarmClock() {
       {!isUnlocked && (
         <div className="absolute top-0 w-full bg-gradient-to-r from-red-600 via-yellow-600 to-red-600 p-3 text-center text-white text-sm font-bold shadow-2xl z-20 flex justify-center items-center gap-2">
           <Zap className="w-4 h-4" />
-          Unlock Premium Alarms (Nuclear, Boxing Theme) for just $1/month!
+          Unlock Premium Alarms & Remove Ads for $1/mo or $5 lifetime!
           <button onClick={() => setShowLogin(true)} className="ml-4 px-4 py-1 bg-white text-red-700 rounded-full text-xs hover:bg-red-50 hover:scale-105 transition-transform uppercase tracking-wider">
             Subscribe Now
           </button>

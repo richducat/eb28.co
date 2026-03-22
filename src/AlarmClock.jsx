@@ -24,10 +24,7 @@ const MOTIVATIONAL_PHRASES = [
 
 export default function AlarmClock() {
   const [time, setTime] = useState(new Date());
-  const [isUnlocked, setIsUnlocked] = useState(false);
-  const [showLogin, setShowLogin] = useState(false);
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
+  const [countdownTarget, setCountdownTarget] = useState(null);
   const [customAudioMap, setCustomAudioMap] = useState({});
   const [activeAudioObj, setActiveAudioObj] = useState(null);
 
@@ -69,6 +66,15 @@ export default function AlarmClock() {
 
   const checkAlarm = (currentTime) => {
     if (!isAlarmActive || isRinging) return;
+
+    if (countdownTarget) {
+      if (currentTime.getTime() >= countdownTarget) {
+        setCountdownTarget(null);
+        triggerAlarm();
+      }
+      return;
+    }
+
     let _h = currentTime.getHours();
     const ampm = _h >= 12 ? 'PM' : 'AM';
     _h = _h % 12 || 12;
@@ -122,13 +128,8 @@ export default function AlarmClock() {
   };
 
   const setTimerMinutes = (minutesAdded) => {
-    const target = new Date(time.getTime() + minutesAdded * 60000);
-    let targetH = target.getHours();
-    const targetAmPm = targetH >= 12 ? 'PM' : 'AM';
-    targetH = targetH % 12 || 12;
-    setAlarmHours(targetH.toString().padStart(2, '0'));
-    setAlarmMinutes(target.getMinutes().toString().padStart(2, '0'));
-    setAlarmAmPm(targetAmPm);
+    const targetTime = time.getTime() + minutesAdded * 60000;
+    setCountdownTarget(targetTime);
     setIsAlarmActive(true);
   };
 
@@ -168,16 +169,21 @@ export default function AlarmClock() {
     }
   };
 
-  const handleLoginSubmit = (e) => {
-    e.preventDefault();
-    if (username === 'admin' && password === 'admin') {
-      setIsUnlocked(true); setShowLogin(false); setUsername(''); setPassword('');
-    } else alert('Invalid credentials');
-  };
-
   const formatHours = (date) => (date.getHours() % 12 || 12).toString().padStart(2, '0');
   const formatMinutes = (date) => date.getMinutes().toString().padStart(2, '0');
   const getAmPm = (date) => date.getHours() >= 12 ? 'PM' : 'AM';
+  
+  const getDisplayMain = () => {
+    if (countdownTarget) {
+      const diffStr = Math.max(0, Math.floor((countdownTarget - time.getTime()) / 1000));
+      const m = Math.floor(diffStr / 60).toString().padStart(2, '0');
+      const s = (diffStr % 60).toString().padStart(2, '0');
+      return { mainString: `${m}:${s}`, mode: 'COUNTDOWN' };
+    }
+    return { mainString: `${formatHours(time)}:${formatMinutes(time)}`, mode: getAmPm(time) };
+  };
+  
+  const displayData = getDisplayMain();
   
   const displayDateStrFull = `${time.toLocaleDateString('en-US', { weekday: 'short' }).toUpperCase()} ${time.toLocaleDateString('en-US', { month: 'numeric', day: 'numeric', year: '2-digit' })}`;
 
@@ -369,13 +375,17 @@ export default function AlarmClock() {
                         fontStyle: 'italic',
                         letterSpacing: '-0.02em'
                       }}>
-                   {formatHours(time)}
-                   <span className="opacity-90 -mx-1 md:-mx-2 mb-[10%]">:</span>
-                   {formatMinutes(time)}
+                   {displayData.mainString.split(':')[0]}
+                   <span className={`opacity-90 -mx-1 md:-mx-2 mb-[10%] ${countdownTarget ? '' : 'animate-pulse'}`}>:</span>
+                   {displayData.mainString.split(':')[1]}
                  </div>
                  <div className="flex flex-col ml-3 gap-2 mt-4 md:mt-0">
-                    <span className={`text-[8px] font-['Press_Start_2P'] uppercase ${getAmPm(time) === 'AM' ? 'text-[#00f0ff] drop-shadow-[0_0_8px_#00f0ff]' : 'text-slate-700'}`}>AM</span>
-                    <span className={`text-[8px] font-['Press_Start_2P'] uppercase ${getAmPm(time) === 'PM' ? 'text-[#00f0ff] drop-shadow-[0_0_8px_#00f0ff]' : 'text-slate-700'}`}>PM</span>
+                    <span className={`text-[8px] font-['Press_Start_2P'] uppercase ${displayData.mode === 'AM' || displayData.mode === 'COUNTDOWN' ? 'text-[#00f0ff] drop-shadow-[0_0_8px_#00f0ff]' : 'text-slate-700'}`}>
+                      {countdownTarget ? 'MIN' : 'AM'}
+                    </span>
+                    <span className={`text-[8px] font-['Press_Start_2P'] uppercase ${displayData.mode === 'PM' || displayData.mode === 'COUNTDOWN' ? 'text-[#00f0ff] drop-shadow-[0_0_8px_#00f0ff]' : 'text-slate-700'}`}>
+                      {countdownTarget ? 'SEC' : 'PM'}
+                    </span>
                  </div>
               </div>
 
@@ -391,21 +401,30 @@ export default function AlarmClock() {
           <div className="w-full mt-6 grid grid-cols-4 gap-3 md:gap-4 px-2">
              {/* LEFT SIDE: ALARM TIME */}
              <div className="col-span-2 row-span-2 flex flex-col items-start bg-[#cfd6e0] p-3 rounded-lg shadow-[inset_1px_1px_5px_rgba(0,0,0,0.1)] relative overflow-hidden">
-               <div className="text-[7.5px] font-bold text-slate-700 uppercase mb-3 flex items-center justify-between w-full pr-1">
-                 <span>ALARM SET: <span className="text-black bg-white/50 px-1 py-0.5 rounded cursor-pointer touch-manipulation hover:bg-white transition-colors">{alarmHours}:{alarmMinutes} {alarmAmPm}</span></span>
+               <div className="text-[7px] font-bold text-slate-700 uppercase mb-3 flex items-center justify-between w-full pr-1">
+                 {countdownTarget ? (
+                   <span className="text-[#ff00aa]">COUNTDOWN ACTIVE</span>
+                 ) : (
+                   <span>ALARM SET: <span className="text-black bg-white/50 px-1 py-0.5 rounded cursor-pointer touch-manipulation hover:bg-white transition-colors">{alarmHours}:{alarmMinutes} {alarmAmPm}</span></span>
+                 )}
                </div>
                
                {/* Hidden native time input overlay */}
-               <input 
-                 type="time" 
-                 className="absolute inset-0 opacity-0 cursor-pointer touch-manipulation w-full h-1/2" 
-                 onChange={handleTimePickerChange}
-                 value={get24HourString()}
-               />
+               {!countdownTarget && (
+                 <input 
+                   type="time" 
+                   className="absolute inset-0 opacity-0 cursor-pointer touch-manipulation w-full h-1/2" 
+                   onChange={handleTimePickerChange}
+                   value={get24HourString()}
+                 />
+               )}
 
                <div className="mt-auto w-full">
                  <button 
-                    onClick={() => setIsAlarmActive(!isAlarmActive)}
+                    onClick={() => {
+                      if (countdownTarget) setCountdownTarget(null); // Cancel countdown
+                      else setIsAlarmActive(!isAlarmActive); // Toggle normal alarm
+                    }}
                     className="w-[60px] h-[24px] bg-slate-800 rounded-full chunky-track relative flex items-center px-1 shrink-0 z-10 cursor-pointer touch-manipulation"
                  >
                     <div className={`w-[20px] h-[20px] rounded-full absolute border-b-[3px] transition-all duration-200 ${isAlarmActive ? 'border-[#0099aa] left-[36px]' : 'bg-slate-400 border-slate-500 left-1'}`} style={isAlarmActive ? {backgroundColor: '#00f0ff'} : {}} />
@@ -443,7 +462,7 @@ export default function AlarmClock() {
              <button className="flex-1 bg-[#1a202c] border-b-[6px] border-[#0d1218] active:scale-95 rounded-xl h-[45px] flex items-center justify-center p-2 group cursor-pointer touch-manipulation transition-all">
                 <ListTodo className="w-[18px] h-[18px] text-[#39ff14] drop-shadow-[0_0_5px_#39ff14] pointer-events-none" strokeWidth={3} />
              </button>
-             <button onClick={() => setShowLogin(true)} className="flex-1 bg-[#1a202c] border-b-[6px] border-[#0d1218] active:scale-95 rounded-xl h-[45px] flex items-center justify-center p-2 group cursor-pointer touch-manipulation transition-all">
+             <button className="flex-1 bg-[#1a202c] border-b-[6px] border-[#0d1218] active:scale-95 rounded-xl h-[45px] flex items-center justify-center p-2 group cursor-pointer touch-manipulation transition-all opacity-50 cursor-not-allowed">
                 <User className="w-[18px] h-[18px] text-[#ff00aa] drop-shadow-[0_0_5px_#ff00aa] pointer-events-none" strokeWidth={3} />
              </button>
           </div>
@@ -459,45 +478,22 @@ export default function AlarmClock() {
                  {ALARM_VOICES.map((voice) => (
                    <button 
                      key={voice.id}
-                     onClick={() => {
-                        if (voice.type === 'premium' && !isUnlocked) setShowLogin(true);
-                        else setSelectedVoice(voice.id);
+                     onClick={(e) => {
+                        setSelectedVoice(voice.id);
+                        playSample(voice.id, e); // Give instant audio preview feedback!
                      }}
-                     className={`w-full flex items-center justify-between p-4 rounded-xl border-b-4 active:scale-[0.98] transition-all ${selectedVoice === voice.id ? 'bg-[#10141a] border-[#ff00aa]' : 'bg-slate-800 border-slate-900'}`}
+                     className={`w-full flex items-center justify-between p-4 rounded-xl border-b-4 active:scale-[0.98] cursor-pointer touch-manipulation transition-all ${selectedVoice === voice.id ? 'bg-[#10141a] border-[#ff00aa]' : 'bg-slate-800 border-slate-900'}`}
                    >
-                     <div className="flex items-center gap-4">
+                     <div className="flex items-center gap-4 pointer-events-none">
                        <span className="text-2xl">{voice.icon}</span>
                        <div className="flex flex-col text-left gap-2">
                          <span className="text-[8px] text-white uppercase">{voice.name}</span>
-                         {(voice.type === 'premium' && !isUnlocked) && (
-                           <span className="text-[6px] text-yellow-400 uppercase"><Lock className="w-[10px] h-[10px] inline mr-1 -mt-0.5"/> LOCKED</span>
-                         )}
                        </div>
                      </div>
                    </button>
                  ))}
                </div>
              </div>
-          </div>
-        )}
-
-        {showLogin && (
-          <div className="absolute inset-0 z-[100] flex items-center justify-center p-6 bg-black/80 backdrop-blur-md">
-            <div className="bg-[#1e2530] border-b-8 border-r-8 border-[#0a0e14] rounded-2xl w-full max-w-[320px] p-8 relative shadow-2xl">
-              <button onClick={() => setShowLogin(false)} className="absolute top-[-15px] right-[-15px] w-10 h-10 flex items-center justify-center bg-red-500 border-b-4 border-red-800 active:border-b-0 active:translate-y-1 rounded-full text-white font-black text-xl z-10 box-shadow-xl">X</button>
-              <h2 className="text-[10px] uppercase text-[#ff00aa] flex items-center mb-6 drop-shadow-[0_0_5px_#ff00aa]"><Lock className="w-4 h-4 mr-2"/> PRO LOGIN</h2>
-              <form onSubmit={handleLoginSubmit} className="space-y-6">
-                <div>
-                  <label className="block text-[8px] text-[#00f0ff] mb-2 uppercase">Username</label>
-                  <input type="text" value={username} onChange={e => setUsername(e.target.value)} className="w-full bg-[#0a0f12] border-t-4 border-l-4 border-[#05080a] border-b-2 border-r-2 border-[#151f26] rounded-xl px-4 py-4 text-white outline-none focus:border-[#ff00aa] text-[8px] font-['Press_Start_2P'] uppercase shadow-inner" autoFocus />
-                </div>
-                <div>
-                  <label className="block text-[8px] text-[#00f0ff] mb-2 uppercase">Password</label>
-                  <input type="password" value={password} onChange={e => setPassword(e.target.value)} className="w-full bg-[#0a0f12] border-t-4 border-l-4 border-[#05080a] border-b-2 border-r-2 border-[#151f26] rounded-xl px-4 py-4 text-white outline-none focus:border-[#ff00aa] text-[8px] font-['Press_Start_2P'] shadow-inner" />
-                </div>
-                <button type="submit" className="w-full py-4 bg-[#ff00aa] border-b-8 border-[#990066] active:scale-95 rounded-xl text-white text-[10px] uppercase mt-4 transition-all tracking-widest shadow-lg">UNLOCK</button>
-              </form>
-            </div>
           </div>
         )}
 

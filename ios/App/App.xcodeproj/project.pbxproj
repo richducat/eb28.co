@@ -28,6 +28,7 @@
 		504EC3131FED79650016851F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		50B271D01FEDC1A000F3C39B /* public */ = {isa = PBXFileReference; lastKnownFileType = folder; path = public; sourceTree = "<group>"; };
 		958DCC722DB07C7200EA8C5F /* debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = debug.xcconfig; path = ../debug.xcconfig; sourceTree = SOURCE_ROOT; };
+		BC88A07D2F70428D005D8B0B /* Screen Recording 2026-03-22 at 11.30.04 AM.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; name = "Screen Recording 2026-03-22 at 11.30.04 AM.mov"; path = "../../../../../../var/folders/30/k7mjq62s6js2m01tck7py0380000gn/T/TemporaryItems/NSIRD_screencaptureui_pdBdZH/Screen Recording 2026-03-22 at 11.30.04 AM.mov"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -47,6 +48,7 @@
 			children = (
 				958DCC722DB07C7200EA8C5F /* debug.xcconfig */,
 				504EC3061FED79650016851F /* App */,
+				BC88A07C2F70428C005D8B0B /* Frameworks */,
 				504EC3051FED79650016851F /* Products */,
 			);
 			sourceTree = "<group>";
@@ -72,6 +74,14 @@
 				50B271D01FEDC1A000F3C39B /* public */,
 			);
 			path = App;
+			sourceTree = "<group>";
+		};
+		BC88A07C2F70428C005D8B0B /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				BC88A07D2F70428D005D8B0B /* Screen Recording 2026-03-22 at 11.30.04 AM.mov */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

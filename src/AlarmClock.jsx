@@ -261,7 +261,7 @@ export default function AlarmClock() {
       `}</style>
 
       {/* BACKGROUND LAYER */}
-      <div className="fixed inset-0 z-0 overflow-hidden bg-gradient-to-b from-[#00050a] to-[#001826]">
+      <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none bg-gradient-to-b from-[#00050a] to-[#001826]">
         <div className="cyber-sun"><div className="sun-lines" /></div>
         <div className="grid-container">
            <div className="vaporwave-grid" />
@@ -328,7 +328,7 @@ export default function AlarmClock() {
           {/* SNOOZE BAR AT THE TOP (Massive chunky physical button) */}
           <button 
             onClick={handleSnoozeLight}
-            className={`w-full relative h-[70px] bg-[#ff00aa] rounded-[16px] mb-6 flex items-center justify-center border-b-[8px] border-r-[4px] border-[#990066] active:border-b-0 active:border-r-0 active:translate-y-[8px] active:translate-x-[4px] outline-none shadow-lg transition-all ${isRinging ? 'animate-pulse bg-[#ff0055]' : ''} ${isLightOn ? 'bg-[#ff66cc] shadow-[0_0_40px_#ff00aa] border-[#cc0088]' : ''}`}
+            className={`w-full relative h-[70px] bg-[#ff00aa] rounded-[16px] mb-6 flex items-center justify-center border-b-[8px] border-r-[4px] border-[#990066] active:scale-[0.98] outline-none shadow-lg transition-all ${isRinging ? 'animate-pulse bg-[#ff0055]' : ''} ${isLightOn ? 'bg-[#ff66cc] shadow-[0_0_40px_#ff00aa] border-[#cc0088]' : ''}`}
           >
              <span className="text-[14px] md:text-[16px] text-white drop-shadow-[2px_2px_0px_#000]">
                {isRinging ? 'SLAM TO STOP' : 'SNOOZE / LIGHT'}
@@ -413,23 +413,23 @@ export default function AlarmClock() {
              <div className="col-span-2 flex flex-col gap-2">
                 <div className="flex justify-between items-center bg-[#cfd6e0] p-2 rounded-lg shadow-[inset_1px_1px_5px_rgba(0,0,0,0.1)] h-full">
                   <span className="text-[6.5px] text-slate-700 uppercase leading-[1.2]">VOL<br/>MUTE</span>
-                  <button onClick={() => setIsMuted(!isMuted)} className={`w-[24px] h-[24px] rounded-md border-b-[4px] active:border-b-0 active:translate-y-1 transition-all ${isMuted ? 'bg-[#ff00aa] border-[#990066]' : 'bg-slate-400 border-slate-500'}`} />
+                  <button onClick={() => setIsMuted(!isMuted)} className={`w-[24px] h-[24px] rounded-md border-b-[4px] active:scale-95 transition-all ${isMuted ? 'bg-[#ff00aa] border-[#990066]' : 'bg-slate-400 border-slate-500'}`} />
                 </div>
                 <div className="flex justify-between items-center bg-[#cfd6e0] p-2 rounded-lg shadow-[inset_1px_1px_5px_rgba(0,0,0,0.1)] h-full">
                   <span className="text-[6.5px] text-slate-700 uppercase leading-[1.2]">MOTV<br/>FEED</span>
-                  <button onClick={() => setMotivationState(!motivationState)} className={`w-[24px] h-[24px] rounded-md border-b-[4px] active:border-b-0 active:translate-y-1 transition-all ${motivationState ? 'bg-[#39ff14] border-[#1b9900]' : 'bg-slate-400 border-slate-500'}`} />
+                  <button onClick={() => setMotivationState(!motivationState)} className={`w-[24px] h-[24px] rounded-md border-b-[4px] active:scale-95 transition-all ${motivationState ? 'bg-[#39ff14] border-[#1b9900]' : 'bg-slate-400 border-slate-500'}`} />
                 </div>
              </div>
           </div>
 
           <div className="w-full flex justify-between gap-4 mt-6 px-2">
-             <button onClick={() => setShowSettings(!showSettings)} className="flex-1 bg-[#1a202c] border-b-[6px] border-[#0d1218] active:border-b-0 active:translate-y-1 rounded-xl h-[45px] flex items-center justify-center p-2 group transition-all">
+             <button onClick={() => setShowSettings(!showSettings)} className="flex-1 bg-[#1a202c] border-b-[6px] border-[#0d1218] active:scale-95 rounded-xl h-[45px] flex items-center justify-center p-2 group transition-all">
                 <Settings className="w-[18px] h-[18px] text-[#00f0ff] drop-shadow-[0_0_5px_#00f0ff]" strokeWidth={3} />
              </button>
-             <button className="flex-1 bg-[#1a202c] border-b-[6px] border-[#0d1218] active:border-b-0 active:translate-y-1 rounded-xl h-[45px] flex items-center justify-center p-2 group transition-all">
+             <button className="flex-1 bg-[#1a202c] border-b-[6px] border-[#0d1218] active:scale-95 rounded-xl h-[45px] flex items-center justify-center p-2 group transition-all">
                 <ListTodo className="w-[18px] h-[18px] text-[#39ff14] drop-shadow-[0_0_5px_#39ff14]" strokeWidth={3} />
              </button>
-             <button onClick={() => setShowLogin(true)} className="flex-1 bg-[#1a202c] border-b-[6px] border-[#0d1218] active:border-b-0 active:translate-y-1 rounded-xl h-[45px] flex items-center justify-center p-2 group transition-all">
+             <button onClick={() => setShowLogin(true)} className="flex-1 bg-[#1a202c] border-b-[6px] border-[#0d1218] active:scale-95 rounded-xl h-[45px] flex items-center justify-center p-2 group transition-all">
                 <User className="w-[18px] h-[18px] text-[#ff00aa] drop-shadow-[0_0_5px_#ff00aa]" strokeWidth={3} />
              </button>
           </div>
@@ -449,7 +449,7 @@ export default function AlarmClock() {
                         if (voice.type === 'premium' && !isUnlocked) setShowLogin(true);
                         else setSelectedVoice(voice.id);
                      }}
-                     className={`w-full flex items-center justify-between p-4 rounded-xl border-b-4 active:border-b-0 active:translate-y-1 transition-all ${selectedVoice === voice.id ? 'bg-[#10141a] border-[#ff00aa]' : 'bg-slate-800 border-slate-900'}`}
+                     className={`w-full flex items-center justify-between p-4 rounded-xl border-b-4 active:scale-[0.98] transition-all ${selectedVoice === voice.id ? 'bg-[#10141a] border-[#ff00aa]' : 'bg-slate-800 border-slate-900'}`}
                    >
                      <div className="flex items-center gap-4">
                        <span className="text-2xl">{voice.icon}</span>
@@ -481,7 +481,7 @@ export default function AlarmClock() {
                   <label className="block text-[8px] text-[#00f0ff] mb-2 uppercase">Password</label>
                   <input type="password" value={password} onChange={e => setPassword(e.target.value)} className="w-full bg-[#0a0f12] border-t-4 border-l-4 border-[#05080a] border-b-2 border-r-2 border-[#151f26] rounded-xl px-4 py-4 text-white outline-none focus:border-[#ff00aa] text-[8px] font-['Press_Start_2P'] shadow-inner" />
                 </div>
-                <button type="submit" className="w-full py-4 bg-[#ff00aa] border-b-8 border-[#990066] active:border-b-0 active:translate-y-2 rounded-xl text-white text-[10px] uppercase mt-4 transition-all tracking-widest shadow-lg">UNLOCK</button>
+                <button type="submit" className="w-full py-4 bg-[#ff00aa] border-b-8 border-[#990066] active:scale-95 rounded-xl text-white text-[10px] uppercase mt-4 transition-all tracking-widest shadow-lg">UNLOCK</button>
               </form>
             </div>
           </div>

@@ -261,7 +261,7 @@ export default function AlarmClock() {
       `}</style>
 
       {/* BACKGROUND LAYER */}
-      <div className="fixed inset-0 z-0 overflow-hidden pointer-events-none bg-gradient-to-b from-[#00050a] to-[#001826]">
+      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none bg-gradient-to-b from-[#00050a] to-[#001826]">
         <div className="cyber-sun"><div className="sun-lines" /></div>
         <div className="grid-container">
            <div className="vaporwave-grid" />
@@ -313,7 +313,7 @@ export default function AlarmClock() {
         THE CLOCK HARDWARE: Centered fully logic
         ======================================================================
       */}
-      <div className="relative w-full max-w-[440px] m-auto flex flex-col justify-center px-4 z-20 drop-shadow-[0_40px_40px_rgba(0,0,0,0.6)]">
+      <div className="relative w-full max-w-[440px] m-auto flex flex-col justify-center px-4 z-50 pointer-events-auto drop-shadow-[0_40px_40px_rgba(0,0,0,0.6)]">
         
         {/* Main Plastic Shell - Miami Vice Gray/White aesthetic */}
         <div className="w-full relative bg-[#e0e5ec] rounded-[24px] rounded-t-[40px] shadow-[inset_-5px_-5px_15px_rgba(0,0,0,0.2),_inset_5px_5px_15px_rgba(255,255,255,0.8)] border-[2px] border-[#cbd2d9] pb-8 pt-4 px-4 md:px-6 flex flex-col overflow-hidden">
@@ -328,7 +328,7 @@ export default function AlarmClock() {
           {/* SNOOZE BAR AT THE TOP (Massive chunky physical button) */}
           <button 
             onClick={handleSnoozeLight}
-            className={`w-full relative h-[70px] bg-[#ff00aa] rounded-[16px] mb-6 flex items-center justify-center border-b-[8px] border-r-[4px] border-[#990066] active:scale-[0.98] outline-none shadow-lg transition-all ${isRinging ? 'animate-pulse bg-[#ff0055]' : ''} ${isLightOn ? 'bg-[#ff66cc] shadow-[0_0_40px_#ff00aa] border-[#cc0088]' : ''}`}
+            className={`w-full relative h-[70px] bg-[#ff00aa] rounded-[16px] mb-6 flex items-center justify-center border-b-[8px] border-r-[4px] border-[#990066] active:scale-[0.98] outline-none shadow-lg transition-all cursor-pointer touch-manipulation ${isRinging ? 'animate-pulse bg-[#ff0055]' : ''} ${isLightOn ? 'bg-[#ff66cc] shadow-[0_0_40px_#ff00aa] border-[#cc0088]' : ''}`}
           >
              <span className="text-[14px] md:text-[16px] text-white drop-shadow-[2px_2px_0px_#000]">
                {isRinging ? 'SLAM TO STOP' : 'SNOOZE / LIGHT'}
@@ -389,48 +389,62 @@ export default function AlarmClock() {
 
           {/* HARDWARE CONTROL DECK */}
           <div className="w-full mt-6 grid grid-cols-4 gap-3 md:gap-4 px-2">
-             <div className="col-span-2 flex flex-col items-start bg-[#cfd6e0] p-3 rounded-lg shadow-[inset_1px_1px_5px_rgba(0,0,0,0.1)] relative overflow-hidden">
+             {/* LEFT SIDE: ALARM TIME */}
+             <div className="col-span-2 row-span-2 flex flex-col items-start bg-[#cfd6e0] p-3 rounded-lg shadow-[inset_1px_1px_5px_rgba(0,0,0,0.1)] relative overflow-hidden">
                <div className="text-[7.5px] font-bold text-slate-700 uppercase mb-3 flex items-center justify-between w-full pr-1">
-                 <span>ALARM SET: <span className="text-black bg-white/50 px-1 py-0.5 rounded cursor-pointer hover:bg-white transition-colors">{alarmHours}:{alarmMinutes} {alarmAmPm}</span></span>
+                 <span>ALARM SET: <span className="text-black bg-white/50 px-1 py-0.5 rounded cursor-pointer touch-manipulation hover:bg-white transition-colors">{alarmHours}:{alarmMinutes} {alarmAmPm}</span></span>
                </div>
                
                {/* Hidden native time input overlay */}
                <input 
                  type="time" 
-                 className="absolute inset-0 opacity-0 cursor-pointer w-full h-1/2" 
+                 className="absolute inset-0 opacity-0 cursor-pointer touch-manipulation w-full h-1/2" 
                  onChange={handleTimePickerChange}
                  value={get24HourString()}
                />
 
-               <button 
-                  onClick={() => setIsAlarmActive(!isAlarmActive)}
-                  className="w-[60px] h-[24px] bg-slate-800 rounded-full chunky-track relative flex items-center px-1 shrink-0 z-10"
-               >
-                  <div className={`w-[20px] h-[20px] rounded-full absolute border-b-[3px] transition-all duration-200 ${isAlarmActive ? 'border-[#0099aa] left-[36px]' : 'bg-slate-400 border-slate-500 left-1'}`} style={isAlarmActive ? {backgroundColor: '#00f0ff'} : {}} />
-               </button>
+               <div className="mt-auto w-full">
+                 <button 
+                    onClick={() => setIsAlarmActive(!isAlarmActive)}
+                    className="w-[60px] h-[24px] bg-slate-800 rounded-full chunky-track relative flex items-center px-1 shrink-0 z-10 cursor-pointer touch-manipulation"
+                 >
+                    <div className={`w-[20px] h-[20px] rounded-full absolute border-b-[3px] transition-all duration-200 ${isAlarmActive ? 'border-[#0099aa] left-[36px]' : 'bg-slate-400 border-slate-500 left-1'}`} style={isAlarmActive ? {backgroundColor: '#00f0ff'} : {}} />
+                 </button>
+               </div>
              </div>
 
-             <div className="col-span-2 flex flex-col gap-2">
-                <div className="flex justify-between items-center bg-[#cfd6e0] p-2 rounded-lg shadow-[inset_1px_1px_5px_rgba(0,0,0,0.1)] h-full">
+             {/* RIGHT SIDE TOP: TOGGLES */}
+             <div className="col-span-2 flex flex-row gap-2">
+                <div className="flex-1 flex justify-between items-center bg-[#cfd6e0] p-2 rounded-lg shadow-[inset_1px_1px_5px_rgba(0,0,0,0.1)] h-full">
                   <span className="text-[6.5px] text-slate-700 uppercase leading-[1.2]">VOL<br/>MUTE</span>
-                  <button onClick={() => setIsMuted(!isMuted)} className={`w-[24px] h-[24px] rounded-md border-b-[4px] active:scale-95 transition-all ${isMuted ? 'bg-[#ff00aa] border-[#990066]' : 'bg-slate-400 border-slate-500'}`} />
+                  <button onClick={() => setIsMuted(!isMuted)} className={`w-[24px] h-[24px] rounded-md border-b-[4px] active:scale-95 cursor-pointer touch-manipulation transition-all ${isMuted ? 'bg-[#ff00aa] border-[#990066]' : 'bg-slate-400 border-slate-500'}`} />
                 </div>
-                <div className="flex justify-between items-center bg-[#cfd6e0] p-2 rounded-lg shadow-[inset_1px_1px_5px_rgba(0,0,0,0.1)] h-full">
+                <div className="flex-1 flex justify-between items-center bg-[#cfd6e0] p-2 rounded-lg shadow-[inset_1px_1px_5px_rgba(0,0,0,0.1)] h-full">
                   <span className="text-[6.5px] text-slate-700 uppercase leading-[1.2]">MOTV<br/>FEED</span>
-                  <button onClick={() => setMotivationState(!motivationState)} className={`w-[24px] h-[24px] rounded-md border-b-[4px] active:scale-95 transition-all ${motivationState ? 'bg-[#39ff14] border-[#1b9900]' : 'bg-slate-400 border-slate-500'}`} />
+                  <button onClick={() => setMotivationState(!motivationState)} className={`w-[24px] h-[24px] rounded-md border-b-[4px] active:scale-95 cursor-pointer touch-manipulation transition-all ${motivationState ? 'bg-[#39ff14] border-[#1b9900]' : 'bg-slate-400 border-slate-500'}`} />
                 </div>
+             </div>
+             
+             {/* RIGHT SIDE BOTTOM: POMODORO QUICK TIMERS */}
+             <div className="col-span-2 flex flex-row gap-2">
+                <button onClick={() => setTimerMinutes(25)} className="flex-1 bg-[#1a202c] border-b-[4px] border-[#0d1218] active:scale-95 rounded-lg flex items-center justify-center p-2 cursor-pointer touch-manipulation transition-all">
+                  <span className="text-[6.5px] text-[#ff00aa] uppercase font-bold text-center">25 MIN<br/>POMO</span>
+                </button>
+                <button onClick={() => setTimerMinutes(15)} className="flex-1 bg-[#1a202c] border-b-[4px] border-[#0d1218] active:scale-95 rounded-lg flex items-center justify-center p-2 cursor-pointer touch-manipulation transition-all">
+                  <span className="text-[6.5px] text-[#00f0ff] uppercase font-bold text-center">15 MIN<br/>NAP</span>
+                </button>
              </div>
           </div>
 
           <div className="w-full flex justify-between gap-4 mt-6 px-2">
-             <button onClick={() => setShowSettings(!showSettings)} className="flex-1 bg-[#1a202c] border-b-[6px] border-[#0d1218] active:scale-95 rounded-xl h-[45px] flex items-center justify-center p-2 group transition-all">
-                <Settings className="w-[18px] h-[18px] text-[#00f0ff] drop-shadow-[0_0_5px_#00f0ff]" strokeWidth={3} />
+             <button onClick={() => setShowSettings(!showSettings)} className="flex-1 bg-[#1a202c] border-b-[6px] border-[#0d1218] active:scale-95 rounded-xl h-[45px] flex items-center justify-center p-2 group cursor-pointer touch-manipulation transition-all">
+                <Settings className="w-[18px] h-[18px] text-[#00f0ff] drop-shadow-[0_0_5px_#00f0ff] pointer-events-none" strokeWidth={3} />
              </button>
-             <button className="flex-1 bg-[#1a202c] border-b-[6px] border-[#0d1218] active:scale-95 rounded-xl h-[45px] flex items-center justify-center p-2 group transition-all">
-                <ListTodo className="w-[18px] h-[18px] text-[#39ff14] drop-shadow-[0_0_5px_#39ff14]" strokeWidth={3} />
+             <button className="flex-1 bg-[#1a202c] border-b-[6px] border-[#0d1218] active:scale-95 rounded-xl h-[45px] flex items-center justify-center p-2 group cursor-pointer touch-manipulation transition-all">
+                <ListTodo className="w-[18px] h-[18px] text-[#39ff14] drop-shadow-[0_0_5px_#39ff14] pointer-events-none" strokeWidth={3} />
              </button>
-             <button onClick={() => setShowLogin(true)} className="flex-1 bg-[#1a202c] border-b-[6px] border-[#0d1218] active:scale-95 rounded-xl h-[45px] flex items-center justify-center p-2 group transition-all">
-                <User className="w-[18px] h-[18px] text-[#ff00aa] drop-shadow-[0_0_5px_#ff00aa]" strokeWidth={3} />
+             <button onClick={() => setShowLogin(true)} className="flex-1 bg-[#1a202c] border-b-[6px] border-[#0d1218] active:scale-95 rounded-xl h-[45px] flex items-center justify-center p-2 group cursor-pointer touch-manipulation transition-all">
+                <User className="w-[18px] h-[18px] text-[#ff00aa] drop-shadow-[0_0_5px_#ff00aa] pointer-events-none" strokeWidth={3} />
              </button>
           </div>
 

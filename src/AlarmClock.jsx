@@ -40,7 +40,7 @@ export default function AlarmClock() {
   const [isMuted, setIsMuted] = useState(false);
   const [motivationState, setMotivationState] = useState(true);
   const [showSettings, setShowSettings] = useState(false);
-  
+  const [isLightOn, setIsLightOn] = useState(false);
   const [phraseIndex, setPhraseIndex] = useState(0);
 
   useEffect(() => {
@@ -90,6 +90,35 @@ export default function AlarmClock() {
     setIsAlarmActive(false);
     window.speechSynthesis.cancel();
     if (activeAudioObj) { activeAudioObj.pause(); activeAudioObj.currentTime = 0; setActiveAudioObj(null); }
+  };
+
+  const handleSnoozeLight = () => {
+    if (isRinging) {
+      stopAlarm();
+    } else {
+      setIsLightOn(true);
+      setTimeout(() => setIsLightOn(false), 2500);
+    }
+  };
+
+  const handleTimePickerChange = (e) => {
+    const val = e.target.value;
+    if (!val) return;
+    const [hStr, mStr] = val.split(':');
+    let h = parseInt(hStr, 10);
+    const ampm = h >= 12 ? 'PM' : 'AM';
+    h = h % 12 || 12;
+    setAlarmHours(h.toString().padStart(2, '0'));
+    setAlarmMinutes(mStr);
+    setAlarmAmPm(ampm);
+    setIsAlarmActive(true);
+  };
+
+  const get24HourString = () => {
+    let h = parseInt(alarmHours, 10);
+    if (alarmAmPm === 'PM' && h !== 12) h += 12;
+    if (alarmAmPm === 'AM' && h === 12) h = 0;
+    return `${h.toString().padStart(2, '0')}:${alarmMinutes}`;
   };
 
   const setTimerMinutes = (minutesAdded) => {
@@ -298,8 +327,8 @@ export default function AlarmClock() {
 
           {/* SNOOZE BAR AT THE TOP (Massive chunky physical button) */}
           <button 
-            onClick={() => isRinging ? stopAlarm() : null}
-            className={`w-full relative h-[70px] bg-[#ff00aa] rounded-[16px] mb-6 flex items-center justify-center border-b-[8px] border-r-[4px] border-[#990066] active:border-b-0 active:border-r-0 active:translate-y-2 active:translate-x-1 outline-none shadow-lg transition-all ${isRinging ? 'animate-pulse bg-[#ff0055]' : ''}`}
+            onClick={handleSnoozeLight}
+            className={`w-full relative h-[70px] bg-[#ff00aa] rounded-[16px] mb-6 flex items-center justify-center border-b-[8px] border-r-[4px] border-[#990066] active:border-b-0 active:border-r-0 active:translate-y-[8px] active:translate-x-[4px] outline-none shadow-lg transition-all ${isRinging ? 'animate-pulse bg-[#ff0055]' : ''} ${isLightOn ? 'bg-[#ff66cc] shadow-[0_0_40px_#ff00aa] border-[#cc0088]' : ''}`}
           >
              <span className="text-[14px] md:text-[16px] text-white drop-shadow-[2px_2px_0px_#000]">
                {isRinging ? 'SLAM TO STOP' : 'SNOOZE / LIGHT'}
@@ -314,9 +343,9 @@ export default function AlarmClock() {
           </button>
 
           {/* LCD SCREEN WINDOW */}
-          <div className="w-full bg-[#0a0f12] rounded-xl border-t-[8px] border-l-[8px] border-[#05080a] border-b-[2px] border-r-[2px] border-[#151f26] shadow-[inset_0_5px_25px_rgba(0,0,0,1)] p-4 relative overflow-hidden flex flex-col">
+          <div className={`w-full bg-[#0a0f12] rounded-xl border-t-[8px] border-l-[8px] border-[#05080a] border-b-[2px] border-r-[2px] border-[#151f26] shadow-[inset_0_5px_25px_rgba(0,0,0,1)] p-4 relative overflow-hidden flex flex-col transition-all duration-300 ${isLightOn ? 'shadow-[0_0_60px_#00f0ff]' : ''}`}>
               
-              <div className="absolute top-0 left-0 w-full h-[30%] bg-gradient-to-b from-white/10 to-transparent pointer-events-none" />
+              <div className={`absolute top-0 left-0 w-full h-[50%] bg-gradient-to-b from-white/10 to-transparent pointer-events-none transition-opacity duration-300 ${isLightOn ? 'from-white/40' : ''}`} />
               
               <div className="flex justify-between items-center w-full px-2 mt-1 z-10">
                  <span className="text-[8px] md:text-[9px] text-[#00f0ff] drop-shadow-[0_0_8px_#00f0ff] uppercase">{displayDateStrFull}</span>
@@ -360,11 +389,22 @@ export default function AlarmClock() {
 
           {/* HARDWARE CONTROL DECK */}
           <div className="w-full mt-6 grid grid-cols-4 gap-3 md:gap-4 px-2">
-             <div className="col-span-2 flex flex-col items-start bg-[#cfd6e0] p-3 rounded-lg shadow-[inset_1px_1px_5px_rgba(0,0,0,0.1)]">
-               <span className="text-[7px] text-slate-700 uppercase mb-3">ALARM SET ({alarmHours}:{alarmMinutes} AM)</span>
+             <div className="col-span-2 flex flex-col items-start bg-[#cfd6e0] p-3 rounded-lg shadow-[inset_1px_1px_5px_rgba(0,0,0,0.1)] relative overflow-hidden">
+               <div className="text-[7.5px] font-bold text-slate-700 uppercase mb-3 flex items-center justify-between w-full pr-1">
+                 <span>ALARM SET: <span className="text-black bg-white/50 px-1 py-0.5 rounded cursor-pointer hover:bg-white transition-colors">{alarmHours}:{alarmMinutes} {alarmAmPm}</span></span>
+               </div>
+               
+               {/* Hidden native time input overlay */}
+               <input 
+                 type="time" 
+                 className="absolute inset-0 opacity-0 cursor-pointer w-full h-1/2" 
+                 onChange={handleTimePickerChange}
+                 value={get24HourString()}
+               />
+
                <button 
                   onClick={() => setIsAlarmActive(!isAlarmActive)}
-                  className="w-[60px] h-[24px] bg-slate-800 rounded-full chunky-track relative flex items-center px-1 shrink-0 cursor-pointer"
+                  className="w-[60px] h-[24px] bg-slate-800 rounded-full chunky-track relative flex items-center px-1 shrink-0 z-10"
                >
                   <div className={`w-[20px] h-[20px] rounded-full absolute border-b-[3px] transition-all duration-200 ${isAlarmActive ? 'border-[#0099aa] left-[36px]' : 'bg-slate-400 border-slate-500 left-1'}`} style={isAlarmActive ? {backgroundColor: '#00f0ff'} : {}} />
                </button>

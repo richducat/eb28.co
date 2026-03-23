@@ -2,15 +2,81 @@ import React, { useState, useEffect } from 'react';
 import { Settings, User, Lock, BellRing, ListTodo } from 'lucide-react';
 
 const ALARM_VOICES = [
-  { id: 'standard', name: 'Classic Beep', type: 'free', icon: '🔔', sample: 'Beep beep beep... time to wake up.', category: 'calm' },
+  { id: 'standard', name: 'Classic Beep', type: 'free', icon: '🔔', sample: 'Standard digital clock piezo buzzer.', category: 'calm' },
   { id: 'zen', name: 'Zen Master', type: 'free', icon: '☯️', sample: 'Breathe in... Breathe out...', category: 'calm' },
-  { id: 'retro', name: 'Retro Synth', type: 'free', icon: '🕹️', sample: 'Synthesizer sounds fading in...', category: 'funny' },
-  { id: 'nuclear', name: 'Nuclear Countdown', type: 'premium', icon: '☢️', sample: 'Warning. Nuclear launch.', category: 'motivational' },
-  { id: 'cyber', name: 'Cyber Strike', type: 'premium', icon: '🚀', sample: 'Cyber strike inbound.', category: 'motivational' },
+  { id: 'retro', name: 'Retro Arcade', type: 'free', icon: '🕹️', sample: '8-bit square wave sequence.', category: 'funny' },
+  { id: 'nuclear', name: 'Nuclear Siren', type: 'premium', icon: '☢️', sample: 'High-frequency klaxon sweep.', category: 'motivational' },
+  { id: 'cyber', name: 'Cyber Laser', type: 'premium', icon: '🚀', sample: 'Sci-fi laser drop synth.', category: 'motivational' },
   { id: 'power', name: 'Power Chord', type: 'premium', icon: '⚡', sample: 'Electric guitar shredding!', category: 'motivational' },
   { id: 'blast', name: 'Blast Radius', type: 'premium', icon: '💣', sample: 'Explosions! Wake up now!', category: 'motivational' },
   { id: 'neon', name: 'Neon Pursuit', type: 'premium', icon: '🕶️', sample: 'Fast paced 80s synthwave.', category: 'motivational' },
 ];
+
+const synthesizeRetroAlarm = (type) => {
+  const AudioContext = window.AudioContext || window.webkitAudioContext;
+  if (!AudioContext) return null;
+  const ctx = new AudioContext();
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+  const now = ctx.currentTime;
+
+  if (type === 'standard') {
+    osc.type = 'square';
+    osc.frequency.setValueAtTime(1200, now);
+    for(let i=0; i<8; i++) {
+       const t = now + (i * 0.25);
+       gain.gain.setValueAtTime(0, t);
+       gain.gain.setValueAtTime(0.5, t + 0.05);
+       gain.gain.setValueAtTime(0, t + 0.15);
+    }
+    osc.start(now);
+    osc.stop(now + 2.0);
+  } else if (type === 'nuclear') {
+    osc.type = 'sawtooth';
+    gain.gain.value = 0.5;
+    osc.frequency.setValueAtTime(300, now);
+    osc.frequency.exponentialRampToValueAtTime(800, now + 1.0);
+    osc.frequency.exponentialRampToValueAtTime(300, now + 2.0);
+    osc.start(now);
+    osc.stop(now + 2.0);
+  } else if (type === 'cyber') {
+    osc.type = 'triangle';
+    gain.gain.value = 0.6;
+    for(let i=0; i<10; i++) {
+       const t = now + (i*0.2);
+       osc.frequency.setValueAtTime(400 + (i*150), t);
+       gain.gain.setValueAtTime(1, t);
+       gain.gain.exponentialRampToValueAtTime(0.01, t + 0.15);
+    }
+    osc.start(now);
+    osc.stop(now + 2.0);
+  } else if (type === 'retro') {
+    osc.type = 'square';
+    for(let i=0; i<4; i++) {
+       const t = now + (i*0.5);
+       osc.frequency.setValueAtTime(440, t);
+       osc.frequency.setValueAtTime(880, t + 0.1);
+       osc.frequency.setValueAtTime(440, t + 0.2);
+       gain.gain.setValueAtTime(0.5, t);
+       gain.gain.linearRampToValueAtTime(0, t + 0.4);
+    }
+    osc.start(now);
+    osc.stop(now + 2.0);
+  } else {
+    try { ctx.close(); } catch(e){}
+    return null; 
+  }
+
+  return {
+    pause: () => {
+      try { osc.stop(); } catch(e){}
+      try { ctx.close(); } catch(e){}
+    }
+  };
+};
 
 const MOTIVATIONAL_PHRASES = [
   "RISE & GRIND!",
@@ -147,8 +213,15 @@ export default function AlarmClock() {
       return;
     }
     
+    // Synthesize Retro Sounds dynamically
+    const syntheticObj = synthesizeRetroAlarm(voiceId);
+    if (syntheticObj) {
+      setActiveAudioObj(syntheticObj);
+      return;
+    }
+
     // Hardcoded special cases
-    if (voiceId === 'nuclear') {
+    if (voiceId === 'nuclear_file') {
       const audio = new Audio('/tacnuke.mp3');
       audio.loop = true;
       audio.play().catch(err => console.error('Tacnuke play failed', err));

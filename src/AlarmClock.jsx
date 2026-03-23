@@ -433,26 +433,44 @@ export default function AlarmClock() {
              </div>
 
              {/* RIGHT SIDE TOP: TOGGLES */}
-             <div className="col-span-2 flex flex-row gap-2">
-                <div className="flex-1 flex justify-between items-center bg-[#cfd6e0] p-2 rounded-lg shadow-[inset_1px_1px_5px_rgba(0,0,0,0.1)] h-full">
-                  <span className="text-[6.5px] text-slate-700 uppercase leading-[1.2]">VOL<br/>MUTE</span>
-                  <button onClick={() => setIsMuted(!isMuted)} className={`w-[24px] h-[24px] rounded-md border-b-[4px] active:scale-95 cursor-pointer touch-manipulation transition-all ${isMuted ? 'bg-[#ff00aa] border-[#990066]' : 'bg-slate-400 border-slate-500'}`} />
+             <div className="col-span-2 flex flex-row gap-2 h-full">
+                <div className="flex-1 flex flex-col justify-between items-center bg-[#cfd6e0] p-2 py-3 rounded-lg shadow-[inset_1px_1px_5px_rgba(0,0,0,0.1)] h-full">
+                  <span className="text-[6.5px] text-slate-700 uppercase leading-[1.2] text-center mb-2">VOL<br/>MUTE</span>
+                  <button onClick={() => setIsMuted(!isMuted)} className={`w-[24px] h-[24px] rounded-md border-b-[4px] active:scale-95 cursor-pointer touch-manipulation transition-transform ${isMuted ? 'bg-[#ff00aa] border-[#990066]' : 'bg-slate-400 border-slate-500'}`} />
                 </div>
-                <div className="flex-1 flex justify-between items-center bg-[#cfd6e0] p-2 rounded-lg shadow-[inset_1px_1px_5px_rgba(0,0,0,0.1)] h-full">
-                  <span className="text-[6.5px] text-slate-700 uppercase leading-[1.2]">MOTV<br/>FEED</span>
-                  <button onClick={() => setMotivationState(!motivationState)} className={`w-[24px] h-[24px] rounded-md border-b-[4px] active:scale-95 cursor-pointer touch-manipulation transition-all ${motivationState ? 'bg-[#39ff14] border-[#1b9900]' : 'bg-slate-400 border-slate-500'}`} />
+                <div className="flex-1 flex flex-col justify-between items-center bg-[#cfd6e0] p-2 py-3 rounded-lg shadow-[inset_1px_1px_5px_rgba(0,0,0,0.1)] h-full">
+                  <span className="text-[6.5px] text-slate-700 uppercase leading-[1.2] text-center mb-2">MOTV<br/>FEED</span>
+                  <button onClick={() => setMotivationState(!motivationState)} className={`w-[24px] h-[24px] rounded-md border-b-[4px] active:scale-95 cursor-pointer touch-manipulation transition-transform ${motivationState ? 'bg-[#39ff14] border-[#1b9900]' : 'bg-slate-400 border-slate-500'}`} />
                 </div>
              </div>
+          </div>
+
+          {/* DEDICATED QUICK TIMERS HARDWARE ROW */}
+          <div className="w-full px-2 mt-5 flex gap-3">
+             <button 
+                onClick={() => setTimerMinutes(25)} 
+                className="flex-[2] relative h-[50px] bg-[#00f0ff] rounded-[12px] flex items-center justify-center border-b-[6px] border-r-[3px] border-[#0099aa] active:scale-[0.98] outline-none shadow-md cursor-pointer touch-manipulation transition-transform hover:brightness-110"
+             >
+                <span className="text-[10px] md:text-[11.5px] text-black uppercase font-black drop-shadow-[1px_1px_0px_rgba(255,255,255,0.8)] tracking-wide">
+                  POMODORO (25M)
+                </span>
+                {/* Hardware texture detailing */}
+                <div className="absolute left-3 top-1/2 -translate-y-1/2 flex flex-col gap-[3px] opacity-40">
+                   <div className="w-[6px] h-[2px] bg-black" /><div className="w-[6px] h-[2px] bg-black" />
+                </div>
+             </button>
              
-             {/* RIGHT SIDE BOTTOM: POMODORO QUICK TIMERS */}
-             <div className="col-span-2 flex flex-row gap-2">
-                <button onClick={() => setTimerMinutes(25)} className="flex-1 bg-[#1a202c] border-b-[4px] border-[#0d1218] active:scale-95 rounded-lg flex items-center justify-center p-2 cursor-pointer touch-manipulation transition-all">
-                  <span className="text-[6.5px] text-[#ff00aa] uppercase font-bold text-center">25 MIN<br/>POMO</span>
-                </button>
-                <button onClick={() => setTimerMinutes(15)} className="flex-1 bg-[#1a202c] border-b-[4px] border-[#0d1218] active:scale-95 rounded-lg flex items-center justify-center p-2 cursor-pointer touch-manipulation transition-all">
-                  <span className="text-[6.5px] text-[#00f0ff] uppercase font-bold text-center">15 MIN<br/>NAP</span>
-                </button>
-             </div>
+             <button 
+                onClick={() => setTimerMinutes(15)} 
+                className="flex-1 relative h-[50px] bg-[#39ff14] rounded-[12px] flex flex-col items-center justify-center border-b-[6px] border-r-[3px] border-[#1b9900] active:scale-[0.98] outline-none shadow-md cursor-pointer touch-manipulation transition-transform hover:brightness-110"
+             >
+                <span className="text-[9px] text-black uppercase font-black drop-shadow-[1px_1px_0px_rgba(255,255,255,0.8)] tracking-wide">
+                  NAP
+                </span>
+                <span className="text-[6px] text-[#0d3300] font-bold mt-1 tracking-widest">
+                  15 MIN
+                </span>
+             </button>
           </div>
 
           <div className="w-full flex justify-between gap-4 mt-6 px-2">

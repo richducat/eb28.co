@@ -340,10 +340,10 @@ export default function AlarmClock() {
                {isRinging ? 'SLAM TO STOP' : 'SNOOZE / LIGHT'}
              </span>
              {/* Small ribbed texture lines for the snooze button */}
-             <div className="absolute left-4 top-1/2 -translate-y-1/2 flex flex-col gap-1">
+             <div className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 flex flex-col gap-1">
                <div className="w-[10px] h-[2px] bg-black/20" /><div className="w-[10px] h-[2px] bg-black/20" /><div className="w-[10px] h-[2px] bg-black/20" />
              </div>
-             <div className="absolute right-4 top-1/2 -translate-y-1/2 flex flex-col gap-1">
+             <div className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 flex flex-col gap-1">
                <div className="w-[10px] h-[2px] bg-black/20" /><div className="w-[10px] h-[2px] bg-black/20" /><div className="w-[10px] h-[2px] bg-black/20" />
              </div>
           </button>
@@ -367,13 +367,13 @@ export default function AlarmClock() {
                  <div className="text-center flex items-center justify-center -ml-2" 
                       style={{
                         fontFamily: '"Digital-7", monospace',
-                        fontSize: 'clamp(5rem, 24vw, 7.5rem)', 
+                        fontSize: 'clamp(4.5rem, 21vw, 7.5rem)', 
                         lineHeight: '0.8',
-                        color: isAlarmActive ? '#ff00aa' : '#550033',
-                        textShadow: isAlarmActive ? `0 0 15px #ff00aa, 0 0 30px #ff00aa` : 'none',
-                        WebkitTextStroke: isAlarmActive ? `4px #ff00aa` : '2px #550033', 
+                        color: isAlarmActive ? '#ffb3e6' : '#550033',
+                        textShadow: isAlarmActive ? `0 0 10px #ff00aa, 0 0 20px #ff00aa, 0 0 35px #ff00aa` : 'none',
+                        WebkitTextStroke: isAlarmActive ? `0.5px #ff00aa` : '1px #33001a', 
                         fontStyle: 'italic',
-                        letterSpacing: '-0.02em'
+                        letterSpacing: '-0.01em'
                       }}>
                    {displayData.mainString.split(':')[0]}
                    <span className={`opacity-90 -mx-1 md:-mx-2 mb-[10%] ${countdownTarget ? '' : 'animate-pulse'}`}>:</span>
@@ -400,12 +400,17 @@ export default function AlarmClock() {
           {/* HARDWARE CONTROL DECK */}
           <div className="w-full mt-6 grid grid-cols-4 gap-3 md:gap-4 px-2">
              {/* LEFT SIDE: ALARM TIME */}
-             <div className="col-span-2 row-span-2 flex flex-col items-start bg-[#cfd6e0] p-3 rounded-lg shadow-[inset_1px_1px_5px_rgba(0,0,0,0.1)] relative overflow-hidden">
-               <div className="text-[7px] font-bold text-slate-700 uppercase mb-3 flex items-center justify-between w-full pr-1">
+             <div className="col-span-2 row-span-2 flex flex-col items-start bg-[#cfd6e0] px-2 py-3 rounded-lg shadow-[inset_1px_1px_5px_rgba(0,0,0,0.1)] relative overflow-hidden">
+               <div className="text-[6.5px] md:text-[7px] font-bold text-slate-700 uppercase mb-2 flex flex-col gap-1 w-full">
                  {countdownTarget ? (
-                   <span className="text-[#ff00aa]">COUNTDOWN ACTIVE</span>
+                   <span className="text-[#ff00aa] text-center leading-tight py-1">COUNTDOWN<br/>ACTIVE</span>
                  ) : (
-                   <span>ALARM SET: <span className="text-black bg-white/50 px-1 py-0.5 rounded cursor-pointer touch-manipulation hover:bg-white transition-colors">{alarmHours}:{alarmMinutes} {alarmAmPm}</span></span>
+                   <>
+                     <span>ALARM SET:</span>
+                     <span className="text-black bg-white/50 px-1.5 py-0.5 rounded cursor-pointer touch-manipulation hover:bg-white transition-colors self-start shadow-sm border border-white/60">
+                       {alarmHours}:{alarmMinutes} {alarmAmPm}
+                     </span>
+                   </>
                  )}
                </div>
                
@@ -434,13 +439,13 @@ export default function AlarmClock() {
 
              {/* RIGHT SIDE TOP: TOGGLES */}
              <div className="col-span-2 flex flex-row gap-2 h-full">
-                <div className="flex-1 flex flex-col justify-between items-center bg-[#cfd6e0] p-2 py-3 rounded-lg shadow-[inset_1px_1px_5px_rgba(0,0,0,0.1)] h-full">
-                  <span className="text-[6.5px] text-slate-700 uppercase leading-[1.2] text-center mb-2">VOL<br/>MUTE</span>
-                  <button onClick={() => setIsMuted(!isMuted)} className={`w-[24px] h-[24px] rounded-md border-b-[4px] active:scale-95 cursor-pointer touch-manipulation transition-transform ${isMuted ? 'bg-[#ff00aa] border-[#990066]' : 'bg-slate-400 border-slate-500'}`} />
+                <div className="flex-1 flex flex-col justify-evenly items-center bg-[#cfd6e0] p-2 py-3 rounded-lg shadow-[inset_1px_1px_5px_rgba(0,0,0,0.1)] h-full">
+                  <span className="text-[5.5px] md:text-[6px] text-slate-700 uppercase leading-[1.2] text-center font-bold">VOL<br/>MUTE</span>
+                  <button onClick={() => setIsMuted(!isMuted)} className={`w-[22px] h-[22px] rounded-md border-b-[3px] active:scale-95 cursor-pointer touch-manipulation transition-transform mt-1 shadow-sm ${isMuted ? 'bg-[#ff00aa] border-[#990066]' : 'bg-slate-400 border-slate-500'}`} />
                 </div>
-                <div className="flex-1 flex flex-col justify-between items-center bg-[#cfd6e0] p-2 py-3 rounded-lg shadow-[inset_1px_1px_5px_rgba(0,0,0,0.1)] h-full">
-                  <span className="text-[6.5px] text-slate-700 uppercase leading-[1.2] text-center mb-2">MOTV<br/>FEED</span>
-                  <button onClick={() => setMotivationState(!motivationState)} className={`w-[24px] h-[24px] rounded-md border-b-[4px] active:scale-95 cursor-pointer touch-manipulation transition-transform ${motivationState ? 'bg-[#39ff14] border-[#1b9900]' : 'bg-slate-400 border-slate-500'}`} />
+                <div className="flex-1 flex flex-col justify-evenly items-center bg-[#cfd6e0] p-2 py-3 rounded-lg shadow-[inset_1px_1px_5px_rgba(0,0,0,0.1)] h-full">
+                  <span className="text-[5.5px] md:text-[6px] text-slate-700 uppercase leading-[1.2] text-center font-bold">MOTV<br/>FEED</span>
+                  <button onClick={() => setMotivationState(!motivationState)} className={`w-[22px] h-[22px] rounded-md border-b-[3px] active:scale-95 cursor-pointer touch-manipulation transition-transform mt-1 shadow-sm ${motivationState ? 'bg-[#39ff14] border-[#1b9900]' : 'bg-slate-400 border-slate-500'}`} />
                 </div>
              </div>
           </div>

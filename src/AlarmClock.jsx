@@ -951,32 +951,50 @@ export default function AlarmClock() {
                 </button>
               </div>
 
-              <div className="mt-2 text-[10px] leading-relaxed text-[#00f0ff] drop-shadow-[0_0_5px_#00f0ff] font-['Space_Grotesk'] uppercase mb-3 pr-2 max-h-[60px] overflow-y-auto custom-scrollbar border-l-[3px] border-[#ff00aa] pl-2">
-                 "{currentHabit.morningMindset}"
-              </div>
+              {!isHabitCompletedToday ? (
+                 <>
+                    <div className="mt-2 text-[10px] leading-relaxed text-[#00f0ff] drop-shadow-[0_0_5px_#00f0ff] font-['Space_Grotesk'] uppercase mb-3 pr-2 max-h-[60px] overflow-y-auto custom-scrollbar border-l-[3px] border-[#ff00aa] pl-2">
+                       "{currentHabit.morningMindset}"
+                    </div>
 
-              <div className="text-[10px] leading-relaxed text-[#00f0ff] drop-shadow-[0_0_5px_#00f0ff] font-['Space_Grotesk'] uppercase mb-3 border-t border-[#334654] pt-2">
-                 <span className="text-[#ff00aa] font-black tracking-widest text-[7px] block mb-1">MISSION DIRECTIVE:</span>
-                 {isHabitCompletedToday ? currentHabit.eveningWindDown : currentHabit.actionTip}
-              </div>
+                    <div className="text-[10px] leading-relaxed text-[#00f0ff] drop-shadow-[0_0_5px_#00f0ff] font-['Space_Grotesk'] uppercase mb-3 border-t border-[#334654] pt-2">
+                       <span className="text-[#ff00aa] font-black tracking-widest text-[7px] block mb-1">MISSION DIRECTIVE:</span>
+                       {currentHabit.actionTip}
+                    </div>
 
-              <div className="flex justify-between items-center w-full mt-1 border-t border-[#334654] pt-2">
-                 <span className={`text-[7px] font-['Press_Start_2P'] uppercase tracking-tighter ${isHabitCompletedToday ? 'text-[#39ff14] drop-shadow-[0_0_5px_#39ff14]' : 'text-[#ff00aa] drop-shadow-[0_0_5px_#ff00aa]'}`}>
-                   {isHabitCompletedToday ? 'SYNC: COMPLETE' : 'MISSION: PENDING'}
-                 </span>
-                 <button 
-                    onClick={() => {
-                       initAudioContext();
-                       if (!isHabitCompletedToday) completeHabitForToday();
-                       else setHabitState(prev => ({...prev, completedDate: null}));
-                    }}
-                    className={`w-[45px] h-[18px] rounded flex items-center justify-center border-[2px] cursor-pointer touch-manipulation active:scale-[0.9] transition-transform ${isHabitCompletedToday ? 'bg-slate-800 border-slate-700 active:bg-slate-700' : 'bg-[#00f0ff] border-[#0099aa] shadow-[0_0_10px_#00f0ff] hover:brightness-110'}`}
-                 >
-                    <span className={`text-[7px] font-black uppercase ${isHabitCompletedToday ? 'text-slate-500' : 'text-black'}`}>
-                      {isHabitCompletedToday ? 'UNDO' : 'DONE'}
-                    </span>
-                 </button>
-              </div>
+                    <div className="flex justify-between items-center w-full mt-1 border-t border-[#334654] pt-2">
+                       <span className="text-[7px] font-['Press_Start_2P'] uppercase tracking-tighter text-[#ff00aa] drop-shadow-[0_0_5px_#ff00aa]">
+                         MISSION: PENDING
+                       </span>
+                       <button 
+                          onClick={() => {
+                             initAudioContext();
+                             completeHabitForToday();
+                          }}
+                          className="w-[45px] h-[18px] rounded flex items-center justify-center border-[2px] cursor-pointer touch-manipulation active:scale-[0.9] transition-transform bg-[#00f0ff] border-[#0099aa] shadow-[0_0_10px_#00f0ff] hover:brightness-110"
+                       >
+                          <span className="text-[7px] font-black uppercase text-black">
+                            DONE
+                          </span>
+                       </button>
+                    </div>
+                 </>
+              ) : (
+                 <div className="mt-4 flex justify-between items-center w-full bg-[#0a120e] border border-[#39ff14]/40 rounded-lg p-3 shadow-[0_0_15px_rgba(57,255,20,0.1)]">
+                    <div className="flex items-center gap-3">
+                       <div className="w-1.5 h-1.5 rounded-full bg-[#39ff14] animate-pulse shadow-[0_0_8px_#39ff14]" />
+                       <span className="text-[#39ff14] text-[8px] font-black uppercase tracking-widest drop-shadow-[0_0_5px_#39ff14]">
+                          DAY {habitState.currentDay} COMPLETE
+                       </span>
+                    </div>
+                    <button 
+                       onClick={() => setHabitState(prev => ({...prev, completedDate: null}))}
+                       className="text-[6px] text-slate-500 font-['Press_Start_2P'] uppercase tracking-tighter hover:text-slate-300 active:scale-95 cursor-pointer touch-manipulation"
+                    >
+                       [UNDO]
+                    </button>
+                 </div>
+              )}
             </div>
           </div>
 

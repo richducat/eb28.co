@@ -2,8 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 
 // iOS Background Persistence & Native Lock Screen Widget Enablers
 let wakeLock = null;
-const SILENT_AUDIO_URI = 'data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA';
-let silentAudioRef = null;
+let silentOscillator = null;
 import { Settings, User, Lock, BellRing, ListTodo } from 'lucide-react';
 import habitSteps from './data/67steps.json';
 
@@ -184,12 +183,18 @@ export default function AlarmClock() {
           try { wakeLock = await navigator.wakeLock.request('screen'); } catch (err) {}
         }
 
-        if (!silentAudioRef) {
-          silentAudioRef = new Audio(SILENT_AUDIO_URI);
-          silentAudioRef.loop = true;
-          silentAudioRef.volume = 1;
+        // Initialize persistent background Web Audio thread
+        initAudioContext();
+        if (!silentOscillator && globalAudioCtx) {
+          try {
+            silentOscillator = globalAudioCtx.createOscillator();
+            const gainNode = globalAudioCtx.createGain();
+            gainNode.gain.value = 0.0001; // Near silent to prevent optimization pruning
+            silentOscillator.connect(gainNode);
+            gainNode.connect(globalAudioCtx.destination);
+            silentOscillator.start();
+          } catch(e) { console.log('Oscillator bg thread failed', e); }
         }
-        silentAudioRef.play().catch(e => console.log('Silent bg audio blocked:', e));
 
         if ('mediaSession' in navigator) {
           navigator.mediaSession.metadata = new MediaMetadata({
@@ -205,7 +210,10 @@ export default function AlarmClock() {
         }
       } else {
         if (wakeLock) { await wakeLock.release().catch(console.error); wakeLock = null; }
-        if (silentAudioRef) { silentAudioRef.pause(); }
+        if (silentOscillator) {
+          try { silentOscillator.stop(); silentOscillator.disconnect(); } catch(e) {}
+          silentOscillator = null;
+        }
         if ('mediaSession' in navigator) { navigator.mediaSession.metadata = null; }
       }
     };
@@ -683,24 +691,35 @@ export default function AlarmClock() {
 
           {/* QUICK ALARM PRESETS */}
           <div className="w-full px-2 mt-3 grid grid-cols-3 gap-2">
-             {[5, 6, 7].map(hour => (
-               <button 
-                 key={hour}
-                 onClick={() => {
-                   initAudioContext();
-                   setAlarmHours(hour.toString().padStart(2, '0'));
-                   setAlarmMinutes('00');
-                   setAlarmAmPm('AM');
-                   setIsAlarmActive(true);
-                   setCountdownTarget(null);
-                 }}
-                 className="relative h-[36px] bg-[#cfd6e0] rounded-[8px] flex items-center justify-center border-b-[4px] border-r-[2px] border-[#8a96a8] active:scale-[0.98] outline-none shadow-[inset_1px_1px_3px_rgba(255,255,255,0.8)] cursor-pointer touch-manipulation transition-transform hover:brightness-105"
-               >
-                 <span className="text-[9px] md:text-[10px] text-slate-800 uppercase font-black tracking-widest text-shadow-sm">
-                   {hour}:00 AM
-                 </span>
-               </button>
-             ))}
+             {[5, 6, 7].map(hour => {
+               const isActivePreset = isAlarmActive && !countdownTarget && alarmHours === hour.toString().padStart(2, '0') && alarmMinutes === '00' && alarmAmPm === 'AM';
+               return (
+                 <button 
+                   key={hour}
+                   onClick={() => {
+                     initAudioContext();
+                     setAlarmHours(hour.toString().padStart(2, '0'));
+                     setAlarmMinutes('00');
+                     setAlarmAmPm('AM');
+                     setIsAlarmActive(true);
+                     setCountdownTarget(null);
+                   }}
+                   className={`relative h-[36px] rounded-[8px] flex items-center justify-center border-b-[4px] border-r-[2px] active:scale-[0.98] outline-none cursor-pointer touch-manipulation transition-all ${
+                     isActivePreset 
+                       ? 'bg-[#00f0ff] border-[#0099aa] shadow-[0_0_10px_#00f0ff,inset_1px_1px_3px_rgba(255,255,255,0.8)]' 
+                       : 'bg-[#cfd6e0] border-[#8a96a8] shadow-[inset_1px_1px_3px_rgba(255,255,255,0.8)] hover:brightness-105'
+                   }`}
+                 >
+                   <span className={`text-[9px] md:text-[10px] uppercase font-black tracking-widest text-shadow-sm transition-colors ${
+                     isActivePreset ? 'text-black drop-shadow-[1px_1px_0px_rgba(255,255,255,0.8)]' : 'text-slate-800'
+                   }`}>
+                     {hour}:00 AM
+                   </span>
+                   {/* Hardware active LED indicator */}
+                   <div className={`absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full border border-black/20 ${isActivePreset ? 'bg-[#ff00aa] shadow-[0_0_5px_#ff00aa]' : 'bg-black/20'}`} />
+                 </button>
+               );
+             })}
           </div>
 
           {/* HABIT MASTERY PROGRESS HUD */}

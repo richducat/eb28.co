@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Settings, User, Lock, BellRing, ListTodo } from 'lucide-react';
+import habitSteps from './data/67steps.json';
 
 const ALARM_VOICES = [
   { id: 'standard', name: 'Classic Beep', type: 'free', icon: '🔔', sample: 'Standard digital clock piezo buzzer.', category: 'calm' },
@@ -106,6 +107,38 @@ export default function AlarmClock() {
   const [isLightOn, setIsLightOn] = useState(false);
   const [phraseIndex, setPhraseIndex] = useState(0);
 
+  const [habitState, setHabitState] = useState(() => {
+    try {
+      const saved = localStorage.getItem('eb28_habit_mastery');
+      return saved ? JSON.parse(saved) : { currentDay: 1, completedDate: null };
+    } catch(e) { return { currentDay: 1, completedDate: null }; }
+  });
+  const [showHabitModal, setShowHabitModal] = useState(false);
+
+  useEffect(() => {
+    localStorage.setItem('eb28_habit_mastery', JSON.stringify(habitState));
+  }, [habitState]);
+
+  const currentHabit = habitSteps.find(h => h.day === habitState.currentDay) || habitSteps[0];
+  const isHabitCompletedToday = habitState.completedDate === new Date().toLocaleDateString('en-US');
+
+  const completeHabitForToday = () => {
+    setHabitState(prev => ({
+      ...prev,
+      completedDate: new Date().toLocaleDateString('en-US')
+    }));
+  };
+
+  useEffect(() => {
+    const todayStr = new Date().toLocaleDateString('en-US');
+    if (habitState.completedDate && habitState.completedDate !== todayStr) {
+      setHabitState(prev => ({
+        currentDay: Math.min(prev.currentDay + 1, 67),
+        completedDate: null
+      }));
+    }
+  }, [time]);
+
   useEffect(() => {
     try {
       const savedAudio = localStorage.getItem('eb28_custom_audio');
@@ -162,6 +195,11 @@ export default function AlarmClock() {
     setIsAlarmActive(false);
     window.speechSynthesis.cancel();
     if (activeAudioObj) { activeAudioObj.pause(); activeAudioObj.currentTime = 0; setActiveAudioObj(null); }
+    
+    // Trigger Habit Mastery Morning Intercept if it hasn't been completed today!
+    if (!isHabitCompletedToday) {
+       setShowHabitModal(true);
+    }
   };
 
   const handleSnoozeLight = () => {
@@ -336,6 +374,16 @@ export default function AlarmClock() {
              transparent 0%, transparent 8%,
              #000b12 8%, #000b12 12%
            );
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: rgba(0,0,0,0.3);
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: #39ff14;
+          border-radius: 10px;
         }
       `}</style>
 
@@ -551,6 +599,34 @@ export default function AlarmClock() {
              </button>
           </div>
 
+          {/* HABIT MASTERY PROGRESS HUD */}
+          <div className="w-full mt-5 px-2">
+            <div className="bg-[#1a252d] border-[3px] border-[#0a0f12] rounded-xl p-3 pb-2 shadow-[inset_0_3px_15px_rgba(0,0,0,0.8)] relative flex flex-col justify-between min-h-[90px]">
+              <span className="absolute -top-3 left-4 bg-[#e0e5ec] text-[#000] text-[8px] font-black px-2 py-0.5 border-[2px] border-[#1a252d] uppercase drop-shadow-md">
+                 HABIT MASTERY: DAY {habitState.currentDay}
+              </span>
+              <div className="mt-2 text-[10px] leading-relaxed text-[#00f0ff] drop-shadow-[0_0_5px_#00f0ff] font-['Space_Grotesk'] uppercase mb-3">
+                 {isHabitCompletedToday ? currentHabit.eveningWindDown : currentHabit.actionTip}
+              </div>
+              <div className="flex justify-between items-center w-full mt-auto border-t border-[#334654] pt-2">
+                 <span className={`text-[7px] font-['Press_Start_2P'] uppercase tracking-tighter ${isHabitCompletedToday ? 'text-[#39ff14] drop-shadow-[0_0_5px_#39ff14]' : 'text-[#ff00aa] drop-shadow-[0_0_5px_#ff00aa]'}`}>
+                   {isHabitCompletedToday ? 'SYNC: COMPLETE' : 'MISSION: PENDING'}
+                 </span>
+                 <button 
+                    onClick={() => {
+                       if (!isHabitCompletedToday) completeHabitForToday();
+                       else setHabitState(prev => ({...prev, completedDate: null}));
+                    }}
+                    className={`w-[45px] h-[18px] rounded flex items-center justify-center border-[2px] cursor-pointer touch-manipulation active:scale-[0.9] transition-transform ${isHabitCompletedToday ? 'bg-slate-800 border-slate-700 active:bg-slate-700' : 'bg-[#00f0ff] border-[#0099aa] shadow-[0_0_10px_#00f0ff] hover:brightness-110'}`}
+                 >
+                    <span className={`text-[7px] font-black uppercase ${isHabitCompletedToday ? 'text-slate-500' : 'text-black'}`}>
+                      {isHabitCompletedToday ? 'UNDO' : 'DONE'}
+                    </span>
+                 </button>
+              </div>
+            </div>
+          </div>
+
           <div className="w-full flex justify-between gap-4 mt-6 px-2">
              <button onClick={() => setShowSettings(!showSettings)} className="flex-1 bg-[#1a202c] border-b-[6px] border-[#0d1218] active:scale-95 rounded-xl h-[45px] flex items-center justify-center p-2 group cursor-pointer touch-manipulation transition-all">
                 <Settings className="w-[18px] h-[18px] text-[#00f0ff] drop-shadow-[0_0_5px_#00f0ff] pointer-events-none" strokeWidth={3} />
@@ -589,6 +665,44 @@ export default function AlarmClock() {
                    </button>
                  ))}
                </div>
+             </div>
+          </div>
+        )}
+
+        {/* MORNING MINDSET INTERCEPTION MODAL */}
+        {showHabitModal && (
+          <div className="absolute inset-0 z-[100] flex flex-col justify-center items-center bg-[#05080a]/95 backdrop-blur-md p-6 animate-fade-in text-center px-4 md:px-0">
+             <div className="w-full max-w-sm border-[3px] border-[#39ff14] shadow-[0_0_50px_rgba(57,255,20,0.3)] bg-gradient-to-b from-[#0a120e] to-[#040806] rounded-3xl p-6 relative flex flex-col overflow-hidden">
+                <div className="absolute -top-[1px] left-1/2 -translate-x-1/2 w-24 h-1.5 bg-[#39ff14] shadow-[0_2px_15px_#39ff14]" />
+                
+                <h1 className="text-[#39ff14] font-['Space_Grotesk'] text-5xl uppercase font-black tracking-tighter mb-1 mt-2 drop-shadow-[0_2px_10px_#39ff14]">
+                  DAY {currentHabit.day}
+                </h1>
+                <h2 className="text-[#00f0ff] text-[11px] tracking-widest uppercase leading-snug drop-shadow-[0_0_8px_#00f0ff]">
+                  {currentHabit.title}
+                </h2>
+                
+                <div className="text-slate-200 mt-6 font-['Inter'] text-[14px] leading-relaxed text-left max-h-[35vh] overflow-y-auto overflow-x-hidden pr-3 custom-scrollbar">
+                   {currentHabit.morningMindset}
+                </div>
+
+                <div className="mt-8 border-t border-[#39ff14]/30 pt-6">
+                   <div className="w-full flex justify-center mb-4">
+                      <span className="text-[#39ff14] text-[9px] font-black tracking-[0.3em] uppercase bg-[#14301a] px-4 py-1.5 rounded-full border border-[#39ff14]/50 shadow-[0_0_10px_rgba(57,255,20,0.2)]">
+                        MISSION BRIEFING
+                      </span>
+                   </div>
+                   <p className="text-white font-['Space_Grotesk'] text-[15px] font-bold tracking-tight leading-snug text-left">
+                     {currentHabit.actionTip}
+                   </p>
+                </div>
+
+                <button 
+                  onClick={() => setShowHabitModal(false)}
+                  className="mt-8 w-full bg-[#39ff14] text-black font-black uppercase text-sm tracking-widest py-4 rounded-xl border-b-[6px] border-[#1b9900] active:translate-y-1 active:border-b-0 transition-transform shadow-[0_5px_20px_rgba(57,255,20,0.3)] cursor-pointer touch-manipulation hover:brightness-110"
+                >
+                  ACKNOWLEDGE
+                </button>
              </div>
           </div>
         )}

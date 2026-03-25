@@ -2,7 +2,36 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 
 // iOS Background Persistence & Native Lock Screen Widget Enablers
 let wakeLock = null;
-let silentOscillator = null;
+const silentAudioElement = new Audio('/silence.mp3');
+silentAudioElement.loop = true;
+
+const armBackgroundEngine = async (titleStr) => {
+  initAudioContext();
+  try { silentAudioElement.play().catch(e => console.log('Silent bg blocked:', e)); } catch(e){}
+  
+  if ('Notification' in window && Notification.permission !== 'granted' && Notification.permission !== 'denied') {
+    try { Notification.requestPermission(); } catch(e){}
+  }
+  if ('wakeLock' in navigator && !wakeLock) {
+    try { wakeLock = await navigator.wakeLock.request('screen'); } catch (err) {}
+  }
+  if ('mediaSession' in navigator) {
+    navigator.mediaSession.metadata = new MediaMetadata({
+      title: `WAKE UP YA BISH ALARM`,
+      artist: titleStr,
+      album: 'Habit Mastery Protocol',
+      artwork: [{ src: 'https://wakeupyabish.com/apple-touch-icon.png', sizes: '180x180', type: 'image/png' }]
+    });
+    navigator.mediaSession.setActionHandler('play', () => {});
+    navigator.mediaSession.setActionHandler('pause', () => {});
+  }
+};
+
+const disarmBackgroundEngine = async () => {
+  try { silentAudioElement.pause(); } catch(e){}
+  if (wakeLock) { await wakeLock.release().catch(console.error); wakeLock = null; }
+  if ('mediaSession' in navigator) navigator.mediaSession.metadata = null;
+};
 import { Settings, User, Lock, BellRing, ListTodo } from 'lucide-react';
 import habitSteps from './data/67steps.json';
 
@@ -171,63 +200,7 @@ export default function AlarmClock() {
     };
   }, []);
 
-  // iOS Background Execution & Live Lock Screen Widget Thread
-  useEffect(() => {
-    if ('Notification' in window && Notification.permission !== 'granted' && Notification.permission !== 'denied') {
-      Notification.requestPermission();
-    }
 
-    const manageBackgroundState = async () => {
-      if (isAlarmActive && !isRinging) {
-        if ('wakeLock' in navigator && !wakeLock) {
-          try { wakeLock = await navigator.wakeLock.request('screen'); } catch (err) {}
-        }
-
-        // Initialize persistent background Web Audio thread
-        initAudioContext();
-        if (!silentOscillator && globalAudioCtx) {
-          try {
-            silentOscillator = globalAudioCtx.createOscillator();
-            const gainNode = globalAudioCtx.createGain();
-            gainNode.gain.value = 0.0001; // Near silent to prevent optimization pruning
-            silentOscillator.connect(gainNode);
-            gainNode.connect(globalAudioCtx.destination);
-            silentOscillator.start();
-          } catch(e) { console.log('Oscillator bg thread failed', e); }
-        }
-
-        if ('mediaSession' in navigator) {
-          navigator.mediaSession.metadata = new MediaMetadata({
-            title: `WAKE UP YA BISH ALARM`,
-            artist: countdownTarget ? 'Active Timer' : `Set for ${alarmHours}:${alarmMinutes} ${alarmAmPm}`,
-            album: 'Habit Mastery Protocol',
-            artwork: [
-              { src: 'https://wakeupyabish.com/apple-touch-icon.png', sizes: '180x180', type: 'image/png' }
-            ]
-          });
-          navigator.mediaSession.setActionHandler('play', () => {});
-          navigator.mediaSession.setActionHandler('pause', () => {});
-        }
-      } else {
-        if (wakeLock) { await wakeLock.release().catch(console.error); wakeLock = null; }
-        if (silentOscillator) {
-          try { silentOscillator.stop(); silentOscillator.disconnect(); } catch(e) {}
-          silentOscillator = null;
-        }
-        if ('mediaSession' in navigator) { navigator.mediaSession.metadata = null; }
-      }
-    };
-
-    manageBackgroundState();
-
-    const handleVisibility = async () => {
-      if (document.visibilityState === 'visible' && isAlarmActive && !isRinging && 'wakeLock' in navigator && wakeLock === null) {
-        try { wakeLock = await navigator.wakeLock.request('screen'); } catch (err) {}
-      }
-    };
-    document.addEventListener('visibilitychange', handleVisibility);
-    return () => document.removeEventListener('visibilitychange', handleVisibility);
-  }, [isAlarmActive, alarmHours, alarmMinutes, alarmAmPm, countdownTarget, isRinging]);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -308,10 +281,12 @@ export default function AlarmClock() {
     let h = parseInt(hStr, 10);
     const ampm = h >= 12 ? 'PM' : 'AM';
     h = h % 12 || 12;
-    setAlarmHours(h.toString().padStart(2, '0'));
+    const finalHStr = h.toString().padStart(2, '0');
+    setAlarmHours(finalHStr);
     setAlarmMinutes(mStr);
     setAlarmAmPm(ampm);
     setIsAlarmActive(true);
+    armBackgroundEngine(`Set for ${finalHStr}:${mStr} ${ampm}`);
   };
 
   const get24HourString = () => {
@@ -638,8 +613,14 @@ export default function AlarmClock() {
                <div className="mt-auto w-full">
                  <button 
                     onClick={() => {
-                      if (countdownTarget) setCountdownTarget(null); // Cancel countdown
-                      else setIsAlarmActive(!isAlarmActive); // Toggle normal alarm
+                      if (countdownTarget) {
+                        setCountdownTarget(null); // Cancel countdown
+                        disarmBackgroundEngine();
+                      } else {
+                        setIsAlarmActive(!isAlarmActive); // Toggle normal alarm
+                        if (!isAlarmActive) armBackgroundEngine(`Set for ${alarmHours}:${alarmMinutes} ${alarmAmPm}`);
+                        else disarmBackgroundEngine();
+                      }
                     }}
                     className="w-[60px] h-[24px] bg-slate-800 rounded-full chunky-track relative flex items-center px-1 shrink-0 z-10 cursor-pointer touch-manipulation"
                  >
@@ -664,7 +645,10 @@ export default function AlarmClock() {
           {/* DEDICATED QUICK TIMERS HARDWARE ROW */}
           <div className="w-full px-2 mt-5 flex gap-3">
              <button 
-                onClick={() => setTimerMinutes(25)} 
+                onClick={() => {
+                  setTimerMinutes(25);
+                  armBackgroundEngine('25 Minute Pomodoro');
+                }} 
                 className="flex-[2] relative h-[50px] bg-[#00f0ff] rounded-[12px] flex items-center justify-center border-b-[6px] border-r-[3px] border-[#0099aa] active:scale-[0.98] outline-none shadow-md cursor-pointer touch-manipulation transition-transform hover:brightness-110"
              >
                 <span className="text-[10px] md:text-[11.5px] text-black uppercase font-black drop-shadow-[1px_1px_0px_rgba(255,255,255,0.8)] tracking-wide">
@@ -677,7 +661,10 @@ export default function AlarmClock() {
              </button>
              
              <button 
-                onClick={() => setTimerMinutes(15)} 
+                onClick={() => {
+                  setTimerMinutes(15);
+                  armBackgroundEngine('15 Minute Nap');
+                }} 
                 className="flex-1 relative h-[50px] bg-[#39ff14] rounded-[12px] flex flex-col items-center justify-center border-b-[6px] border-r-[3px] border-[#1b9900] active:scale-[0.98] outline-none shadow-md cursor-pointer touch-manipulation transition-transform hover:brightness-110"
              >
                 <span className="text-[9px] text-black uppercase font-black drop-shadow-[1px_1px_0px_rgba(255,255,255,0.8)] tracking-wide">
@@ -698,11 +685,13 @@ export default function AlarmClock() {
                    key={hour}
                    onClick={() => {
                      initAudioContext();
-                     setAlarmHours(hour.toString().padStart(2, '0'));
+                     const hStr = hour.toString().padStart(2, '0');
+                     setAlarmHours(hStr);
                      setAlarmMinutes('00');
                      setAlarmAmPm('AM');
                      setIsAlarmActive(true);
                      setCountdownTarget(null);
+                     armBackgroundEngine(`Set for ${hStr}:00 AM`);
                    }}
                    className={`relative h-[36px] rounded-[8px] flex items-center justify-center border-b-[4px] border-r-[2px] active:scale-[0.98] outline-none cursor-pointer touch-manipulation transition-all ${
                      isActivePreset 

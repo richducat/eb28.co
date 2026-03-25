@@ -620,6 +620,28 @@ export default function AlarmClock() {
              </button>
           </div>
 
+          {/* QUICK ALARM PRESETS */}
+          <div className="w-full px-2 mt-3 grid grid-cols-3 gap-2">
+             {[5, 6, 7].map(hour => (
+               <button 
+                 key={hour}
+                 onClick={() => {
+                   initAudioContext();
+                   setAlarmHours(hour.toString().padStart(2, '0'));
+                   setAlarmMinutes('00');
+                   setAlarmAmPm('AM');
+                   setIsAlarmActive(true);
+                   setCountdownTarget(null);
+                 }}
+                 className="relative h-[36px] bg-[#cfd6e0] rounded-[8px] flex items-center justify-center border-b-[4px] border-r-[2px] border-[#8a96a8] active:scale-[0.98] outline-none shadow-[inset_1px_1px_3px_rgba(255,255,255,0.8)] cursor-pointer touch-manipulation transition-transform hover:brightness-105"
+               >
+                 <span className="text-[9px] md:text-[10px] text-slate-800 uppercase font-black tracking-widest text-shadow-sm">
+                   {hour}:00 AM
+                 </span>
+               </button>
+             ))}
+          </div>
+
           {/* HABIT MASTERY PROGRESS HUD */}
           <div className="w-full mt-5 px-2">
             <div className="bg-[#1a252d] border-[3px] border-[#0a0f12] rounded-xl p-3 pb-2 shadow-[inset_0_3px_15px_rgba(0,0,0,0.8)] relative flex flex-col justify-between">

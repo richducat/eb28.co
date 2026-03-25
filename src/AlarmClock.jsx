@@ -4,11 +4,23 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 let wakeLock = null;
 const silentAudioElement = new Audio('/silence.mp3');
 silentAudioElement.loop = true;
+let silentOscillator = null;
 
 const armBackgroundEngine = async (titleStr) => {
   initAudioContext();
   try { silentAudioElement.play().catch(e => console.log('Silent bg blocked:', e)); } catch(e){}
   
+  if (!silentOscillator && globalAudioCtx) {
+    try {
+      silentOscillator = globalAudioCtx.createOscillator();
+      const gainNode = globalAudioCtx.createGain();
+      gainNode.gain.value = 0.0001;
+      silentOscillator.connect(gainNode);
+      gainNode.connect(globalAudioCtx.destination);
+      silentOscillator.start();
+    } catch(e) {}
+  }
+
   if ('Notification' in window && Notification.permission !== 'granted' && Notification.permission !== 'denied') {
     try { Notification.requestPermission(); } catch(e){}
   }
@@ -29,6 +41,10 @@ const armBackgroundEngine = async (titleStr) => {
 
 const disarmBackgroundEngine = async () => {
   try { silentAudioElement.pause(); } catch(e){}
+  if (silentOscillator) {
+    try { silentOscillator.stop(); silentOscillator.disconnect(); } catch(e){}
+    silentOscillator = null;
+  }
   if (wakeLock) { await wakeLock.release().catch(console.error); wakeLock = null; }
   if ('mediaSession' in navigator) navigator.mediaSession.metadata = null;
 };
@@ -194,6 +210,12 @@ export default function AlarmClock() {
     const unlocker = () => initAudioContext();
     document.addEventListener('click', unlocker);
     document.addEventListener('touchstart', unlocker);
+    
+    // Register Service Worker for iOS Native Push Notifications API
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW registration failed:', err));
+    }
+
     return () => {
       document.removeEventListener('click', unlocker);
       document.removeEventListener('touchstart', unlocker);
@@ -245,11 +267,22 @@ export default function AlarmClock() {
     setIsRinging(true);
     if (!isMuted) playSample(selectedVoice);
     if ('Notification' in window && Notification.permission === 'granted') {
-      new Notification('⚠️ WAKE UP, YA BISH', {
-        body: 'Time to grind. Your alarm is sounding.',
-        icon: 'https://wakeupyabish.com/apple-touch-icon.png',
-        requireInteraction: true
-      });
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.ready.then(reg => {
+          reg.showNotification('⚠️ WAKE UP, YA BISH', {
+            body: 'Time to grind. Your alarm is sounding.',
+            icon: 'https://wakeupyabish.com/apple-touch-icon.png',
+            requireInteraction: true,
+            vibrate: [200, 100, 200, 100, 200, 100, 200]
+          });
+        });
+      } else {
+        new Notification('⚠️ WAKE UP, YA BISH', {
+          body: 'Time to grind. Your alarm is sounding.',
+          icon: 'https://wakeupyabish.com/apple-touch-icon.png',
+          requireInteraction: true
+        });
+      }
     }
   };
 

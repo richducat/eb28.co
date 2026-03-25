@@ -329,15 +329,50 @@ export default function AlarmClock() {
     }
   };
 
+  const fetchNativeCalendar = async () => {
+    try {
+       const now = Date.now();
+       const endOfDay = new Date();
+       endOfDay.setHours(23, 59, 59, 999);
+       
+       const { result } = await CapacitorCalendar.listEventsInRange({
+          startDate: now,
+          endDate: endOfDay.getTime()
+       });
+       
+       if (result && result.length > 0) {
+          const events = result.map(e => ({
+             summary: e.title,
+             start: new Date(e.startDate)
+          })).sort((a,b) => a.start - b.start);
+          
+          if (events.length > 0) {
+             setUpcomingEvent(events[0]);
+          } else {
+             setUpcomingEvent(null);
+          }
+       } else {
+          setUpcomingEvent(null);
+       }
+    } catch(err) {
+       console.error('Native Calendar EventKit failed', err);
+    }
+  };
+
   useEffect(() => {
-    if (calendarUrl) fetchCalendar(calendarUrl);
+    const isNative = Capacitor.isNativePlatform();
     
-    // Auto-refresh the visual feed every 15 minutes
-    const calInterval = setInterval(() => {
+    if (isNative) {
+       fetchNativeCalendar();
+       const calInterval = setInterval(() => fetchNativeCalendar(), 15 * 60 * 1000);
+       return () => clearInterval(calInterval);
+    } else {
        if (calendarUrl) fetchCalendar(calendarUrl);
-    }, 15 * 60 * 1000);
-    
-    return () => clearInterval(calInterval);
+       const calInterval = setInterval(() => {
+          if (calendarUrl) fetchCalendar(calendarUrl);
+       }, 15 * 60 * 1000);
+       return () => clearInterval(calInterval);
+    }
   }, [calendarUrl]);
 
 
@@ -1055,6 +1090,22 @@ export default function AlarmClock() {
                          <span className="text-[#00f0ff] text-[8px] mt-3 uppercase block border-t border-[#39ff14]/30 pt-2 break-all overflow-hidden text-ellipsis line-clamp-1 opacity-70">
                             iCal Sync: {calendarUrl.substring(0, 40)}...
                          </span>
+                      ) : Capacitor.isNativePlatform() ? (
+                         <div className="mt-3 pt-3 border-t border-[#39ff14]/30">
+                            <span className="text-slate-500 text-[8px] uppercase block mb-2">Native iOS EventKit Sync</span>
+                            <button 
+                              onClick={async () => {
+                                 try {
+                                    // Request the native OS permissions panel from EventKit
+                                    await CapacitorCalendar.requestFullCalendarAccess();
+                                    fetchNativeCalendar();
+                                 } catch(e) { console.error('Native Auth Rejection', e); }
+                              }}
+                              className="w-full bg-[#39ff14] text-black px-3 py-2 text-[8px] font-black rounded hover:brightness-110 active:scale-95 cursor-pointer touch-manipulation uppercase"
+                            >
+                              CONNECT DEVICE CALENDAR
+                            </button>
+                         </div>
                       ) : (
                          <div className="mt-3 pt-3 border-t border-[#39ff14]/30">
                             <span className="text-slate-500 text-[8px] uppercase block mb-2">Connect Google/Apple Calendar</span>

@@ -13,6 +13,7 @@
     "@capacitor/cli": "^8.2.0",
     "@capacitor/core": "^8.2.0",
     "@capacitor/ios": "^8.2.0",
+    "@capacitor/local-notifications": "^8.0.2",
     "@fontsource/inter": "^5.2.8",
     "@fontsource/share-tech-mono": "^5.2.7",
     "jszip": "^3.10.1",

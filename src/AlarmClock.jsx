@@ -1,4 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+
+// iOS Background Persistence & Native Lock Screen Widget Enablers
+let wakeLock = null;
+const SILENT_AUDIO_URI = 'data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA';
+let silentAudioRef = null;
 import { Settings, User, Lock, BellRing, ListTodo } from 'lucide-react';
 import habitSteps from './data/67steps.json';
 
@@ -167,6 +172,55 @@ export default function AlarmClock() {
     };
   }, []);
 
+  // iOS Background Execution & Live Lock Screen Widget Thread
+  useEffect(() => {
+    if ('Notification' in window && Notification.permission !== 'granted' && Notification.permission !== 'denied') {
+      Notification.requestPermission();
+    }
+
+    const manageBackgroundState = async () => {
+      if (isAlarmActive && !isRinging) {
+        if ('wakeLock' in navigator && !wakeLock) {
+          try { wakeLock = await navigator.wakeLock.request('screen'); } catch (err) {}
+        }
+
+        if (!silentAudioRef) {
+          silentAudioRef = new Audio(SILENT_AUDIO_URI);
+          silentAudioRef.loop = true;
+          silentAudioRef.volume = 1;
+        }
+        silentAudioRef.play().catch(e => console.log('Silent bg audio blocked:', e));
+
+        if ('mediaSession' in navigator) {
+          navigator.mediaSession.metadata = new MediaMetadata({
+            title: `WAKE UP YA BISH ALARM`,
+            artist: countdownTarget ? 'Active Timer' : `Set for ${alarmHours}:${alarmMinutes} ${alarmAmPm}`,
+            album: 'Habit Mastery Protocol',
+            artwork: [
+              { src: 'https://wakeupyabish.com/apple-touch-icon.png', sizes: '180x180', type: 'image/png' }
+            ]
+          });
+          navigator.mediaSession.setActionHandler('play', () => {});
+          navigator.mediaSession.setActionHandler('pause', () => {});
+        }
+      } else {
+        if (wakeLock) { await wakeLock.release().catch(console.error); wakeLock = null; }
+        if (silentAudioRef) { silentAudioRef.pause(); }
+        if ('mediaSession' in navigator) { navigator.mediaSession.metadata = null; }
+      }
+    };
+
+    manageBackgroundState();
+
+    const handleVisibility = async () => {
+      if (document.visibilityState === 'visible' && isAlarmActive && !isRinging && 'wakeLock' in navigator && wakeLock === null) {
+        try { wakeLock = await navigator.wakeLock.request('screen'); } catch (err) {}
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibility);
+    return () => document.removeEventListener('visibilitychange', handleVisibility);
+  }, [isAlarmActive, alarmHours, alarmMinutes, alarmAmPm, countdownTarget, isRinging]);
+
   useEffect(() => {
     const timer = setInterval(() => {
       const now = new Date();
@@ -209,6 +263,13 @@ export default function AlarmClock() {
   const triggerAlarm = () => {
     setIsRinging(true);
     if (!isMuted) playSample(selectedVoice);
+    if ('Notification' in window && Notification.permission === 'granted') {
+      new Notification('⚠️ WAKE UP, YA BISH', {
+        body: 'Time to grind. Your alarm is sounding.',
+        icon: 'https://wakeupyabish.com/apple-touch-icon.png',
+        requireInteraction: true
+      });
+    }
   };
 
   const stopAlarm = () => {

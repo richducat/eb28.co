@@ -844,48 +844,27 @@ export default function AlarmClock() {
           </div>
 
           {/* DEDICATED QUICK TIMERS HARDWARE ROW */}
-          <div className="w-full px-2 mt-5 grid grid-cols-2 md:flex gap-3">
+          <div className="w-full px-2 mt-5 grid grid-cols-3 md:flex gap-2">
              <button 
                 onClick={() => {
-                  setTimerMinutes(25);
-                  armBackgroundEngine('25 Min Pomodoro');
+                  setTimerMinutes(1);
+                  armBackgroundEngine('1 Min Blast');
                 }} 
-                className="flex-1 relative h-[50px] bg-[#00f0ff] rounded-[12px] flex items-center justify-center border-b-[6px] border-r-[3px] border-[#0099aa] active:scale-[0.98] outline-none shadow-md cursor-pointer touch-manipulation transition-transform hover:brightness-110"
+                className="flex-1 relative h-[50px] bg-[#ff2a2a] rounded-[12px] flex flex-col items-center justify-center border-b-[6px] border-r-[3px] border-[#990000] active:scale-[0.98] outline-none shadow-md cursor-pointer touch-manipulation transition-transform hover:brightness-110"
              >
-                <span className="text-[10px] md:text-[11.5px] text-black uppercase font-black drop-shadow-[1px_1px_0px_rgba(255,255,255,0.8)] tracking-wide">
-                  POMODORO
-                </span>
-             </button>
-             
-             <button 
-                onClick={() => {
-                  setTimerMinutes(15);
-                  armBackgroundEngine('15 Min Hustle');
-                }} 
-                className="flex-1 relative h-[50px] bg-[#39ff14] rounded-[12px] flex flex-col items-center justify-center border-b-[6px] border-r-[3px] border-[#1b9900] active:scale-[0.98] outline-none shadow-md cursor-pointer touch-manipulation transition-transform hover:brightness-110"
-             >
-                <span className="text-[10px] text-black uppercase font-black drop-shadow-[1px_1px_0px_rgba(255,255,255,0.8)] tracking-wide">
-                  HUSTLE
-                </span>
-                <span className="text-[6px] text-[#0d3300] font-bold mt-1 tracking-widest">
-                  15 MIN
-                </span>
+                <span className="text-[9px] md:text-[10px] text-white uppercase font-black drop-shadow-[1px_1px_0px_rgba(0,0,0,0.8)] tracking-wide">BLAST</span>
+                <span className="text-[6px] text-[#ffcccc] font-bold mt-0.5 tracking-widest">1 MIN</span>
              </button>
 
-             {/* Mobile-injected additional timers (originally hiding in desktop Jumbotrons) */}
              <button 
                 onClick={() => {
-                  setTimerMinutes(60);
-                  armBackgroundEngine('1 Hour Grind');
+                  setTimerMinutes(3);
+                  armBackgroundEngine('3 Min Breathe');
                 }} 
-                className="flex-1 relative h-[50px] bg-[#ff00aa] rounded-[12px] flex flex-col items-center justify-center border-b-[6px] border-r-[3px] border-[#990066] active:scale-[0.98] outline-none shadow-md cursor-pointer touch-manipulation transition-transform hover:brightness-110 md:hidden"
+                className="flex-1 relative h-[50px] bg-[#9d00ff] rounded-[12px] flex flex-col items-center justify-center border-b-[6px] border-r-[3px] border-[#550099] active:scale-[0.98] outline-none shadow-md cursor-pointer touch-manipulation transition-transform hover:brightness-110"
              >
-                <span className="text-[10px] text-white uppercase font-black drop-shadow-[1px_1px_0px_rgba(0,0,0,0.8)] tracking-wide">
-                  GRIND
-                </span>
-                <span className="text-[6px] text-[#ffb3e6] font-bold mt-1 tracking-widest">
-                  60 MIN
-                </span>
+                <span className="text-[9px] md:text-[10px] text-white uppercase font-black drop-shadow-[1px_1px_0px_rgba(0,0,0,0.8)] tracking-wide">BREATHE</span>
+                <span className="text-[6px] text-[#e6ccff] font-bold mt-0.5 tracking-widest">3 MIN</span>
              </button>
 
              <button 
@@ -893,14 +872,43 @@ export default function AlarmClock() {
                   setTimerMinutes(5);
                   armBackgroundEngine('5 Min Power Nap');
                 }} 
-                className="flex-1 relative h-[50px] bg-[#ffaa00] rounded-[12px] flex flex-col items-center justify-center border-b-[6px] border-r-[3px] border-[#996600] active:scale-[0.98] outline-none shadow-md cursor-pointer touch-manipulation transition-transform hover:brightness-110 md:hidden"
+                className="flex-1 relative h-[50px] bg-[#ffaa00] rounded-[12px] flex flex-col items-center justify-center border-b-[6px] border-r-[3px] border-[#996600] active:scale-[0.98] outline-none shadow-md cursor-pointer touch-manipulation transition-transform hover:brightness-110"
              >
-                <span className="text-[10px] text-black uppercase font-black drop-shadow-[1px_1px_0px_rgba(255,255,255,0.8)] tracking-wide">
-                  PWR NAP
-                </span>
-                <span className="text-[6px] text-[#664400] font-bold mt-1 tracking-widest">
-                  5 MIN
-                </span>
+                <span className="text-[9px] md:text-[10px] text-black uppercase font-black drop-shadow-[1px_1px_0px_rgba(255,255,255,0.8)] tracking-wide">PWR NAP</span>
+                <span className="text-[6px] text-[#664400] font-bold mt-0.5 tracking-widest">5 MIN</span>
+             </button>
+
+             <button 
+                onClick={() => {
+                  setTimerMinutes(15);
+                  armBackgroundEngine('15 Min Hustle');
+                }} 
+                className="flex-1 relative h-[50px] bg-[#39ff14] rounded-[12px] flex flex-col items-center justify-center border-b-[6px] border-r-[3px] border-[#1b9900] active:scale-[0.98] outline-none shadow-md cursor-pointer touch-manipulation transition-transform hover:brightness-110"
+             >
+                <span className="text-[9px] md:text-[10px] text-black uppercase font-black drop-shadow-[1px_1px_0px_rgba(255,255,255,0.8)] tracking-wide">HUSTLE</span>
+                <span className="text-[6px] text-[#0d3300] font-bold mt-0.5 tracking-widest">15 MIN</span>
+             </button>
+             
+             <button 
+                onClick={() => {
+                  setTimerMinutes(25);
+                  armBackgroundEngine('25 Min Pomodoro');
+                }} 
+                className="flex-1 relative h-[50px] bg-[#00f0ff] rounded-[12px] flex flex-col items-center justify-center border-b-[6px] border-r-[3px] border-[#0099aa] active:scale-[0.98] outline-none shadow-md cursor-pointer touch-manipulation transition-transform hover:brightness-110"
+             >
+                <span className="text-[9px] md:text-[10px] text-black uppercase font-black drop-shadow-[1px_1px_0px_rgba(255,255,255,0.8)] tracking-wide">POMODORO</span>
+                <span className="text-[6px] text-[#004455] font-bold mt-0.5 tracking-widest">25 MIN</span>
+             </button>
+
+             <button 
+                onClick={() => {
+                  setTimerMinutes(60);
+                  armBackgroundEngine('1 Hour Grind');
+                }} 
+                className="flex-1 relative h-[50px] bg-[#ff00aa] rounded-[12px] flex flex-col items-center justify-center border-b-[6px] border-r-[3px] border-[#990066] active:scale-[0.98] outline-none shadow-md cursor-pointer touch-manipulation transition-transform hover:brightness-110"
+             >
+                <span className="text-[9px] md:text-[10px] text-white uppercase font-black drop-shadow-[1px_1px_0px_rgba(0,0,0,0.8)] tracking-wide">GRIND</span>
+                <span className="text-[6px] text-[#ffb3e6] font-bold mt-0.5 tracking-widest">60 MIN</span>
              </button>
           </div>
 

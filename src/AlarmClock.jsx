@@ -174,6 +174,13 @@ export default function AlarmClock() {
   });
   const [tempName, setTempName] = useState('');
   const [tempEmail, setTempEmail] = useState('');
+  
+  // Calendar Intercept State
+  const [calendarUrl, setCalendarUrl] = useState(() => {
+    try { return localStorage.getItem('eb28_calendar_url') || ''; } catch(e) { return ''; }
+  });
+  const [upcomingEvent, setUpcomingEvent] = useState(null);
+  const [tempCalUrl, setTempCalUrl] = useState('');
   const [motivationState, setMotivationState] = useState(true);
   const [showSettings, setShowSettings] = useState(false);
   const [isLightOn, setIsLightOn] = useState(false);
@@ -233,6 +240,105 @@ export default function AlarmClock() {
     };
   }, []);
 
+  // -- Google Calendar / iCal Feed Sync Engine --
+  const fetchCalendar = async (url) => {
+    if (!url) {
+      setUpcomingEvent(null);
+      return;
+    }
+    try {
+      // Free CORS proxy to bypass cross-origin browser bans on public .ics files
+      const proxyUrl = (url.startsWith('http://localhost') || url.startsWith('/')) 
+         ? url 
+         : `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`;
+      const res = await fetch(proxyUrl);
+      if (!res.ok) throw new Error('CORS fetch failure');
+      const text = await res.text();
+      
+      const events = [];
+      const lines = text.split(/\r?\n/);
+      let inEvent = false;
+      let currentEvent = {};
+      
+      for (let i = 0; i < lines.length; i++) {
+        let line = lines[i].trim();
+        // Handle RFC 5545 folded lines 
+        while (i + 1 < lines.length && (lines[i+1].startsWith(' ') || lines[i+1].startsWith('\t'))) {
+           i++;
+           line += lines[i].substring(1);
+        }
+
+        if (line === 'BEGIN:VEVENT') {
+          inEvent = true;
+          currentEvent = {};
+        } else if (line === 'END:VEVENT') {
+          inEvent = false;
+          if (currentEvent.start && currentEvent.summary) {
+             events.push({...currentEvent});
+          }
+        } else if (inEvent) {
+          if (line.startsWith('SUMMARY:')) {
+             currentEvent.summary = line.substring(8);
+          }
+          else if (line.startsWith('DTSTART')) {
+             // Parse basic DTSTART arrays e.g DTSTART:20240501T120000Z or DTSTART;TZID=America/New_York:20250325T140000
+             const dateMatch = line.match(/:(\d{8})(T\d{6}Z?)?/);
+             if (dateMatch) {
+                const ds = dateMatch[1]; // YYYYMMDD
+                const ts = dateMatch[2] || 'T000000'; // THHMMSS
+                const year = parseInt(ds.substring(0,4), 10);
+                const month = parseInt(ds.substring(4,6), 10) - 1;
+                const day = parseInt(ds.substring(6,8), 10);
+                
+                let hr = 0, min = 0, sec = 0;
+                if (ts.length >= 7) {
+                  hr = parseInt(ts.substring(1,3), 10);
+                  min = parseInt(ts.substring(3,5), 10);
+                  sec = parseInt(ts.substring(5,7), 10);
+                }
+                
+                // If it ends in Z, it's UTC. Otherwise assume strictly local wall-time for simplicity
+                const isUtc = ts.endsWith('Z');
+                let eventDate;
+                if (isUtc) {
+                  eventDate = new Date(Date.UTC(year, month, day, hr, min, sec));
+                } else {
+                  eventDate = new Date(year, month, day, hr, min, sec);
+                }
+                currentEvent.start = eventDate;
+             }
+          }
+        }
+      }
+
+      const now = new Date();
+      // Only show events originating in the future today
+      const upcoming = events
+         .filter(e => e.start > now)
+         .sort((a,b) => a.start - b.start);
+         
+      if (upcoming.length > 0) {
+         // Pick the absolute closest next event
+         setUpcomingEvent(upcoming[0]);
+      } else {
+         setUpcomingEvent(null);
+      }
+    } catch(err) {
+      console.error('ICS Parse Error: Sync aborted.', err);
+      setUpcomingEvent(null);
+    }
+  };
+
+  useEffect(() => {
+    if (calendarUrl) fetchCalendar(calendarUrl);
+    
+    // Auto-refresh the visual feed every 15 minutes
+    const calInterval = setInterval(() => {
+       if (calendarUrl) fetchCalendar(calendarUrl);
+    }, 15 * 60 * 1000);
+    
+    return () => clearInterval(calInterval);
+  }, [calendarUrl]);
 
 
   useEffect(() => {
@@ -910,12 +1016,18 @@ export default function AlarmClock() {
                    </div>
                    <input type="text" placeholder="CALLSIGN / NAME" value={tempName} onChange={e => setTempName(e.target.value)} className="w-full bg-slate-900 text-[#00f0ff] p-4 rounded-xl border-2 border-slate-700 focus:border-[#00f0ff] outline-none font-['Space_Grotesk'] tracking-widest uppercase text-center" />
                    <input type="email" placeholder="EMAIL ADDRESS" value={tempEmail} onChange={e => setTempEmail(e.target.value)} className="w-full bg-slate-900 text-[#00f0ff] p-4 rounded-xl border-2 border-slate-700 focus:border-[#00f0ff] outline-none font-['Space_Grotesk'] tracking-widest uppercase text-center" />
+                   <input type="text" placeholder="iCal Secret URL (Optional)" value={tempCalUrl} onChange={e => setTempCalUrl(e.target.value)} className="w-full bg-slate-900 text-[#00f0ff] p-4 rounded-xl border-2 border-slate-700 focus:border-[#00f0ff] outline-none font-['Space_Grotesk'] tracking-widest uppercase text-center text-[10px]" />
                    <button 
                      onClick={() => {
                         if(tempName.trim()) {
                           const profile = { name: tempName.trim(), email: tempEmail.trim() };
                           localStorage.setItem('eb28_user_profile', JSON.stringify(profile));
                           setUserProfile(profile);
+                          
+                          if(tempCalUrl.trim()) {
+                             localStorage.setItem('eb28_calendar_url', tempCalUrl.trim());
+                             setCalendarUrl(tempCalUrl.trim());
+                          }
                         }
                      }}
                      className="w-full mt-4 bg-[#ff00aa] text-white font-black uppercase tracking-widest p-4 rounded-xl border-b-[6px] border-[#990066] active:border-b-0 active:translate-y-1 shadow-[0_0_15px_#ff00aa] hover:brightness-110 transition-all cursor-pointer touch-manipulation"
@@ -937,12 +1049,40 @@ export default function AlarmClock() {
                    
                    <div className="bg-[#0a120e] border border-[#39ff14] rounded-xl p-4 mb-8 shadow-[0_0_20px_rgba(57,255,20,0.1)] relative overflow-hidden">
                       <div className="absolute top-0 left-0 w-full h-1 bg-[#39ff14]" />
-                      <span className="text-[#39ff14] text-[12px] uppercase font-black tracking-widest block drop-shadow-[0_0_8px_#39ff14] mb-2 animate-pulse">PREMIUM UNLOCKED</span>
-                      <span className="text-slate-400 text-[9px] uppercase block leading-relaxed">Habit Mastery & Custom Audio Uploads are fully authorized. You are linked.</span>
+                      <span className="text-[#39ff14] text-[12px] uppercase font-black tracking-widest block drop-shadow-[0_0_8px_#39ff14] mb-2">AUTH LINKED</span>
+                      <span className="text-slate-400 text-[9px] uppercase block leading-relaxed">Habit Mastery & Custom Audio Uploads are fully authorized.</span>
+                      {calendarUrl ? (
+                         <span className="text-[#00f0ff] text-[8px] mt-3 uppercase block border-t border-[#39ff14]/30 pt-2 break-all overflow-hidden text-ellipsis line-clamp-1 opacity-70">
+                            iCal Sync: {calendarUrl.substring(0, 40)}...
+                         </span>
+                      ) : (
+                         <div className="mt-3 pt-3 border-t border-[#39ff14]/30">
+                            <span className="text-slate-500 text-[8px] uppercase block mb-2">Connect Google/Apple Calendar</span>
+                            <div className="flex gap-2">
+                               <input type="text" placeholder="Paste .ics URL" value={tempCalUrl} onChange={e => setTempCalUrl(e.target.value)} className="flex-1 bg-black text-[#00f0ff] text-[8px] p-2 rounded outline-none border border-slate-700" />
+                               <button 
+                                 onClick={() => {
+                                    if(tempCalUrl.trim()) {
+                                       localStorage.setItem('eb28_calendar_url', tempCalUrl.trim());
+                                       setCalendarUrl(tempCalUrl.trim());
+                                    }
+                                 }}
+                                 className="bg-[#39ff14] text-black px-3 text-[8px] font-black rounded hover:brightness-110 active:scale-95 cursor-pointer touch-manipulation"
+                               >
+                                 SYNC
+                               </button>
+                            </div>
+                         </div>
+                      )}
                    </div>
 
                    <button 
-                      onClick={() => { localStorage.removeItem('eb28_user_profile'); setUserProfile(null); }} 
+                      onClick={() => { 
+                         localStorage.removeItem('eb28_user_profile'); 
+                         localStorage.removeItem('eb28_calendar_url');
+                         setUserProfile(null); 
+                         setCalendarUrl('');
+                      }} 
                       className="w-full text-slate-500 text-[9px] uppercase tracking-[0.2em] p-3 rounded-xl border border-slate-800 active:bg-slate-900 hover:text-white transition-colors cursor-pointer touch-manipulation"
                    >
                      OVERRIDE / UNLINK DEVICE

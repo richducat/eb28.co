@@ -654,7 +654,7 @@ export default function AlarmClock() {
                 </button>
               </div>
 
-              <div className="mt-2 text-[9px] leading-relaxed text-slate-300 font-['Inter'] mb-3 pr-2 max-h-[60px] overflow-y-auto custom-scrollbar italic border-l-2 border-[#00f0ff] pl-2">
+              <div className="mt-2 text-[10px] leading-relaxed text-[#00f0ff] drop-shadow-[0_0_5px_#00f0ff] font-['Space_Grotesk'] uppercase mb-3 pr-2 max-h-[60px] overflow-y-auto custom-scrollbar border-l-[3px] border-[#ff00aa] pl-2">
                  "{currentHabit.morningMindset}"
               </div>
 

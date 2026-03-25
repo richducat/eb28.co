@@ -134,8 +134,9 @@ const synthesizeRetroAlarm = (type) => {
   }
 
   return {
+    osc,
     pause: () => {
-      try { osc.stop(); } catch(e){}
+      try { osc.onended = null; osc.stop(); } catch(e){}
     }
   };
 };
@@ -163,6 +164,11 @@ export default function AlarmClock() {
   const [isRinging, setIsRinging] = useState(false);
   const [selectedVoice, setSelectedVoice] = useState(ALARM_VOICES[0].id);
   const [isMuted, setIsMuted] = useState(false);
+
+  const isRingingRef = useRef(false);
+  useEffect(() => {
+     isRingingRef.current = isRinging;
+  }, [isRinging]);
 
   // User Profile & Mock-Authentication State
   const [showProfile, setShowProfile] = useState(false);
@@ -383,7 +389,7 @@ export default function AlarmClock() {
       checkAlarm(now);
     }, 1000);
     return () => clearInterval(timer);
-  }, [alarmHours, alarmMinutes, alarmAmPm, isAlarmActive, isRinging]);
+  }, [alarmHours, alarmMinutes, alarmAmPm, isAlarmActive, isRinging, countdownTarget]);
 
   // Rotate motivational phrases on the dynamic background billboard
   useEffect(() => {
@@ -441,6 +447,7 @@ export default function AlarmClock() {
   const stopAlarm = () => {
     setIsRinging(false);
     setIsAlarmActive(false);
+    isRingingRef.current = false;
     window.speechSynthesis.cancel();
     if (activeAudioObj) { activeAudioObj.pause(); activeAudioObj.currentTime = 0; setActiveAudioObj(null); }
     
@@ -501,12 +508,19 @@ export default function AlarmClock() {
       return;
     }
     
-    // Synthesize Retro Sounds dynamically
-    const syntheticObj = synthesizeRetroAlarm(voiceId);
-    if (syntheticObj) {
-      setActiveAudioObj(syntheticObj);
-      return;
-    }
+    // Synthesize Retro Sounds dynamically with infinite recursive looping
+    const playSyntheticLoop = () => {
+       if (!isRingingRef.current) return;
+       const syntheticObj = synthesizeRetroAlarm(voiceId);
+       if (syntheticObj) {
+         setActiveAudioObj(syntheticObj);
+         syntheticObj.osc.onended = playSyntheticLoop;
+         return true;
+       }
+       return false;
+    };
+
+    if (playSyntheticLoop()) return;
 
     // Hardcoded special cases
     if (voiceId === 'nuclear_file') {

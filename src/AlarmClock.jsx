@@ -163,6 +163,17 @@ export default function AlarmClock() {
   const [isRinging, setIsRinging] = useState(false);
   const [selectedVoice, setSelectedVoice] = useState(ALARM_VOICES[0].id);
   const [isMuted, setIsMuted] = useState(false);
+
+  // User Profile & Mock-Authentication State
+  const [showProfile, setShowProfile] = useState(false);
+  const [userProfile, setUserProfile] = useState(() => {
+    try {
+      const saved = localStorage.getItem('eb28_user_profile');
+      return saved ? JSON.parse(saved) : null;
+    } catch(e) { return null; }
+  });
+  const [tempName, setTempName] = useState('');
+  const [tempEmail, setTempEmail] = useState('');
   const [motivationState, setMotivationState] = useState(true);
   const [showSettings, setShowSettings] = useState(false);
   const [isLightOn, setIsLightOn] = useState(false);
@@ -397,7 +408,7 @@ export default function AlarmClock() {
   const displayDateStrFull = `${time.toLocaleDateString('en-US', { weekday: 'short' }).toUpperCase()} ${time.toLocaleDateString('en-US', { month: 'numeric', day: 'numeric', year: '2-digit' })}`;
 
   return (
-    <div className="relative w-full overflow-hidden min-h-[100dvh] flex justify-center items-center bg-[#000b12]" style={{fontFamily: '"Press Start 2P", monospace'}}>
+    <div className="relative w-full overflow-x-hidden overflow-y-auto min-h-screen pt-[8dvh] lg:pt-0 pb-16 flex items-start lg:items-center justify-center bg-[#000b12]" style={{fontFamily: '"Press Start 2P", monospace'}}>
       
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
@@ -546,7 +557,9 @@ export default function AlarmClock() {
           {/* Hardware Decal Logo Top Center */}
           <div className="text-center w-full mb-3 flex items-center justify-center gap-3">
              <div className="h-[2px] w-8 bg-[#ff00aa] shadow-[0_4px_0_#00f0ff]" />
-             <span className="text-[8px] text-slate-500 tracking-widest uppercase">RADIO-TEK</span>
+             <span className="text-[8px] text-slate-500 tracking-widest uppercase">
+               {userProfile ? `WELCOME, ${userProfile.name}` : 'RADIO-TEK'}
+             </span>
              <div className="h-[2px] w-8 bg-[#ff00aa] shadow-[0_4px_0_#00f0ff]" />
           </div>
 
@@ -676,35 +689,62 @@ export default function AlarmClock() {
           </div>
 
           {/* DEDICATED QUICK TIMERS HARDWARE ROW */}
-          <div className="w-full px-2 mt-5 flex gap-3">
+          <div className="w-full px-2 mt-5 grid grid-cols-2 md:flex gap-3">
              <button 
                 onClick={() => {
                   setTimerMinutes(25);
-                  armBackgroundEngine('25 Minute Pomodoro');
+                  armBackgroundEngine('25 Min Pomodoro');
                 }} 
-                className="flex-[2] relative h-[50px] bg-[#00f0ff] rounded-[12px] flex items-center justify-center border-b-[6px] border-r-[3px] border-[#0099aa] active:scale-[0.98] outline-none shadow-md cursor-pointer touch-manipulation transition-transform hover:brightness-110"
+                className="flex-1 relative h-[50px] bg-[#00f0ff] rounded-[12px] flex items-center justify-center border-b-[6px] border-r-[3px] border-[#0099aa] active:scale-[0.98] outline-none shadow-md cursor-pointer touch-manipulation transition-transform hover:brightness-110"
              >
                 <span className="text-[10px] md:text-[11.5px] text-black uppercase font-black drop-shadow-[1px_1px_0px_rgba(255,255,255,0.8)] tracking-wide">
-                  POMODORO (25M)
+                  POMODORO
                 </span>
-                {/* Hardware texture detailing */}
-                <div className="absolute left-3 top-1/2 -translate-y-1/2 flex flex-col gap-[3px] opacity-40">
-                   <div className="w-[6px] h-[2px] bg-black" /><div className="w-[6px] h-[2px] bg-black" />
-                </div>
              </button>
              
              <button 
                 onClick={() => {
                   setTimerMinutes(15);
-                  armBackgroundEngine('15 Minute Nap');
+                  armBackgroundEngine('15 Min Hustle');
                 }} 
                 className="flex-1 relative h-[50px] bg-[#39ff14] rounded-[12px] flex flex-col items-center justify-center border-b-[6px] border-r-[3px] border-[#1b9900] active:scale-[0.98] outline-none shadow-md cursor-pointer touch-manipulation transition-transform hover:brightness-110"
              >
-                <span className="text-[9px] text-black uppercase font-black drop-shadow-[1px_1px_0px_rgba(255,255,255,0.8)] tracking-wide">
-                  NAP
+                <span className="text-[10px] text-black uppercase font-black drop-shadow-[1px_1px_0px_rgba(255,255,255,0.8)] tracking-wide">
+                  HUSTLE
                 </span>
                 <span className="text-[6px] text-[#0d3300] font-bold mt-1 tracking-widest">
                   15 MIN
+                </span>
+             </button>
+
+             {/* Mobile-injected additional timers (originally hiding in desktop Jumbotrons) */}
+             <button 
+                onClick={() => {
+                  setTimerMinutes(60);
+                  armBackgroundEngine('1 Hour Grind');
+                }} 
+                className="flex-1 relative h-[50px] bg-[#ff00aa] rounded-[12px] flex flex-col items-center justify-center border-b-[6px] border-r-[3px] border-[#990066] active:scale-[0.98] outline-none shadow-md cursor-pointer touch-manipulation transition-transform hover:brightness-110 md:hidden"
+             >
+                <span className="text-[10px] text-white uppercase font-black drop-shadow-[1px_1px_0px_rgba(0,0,0,0.8)] tracking-wide">
+                  GRIND
+                </span>
+                <span className="text-[6px] text-[#ffb3e6] font-bold mt-1 tracking-widest">
+                  60 MIN
+                </span>
+             </button>
+
+             <button 
+                onClick={() => {
+                  setTimerMinutes(5);
+                  armBackgroundEngine('5 Min Power Nap');
+                }} 
+                className="flex-1 relative h-[50px] bg-[#ffaa00] rounded-[12px] flex flex-col items-center justify-center border-b-[6px] border-r-[3px] border-[#996600] active:scale-[0.98] outline-none shadow-md cursor-pointer touch-manipulation transition-transform hover:brightness-110 md:hidden"
+             >
+                <span className="text-[10px] text-black uppercase font-black drop-shadow-[1px_1px_0px_rgba(255,255,255,0.8)] tracking-wide">
+                  PWR NAP
+                </span>
+                <span className="text-[6px] text-[#664400] font-bold mt-1 tracking-widest">
+                  5 MIN
                 </span>
              </button>
           </div>
@@ -792,7 +832,7 @@ export default function AlarmClock() {
              <button className="flex-1 bg-[#1a202c] border-b-[6px] border-[#0d1218] active:scale-95 rounded-xl h-[45px] flex items-center justify-center p-2 group cursor-pointer touch-manipulation transition-all">
                 <ListTodo className="w-[18px] h-[18px] text-[#39ff14] drop-shadow-[0_0_5px_#39ff14] pointer-events-none" strokeWidth={3} />
              </button>
-             <button className="flex-1 bg-[#1a202c] border-b-[6px] border-[#0d1218] active:scale-95 rounded-xl h-[45px] flex items-center justify-center p-2 group cursor-pointer touch-manipulation transition-all opacity-50 cursor-not-allowed">
+             <button onClick={() => setShowProfile(true)} className="flex-1 bg-[#1a202c] border-b-[6px] border-[#0d1218] active:scale-95 rounded-xl h-[45px] flex items-center justify-center p-2 group cursor-pointer touch-manipulation transition-all hover:brightness-125">
                 <User className="w-[18px] h-[18px] text-[#ff00aa] drop-shadow-[0_0_5px_#ff00aa] pointer-events-none" strokeWidth={3} />
              </button>
           </div>
@@ -823,6 +863,92 @@ export default function AlarmClock() {
                    </button>
                  ))}
                </div>
+               
+               {userProfile && (
+                  <div className="mt-8 border-t-2 border-slate-700 pt-6">
+                     <h2 className="text-[10px] text-[#39ff14] uppercase mb-4 drop-shadow-[0_0_5px_#39ff14]">Premium Custom Audio</h2>
+                     {ALARM_VOICES.map((voice) => (
+                        <div key={`custom-${voice.id}`} className="w-full flex justify-between items-center mb-4 bg-slate-900 p-3 rounded-lg border border-slate-700">
+                           <span className="text-[8px] text-slate-300 uppercase">{voice.name} Override</span>
+                           <label className="bg-[#39ff14] text-black text-[7px] font-black uppercase px-3 py-1.5 rounded cursor-pointer active:scale-95 hover:brightness-110">
+                              UPLOAD
+                              <input type="file" accept="audio/*" className="hidden" onChange={(e) => {
+                                 const file = e.target.files?.[0];
+                                 if (!file) return;
+                                 const reader = new FileReader();
+                                 reader.onload = (ev) => {
+                                    const b64 = ev.target.result;
+                                    const newMap = { ...customAudioMap, [voice.id]: b64 };
+                                    setCustomAudioMap(newMap);
+                                    localStorage.setItem('eb28_custom_audio', JSON.stringify(newMap));
+                                 };
+                                 reader.readAsDataURL(file);
+                              }} />
+                           </label>
+                        </div>
+                     ))}
+                  </div>
+               )}
+             </div>
+          </div>
+        )}
+
+        {/* PROFILE OVERLAY */}
+        {showProfile && (
+          <div className="fixed inset-0 z-50 flex flex-col justify-center items-center bg-black/80 backdrop-blur-sm p-4 animate-fade-in">
+             <div className="w-full max-w-[360px] bg-[#1e2530] border-[3px] border-[#ff00aa] shadow-[0_0_50px_rgba(255,0,170,0.3)] rounded-3xl p-6 relative flex flex-col">
+               <button onClick={() => setShowProfile(false)} className="absolute top-4 right-5 text-slate-400 text-[20px] font-black hover:text-[#ff00aa] transition-colors">✕</button>
+               
+               <h2 className="text-[12px] text-[#ff00aa] uppercase mb-6 mt-2 text-center drop-shadow-[0_0_5px_#ff00aa] font-black tracking-widest">
+                  OPERATOR PROFILE
+               </h2>
+               
+               {!userProfile ? (
+                 <div className="space-y-4">
+                   <div className="text-center mb-6">
+                      <span className="text-slate-400 text-[9px] uppercase leading-relaxed block">Create a local auth profile to unlock premium features and cross-session retention.</span>
+                   </div>
+                   <input type="text" placeholder="CALLSIGN / NAME" value={tempName} onChange={e => setTempName(e.target.value)} className="w-full bg-slate-900 text-[#00f0ff] p-4 rounded-xl border-2 border-slate-700 focus:border-[#00f0ff] outline-none font-['Space_Grotesk'] tracking-widest uppercase text-center" />
+                   <input type="email" placeholder="EMAIL ADDRESS" value={tempEmail} onChange={e => setTempEmail(e.target.value)} className="w-full bg-slate-900 text-[#00f0ff] p-4 rounded-xl border-2 border-slate-700 focus:border-[#00f0ff] outline-none font-['Space_Grotesk'] tracking-widest uppercase text-center" />
+                   <button 
+                     onClick={() => {
+                        if(tempName.trim()) {
+                          const profile = { name: tempName.trim(), email: tempEmail.trim() };
+                          localStorage.setItem('eb28_user_profile', JSON.stringify(profile));
+                          setUserProfile(profile);
+                        }
+                     }}
+                     className="w-full mt-4 bg-[#ff00aa] text-white font-black uppercase tracking-widest p-4 rounded-xl border-b-[6px] border-[#990066] active:border-b-0 active:translate-y-1 shadow-[0_0_15px_#ff00aa] hover:brightness-110 transition-all cursor-pointer touch-manipulation"
+                   >
+                     INITIALIZE UPLINK
+                   </button>
+                 </div>
+               ) : (
+                 <div className="text-center py-4">
+                   <div className="w-20 h-20 bg-[#ff00aa] rounded-full mx-auto mb-4 flex items-center justify-center text-4xl font-black text-white shadow-[0_0_30px_#ff00aa] border-[3px] border-white">
+                      {userProfile.name.charAt(0).toUpperCase()}
+                   </div>
+                   <h3 className="text-[#00f0ff] text-[22px] font-black uppercase tracking-widest drop-shadow-[0_0_8px_#00f0ff]">
+                      {userProfile.name}
+                   </h3>
+                   <p className="text-slate-400 text-[10px] mt-2 mb-8 uppercase tracking-widest">
+                      {userProfile.email || 'GUEST PROXY'}
+                   </p>
+                   
+                   <div className="bg-[#0a120e] border border-[#39ff14] rounded-xl p-4 mb-8 shadow-[0_0_20px_rgba(57,255,20,0.1)] relative overflow-hidden">
+                      <div className="absolute top-0 left-0 w-full h-1 bg-[#39ff14]" />
+                      <span className="text-[#39ff14] text-[12px] uppercase font-black tracking-widest block drop-shadow-[0_0_8px_#39ff14] mb-2 animate-pulse">PREMIUM UNLOCKED</span>
+                      <span className="text-slate-400 text-[9px] uppercase block leading-relaxed">Habit Mastery & Custom Audio Uploads are fully authorized. You are linked.</span>
+                   </div>
+
+                   <button 
+                      onClick={() => { localStorage.removeItem('eb28_user_profile'); setUserProfile(null); }} 
+                      className="w-full text-slate-500 text-[9px] uppercase tracking-[0.2em] p-3 rounded-xl border border-slate-800 active:bg-slate-900 hover:text-white transition-colors cursor-pointer touch-manipulation"
+                   >
+                     OVERRIDE / UNLINK DEVICE
+                   </button>
+                 </div>
+               )}
              </div>
           </div>
         )}

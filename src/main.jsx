@@ -22,7 +22,7 @@ const isAppBuilderRoute = pathname === '/appbuilder';
 const isFundManagerRoute =
   pathname === '/fundmanager' ||
   hostname === 'fundmanager.eb28.co';
-const isAlarmClockRoute = pathname === '/alarmclock';
+const isAlarmClockRoute = pathname === '/alarmclock' || hostname === 'app.wakeupyabish.com';
 
 applyDocumentSeo(routeKey);
 

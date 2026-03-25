@@ -13,10 +13,24 @@ const ALARM_VOICES = [
   { id: 'neon', name: 'Neon Pursuit', type: 'premium', icon: '🕶️', sample: 'Fast paced 80s synthwave.', category: 'motivational' },
 ];
 
+let globalAudioCtx = null;
+
+export const initAudioContext = () => {
+  if (!globalAudioCtx) {
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    if (AudioContext) {
+      globalAudioCtx = new AudioContext();
+    }
+  }
+  if (globalAudioCtx && globalAudioCtx.state === 'suspended') {
+    globalAudioCtx.resume();
+  }
+};
+
 const synthesizeRetroAlarm = (type) => {
-  const AudioContext = window.AudioContext || window.webkitAudioContext;
-  if (!AudioContext) return null;
-  const ctx = new AudioContext();
+  initAudioContext();
+  if (!globalAudioCtx) return null;
+  const ctx = globalAudioCtx;
   const osc = ctx.createOscillator();
   const gain = ctx.createGain();
 
@@ -67,14 +81,12 @@ const synthesizeRetroAlarm = (type) => {
     osc.start(now);
     osc.stop(now + 2.0);
   } else {
-    try { ctx.close(); } catch(e){}
     return null; 
   }
 
   return {
     pause: () => {
       try { osc.stop(); } catch(e){}
-      try { ctx.close(); } catch(e){}
     }
   };
 };
@@ -144,6 +156,15 @@ export default function AlarmClock() {
       const savedAudio = localStorage.getItem('eb28_custom_audio');
       if (savedAudio) setCustomAudioMap(JSON.parse(savedAudio));
     } catch (e) { console.warn('Failed to load storage', e); }
+    
+    // Globally register click listeners to unlock browser AudioContext policies
+    const unlocker = () => initAudioContext();
+    document.addEventListener('click', unlocker);
+    document.addEventListener('touchstart', unlocker);
+    return () => {
+      document.removeEventListener('click', unlocker);
+      document.removeEventListener('touchstart', unlocker);
+    };
   }, []);
 
   useEffect(() => {
@@ -601,19 +622,32 @@ export default function AlarmClock() {
 
           {/* HABIT MASTERY PROGRESS HUD */}
           <div className="w-full mt-5 px-2">
-            <div className="bg-[#1a252d] border-[3px] border-[#0a0f12] rounded-xl p-3 pb-2 shadow-[inset_0_3px_15px_rgba(0,0,0,0.8)] relative flex flex-col justify-between min-h-[90px]">
-              <span className="absolute -top-3 left-4 bg-[#e0e5ec] text-[#000] text-[8px] font-black px-2 py-0.5 border-[2px] border-[#1a252d] uppercase drop-shadow-md">
-                 HABIT MASTERY: DAY {habitState.currentDay}
-              </span>
-              <div className="mt-2 text-[10px] leading-relaxed text-[#00f0ff] drop-shadow-[0_0_5px_#00f0ff] font-['Space_Grotesk'] uppercase mb-3">
+            <div className="bg-[#1a252d] border-[3px] border-[#0a0f12] rounded-xl p-3 pb-2 shadow-[inset_0_3px_15px_rgba(0,0,0,0.8)] relative flex flex-col justify-between">
+              <div className="absolute -top-3 left-4 flex gap-2">
+                <span className="bg-[#e0e5ec] text-[#000] text-[8px] font-black px-2 py-0.5 border-[2px] border-[#1a252d] uppercase drop-shadow-md">
+                   HABIT MASTERY: DAY {habitState.currentDay}
+                </span>
+                <button onClick={() => setShowHabitModal(true)} className="bg-[#ff00aa] text-white text-[7px] font-black px-2 py-0.5 border-[2px] border-[#1a252d] uppercase hover:brightness-125 cursor-pointer touch-manipulation">
+                   VIEW INTEL
+                </button>
+              </div>
+
+              <div className="mt-2 text-[9px] leading-relaxed text-slate-300 font-['Inter'] mb-3 pr-2 max-h-[60px] overflow-y-auto custom-scrollbar italic border-l-2 border-[#00f0ff] pl-2">
+                 "{currentHabit.morningMindset}"
+              </div>
+
+              <div className="text-[10px] leading-relaxed text-[#00f0ff] drop-shadow-[0_0_5px_#00f0ff] font-['Space_Grotesk'] uppercase mb-3 border-t border-[#334654] pt-2">
+                 <span className="text-[#ff00aa] font-black tracking-widest text-[7px] block mb-1">MISSION DIRECTIVE:</span>
                  {isHabitCompletedToday ? currentHabit.eveningWindDown : currentHabit.actionTip}
               </div>
-              <div className="flex justify-between items-center w-full mt-auto border-t border-[#334654] pt-2">
+
+              <div className="flex justify-between items-center w-full mt-1 border-t border-[#334654] pt-2">
                  <span className={`text-[7px] font-['Press_Start_2P'] uppercase tracking-tighter ${isHabitCompletedToday ? 'text-[#39ff14] drop-shadow-[0_0_5px_#39ff14]' : 'text-[#ff00aa] drop-shadow-[0_0_5px_#ff00aa]'}`}>
                    {isHabitCompletedToday ? 'SYNC: COMPLETE' : 'MISSION: PENDING'}
                  </span>
                  <button 
                     onClick={() => {
+                       initAudioContext();
                        if (!isHabitCompletedToday) completeHabitForToday();
                        else setHabitState(prev => ({...prev, completedDate: null}));
                     }}

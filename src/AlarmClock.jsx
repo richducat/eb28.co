@@ -494,6 +494,7 @@ export default function AlarmClock() {
     const targetTime = time.getTime() + minutesAdded * 60000;
     setCountdownTarget(targetTime);
     setIsAlarmActive(true);
+    armBackgroundEngine(`${minutesAdded} Min Timer`);
   };
 
   const playSample = (voiceId, e) => {
@@ -792,7 +793,7 @@ export default function AlarmClock() {
              <div className="col-span-2 row-span-2 flex flex-col items-start bg-[#cfd6e0] px-2 py-3 rounded-lg shadow-[inset_1px_1px_5px_rgba(0,0,0,0.1)] relative overflow-hidden">
                <div className="text-[6.5px] md:text-[7px] font-bold text-slate-700 uppercase mb-2 flex flex-col gap-1 w-full">
                  {countdownTarget ? (
-                   <span className="text-[#ff00aa] text-center leading-tight py-1">COUNTDOWN<br/>ACTIVE</span>
+                   <span className="text-[#ff00aa] text-center leading-tight py-1 animate-pulse">COUNTDOWN<br/>ACTIVE</span>
                  ) : (
                    <>
                      <span>ALARM SET:</span>
@@ -825,7 +826,7 @@ export default function AlarmClock() {
                         else disarmBackgroundEngine();
                       }
                     }}
-                    className="w-[60px] h-[24px] bg-slate-800 rounded-full chunky-track relative flex items-center px-1 shrink-0 z-10 cursor-pointer touch-manipulation"
+                    className="w-[60px] h-[24px] bg-slate-800 rounded-full chunky-track relative flex items-center px-1 shrink-0 z-10 cursor-pointer touch-manipulation shadow-[0_2px_5px_rgba(0,0,0,0.3)]"
                  >
                     <div className={`w-[20px] h-[20px] rounded-full absolute border-b-[3px] transition-all duration-200 ${isAlarmActive ? 'border-[#0099aa] left-[36px]' : 'bg-slate-400 border-slate-500 left-1'}`} style={isAlarmActive ? {backgroundColor: '#00f0ff'} : {}} />
                  </button>
@@ -846,7 +847,7 @@ export default function AlarmClock() {
           </div>
 
           {/* DEDICATED QUICK TIMERS HARDWARE ROW */}
-          <div className="w-full px-2 mt-5 grid grid-cols-3 md:flex gap-2">
+          <div className="w-full px-2 mt-5 grid grid-cols-2 md:flex flex-wrap gap-2">
              <button 
                 onClick={() => {
                   setTimerMinutes(1);

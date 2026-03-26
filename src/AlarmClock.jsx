@@ -1,3 +1,5 @@
+import { Capacitor } from "@capacitor/core";
+import { CapacitorCalendar } from "@ebarooni/capacitor-calendar";
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 
 // iOS Background Persistence & Native Lock Screen Widget Enablers

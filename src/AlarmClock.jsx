@@ -158,6 +158,21 @@ export default function AlarmClock() {
   const [countdownTarget, setCountdownTarget] = useState(null);
   const [customAudioMap, setCustomAudioMap] = useState({});
   const [activeAudioObj, setActiveAudioObj] = useState(null);
+  const activeAudioRef = useRef(null);
+
+  const safeSetAudio = (audioObj) => {
+    setActiveAudioObj(audioObj);
+    activeAudioRef.current = audioObj;
+  };
+
+  const safeStopAudio = () => {
+    if (activeAudioRef.current) {
+        try { activeAudioRef.current.pause(); } catch(e){}
+        if (activeAudioRef.current.currentTime !== undefined) activeAudioRef.current.currentTime = 0;
+        activeAudioRef.current = null;
+    }
+    setActiveAudioObj(null);
+  };
 
   const [alarmHours, setAlarmHours] = useState('06');
   const [alarmMinutes, setAlarmMinutes] = useState('00');
@@ -425,7 +440,8 @@ export default function AlarmClock() {
 
   const triggerAlarm = () => {
     setIsRinging(true);
-    if (!isMuted) playSample(selectedVoice);
+    isRingingRef.current = true;
+    if (!isMuted) playSample(selectedVoice, null, false);
     if ('Notification' in window && Notification.permission === 'granted') {
       if ('serviceWorker' in navigator) {
         navigator.serviceWorker.ready.then(reg => {
@@ -451,7 +467,7 @@ export default function AlarmClock() {
     setIsAlarmActive(false);
     isRingingRef.current = false;
     window.speechSynthesis.cancel();
-    if (activeAudioObj) { activeAudioObj.pause(); activeAudioObj.currentTime = 0; setActiveAudioObj(null); }
+    safeStopAudio();
     
     // Trigger Habit Mastery Morning Intercept if it hasn't been completed today!
     if (!isHabitCompletedToday) {
@@ -497,27 +513,31 @@ export default function AlarmClock() {
     armBackgroundEngine(`${minutesAdded} Min Timer`);
   };
 
-  const playSample = (voiceId, e) => {
+  const playSample = (voiceId, e, isPreview = true) => {
     if (e) e.stopPropagation();
     window.speechSynthesis.cancel();
-    if (activeAudioObj) { activeAudioObj.pause(); activeAudioObj.currentTime = 0; }
+    safeStopAudio();
     
     // First Priority: User Uploaded Custom Audio
     if (customAudioMap[voiceId]) {
       const audio = new Audio(customAudioMap[voiceId]);
-      audio.loop = true; // Loop alarms
+      audio.loop = !isPreview; // Loop alarms, not previews
       audio.play().catch(err => console.error('Audio play failed', err));
-      setActiveAudioObj(audio);
+      safeSetAudio(audio);
       return;
     }
     
     // Synthesize Retro Sounds dynamically with infinite recursive looping
     const playSyntheticLoop = () => {
-       if (!isRingingRef.current) return;
+       if (!isRingingRef.current && !isPreview) return;
        const syntheticObj = synthesizeRetroAlarm(voiceId);
        if (syntheticObj) {
-         setActiveAudioObj(syntheticObj);
-         syntheticObj.osc.onended = playSyntheticLoop;
+         safeSetAudio(syntheticObj);
+         if (!isPreview) {
+            syntheticObj.osc.onended = () => {
+               if (isRingingRef.current) playSyntheticLoop();
+            };
+         }
          return true;
        }
        return false;
@@ -528,9 +548,9 @@ export default function AlarmClock() {
     // Hardcoded special cases
     if (voiceId === 'nuclear_file') {
       const audio = new Audio('/tacnuke.mp3');
-      audio.loop = true;
+      audio.loop = !isPreview;
       audio.play().catch(err => console.error('Tacnuke play failed', err));
-      setActiveAudioObj(audio);
+      safeSetAudio(audio);
       return;
     }
 
@@ -540,9 +560,11 @@ export default function AlarmClock() {
       const utterance = new SpeechSynthesisUtterance(voice.sample);
       utterance.rate = 0.9;
       // Loop the speech synthesis while alarm is ringing
-      utterance.onend = () => {
-         if (isRinging) window.speechSynthesis.speak(utterance);
-      };
+      if (!isPreview) {
+         utterance.onend = () => {
+            if (isRingingRef.current) window.speechSynthesis.speak(utterance);
+         };
+      }
       window.speechSynthesis.speak(utterance);
     }
   };
@@ -808,13 +830,13 @@ export default function AlarmClock() {
                {!countdownTarget && (
                  <input 
                    type="time" 
-                   className="absolute inset-0 opacity-0 cursor-pointer touch-manipulation w-full h-1/2" 
+                   className="absolute top-0 left-0 w-full h-[65%] z-40 opacity-0 cursor-pointer touch-manipulation" 
                    onChange={handleTimePickerChange}
                    value={get24HourString()}
                  />
                )}
 
-               <div className="mt-auto w-full">
+               <div className="mt-auto w-full relative z-50">
                  <button 
                     onClick={() => {
                       if (countdownTarget) {

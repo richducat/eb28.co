@@ -56,10 +56,11 @@ import tacticalNukeUrl from './assets/tactical_nuke.mp3';
 import quarteredAtDawnUrl from './assets/Quartered_at_Dawn.mp3';
 import matterOfSpiteUrl from './assets/A_Matter_of_Spite.mp3';
 import rainbowBunnyUrl from './assets/rainbowbunnyboi.mp3';
+import zenUrl from './assets/zenalarm.mp3';
 
 const ALARM_VOICES = [
   { id: 'standard', name: 'Classic Beep', type: 'free', icon: '🔔', sample: 'Standard digital clock piezo buzzer.', category: 'calm' },
-  { id: 'zen', name: 'Zen Master', type: 'free', icon: '☯️', sample: 'Breathe in... Breathe out...', category: 'calm' },
+  { id: 'zen', name: 'Zen Master', type: 'free', icon: '☯️', sample: 'Zen meditation bells audio.', category: 'calm' },
   { id: 'retro', name: 'Retro Arcade', type: 'free', icon: '🕹️', sample: '8-bit square wave sequence.', category: 'funny' },
   { id: 'nuclear', name: 'Nuclear Siren', type: 'premium', icon: '☢️', sample: 'High-frequency klaxon sweep.', category: 'motivational' },
   { id: 'quarter', name: 'Wake up or else', type: 'premium', icon: '💀', sample: 'Quartered at Dawn audio.', category: 'motivational' },
@@ -584,6 +585,14 @@ export default function AlarmClock() {
       const audio = new Audio(rainbowBunnyUrl);
       audio.loop = !isPreview;
       audio.play().catch(err => console.error('Rainbow play failed', err));
+      safeSetAudio(audio);
+      return;
+    }
+
+    if (voiceId === 'zen') {
+      const audio = new Audio(zenUrl);
+      audio.loop = !isPreview;
+      audio.play().catch(err => console.error('Zen play failed', err));
       safeSetAudio(audio);
       return;
     }

@@ -849,20 +849,23 @@ export default function AlarmClock() {
                  </div>
               </div>
 
-              <div className="mt-4 pt-3 border-t border-[#1a252d] w-full flex justify-between items-center z-10 px-2 lg:hidden gap-2">
-                <div className="flex items-center gap-2 overflow-hidden flex-1">
-                  <span className="text-[6px] text-slate-500 uppercase shrink-0">FEED:</span>
-                  <span className="text-[7px] md:text-[8px] text-[#39ff14] drop-shadow-[0_0_8px_#39ff14] !leading-snug truncate">
+              <div className="mt-4 pt-3 w-full flex flex-col z-10 px-2 lg:hidden gap-2">
+                <div className="flex items-center gap-3 overflow-hidden w-full px-1">
+                  <span className="text-[7px] md:text-[8px] text-slate-400 font-bold uppercase shrink-0 tracking-widest">FEED</span>
+                  <span className="text-[7px] md:text-[8px] text-[#39ff14] font-bold drop-shadow-[0_0_8px_#39ff14] truncate tracking-wider">
                     {currentHabit.title}
                   </span>
                 </div>
+                
+                <div className="w-full h-[2px] bg-[#1a252d] opacity-50"></div>
+                
                 <div 
                   onClick={() => setShowSettings(true)}
-                  className="flex items-center gap-1.5 shrink-0 cursor-pointer px-1.5 py-1 rounded hover:bg-white/5 active:scale-95 transition-all outline outline-1 outline-[#8a2be2] bg-[#8a2be2]/10"
+                  className="flex items-center gap-2 overflow-hidden w-full cursor-pointer bg-black py-2 px-1 hover:bg-[#111] active:scale-95 transition-all mb-1"
                 >
-                  <span className="text-[5px] md:text-[6px] text-slate-500 uppercase">ALM:</span>
-                  <span className="text-[6px] md:text-[7px] text-[#00f0ff] drop-shadow-[0_0_8px_#00f0ff] uppercase max-w-[60px] md:max-w-[75px] truncate">
-                    {ALARM_VOICES.find(v => v.id === selectedVoice)?.name || 'ALARM'}
+                  <span className="text-[7px] md:text-[8px] text-[#c026d3] font-bold uppercase shrink-0 drop-shadow-[0_0_5px_#c026d3]">ALARM:</span>
+                  <span className="text-[7px] md:text-[8px] text-[#39ff14] font-bold drop-shadow-[0_0_8px_#39ff14] truncate tracking-wider">
+                    {ALARM_VOICES.find(v => v.id === selectedVoice)?.name?.toUpperCase() || 'ALARM'}
                   </span>
                 </div>
               </div>

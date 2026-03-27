@@ -63,7 +63,6 @@ import trapWakeupUrl from './assets/trap_wakeup.mp3';
 const ALARM_VOICES = [
   { id: 'standard', name: 'Classic Beep', type: 'free', icon: '🔔', sample: 'Standard digital clock piezo buzzer.', category: 'calm' },
   { id: 'zen', name: 'Zen Master', type: 'free', icon: '☯️', sample: 'Zen meditation bells audio.', category: 'calm' },
-  { id: 'retro', name: 'Retro Arcade', type: 'free', icon: '🕹️', sample: '8-bit square wave sequence.', category: 'funny' },
   { id: 'nuclear', name: 'Nuclear Siren', type: 'premium', icon: '☢️', sample: 'High-frequency klaxon sweep.', category: 'motivational' },
   { id: 'quarter', name: 'Wake up or else', type: 'premium', icon: '💀', sample: 'Quartered at Dawn audio.', category: 'motivational' },
   { id: 'spite', name: 'Spiteful Pomodoro', type: 'premium', icon: '🍅', sample: 'A Matter of Spite.', category: 'motivational' },
@@ -121,18 +120,6 @@ const synthesizeRetroAlarm = (type) => {
        osc.frequency.setValueAtTime(400 + (i*150), t);
        gain.gain.setValueAtTime(1, t);
        gain.gain.exponentialRampToValueAtTime(0.01, t + 0.15);
-    }
-    osc.start(now);
-    osc.stop(now + 2.0);
-  } else if (type === 'retro') {
-    osc.type = 'square';
-    for(let i=0; i<4; i++) {
-       const t = now + (i*0.5);
-       osc.frequency.setValueAtTime(440, t);
-       osc.frequency.setValueAtTime(880, t + 0.1);
-       osc.frequency.setValueAtTime(440, t + 0.2);
-       gain.gain.setValueAtTime(0.5, t);
-       gain.gain.linearRampToValueAtTime(0, t + 0.4);
     }
     osc.start(now);
     osc.stop(now + 2.0);

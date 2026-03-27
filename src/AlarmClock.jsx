@@ -146,7 +146,17 @@ const MOTIVATIONAL_PHRASES = [
   "ELEVATE YOUR MIND"
 ];
 
+const COLOR_SCHEMES = {
+  standard: { active: '#ffb3e6', shadow: '#ff00aa', inactive: '#550033', strokeActive: '#ff00aa', strokeInactive: '#33001a' },
+  blue: { active: '#b3ecff', shadow: '#00ccff', inactive: '#004466', strokeActive: '#00ccff', strokeInactive: '#002233' },
+  green: { active: '#b3ffcc', shadow: '#00ff88', inactive: '#006633', strokeActive: '#00ff88', strokeInactive: '#00331a' },
+  red: { active: '#ffb3b3', shadow: '#ff3333', inactive: '#660000', strokeActive: '#ff3333', strokeInactive: '#330000' },
+  yellow: { active: '#ffffb3', shadow: '#ffea00', inactive: '#665c00', strokeActive: '#ffea00', strokeInactive: '#332e00' },
+  purple: { active: '#ebb3ff', shadow: '#aa00ff', inactive: '#440066', strokeActive: '#aa00ff', strokeInactive: '#220033' }
+};
+
 export default function AlarmClock() {
+  const [colorSchemeKey, setColorSchemeKey] = useState('standard');
   const [time, setTime] = useState(new Date());
   const [countdownTarget, setCountdownTarget] = useState(null);
   const [customAudioMap, setCustomAudioMap] = useState({});
@@ -579,6 +589,8 @@ export default function AlarmClock() {
   const displayData = getDisplayMain();
   
   const displayDateStrFull = `${time.toLocaleDateString('en-US', { weekday: 'short' }).toUpperCase()} ${time.toLocaleDateString('en-US', { month: 'numeric', day: 'numeric', year: '2-digit' })}`;
+  
+  const currentScheme = COLOR_SCHEMES[colorSchemeKey];
 
   return (
     <div className="relative w-full overflow-x-hidden overflow-y-auto min-h-screen pt-[8dvh] lg:pt-0 pb-16 flex items-start lg:items-center justify-center bg-[#000b12]" style={{fontFamily: '"Press Start 2P", monospace'}}>
@@ -760,7 +772,18 @@ export default function AlarmClock() {
               
               <div className="flex justify-between items-center w-full px-2 mt-1 z-10">
                  <span className="text-[8px] md:text-[9px] text-[#00f0ff] drop-shadow-[0_0_8px_#00f0ff] uppercase">{displayDateStrFull}</span>
-                 <div className="flex gap-4">
+                 <div className="flex gap-4 items-center">
+                    <div className="flex gap-1.5 z-20">
+                      {Object.keys(COLOR_SCHEMES).map(key => (
+                        <button 
+                          key={key} 
+                          onClick={() => setColorSchemeKey(key)}
+                          className={`w-2.5 h-2.5 rounded-full border border-black transition-all cursor-pointer ${colorSchemeKey === key ? 'ring-1 ring-white scale-110' : 'opacity-40 hover:opacity-100'}`}
+                          style={{ backgroundColor: COLOR_SCHEMES[key].shadow, boxShadow: colorSchemeKey === key ? `0 0 5px ${COLOR_SCHEMES[key].shadow}` : 'none' }}
+                          title={`Color: ${key}`}
+                        />
+                      ))}
+                    </div>
                     <div className="flex flex-col items-center">
                       <span className="text-[5px] text-slate-500 mb-1">ALM</span>
                       <div className={`w-[6px] h-[6px] rounded-full border border-black ${isAlarmActive ? 'bg-[#ff00aa] shadow-[0_0_8px_#ff00aa]' : 'bg-slate-800'}`} />
@@ -769,14 +792,14 @@ export default function AlarmClock() {
               </div>
 
               <div className="w-full flex justify-center items-center mt-4 mb-2 relative z-10 pl-2">
-                 <div className="text-center flex items-center justify-center -ml-2" 
+                  <div className="text-center flex items-center justify-center -ml-2" 
                       style={{
                         fontFamily: '"Digital-7", monospace',
                         fontSize: 'clamp(4.5rem, 21vw, 7.5rem)', 
                         lineHeight: '0.8',
-                        color: isAlarmActive ? '#ffb3e6' : '#550033',
-                        textShadow: isAlarmActive ? `0 0 10px #ff00aa, 0 0 20px #ff00aa, 0 0 35px #ff00aa` : 'none',
-                        WebkitTextStroke: isAlarmActive ? `0.5px #ff00aa` : '1px #33001a', 
+                        color: isAlarmActive ? currentScheme.active : currentScheme.inactive,
+                        textShadow: isAlarmActive ? `0 0 10px ${currentScheme.shadow}, 0 0 20px ${currentScheme.shadow}, 0 0 35px ${currentScheme.shadow}` : 'none',
+                        WebkitTextStroke: isAlarmActive ? `0.5px ${currentScheme.strokeActive}` : `1px ${currentScheme.strokeInactive}`, 
                         fontStyle: 'italic',
                         letterSpacing: '-0.01em'
                       }}>

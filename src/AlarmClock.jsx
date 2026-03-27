@@ -100,14 +100,7 @@ const synthesizeRetroAlarm = (type) => {
     }
     osc.start(now);
     osc.stop(now + 2.0);
-  } else if (type === 'nuclear') {
-    osc.type = 'sawtooth';
-    gain.gain.value = 0.5;
-    osc.frequency.setValueAtTime(300, now);
-    osc.frequency.exponentialRampToValueAtTime(800, now + 1.0);
-    osc.frequency.exponentialRampToValueAtTime(300, now + 2.0);
-    osc.start(now);
-    osc.stop(now + 2.0);
+
   } else if (type === 'cyber') {
     osc.type = 'triangle';
     gain.gain.value = 0.6;
@@ -546,8 +539,8 @@ export default function AlarmClock() {
     if (playSyntheticLoop()) return;
 
     // Hardcoded special cases
-    if (voiceId === 'nuclear_file') {
-      const audio = new Audio('/tacnuke.mp3');
+    if (voiceId === 'nuclear') {
+      const audio = new Audio('/tactical_nuke.m4a');
       audio.loop = !isPreview;
       audio.play().catch(err => console.error('Tacnuke play failed', err));
       safeSetAudio(audio);

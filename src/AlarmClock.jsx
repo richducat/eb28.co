@@ -69,10 +69,6 @@ const ALARM_VOICES = [
   { id: 'rainbow', name: '80s Rainbow Bunny Anthem', type: 'premium', icon: '🐰', sample: 'Rainbow Bunny!', category: 'motivational' },
   { id: 'metal', name: 'Heavy Metal Wakeup', type: 'premium', icon: '🎸', sample: 'Heavy metal vibes!', category: 'motivational' },
   { id: 'trap', name: 'TrapBoi Wake Up Anthem', type: 'premium', icon: '🔥', sample: 'Trap 808s!', category: 'motivational' },
-  { id: 'cyber', name: 'Cyber Laser', type: 'premium', icon: '🚀', sample: 'Sci-fi laser drop synth.', category: 'motivational' },
-  { id: 'power', name: 'Power Chord', type: 'premium', icon: '⚡', sample: 'Electric guitar shredding!', category: 'motivational' },
-  { id: 'blast', name: 'Blast Radius', type: 'premium', icon: '💣', sample: 'Explosions! Wake up now!', category: 'motivational' },
-  { id: 'neon', name: 'Neon Pursuit', type: 'premium', icon: '🕶️', sample: 'Fast paced 80s synthwave.', category: 'motivational' },
 ];
 
 let globalAudioCtx = null;
@@ -112,17 +108,6 @@ const synthesizeRetroAlarm = (type) => {
     osc.start(now);
     osc.stop(now + 2.0);
 
-  } else if (type === 'cyber') {
-    osc.type = 'triangle';
-    gain.gain.value = 0.6;
-    for(let i=0; i<10; i++) {
-       const t = now + (i*0.2);
-       osc.frequency.setValueAtTime(400 + (i*150), t);
-       gain.gain.setValueAtTime(1, t);
-       gain.gain.exponentialRampToValueAtTime(0.01, t + 0.15);
-    }
-    osc.start(now);
-    osc.stop(now + 2.0);
   } else {
     return null; 
   }
@@ -864,11 +849,22 @@ export default function AlarmClock() {
                  </div>
               </div>
 
-              <div className="mt-4 pt-3 border-t border-[#1a252d] w-full flex justify-between items-center z-10 px-2 lg:hidden">
-                <span className="text-[6px] text-slate-500 uppercase">FEED:</span>
-                <span className="text-[7px] md:text-[8px] text-[#39ff14] drop-shadow-[0_0_8px_#39ff14] !leading-snug">
-                  {MOTIVATIONAL_PHRASES[phraseIndex]}
-                </span>
+              <div className="mt-4 pt-3 border-t border-[#1a252d] w-full flex justify-between items-center z-10 px-2 lg:hidden gap-2">
+                <div className="flex items-center gap-2 overflow-hidden flex-1">
+                  <span className="text-[6px] text-slate-500 uppercase shrink-0">FEED:</span>
+                  <span className="text-[7px] md:text-[8px] text-[#39ff14] drop-shadow-[0_0_8px_#39ff14] !leading-snug truncate">
+                    {currentHabit.title}
+                  </span>
+                </div>
+                <div 
+                  onClick={() => setShowSettings(true)}
+                  className="flex items-center gap-1.5 shrink-0 cursor-pointer px-1.5 py-1 rounded hover:bg-white/5 active:scale-95 transition-all outline outline-1 outline-[#8a2be2] bg-[#8a2be2]/10"
+                >
+                  <span className="text-[5px] md:text-[6px] text-slate-500 uppercase">ALM:</span>
+                  <span className="text-[6px] md:text-[7px] text-[#00f0ff] drop-shadow-[0_0_8px_#00f0ff] uppercase max-w-[60px] md:max-w-[75px] truncate">
+                    {ALARM_VOICES.find(v => v.id === selectedVoice)?.name || 'ALARM'}
+                  </span>
+                </div>
               </div>
           </div>
 

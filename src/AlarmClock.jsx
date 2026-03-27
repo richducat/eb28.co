@@ -594,7 +594,7 @@ export default function AlarmClock() {
   const currentScheme = COLOR_SCHEMES[colorSchemeKey];
 
   return (
-    <div className="relative w-full overflow-x-hidden overflow-y-auto min-h-screen pt-[8dvh] lg:pt-0 pb-16 flex items-start lg:items-center justify-center bg-[#000b12]" style={{fontFamily: '"Press Start 2P", monospace'}}>
+    <div className="relative w-full overflow-x-hidden overflow-y-auto h-[100dvh] pt-4 lg:pt-0 pb-4 flex items-start lg:items-center justify-center bg-[#000b12] touch-manipulation" style={{fontFamily: '"Press Start 2P", monospace'}}>
       
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
@@ -752,7 +752,7 @@ export default function AlarmClock() {
           {/* SNOOZE BAR AT THE TOP (Massive chunky physical button) */}
           <button 
             onClick={handleSnoozeLight}
-            className={`w-full relative h-[70px] bg-[#ff00aa] rounded-[16px] mb-6 flex items-center justify-center border-b-[8px] border-r-[4px] border-[#990066] active:scale-[0.98] outline-none shadow-lg transition-all cursor-pointer touch-manipulation ${isRinging ? 'animate-pulse bg-[#ff0055]' : ''} ${isLightOn ? 'bg-[#ff66cc] shadow-[0_0_40px_#ff00aa] border-[#cc0088]' : ''}`}
+            className={`w-full relative h-[50px] md:h-[70px] bg-[#ff00aa] rounded-[16px] mb-3 md:mb-6 flex items-center justify-center border-b-[8px] border-r-[4px] border-[#990066] active:scale-[0.98] outline-none shadow-lg transition-all cursor-pointer touch-manipulation ${isRinging ? 'animate-pulse bg-[#ff0055]' : ''} ${isLightOn ? 'bg-[#ff66cc] shadow-[0_0_40px_#ff00aa] border-[#cc0088]' : ''}`}
           >
              <span className="text-[14px] md:text-[16px] text-white drop-shadow-[2px_2px_0px_#000]">
                {isRinging ? 'SLAM TO STOP' : 'SNOOZE / LIGHT'}
@@ -796,7 +796,7 @@ export default function AlarmClock() {
                   <div className="text-center flex items-center justify-center -ml-2" 
                       style={{
                         fontFamily: '"Digital-7", monospace',
-                        fontSize: 'clamp(4.5rem, 21vw, 7.5rem)', 
+                        fontSize: 'clamp(3.5rem, 18vw, 7.5rem)', 
                         lineHeight: '0.8',
                         color: isAlarmActive ? currentScheme.active : currentScheme.inactive,
                         textShadow: isAlarmActive ? `0 0 10px ${currentScheme.shadow}, 0 0 20px ${currentScheme.shadow}, 0 0 35px ${currentScheme.shadow}` : 'none',
@@ -827,9 +827,9 @@ export default function AlarmClock() {
           </div>
 
           {/* HARDWARE CONTROL DECK */}
-          <div className="w-full mt-6 grid grid-cols-4 gap-3 md:gap-4 px-2">
+          <div className="w-full mt-3 md:mt-6 grid grid-cols-4 gap-2 md:gap-4 px-2">
              {/* LEFT SIDE: ALARM TIME */}
-             <div className="col-span-2 row-span-2 flex flex-col items-start bg-[#cfd6e0] px-2 py-3 rounded-lg shadow-[inset_1px_1px_5px_rgba(0,0,0,0.1)] relative overflow-hidden">
+             <div className="col-span-2 row-span-2 flex flex-col items-start bg-[#cfd6e0] px-2 py-2 md:py-3 rounded-lg shadow-[inset_1px_1px_5px_rgba(0,0,0,0.1)] relative overflow-hidden">
                <div className="text-[6.5px] md:text-[7px] font-bold text-slate-700 uppercase mb-2 flex flex-col gap-1 w-full">
                  {countdownTarget ? (
                    <span className="text-[#ff00aa] text-center leading-tight py-1 animate-pulse">COUNTDOWN<br/>ACTIVE</span>
@@ -874,11 +874,11 @@ export default function AlarmClock() {
 
              {/* RIGHT SIDE TOP: TOGGLES */}
              <div className="col-span-2 flex flex-row gap-2 h-full">
-                <div className="flex-1 flex flex-col justify-evenly items-center bg-[#cfd6e0] p-2 py-3 rounded-lg shadow-[inset_1px_1px_5px_rgba(0,0,0,0.1)] h-full">
+                <div className="flex-1 flex flex-col justify-evenly items-center bg-[#cfd6e0] p-1 py-2 md:p-2 md:py-3 rounded-lg shadow-[inset_1px_1px_5px_rgba(0,0,0,0.1)] h-full">
                   <span className="text-[5.5px] md:text-[6px] text-slate-700 uppercase leading-[1.2] text-center font-bold">VOL<br/>MUTE</span>
                   <button onClick={() => setIsMuted(!isMuted)} className={`w-[22px] h-[22px] rounded-md border-b-[3px] active:scale-95 cursor-pointer touch-manipulation transition-transform mt-1 shadow-sm ${isMuted ? 'bg-[#ff00aa] border-[#990066]' : 'bg-slate-400 border-slate-500'}`} />
                 </div>
-                <div className="flex-1 flex flex-col justify-evenly items-center bg-[#cfd6e0] p-2 py-3 rounded-lg shadow-[inset_1px_1px_5px_rgba(0,0,0,0.1)] h-full">
+                <div className="flex-1 flex flex-col justify-evenly items-center bg-[#cfd6e0] p-1 py-2 md:p-2 md:py-3 rounded-lg shadow-[inset_1px_1px_5px_rgba(0,0,0,0.1)] h-full">
                   <span className="text-[5.5px] md:text-[6px] text-slate-700 uppercase leading-[1.2] text-center font-bold">MOTV<br/>FEED</span>
                   <button onClick={() => setMotivationState(!motivationState)} className={`w-[22px] h-[22px] rounded-md border-b-[3px] active:scale-95 cursor-pointer touch-manipulation transition-transform mt-1 shadow-sm ${motivationState ? 'bg-[#39ff14] border-[#1b9900]' : 'bg-slate-400 border-slate-500'}`} />
                 </div>
@@ -886,13 +886,13 @@ export default function AlarmClock() {
           </div>
 
           {/* DEDICATED QUICK TIMERS HARDWARE ROW */}
-          <div className="w-full px-2 mt-5 grid grid-cols-2 md:flex flex-wrap gap-2">
+          <div className="w-full px-2 mt-3 md:mt-5 grid grid-cols-2 md:flex flex-wrap gap-2">
              <button 
                 onClick={() => {
                   setTimerMinutes(1);
                   armBackgroundEngine('1 Min Blast');
                 }} 
-                className="flex-1 relative h-[50px] bg-[#ff2a2a] rounded-[12px] flex flex-col items-center justify-center border-b-[6px] border-r-[3px] border-[#990000] active:scale-[0.98] outline-none shadow-md cursor-pointer touch-manipulation transition-transform hover:brightness-110"
+                className="flex-1 relative h-[42px] md:h-[50px] bg-[#ff2a2a] rounded-[12px] flex flex-col items-center justify-center border-b-[6px] border-r-[3px] border-[#990000] active:scale-[0.98] outline-none shadow-md cursor-pointer touch-manipulation transition-transform hover:brightness-110"
              >
                 <span className="text-[9px] md:text-[10px] text-white uppercase font-black drop-shadow-[1px_1px_0px_rgba(0,0,0,0.8)] tracking-wide">BLAST</span>
                 <span className="text-[6px] text-[#ffcccc] font-bold mt-0.5 tracking-widest">1 MIN</span>
@@ -903,7 +903,7 @@ export default function AlarmClock() {
                   setTimerMinutes(3);
                   armBackgroundEngine('3 Min Breathe');
                 }} 
-                className="flex-1 relative h-[50px] bg-[#9d00ff] rounded-[12px] flex flex-col items-center justify-center border-b-[6px] border-r-[3px] border-[#550099] active:scale-[0.98] outline-none shadow-md cursor-pointer touch-manipulation transition-transform hover:brightness-110"
+                className="flex-1 relative h-[42px] md:h-[50px] bg-[#9d00ff] rounded-[12px] flex flex-col items-center justify-center border-b-[6px] border-r-[3px] border-[#550099] active:scale-[0.98] outline-none shadow-md cursor-pointer touch-manipulation transition-transform hover:brightness-110"
              >
                 <span className="text-[9px] md:text-[10px] text-white uppercase font-black drop-shadow-[1px_1px_0px_rgba(0,0,0,0.8)] tracking-wide">BREATHE</span>
                 <span className="text-[6px] text-[#e6ccff] font-bold mt-0.5 tracking-widest">3 MIN</span>
@@ -914,7 +914,7 @@ export default function AlarmClock() {
                   setTimerMinutes(5);
                   armBackgroundEngine('5 Min Power Nap');
                 }} 
-                className="flex-1 relative h-[50px] bg-[#ffaa00] rounded-[12px] flex flex-col items-center justify-center border-b-[6px] border-r-[3px] border-[#996600] active:scale-[0.98] outline-none shadow-md cursor-pointer touch-manipulation transition-transform hover:brightness-110"
+                className="flex-1 relative h-[42px] md:h-[50px] bg-[#ffaa00] rounded-[12px] flex flex-col items-center justify-center border-b-[6px] border-r-[3px] border-[#996600] active:scale-[0.98] outline-none shadow-md cursor-pointer touch-manipulation transition-transform hover:brightness-110"
              >
                 <span className="text-[9px] md:text-[10px] text-black uppercase font-black drop-shadow-[1px_1px_0px_rgba(255,255,255,0.8)] tracking-wide">PWR NAP</span>
                 <span className="text-[6px] text-[#664400] font-bold mt-0.5 tracking-widest">5 MIN</span>
@@ -925,7 +925,7 @@ export default function AlarmClock() {
                   setTimerMinutes(15);
                   armBackgroundEngine('15 Min Hustle');
                 }} 
-                className="flex-1 relative h-[50px] bg-[#39ff14] rounded-[12px] flex flex-col items-center justify-center border-b-[6px] border-r-[3px] border-[#1b9900] active:scale-[0.98] outline-none shadow-md cursor-pointer touch-manipulation transition-transform hover:brightness-110"
+                className="flex-1 relative h-[42px] md:h-[50px] bg-[#39ff14] rounded-[12px] flex flex-col items-center justify-center border-b-[6px] border-r-[3px] border-[#1b9900] active:scale-[0.98] outline-none shadow-md cursor-pointer touch-manipulation transition-transform hover:brightness-110"
              >
                 <span className="text-[9px] md:text-[10px] text-black uppercase font-black drop-shadow-[1px_1px_0px_rgba(255,255,255,0.8)] tracking-wide">HUSTLE</span>
                 <span className="text-[6px] text-[#0d3300] font-bold mt-0.5 tracking-widest">15 MIN</span>
@@ -936,7 +936,7 @@ export default function AlarmClock() {
                   setTimerMinutes(25);
                   armBackgroundEngine('25 Min Pomodoro');
                 }} 
-                className="flex-1 relative h-[50px] bg-[#00f0ff] rounded-[12px] flex flex-col items-center justify-center border-b-[6px] border-r-[3px] border-[#0099aa] active:scale-[0.98] outline-none shadow-md cursor-pointer touch-manipulation transition-transform hover:brightness-110"
+                className="flex-1 relative h-[42px] md:h-[50px] bg-[#00f0ff] rounded-[12px] flex flex-col items-center justify-center border-b-[6px] border-r-[3px] border-[#0099aa] active:scale-[0.98] outline-none shadow-md cursor-pointer touch-manipulation transition-transform hover:brightness-110"
              >
                 <span className="text-[9px] md:text-[10px] text-black uppercase font-black drop-shadow-[1px_1px_0px_rgba(255,255,255,0.8)] tracking-wide">POMODORO</span>
                 <span className="text-[6px] text-[#004455] font-bold mt-0.5 tracking-widest">25 MIN</span>
@@ -947,7 +947,7 @@ export default function AlarmClock() {
                   setTimerMinutes(60);
                   armBackgroundEngine('1 Hour Grind');
                 }} 
-                className="flex-1 relative h-[50px] bg-[#ff00aa] rounded-[12px] flex flex-col items-center justify-center border-b-[6px] border-r-[3px] border-[#990066] active:scale-[0.98] outline-none shadow-md cursor-pointer touch-manipulation transition-transform hover:brightness-110"
+                className="flex-1 relative h-[42px] md:h-[50px] bg-[#ff00aa] rounded-[12px] flex flex-col items-center justify-center border-b-[6px] border-r-[3px] border-[#990066] active:scale-[0.98] outline-none shadow-md cursor-pointer touch-manipulation transition-transform hover:brightness-110"
              >
                 <span className="text-[9px] md:text-[10px] text-white uppercase font-black drop-shadow-[1px_1px_0px_rgba(0,0,0,0.8)] tracking-wide">GRIND</span>
                 <span className="text-[6px] text-[#ffb3e6] font-bold mt-0.5 tracking-widest">60 MIN</span>
@@ -955,7 +955,7 @@ export default function AlarmClock() {
           </div>
 
           {/* QUICK ALARM PRESETS */}
-          <div className="w-full px-2 mt-3 grid grid-cols-3 gap-2">
+          <div className="w-full px-2 mt-2 md:mt-3 grid grid-cols-3 gap-2">
              {[5, 6, 7].map(hour => {
                const isActivePreset = isAlarmActive && !countdownTarget && alarmHours === hour.toString().padStart(2, '0') && alarmMinutes === '00' && alarmAmPm === 'AM';
                return (
@@ -971,7 +971,7 @@ export default function AlarmClock() {
                      setCountdownTarget(null);
                      armBackgroundEngine(`Set for ${hStr}:00 AM`);
                    }}
-                   className={`relative h-[36px] rounded-[8px] flex items-center justify-center border-b-[4px] border-r-[2px] active:scale-[0.98] outline-none cursor-pointer touch-manipulation transition-all ${
+                   className={`relative h-[32px] md:h-[36px] rounded-[8px] flex items-center justify-center border-b-[4px] border-r-[2px] active:scale-[0.98] outline-none cursor-pointer touch-manipulation transition-all ${
                      isActivePreset 
                        ? 'bg-[#00f0ff] border-[#0099aa] shadow-[0_0_10px_#00f0ff,inset_1px_1px_3px_rgba(255,255,255,0.8)]' 
                        : 'bg-[#cfd6e0] border-[#8a96a8] shadow-[inset_1px_1px_3px_rgba(255,255,255,0.8)] hover:brightness-105'
@@ -990,8 +990,8 @@ export default function AlarmClock() {
           </div>
 
           {/* HABIT MASTERY PROGRESS HUD */}
-          <div className="w-full mt-5 px-2">
-            <div className="bg-[#1a252d] border-[3px] border-[#0a0f12] rounded-xl p-3 pb-2 shadow-[inset_0_3px_15px_rgba(0,0,0,0.8)] relative flex flex-col justify-between">
+          <div className="w-full mt-3 md:mt-5 px-2">
+            <div className="bg-[#1a252d] border-[3px] border-[#0a0f12] rounded-xl p-2 pb-2 md:p-3 md:pb-2 shadow-[inset_0_3px_15px_rgba(0,0,0,0.8)] relative flex flex-col justify-between">
               <div className="absolute -top-3 left-4 flex gap-2">
                 <span className="bg-[#e0e5ec] text-[#000] text-[8px] font-black px-2 py-0.5 border-[2px] border-[#1a252d] uppercase drop-shadow-md">
                    HABIT MASTERY: DAY {habitState.currentDay}

@@ -52,6 +52,7 @@ const disarmBackgroundEngine = async () => {
 };
 import { Settings, User, Lock, BellRing, ListTodo } from 'lucide-react';
 import habitSteps from './data/67steps.json';
+import tacticalNukeUrl from './assets/tactical_nuke.mp3';
 
 const ALARM_VOICES = [
   { id: 'standard', name: 'Classic Beep', type: 'free', icon: '🔔', sample: 'Standard digital clock piezo buzzer.', category: 'calm' },
@@ -550,7 +551,7 @@ export default function AlarmClock() {
 
     // Hardcoded special cases
     if (voiceId === 'nuclear') {
-      const audio = new Audio('/tactical_nuke.m4a');
+      const audio = new Audio(tacticalNukeUrl);
       audio.loop = !isPreview;
       audio.play().catch(err => console.error('Tacnuke play failed', err));
       safeSetAudio(audio);

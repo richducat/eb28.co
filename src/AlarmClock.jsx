@@ -57,6 +57,7 @@ import quarteredAtDawnUrl from './assets/Quartered_at_Dawn.mp3';
 import matterOfSpiteUrl from './assets/A_Matter_of_Spite.mp3';
 import rainbowBunnyUrl from './assets/rainbowbunnyboi.mp3';
 import zenUrl from './assets/zenalarm.mp3';
+import metalWakeupUrl from './assets/metal_wakeup_track.mp3';
 
 const ALARM_VOICES = [
   { id: 'standard', name: 'Classic Beep', type: 'free', icon: '🔔', sample: 'Standard digital clock piezo buzzer.', category: 'calm' },
@@ -66,6 +67,7 @@ const ALARM_VOICES = [
   { id: 'quarter', name: 'Wake up or else', type: 'premium', icon: '💀', sample: 'Quartered at Dawn audio.', category: 'motivational' },
   { id: 'spite', name: 'Spiteful Pomodoro', type: 'premium', icon: '🍅', sample: 'A Matter of Spite.', category: 'motivational' },
   { id: 'rainbow', name: '80s Rainbow Bunny Anthem', type: 'premium', icon: '🐰', sample: 'Rainbow Bunny!', category: 'motivational' },
+  { id: 'metal', name: 'Heavy Metal Wakeup', type: 'premium', icon: '🎸', sample: 'Heavy metal vibes!', category: 'motivational' },
   { id: 'cyber', name: 'Cyber Laser', type: 'premium', icon: '🚀', sample: 'Sci-fi laser drop synth.', category: 'motivational' },
   { id: 'power', name: 'Power Chord', type: 'premium', icon: '⚡', sample: 'Electric guitar shredding!', category: 'motivational' },
   { id: 'blast', name: 'Blast Radius', type: 'premium', icon: '💣', sample: 'Explosions! Wake up now!', category: 'motivational' },
@@ -593,6 +595,14 @@ export default function AlarmClock() {
       const audio = new Audio(zenUrl);
       audio.loop = !isPreview;
       audio.play().catch(err => console.error('Zen play failed', err));
+      safeSetAudio(audio);
+      return;
+    }
+
+    if (voiceId === 'metal') {
+      const audio = new Audio(metalWakeupUrl);
+      audio.loop = !isPreview;
+      audio.play().catch(err => console.error('Metal play failed', err));
       safeSetAudio(audio);
       return;
     }

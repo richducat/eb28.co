@@ -783,7 +783,12 @@ export default function AlarmClock() {
           {/* SNOOZE BAR AT THE TOP (Massive chunky physical button) */}
           <button 
             onClick={handleSnoozeLight}
-            className={`w-full relative h-[50px] md:h-[70px] bg-[#ff00aa] rounded-[16px] mb-3 md:mb-6 flex items-center justify-center border-b-[8px] border-r-[4px] border-[#990066] active:scale-[0.98] outline-none shadow-lg transition-all cursor-pointer touch-manipulation ${isRinging ? 'animate-pulse bg-[#ff0055]' : ''} ${isLightOn ? 'bg-[#ff66cc] shadow-[0_0_40px_#ff00aa] border-[#cc0088]' : ''}`}
+            className={`w-full relative h-[50px] md:h-[70px] rounded-[16px] mb-3 md:mb-6 flex items-center justify-center border-b-[8px] border-r-[4px] active:scale-[0.98] outline-none transition-all cursor-pointer touch-manipulation ${isRinging ? 'animate-pulse' : ''}`}
+            style={{
+               backgroundColor: isRinging ? currentScheme.active : (isLightOn ? currentScheme.active : currentScheme.shadow),
+               borderColor: isLightOn ? currentScheme.shadow : currentScheme.inactive,
+               boxShadow: isLightOn || isRinging ? `0 0 30px ${currentScheme.shadow}` : '0 10px 15px -3px rgba(0,0,0,0.3)',
+            }}
           >
              <span className="text-[14px] md:text-[16px] text-white drop-shadow-[2px_2px_0px_#000]">
                {isRinging ? 'SLAM TO STOP' : 'SNOOZE / LIGHT'}
@@ -1306,6 +1311,25 @@ export default function AlarmClock() {
                   ACKNOWLEDGE
                 </button>
              </div>
+          </div>
+        )}
+
+        {/* ALARM RINGING FULL-SCREEN OVERLAY */}
+        {isRinging && (
+          <div 
+            onClick={handleSnoozeLight}
+            className="fixed inset-0 z-[200] flex flex-col items-center justify-center bg-black/85 backdrop-blur-sm cursor-pointer animate-pulse px-4"
+          >
+             <h1 
+               className="text-5xl md:text-8xl font-black tracking-widest text-center uppercase" 
+               style={{ 
+                 color: currentScheme.active, 
+                 textShadow: `0 0 20px ${currentScheme.shadow}, 0 0 60px ${currentScheme.shadow}`,
+                 fontFamily: '"Space Grotesk", sans-serif'
+               }}
+             >
+               SLAM<br/>TO<br/>STOP<br/>ALARM
+             </h1>
           </div>
         )}
 

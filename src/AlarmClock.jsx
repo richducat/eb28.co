@@ -229,7 +229,7 @@ export default function AlarmClock() {
             title: "⚠️ WAKE UP, YA BISH",
             body: "Time to grind. Your alarm is sounding.",
             id: 1,
-            schedule: { at: targetTime },
+            schedule: { allowWhileIdle: true, on: { hour: targetH, minute: parseInt(alarmMinutes, 10), second: 0 } },
             sound: `${selectedVoice}.mp3`,
             actionTypeId: "",
             extra: null
@@ -517,7 +517,6 @@ export default function AlarmClock() {
 
   const stopAlarm = () => {
     setIsRinging(false);
-    setIsAlarmActive(false);
     isRingingRef.current = false;
     window.speechSynthesis.cancel();
     safeStopAudio();

@@ -1354,7 +1354,10 @@ export default function AlarmClock() {
                 </div>
 
                 <button 
-                  onClick={() => setShowHabitModal(false)}
+                  onClick={() => {
+                     completeHabitForToday();
+                     setShowHabitModal(false);
+                  }}
                   className="mt-8 w-full bg-[#39ff14] text-black font-black uppercase text-sm tracking-widest py-4 rounded-xl border-b-[6px] border-[#1b9900] active:translate-y-1 active:border-b-0 transition-transform shadow-[0_5px_20px_rgba(57,255,20,0.3)] cursor-pointer touch-manipulation hover:brightness-110"
                 >
                   ACKNOWLEDGE

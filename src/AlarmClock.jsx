@@ -1,5 +1,6 @@
 import { Capacitor } from "@capacitor/core";
 import { CapacitorCalendar } from "@ebarooni/capacitor-calendar";
+import { LocalNotifications } from "@capacitor/local-notifications";
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 
 // iOS Background Persistence & Native Lock Screen Widget Enablers
@@ -173,6 +174,54 @@ export default function AlarmClock() {
   useEffect(() => {
      isRingingRef.current = isRinging;
   }, [isRinging]);
+
+  // CAPACITOR NATIVE PUSH SCHEDULER
+  useEffect(() => {
+    if (Capacitor.isNativePlatform()) {
+      LocalNotifications.requestPermissions();
+      
+      const actionL = LocalNotifications.addListener('localNotificationActionPerformed', () => {
+         setIsRinging(true);
+      });
+      const receiveL = LocalNotifications.addListener('localNotificationReceived', () => {
+         setIsRinging(true);
+      });
+      return () => {
+         actionL.then(l => l.remove());
+         receiveL.then(l => l.remove());
+      };
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!Capacitor.isNativePlatform()) return;
+    
+    if (isAlarmActive) {
+      const now = new Date();
+      let targetH = parseInt(alarmHours, 10);
+      if (alarmAmPm === 'PM' && targetH < 12) targetH += 12;
+      if (alarmAmPm === 'AM' && targetH === 12) targetH = 0;
+      
+      const targetTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), targetH, parseInt(alarmMinutes, 10), 0);
+      if (targetTime.getTime() <= now.getTime()) {
+         targetTime.setDate(targetTime.getDate() + 1);
+      }
+
+      LocalNotifications.schedule({
+        notifications: [{
+            title: "⚠️ WAKE UP, YA BISH",
+            body: "Time to grind. Your alarm is sounding.",
+            id: 1,
+            schedule: { at: targetTime },
+            sound: `${selectedVoice}.mp3`,
+            actionTypeId: "",
+            extra: null
+        }]
+      });
+    } else {
+      LocalNotifications.cancel({ notifications: [{ id: 1 }] });
+    }
+  }, [isAlarmActive, alarmHours, alarmMinutes, alarmAmPm, selectedVoice]);
 
   // User Profile & Mock-Authentication State
   const [showProfile, setShowProfile] = useState(false);

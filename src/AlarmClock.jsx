@@ -565,23 +565,28 @@ export default function AlarmClock() {
     armBackgroundEngine(`${minutesAdded} Min Timer`);
   };
 
-  const playSample = (voiceId, e, isPreview = true) => {
-    if (e) e.stopPropagation();
+  const ALARM_URLS = {
+    nuclear: tacticalNukeUrl,
+    quarter: quarteredAtDawnUrl,
+    spite: matterOfSpiteUrl,
+    rainbow: rainbowBunnyUrl,
+    zen: zenUrl,
+    metal: metalWakeupUrl,
+    trap: trapWakeupUrl
+  };
+
+  const playSample = async (voiceId, e, isPreview = true) => {
+    if (e) {
+      e.stopPropagation();
+      e.preventDefault();
+    }
     window.speechSynthesis.cancel();
     safeStopAudio();
-    
-    // First Priority: User Uploaded Custom Audio
-    if (customAudioMap[voiceId]) {
-      const audio = new Audio(customAudioMap[voiceId]);
-      audio.loop = !isPreview; // Loop alarms, not previews
-      audio.play().catch(err => console.error('Audio play failed', err));
-      safeSetAudio(audio);
-      return;
-    }
+    initAudioContext();
     
     // Synthesize Retro Sounds dynamically with infinite recursive looping
     const playSyntheticLoop = () => {
-       if (!isRingingRef.current && !isPreview) return;
+       if (!isRingingRef.current && !isPreview) return false;
        const syntheticObj = synthesizeRetroAlarm(voiceId);
        if (syntheticObj) {
          safeSetAudio(syntheticObj);
@@ -597,61 +602,34 @@ export default function AlarmClock() {
 
     if (playSyntheticLoop()) return;
 
-    // Hardcoded special cases
-    if (voiceId === 'nuclear') {
-      const audio = new Audio(tacticalNukeUrl);
-      audio.loop = !isPreview;
-      audio.play().catch(err => console.error('Tacnuke play failed', err));
-      safeSetAudio(audio);
-      return;
-    }
-
-    if (voiceId === 'quarter') {
-      const audio = new Audio(quarteredAtDawnUrl);
-      audio.loop = !isPreview;
-      audio.play().catch(err => console.error('Quarter play failed', err));
-      safeSetAudio(audio);
-      return;
-    }
-
-    if (voiceId === 'spite') {
-      const audio = new Audio(matterOfSpiteUrl);
-      audio.loop = !isPreview;
-      audio.play().catch(err => console.error('Spite play failed', err));
-      safeSetAudio(audio);
-      return;
-    }
-
-    if (voiceId === 'rainbow') {
-      const audio = new Audio(rainbowBunnyUrl);
-      audio.loop = !isPreview;
-      audio.play().catch(err => console.error('Rainbow play failed', err));
-      safeSetAudio(audio);
-      return;
-    }
-
-    if (voiceId === 'zen') {
-      const audio = new Audio(zenUrl);
-      audio.loop = !isPreview;
-      audio.play().catch(err => console.error('Zen play failed', err));
-      safeSetAudio(audio);
-      return;
-    }
-
-    if (voiceId === 'metal') {
-      const audio = new Audio(metalWakeupUrl);
-      audio.loop = !isPreview;
-      audio.play().catch(err => console.error('Metal play failed', err));
-      safeSetAudio(audio);
-      return;
-    }
-
-    if (voiceId === 'trap') {
-      const audio = new Audio(trapWakeupUrl);
-      audio.loop = !isPreview;
-      audio.play().catch(err => console.error('Trap play failed', err));
-      safeSetAudio(audio);
-      return;
+    // Web Audio API Buffer Playback (for Mobile lock screen bypassing)
+    if (ALARM_URLS[voiceId] && globalAudioCtx) {
+      try {
+        const response = await fetch(ALARM_URLS[voiceId]);
+        const arrayBuffer = await response.arrayBuffer();
+        const audioBuffer = await globalAudioCtx.decodeAudioData(arrayBuffer);
+        
+        const source = globalAudioCtx.createBufferSource();
+        source.buffer = audioBuffer;
+        source.loop = !isPreview; // Loop the alarm if it's not a preview
+        
+        const gainNode = globalAudioCtx.createGain();
+        gainNode.gain.value = 1.0;
+        
+        source.connect(gainNode);
+        gainNode.connect(globalAudioCtx.destination);
+        source.start(0);
+        
+        safeSetAudio({
+          pause: () => {
+             try { source.stop(); } catch(err){}
+          },
+          currentTime: 0
+        });
+        return;
+      } catch (err) {
+        console.error("Failed to decode mp3 buffer natively:", err);
+      }
     }
 
     // Default Fallback: Text-TO-Speech
@@ -1202,31 +1180,7 @@ export default function AlarmClock() {
                  ))}
                </div>
                
-               {userProfile && (
-                  <div className="mt-8 border-t-2 border-slate-700 pt-6">
-                     <h2 className="text-[10px] text-[#39ff14] uppercase mb-4 drop-shadow-[0_0_5px_#39ff14]">Premium Custom Audio</h2>
-                     {ALARM_VOICES.map((voice) => (
-                        <div key={`custom-${voice.id}`} className="w-full flex justify-between items-center mb-4 bg-slate-900 p-3 rounded-lg border border-slate-700">
-                           <span className="text-[8px] text-slate-300 uppercase">{voice.name} Override</span>
-                           <label className="bg-[#39ff14] text-black text-[7px] font-black uppercase px-3 py-1.5 rounded cursor-pointer active:scale-95 hover:brightness-110">
-                              UPLOAD
-                              <input type="file" accept="audio/*" className="hidden" onChange={(e) => {
-                                 const file = e.target.files?.[0];
-                                 if (!file) return;
-                                 const reader = new FileReader();
-                                 reader.onload = (ev) => {
-                                    const b64 = ev.target.result;
-                                    const newMap = { ...customAudioMap, [voice.id]: b64 };
-                                    setCustomAudioMap(newMap);
-                                    localStorage.setItem('eb28_custom_audio', JSON.stringify(newMap));
-                                 };
-                                 reader.readAsDataURL(file);
-                              }} />
-                           </label>
-                        </div>
-                     ))}
-                  </div>
-               )}
+
              </div>
           </div>
         )}

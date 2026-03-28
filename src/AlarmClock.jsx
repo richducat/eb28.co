@@ -141,7 +141,15 @@ const COLOR_SCHEMES = {
 };
 
 export default function AlarmClock() {
-  const [colorSchemeKey, setColorSchemeKey] = useState('standard');
+  const getSaved = (key, defaultVal) => {
+    try {
+      const saved = localStorage.getItem(key);
+      return saved !== null ? JSON.parse(saved) : defaultVal;
+    } catch { return defaultVal; }
+  };
+
+  const [colorSchemeKey, setColorSchemeKey] = useState(() => getSaved('eb28_color_scheme', 'standard'));
+  useEffect(() => localStorage.setItem('eb28_color_scheme', JSON.stringify(colorSchemeKey)), [colorSchemeKey]);
   const [time, setTime] = useState(new Date());
   const [countdownTarget, setCountdownTarget] = useState(null);
   const [customAudioMap, setCustomAudioMap] = useState({});
@@ -162,13 +170,22 @@ export default function AlarmClock() {
     setActiveAudioObj(null);
   };
 
-  const [alarmHours, setAlarmHours] = useState('06');
-  const [alarmMinutes, setAlarmMinutes] = useState('00');
-  const [alarmAmPm, setAlarmAmPm] = useState('AM');
-  const [isAlarmActive, setIsAlarmActive] = useState(true);
+  const [alarmHours, setAlarmHours] = useState(() => getSaved('eb28_alarm_hours', '06'));
+  const [alarmMinutes, setAlarmMinutes] = useState(() => getSaved('eb28_alarm_minutes', '00'));
+  const [alarmAmPm, setAlarmAmPm] = useState(() => getSaved('eb28_alarm_ampm', 'AM'));
+  const [isAlarmActive, setIsAlarmActive] = useState(() => getSaved('eb28_alarm_active', true));
   const [isRinging, setIsRinging] = useState(false);
-  const [selectedVoice, setSelectedVoice] = useState(ALARM_VOICES[0].id);
-  const [isMuted, setIsMuted] = useState(false);
+  const [selectedVoice, setSelectedVoice] = useState(() => getSaved('eb28_alarm_voice', ALARM_VOICES[0].id));
+  const [isMuted, setIsMuted] = useState(() => getSaved('eb28_alarm_muted', false));
+
+  useEffect(() => {
+    localStorage.setItem('eb28_alarm_hours', JSON.stringify(alarmHours));
+    localStorage.setItem('eb28_alarm_minutes', JSON.stringify(alarmMinutes));
+    localStorage.setItem('eb28_alarm_ampm', JSON.stringify(alarmAmPm));
+    localStorage.setItem('eb28_alarm_active', JSON.stringify(isAlarmActive));
+    localStorage.setItem('eb28_alarm_voice', JSON.stringify(selectedVoice));
+    localStorage.setItem('eb28_alarm_muted', JSON.stringify(isMuted));
+  }, [alarmHours, alarmMinutes, alarmAmPm, isAlarmActive, selectedVoice, isMuted]);
 
   const isRingingRef = useRef(false);
   useEffect(() => {

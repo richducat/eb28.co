@@ -60,6 +60,7 @@ import rainbowBunnyUrl from './assets/rainbowbunnyboi.mp3';
 import zenUrl from './assets/zenalarm.mp3';
 import metalWakeupUrl from './assets/metal_wakeup_track.mp3';
 import trapWakeupUrl from './assets/trap_wakeup.mp3';
+import breakUrl from './assets/take_a_break.mp3';
 
 const ALARM_VOICES = [
   { id: 'standard', name: 'Classic Beep', type: 'free', icon: '🔔', sample: 'Standard digital clock piezo buzzer.', category: 'calm' },
@@ -70,6 +71,7 @@ const ALARM_VOICES = [
   { id: 'rainbow', name: '80s Rainbow Bunny Anthem', type: 'premium', icon: '🐰', sample: 'Rainbow Bunny!', category: 'motivational' },
   { id: 'metal', name: 'Heavy Metal Wakeup', type: 'premium', icon: '🎸', sample: 'Heavy metal vibes!', category: 'motivational' },
   { id: 'trap', name: 'TrapBoi Wake Up Anthem', type: 'premium', icon: '🔥', sample: 'Trap 808s!', category: 'motivational' },
+  { id: 'break', name: 'Take a break bitch', type: 'premium', icon: '🛑', sample: 'Take a break!', category: 'motivational' },
 ];
 
 let globalAudioCtx = null;
@@ -572,7 +574,8 @@ export default function AlarmClock() {
     rainbow: rainbowBunnyUrl,
     zen: zenUrl,
     metal: metalWakeupUrl,
-    trap: trapWakeupUrl
+    trap: trapWakeupUrl,
+    break: breakUrl
   };
 
   const playSample = async (voiceId, e, isPreview = true) => {

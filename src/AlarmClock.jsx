@@ -71,7 +71,7 @@ const ALARM_VOICES = [
   { id: 'rainbow', name: '80s Rainbow Bunny Anthem', type: 'premium', icon: '🐰', sample: 'Rainbow Bunny!', category: 'motivational' },
   { id: 'metal', name: 'Heavy Metal Wakeup', type: 'premium', icon: '🎸', sample: 'Heavy metal vibes!', category: 'motivational' },
   { id: 'trap', name: 'TrapBoi Wake Up Anthem', type: 'premium', icon: '🔥', sample: 'Trap 808s!', category: 'motivational' },
-  { id: 'break', name: 'Take a break bitch', type: 'premium', icon: '🛑', sample: 'Take a break!', category: 'motivational' },
+  { id: 'break', name: 'Take a break bish', type: 'premium', icon: '🛑', sample: 'Take a break!', category: 'motivational' },
 ];
 
 let globalAudioCtx = null;

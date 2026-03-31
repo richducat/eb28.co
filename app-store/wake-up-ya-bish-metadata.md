@@ -38,7 +38,7 @@ alarm clock,wakeup,retro,productivity,timer,morning,habit,calendar
 
 ## What's New
 
-- Added the new “Take a break bitch” motivational alarm sound
+- Added the new “Take a break bish” motivational alarm sound
 - Synced the latest web experience into the native iOS app
 - Added native calendar permission messaging and App Store release prep
 

@@ -175,10 +175,31 @@ export default function AlarmClock() {
   const [alarmHours, setAlarmHours] = useState(() => getSaved('eb28_alarm_hours', '06'));
   const [alarmMinutes, setAlarmMinutes] = useState(() => getSaved('eb28_alarm_minutes', '00'));
   const [alarmAmPm, setAlarmAmPm] = useState(() => getSaved('eb28_alarm_ampm', 'AM'));
-  const [isAlarmActive, setIsAlarmActive] = useState(() => getSaved('eb28_alarm_active', true));
+  const [isAlarmActive, setIsAlarmActive] = useState(() => getSaved('eb28_alarm_active', false));
   const [isRinging, setIsRinging] = useState(false);
   const [selectedVoice, setSelectedVoice] = useState(() => getSaved('eb28_alarm_voice', ALARM_VOICES[0].id));
   const [isMuted, setIsMuted] = useState(() => getSaved('eb28_alarm_muted', false));
+  const [hasNativeNotificationAccess, setHasNativeNotificationAccess] = useState(() => getSaved('eb28_notification_permission_granted', false));
+
+  const ensureNotificationPermission = useCallback(async () => {
+    if (!Capacitor.isNativePlatform()) return true;
+
+    try {
+      const current = await LocalNotifications.checkPermissions();
+      if (current.display === 'granted') {
+        setHasNativeNotificationAccess(true);
+        return true;
+      }
+
+      const requested = await LocalNotifications.requestPermissions();
+      const granted = requested.display === 'granted';
+      setHasNativeNotificationAccess(granted);
+      return granted;
+    } catch (err) {
+      console.error('Notification permission request failed', err);
+      return false;
+    }
+  }, []);
 
   useEffect(() => {
     localStorage.setItem('eb28_alarm_hours', JSON.stringify(alarmHours));
@@ -189,6 +210,10 @@ export default function AlarmClock() {
     localStorage.setItem('eb28_alarm_muted', JSON.stringify(isMuted));
   }, [alarmHours, alarmMinutes, alarmAmPm, isAlarmActive, selectedVoice, isMuted]);
 
+  useEffect(() => {
+    localStorage.setItem('eb28_notification_permission_granted', JSON.stringify(hasNativeNotificationAccess));
+  }, [hasNativeNotificationAccess]);
+
   const isRingingRef = useRef(false);
   useEffect(() => {
      isRingingRef.current = isRinging;
@@ -196,37 +221,46 @@ export default function AlarmClock() {
 
   // CAPACITOR NATIVE PUSH SCHEDULER
   useEffect(() => {
-    if (Capacitor.isNativePlatform()) {
-      LocalNotifications.requestPermissions();
-      
-      const actionL = LocalNotifications.addListener('localNotificationActionPerformed', () => {
-         setIsRinging(true);
-      });
-      const receiveL = LocalNotifications.addListener('localNotificationReceived', () => {
-         setIsRinging(true);
-      });
-      return () => {
-         actionL.then(l => l.remove());
-         receiveL.then(l => l.remove());
-      };
-    }
+    if (!Capacitor.isNativePlatform()) return;
   }, []);
 
   useEffect(() => {
+    if (!Capacitor.isNativePlatform() || !hasNativeNotificationAccess) return;
+
+    const actionL = LocalNotifications.addListener('localNotificationActionPerformed', () => {
+       setIsRinging(true);
+    });
+    const receiveL = LocalNotifications.addListener('localNotificationReceived', () => {
+       setIsRinging(true);
+    });
+    return () => {
+       actionL.then(l => l.remove());
+       receiveL.then(l => l.remove());
+    };
+  }, [hasNativeNotificationAccess]);
+
+  useEffect(() => {
     if (!Capacitor.isNativePlatform()) return;
-    
-    if (isAlarmActive) {
+
+    const syncNativeAlarm = async () => {
+      if (!isAlarmActive) {
+        await LocalNotifications.cancel({ notifications: [{ id: 1 }] });
+        return;
+      }
+
+      if (!hasNativeNotificationAccess) return;
+
       const now = new Date();
       let targetH = parseInt(alarmHours, 10);
       if (alarmAmPm === 'PM' && targetH < 12) targetH += 12;
       if (alarmAmPm === 'AM' && targetH === 12) targetH = 0;
-      
+
       const targetTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), targetH, parseInt(alarmMinutes, 10), 0);
       if (targetTime.getTime() <= now.getTime()) {
          targetTime.setDate(targetTime.getDate() + 1);
       }
 
-      LocalNotifications.schedule({
+      await LocalNotifications.schedule({
         notifications: [{
             title: "⚠️ WAKE UP, YA BISH",
             body: "Time to grind. Your alarm is sounding.",
@@ -237,10 +271,12 @@ export default function AlarmClock() {
             extra: null
         }]
       });
-    } else {
-      LocalNotifications.cancel({ notifications: [{ id: 1 }] });
-    }
-  }, [isAlarmActive, alarmHours, alarmMinutes, alarmAmPm, selectedVoice]);
+    };
+
+    syncNativeAlarm().catch(err => {
+      console.error('Native alarm scheduling failed', err);
+    });
+  }, [hasNativeNotificationAccess, isAlarmActive, alarmHours, alarmMinutes, alarmAmPm, selectedVoice]);
 
   // User Profile & Mock-Authentication State
   const [showProfile, setShowProfile] = useState(false);
@@ -308,7 +344,7 @@ export default function AlarmClock() {
     document.addEventListener('touchstart', unlocker);
     
     // Register Service Worker for iOS Native Push Notifications API
-    if ('serviceWorker' in navigator) {
+    if (!Capacitor.isNativePlatform() && 'serviceWorker' in navigator) {
       navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW registration failed:', err));
     }
 
@@ -538,7 +574,7 @@ export default function AlarmClock() {
     }
   };
 
-  const handleTimePickerChange = (e) => {
+  const handleTimePickerChange = async (e) => {
     const val = e.target.value;
     if (!val) return;
     const [hStr, mStr] = val.split(':');
@@ -546,6 +582,7 @@ export default function AlarmClock() {
     const ampm = h >= 12 ? 'PM' : 'AM';
     h = h % 12 || 12;
     const finalHStr = h.toString().padStart(2, '0');
+    if (!(await ensureNotificationPermission())) return;
     setAlarmHours(finalHStr);
     setAlarmMinutes(mStr);
     setAlarmAmPm(ampm);
@@ -560,7 +597,8 @@ export default function AlarmClock() {
     return `${h.toString().padStart(2, '0')}:${alarmMinutes}`;
   };
 
-  const setTimerMinutes = (minutesAdded) => {
+  const setTimerMinutes = async (minutesAdded) => {
+    if (!(await ensureNotificationPermission())) return;
     const targetTime = time.getTime() + minutesAdded * 60000;
     setCountdownTarget(targetTime);
     setIsAlarmActive(true);

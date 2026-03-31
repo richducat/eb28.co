@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import { Capacitor } from '@capacitor/core';
 import App from './App';
 import Dashboard from './Dashboard';
 import AppBuilderStudio from './AppBuilderStudio';
@@ -13,6 +14,7 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 const pathname = window.location.pathname.toLowerCase().replace(/\/$/, "");
 const hostname = window.location.hostname.toLowerCase();
 const routeKey = detectRouteKey({ pathname, hostname });
+const isNativeAlarmClockApp = Capacitor.isNativePlatform();
 
 const isDashboardRoute =
   pathname === '/dash' ||
@@ -22,7 +24,10 @@ const isAppBuilderRoute = pathname === '/appbuilder';
 const isFundManagerRoute =
   pathname === '/fundmanager' ||
   hostname === 'fundmanager.eb28.co';
-const isAlarmClockRoute = pathname === '/alarmclock' || hostname === 'app.wakeupyabish.com';
+const isAlarmClockRoute =
+  isNativeAlarmClockApp ||
+  pathname === '/alarmclock' ||
+  hostname === 'app.wakeupyabish.com';
 
 applyDocumentSeo(routeKey);
 

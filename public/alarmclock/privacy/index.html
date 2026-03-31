@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Wake Up Ya Bish Privacy Policy</title>
+    <meta
+      name="description"
+      content="Privacy policy for the Wake Up Ya Bish alarm clock app."
+    />
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #05080a;
+        --panel: rgba(10, 16, 21, 0.92);
+        --line: rgba(0, 240, 255, 0.18);
+        --text: #eef6ff;
+        --muted: #a8bfd2;
+        --accent: #39ff14;
+        --accent-2: #00f0ff;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background:
+          radial-gradient(circle at top, rgba(255, 0, 170, 0.16), transparent 34%),
+          radial-gradient(circle at bottom right, rgba(0, 240, 255, 0.18), transparent 28%),
+          var(--bg);
+        color: var(--text);
+      }
+
+      main {
+        width: min(880px, calc(100% - 32px));
+        margin: 32px auto;
+        padding: 28px;
+        border: 1px solid var(--line);
+        border-radius: 24px;
+        background: var(--panel);
+        backdrop-filter: blur(18px);
+        box-shadow: 0 18px 60px rgba(0, 0, 0, 0.35);
+      }
+
+      h1,
+      h2 {
+        line-height: 1.1;
+      }
+
+      h1 {
+        margin: 0 0 12px;
+        font-size: clamp(2.2rem, 5vw, 3.4rem);
+        letter-spacing: -0.05em;
+      }
+
+      h2 {
+        margin: 28px 0 10px;
+        font-size: 1.15rem;
+        color: var(--accent);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      p,
+      li {
+        color: var(--muted);
+        line-height: 1.65;
+        font-size: 1rem;
+      }
+
+      a {
+        color: var(--accent-2);
+      }
+
+      .eyebrow {
+        display: inline-block;
+        margin-bottom: 14px;
+        padding: 7px 12px;
+        border-radius: 999px;
+        border: 1px solid rgba(57, 255, 20, 0.28);
+        color: var(--accent);
+        font-size: 0.78rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+      }
+
+      ul {
+        padding-left: 18px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="eyebrow">Wake Up Ya Bish</div>
+      <h1>Privacy Policy</h1>
+      <p>Last updated: March 31, 2026</p>
+      <p>
+        Wake Up Ya Bish is an alarm clock app with optional calendar awareness and
+        locally stored personalization. This policy explains what the app accesses,
+        what stays on your device, and how to contact support.
+      </p>
+
+      <h2>What the app accesses</h2>
+      <ul>
+        <li>
+          Calendar access is optional and used only to show your next upcoming event
+          on the alarm screen.
+        </li>
+        <li>
+          Notification permission is optional and used to schedule local alarm
+          notifications on your device.
+        </li>
+      </ul>
+
+      <h2>Data storage</h2>
+      <p>
+        Alarm settings, selected sounds, and progress data are stored locally on
+        your device. The iOS app does not require account creation to function.
+      </p>
+
+      <h2>Data sharing</h2>
+      <p>
+        The iOS app does not sell your personal data. If you choose to enable
+        calendar access, event information is read from the device calendar APIs so
+        the app can show your next event. The app does not use analytics SDKs or
+        third-party advertising trackers.
+      </p>
+
+      <h2>Website behavior</h2>
+      <p>
+        The web version of the product can optionally fetch a public iCal feed URL
+        that you provide. That behavior is separate from the iOS app flow, which
+        uses native device calendar access instead.
+      </p>
+
+      <h2>Contact</h2>
+      <p>
+        Questions about privacy can be sent through
+        <a href="https://eb28.co/#contact">eb28.co/#contact</a>.
+      </p>
+    </main>
+  </body>
+</html>

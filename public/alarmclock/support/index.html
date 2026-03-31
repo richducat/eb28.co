@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Wake Up Ya Bish Support</title>
+    <meta
+      name="description"
+      content="Support information for the Wake Up Ya Bish alarm clock app."
+    />
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #05080a;
+        --panel: rgba(9, 15, 20, 0.92);
+        --line: rgba(255, 0, 170, 0.18);
+        --text: #eef6ff;
+        --muted: #a8bfd2;
+        --accent: #ff00aa;
+        --accent-2: #39ff14;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background:
+          radial-gradient(circle at top left, rgba(255, 0, 170, 0.16), transparent 35%),
+          radial-gradient(circle at bottom, rgba(57, 255, 20, 0.15), transparent 30%),
+          var(--bg);
+        color: var(--text);
+      }
+
+      main {
+        width: min(880px, calc(100% - 32px));
+        margin: 32px auto;
+        padding: 28px;
+        border: 1px solid var(--line);
+        border-radius: 24px;
+        background: var(--panel);
+        backdrop-filter: blur(18px);
+        box-shadow: 0 18px 60px rgba(0, 0, 0, 0.35);
+      }
+
+      h1,
+      h2 {
+        line-height: 1.1;
+      }
+
+      h1 {
+        margin: 0 0 12px;
+        font-size: clamp(2.2rem, 5vw, 3.4rem);
+        letter-spacing: -0.05em;
+      }
+
+      h2 {
+        margin: 28px 0 10px;
+        font-size: 1.1rem;
+        color: var(--accent-2);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      p,
+      li {
+        color: var(--muted);
+        line-height: 1.65;
+        font-size: 1rem;
+      }
+
+      a {
+        color: var(--accent);
+      }
+
+      .eyebrow {
+        display: inline-block;
+        margin-bottom: 14px;
+        padding: 7px 12px;
+        border-radius: 999px;
+        border: 1px solid rgba(255, 0, 170, 0.28);
+        color: var(--accent);
+        font-size: 0.78rem;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+      }
+
+      ul {
+        padding-left: 18px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="eyebrow">Wake Up Ya Bish</div>
+      <h1>Support</h1>
+      <p>
+        Need help with Wake Up Ya Bish? Use the notes below for common setup and
+        troubleshooting steps.
+      </p>
+
+      <h2>Setup tips</h2>
+      <ul>
+        <li>Allow notifications when prompted so alarms can fire on device.</li>
+        <li>
+          Enable calendar access only if you want to see your next upcoming event
+          on the alarm screen.
+        </li>
+        <li>
+          Open the app after installing a new build and preview an alarm sound once
+          to make sure audio is initialized on your device.
+        </li>
+      </ul>
+
+      <h2>Troubleshooting</h2>
+      <ul>
+        <li>If alarms are muted, verify your selected sound and mute toggle.</li>
+        <li>
+          If the calendar card is blank, confirm calendar permission is enabled in
+          iOS Settings.
+        </li>
+        <li>
+          If a sound preview does not play, close and reopen the app and test the
+          voice again.
+        </li>
+      </ul>
+
+      <h2>Contact</h2>
+      <p>
+        For support requests, bug reports, or review follow-up, contact
+        <a href="https://eb28.co/#contact">https://eb28.co/#contact</a>.
+      </p>
+    </main>
+  </body>
+</html>

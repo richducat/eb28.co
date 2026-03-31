@@ -1,5 +1,18 @@
 import UIKit
 import Capacitor
+import Foundation
+
+private let bundledNotificationSounds = [
+    "alarm_standard.caf",
+    "alarm_zen.caf",
+    "alarm_nuclear.caf",
+    "alarm_quarter.caf",
+    "alarm_spite.caf",
+    "alarm_rainbow.caf",
+    "alarm_metal.caf",
+    "alarm_trap.caf",
+    "alarm_break.caf"
+]
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -7,8 +20,41 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        installNotificationSounds()
         return true
+    }
+
+    private func installNotificationSounds() {
+        guard let libraryDirectory = FileManager.default.urls(for: .libraryDirectory, in: .userDomainMask).first else {
+            return
+        }
+
+        let soundsDirectory = libraryDirectory.appendingPathComponent("Sounds", isDirectory: true)
+
+        do {
+            try FileManager.default.createDirectory(at: soundsDirectory, withIntermediateDirectories: true)
+
+            for filename in bundledNotificationSounds {
+                let destinationURL = soundsDirectory.appendingPathComponent(filename)
+                if FileManager.default.fileExists(atPath: destinationURL.path) {
+                    try FileManager.default.removeItem(at: destinationURL)
+                }
+
+                let possibleSources = [
+                    Bundle.main.resourceURL?.appendingPathComponent("public/\(filename)"),
+                    Bundle.main.resourceURL?.appendingPathComponent(filename)
+                ].compactMap { $0 }
+
+                guard let sourceURL = possibleSources.first(where: { FileManager.default.fileExists(atPath: $0.path) }) else {
+                    NSLog("Wake Up Ya Bish: missing bundled notification sound %@", filename)
+                    continue
+                }
+
+                try FileManager.default.copyItem(at: sourceURL, to: destinationURL)
+            }
+        } catch {
+            NSLog("Wake Up Ya Bish: failed to install notification sounds %@", error.localizedDescription)
+        }
     }
 
     func applicationWillResignActive(_ application: UIApplication) {

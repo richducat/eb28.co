@@ -1,5 +1,5 @@
 import { Capacitor } from "@capacitor/core";
-import { CapacitorCalendar } from "@ebarooni/capacitor-calendar";
+import { CalendarPermissionScope, CapacitorCalendar } from "@ebarooni/capacitor-calendar";
 import { LocalNotifications } from "@capacitor/local-notifications";
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 
@@ -7,6 +7,8 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 let wakeLock = null;
 const silentAudioElement = new Audio('/silence.mp3');
 silentAudioElement.loop = true;
+silentAudioElement.preload = 'auto';
+silentAudioElement.playsInline = true;
 let silentOscillator = null;
 
 const armBackgroundEngine = async (titleStr) => {
@@ -73,6 +75,22 @@ const ALARM_VOICES = [
   { id: 'trap', name: 'TrapBoi Wake Up Anthem', type: 'premium', icon: '🔥', sample: 'Trap 808s!', category: 'motivational' },
   { id: 'break', name: 'Take a break bish', type: 'premium', icon: '🛑', sample: 'Take a break!', category: 'motivational' },
 ];
+
+const NATIVE_NOTIFICATION_SOUND_MAP = {
+  standard: 'alarm_standard.caf',
+  zen: 'alarm_zen.caf',
+  nuclear: 'alarm_nuclear.caf',
+  quarter: 'alarm_quarter.caf',
+  spite: 'alarm_spite.caf',
+  rainbow: 'alarm_rainbow.caf',
+  metal: 'alarm_metal.caf',
+  trap: 'alarm_trap.caf',
+  break: 'alarm_break.caf'
+};
+
+const getNativeNotificationSound = (voiceId) => (
+  NATIVE_NOTIFICATION_SOUND_MAP[voiceId] || NATIVE_NOTIFICATION_SOUND_MAP.standard
+);
 
 let globalAudioCtx = null;
 
@@ -180,6 +198,7 @@ export default function AlarmClock() {
   const [selectedVoice, setSelectedVoice] = useState(() => getSaved('eb28_alarm_voice', ALARM_VOICES[0].id));
   const [isMuted, setIsMuted] = useState(() => getSaved('eb28_alarm_muted', false));
   const [hasNativeNotificationAccess, setHasNativeNotificationAccess] = useState(() => getSaved('eb28_notification_permission_granted', false));
+  const [calendarPermissionState, setCalendarPermissionState] = useState(() => getSaved('eb28_calendar_permission_state', 'prompt'));
 
   const ensureNotificationPermission = useCallback(async () => {
     if (!Capacitor.isNativePlatform()) return true;
@@ -214,37 +233,122 @@ export default function AlarmClock() {
     localStorage.setItem('eb28_notification_permission_granted', JSON.stringify(hasNativeNotificationAccess));
   }, [hasNativeNotificationAccess]);
 
+  useEffect(() => {
+    localStorage.setItem('eb28_calendar_permission_state', JSON.stringify(calendarPermissionState));
+  }, [calendarPermissionState]);
+
   const isRingingRef = useRef(false);
   useEffect(() => {
      isRingingRef.current = isRinging;
   }, [isRinging]);
 
-  // CAPACITOR NATIVE PUSH SCHEDULER
+  const warmAudioEngine = useCallback(async () => {
+    initAudioContext();
+    if (globalAudioCtx && globalAudioCtx.state === 'suspended') {
+      try {
+        await globalAudioCtx.resume();
+      } catch (err) {
+        console.warn('Audio context resume failed', err);
+      }
+    }
+
+    try {
+      silentAudioElement.muted = true;
+      silentAudioElement.currentTime = 0;
+      const unlockAttempt = silentAudioElement.play();
+      if (unlockAttempt && typeof unlockAttempt.then === 'function') {
+        await unlockAttempt;
+        silentAudioElement.pause();
+        silentAudioElement.currentTime = 0;
+      }
+    } catch (err) {
+      console.warn('Silent audio warmup failed', err);
+    } finally {
+      silentAudioElement.muted = false;
+    }
+
+    return globalAudioCtx;
+  }, []);
+
+  const clearDeliveredNativeNotifications = async () => {
+    if (!Capacitor.isNativePlatform()) return;
+    try {
+      await LocalNotifications.removeAllDeliveredNotifications();
+    } catch (err) {
+      console.warn('Failed to clear delivered notifications', err);
+    }
+  };
+
+  const cancelScheduledAlarm = async () => {
+    setCountdownTarget(null);
+    setIsAlarmActive(false);
+    setIsRinging(false);
+    isRingingRef.current = false;
+    window.speechSynthesis.cancel();
+    safeStopAudio();
+    await disarmBackgroundEngine();
+    await clearDeliveredNativeNotifications();
+    if (Capacitor.isNativePlatform()) {
+      try {
+        await LocalNotifications.cancel({ notifications: [{ id: 1 }] });
+      } catch (err) {
+        console.warn('Failed to cancel pending native alarm', err);
+      }
+    }
+  };
+
+  function handleNativeAlarmEvent(notificationPayload) {
+    const voiceId = notificationPayload?.notification?.extra?.voiceId
+      || notificationPayload?.extra?.voiceId
+      || selectedVoice;
+    const alarmMode = notificationPayload?.notification?.extra?.alarmMode
+      || notificationPayload?.extra?.alarmMode
+      || 'clock';
+    if (alarmMode === 'countdown') {
+      setCountdownTarget(null);
+      setIsAlarmActive(false);
+    }
+    setIsRinging(true);
+    isRingingRef.current = true;
+    if (!isMuted) {
+      void playSample(voiceId, null, false);
+    }
+  }
+
   useEffect(() => {
     if (!Capacitor.isNativePlatform()) return;
+
+    LocalNotifications.checkPermissions()
+      .then((current) => {
+        setHasNativeNotificationAccess(current.display === 'granted');
+      })
+      .catch((err) => {
+        console.warn('Notification permission check failed', err);
+      });
   }, []);
 
   useEffect(() => {
     if (!Capacitor.isNativePlatform() || !hasNativeNotificationAccess) return;
 
-    const actionL = LocalNotifications.addListener('localNotificationActionPerformed', () => {
-       setIsRinging(true);
+    const actionL = LocalNotifications.addListener('localNotificationActionPerformed', (notificationAction) => {
+       handleNativeAlarmEvent(notificationAction);
     });
-    const receiveL = LocalNotifications.addListener('localNotificationReceived', () => {
-       setIsRinging(true);
+    const receiveL = LocalNotifications.addListener('localNotificationReceived', (notification) => {
+       handleNativeAlarmEvent(notification);
     });
     return () => {
        actionL.then(l => l.remove());
        receiveL.then(l => l.remove());
     };
-  }, [hasNativeNotificationAccess]);
+  }, [hasNativeNotificationAccess, isMuted, selectedVoice]);
 
   useEffect(() => {
     if (!Capacitor.isNativePlatform()) return;
 
     const syncNativeAlarm = async () => {
+      await LocalNotifications.cancel({ notifications: [{ id: 1 }] });
+
       if (!isAlarmActive) {
-        await LocalNotifications.cancel({ notifications: [{ id: 1 }] });
         return;
       }
 
@@ -255,9 +359,11 @@ export default function AlarmClock() {
       if (alarmAmPm === 'PM' && targetH < 12) targetH += 12;
       if (alarmAmPm === 'AM' && targetH === 12) targetH = 0;
 
-      const targetTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), targetH, parseInt(alarmMinutes, 10), 0);
-      if (targetTime.getTime() <= now.getTime()) {
-         targetTime.setDate(targetTime.getDate() + 1);
+      const targetTime = countdownTarget
+        ? new Date(countdownTarget)
+        : new Date(now.getFullYear(), now.getMonth(), now.getDate(), targetH, parseInt(alarmMinutes, 10), 0);
+      if (!countdownTarget && targetTime.getTime() <= now.getTime()) {
+        targetTime.setDate(targetTime.getDate() + 1);
       }
 
       await LocalNotifications.schedule({
@@ -265,10 +371,16 @@ export default function AlarmClock() {
             title: "⚠️ WAKE UP, YA BISH",
             body: "Time to grind. Your alarm is sounding.",
             id: 1,
-            schedule: { allowWhileIdle: true, on: { hour: targetH, minute: parseInt(alarmMinutes, 10), second: 0 } },
-            sound: `${selectedVoice}.mp3`,
+            schedule: countdownTarget
+              ? { allowWhileIdle: true, at: targetTime }
+              : { allowWhileIdle: true, on: { hour: targetH, minute: parseInt(alarmMinutes, 10), second: 0 } },
+            ...(!isMuted ? { sound: getNativeNotificationSound(selectedVoice) } : {}),
             actionTypeId: "",
-            extra: null
+            extra: {
+              voiceId: selectedVoice,
+              targetIso: targetTime.toISOString(),
+              alarmMode: countdownTarget ? 'countdown' : 'clock'
+            }
         }]
       });
     };
@@ -276,7 +388,7 @@ export default function AlarmClock() {
     syncNativeAlarm().catch(err => {
       console.error('Native alarm scheduling failed', err);
     });
-  }, [hasNativeNotificationAccess, isAlarmActive, alarmHours, alarmMinutes, alarmAmPm, selectedVoice]);
+  }, [hasNativeNotificationAccess, isAlarmActive, alarmHours, alarmMinutes, alarmAmPm, countdownTarget, selectedVoice, isMuted]);
 
   // User Profile & Mock-Authentication State
   const [showProfile, setShowProfile] = useState(false);
@@ -294,8 +406,9 @@ export default function AlarmClock() {
     try { return localStorage.getItem('eb28_calendar_url') || ''; } catch(e) { return ''; }
   });
   const [upcomingEvent, setUpcomingEvent] = useState(null);
-  const [tempCalUrl, setTempCalUrl] = useState('');
-  const [motivationState, setMotivationState] = useState(true);
+  const [tempCalUrl, setTempCalUrl] = useState(() => {
+    try { return localStorage.getItem('eb28_calendar_url') || ''; } catch(e) { return ''; }
+  });
   const [showSettings, setShowSettings] = useState(false);
   const [isLightOn, setIsLightOn] = useState(false);
   const [phraseIndex, setPhraseIndex] = useState(0);
@@ -339,7 +452,9 @@ export default function AlarmClock() {
     } catch (e) { console.warn('Failed to load storage', e); }
     
     // Globally register click listeners to unlock browser AudioContext policies
-    const unlocker = () => initAudioContext();
+    const unlocker = () => {
+      void warmAudioEngine();
+    };
     document.addEventListener('click', unlocker);
     document.addEventListener('touchstart', unlocker);
     
@@ -352,7 +467,12 @@ export default function AlarmClock() {
       document.removeEventListener('click', unlocker);
       document.removeEventListener('touchstart', unlocker);
     };
-  }, []);
+  }, [warmAudioEngine]);
+
+  useEffect(() => {
+    if (!showSettings) return;
+    void warmAudioEngine();
+  }, [showSettings, warmAudioEngine]);
 
   // -- Google Calendar / iCal Feed Sync Engine --
   const fetchCalendar = async (url) => {
@@ -443,22 +563,47 @@ export default function AlarmClock() {
     }
   };
 
-  const fetchNativeCalendar = async () => {
+  const syncNativeCalendarPermission = async (requestAccess = false) => {
+    if (!Capacitor.isNativePlatform()) return false;
+
+    try {
+      const permission = requestAccess
+        ? await CapacitorCalendar.requestFullCalendarAccess()
+        : await CapacitorCalendar.checkPermission({ scope: CalendarPermissionScope.READ_CALENDAR });
+      const granted = permission.result === 'granted';
+      setCalendarPermissionState(permission.result);
+      if (!granted) {
+        setUpcomingEvent(null);
+      }
+      return granted;
+    } catch (err) {
+      console.error('Calendar permission sync failed', err);
+      setCalendarPermissionState('denied');
+      setUpcomingEvent(null);
+      return false;
+    }
+  };
+
+  const fetchNativeCalendar = async (requestAccess = false) => {
+    if (!(await syncNativeCalendarPermission(requestAccess))) return;
+
     try {
        const now = Date.now();
-       const endOfDay = new Date();
-       endOfDay.setHours(23, 59, 59, 999);
+       const endOfRange = new Date(now + (7 * 24 * 60 * 60 * 1000));
        
        const { result } = await CapacitorCalendar.listEventsInRange({
           startDate: now,
-          endDate: endOfDay.getTime()
+          endDate: endOfRange.getTime()
        });
        
        if (result && result.length > 0) {
-          const events = result.map(e => ({
-             summary: e.title,
-             start: new Date(e.startDate)
-          })).sort((a,b) => a.start - b.start);
+          const events = result
+            .map(e => ({
+               summary: e.title,
+               start: new Date(e.startDate)
+            }))
+            .filter(event => event.start.getTime() >= now)
+            .sort((a,b) => a.start - b.start);
           
           if (events.length > 0) {
              setUpcomingEvent(events[0]);
@@ -470,6 +615,7 @@ export default function AlarmClock() {
        }
     } catch(err) {
        console.error('Native Calendar EventKit failed', err);
+       setUpcomingEvent(null);
     }
   };
 
@@ -477,11 +623,23 @@ export default function AlarmClock() {
     const isNative = Capacitor.isNativePlatform();
     
     if (isNative) {
-       fetchNativeCalendar();
-       const calInterval = setInterval(() => fetchNativeCalendar(), 15 * 60 * 1000);
-       return () => clearInterval(calInterval);
+       void fetchNativeCalendar();
+       const calInterval = setInterval(() => {
+         void fetchNativeCalendar();
+       }, 15 * 60 * 1000);
+       const refreshOnVisible = () => {
+         if (document.visibilityState === 'visible') {
+           void fetchNativeCalendar();
+         }
+       };
+       document.addEventListener('visibilitychange', refreshOnVisible);
+       return () => {
+         clearInterval(calInterval);
+         document.removeEventListener('visibilitychange', refreshOnVisible);
+       };
     } else {
        if (calendarUrl) fetchCalendar(calendarUrl);
+       else setUpcomingEvent(null);
        const calInterval = setInterval(() => {
           if (calendarUrl) fetchCalendar(calendarUrl);
        }, 15 * 60 * 1000);
@@ -513,6 +671,7 @@ export default function AlarmClock() {
     if (countdownTarget) {
       if (currentTime.getTime() >= countdownTarget) {
         setCountdownTarget(null);
+        setIsAlarmActive(false);
         triggerAlarm();
       }
       return;
@@ -529,10 +688,12 @@ export default function AlarmClock() {
     }
   };
 
-  const triggerAlarm = () => {
+  const triggerAlarm = (voiceId = selectedVoice) => {
     setIsRinging(true);
     isRingingRef.current = true;
-    if (!isMuted) playSample(selectedVoice, null, false);
+    if (!isMuted) {
+      void playSample(voiceId, null, false);
+    }
     if ('Notification' in window && Notification.permission === 'granted') {
       if ('serviceWorker' in navigator) {
         navigator.serviceWorker.ready.then(reg => {
@@ -553,11 +714,12 @@ export default function AlarmClock() {
     }
   };
 
-  const stopAlarm = () => {
+  const stopAlarm = async () => {
     setIsRinging(false);
     isRingingRef.current = false;
     window.speechSynthesis.cancel();
     safeStopAudio();
+    await clearDeliveredNativeNotifications();
     
     // Trigger Habit Mastery Morning Intercept if it hasn't been completed today!
     if (!isHabitCompletedToday) {
@@ -567,7 +729,7 @@ export default function AlarmClock() {
 
   const handleSnoozeLight = () => {
     if (isRinging) {
-      stopAlarm();
+      void stopAlarm();
     } else {
       setIsLightOn(true);
       setTimeout(() => setIsLightOn(false), 2500);
@@ -583,6 +745,7 @@ export default function AlarmClock() {
     h = h % 12 || 12;
     const finalHStr = h.toString().padStart(2, '0');
     if (!(await ensureNotificationPermission())) return;
+    await warmAudioEngine();
     setAlarmHours(finalHStr);
     setAlarmMinutes(mStr);
     setAlarmAmPm(ampm);
@@ -599,6 +762,7 @@ export default function AlarmClock() {
 
   const setTimerMinutes = async (minutesAdded) => {
     if (!(await ensureNotificationPermission())) return;
+    await warmAudioEngine();
     const targetTime = time.getTime() + minutesAdded * 60000;
     setCountdownTarget(targetTime);
     setIsAlarmActive(true);
@@ -623,7 +787,7 @@ export default function AlarmClock() {
     }
     window.speechSynthesis.cancel();
     safeStopAudio();
-    initAudioContext();
+    await warmAudioEngine();
     
     // Synthesize Retro Sounds dynamically with infinite recursive looping
     const playSyntheticLoop = () => {
@@ -643,24 +807,38 @@ export default function AlarmClock() {
 
     if (playSyntheticLoop()) return;
 
-    // Web Audio API Buffer Playback (for Mobile lock screen bypassing)
+    if (ALARM_URLS[voiceId]) {
+      try {
+        const mediaEl = new Audio(ALARM_URLS[voiceId]);
+        mediaEl.preload = 'auto';
+        mediaEl.playsInline = true;
+        mediaEl.loop = !isPreview;
+        await mediaEl.play();
+        safeSetAudio(mediaEl);
+        return;
+      } catch (err) {
+        console.warn("HTML audio playback failed, falling back to Web Audio:", err);
+      }
+    }
+
+    // Web Audio API Buffer Playback fallback
     if (ALARM_URLS[voiceId] && globalAudioCtx) {
       try {
         const response = await fetch(ALARM_URLS[voiceId]);
         const arrayBuffer = await response.arrayBuffer();
         const audioBuffer = await globalAudioCtx.decodeAudioData(arrayBuffer);
-        
+
         const source = globalAudioCtx.createBufferSource();
         source.buffer = audioBuffer;
-        source.loop = !isPreview; // Loop the alarm if it's not a preview
-        
+        source.loop = !isPreview;
+
         const gainNode = globalAudioCtx.createGain();
         gainNode.gain.value = 1.0;
-        
+
         source.connect(gainNode);
         gainNode.connect(globalAudioCtx.destination);
         source.start(0);
-        
+
         safeSetAudio({
           pause: () => {
              try { source.stop(); } catch(err){}
@@ -707,6 +885,36 @@ export default function AlarmClock() {
   const displayDateStrFull = `${time.toLocaleDateString('en-US', { weekday: 'short' }).toUpperCase()} ${time.toLocaleDateString('en-US', { month: 'numeric', day: 'numeric', year: '2-digit' })}`;
   
   const currentScheme = COLOR_SCHEMES[colorSchemeKey];
+  const isCalendarLinked = Capacitor.isNativePlatform()
+    ? calendarPermissionState === 'granted'
+    : Boolean(calendarUrl);
+  const nextEventTimeLabel = upcomingEvent
+    ? upcomingEvent.start.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }).toUpperCase()
+    : null;
+  const nextEventDayLabel = upcomingEvent
+    ? (upcomingEvent.start.toDateString() === new Date().toDateString()
+        ? 'TODAY'
+        : upcomingEvent.start.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }).toUpperCase())
+    : null;
+  const nextEventSummary = upcomingEvent?.summary?.trim() || '';
+  const nextEventStatusLabel = upcomingEvent
+    ? `${nextEventDayLabel} ${nextEventTimeLabel}`.trim()
+    : (isCalendarLinked ? 'NO UPCOMING EVENT' : 'CALENDAR NOT CONNECTED');
+  const nextEventDetailLabel = upcomingEvent
+    ? nextEventSummary
+    : (Capacitor.isNativePlatform() ? 'Connect device calendar in profile.' : 'Paste an iCal feed in profile.');
+  const canCancelAlarm = Boolean(isAlarmActive || countdownTarget || isRinging);
+  const openSettingsPanel = () => {
+    void warmAudioEngine();
+    setShowSettings(true);
+  };
+  const openProfilePanel = () => {
+    setTempCalUrl(calendarUrl);
+    if (Capacitor.isNativePlatform()) {
+      void fetchNativeCalendar();
+    }
+    setShowProfile(true);
+  };
 
   return (
     <div className="relative w-full overflow-x-hidden overflow-y-auto h-[100dvh] pt-4 lg:pt-0 pb-4 flex items-start lg:items-center justify-center bg-[#000b12] touch-manipulation" style={{fontFamily: '"Press Start 2P", monospace'}}>
@@ -827,13 +1035,13 @@ export default function AlarmClock() {
         <div className="pointer-events-auto w-[350px] h-[220px] border-4 border-[#ff00aa] bg-black shadow-[0_0_30px_#ff00aa] flex flex-col pt-2 relative overflow-hidden">
           <div className="text-[10px] text-white text-center border-b border-[#ff00aa] pb-2 uppercase">Auto-Select Timers</div>
           <div className="flex-1 flex flex-col justify-center gap-3 px-4 mt-2">
-             <button onClick={() => setTimerMinutes(5)} className="w-full h-[40px] bg-[#1a0011] border border-[#ff00aa] text-[#00f0ff] text-[10px] uppercase hover:bg-[#ff00aa] hover:text-white transition-colors">
+             <button onClick={() => { void setTimerMinutes(5); }} className="w-full h-[40px] bg-[#1a0011] border border-[#ff00aa] text-[#00f0ff] text-[10px] uppercase hover:bg-[#ff00aa] hover:text-white transition-colors">
                 5 Minute Power Nap
              </button>
-             <button onClick={() => setTimerMinutes(15)} className="w-full h-[40px] bg-[#1a0011] border border-[#ff00aa] text-[#00f0ff] text-[10px] uppercase hover:bg-[#ff00aa] hover:text-white transition-colors">
+             <button onClick={() => { void setTimerMinutes(15); }} className="w-full h-[40px] bg-[#1a0011] border border-[#ff00aa] text-[#00f0ff] text-[10px] uppercase hover:bg-[#ff00aa] hover:text-white transition-colors">
                 15 Min Hustle
              </button>
-             <button onClick={() => setTimerMinutes(60)} className="w-full h-[40px] bg-[#1a0011] border border-[#ff00aa] text-[#00f0ff] text-[10px] uppercase hover:bg-[#ff00aa] hover:text-white transition-colors">
+             <button onClick={() => { void setTimerMinutes(60); }} className="w-full h-[40px] bg-[#1a0011] border border-[#ff00aa] text-[#00f0ff] text-[10px] uppercase hover:bg-[#ff00aa] hover:text-white transition-colors">
                 1 Hour Grind
              </button>
           </div>
@@ -949,7 +1157,7 @@ export default function AlarmClock() {
                 <div className="w-full h-[2px] bg-[#1a252d] opacity-50"></div>
                 
                 <div 
-                  onClick={() => setShowSettings(true)}
+                  onClick={openSettingsPanel}
                   className="flex items-center gap-2 overflow-hidden w-full cursor-pointer bg-black py-2 px-1 hover:bg-[#111] active:scale-95 transition-all mb-1"
                 >
                   <span className="text-[7px] md:text-[8px] text-[#c026d3] font-bold uppercase shrink-0 drop-shadow-[0_0_5px_#c026d3]">ALARM:</span>
@@ -981,22 +1189,38 @@ export default function AlarmClock() {
                {!countdownTarget && (
                  <input 
                    type="time" 
-                   className="absolute top-0 left-0 w-full h-[65%] z-40 opacity-0 cursor-pointer touch-manipulation" 
+                   className="absolute top-0 left-0 w-full h-[38%] z-40 opacity-0 cursor-pointer touch-manipulation" 
                    onChange={handleTimePickerChange}
                    value={get24HourString()}
                  />
                )}
 
+               <div className="w-full rounded-lg border border-white/40 bg-white/55 px-2 py-2 mb-3 shadow-[inset_0_1px_2px_rgba(255,255,255,0.5)]">
+                 <span className="text-[6px] font-black tracking-[0.2em] text-slate-500 uppercase block mb-1">Next Event</span>
+                 <span className="text-[8px] font-black text-slate-800 uppercase leading-tight block">
+                   {nextEventStatusLabel}
+                 </span>
+                 <span className="text-[7px] text-slate-600 leading-tight uppercase block mt-1">
+                   {nextEventDetailLabel}
+                 </span>
+               </div>
+
                <div className="mt-auto w-full relative z-50">
                  <button 
-                    onClick={() => {
+                    onClick={async () => {
                       if (countdownTarget) {
-                        setCountdownTarget(null); // Cancel countdown
-                        disarmBackgroundEngine();
+                        await cancelScheduledAlarm();
                       } else {
-                        setIsAlarmActive(!isAlarmActive); // Toggle normal alarm
-                        if (!isAlarmActive) armBackgroundEngine(`Set for ${alarmHours}:${alarmMinutes} ${alarmAmPm}`);
-                        else disarmBackgroundEngine();
+                        if (isAlarmActive) {
+                          setIsAlarmActive(false);
+                          await disarmBackgroundEngine();
+                        } else {
+                          if (!(await ensureNotificationPermission())) return;
+                          await warmAudioEngine();
+                          setCountdownTarget(null);
+                          setIsAlarmActive(true);
+                          armBackgroundEngine(`Set for ${alarmHours}:${alarmMinutes} ${alarmAmPm}`);
+                        }
                       }
                     }}
                     className="w-[60px] h-[24px] bg-slate-800 rounded-full chunky-track relative flex items-center px-1 shrink-0 z-10 cursor-pointer touch-manipulation shadow-[0_2px_5px_rgba(0,0,0,0.3)]"
@@ -1013,8 +1237,20 @@ export default function AlarmClock() {
                   <button onClick={() => setIsMuted(!isMuted)} className={`w-[22px] h-[22px] rounded-md border-b-[3px] active:scale-95 cursor-pointer touch-manipulation transition-transform mt-1 shadow-sm ${isMuted ? 'bg-[#ff00aa] border-[#990066]' : 'bg-slate-400 border-slate-500'}`} />
                 </div>
                 <div className="flex-1 flex flex-col justify-evenly items-center bg-[#cfd6e0] p-1 py-2 md:p-2 md:py-3 rounded-lg shadow-[inset_1px_1px_5px_rgba(0,0,0,0.1)] h-full">
-                  <span className="text-[5.5px] md:text-[6px] text-slate-700 uppercase leading-[1.2] text-center font-bold">MOTV<br/>FEED</span>
-                  <button onClick={() => setMotivationState(!motivationState)} className={`w-[22px] h-[22px] rounded-md border-b-[3px] active:scale-95 cursor-pointer touch-manipulation transition-transform mt-1 shadow-sm ${motivationState ? 'bg-[#39ff14] border-[#1b9900]' : 'bg-slate-400 border-slate-500'}`} />
+                  <span className="text-[5.5px] md:text-[6px] text-slate-700 uppercase leading-[1.2] text-center font-bold">PRESS<br/>CANCEL</span>
+                  <button
+                    onClick={() => {
+                      void cancelScheduledAlarm();
+                    }}
+                    disabled={!canCancelAlarm}
+                    className={`w-full max-w-[68px] h-[26px] rounded-md border-b-[3px] active:scale-95 cursor-pointer touch-manipulation transition-transform mt-1 shadow-sm text-[6px] font-black tracking-[0.15em] uppercase ${
+                      canCancelAlarm
+                        ? 'bg-[#ff6b6b] border-[#b42323] text-white'
+                        : 'bg-slate-300 border-slate-400 text-slate-500 cursor-not-allowed'
+                    }`}
+                  >
+                    Cancel
+                  </button>
                 </div>
              </div>
           </div>
@@ -1023,8 +1259,7 @@ export default function AlarmClock() {
           <div className="w-full px-2 mt-3 md:mt-5 grid grid-cols-2 md:flex flex-wrap gap-2">
              <button 
                 onClick={() => {
-                  setTimerMinutes(1);
-                  armBackgroundEngine('1 Min Blast');
+                  void setTimerMinutes(1);
                 }} 
                 className="flex-1 relative h-[42px] md:h-[50px] bg-[#ff2a2a] rounded-[12px] flex flex-col items-center justify-center border-b-[6px] border-r-[3px] border-[#990000] active:scale-[0.98] outline-none shadow-md cursor-pointer touch-manipulation transition-transform hover:brightness-110"
              >
@@ -1034,8 +1269,7 @@ export default function AlarmClock() {
 
              <button 
                 onClick={() => {
-                  setTimerMinutes(3);
-                  armBackgroundEngine('3 Min Breathe');
+                  void setTimerMinutes(3);
                 }} 
                 className="flex-1 relative h-[42px] md:h-[50px] bg-[#9d00ff] rounded-[12px] flex flex-col items-center justify-center border-b-[6px] border-r-[3px] border-[#550099] active:scale-[0.98] outline-none shadow-md cursor-pointer touch-manipulation transition-transform hover:brightness-110"
              >
@@ -1045,8 +1279,7 @@ export default function AlarmClock() {
 
              <button 
                 onClick={() => {
-                  setTimerMinutes(5);
-                  armBackgroundEngine('5 Min Power Nap');
+                  void setTimerMinutes(5);
                 }} 
                 className="flex-1 relative h-[42px] md:h-[50px] bg-[#ffaa00] rounded-[12px] flex flex-col items-center justify-center border-b-[6px] border-r-[3px] border-[#996600] active:scale-[0.98] outline-none shadow-md cursor-pointer touch-manipulation transition-transform hover:brightness-110"
              >
@@ -1056,8 +1289,7 @@ export default function AlarmClock() {
 
              <button 
                 onClick={() => {
-                  setTimerMinutes(15);
-                  armBackgroundEngine('15 Min Hustle');
+                  void setTimerMinutes(15);
                 }} 
                 className="flex-1 relative h-[42px] md:h-[50px] bg-[#39ff14] rounded-[12px] flex flex-col items-center justify-center border-b-[6px] border-r-[3px] border-[#1b9900] active:scale-[0.98] outline-none shadow-md cursor-pointer touch-manipulation transition-transform hover:brightness-110"
              >
@@ -1067,8 +1299,7 @@ export default function AlarmClock() {
              
              <button 
                 onClick={() => {
-                  setTimerMinutes(25);
-                  armBackgroundEngine('25 Min Pomodoro');
+                  void setTimerMinutes(25);
                 }} 
                 className="flex-1 relative h-[42px] md:h-[50px] bg-[#00f0ff] rounded-[12px] flex flex-col items-center justify-center border-b-[6px] border-r-[3px] border-[#0099aa] active:scale-[0.98] outline-none shadow-md cursor-pointer touch-manipulation transition-transform hover:brightness-110"
              >
@@ -1078,8 +1309,7 @@ export default function AlarmClock() {
 
              <button 
                 onClick={() => {
-                  setTimerMinutes(60);
-                  armBackgroundEngine('1 Hour Grind');
+                  void setTimerMinutes(60);
                 }} 
                 className="flex-1 relative h-[42px] md:h-[50px] bg-[#ff00aa] rounded-[12px] flex flex-col items-center justify-center border-b-[6px] border-r-[3px] border-[#990066] active:scale-[0.98] outline-none shadow-md cursor-pointer touch-manipulation transition-transform hover:brightness-110"
              >
@@ -1095,8 +1325,9 @@ export default function AlarmClock() {
                return (
                  <button 
                    key={hour}
-                   onClick={() => {
-                     initAudioContext();
+                   onClick={async () => {
+                     if (!(await ensureNotificationPermission())) return;
+                     await warmAudioEngine();
                      const hStr = hour.toString().padStart(2, '0');
                      setAlarmHours(hStr);
                      setAlarmMinutes('00');
@@ -1183,13 +1414,13 @@ export default function AlarmClock() {
           </div>
 
           <div className="w-full flex justify-between gap-4 mt-6 px-2">
-             <button onClick={() => setShowSettings(!showSettings)} className="flex-1 bg-[#1a202c] border-b-[6px] border-[#0d1218] active:scale-95 rounded-xl h-[45px] flex items-center justify-center p-2 group cursor-pointer touch-manipulation transition-all">
+             <button onClick={openSettingsPanel} className="flex-1 bg-[#1a202c] border-b-[6px] border-[#0d1218] active:scale-95 rounded-xl h-[45px] flex items-center justify-center p-2 group cursor-pointer touch-manipulation transition-all">
                 <Settings className="w-[18px] h-[18px] text-[#00f0ff] drop-shadow-[0_0_5px_#00f0ff] pointer-events-none" strokeWidth={3} />
              </button>
              <button onClick={() => setShowHabitModal(true)} className="flex-1 bg-[#1a202c] border-b-[6px] border-[#0d1218] active:scale-95 rounded-xl h-[45px] flex items-center justify-center p-2 group cursor-pointer touch-manipulation transition-all hover:brightness-125">
                 <ListTodo className="w-[18px] h-[18px] text-[#39ff14] drop-shadow-[0_0_5px_#39ff14] pointer-events-none" strokeWidth={3} />
              </button>
-             <button onClick={() => setShowProfile(true)} className="flex-1 bg-[#1a202c] border-b-[6px] border-[#0d1218] active:scale-95 rounded-xl h-[45px] flex items-center justify-center p-2 group cursor-pointer touch-manipulation transition-all hover:brightness-125">
+             <button onClick={openProfilePanel} className="flex-1 bg-[#1a202c] border-b-[6px] border-[#0d1218] active:scale-95 rounded-xl h-[45px] flex items-center justify-center p-2 group cursor-pointer touch-manipulation transition-all hover:brightness-125">
                 <User className="w-[18px] h-[18px] text-[#ff00aa] drop-shadow-[0_0_5px_#ff00aa] pointer-events-none" strokeWidth={3} />
              </button>
           </div>
@@ -1279,23 +1510,31 @@ export default function AlarmClock() {
                       <span className="text-[#39ff14] text-[12px] uppercase font-black tracking-widest block drop-shadow-[0_0_8px_#39ff14] mb-2">AUTH LINKED</span>
                       <span className="text-slate-400 text-[9px] uppercase block leading-relaxed">Habit Mastery & Custom Audio Uploads are fully authorized.</span>
                       {calendarUrl ? (
-                         <span className="text-[#00f0ff] text-[8px] mt-3 uppercase block border-t border-[#39ff14]/30 pt-2 break-all overflow-hidden text-ellipsis line-clamp-1 opacity-70">
-                            iCal Sync: {calendarUrl.substring(0, 40)}...
-                         </span>
+                         <div className="mt-3 pt-3 border-t border-[#39ff14]/30 text-left">
+                            <span className="text-[#00f0ff] text-[8px] uppercase block break-all overflow-hidden text-ellipsis line-clamp-1 opacity-70">
+                               iCal Sync: {calendarUrl.substring(0, 40)}...
+                            </span>
+                            <span className="text-slate-500 text-[8px] uppercase block mt-2">
+                               {upcomingEvent ? `Next: ${nextEventStatusLabel} / ${nextEventSummary}` : 'Waiting for your next event.'}
+                            </span>
+                         </div>
                       ) : Capacitor.isNativePlatform() ? (
                          <div className="mt-3 pt-3 border-t border-[#39ff14]/30">
-                            <span className="text-slate-500 text-[8px] uppercase block mb-2">Native iOS EventKit Sync</span>
+                            <span className="text-slate-500 text-[8px] uppercase block mb-2">
+                              {calendarPermissionState === 'granted' ? 'Device Calendar Linked' : 'Native iOS EventKit Sync'}
+                            </span>
+                            <span className="text-[#00f0ff] text-[8px] uppercase block mb-2 leading-relaxed">
+                              {upcomingEvent ? `${nextEventStatusLabel} / ${nextEventSummary}` : 'Show your next event on the active alarm card.'}
+                            </span>
                             <button 
                               onClick={async () => {
                                  try {
-                                    // Request the native OS permissions panel from EventKit
-                                    await CapacitorCalendar.requestFullCalendarAccess();
-                                    fetchNativeCalendar();
+                                    await fetchNativeCalendar(true);
                                  } catch(e) { console.error('Native Auth Rejection', e); }
                               }}
                               className="w-full bg-[#39ff14] text-black px-3 py-2 text-[8px] font-black rounded hover:brightness-110 active:scale-95 cursor-pointer touch-manipulation uppercase"
                             >
-                              CONNECT DEVICE CALENDAR
+                              {calendarPermissionState === 'granted' ? 'REFRESH NEXT EVENT' : 'CONNECT DEVICE CALENDAR'}
                             </button>
                          </div>
                       ) : (
@@ -1323,8 +1562,12 @@ export default function AlarmClock() {
                       onClick={() => { 
                          localStorage.removeItem('eb28_user_profile'); 
                          localStorage.removeItem('eb28_calendar_url');
+                         localStorage.removeItem('eb28_calendar_permission_state');
                          setUserProfile(null); 
                          setCalendarUrl('');
+                         setTempCalUrl('');
+                         setCalendarPermissionState('prompt');
+                         setUpcomingEvent(null);
                       }} 
                       className="w-full text-slate-500 text-[9px] uppercase tracking-[0.2em] p-3 rounded-xl border border-slate-800 active:bg-slate-900 hover:text-white transition-colors cursor-pointer touch-manipulation"
                    >

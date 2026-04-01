@@ -32,6 +32,9 @@ Features:
 
 Wake Up Ya Bish is built for people who want something bolder than a default alarm app.
 
+Privacy Policy: https://eb28.co/alarmclock/privacy/
+Terms of Use (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
+
 ## Keywords
 
 alarm clock,wakeup,retro,productivity,timer,morning,habit,calendar
@@ -49,3 +52,4 @@ alarm clock,wakeup,retro,productivity,timer,morning,habit,calendar
 - No login is required.
 - The app includes one auto-renewable monthly subscription: `Remove Ads` (`com.eb28.alarmclock.removeads.monthly`).
 - The subscription removes sponsor panels from the dashboard and can be purchased or restored from the profile sheet in the iOS app.
+- The subscription purchase card now includes functional links to the Privacy Policy and Terms of Use (Apple Standard EULA).

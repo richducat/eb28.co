@@ -182,6 +182,9 @@ const SPONSORED_MESSAGES = [
   }
 ];
 
+const SUBSCRIPTION_PRIVACY_URL = 'https://eb28.co/alarmclock/privacy/';
+const SUBSCRIPTION_TERMS_URL = 'https://www.apple.com/legal/internet-services/itunes/dev/stdeula/';
+
 const DEFAULT_REMOVE_ADS_STATE = {
   available: false,
   canMakePayments: false,
@@ -442,6 +445,13 @@ export default function AlarmClock() {
       setSubscriptionMessage(err?.message || 'Unable to restore purchases right now.');
     } finally {
       setIsPurchaseBusy(false);
+    }
+  }, []);
+
+  const openExternalResource = useCallback((url) => {
+    const popup = window.open(url, '_blank', 'noopener,noreferrer');
+    if (!popup) {
+      window.location.assign(url);
     }
   }, []);
 
@@ -1153,6 +1163,31 @@ export default function AlarmClock() {
         {isAdFree && renewalLabel
           ? `Entitlement good through ${renewalLabel}.`
           : 'Auto-renewable monthly subscription. Cancel anytime in Apple ID subscriptions.'}
+      </div>
+
+      <div className="mt-3 rounded-lg border border-[#00f0ff]/20 bg-[#081017] px-3 py-3 text-[8px] leading-relaxed text-slate-300">
+        <span className="block uppercase tracking-[0.18em] text-[#00f0ff]">
+          Subscription Details
+        </span>
+        <span className="mt-2 block">
+          Remove Ads renews monthly at {removeAdsPriceLabel}. Payment is charged to your Apple ID at confirmation and renews automatically unless cancelled at least 24 hours before the current period ends.
+        </span>
+        <div className="mt-3 flex flex-wrap gap-2">
+          <button
+            type="button"
+            onClick={() => openExternalResource(SUBSCRIPTION_PRIVACY_URL)}
+            className="rounded-full border border-[#39ff14]/35 px-3 py-2 text-[8px] font-black uppercase tracking-[0.16em] text-[#39ff14]"
+          >
+            Privacy Policy
+          </button>
+          <button
+            type="button"
+            onClick={() => openExternalResource(SUBSCRIPTION_TERMS_URL)}
+            className="rounded-full border border-[#00f0ff]/35 px-3 py-2 text-[8px] font-black uppercase tracking-[0.16em] text-[#00f0ff]"
+          >
+            Terms of Use
+          </button>
+        </div>
       </div>
 
       {subscriptionMessage ? (

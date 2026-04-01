@@ -149,10 +149,19 @@ public class WakeUpPurchasesPlugin: CAPPlugin, CAPBridgedPlugin {
     }
 
     private func loadProduct(productId: String) async throws -> Product {
-        guard let product = try await Product.products(for: [productId]).first else {
+        if let product = try await Product.products(for: [productId]).first {
+            return product
+        }
+
+        // Give StoreKit one refresh pass before failing so newly attached
+        // review/sandbox products have a chance to appear on first launch.
+        try await AppStore.sync()
+
+        guard let refreshedProduct = try await Product.products(for: [productId]).first else {
             throw WakeUpPurchasesError.productNotFound(productId)
         }
-        return product
+
+        return refreshedProduct
     }
 
     private func currentEntitlement(for productId: String) async throws -> Transaction? {

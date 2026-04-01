@@ -63,6 +63,13 @@ import zenUrl from './assets/zenalarm.mp3';
 import metalWakeupUrl from './assets/metal_wakeup_track.mp3';
 import trapWakeupUrl from './assets/trap_wakeup.mp3';
 import breakUrl from './assets/take_a_break.mp3';
+import {
+  formatRemoveAdsPrice,
+  getRemoveAdsCatalog,
+  getRemoveAdsStatus,
+  purchaseRemoveAdsSubscription,
+  restoreRemoveAdsSubscription
+} from './wakeUpPurchases';
 
 const ALARM_VOICES = [
   { id: 'standard', name: 'Classic Beep', type: 'free', icon: '🔔', sample: 'Standard digital clock piezo buzzer.', category: 'calm' },
@@ -151,6 +158,43 @@ const MOTIVATIONAL_PHRASES = [
   "ELEVATE YOUR MIND"
 ];
 
+const SPONSORED_MESSAGES = [
+  {
+    id: 'appbuilder',
+    headline: 'EB28 APP BUILDER',
+    body: 'Spin rough ideas into live apps and AI tools faster than your morning coffee hits.',
+    cta: 'OPEN BUILDER',
+    url: 'https://eb28.co/appbuilder/'
+  },
+  {
+    id: 'fundmanager',
+    headline: 'FUND MANAGER LIVE',
+    body: 'Check the autonomous desk feed and see how the other half wakes up.',
+    cta: 'OPEN DASH',
+    url: 'https://eb28.co/fundmanager/'
+  },
+  {
+    id: 'upgrade',
+    headline: 'CLEAN SCREEN MODE',
+    body: 'Stay on the free tier with sponsor panels, or kill the noise with ad-free mode.',
+    cta: 'REMOVE ADS',
+    action: 'upgrade'
+  }
+];
+
+const DEFAULT_REMOVE_ADS_STATE = {
+  available: false,
+  canMakePayments: false,
+  loading: false,
+  isSubscribed: false,
+  displayName: 'Remove Ads',
+  description: 'Hide sponsored panels and keep the alarm dashboard clean.',
+  displayPrice: '$0.99',
+  subscriptionPeriodUnit: 'month',
+  subscriptionPeriodValue: 1,
+  errorMessage: ''
+};
+
 const COLOR_SCHEMES = {
   standard: { active: '#ffb3e6', shadow: '#ff00aa', inactive: '#550033', strokeActive: '#ff00aa', strokeInactive: '#33001a' },
   blue: { active: '#b3ecff', shadow: '#00ccff', inactive: '#004466', strokeActive: '#00ccff', strokeInactive: '#002233' },
@@ -199,6 +243,12 @@ export default function AlarmClock() {
   const [isMuted, setIsMuted] = useState(() => getSaved('eb28_alarm_muted', false));
   const [hasNativeNotificationAccess, setHasNativeNotificationAccess] = useState(() => getSaved('eb28_notification_permission_granted', false));
   const [calendarPermissionState, setCalendarPermissionState] = useState(() => getSaved('eb28_calendar_permission_state', 'prompt'));
+  const [removeAdsState, setRemoveAdsState] = useState(() => ({
+    ...DEFAULT_REMOVE_ADS_STATE,
+    ...getSaved('eb28_remove_ads_state', {})
+  }));
+  const [isPurchaseBusy, setIsPurchaseBusy] = useState(false);
+  const [subscriptionMessage, setSubscriptionMessage] = useState('');
 
   const ensureNotificationPermission = useCallback(async () => {
     if (!Capacitor.isNativePlatform()) return true;
@@ -237,6 +287,13 @@ export default function AlarmClock() {
     localStorage.setItem('eb28_calendar_permission_state', JSON.stringify(calendarPermissionState));
   }, [calendarPermissionState]);
 
+  useEffect(() => {
+    localStorage.setItem('eb28_remove_ads_state', JSON.stringify({
+      ...removeAdsState,
+      loading: false
+    }));
+  }, [removeAdsState]);
+
   const isRingingRef = useRef(false);
   useEffect(() => {
      isRingingRef.current = isRinging;
@@ -268,6 +325,124 @@ export default function AlarmClock() {
     }
 
     return globalAudioCtx;
+  }, []);
+
+  const syncRemoveAdsState = useCallback(async ({ silent = false } = {}) => {
+    if (!Capacitor.isNativePlatform()) {
+      setRemoveAdsState(prev => ({
+        ...prev,
+        ...DEFAULT_REMOVE_ADS_STATE,
+        loading: false
+      }));
+      return;
+    }
+
+    if (!silent) {
+      setRemoveAdsState(prev => ({
+        ...prev,
+        loading: true,
+        errorMessage: ''
+      }));
+    }
+
+    try {
+      const [statusResult, catalogResult] = await Promise.all([
+        getRemoveAdsStatus(),
+        getRemoveAdsCatalog()
+      ]);
+      const catalogProduct = catalogResult?.products?.[0] || {};
+
+      setRemoveAdsState(prev => ({
+        ...prev,
+        ...DEFAULT_REMOVE_ADS_STATE,
+        ...catalogProduct,
+        ...statusResult,
+        available: true,
+        canMakePayments: typeof statusResult?.canMakePayments === 'boolean'
+          ? statusResult.canMakePayments
+          : Boolean(catalogResult?.canMakePayments),
+        loading: false,
+        errorMessage: ''
+      }));
+    } catch (err) {
+      console.error('Failed to sync remove-ads subscription state', err);
+      setRemoveAdsState(prev => ({
+        ...prev,
+        loading: false,
+        errorMessage: err?.message || 'Unable to reach the App Store right now.'
+      }));
+    }
+  }, []);
+
+  const handlePurchaseRemoveAds = useCallback(async () => {
+    if (!Capacitor.isNativePlatform()) {
+      setSubscriptionMessage('Subscriptions are only available inside the iOS app build.');
+      return;
+    }
+
+    setIsPurchaseBusy(true);
+    setSubscriptionMessage('Connecting to the App Store...');
+
+    try {
+      const result = await purchaseRemoveAdsSubscription();
+      setRemoveAdsState(prev => ({
+        ...prev,
+        ...DEFAULT_REMOVE_ADS_STATE,
+        ...prev,
+        ...result,
+        available: true,
+        loading: false,
+        errorMessage: ''
+      }));
+
+      if (result?.cancelled) {
+        setSubscriptionMessage('Purchase cancelled. Sponsor panels stay on for now.');
+      } else if (result?.pending) {
+        setSubscriptionMessage('Purchase is pending approval. Ad-free mode will unlock once Apple clears it.');
+      } else if (result?.isSubscribed) {
+        setSubscriptionMessage('Ad-free mode is active on this device.');
+      } else {
+        setSubscriptionMessage('Purchase completed, but the App Store has not granted the entitlement yet.');
+      }
+    } catch (err) {
+      console.error('Remove-ads purchase failed', err);
+      setSubscriptionMessage(err?.message || 'The App Store purchase failed.');
+    } finally {
+      setIsPurchaseBusy(false);
+    }
+  }, []);
+
+  const handleRestoreRemoveAds = useCallback(async () => {
+    if (!Capacitor.isNativePlatform()) {
+      setSubscriptionMessage('Restore is only available inside the iOS app build.');
+      return;
+    }
+
+    setIsPurchaseBusy(true);
+    setSubscriptionMessage('Checking your previous App Store purchases...');
+
+    try {
+      const result = await restoreRemoveAdsSubscription();
+      setRemoveAdsState(prev => ({
+        ...prev,
+        ...DEFAULT_REMOVE_ADS_STATE,
+        ...prev,
+        ...result,
+        available: true,
+        loading: false,
+        errorMessage: ''
+      }));
+      setSubscriptionMessage(
+        result?.isSubscribed
+          ? 'Previous subscription restored. Ad-free mode is active.'
+          : 'No active remove-ads subscription was found on this Apple ID.'
+      );
+    } catch (err) {
+      console.error('Restore purchases failed', err);
+      setSubscriptionMessage(err?.message || 'Unable to restore purchases right now.');
+    } finally {
+      setIsPurchaseBusy(false);
+    }
   }, []);
 
   const clearDeliveredNativeNotifications = async () => {
@@ -326,6 +501,22 @@ export default function AlarmClock() {
         console.warn('Notification permission check failed', err);
       });
   }, []);
+
+  useEffect(() => {
+    void syncRemoveAdsState();
+
+    const refreshEntitlements = () => {
+      if (document.visibilityState === 'visible') {
+        void syncRemoveAdsState({ silent: true });
+      }
+    };
+
+    document.addEventListener('visibilitychange', refreshEntitlements);
+
+    return () => {
+      document.removeEventListener('visibilitychange', refreshEntitlements);
+    };
+  }, [syncRemoveAdsState]);
 
   useEffect(() => {
     if (!Capacitor.isNativePlatform() || !hasNativeNotificationAccess) return;
@@ -904,17 +1095,120 @@ export default function AlarmClock() {
     ? nextEventSummary
     : (Capacitor.isNativePlatform() ? 'Connect device calendar in profile.' : 'Paste an iCal feed in profile.');
   const canCancelAlarm = Boolean(isAlarmActive || countdownTarget || isRinging);
+  const isAdFree = Boolean(removeAdsState.isSubscribed);
+  const sponsorMessage = SPONSORED_MESSAGES[phraseIndex % SPONSORED_MESSAGES.length];
+  const removeAdsPriceLabel = formatRemoveAdsPrice(removeAdsState);
+  const renewalLabel = removeAdsState.expirationDate
+    ? new Date(removeAdsState.expirationDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).toUpperCase()
+    : null;
+
   const openSettingsPanel = () => {
     void warmAudioEngine();
     setShowSettings(true);
   };
   const openProfilePanel = () => {
     setTempCalUrl(calendarUrl);
+    setSubscriptionMessage('');
     if (Capacitor.isNativePlatform()) {
       void fetchNativeCalendar();
     }
+    void syncRemoveAdsState({ silent: true });
     setShowProfile(true);
   };
+
+  const openSponsoredDestination = () => {
+    if (sponsorMessage.action === 'upgrade') {
+      openProfilePanel();
+      return;
+    }
+
+    if (sponsorMessage.url) {
+      window.open(sponsorMessage.url, '_blank', 'noopener,noreferrer');
+    }
+  };
+
+  const renderRemoveAdsPanel = () => (
+    <div className="bg-[#10141a] border border-[#00f0ff]/35 rounded-xl p-4 shadow-[0_0_20px_rgba(0,240,255,0.08)] text-left">
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <span className="text-[#00f0ff] text-[10px] uppercase font-black tracking-[0.2em] block drop-shadow-[0_0_5px_#00f0ff]">
+            Ad-Free Pass
+          </span>
+          <span className="text-slate-300 text-[9px] uppercase block mt-2 leading-relaxed">
+            {isAdFree
+              ? 'Sponsor panels are hidden on this device.'
+              : 'Free tier keeps sponsor panels visible. Subscribe to clean up the dashboard.'}
+          </span>
+        </div>
+        <span className={`shrink-0 rounded-full px-3 py-1 text-[8px] font-black uppercase tracking-[0.2em] border ${
+          isAdFree
+            ? 'bg-[#14301a] border-[#39ff14]/50 text-[#39ff14]'
+            : 'bg-[#2a0c1f] border-[#ff00aa]/50 text-[#ff8fd6]'
+        }`}>
+          {isAdFree ? 'Active' : removeAdsPriceLabel}
+        </span>
+      </div>
+
+      <div className="mt-3 text-[8px] uppercase leading-relaxed text-slate-500">
+        {isAdFree && renewalLabel
+          ? `Entitlement good through ${renewalLabel}.`
+          : 'Auto-renewable monthly subscription. Cancel anytime in Apple ID subscriptions.'}
+      </div>
+
+      {subscriptionMessage ? (
+        <div className="mt-3 rounded-lg border border-[#ff00aa]/25 bg-[#250818] px-3 py-2 text-[8px] uppercase leading-relaxed text-[#ffd4ef]">
+          {subscriptionMessage}
+        </div>
+      ) : null}
+
+      {removeAdsState.errorMessage ? (
+        <div className="mt-3 rounded-lg border border-[#ff6b6b]/25 bg-[#2a0c0c] px-3 py-2 text-[8px] uppercase leading-relaxed text-[#ffd2d2]">
+          {removeAdsState.errorMessage}
+        </div>
+      ) : null}
+
+      <div className="mt-4 grid grid-cols-2 gap-2">
+        <button
+          onClick={() => {
+            void handlePurchaseRemoveAds();
+          }}
+          disabled={isPurchaseBusy || removeAdsState.loading || !Capacitor.isNativePlatform() || !removeAdsState.canMakePayments || isAdFree}
+          className={`rounded-xl px-3 py-3 text-[8px] font-black uppercase tracking-[0.18em] transition-all ${
+            isPurchaseBusy || removeAdsState.loading || !Capacitor.isNativePlatform() || !removeAdsState.canMakePayments || isAdFree
+              ? 'bg-slate-700 text-slate-400 cursor-not-allowed'
+              : 'bg-[#ff00aa] border-b-[4px] border-[#990066] text-white hover:brightness-110 active:translate-y-1 active:border-b-0'
+          }`}
+        >
+          {isAdFree
+            ? 'Ad-Free On'
+            : isPurchaseBusy
+              ? 'Working...'
+              : removeAdsState.loading
+                ? 'Checking...'
+                : 'Remove Ads'}
+        </button>
+        <button
+          onClick={() => {
+            void handleRestoreRemoveAds();
+          }}
+          disabled={isPurchaseBusy || !Capacitor.isNativePlatform()}
+          className={`rounded-xl px-3 py-3 text-[8px] font-black uppercase tracking-[0.18em] transition-all ${
+            isPurchaseBusy || !Capacitor.isNativePlatform()
+              ? 'bg-slate-800 text-slate-500 cursor-not-allowed'
+              : 'bg-[#00f0ff] border-b-[4px] border-[#0099aa] text-black hover:brightness-110 active:translate-y-1 active:border-b-0'
+          }`}
+        >
+          {isPurchaseBusy ? 'Working...' : 'Restore'}
+        </button>
+      </div>
+
+      {!Capacitor.isNativePlatform() ? (
+        <span className="mt-3 text-slate-500 text-[8px] uppercase block leading-relaxed">
+          Purchases are available in the native iOS app build.
+        </span>
+      ) : null}
+    </div>
+  );
 
   return (
     <div className="relative w-full overflow-x-hidden overflow-y-auto h-[100dvh] pt-4 lg:pt-0 pb-4 flex items-start lg:items-center justify-center bg-[#000b12] touch-manipulation" style={{fontFamily: '"Press Start 2P", monospace'}}>
@@ -1069,6 +1363,11 @@ export default function AlarmClock() {
              <span className="text-[8px] text-slate-500 tracking-widest uppercase">
                {userProfile ? `WELCOME, ${userProfile.name}` : 'RADIO-TEK'}
              </span>
+             {isAdFree ? (
+               <span className="rounded-full border border-[#39ff14]/50 bg-[#14301a] px-2 py-1 text-[6px] text-[#39ff14] tracking-[0.2em] uppercase shadow-[0_0_10px_rgba(57,255,20,0.15)]">
+                 Ad-Free
+               </span>
+             ) : null}
              <div className="h-[2px] w-8 bg-[#ff00aa] shadow-[0_4px_0_#00f0ff]" />
           </div>
 
@@ -1354,6 +1653,39 @@ export default function AlarmClock() {
              })}
           </div>
 
+          {!isAdFree ? (
+            <div className="w-full mt-3 px-2">
+              <div className="relative overflow-hidden rounded-xl border-[3px] border-[#ff00aa] bg-gradient-to-r from-[#140713] via-[#120814] to-[#071220] p-3 shadow-[0_0_20px_rgba(255,0,170,0.15)]">
+                <div className="absolute top-2 right-2 rounded-full bg-[#ffea00] px-2 py-1 text-[6px] font-black uppercase tracking-[0.2em] text-black">
+                  Sponsored
+                </div>
+                <span className="text-[#00f0ff] text-[7px] uppercase tracking-[0.22em] block mb-2">
+                  Free Tier Signal
+                </span>
+                <h3 className="text-white text-[12px] font-black uppercase tracking-[0.14em] pr-16">
+                  {sponsorMessage.headline}
+                </h3>
+                <p className="mt-2 text-[8px] uppercase leading-relaxed text-slate-300 max-w-[95%]">
+                  {sponsorMessage.body}
+                </p>
+                <div className="mt-3 flex gap-2">
+                  <button
+                    onClick={openSponsoredDestination}
+                    className="rounded-lg bg-[#00f0ff] border-b-[4px] border-[#0099aa] px-3 py-2 text-[7px] font-black uppercase tracking-[0.18em] text-black hover:brightness-110 active:translate-y-1 active:border-b-0"
+                  >
+                    {sponsorMessage.cta}
+                  </button>
+                  <button
+                    onClick={openProfilePanel}
+                    className="rounded-lg bg-[#ff00aa] border-b-[4px] border-[#990066] px-3 py-2 text-[7px] font-black uppercase tracking-[0.18em] text-white hover:brightness-110 active:translate-y-1 active:border-b-0"
+                  >
+                    Remove Ads
+                  </button>
+                </div>
+              </div>
+            </div>
+          ) : null}
+
           {/* HABIT MASTERY PROGRESS HUD */}
           <div className="w-full mt-3 md:mt-5 px-2">
             <div className="bg-[#1a252d] border-[3px] border-[#0a0f12] rounded-xl p-2 pb-2 md:p-3 md:pb-2 shadow-[inset_0_3px_15px_rgba(0,0,0,0.8)] relative flex flex-col justify-between">
@@ -1470,8 +1802,9 @@ export default function AlarmClock() {
                {!userProfile ? (
                  <div className="space-y-4">
                    <div className="text-center mb-6">
-                      <span className="text-slate-400 text-[9px] uppercase leading-relaxed block">Create a local auth profile to unlock premium features and cross-session retention.</span>
-                   </div>
+                      <span className="text-slate-400 text-[9px] uppercase leading-relaxed block">Create a local auth profile to save your alarm setup, calendar link, and subscription state locally.</span>
+                    </div>
+                   {renderRemoveAdsPanel()}
                    <input type="text" placeholder="CALLSIGN / NAME" value={tempName} onChange={e => setTempName(e.target.value)} className="w-full bg-slate-900 text-[#00f0ff] p-4 rounded-xl border-2 border-slate-700 focus:border-[#00f0ff] outline-none font-['Space_Grotesk'] tracking-widest uppercase text-center" />
                    <input type="email" placeholder="EMAIL ADDRESS" value={tempEmail} onChange={e => setTempEmail(e.target.value)} className="w-full bg-slate-900 text-[#00f0ff] p-4 rounded-xl border-2 border-slate-700 focus:border-[#00f0ff] outline-none font-['Space_Grotesk'] tracking-widest uppercase text-center" />
                    <input type="text" placeholder="iCal Secret URL (Optional)" value={tempCalUrl} onChange={e => setTempCalUrl(e.target.value)} className="w-full bg-slate-900 text-[#00f0ff] p-4 rounded-xl border-2 border-slate-700 focus:border-[#00f0ff] outline-none font-['Space_Grotesk'] tracking-widest uppercase text-center text-[10px]" />
@@ -1504,6 +1837,10 @@ export default function AlarmClock() {
                    <p className="text-slate-400 text-[10px] mt-2 mb-8 uppercase tracking-widest">
                       {userProfile.email || 'GUEST PROXY'}
                    </p>
+
+                   <div className="mb-6">
+                     {renderRemoveAdsPanel()}
+                   </div>
                    
                    <div className="bg-[#0a120e] border border-[#39ff14] rounded-xl p-4 mb-8 shadow-[0_0_20px_rgba(57,255,20,0.1)] relative overflow-hidden">
                       <div className="absolute top-0 left-0 w-full h-1 bg-[#39ff14]" />

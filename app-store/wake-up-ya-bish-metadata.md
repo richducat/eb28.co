@@ -6,7 +6,7 @@
 - Subtitle: Retro alarm clock with attitude
 - Bundle ID: com.eb28.alarmclock
 - Version: 1.1.0
-- Build: 2
+- Build: 6
 - Primary category: Productivity
 - Secondary category: Lifestyle
 - Support URL: https://eb28.co/alarmclock/support/
@@ -38,13 +38,14 @@ alarm clock,wakeup,retro,productivity,timer,morning,habit,calendar
 
 ## What's New
 
-- Added the new “Take a break bish” motivational alarm sound
+- Added a native auto-renewable monthly subscription to remove sponsor panels
 - Synced the latest web experience into the native iOS app
-- Added native calendar permission messaging and App Store release prep
+- Added native calendar-aware dashboard updates and iOS release polish
 
 ## Review Notes
 
 - The app uses local notifications for alarm delivery.
 - Calendar access is optional and only used to display the next upcoming event inside the app.
 - No login is required.
-- The app does not include in-app purchases or account creation.
+- The app includes one auto-renewable monthly subscription: `Remove Ads` (`com.eb28.alarmclock.removeads.monthly`).
+- The subscription removes sponsor panels from the dashboard and can be purchased or restored from the profile sheet in the iOS app.

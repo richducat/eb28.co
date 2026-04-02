@@ -1,5 +1,6 @@
 import UIKit
 import Capacitor
+import CapApp_SPM
 import Foundation
 
 private let bundledNotificationSounds = [
@@ -92,4 +93,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return ApplicationDelegateProxy.shared.application(application, continue: userActivity, restorationHandler: restorationHandler)
     }
 
+}
+
+class WakeUpBridgeViewController: CAPBridgeViewController {
+    override func capacitorDidLoad() {
+        super.capacitorDidLoad()
+
+        // Explicitly register the local StoreKit bridge so release builds do not
+        // depend on Capacitor's generated package scan to discover it.
+        bridge?.registerPluginInstance(WakeUpPurchasesPlugin())
+    }
 }

@@ -6,7 +6,7 @@
 - Subtitle: Retro alarm clock with attitude
 - Bundle ID: com.eb28.alarmclock
 - Version: 1.1.0
-- Build: 6
+- Build: 8
 - Primary category: Productivity
 - Secondary category: Lifestyle
 - Support URL: https://eb28.co/alarmclock/support/
@@ -53,3 +53,4 @@ alarm clock,wakeup,retro,productivity,timer,morning,habit,calendar
 - The app includes one auto-renewable monthly subscription: `Remove Ads` (`com.eb28.alarmclock.removeads.monthly`).
 - The subscription removes sponsor panels from the dashboard and can be purchased or restored from the profile sheet in the iOS app.
 - The subscription purchase card now includes functional links to the Privacy Policy and Terms of Use (Apple Standard EULA).
+- Build 8 explicitly registers the native `WakeUpPurchases` iOS plugin in the bridge and includes it in the embedded Capacitor plugin list to resolve the prior "Plugin is not implemented on iOS" rejection.

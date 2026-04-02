@@ -1,7 +1,7 @@
 {
   "ok": true,
   "source": "ticker-site/data.json",
-  "updatedAt": "4/2/2026, 12:03:02 PM ET",
+  "updatedAt": "4/2/2026, 1:25:38 PM ET",
   "portfolio": {
     "balance": "$0.00",
     "exposure": "$0.00",
@@ -26,7 +26,7 @@
   },
   "orchestrator": {
     "status": "IDLE",
-    "lastCycle": "2026-04-02T16:34:42.406Z",
+    "lastCycle": "2026-04-02T17:30:49.674Z",
     "detail": null
   }
 }

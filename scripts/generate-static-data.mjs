@@ -5,6 +5,8 @@ import os from 'node:os';
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
 
+import fundmanagerHandler from '../api/fundmanager-data.js';
+
 const execFileAsync = promisify(execFile);
 const repoRoot = process.cwd();
 const outDir = path.join(repoRoot, 'docs', 'data');
@@ -229,6 +231,35 @@ async function buildFundManagerData() {
   };
 }
 
+async function buildFundManagerPublicSnapshot() {
+  const req = { method: 'GET' };
+  let payload = null;
+
+  const res = {
+    headers: {},
+    statusCode: 200,
+    setHeader(key, value) {
+      this.headers[key] = value;
+    },
+    status(code) {
+      this.statusCode = code;
+      return this;
+    },
+    json(body) {
+      payload = body;
+      return body;
+    },
+  };
+
+  await fundmanagerHandler(req, res);
+
+  if (!payload || payload.ok === false) {
+    throw new Error(payload?.error || 'fundmanager snapshot generation failed');
+  }
+
+  return payload;
+}
+
 async function main() {
   await ensureDir();
   await writeJson('activity-feed.json', await buildActivityFeed());
@@ -236,6 +267,7 @@ async function main() {
   await writeJson('search.json', await buildSearch());
   await writeJson('mission-dashboard.json', await buildMissionDashboard());
   await writeJson('fundmanager-data.json', await buildFundManagerData());
+  await writeJson('fundmanager-public.json', await buildFundManagerPublicSnapshot());
   console.log('Generated docs/data/*.json');
 }
 

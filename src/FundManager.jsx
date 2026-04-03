@@ -1,26 +1,13 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
+import { AGENT_ROSTER as AGENTS } from './fundmanagerMeta';
+
 const PROD_REMOTE_SNAPSHOT_HOSTS = new Set(['eb28.co', 'www.eb28.co', 'fundmanager.eb28.co']);
 const PROD_REMOTE_SNAPSHOT_URL = 'https://fundstate.eb28.co/fund-state.json';
 const IS_PROD_REMOTE_SNAPSHOT_HOST =
     typeof window !== 'undefined' && PROD_REMOTE_SNAPSHOT_HOSTS.has(window.location.hostname.toLowerCase());
 const detectedProdRemoteSnapshotUrl = IS_PROD_REMOTE_SNAPSHOT_HOST ? PROD_REMOTE_SNAPSHOT_URL : '';
 const REMOTE_SNAPSHOT_URL = import.meta.env.VITE_FUNDMANAGER_PUBLIC_STATE_URL || detectedProdRemoteSnapshotUrl;
-
-const AGENTS = [
-    { id: 'goldman', name: 'Goldman Fundamental', roles: ['trading-research', 'quant-analyst'], color: '#22d3ee', gridPos: { x: 0, y: 0 }, laneIds: [] },
-    { id: 'jpm', name: 'JPM Technical', roles: ['crypto-levels', 'trading-research', 'ccxt'], color: '#818cf8', gridPos: { x: 1, y: 0 }, laneIds: [] },
-    { id: 'ms', name: 'Morgan Stanley DCF', roles: ['quant-analyst', 'valuation-templates'], color: '#fbbf24', gridPos: { x: 2, y: 0 }, laneIds: ['memebot'] },
-    { id: 'bridgewater', name: 'Bridgewater Macro', roles: ['trading-research', 'polymarket-signal-sniper'], color: '#34d399', gridPos: { x: 3, y: 0 }, laneIds: ['copytrading'] },
-    { id: 'cathie', name: 'Cathie Wood Disruption', roles: ['polymarket-signal-sniper', 'trading-research'], color: '#f472b6', gridPos: { x: 0, y: 1 }, laneIds: ['opportunities'] },
-    { id: 'buffett', name: 'Buffett Value', roles: ['quant-analyst', 'trading-research'], color: '#94a3b8', gridPos: { x: 1, y: 1 }, laneIds: [] },
-    { id: 'renaissance', name: 'Renaissance Quant', roles: ['polymarket-fast-loop', 'polymarket-ai-divergence', 'ccxt'], color: '#a78bfa', gridPos: { x: 2, y: 1 }, laneIds: ['fast-loop', 'divergence'] },
-    { id: 'blackrock', name: 'BlackRock Risk Matrix', roles: ['prediction-trade-journal', 'openclaw-security-monitor', 'risk-runbooks'], color: '#f87171', gridPos: { x: 3, y: 1 }, laneIds: [] },
-    { id: 'lynch', name: 'Peter Lynch Deep Dive', roles: ['trading-research', 'polymarket-signal-sniper'], color: '#fb923c', gridPos: { x: 0, y: 2 }, laneIds: [] },
-    { id: 'ackman', name: 'Bill Ackman Activist', roles: ['polymarket-signal-sniper', 'trading-research'], color: '#e879f9', gridPos: { x: 1, y: 2 }, laneIds: [] },
-    { id: 'citadel', name: 'Citadel Options Architect', roles: ['funding-rate-trader', 'hummingbot'], color: '#2dd4bf', gridPos: { x: 2, y: 2 }, laneIds: [] },
-    { id: 'sequoia', name: 'Sequoia VC Lens', roles: ['trading-research', 'quant-analyst'], color: '#4ade80', gridPos: { x: 3, y: 2 }, laneIds: [] },
-];
 
 const STATUS_TONE = {
     RUNNING: {
@@ -55,6 +42,7 @@ const STATUS_TONE = {
 
 const LANE_MODE_LABEL = {
     active: 'Active',
+    platform: 'Platform',
     'watch-only': 'Watch only',
     disabled: 'Disabled',
 };
@@ -72,6 +60,41 @@ function humanizeToken(value, fallback = 'None') {
         .replace(/[_-]+/g, ' ')
         .toLowerCase()
         .replace(/\b\w/g, (char) => char.toUpperCase());
+}
+
+function formatCurrency(value, fallback = '--') {
+    const parsed = Number(value);
+    if (!Number.isFinite(parsed)) {
+        return fallback;
+    }
+
+    return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        maximumFractionDigits: parsed >= 1000 ? 0 : 2,
+    }).format(parsed);
+}
+
+function formatCompactNumber(value, fallback = '--') {
+    const parsed = Number(value);
+    if (!Number.isFinite(parsed)) {
+        return fallback;
+    }
+
+    return new Intl.NumberFormat('en-US', {
+        notation: Math.abs(parsed) >= 1000 ? 'compact' : 'standard',
+        maximumFractionDigits: Math.abs(parsed) >= 1000 ? 1 : 2,
+    }).format(parsed);
+}
+
+function formatSignedCurrency(value, fallback = '--') {
+    const parsed = Number(value);
+    if (!Number.isFinite(parsed)) {
+        return fallback;
+    }
+
+    const formatted = formatCurrency(Math.abs(parsed));
+    return parsed > 0 ? `+${formatted}` : (parsed < 0 ? `-${formatted}` : formatted);
 }
 
 function formatTimestamp(value, fallback = '--') {
@@ -147,7 +170,7 @@ function deriveAgentHealth(agent, laneMap, systemStatus) {
         };
     }
 
-    const severity = ['RUNNING', 'DEGRADED', 'PAUSED'];
+    const severity = ['RUNNING', 'MONITORING', 'DEGRADED', 'PAUSED'];
     const chosenLane = linkedLanes
         .slice()
         .sort((left, right) => severity.indexOf(right.status) - severity.indexOf(left.status))[0];
@@ -235,29 +258,31 @@ function normalizeRemoteSnapshot(raw) {
 }
 
 async function fetchSnapshotJson(url) {
-    const response = await fetch(url, { cache: 'no-store' });
-    const data = await response.json();
-    if (!response.ok || data?.ok === false) {
-        throw new Error(data?.error || `Snapshot request failed: ${response.status}`);
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 5000);
+    try {
+        const response = await fetch(url, { cache: 'no-store', signal: controller.signal });
+        const data = await response.json();
+        if (!response.ok || data?.ok === false) {
+            throw new Error(data?.error || `Snapshot request failed: ${response.status}`);
+        }
+        return normalizeRemoteSnapshot(data);
+    } finally {
+        clearTimeout(timeout);
     }
-    return normalizeRemoteSnapshot(data);
 }
 
 function getSnapshotSourceUrls() {
     const sources = [];
 
-    if (IS_PROD_REMOTE_SNAPSHOT_HOST && REMOTE_SNAPSHOT_URL) {
-        sources.push(REMOTE_SNAPSHOT_URL);
-    }
-
     sources.push('/api/fundmanager-data');
-
-    if (REMOTE_SNAPSHOT_URL && !sources.includes(REMOTE_SNAPSHOT_URL)) {
-        sources.push(REMOTE_SNAPSHOT_URL);
-    }
 
     if (!sources.includes('/data/fundmanager-public.json')) {
         sources.push('/data/fundmanager-public.json');
+    }
+
+    if (REMOTE_SNAPSHOT_URL && !sources.includes(REMOTE_SNAPSHOT_URL)) {
+        sources.push(REMOTE_SNAPSHOT_URL);
     }
 
     return sources;
@@ -305,6 +330,8 @@ const FundManager = () => {
 
     const laneMap = Object.fromEntries((snapshot?.lanes || []).map((lane) => [lane.id, lane]));
     const summary = snapshot?.summary || null;
+    const account = snapshot?.account || null;
+    const liveBook = snapshot?.liveBook || { positions: [], openOrders: [], untrackedSources: [] };
     const recentActions = snapshot?.recentActions || [];
     const topBlockers = summary?.topBlockers || [];
     const totalLiveLanes = (snapshot?.lanes || []).filter((lane) => lane.mode === 'active').length;
@@ -325,14 +352,24 @@ const FundManager = () => {
             tone: snapshot?.stale ? 'text-orange-300' : 'text-cyan-300',
         },
         {
-            label: 'Last Fill',
-            value: summary?.lastSuccessfulFillAt ? formatTimestamp(summary.lastSuccessfulFillAt) : 'No fills yet',
-            tone: summary?.lastSuccessfulFillAt ? 'text-green-300' : 'text-amber-300',
+            label: 'Free Cash',
+            value: formatCurrency(account?.balanceUsdc, loading ? 'Loading...' : '--'),
+            tone: (account?.balanceUsdc || 0) >= 5 ? 'text-green-300' : 'text-amber-300',
         },
         {
-            label: 'Active Lanes',
-            value: `${summary?.activeLanes ?? 0} / ${totalLiveLanes || 0}`,
+            label: 'Exposure',
+            value: formatCurrency(account?.totalExposure, loading ? 'Loading...' : '--'),
             tone: 'text-blue-300',
+        },
+        {
+            label: 'Open Book',
+            value: `${account?.activePositionCount ?? 0} pos / ${account?.openOrderCount ?? 0} ord`,
+            tone: 'text-fuchsia-300',
+        },
+        {
+            label: 'Desk PnL',
+            value: formatSignedCurrency(account?.totalPnl, loading ? 'Loading...' : '--'),
+            tone: (account?.totalPnl || 0) >= 0 ? 'text-emerald-300' : 'text-rose-300',
         },
     ];
 
@@ -366,7 +403,7 @@ const FundManager = () => {
                                             Autonomous Trading Matrix v3.3
                                         </p>
                                         <p className="mt-3 max-w-2xl text-[12px] leading-relaxed text-white/65 sm:text-sm">
-                                            Live health view for the orchestrator snapshot, lane guardrails, and recent execution blockers.
+                                            Simulated hedge fund bridge showing live bot activity, platform support lanes, and source-tagged Simmer exposure.
                                         </p>
                                         <div className="mt-4 flex flex-wrap gap-2 text-[10px] uppercase tracking-[0.18em] text-white/55">
                                             <span className="rounded-full border border-[#22d3ee]/10 bg-black/20 px-2.5 py-1">
@@ -389,7 +426,7 @@ const FundManager = () => {
                                 ) : null}
                             </div>
 
-                            <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:w-[28rem]">
+                            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:w-[42rem]">
                                 {systemCards.map((card) => (
                                     <div key={card.label} className="rounded-2xl border border-[#22d3ee]/10 bg-black/20 p-3 sm:p-4">
                                         <div className="text-[10px] uppercase tracking-[0.22em] opacity-50">{card.label}</div>
@@ -514,7 +551,10 @@ const FundManager = () => {
                                         <div className="mt-3 space-y-2 text-[11px] leading-relaxed text-white/65">
                                             <div>Next: {humanizeToken(lane.nextAction)}</div>
                                             <div>Blocker: {humanizeToken(lane.lastReasonCode)}</div>
-                                            <div>Last fill: {formatTimestamp(lane.lastSuccessfulFillAt, 'No fills')}</div>
+                                            <div>Cadence: {lane.cadenceMinutes ? `${lane.cadenceMinutes}m` : '--'}</div>
+                                            <div>Value: {formatCurrency(lane.providerActivity?.positionValueUsd, '$0.00')}</div>
+                                            <div>PnL: {formatSignedCurrency(lane.providerActivity?.positionPnlUsd, '$0.00')}</div>
+                                            <div>Book: {lane.providerActivity?.positionCount || 0} pos / {lane.providerActivity?.openOrderCount || 0} ord</div>
                                             {lane.circuitBreaker?.open ? (
                                                 <div className="text-rose-200">
                                                     Circuit open until {formatTimestamp(lane.circuitBreaker.openUntil)}
@@ -593,6 +633,132 @@ const FundManager = () => {
                                     SYSTEM://ORCHESTRATOR_STATE_STREAM
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section className="grid grid-cols-1 gap-4 pb-8 xl:grid-cols-2">
+                    <div className="eb28-panel rounded-[28px] border border-[#22d3ee]/10 p-4 sm:p-5">
+                        <div className="mb-4 flex items-start justify-between gap-3">
+                            <div>
+                                <p className="text-[10px] uppercase tracking-[0.24em] opacity-45">Live book</p>
+                                <h2 className="mt-1 text-lg font-bold text-white/90">Positions by desk</h2>
+                            </div>
+                            <span className="rounded-full border border-[#22d3ee]/10 bg-black/20 px-2.5 py-1 text-[10px] uppercase tracking-[0.18em] text-white/55">
+                                {liveBook.positions?.length || 0} active
+                            </span>
+                        </div>
+
+                        <div className="space-y-3">
+                            {liveBook.positions?.length ? liveBook.positions.map((position) => (
+                                <div key={`${position.marketId}-${position.question}`} className="rounded-2xl border border-[#22d3ee]/10 bg-black/20 p-3">
+                                    <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+                                        <div className="min-w-0">
+                                            <div className="text-[10px] uppercase tracking-[0.18em] text-white/45">
+                                                {position.sources?.length ? humanizeToken(position.sources[0]) : 'Desk'}
+                                            </div>
+                                            <div className="mt-1 text-sm font-bold leading-relaxed text-white/90">
+                                                {position.question}
+                                            </div>
+                                        </div>
+                                        <div className="text-left sm:text-right">
+                                            <div className="text-sm font-bold text-cyan-300">
+                                                {formatCurrency(position.currentValue)}
+                                            </div>
+                                            <div className={`mt-1 text-[11px] ${Number(position.pnl) >= 0 ? 'text-emerald-300' : 'text-rose-300'}`}>
+                                                {formatSignedCurrency(position.pnl)}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="mt-3 flex flex-wrap gap-2 text-[10px] uppercase tracking-[0.16em] text-white/50">
+                                        <span className="rounded-full border border-white/10 bg-[#22d3ee]/5 px-2 py-1">
+                                            {position.venue}
+                                        </span>
+                                        <span className="rounded-full border border-white/10 bg-[#22d3ee]/5 px-2 py-1">
+                                            YES {formatCompactNumber(position.sharesYes, '0')}
+                                        </span>
+                                        <span className="rounded-full border border-white/10 bg-[#22d3ee]/5 px-2 py-1">
+                                            NO {formatCompactNumber(position.sharesNo, '0')}
+                                        </span>
+                                        <span className="rounded-full border border-white/10 bg-[#22d3ee]/5 px-2 py-1">
+                                            Resolve {formatTimestamp(position.resolvesAt)}
+                                        </span>
+                                    </div>
+                                </div>
+                            )) : (
+                                <div className="rounded-2xl border border-[#22d3ee]/10 bg-black/20 p-3 text-[11px] leading-relaxed text-white/60">
+                                    No active positions are visible in the live book.
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
+                    <div className="eb28-panel rounded-[28px] border border-[#22d3ee]/10 p-4 sm:p-5">
+                        <div className="mb-4 flex items-start justify-between gap-3">
+                            <div>
+                                <p className="text-[10px] uppercase tracking-[0.24em] opacity-45">Order blotter</p>
+                                <h2 className="mt-1 text-lg font-bold text-white/90">Live queue and stray sources</h2>
+                            </div>
+                            <span className="rounded-full border border-[#22d3ee]/10 bg-black/20 px-2.5 py-1 text-[10px] uppercase tracking-[0.18em] text-white/55">
+                                {liveBook.openOrders?.length || 0} open
+                            </span>
+                        </div>
+
+                        <div className="space-y-3">
+                            {liveBook.openOrders?.length ? liveBook.openOrders.map((order) => (
+                                <div key={`${order.tradeId || order.orderId || order.marketId}-${order.createdAt}`} className="rounded-2xl border border-[#22d3ee]/10 bg-black/20 p-3">
+                                    <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+                                        <div className="min-w-0">
+                                            <div className="text-[10px] uppercase tracking-[0.18em] text-white/45">
+                                                {humanizeToken(order.sourceTag)}
+                                            </div>
+                                            <div className="mt-1 text-sm font-bold leading-relaxed text-white/90">
+                                                {order.question}
+                                            </div>
+                                        </div>
+                                        <div className="text-left sm:text-right">
+                                            <div className="text-sm font-bold text-cyan-300">
+                                                {order.tradeType?.toUpperCase()} {order.side?.toUpperCase()}
+                                            </div>
+                                            <div className="mt-1 text-[11px] text-white/55">
+                                                {formatTimestamp(order.createdAt)}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="mt-3 flex flex-wrap gap-2 text-[10px] uppercase tracking-[0.16em] text-white/50">
+                                        <span className="rounded-full border border-white/10 bg-[#22d3ee]/5 px-2 py-1">
+                                            {order.venue}
+                                        </span>
+                                        <span className="rounded-full border border-white/10 bg-[#22d3ee]/5 px-2 py-1">
+                                            Price {formatCurrency(order.price)}
+                                        </span>
+                                        <span className="rounded-full border border-white/10 bg-[#22d3ee]/5 px-2 py-1">
+                                            Cost {formatCurrency(order.costUsdc)}
+                                        </span>
+                                    </div>
+                                </div>
+                            )) : (
+                                <div className="rounded-2xl border border-[#22d3ee]/10 bg-black/20 p-3 text-[11px] leading-relaxed text-white/60">
+                                    No live open orders are sitting on the blotter right now.
+                                </div>
+                            )}
+
+                            {liveBook.untrackedSources?.length ? (
+                                <div className="rounded-2xl border border-amber-300/15 bg-amber-500/5 p-3">
+                                    <div className="text-[10px] uppercase tracking-[0.2em] text-amber-200/70">
+                                        Unmapped Sources
+                                    </div>
+                                    <div className="mt-2 flex flex-wrap gap-2">
+                                        {liveBook.untrackedSources.map((sourceTag) => (
+                                            <span key={sourceTag} className="rounded-full border border-amber-300/20 bg-black/20 px-2 py-1 text-[10px] uppercase tracking-[0.16em] text-amber-100">
+                                                {sourceTag}
+                                            </span>
+                                        ))}
+                                    </div>
+                                </div>
+                            ) : null}
                         </div>
                     </div>
                 </section>

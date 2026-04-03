@@ -1,17 +1,645 @@
 {
   "ok": true,
-  "source": "static-public-cache",
-  "sourceType": "file",
+  "source": "live-simmer",
+  "sourceType": "api",
   "fallbackReason": null,
-  "updatedAt": "2026-03-07T00:00:00Z",
-  "stale": true,
+  "updatedAt": "2026-04-03T04:34:34.591Z",
+  "stale": false,
   "summary": {
-    "status": "PAUSED",
-    "cycleIntervalMinutes": 10,
-    "activeLanes": 0,
-    "topBlockers": [],
-    "lastSuccessfulFillAt": null
+    "status": "DEGRADED",
+    "cycleIntervalMinutes": 5,
+    "activeLanes": 6,
+    "topBlockers": [
+      {
+        "reasonCode": "LOW_FREE_CAPITAL",
+        "count": 6
+      },
+      {
+        "reasonCode": "SETUP_REQUIRED",
+        "count": 2
+      }
+    ],
+    "lastSuccessfulFillAt": "2026-04-02 22:02:08.579876+00:00"
   },
-  "lanes": [],
-  "recentActions": []
+  "account": {
+    "balanceUsdc": 0.49,
+    "totalExposure": 6273.15,
+    "activePositionCount": 0,
+    "openOrderCount": 1,
+    "totalPnl": -58.82,
+    "realizedPnl": 41.86,
+    "unrealizedPnl": -100.68,
+    "bySource": {
+      "sdk:divergence": {
+        "positions": 3,
+        "exposure": 0.68
+      },
+      "sdk:risk-monitor": {
+        "positions": 1,
+        "exposure": 0.2
+      }
+    }
+  },
+  "providerHealth": {
+    "status": "OK",
+    "degraded": false,
+    "lastCheckedAt": "2026-04-03T04:34:34.591Z",
+    "baseUrl": "https://api.simmer.markets",
+    "trackedLaneCount": 11,
+    "untrackedSourceCount": 0
+  },
+  "lanes": [
+    {
+      "id": "divergence",
+      "name": "AI Divergence",
+      "mode": "active",
+      "status": "DEGRADED",
+      "lastCycleAt": null,
+      "lastReasonCode": "LOW_FREE_CAPITAL",
+      "lastErrorClass": "capital",
+      "lastSuccessfulFillAt": null,
+      "nextAction": "free_up_collateral",
+      "consecutiveFailures": 0,
+      "cadenceMinutes": 30,
+      "description": "Fundamental mispricing desk trading Simmer consensus gaps.",
+      "venue": "polymarket",
+      "metrics": {
+        "filled": 0,
+        "submitted": 0,
+        "skipped": 0,
+        "failed": 0,
+        "watched": 0
+      },
+      "reasonMetrics": {
+        "LOW_FREE_CAPITAL": 1
+      },
+      "cooldowns": [],
+      "circuitBreaker": {
+        "open": false,
+        "openUntil": null,
+        "threshold": 0,
+        "cooloffMinutes": 0
+      },
+      "recentEvents": [],
+      "providerActivity": {
+        "positions": [],
+        "openOrders": [],
+        "positionCount": 0,
+        "openOrderCount": 0,
+        "positionValueUsd": 0,
+        "positionPnlUsd": 0,
+        "sourceTags": [
+          "sdk:divergence"
+        ],
+        "lastActivityAt": null
+      },
+      "sourceTags": [
+        "sdk:divergence"
+      ]
+    },
+    {
+      "id": "elon-tweets",
+      "name": "Elon Tweets",
+      "mode": "active",
+      "status": "DEGRADED",
+      "lastCycleAt": null,
+      "lastReasonCode": "LOW_FREE_CAPITAL",
+      "lastErrorClass": "capital",
+      "lastSuccessfulFillAt": null,
+      "nextAction": "free_up_collateral",
+      "consecutiveFailures": 0,
+      "cadenceMinutes": 15,
+      "description": "Moonshot bucket trader for Elon tweet count markets.",
+      "venue": "polymarket",
+      "metrics": {
+        "filled": 0,
+        "submitted": 0,
+        "skipped": 0,
+        "failed": 0,
+        "watched": 0
+      },
+      "reasonMetrics": {
+        "LOW_FREE_CAPITAL": 1
+      },
+      "cooldowns": [],
+      "circuitBreaker": {
+        "open": false,
+        "openUntil": null,
+        "threshold": 0,
+        "cooloffMinutes": 0
+      },
+      "recentEvents": [],
+      "providerActivity": {
+        "positions": [],
+        "openOrders": [],
+        "positionCount": 0,
+        "openOrderCount": 0,
+        "positionValueUsd": 0,
+        "positionPnlUsd": 0,
+        "sourceTags": [
+          "sdk:elon-tweets"
+        ],
+        "lastActivityAt": null
+      },
+      "sourceTags": [
+        "sdk:elon-tweets"
+      ]
+    },
+    {
+      "id": "fast-loop",
+      "name": "Fast Loop",
+      "mode": "active",
+      "status": "DEGRADED",
+      "lastCycleAt": null,
+      "lastReasonCode": "LOW_FREE_CAPITAL",
+      "lastErrorClass": "capital",
+      "lastSuccessfulFillAt": null,
+      "nextAction": "free_up_collateral",
+      "consecutiveFailures": 0,
+      "cadenceMinutes": 5,
+      "description": "Renaissance-style sprint desk for 5 minute crypto markets.",
+      "venue": "polymarket",
+      "metrics": {
+        "filled": 0,
+        "submitted": 0,
+        "skipped": 0,
+        "failed": 0,
+        "watched": 0
+      },
+      "reasonMetrics": {
+        "LOW_FREE_CAPITAL": 1
+      },
+      "cooldowns": [],
+      "circuitBreaker": {
+        "open": false,
+        "openUntil": null,
+        "threshold": 0,
+        "cooloffMinutes": 0
+      },
+      "recentEvents": [],
+      "providerActivity": {
+        "positions": [],
+        "openOrders": [],
+        "positionCount": 0,
+        "openOrderCount": 0,
+        "positionValueUsd": 0,
+        "positionPnlUsd": 0,
+        "sourceTags": [
+          "sdk:fastloop"
+        ],
+        "lastActivityAt": null
+      },
+      "sourceTags": [
+        "sdk:fastloop"
+      ]
+    },
+    {
+      "id": "kalshi-weather",
+      "name": "Kalshi Weather",
+      "mode": "active",
+      "status": "DEGRADED",
+      "lastCycleAt": null,
+      "lastReasonCode": "LOW_FREE_CAPITAL",
+      "lastErrorClass": "capital",
+      "lastSuccessfulFillAt": null,
+      "nextAction": "free_up_collateral",
+      "consecutiveFailures": 0,
+      "cadenceMinutes": 30,
+      "description": "Cross-venue weather desk trading Kalshi forecast contracts.",
+      "venue": "kalshi",
+      "metrics": {
+        "filled": 0,
+        "submitted": 0,
+        "skipped": 0,
+        "failed": 0,
+        "watched": 0
+      },
+      "reasonMetrics": {
+        "LOW_FREE_CAPITAL": 1
+      },
+      "cooldowns": [],
+      "circuitBreaker": {
+        "open": false,
+        "openUntil": null,
+        "threshold": 0,
+        "cooloffMinutes": 0
+      },
+      "recentEvents": [],
+      "providerActivity": {
+        "positions": [],
+        "openOrders": [],
+        "positionCount": 0,
+        "openOrderCount": 0,
+        "positionValueUsd": 0,
+        "positionPnlUsd": 0,
+        "sourceTags": [
+          "sdk:kalshi-weather"
+        ],
+        "lastActivityAt": null
+      },
+      "sourceTags": [
+        "sdk:kalshi-weather"
+      ]
+    },
+    {
+      "id": "mert-sniper",
+      "name": "Mert Sniper",
+      "mode": "active",
+      "status": "DEGRADED",
+      "lastCycleAt": null,
+      "lastReasonCode": "LOW_FREE_CAPITAL",
+      "lastErrorClass": "capital",
+      "lastSuccessfulFillAt": null,
+      "nextAction": "free_up_collateral",
+      "consecutiveFailures": 0,
+      "cadenceMinutes": 5,
+      "description": "Near-expiry conviction desk for skewed fast-closing markets.",
+      "venue": "polymarket",
+      "metrics": {
+        "filled": 0,
+        "submitted": 0,
+        "skipped": 0,
+        "failed": 0,
+        "watched": 0
+      },
+      "reasonMetrics": {
+        "LOW_FREE_CAPITAL": 1
+      },
+      "cooldowns": [],
+      "circuitBreaker": {
+        "open": false,
+        "openUntil": null,
+        "threshold": 0,
+        "cooloffMinutes": 0
+      },
+      "recentEvents": [],
+      "providerActivity": {
+        "positions": [],
+        "openOrders": [],
+        "positionCount": 0,
+        "openOrderCount": 0,
+        "positionValueUsd": 0,
+        "positionPnlUsd": 0,
+        "sourceTags": [
+          "sdk:mertsniper"
+        ],
+        "lastActivityAt": null
+      },
+      "sourceTags": [
+        "sdk:mertsniper"
+      ]
+    },
+    {
+      "id": "weather",
+      "name": "Weather",
+      "mode": "active",
+      "status": "DEGRADED",
+      "lastCycleAt": null,
+      "lastReasonCode": "LOW_FREE_CAPITAL",
+      "lastErrorClass": "capital",
+      "lastSuccessfulFillAt": null,
+      "nextAction": "free_up_collateral",
+      "consecutiveFailures": 0,
+      "cadenceMinutes": 30,
+      "description": "NOAA-fed weather desk on Polymarket.",
+      "venue": "polymarket",
+      "metrics": {
+        "filled": 0,
+        "submitted": 0,
+        "skipped": 0,
+        "failed": 0,
+        "watched": 0
+      },
+      "reasonMetrics": {
+        "LOW_FREE_CAPITAL": 1
+      },
+      "cooldowns": [],
+      "circuitBreaker": {
+        "open": false,
+        "openUntil": null,
+        "threshold": 0,
+        "cooloffMinutes": 0
+      },
+      "recentEvents": [],
+      "providerActivity": {
+        "positions": [],
+        "openOrders": [],
+        "positionCount": 0,
+        "openOrderCount": 0,
+        "positionValueUsd": 0,
+        "positionPnlUsd": 0,
+        "sourceTags": [
+          "sdk:weather"
+        ],
+        "lastActivityAt": null
+      },
+      "sourceTags": [
+        "sdk:weather"
+      ]
+    },
+    {
+      "id": "risk-monitor",
+      "name": "Risk Monitor",
+      "mode": "platform",
+      "status": "RUNNING",
+      "lastCycleAt": "2026-04-02T22:02:08.579Z",
+      "lastReasonCode": null,
+      "lastErrorClass": null,
+      "lastSuccessfulFillAt": "2026-04-02T22:02:08.579Z",
+      "nextAction": "manage_live_orders",
+      "consecutiveFailures": 0,
+      "cadenceMinutes": 15,
+      "description": "Platform risk automation for exits and drawdown protection.",
+      "venue": "polymarket",
+      "metrics": {
+        "filled": 0,
+        "submitted": 1,
+        "skipped": 0,
+        "failed": 0,
+        "watched": 0
+      },
+      "reasonMetrics": {},
+      "cooldowns": [],
+      "circuitBreaker": {
+        "open": false,
+        "openUntil": null,
+        "threshold": 0,
+        "cooloffMinutes": 0
+      },
+      "recentEvents": [
+        {
+          "timestamp": "2026-04-02 22:02:08.579876+00:00",
+          "message": "Risk Monitor: SELL YES Victor Wembanyama: Points O/U 24.5",
+          "details": {
+            "marketId": "af98bb40-c281-4e8f-94db-3665a81e385e",
+            "venue": "polymarket",
+            "price": 0.01,
+            "costUsdc": 0
+          }
+        }
+      ],
+      "providerActivity": {
+        "positions": [],
+        "openOrders": [
+          {
+            "orderId": null,
+            "tradeId": "dc7b62fc-48c6-4583-8e6c-140d8bebc5fa",
+            "marketId": "af98bb40-c281-4e8f-94db-3665a81e385e",
+            "question": "Victor Wembanyama: Points O/U 24.5",
+            "venue": "polymarket",
+            "side": "yes",
+            "tradeType": "sell",
+            "shares": 0,
+            "price": 0.01,
+            "costUsdc": 0,
+            "createdAt": "2026-04-02 22:02:08.579876+00:00",
+            "sourceTag": "sdk:risk-monitor",
+            "sourceTags": [
+              "sdk:risk-monitor"
+            ]
+          }
+        ],
+        "positionCount": 0,
+        "openOrderCount": 1,
+        "positionValueUsd": 0,
+        "positionPnlUsd": 0,
+        "sourceTags": [
+          "sdk:risk-monitor"
+        ],
+        "lastActivityAt": "2026-04-02T22:02:08.579Z"
+      },
+      "sourceTags": [
+        "sdk:risk-monitor"
+      ]
+    },
+    {
+      "id": "auto-redeem",
+      "name": "Auto Redeem",
+      "mode": "platform",
+      "status": "MONITORING",
+      "lastCycleAt": null,
+      "lastReasonCode": "PLATFORM_IDLE",
+      "lastErrorClass": null,
+      "lastSuccessfulFillAt": null,
+      "nextAction": "await_platform_activity",
+      "consecutiveFailures": 0,
+      "cadenceMinutes": 60,
+      "description": "Settlement sweep lane for redeemable positions.",
+      "venue": "polymarket",
+      "metrics": {
+        "filled": 0,
+        "submitted": 0,
+        "skipped": 0,
+        "failed": 0,
+        "watched": 1
+      },
+      "reasonMetrics": {
+        "PLATFORM_IDLE": 1
+      },
+      "cooldowns": [],
+      "circuitBreaker": {
+        "open": false,
+        "openUntil": null,
+        "threshold": 0,
+        "cooloffMinutes": 0
+      },
+      "recentEvents": [],
+      "providerActivity": {
+        "positions": [],
+        "openOrders": [],
+        "positionCount": 0,
+        "openOrderCount": 0,
+        "positionValueUsd": 0,
+        "positionPnlUsd": 0,
+        "sourceTags": [
+          "sdk:auto-redeem"
+        ],
+        "lastActivityAt": null
+      },
+      "sourceTags": [
+        "sdk:auto-redeem"
+      ]
+    },
+    {
+      "id": "polymarket-clob-microstructure",
+      "name": "CLOB Microstructure",
+      "mode": "platform",
+      "status": "MONITORING",
+      "lastCycleAt": null,
+      "lastReasonCode": "PLATFORM_IDLE",
+      "lastErrorClass": null,
+      "lastSuccessfulFillAt": null,
+      "nextAction": "await_platform_activity",
+      "consecutiveFailures": 0,
+      "cadenceMinutes": 5,
+      "description": "House microstructure lane visible through Simmer source tags.",
+      "venue": "polymarket",
+      "metrics": {
+        "filled": 0,
+        "submitted": 0,
+        "skipped": 0,
+        "failed": 0,
+        "watched": 1
+      },
+      "reasonMetrics": {
+        "PLATFORM_IDLE": 1
+      },
+      "cooldowns": [],
+      "circuitBreaker": {
+        "open": false,
+        "openUntil": null,
+        "threshold": 0,
+        "cooloffMinutes": 0
+      },
+      "recentEvents": [],
+      "providerActivity": {
+        "positions": [],
+        "openOrders": [],
+        "positionCount": 0,
+        "openOrderCount": 0,
+        "positionValueUsd": 0,
+        "positionPnlUsd": 0,
+        "sourceTags": [
+          "sdk:polymarket-clob-microstructure"
+        ],
+        "lastActivityAt": null
+      },
+      "sourceTags": [
+        "sdk:polymarket-clob-microstructure"
+      ]
+    },
+    {
+      "id": "copytrading",
+      "name": "Copytrading",
+      "mode": "watch-only",
+      "status": "MONITORING",
+      "lastCycleAt": null,
+      "lastReasonCode": "SETUP_REQUIRED",
+      "lastErrorClass": null,
+      "lastSuccessfulFillAt": null,
+      "nextAction": "finish_configuration",
+      "consecutiveFailures": 0,
+      "cadenceMinutes": 240,
+      "description": "Whale mirroring desk waiting on wallet list configuration.",
+      "venue": "polymarket",
+      "metrics": {
+        "filled": 0,
+        "submitted": 0,
+        "skipped": 0,
+        "failed": 0,
+        "watched": 1
+      },
+      "reasonMetrics": {
+        "SETUP_REQUIRED": 1
+      },
+      "cooldowns": [],
+      "circuitBreaker": {
+        "open": false,
+        "openUntil": null,
+        "threshold": 0,
+        "cooloffMinutes": 0
+      },
+      "recentEvents": [],
+      "providerActivity": {
+        "positions": [],
+        "openOrders": [],
+        "positionCount": 0,
+        "openOrderCount": 0,
+        "positionValueUsd": 0,
+        "positionPnlUsd": 0,
+        "sourceTags": [
+          "sdk:copytrading"
+        ],
+        "lastActivityAt": null
+      },
+      "sourceTags": [
+        "sdk:copytrading"
+      ]
+    },
+    {
+      "id": "signal-sniper",
+      "name": "Signal Sniper",
+      "mode": "watch-only",
+      "status": "MONITORING",
+      "lastCycleAt": null,
+      "lastReasonCode": "SETUP_REQUIRED",
+      "lastErrorClass": null,
+      "lastSuccessfulFillAt": null,
+      "nextAction": "finish_configuration",
+      "consecutiveFailures": 0,
+      "cadenceMinutes": 15,
+      "description": "Newswire monitor awaiting custom keywords and target markets.",
+      "venue": "polymarket",
+      "metrics": {
+        "filled": 0,
+        "submitted": 0,
+        "skipped": 0,
+        "failed": 0,
+        "watched": 1
+      },
+      "reasonMetrics": {
+        "SETUP_REQUIRED": 1
+      },
+      "cooldowns": [],
+      "circuitBreaker": {
+        "open": false,
+        "openUntil": null,
+        "threshold": 0,
+        "cooloffMinutes": 0
+      },
+      "recentEvents": [],
+      "providerActivity": {
+        "positions": [],
+        "openOrders": [],
+        "positionCount": 0,
+        "openOrderCount": 0,
+        "positionValueUsd": 0,
+        "positionPnlUsd": 0,
+        "sourceTags": [
+          "sdk:signalsniper"
+        ],
+        "lastActivityAt": null
+      },
+      "sourceTags": [
+        "sdk:signalsniper"
+      ]
+    }
+  ],
+  "recentActions": [
+    {
+      "timestamp": "2026-04-02 22:02:08.579876+00:00",
+      "laneId": "risk-monitor",
+      "message": "Risk Monitor queued SELL YES on Victor Wembanyama: Points O/U 24.5",
+      "details": {
+        "marketId": "af98bb40-c281-4e8f-94db-3665a81e385e",
+        "venue": "polymarket",
+        "price": 0.01,
+        "costUsdc": 0,
+        "sourceTag": "sdk:risk-monitor"
+      }
+    }
+  ],
+  "liveBook": {
+    "positions": [],
+    "openOrders": [
+      {
+        "orderId": null,
+        "tradeId": "dc7b62fc-48c6-4583-8e6c-140d8bebc5fa",
+        "marketId": "af98bb40-c281-4e8f-94db-3665a81e385e",
+        "question": "Victor Wembanyama: Points O/U 24.5",
+        "venue": "polymarket",
+        "side": "yes",
+        "tradeType": "sell",
+        "shares": 0,
+        "price": 0.01,
+        "costUsdc": 0,
+        "createdAt": "2026-04-02 22:02:08.579876+00:00",
+        "sourceTag": "sdk:risk-monitor",
+        "sourceTags": [
+          "sdk:risk-monitor"
+        ]
+      }
+    ],
+    "untrackedSources": []
+  }
 }

@@ -17,23 +17,23 @@ const BUILD_CHECKOUT_URL = import.meta.env.VITE_RECON_AGENT_CHECKOUT_URL || '';
 
 const dailySteps = [
   {
-    title: 'Checks Stripe for you',
-    description: 'It looks at payments, refunds, payouts, fees, and anything else that changed.',
+    title: 'Tracks Every Dollar',
+    description: 'Watches your Stripe account 24/7. Sales, fees, refunds, and payouts are automatically tracked.',
     icon: <CreditCard className="h-5 w-5 text-cyan-300" />,
   },
   {
-    title: 'Reads the important emails',
-    description: 'Forwarded receipts, invoice emails, and payment alerts are grouped into the same report.',
+    title: 'Organizes Your Inbox',
+    description: 'No more digging for receipts. We match your invoice emails and payout alerts directly to your Stripe data.',
     icon: <Mail className="h-5 w-5 text-emerald-300" />,
   },
   {
-    title: 'Finds what looks off',
-    description: 'Missing receipts, weird payout totals, duplicate charges, and other problems are pushed to the top.',
+    title: 'Spots The Anomalies',
+    description: 'Late refunds? Unmatched payouts? We flag exactly what needs your attention so nothing slips through the cracks.',
     icon: <AlertTriangle className="h-5 w-5 text-amber-300" />,
   },
   {
-    title: 'Explains it in plain English',
-    description: 'You can ask what changed, what still needs attention, and what probably caused the mismatch.',
+    title: 'Your Personal CFO',
+    description: 'Ask questions about your revenue just like you\'d ask a real bookkeeper. "Why was yesterday\'s payout short?"',
     icon: <MessageSquare className="h-5 w-5 text-fuchsia-300" />,
   },
 ];
@@ -110,20 +110,20 @@ export default function ReconAgentPage() {
   const timelineCards = [
     {
       time: '6:31 AM',
-      title: 'Morning check is done',
-      detail: '148 Stripe updates were compared against 34 finance emails.',
+      title: 'The Math is Done',
+      detail: '148 Stripe updates were successfully reconciled with 34 receipt emails.',
       tone: 'border-cyan-400/30 bg-cyan-500/10 text-cyan-100',
     },
     {
       time: '6:33 AM',
       title: '3 things need a quick look',
-      detail: '1 payout total looks off, plus 2 refunds still need to be matched.',
+      detail: 'A payout total looks short, and 2 manual refunds need to be matched.',
       tone: 'border-amber-400/30 bg-amber-500/10 text-amber-100',
     },
     {
       time: '6:36 AM',
       title: 'Summary is ready',
-      detail: 'A short explanation is prepared for the owner or bookkeeper.',
+      detail: 'Your beautiful, 60-second morning briefing is ready to read.',
       tone: 'border-emerald-400/30 bg-emerald-500/10 text-emerald-100',
     },
   ];
@@ -195,12 +195,11 @@ export default function ReconAgentPage() {
               </div>
 
               <h1 className="font-brand mt-6 max-w-4xl text-5xl font-extrabold tracking-tight text-white sm:text-6xl lg:text-7xl">
-                Know what happened in Stripe every morning.
+                Stop wrestling with Stripe payout math every morning.
               </h1>
 
               <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-300 sm:text-xl">
-                Recon Agent checks your Stripe activity and payment emails, then gives you one simple report:
-                what matched, what looks wrong, and what needs your attention.
+                Recon Agent acts as your personal AI financial assistant. It automatically matches your Stripe activity with your emails, giving you a 60-second daily briefing on exactly where your money went.
               </p>
 
               <div className="mt-8 flex flex-col gap-4 sm:flex-row">
@@ -240,14 +239,14 @@ export default function ReconAgentPage() {
               <div className="mt-10 max-w-2xl rounded-[2rem] border border-white/10 bg-slate-950/60 p-5 shadow-2xl shadow-slate-950/40 backdrop-blur">
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                   <div>
-                    <p className="text-xs font-semibold uppercase tracking-[0.22em] text-cyan-200">Simple first version</p>
+                    <p className="text-xs font-semibold uppercase tracking-[0.22em] text-cyan-200">Setup Takes 5 Minutes</p>
                     <p className="mt-2 text-sm leading-6 text-slate-300">
-                      We start with Stripe plus a finance inbox or forwarded payment emails. That keeps setup simple and gets the useful part live faster.
+                      Just connect your Stripe account and forward your receipt emails. We handle the messy reconciliation so you can focus on your business.
                     </p>
                   </div>
                   <div className="inline-flex items-center rounded-full border border-emerald-400/20 bg-emerald-500/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-emerald-200">
                     <ShieldCheck className="mr-2 h-4 w-4" />
-                    Easy setup
+                    Done For You
                   </div>
                 </div>
               </div>
@@ -258,8 +257,8 @@ export default function ReconAgentPage() {
               <div className="relative">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-xs uppercase tracking-[0.2em] text-slate-400">Daily report</p>
-                    <h2 className="mt-2 font-brand text-2xl font-bold text-white">What you see each morning</h2>
+                    <p className="text-xs uppercase tracking-[0.2em] text-slate-400">Morning briefing</p>
+                    <h2 className="mt-2 font-brand text-2xl font-bold text-white">Your 60-Second Daily Briefing</h2>
                   </div>
                   <div className="rounded-full border border-emerald-400/20 bg-emerald-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-emerald-200">
                     Ready
@@ -339,8 +338,8 @@ export default function ReconAgentPage() {
         <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[minmax(0,1fr)_23rem]">
           <div className="overflow-hidden rounded-[2rem] border border-white/10 bg-slate-950/60 shadow-2xl shadow-slate-950/30">
             <div className="border-b border-white/10 px-6 py-5">
-              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-cyan-200">Example daily digest</p>
-              <h2 className="font-brand mt-2 text-2xl font-bold text-white">A simple morning update</h2>
+              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-cyan-200">See exactly what you'll wake up to</p>
+              <h2 className="font-brand mt-2 text-2xl font-bold text-white">An update you can actually understand</h2>
             </div>
 
             <div className="grid gap-0 md:grid-cols-[16rem_minmax(0,1fr)]">
@@ -403,9 +402,9 @@ export default function ReconAgentPage() {
             </div>
 
             <div className="mt-6 rounded-2xl border border-white/10 bg-slate-950/45 p-4">
-              <p className="text-xs uppercase tracking-[0.18em] text-slate-400">Ideal first customers</p>
+              <p className="text-xs uppercase tracking-[0.18em] text-slate-400">Best fit</p>
               <p className="mt-3 text-sm leading-6 text-slate-100">
-                Freelancers, agencies, online stores, and small teams that run money through Stripe and want a cleaner morning routine.
+                Consultants, agencies, info-product creators, coaches, memberships, and businesses ready to eliminate their Stripe headaches forever.
               </p>
             </div>
           </aside>
@@ -544,16 +543,16 @@ export default function ReconAgentPage() {
             </div>
 
             <aside className="rounded-[1.75rem] border border-white/10 bg-white/[0.03] p-6">
-              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-400">Why this exists</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-400">Why people want this</p>
               <div className="mt-5 space-y-5 text-sm leading-7 text-slate-300">
                 <p>
-                  If you use Stripe, you should not have to dig through emails and spreadsheets just to understand your numbers.
+                  You built a business to gain freedom, not to become a part-time bookkeeper digging through emails and spreadsheets.
                 </p>
                 <p>
-                  This is for the space between “I do this by hand” and “I need a giant finance system.”
+                  Recon Agent bridges the massive gap between doing it all by hand and paying thousands for a full finance department.
                 </p>
                 <p>
-                  The goal is simple: show you what matched, what did not, and what needs a quick human decision.
+                  Wake up, read your beautiful briefing, easily resolve the anomalies, and get back to growing your business.
                 </p>
               </div>
 

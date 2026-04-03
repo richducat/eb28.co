@@ -6,7 +6,7 @@
 - Subtitle: Retro alarm clock with attitude
 - Bundle ID: com.eb28.alarmclock
 - Version: 1.1.0
-- Build: 8
+- Build: 9
 - Primary category: Productivity
 - Secondary category: Lifestyle
 - Support URL: https://eb28.co/alarmclock/support/
@@ -53,4 +53,6 @@ alarm clock,wakeup,retro,productivity,timer,morning,habit,calendar
 - The app includes one auto-renewable monthly subscription: `Remove Ads` (`com.eb28.alarmclock.removeads.monthly`).
 - The subscription removes sponsor panels from the dashboard and can be purchased or restored from the profile sheet in the iOS app.
 - The subscription purchase card now includes functional links to the Privacy Policy and Terms of Use (Apple Standard EULA).
-- Build 8 explicitly registers the native `WakeUpPurchases` iOS plugin in the bridge and includes it in the embedded Capacitor plugin list to resolve the prior "Plugin is not implemented on iOS" rejection.
+- Build 9 replaces the direct subscription purchase lookup on iPadOS 17+ with Apple's native `SubscriptionStoreView` sheet for `com.eb28.alarmclock.removeads.monthly`, so tapping `Remove Ads` opens the live App Store subscription card instead of failing when StoreKit product metadata is still warming up.
+- Build 9 keeps a retry/backoff fallback around StoreKit product loading for status and restore checks while the App Store finishes syncing sandbox subscription metadata.
+- Verified on April 3, 2026 on the same simulator family Apple cited (`iPad Air 11-inch (M3)`) that tapping `Remove Ads` opens the native subscription sheet labeled `Wake Up Ya Bish Premium`.

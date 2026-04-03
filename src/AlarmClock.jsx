@@ -349,30 +349,46 @@ export default function AlarmClock() {
     }
 
     try {
-      const [statusResult, catalogResult] = await Promise.all([
+      const [statusOutcome, catalogOutcome] = await Promise.allSettled([
         getRemoveAdsStatus(),
         getRemoveAdsCatalog()
       ]);
+      const statusResult = statusOutcome.status === 'fulfilled' ? statusOutcome.value : {};
+      const catalogResult = catalogOutcome.status === 'fulfilled' ? catalogOutcome.value : {};
       const catalogProduct = catalogResult?.products?.[0] || {};
+      const hasTemporaryStoreIssue = [statusOutcome, catalogOutcome].some((outcome) => (
+        outcome.status === 'rejected'
+        && /app store product|reach the app store|storekit/i.test(outcome.reason?.message || '')
+      ));
 
       setRemoveAdsState(prev => ({
         ...prev,
         ...DEFAULT_REMOVE_ADS_STATE,
         ...catalogProduct,
         ...statusResult,
-        available: true,
+        available: Boolean(
+          statusResult?.available
+          || statusResult?.productId
+          || catalogProduct?.productId
+          || (catalogResult?.products && catalogResult.products.length)
+        ),
         canMakePayments: typeof statusResult?.canMakePayments === 'boolean'
           ? statusResult.canMakePayments
-          : Boolean(catalogResult?.canMakePayments),
+          : typeof catalogResult?.canMakePayments === 'boolean'
+            ? catalogResult.canMakePayments
+            : Capacitor.isNativePlatform(),
         loading: false,
-        errorMessage: ''
+        errorMessage: hasTemporaryStoreIssue && !silent
+          ? 'The App Store is still loading subscription info on this device. If Remove Ads does not appear right away, wait a moment and try again.'
+          : ''
       }));
     } catch (err) {
       console.error('Failed to sync remove-ads subscription state', err);
       setRemoveAdsState(prev => ({
         ...prev,
         loading: false,
-        errorMessage: err?.message || 'Unable to reach the App Store right now.'
+        canMakePayments: Capacitor.isNativePlatform(),
+        errorMessage: 'The App Store is still loading subscription info on this device. If Remove Ads does not appear right away, wait a moment and try again.'
       }));
     }
   }, []);
@@ -404,12 +420,18 @@ export default function AlarmClock() {
         setSubscriptionMessage('Purchase is pending approval. Ad-free mode will unlock once Apple clears it.');
       } else if (result?.isSubscribed) {
         setSubscriptionMessage('Ad-free mode is active on this device.');
+      } else if (result?.source === 'storefront') {
+        setSubscriptionMessage('The App Store sheet closed. If the subscription did not unlock yet, give it a moment and tap Restore.');
       } else {
         setSubscriptionMessage('Purchase completed, but the App Store has not granted the entitlement yet.');
       }
     } catch (err) {
       console.error('Remove-ads purchase failed', err);
-      setSubscriptionMessage(err?.message || 'The App Store purchase failed.');
+      setSubscriptionMessage(
+        /app store product/i.test(err?.message || '')
+          ? 'The App Store is still warming up subscription products on this device. Wait a moment and tap Remove Ads again.'
+          : err?.message || 'The App Store purchase failed.'
+      );
     } finally {
       setIsPurchaseBusy(false);
     }

@@ -5,6 +5,7 @@ import App from './App';
 import Dashboard from './Dashboard';
 import AppBuilderStudio from './AppBuilderStudio';
 import FundManager from './FundManager';
+import ReconAgentPage from './ReconAgentPage';
 import AlarmClock from './AlarmClock';
 import './index.css';
 import { applyDocumentSeo } from './seo.js';
@@ -24,6 +25,9 @@ const isAppBuilderRoute = pathname === '/appbuilder';
 const isFundManagerRoute =
   pathname === '/fundmanager' ||
   hostname === 'fundmanager.eb28.co';
+const isReconAgentRoute =
+  pathname === '/reconcile' ||
+  hostname === 'reconcile.eb28.co';
 const isAlarmClockRoute =
   isNativeAlarmClockApp ||
   pathname === '/alarmclock' ||
@@ -47,6 +51,12 @@ if (isDashboardRoute) {
   root.render(
     <React.StrictMode>
       <FundManager />
+    </React.StrictMode>
+  );
+} else if (isReconAgentRoute) {
+  root.render(
+    <React.StrictMode>
+      <ReconAgentPage />
     </React.StrictMode>
   );
 } else if (isAlarmClockRoute) {

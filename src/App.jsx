@@ -54,6 +54,18 @@ const App = () => {
   // --- DATA: PORTFOLIO / PRODUCTS ---
   const products = [
     {
+      id: 'recon-agent-beta',
+      title: "Recon Agent Founder Beta",
+      category: "revenue",
+      price: "$17/mo",
+      description: "A daily reconciliation copilot for Stripe operators. Surface payout mismatches, refund anomalies, and finance-email exceptions before the day starts.",
+      features: ["Daily exception digest", "Stripe + finance email timeline", "Founder onboarding support"],
+      icon: <BarChart className="w-8 h-8 text-cyan-300" />,
+      highlight: false,
+      ctaHref: "/reconcile/",
+      ctaLabel: "See Founder Beta"
+    },
+    {
       id: 0,
       title: "DIY AI Foundation Build",
       category: "ai-agents",
@@ -116,6 +128,12 @@ const App = () => {
   ];
 
   const portfolioProjects = [
+    {
+      id: 'tool-reconcile',
+      title: "Recon Agent",
+      type: "Founder Beta",
+      url: "/reconcile/"
+    },
     {
       id: 'tool-appbuilder',
       title: "EB28 App Builder",
@@ -275,6 +293,7 @@ const App = () => {
               <button onClick={() => scrollToSection('services')} className="text-slate-300 hover:text-white transition-colors text-sm font-medium uppercase tracking-wide">Infrastructure</button>
               <button onClick={() => scrollToSection('portfolio')} className="text-slate-300 hover:text-white transition-colors text-sm font-medium uppercase tracking-wide">Portfolio</button>
               <button onClick={() => scrollToSection('deployments')} className="text-slate-300 hover:text-white transition-colors text-sm font-medium uppercase tracking-wide">Deployments</button>
+              <a href="/reconcile/" className="text-cyan-300 hover:text-cyan-200 transition-colors text-sm font-medium uppercase tracking-wide">Recon Agent</a>
               <button onClick={() => scrollToSection('packages')} className="text-slate-300 hover:text-white transition-colors text-sm font-medium uppercase tracking-wide text-blue-400">$10 AI Offer</button>
               <button onClick={() => scrollToSection('contact')} className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-full font-bold text-sm transition-all transform hover:scale-105 shadow-lg shadow-blue-600/30">
                 Architect Your System
@@ -303,6 +322,7 @@ const App = () => {
               <button onClick={() => scrollToSection('services')} className="block w-full text-left px-3 py-3 text-slate-300 hover:bg-slate-700 rounded-md font-medium">Infrastructure</button>
               <button onClick={() => scrollToSection('portfolio')} className="block w-full text-left px-3 py-3 text-slate-300 hover:bg-slate-700 rounded-md font-medium">Portfolio</button>
               <button onClick={() => scrollToSection('deployments')} className="block w-full text-left px-3 py-3 text-slate-300 hover:bg-slate-700 rounded-md font-medium">Deployments</button>
+              <a href="/reconcile/" className="block w-full text-left px-3 py-3 text-cyan-300 hover:bg-slate-700 rounded-md font-bold">Recon Agent Founder Beta</a>
               <button onClick={() => scrollToSection('packages')} className="block w-full text-left px-3 py-3 text-blue-400 hover:bg-slate-700 rounded-md font-bold">$10 AI Offer</button>
               <button onClick={() => scrollToSection('contact')} className="block w-full text-left px-3 py-3 bg-blue-600 text-white hover:bg-blue-700 rounded-md font-bold mt-4">Architect Your System</button>
             </div>
@@ -325,6 +345,12 @@ const App = () => {
           <div className="inline-flex items-center px-4 py-2 rounded-full bg-slate-800/80 border border-slate-700 mb-8 backdrop-blur-md shadow-lg">
             <span className="flex h-2 w-2 rounded-full bg-green-400 mr-2 animate-pulse"></span>
             <span className="text-slate-300 text-xs font-bold uppercase tracking-widest">eb28.co | Private AI Infrastructure</span>
+          </div>
+
+          <div className="mb-6">
+            <a href="/reconcile/" className="inline-flex items-center gap-2 rounded-full border border-cyan-400/20 bg-cyan-500/10 px-5 py-2 text-sm font-semibold text-cyan-100 transition-colors hover:bg-cyan-500/15">
+              New founder beta: Recon Agent at $17/mo <ArrowRight className="w-4 h-4" />
+            </a>
           </div>
           
           <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 leading-tight">
@@ -567,7 +593,11 @@ const App = () => {
 
                 <div className="p-6 bg-slate-800/50 border-t border-slate-800 flex items-center justify-between">
                   <span className={`text-2xl font-bold ${item.highlight ? 'text-blue-400' : 'text-white'}`}>{item.price}</span>
-                  {item.highlight ? (
+                  {item.ctaHref ? (
+                    <a href={item.ctaHref} className="px-4 py-2 bg-white text-slate-900 rounded-lg font-bold text-sm hover:bg-cyan-50 transition-colors flex items-center">
+                      {item.ctaLabel || 'Open'} <ArrowRight className="w-4 h-4 ml-1" />
+                    </a>
+                  ) : item.highlight ? (
                      <button onClick={() => scrollToSection('contact')} className="px-4 py-2 bg-blue-700 text-white rounded-lg font-bold text-sm hover:bg-blue-600 transition-colors flex items-center shadow-lg shadow-blue-700/40">
                      Build It <ArrowRight className="w-4 h-4 ml-1" />
                    </button>
@@ -740,6 +770,7 @@ const App = () => {
                 <div>
                   <label htmlFor="contact-need" className="block text-sm font-medium text-slate-300 mb-2">Infrastructure Need</label>
                   <select id="contact-need" name="serviceNeed" value={formData.serviceNeed} onChange={(e) => updateField('serviceNeed', e.target.value)} className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all">
+                    <option value="recon-agent-founder-beta">Recon Agent Founder Beta ($17/mo)</option>
                     <option value="10-dollar-bot">🔥 Deploy $10 Proof of Concept Bot</option>
                     <option value="on-prem">On-Premise Local LLM Setup</option>
                     <option value="cloud">eb28.co Cloud AI Hosting</option>

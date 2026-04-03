@@ -128,6 +128,39 @@ const ROUTE_META = {
             },
         ],
     },
+    reconcile: {
+        ...BASE_ROUTE_META,
+        key: 'reconcile',
+        path: '/reconcile/',
+        title: 'Recon Agent Founder Beta | Daily Stripe Reconciliation Copilot | EB28',
+        description:
+            'Recon Agent is the EB28 daily reconciliation copilot for Stripe operators: payout mismatches, refund anomalies, finance email context, and a chat-ready exception brief every morning.',
+        image: DEFAULT_IMAGE,
+        includeInSitemap: true,
+        structuredData: [
+            ORGANIZATION_SCHEMA,
+            {
+                '@context': 'https://schema.org',
+                '@type': 'SoftwareApplication',
+                name: 'Recon Agent',
+                applicationCategory: 'FinanceApplication',
+                operatingSystem: 'Web',
+                offers: {
+                    '@type': 'Offer',
+                    price: '17',
+                    priceCurrency: 'USD',
+                    url: `${SITE_ORIGIN}/reconcile/`,
+                },
+                url: `${SITE_ORIGIN}/reconcile/`,
+                image: DEFAULT_IMAGE,
+                description:
+                    'A daily reconciliation copilot for Stripe activity, payout review, finance email context, and exception handling.',
+                provider: {
+                    '@id': ORGANIZATION_ID,
+                },
+            },
+        ],
+    },
     dash: {
         ...BASE_ROUTE_META,
         key: 'dash',
@@ -157,6 +190,7 @@ export const STATIC_ROUTE_OUTPUTS = [
     { routeKey: 'home', outputPath: 'index.html' },
     { routeKey: 'appbuilder', outputPath: 'appbuilder/index.html' },
     { routeKey: 'fundmanager', outputPath: 'fundmanager/index.html' },
+    { routeKey: 'reconcile', outputPath: 'reconcile/index.html' },
     { routeKey: 'dash', outputPath: 'dash/index.html' },
     { routeKey: 'notfound', outputPath: '404.html' },
 ];
@@ -184,6 +218,10 @@ export function detectRouteKey({ pathname = '/', hostname = '' } = {}) {
 
     if (normalizedPathname === '/fundmanager' || normalizedHostname === 'fundmanager.eb28.co') {
         return 'fundmanager';
+    }
+
+    if (normalizedPathname === '/reconcile' || normalizedHostname === 'reconcile.eb28.co') {
+        return 'reconcile';
     }
 
     return 'home';

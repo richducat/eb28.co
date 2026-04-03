@@ -161,6 +161,49 @@ const ROUTE_META = {
             },
         ],
     },
+    tch: {
+        ...BASE_ROUTE_META,
+        key: 'tch',
+        path: '/tch/',
+        title: 'Thomas Custom Homes Inc. | Custom Home Builder in Cocoa, FL',
+        description:
+            'Explore Thomas Custom Homes Inc. in Cocoa, Florida for custom homes, additions, whole-home remodels, and design-build construction planning.',
+        image: DEFAULT_IMAGE,
+        siteName: 'Thomas Custom Homes Inc.',
+        themeColor: '#1c1917',
+        colorScheme: 'light',
+        includeInSitemap: true,
+        structuredData: [
+            {
+                '@context': 'https://schema.org',
+                '@type': 'WebPage',
+                name: 'Thomas Custom Homes Inc.',
+                url: `${SITE_ORIGIN}/tch/`,
+                description:
+                    'Custom home building, additions, and whole-home remodel information for Thomas Custom Homes Inc. in Cocoa, Florida.',
+            },
+            {
+                '@context': 'https://schema.org',
+                '@type': 'GeneralContractor',
+                name: 'Thomas Custom Homes Inc.',
+                url: `${SITE_ORIGIN}/tch/`,
+                telephone: '+1-321-587-1163',
+                image: DEFAULT_IMAGE,
+                areaServed: ['Cocoa, Florida', 'Brevard County, Florida'],
+                address: {
+                    '@type': 'PostalAddress',
+                    streetAddress: '846 N. Cocoa Blvd. Suite C',
+                    addressLocality: 'Cocoa',
+                    addressRegion: 'FL',
+                    postalCode: '32922',
+                    addressCountry: 'US',
+                },
+                sameAs: ['https://www.alignable.com/cocoa-fl/thomas-custom-homes-inc'],
+                description:
+                    'Thomas Custom Homes Inc. provides custom homes, whole-home remodels, additions, and design-build construction services.',
+            },
+        ],
+    },
     dash: {
         ...BASE_ROUTE_META,
         key: 'dash',
@@ -191,6 +234,7 @@ export const STATIC_ROUTE_OUTPUTS = [
     { routeKey: 'appbuilder', outputPath: 'appbuilder/index.html' },
     { routeKey: 'fundmanager', outputPath: 'fundmanager/index.html' },
     { routeKey: 'reconcile', outputPath: 'reconcile/index.html' },
+    { routeKey: 'tch', outputPath: 'tch/index.html' },
     { routeKey: 'dash', outputPath: 'dash/index.html' },
     { routeKey: 'notfound', outputPath: '404.html' },
 ];
@@ -222,6 +266,10 @@ export function detectRouteKey({ pathname = '/', hostname = '' } = {}) {
 
     if (normalizedPathname === '/reconcile' || normalizedHostname === 'reconcile.eb28.co') {
         return 'reconcile';
+    }
+
+    if (normalizedPathname === '/tch') {
+        return 'tch';
     }
 
     return 'home';

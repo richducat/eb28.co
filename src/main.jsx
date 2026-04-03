@@ -7,6 +7,7 @@ import AppBuilderStudio from './AppBuilderStudio';
 import FundManager from './FundManager';
 import ReconAgentPage from './ReconAgentPage';
 import AlarmClock from './AlarmClock';
+import ThomasCustomHomesPage from './ThomasCustomHomesPage';
 import './index.css';
 import { applyDocumentSeo } from './seo.js';
 import { detectRouteKey } from './siteMeta.js';
@@ -28,6 +29,7 @@ const isFundManagerRoute =
 const isReconAgentRoute =
   pathname === '/reconcile' ||
   hostname === 'reconcile.eb28.co';
+const isThomasCustomHomesRoute = pathname === '/tch';
 const isAlarmClockRoute =
   isNativeAlarmClockApp ||
   pathname === '/alarmclock' ||
@@ -57,6 +59,12 @@ if (isDashboardRoute) {
   root.render(
     <React.StrictMode>
       <ReconAgentPage />
+    </React.StrictMode>
+  );
+} else if (isThomasCustomHomesRoute) {
+  root.render(
+    <React.StrictMode>
+      <ThomasCustomHomesPage />
     </React.StrictMode>
   );
 } else if (isAlarmClockRoute) {

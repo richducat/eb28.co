@@ -99,7 +99,13 @@ export function stripManagedSeo(html) {
 }
 
 export function injectSeoMarkup(html, routeOrLocation) {
-    const viewportTag = '<meta name="viewport" content="width=device-width, initial-scale=1.0" />';
     const sanitizedHtml = stripManagedSeo(html);
-    return sanitizedHtml.replace(viewportTag, `${viewportTag}\n${buildSeoMarkup(routeOrLocation)}`);
+    const seoMarkup = buildSeoMarkup(routeOrLocation);
+    const viewportPattern = /(<meta\s+name="viewport"[^>]*>\s*)/i;
+
+    if (viewportPattern.test(sanitizedHtml)) {
+        return sanitizedHtml.replace(viewportPattern, `$1${seoMarkup}`);
+    }
+
+    return sanitizedHtml.replace('</head>', `${seoMarkup}</head>`);
 }

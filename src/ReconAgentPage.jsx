@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   AlertTriangle,
   ArrowRight,
@@ -13,27 +13,27 @@ import {
 } from 'lucide-react';
 
 const FOUNDER_PRICE = '$17/mo';
-const CHECKOUT_URL = import.meta.env.VITE_RECON_AGENT_CHECKOUT_URL || '';
+const BUILD_CHECKOUT_URL = import.meta.env.VITE_RECON_AGENT_CHECKOUT_URL || '';
 
 const dailySteps = [
   {
-    title: 'Pull Stripe activity',
-    description: 'Charges, refunds, payouts, fees, disputes, and balance changes are collected into one run.',
+    title: 'Checks Stripe for you',
+    description: 'It looks at payments, refunds, payouts, fees, and anything else that changed.',
     icon: <CreditCard className="h-5 w-5 text-cyan-300" />,
   },
   {
-    title: 'Read finance email',
-    description: 'Forwarded receipts, invoice notices, and processor alerts are stitched onto the same timeline.',
+    title: 'Reads the important emails',
+    description: 'Forwarded receipts, invoice emails, and payment alerts are grouped into the same report.',
     icon: <Mail className="h-5 w-5 text-emerald-300" />,
   },
   {
-    title: 'Flag exceptions',
-    description: 'Missing invoices, payout mismatches, duplicate charges, and unusual refund clusters rise to the top.',
+    title: 'Finds what looks off',
+    description: 'Missing receipts, weird payout totals, duplicate charges, and other problems are pushed to the top.',
     icon: <AlertTriangle className="h-5 w-5 text-amber-300" />,
   },
   {
-    title: 'Explain in chat',
-    description: 'Operators can ask what changed, what is unresolved, and what needs a human decision before close.',
+    title: 'Explains it in plain English',
+    description: 'You can ask what changed, what still needs attention, and what probably caused the mismatch.',
     icon: <MessageSquare className="h-5 w-5 text-fuchsia-300" />,
   },
 ];
@@ -41,17 +41,18 @@ const dailySteps = [
 const includedItems = [
   '1 Stripe account',
   '1 finance inbox or forwarding alias',
-  'Daily reconciliation digest',
-  'Exception queue with plain-English summaries',
-  'CSV export for accountant handoff',
-  'Founder onboarding with custom mapping',
+  'A daily “what happened” report',
+  'A short list of problems to check',
+  'Plain-English explanations',
+  'CSV export for your bookkeeper or accountant',
+  'Founder onboarding help',
 ];
 
 const reportLines = [
-  { label: 'Matched transactions', value: '148', tone: 'text-white' },
-  { label: 'Payout variance', value: '$31.42', tone: 'text-amber-300' },
-  { label: 'Unmatched refunds', value: '2', tone: 'text-rose-300' },
-  { label: 'Likely duplicate receipts', value: '4', tone: 'text-cyan-300' },
+  { label: 'Payments that matched', value: '148', tone: 'text-white' },
+  { label: 'Money that looks off', value: '$31.42', tone: 'text-amber-300' },
+  { label: 'Refunds to review', value: '2', tone: 'text-rose-300' },
+  { label: 'Receipt emails to check', value: '4', tone: 'text-cyan-300' },
 ];
 
 function scrollToReserve() {
@@ -73,26 +74,56 @@ export default function ReconAgentPage() {
   });
   const [formStatus, setFormStatus] = useState('idle');
   const [formError, setFormError] = useState('');
+  const [runtimeCheckoutUrl, setRuntimeCheckoutUrl] = useState('');
 
-  const primaryCtaLabel = CHECKOUT_URL ? `Start ${FOUNDER_PRICE}` : 'Reserve founder pricing';
-  const supportCtaLabel = CHECKOUT_URL ? 'Talk through onboarding' : 'See how beta works';
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadRuntimeConfig() {
+      try {
+        const response = await fetch('/recon-agent-config.json', { cache: 'no-store' });
+        if (!response.ok) {
+          return;
+        }
+
+        const payload = await response.json();
+        const checkoutUrl = String(payload?.checkoutUrl || '').trim();
+
+        if (!cancelled && checkoutUrl) {
+          setRuntimeCheckoutUrl(checkoutUrl);
+        }
+      } catch {
+        // The page keeps working without runtime config.
+      }
+    }
+
+    loadRuntimeConfig();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const checkoutUrl = runtimeCheckoutUrl || BUILD_CHECKOUT_URL;
+  const primaryCtaLabel = checkoutUrl ? `Buy now for ${FOUNDER_PRICE}` : 'Join the founder beta';
+  const supportCtaLabel = checkoutUrl ? 'Ask a question first' : 'Talk to us first';
   const timelineCards = [
     {
       time: '6:31 AM',
-      title: 'Daily run completed',
-      detail: '148 Stripe events matched against 34 finance emails.',
+      title: 'Morning check is done',
+      detail: '148 Stripe updates were compared against 34 finance emails.',
       tone: 'border-cyan-400/30 bg-cyan-500/10 text-cyan-100',
     },
     {
       time: '6:33 AM',
-      title: '3 exceptions surfaced',
-      detail: '1 payout mismatch, 2 unmatched refunds.',
+      title: '3 things need a quick look',
+      detail: '1 payout total looks off, plus 2 refunds still need to be matched.',
       tone: 'border-amber-400/30 bg-amber-500/10 text-amber-100',
     },
     {
       time: '6:36 AM',
-      title: 'Operator summary drafted',
-      detail: 'Chat-ready brief generated for owner or bookkeeper review.',
+      title: 'Summary is ready',
+      detail: 'A short explanation is prepared for the owner or bookkeeper.',
       tone: 'border-emerald-400/30 bg-emerald-500/10 text-emerald-100',
     },
   ];
@@ -164,18 +195,18 @@ export default function ReconAgentPage() {
               </div>
 
               <h1 className="font-brand mt-6 max-w-4xl text-5xl font-extrabold tracking-tight text-white sm:text-6xl lg:text-7xl">
-                Close your Stripe books before breakfast.
+                Know what happened in Stripe every morning.
               </h1>
 
               <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-300 sm:text-xl">
-                Recon Agent gives operators a daily account-reconciliation copilot: Stripe activity, finance email, payout mismatches,
-                refund anomalies, and a chat surface to explain what changed.
+                Recon Agent checks your Stripe activity and payment emails, then gives you one simple report:
+                what matched, what looks wrong, and what needs your attention.
               </p>
 
               <div className="mt-8 flex flex-col gap-4 sm:flex-row">
-                {CHECKOUT_URL ? (
+                {checkoutUrl ? (
                   <a
-                    href={CHECKOUT_URL}
+                    href={checkoutUrl}
                     className="inline-flex items-center justify-center rounded-full bg-white px-7 py-4 text-base font-bold text-slate-950 transition-transform hover:-translate-y-0.5 hover:bg-cyan-50"
                   >
                     {primaryCtaLabel}
@@ -201,22 +232,22 @@ export default function ReconAgentPage() {
               </div>
 
               <div className="mt-8 flex flex-wrap gap-3 text-sm text-slate-300">
-                <span className="rounded-full border border-cyan-400/20 bg-cyan-500/10 px-4 py-2">Launch price: {FOUNDER_PRICE}</span>
+                <span className="rounded-full border border-cyan-400/20 bg-cyan-500/10 px-4 py-2">Founder price: {FOUNDER_PRICE}</span>
                 <span className="rounded-full border border-white/10 bg-white/5 px-4 py-2">No annual contract</span>
-                <span className="rounded-full border border-white/10 bg-white/5 px-4 py-2">Built for founders, operators, bookkeepers</span>
+                <span className="rounded-full border border-white/10 bg-white/5 px-4 py-2">Made for people who use Stripe and hate manual checking</span>
               </div>
 
               <div className="mt-10 max-w-2xl rounded-[2rem] border border-white/10 bg-slate-950/60 p-5 shadow-2xl shadow-slate-950/40 backdrop-blur">
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                   <div>
-                    <p className="text-xs font-semibold uppercase tracking-[0.22em] text-cyan-200">Launch scope</p>
+                    <p className="text-xs font-semibold uppercase tracking-[0.22em] text-cyan-200">Simple first version</p>
                     <p className="mt-2 text-sm leading-6 text-slate-300">
-                      Beta uses Stripe plus a finance inbox or forwarding alias first. Full Gmail inbox sync comes after Google verification.
+                      We start with Stripe plus a finance inbox or forwarded payment emails. That keeps setup simple and gets the useful part live faster.
                     </p>
                   </div>
                   <div className="inline-flex items-center rounded-full border border-emerald-400/20 bg-emerald-500/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-emerald-200">
                     <ShieldCheck className="mr-2 h-4 w-4" />
-                    Lower-risk launch path
+                    Easy setup
                   </div>
                 </div>
               </div>
@@ -227,11 +258,11 @@ export default function ReconAgentPage() {
               <div className="relative">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-xs uppercase tracking-[0.2em] text-slate-400">Daily exception brief</p>
-                    <h2 className="mt-2 font-brand text-2xl font-bold text-white">6:30 AM Run</h2>
+                    <p className="text-xs uppercase tracking-[0.2em] text-slate-400">Daily report</p>
+                    <h2 className="mt-2 font-brand text-2xl font-bold text-white">What you see each morning</h2>
                   </div>
                   <div className="rounded-full border border-emerald-400/20 bg-emerald-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-emerald-200">
-                    Completed
+                    Ready
                   </div>
                 </div>
 
@@ -262,13 +293,12 @@ export default function ReconAgentPage() {
                       <Bot className="h-5 w-5" />
                     </div>
                     <div>
-                      <p className="text-sm font-semibold text-white">Chat operator</p>
-                      <p className="text-xs uppercase tracking-[0.18em] text-slate-500">Explain the mismatch</p>
+                      <p className="text-sm font-semibold text-white">Ask the report questions</p>
+                      <p className="text-xs uppercase tracking-[0.18em] text-slate-500">Plain-English answers</p>
                     </div>
                   </div>
                   <p className="mt-4 text-sm leading-6 text-slate-300">
-                    “Yesterday&apos;s largest payout was short by $31.42 because two refunds hit after the payout batch closed. I already grouped the
-                    related emails and tagged the affected charges.”
+                    “Yesterday&apos;s payout is short by $31.42 because two refunds came in after the payout was created. I already grouped the related emails for you.”
                   </p>
                 </div>
               </div>
@@ -283,10 +313,10 @@ export default function ReconAgentPage() {
             <div>
               <p className="text-sm font-semibold uppercase tracking-[0.22em] text-cyan-200">How it works</p>
               <h2 className="font-brand mt-4 text-3xl font-bold text-white sm:text-4xl">
-                One run. One queue. One operator story.
+                What it does each day.
               </h2>
               <p className="mt-4 text-base leading-7 text-slate-300">
-                The beta is intentionally narrow so it can be dependable. We reconcile the recurring operational surfaces first, then expand the scope.
+                You do not get a giant dashboard. You get a simple daily check, a short list of issues, and clear answers about what changed.
               </p>
             </div>
 
@@ -310,42 +340,40 @@ export default function ReconAgentPage() {
           <div className="overflow-hidden rounded-[2rem] border border-white/10 bg-slate-950/60 shadow-2xl shadow-slate-950/30">
             <div className="border-b border-white/10 px-6 py-5">
               <p className="text-xs font-semibold uppercase tracking-[0.22em] text-cyan-200">Example daily digest</p>
-              <h2 className="font-brand mt-2 text-2xl font-bold text-white">What the owner sees</h2>
+              <h2 className="font-brand mt-2 text-2xl font-bold text-white">A simple morning update</h2>
             </div>
 
             <div className="grid gap-0 md:grid-cols-[16rem_minmax(0,1fr)]">
               <div className="border-b border-white/10 bg-white/[0.03] p-6 md:border-b-0 md:border-r">
                 <div className="space-y-4">
                   <div className="rounded-2xl border border-emerald-400/20 bg-emerald-500/10 p-4">
-                    <p className="text-xs uppercase tracking-[0.18em] text-emerald-200">Healthy</p>
-                    <p className="mt-2 text-sm leading-6 text-emerald-50">Gross volume matched across the day. No hidden fee drift.</p>
+                    <p className="text-xs uppercase tracking-[0.18em] text-emerald-200">Looks good</p>
+                    <p className="mt-2 text-sm leading-6 text-emerald-50">Most of the day matched cleanly.</p>
                   </div>
                   <div className="rounded-2xl border border-amber-400/20 bg-amber-500/10 p-4">
-                    <p className="text-xs uppercase tracking-[0.18em] text-amber-200">Needs review</p>
-                    <p className="mt-2 text-sm leading-6 text-amber-50">2 refund emails do not map cleanly to settlement batches.</p>
+                    <p className="text-xs uppercase tracking-[0.18em] text-amber-200">Needs a quick check</p>
+                    <p className="mt-2 text-sm leading-6 text-amber-50">Two refund emails still need to be matched.</p>
                   </div>
                   <div className="rounded-2xl border border-cyan-400/20 bg-cyan-500/10 p-4">
-                    <p className="text-xs uppercase tracking-[0.18em] text-cyan-200">Ready for export</p>
-                    <p className="mt-2 text-sm leading-6 text-cyan-50">CSV and notes prepared for the bookkeeper handoff.</p>
+                    <p className="text-xs uppercase tracking-[0.18em] text-cyan-200">Ready to share</p>
+                    <p className="mt-2 text-sm leading-6 text-cyan-50">Your CSV and notes are ready for your bookkeeper.</p>
                   </div>
                 </div>
               </div>
 
               <div className="p-6">
                 <div className="space-y-5 text-sm leading-7 text-slate-300">
-                  <p className="text-base font-semibold text-white">Thursday close summary</p>
+                  <p className="text-base font-semibold text-white">Thursday summary</p>
                   <p>
-                    Stripe processed 148 events and sent 34 finance emails that matter to close. The largest payout variance is <strong className="text-amber-200">$31.42</strong>,
-                    driven by two post-batch refunds. Four receipts look duplicated, likely from a resend loop rather than duplicate customer billing.
+                    Stripe had 148 updates and 34 emails worth checking. Most of it matched. The biggest thing to review is a <strong className="text-amber-200">$31.42</strong> payout difference caused by two refunds that came in later.
                   </p>
                   <p>
-                    The queue is small enough for one human decision pass. If nothing changes, books can close with three follow-ups: verify refund timing, annotate the payout
-                    difference, and archive the duplicate receipt thread.
+                    Nothing here looks scary. One person can clear the open items quickly: confirm the refund timing, note the payout difference, and clean up the repeated receipt emails.
                   </p>
                   <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
-                    <p className="text-xs uppercase tracking-[0.18em] text-slate-500">Suggested prompt</p>
+                    <p className="text-xs uppercase tracking-[0.18em] text-slate-500">Example question</p>
                     <p className="mt-3 text-sm text-slate-100">
-                      “Show me every unresolved item from the last 7 days that could change net payout, and draft notes my bookkeeper can paste into the ledger.”
+                      “Show me anything from the last 7 days that could change my payout total, and write notes my bookkeeper can use.”
                     </p>
                   </div>
                 </div>
@@ -361,7 +389,7 @@ export default function ReconAgentPage() {
             <div className="mt-4">
               <p className="font-brand text-5xl font-extrabold text-white">{FOUNDER_PRICE}</p>
               <p className="mt-2 text-sm leading-6 text-cyan-50">
-                Launch pricing for operators who want daily reconciliation without buying enterprise bookkeeping software.
+                A simple monthly tool for people who want Stripe checked every day without doing it by hand.
               </p>
             </div>
 
@@ -377,7 +405,7 @@ export default function ReconAgentPage() {
             <div className="mt-6 rounded-2xl border border-white/10 bg-slate-950/45 p-4">
               <p className="text-xs uppercase tracking-[0.18em] text-slate-400">Ideal first customers</p>
               <p className="mt-3 text-sm leading-6 text-slate-100">
-                Agencies, solo operators, ecommerce brands, and small finance teams using Stripe as the operational source of truth.
+                Freelancers, agencies, online stores, and small teams that run money through Stripe and want a cleaner morning routine.
               </p>
             </div>
           </aside>
@@ -389,25 +417,25 @@ export default function ReconAgentPage() {
           <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_24rem]">
             <div>
               <p className="text-sm font-semibold uppercase tracking-[0.22em] text-cyan-200">
-                {CHECKOUT_URL ? 'Get onboarded' : 'Reserve your founder slot'}
+                {checkoutUrl ? 'Buy now' : 'Join the founder beta'}
               </p>
               <h2 className="font-brand mt-3 text-3xl font-bold text-white sm:text-4xl">
-                {CHECKOUT_URL ? 'Start the subscription, then we map your workflow.' : 'Tell us your stack and we will hold the launch price.'}
+                {checkoutUrl ? 'Start your plan and we will help you get set up.' : 'Tell us a little about your setup and we will reach out.'}
               </h2>
               <p className="mt-4 max-w-2xl text-base leading-7 text-slate-300">
-                {CHECKOUT_URL
-                  ? 'Use the founder checkout when you are ready, or send your details here so we can prep onboarding and data mapping before the first run.'
-                  : 'This launch page is live now. The beta intake locks in founder pricing while we finish the direct checkout path and schedule onboarding.'}
+                {checkoutUrl
+                  ? 'You can buy the founder plan right now, or send your details first if you want help before paying.'
+                  : 'We are opening this up customer by customer so setup stays smooth. Send your info and we will help you get started.'}
               </p>
 
               {formStatus === 'success' ? (
                 <div className="mt-8 rounded-[1.75rem] border border-emerald-400/20 bg-emerald-500/10 p-6">
                   <div className="flex items-center gap-3">
                     <CheckCircle className="h-6 w-6 text-emerald-200" />
-                    <p className="font-brand text-2xl font-bold text-white">Founder request received</p>
+                    <p className="font-brand text-2xl font-bold text-white">You are on the list</p>
                   </div>
                   <p className="mt-4 text-sm leading-7 text-emerald-50">
-                    We have your details and will follow up with onboarding steps. Expect a same-day response while founder slots are open.
+                    We have your details and will follow up with next steps. Expect a same-day response while founder spots are open.
                   </p>
                   <button
                     type="button"
@@ -471,7 +499,7 @@ export default function ReconAgentPage() {
                     </label>
 
                     <label className="block">
-                      <span className="mb-2 block text-sm font-medium text-slate-300">Monthly Stripe volume</span>
+                      <span className="mb-2 block text-sm font-medium text-slate-300">About how much do you run through Stripe each month?</span>
                       <input
                         type="text"
                         value={formData.monthlyVolume}
@@ -483,12 +511,12 @@ export default function ReconAgentPage() {
                   </div>
 
                   <label className="block">
-                    <span className="mb-2 block text-sm font-medium text-slate-300">Current reconciliation pain</span>
+                    <span className="mb-2 block text-sm font-medium text-slate-300">What feels messy or confusing right now?</span>
                     <textarea
                       rows="5"
                       value={formData.notes}
                       onChange={(event) => updateField('notes', event.target.value)}
-                      placeholder="What breaks today: payout mismatches, refunds, handoff delays, missing receipts, bookkeeper back-and-forth..."
+                      placeholder="For example: payouts do not match, refund emails are hard to track, my bookkeeper keeps asking questions, or I spend too much time checking numbers."
                       className="w-full rounded-[1.5rem] border border-white/10 bg-white/[0.04] px-4 py-3 text-white outline-none transition focus:border-cyan-400/50 focus:ring-2 focus:ring-cyan-400/30"
                     />
                   </label>
@@ -499,15 +527,15 @@ export default function ReconAgentPage() {
                       disabled={formStatus === 'submitting'}
                       className="inline-flex items-center justify-center rounded-full bg-white px-7 py-4 text-base font-bold text-slate-950 transition hover:bg-cyan-50 disabled:cursor-not-allowed disabled:opacity-70"
                     >
-                      {formStatus === 'submitting' ? 'Sending...' : CHECKOUT_URL ? 'Request onboarding' : 'Reserve founder pricing'}
+                      {formStatus === 'submitting' ? 'Sending...' : checkoutUrl ? 'Talk to us first' : 'Join the founder beta'}
                     </button>
 
-                    {CHECKOUT_URL ? (
+                    {checkoutUrl ? (
                       <a
-                        href={CHECKOUT_URL}
+                        href={checkoutUrl}
                         className="inline-flex items-center justify-center rounded-full border border-white/15 bg-white/5 px-7 py-4 text-base font-semibold text-white transition-colors hover:bg-white/10"
                       >
-                        Open checkout
+                        Buy now for {FOUNDER_PRICE}
                       </a>
                     ) : null}
                   </div>
@@ -516,25 +544,25 @@ export default function ReconAgentPage() {
             </div>
 
             <aside className="rounded-[1.75rem] border border-white/10 bg-white/[0.03] p-6">
-              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-400">Why this offer exists</p>
+              <p className="text-xs font-semibold uppercase tracking-[0.22em] text-slate-400">Why this exists</p>
               <div className="mt-5 space-y-5 text-sm leading-7 text-slate-300">
                 <p>
-                  Most small teams do not need a giant ERP or a full accounting platform just to identify why payouts do not match.
+                  If you use Stripe, you should not have to dig through emails and spreadsheets just to understand your numbers.
                 </p>
                 <p>
-                  Founder beta is for the gap between “manual spreadsheet chaos” and “buy an enterprise finance suite.”
+                  This is for the space between “I do this by hand” and “I need a giant finance system.”
                 </p>
                 <p>
-                  We are optimizing for daily clarity: what matched, what did not, what changed, and what needs a human answer.
+                  The goal is simple: show you what matched, what did not, and what needs a quick human decision.
                 </p>
               </div>
 
               <div className="mt-6 rounded-2xl border border-cyan-400/20 bg-cyan-500/10 p-4">
                 <div className="flex items-center gap-3">
                   <Clock className="h-5 w-5 text-cyan-200" />
-                  <p className="text-sm font-semibold text-white">Founder response target</p>
+                  <p className="text-sm font-semibold text-white">Fast reply</p>
                 </div>
-                <p className="mt-3 text-sm leading-6 text-cyan-50">Same day for setup replies, workflow questions, and first-pass data mapping.</p>
+                <p className="mt-3 text-sm leading-6 text-cyan-50">Same-day replies for setup questions and first-pass onboarding.</p>
               </div>
 
               <a href="/" className="mt-6 inline-flex items-center text-sm font-semibold text-cyan-200 hover:text-cyan-100">

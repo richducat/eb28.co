@@ -134,7 +134,7 @@ const ROUTE_META = {
         path: '/reconcile/',
         title: 'Recon Agent Founder Beta | Daily Stripe Reconciliation Copilot | EB28',
         description:
-            'Recon Agent is the EB28 daily reconciliation copilot for Stripe operators: payout mismatches, refund anomalies, finance email context, and a chat-ready exception brief every morning.',
+            'Recon Agent gives Stripe users a simple daily report showing what matched, what looks wrong, and what needs attention.',
         image: DEFAULT_IMAGE,
         includeInSitemap: true,
         structuredData: [

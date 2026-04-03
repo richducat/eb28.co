@@ -3,7 +3,7 @@
   "source": "live-simmer",
   "sourceType": "api",
   "fallbackReason": null,
-  "updatedAt": "2026-04-03T02:14:16.786Z",
+  "updatedAt": "2026-04-03T03:07:56.107Z",
   "stale": false,
   "summary": {
     "status": "RUNNING",
@@ -19,27 +19,27 @@
         "count": 2
       }
     ],
-    "lastSuccessfulFillAt": "2026-04-03T02:14:16.786Z"
+    "lastSuccessfulFillAt": "2026-04-03T03:07:56.107Z"
   },
   "account": {
     "balanceUsdc": 0.49,
-    "totalExposure": 6273.96,
+    "totalExposure": 6274.16,
     "activePositionCount": 1,
     "openOrderCount": 1,
-    "totalPnl": -57.2,
+    "totalPnl": -56.8,
     "realizedPnl": 41.86,
-    "unrealizedPnl": -99.06,
+    "unrealizedPnl": -98.66,
     "bySource": {
       "sdk:divergence": {
         "positions": 3,
-        "exposure": 1.49
+        "exposure": 1.7
       }
     }
   },
   "providerHealth": {
     "status": "OK",
     "degraded": false,
-    "lastCheckedAt": "2026-04-03T02:14:16.786Z",
+    "lastCheckedAt": "2026-04-03T03:07:56.107Z",
     "baseUrl": "https://api.simmer.markets",
     "trackedLaneCount": 11,
     "untrackedSourceCount": 0
@@ -81,8 +81,8 @@
           "details": {
             "marketId": "af98bb40-c281-4e8f-94db-3665a81e385e",
             "venue": "polymarket",
-            "currentValue": 1.01051044,
-            "pnl": -0.20210208799999987
+            "currentValue": 1.212612528,
+            "pnl": 0
           }
         }
       ],
@@ -92,15 +92,14 @@
             "marketId": "af98bb40-c281-4e8f-94db-3665a81e385e",
             "question": "Victor Wembanyama: Points O/U 24.5",
             "venue": "polymarket",
-            "currentValue": 1.01051044,
-            "pnl": -0.20210208799999987,
+            "currentValue": 1.212612528,
+            "pnl": 0,
             "status": "active",
-            "currentPrice": 0.0025,
+            "currentPrice": 0.003,
             "sharesYes": 404.204176,
             "sharesNo": 0,
             "resolvesAt": "2026-04-03T02:30:00",
             "sources": [
-              "sdk:risk-monitor",
               "sdk:divergence"
             ]
           }
@@ -108,8 +107,8 @@
         "openOrders": [],
         "positionCount": 1,
         "openOrderCount": 0,
-        "positionValueUsd": 1.01,
-        "positionPnlUsd": -0.2,
+        "positionValueUsd": 1.21,
+        "positionPnlUsd": 0,
         "sourceTags": [
           "sdk:divergence"
         ],
@@ -374,7 +373,7 @@
       "description": "Platform risk automation for exits and drawdown protection.",
       "venue": "polymarket",
       "metrics": {
-        "filled": 1,
+        "filled": 0,
         "submitted": 1,
         "skipped": 0,
         "failed": 0,
@@ -401,24 +400,7 @@
         }
       ],
       "providerActivity": {
-        "positions": [
-          {
-            "marketId": "af98bb40-c281-4e8f-94db-3665a81e385e",
-            "question": "Victor Wembanyama: Points O/U 24.5",
-            "venue": "polymarket",
-            "currentValue": 1.01051044,
-            "pnl": -0.20210208799999987,
-            "status": "active",
-            "currentPrice": 0.0025,
-            "sharesYes": 404.204176,
-            "sharesNo": 0,
-            "resolvesAt": "2026-04-03T02:30:00",
-            "sources": [
-              "sdk:risk-monitor",
-              "sdk:divergence"
-            ]
-          }
-        ],
+        "positions": [],
         "openOrders": [
           {
             "orderId": null,
@@ -438,10 +420,10 @@
             ]
           }
         ],
-        "positionCount": 1,
+        "positionCount": 0,
         "openOrderCount": 1,
-        "positionValueUsd": 1.01,
-        "positionPnlUsd": -0.2,
+        "positionValueUsd": 0,
+        "positionPnlUsd": 0,
         "sourceTags": [
           "sdk:risk-monitor"
         ],
@@ -646,16 +628,15 @@
   ],
   "recentActions": [
     {
-      "timestamp": "2026-04-03T02:14:16.786Z",
-      "laneId": "risk-monitor",
-      "message": "Risk Monitor is carrying Victor Wembanyama: Points O/U 24.5",
+      "timestamp": "2026-04-03T03:07:56.107Z",
+      "laneId": "divergence",
+      "message": "Divergence is carrying Victor Wembanyama: Points O/U 24.5",
       "details": {
         "marketId": "af98bb40-c281-4e8f-94db-3665a81e385e",
         "venue": "polymarket",
-        "currentValue": 1.01051044,
-        "pnl": -0.20210208799999987,
+        "currentValue": 1.212612528,
+        "pnl": 0,
         "sourceTags": [
-          "sdk:risk-monitor",
           "sdk:divergence"
         ]
       }
@@ -679,15 +660,14 @@
         "marketId": "af98bb40-c281-4e8f-94db-3665a81e385e",
         "question": "Victor Wembanyama: Points O/U 24.5",
         "venue": "polymarket",
-        "currentValue": 1.01051044,
-        "pnl": -0.20210208799999987,
+        "currentValue": 1.212612528,
+        "pnl": 0,
         "status": "active",
-        "currentPrice": 0.0025,
+        "currentPrice": 0.003,
         "sharesYes": 404.204176,
         "sharesNo": 0,
         "resolvesAt": "2026-04-03T02:30:00",
         "sources": [
-          "sdk:risk-monitor",
           "sdk:divergence"
         ]
       }

@@ -275,7 +275,7 @@ async function fetchSnapshotJson(url) {
 function getSnapshotSourceUrls() {
     const sources = [];
 
-    sources.push('/api/fundmanager-data');
+    sources.push('/data/fundmanager-data.json');
 
     if (!sources.includes('/data/fundmanager-public.json')) {
         sources.push('/data/fundmanager-public.json');

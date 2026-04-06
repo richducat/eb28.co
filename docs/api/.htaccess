@@ -1,0 +1,6 @@
+# Set correct Content-Type for extensionless files in api/ directory
+ForceType application/json
+
+# Enable CORS for API responses
+Header set Access-Control-Allow-Origin "*"
+Header set Access-Control-Allow-Methods "GET"

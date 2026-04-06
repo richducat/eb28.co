@@ -269,6 +269,12 @@ async function main() {
   await writeJson('fundmanager-data.json', await buildFundManagerData());
   await writeJson('fundmanager-public.json', await buildFundManagerPublicSnapshot());
   console.log('Generated docs/data/*.json');
+
+  // Also generate docs/api/fundmanager-data for the /api/fundmanager-data endpoint
+  const apiDir = path.join(repoRoot, 'docs', 'api');
+  await fs.mkdir(apiDir, { recursive: true });
+  await fs.copyFile(path.join(outDir, 'fundmanager-data.json'), path.join(apiDir, 'fundmanager-data'));
+  console.log('Generated docs/api/fundmanager-data');
 }
 
 main().catch((e) => {

@@ -1,0 +1,32 @@
+{
+  "ok": true,
+  "source": "ticker-site/data.json",
+  "updatedAt": "4/6/2026, 6:00:45 PM ET",
+  "portfolio": {
+    "balance": "$0.00",
+    "exposure": "$1.77",
+    "totalPnl": "-$30.10",
+    "positionsCount": 1,
+    "winRate": "--",
+    "profitFactor": "--",
+    "drawdown": "--"
+  },
+  "bots": [],
+  "trades": [],
+  "botPerf": "",
+  "accountStatus": "UNKNOWN",
+  "latency": "--",
+  "committee": {
+    "decision": "NO_TRADE",
+    "direction": "NA",
+    "confidence": 0,
+    "blockers": [
+      "missing_committee_output"
+    ]
+  },
+  "orchestrator": {
+    "status": "IDLE",
+    "lastCycle": "2026-04-06T22:39:39.160Z",
+    "detail": null
+  }
+}

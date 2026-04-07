@@ -3,7 +3,9 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { AGENT_ROSTER as AGENTS } from './fundmanagerMeta';
 
 const PROD_REMOTE_SNAPSHOT_HOSTS = new Set(['eb28.co', 'www.eb28.co', 'fundmanager.eb28.co']);
+const STATIC_PREVIEW_HOSTS = new Set(['localhost', '127.0.0.1']);
 const PROD_REMOTE_SNAPSHOT_URL = 'https://fundstate.eb28.co/fund-state.json';
+const SOURCE_TIMEOUT_MS = 5000;
 const IS_PROD_REMOTE_SNAPSHOT_HOST =
     typeof window !== 'undefined' && PROD_REMOTE_SNAPSHOT_HOSTS.has(window.location.hostname.toLowerCase());
 const detectedProdRemoteSnapshotUrl = IS_PROD_REMOTE_SNAPSHOT_HOST ? PROD_REMOTE_SNAPSHOT_URL : '';
@@ -49,6 +51,14 @@ const LANE_MODE_LABEL = {
 
 function getStatusTone(status) {
     return STATUS_TONE[status] || STATUS_TONE.MONITORING;
+}
+
+function isApiBackedHost(hostname) {
+    return hostname === 'dashboard.eb28.co' || hostname === 'command-center.eb28.co' || hostname.endsWith('.vercel.app');
+}
+
+function uniqueSources(sources) {
+    return sources.filter(Boolean).filter((value, index, list) => list.indexOf(value) === index);
 }
 
 function humanizeToken(value, fallback = 'None') {
@@ -159,6 +169,84 @@ function isSnapshotStaleClient(updatedAt, cycleIntervalMinutes) {
     return Date.now() - parsed.getTime() > maxAgeMs;
 }
 
+function parseNumericValue(value) {
+    if (typeof value === 'number' && Number.isFinite(value)) {
+        return value;
+    }
+
+    const normalized = String(value || '')
+        .replace(/[^0-9.-]+/g, '')
+        .trim();
+    const parsed = Number(normalized);
+    return Number.isFinite(parsed) ? parsed : null;
+}
+
+function getTimeZoneOffsetMilliseconds(date, timeZone) {
+    const formatter = new Intl.DateTimeFormat('en-US', {
+        timeZone,
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hourCycle: 'h23',
+    });
+    const values = Object.fromEntries(
+        formatter
+            .formatToParts(date)
+            .filter((part) => part.type !== 'literal')
+            .map((part) => [part.type, part.value]),
+    );
+
+    return Date.UTC(
+        Number(values.year),
+        Number(values.month) - 1,
+        Number(values.day),
+        Number(values.hour),
+        Number(values.minute),
+        Number(values.second),
+    ) - date.getTime();
+}
+
+function parseEasternTimestamp(value) {
+    if (!value) {
+        return null;
+    }
+
+    const direct = new Date(value);
+    if (!Number.isNaN(direct.getTime())) {
+        return direct.toISOString();
+    }
+
+    const match = String(value)
+        .trim()
+        .match(/^(\d{1,2})\/(\d{1,2})\/(\d{4}),\s+(\d{1,2}):(\d{2})(?::(\d{2}))?\s+(AM|PM)\s+ET$/i);
+    if (!match) {
+        return null;
+    }
+
+    const [, month, day, year, rawHour, minute, second = '00', meridiem] = match;
+    let hour = Number(rawHour);
+    if (meridiem.toUpperCase() === 'PM' && hour < 12) {
+        hour += 12;
+    }
+    if (meridiem.toUpperCase() === 'AM' && hour === 12) {
+        hour = 0;
+    }
+
+    const utcGuess = new Date(Date.UTC(
+        Number(year),
+        Number(month) - 1,
+        Number(day),
+        hour,
+        Number(minute),
+        Number(second),
+    ));
+    const offset = getTimeZoneOffsetMilliseconds(utcGuess, 'America/New_York');
+    return new Date(utcGuess.getTime() - offset).toISOString();
+}
+
 function deriveAgentHealth(agent, laneMap, systemStatus) {
     const linkedLanes = agent.laneIds.map((laneId) => laneMap[laneId]).filter(Boolean);
 
@@ -257,35 +345,183 @@ function normalizeRemoteSnapshot(raw) {
     };
 }
 
+function normalizeTickerSnapshot(raw, sourceUrl) {
+    if (!raw || typeof raw !== 'object' || raw.ok !== true || !raw.portfolio || !raw.orchestrator) {
+        throw new Error('Invalid fundmanager ticker payload.');
+    }
+
+    const updatedAt = parseEasternTimestamp(raw.updatedAt) || raw.orchestrator?.lastCycle || null;
+    const cycleIntervalMinutes = 10;
+    const balanceUsdc = parseNumericValue(raw.portfolio?.balance);
+    const totalExposure = parseNumericValue(raw.portfolio?.exposure);
+    const totalPnl = parseNumericValue(raw.portfolio?.totalPnl);
+    const activePositionCount = Number(raw.portfolio?.positionsCount || 0);
+    const openOrderCount = 0;
+    const blockerCode = Array.isArray(raw.committee?.blockers) && raw.committee.blockers.length > 0
+        ? raw.committee.blockers[0]
+        : null;
+    const upstreamStatus = String(raw.orchestrator?.status || 'IDLE').toUpperCase();
+    const laneMode = activePositionCount > 0 || upstreamStatus === 'RUNNING'
+        ? 'active'
+        : 'watch-only';
+    const laneStatus = upstreamStatus === 'RUNNING'
+        ? 'RUNNING'
+        : (activePositionCount > 0 ? 'DEGRADED' : 'PAUSED');
+    const sourceType = sourceUrl?.startsWith('/data/') ? 'cache' : 'url';
+    const sourceLabel = raw.source || sourceUrl || 'fundmanager-data';
+
+    const recentActions = [
+        {
+            timestamp: updatedAt,
+            laneId: 'platform-bridge',
+            message: `Portfolio bridge reports ${activePositionCount} open positions, exposure ${formatCurrency(totalExposure, '$0.00')}, and desk PnL ${formatSignedCurrency(totalPnl, '$0.00')}.`,
+            details: null,
+        },
+        {
+            timestamp: updatedAt,
+            laneId: 'committee',
+            message: `Committee ${humanizeToken(raw.committee?.decision || 'NO_TRADE')} with ${humanizeToken(raw.committee?.direction || 'NA')} direction at ${Number(raw.committee?.confidence || 0)} confidence.`,
+            details: null,
+        },
+    ];
+
+    if (Array.isArray(raw.trades)) {
+        raw.trades.slice(0, 4).forEach((tradeLine) => {
+            if (tradeLine) {
+                recentActions.push({
+                    timestamp: updatedAt,
+                    laneId: 'trade-log',
+                    message: String(tradeLine),
+                    details: null,
+                });
+            }
+        });
+    }
+
+    return {
+        ok: true,
+        source: sourceLabel,
+        sourceType,
+        updatedAt,
+        stale: isSnapshotStaleClient(updatedAt, cycleIntervalMinutes),
+        summary: {
+            status: laneStatus,
+            cycleIntervalMinutes,
+            activeLanes: laneMode === 'active' ? 1 : 0,
+            topBlockers: Array.isArray(raw.committee?.blockers)
+                ? raw.committee.blockers.slice(0, 4).map((reasonCode) => ({
+                    reasonCode: reasonCode || 'UNKNOWN',
+                    count: 1,
+                }))
+                : [],
+            lastSuccessfulFillAt: null,
+        },
+        account: {
+            balanceUsdc,
+            totalExposure,
+            totalPnl,
+            activePositionCount,
+            openOrderCount,
+        },
+        liveBook: {
+            positions: activePositionCount > 0
+                ? [
+                    {
+                        marketId: 'aggregate-book',
+                        question: `Aggregate open book from ${sourceLabel}`,
+                        sources: [sourceLabel],
+                        venue: 'Simmer',
+                        currentValue: totalExposure,
+                        pnl: totalPnl,
+                        sharesYes: activePositionCount,
+                        sharesNo: 0,
+                        resolvesAt: updatedAt,
+                    },
+                ]
+                : [],
+            openOrders: [],
+            untrackedSources: [],
+        },
+        lanes: [
+            {
+                id: 'platform-bridge',
+                name: 'Platform Bridge',
+                mode: laneMode,
+                status: laneStatus,
+                lastCycleAt: updatedAt,
+                lastReasonCode: blockerCode,
+                lastErrorClass: null,
+                lastSuccessfulFillAt: null,
+                nextAction: raw.committee?.decision === 'NO_TRADE' ? 'stand_by' : 'review_signal',
+                consecutiveFailures: 0,
+                cadenceMinutes: cycleIntervalMinutes,
+                providerActivity: {
+                    positionValueUsd: totalExposure,
+                    positionPnlUsd: totalPnl,
+                    positionCount: activePositionCount,
+                    openOrderCount,
+                },
+                metrics: {},
+                reasonMetrics: {},
+                cooldowns: [],
+                circuitBreaker: {
+                    open: false,
+                    openUntil: null,
+                    threshold: 0,
+                    cooloffMinutes: 0,
+                },
+                recentEvents: [],
+            },
+        ],
+        recentActions: recentActions.filter((action) => action.message),
+    };
+}
+
+function normalizeSnapshotPayload(raw, sourceUrl) {
+    if (raw && typeof raw === 'object' && raw.portfolio && raw.orchestrator) {
+        return normalizeTickerSnapshot(raw, sourceUrl);
+    }
+
+    return normalizeRemoteSnapshot(raw);
+}
+
 async function fetchSnapshotJson(url) {
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 5000);
+    const timeout = setTimeout(() => controller.abort(), SOURCE_TIMEOUT_MS);
     try {
         const response = await fetch(url, { cache: 'no-store', signal: controller.signal });
         const data = await response.json();
         if (!response.ok || data?.ok === false) {
             throw new Error(data?.error || `Snapshot request failed: ${response.status}`);
         }
-        return normalizeRemoteSnapshot(data);
+        return normalizeSnapshotPayload(data, url);
+    } catch (error) {
+        if (error?.name === 'AbortError') {
+            throw new Error(`Snapshot request timed out: ${url}`);
+        }
+        throw error;
     } finally {
         clearTimeout(timeout);
     }
 }
 
 function getSnapshotSourceUrls() {
-    const sources = [];
+    const hostname =
+        typeof window === 'undefined' ? '' : window.location.hostname.toLowerCase();
 
-    sources.push('/data/fundmanager-data.json');
-
-    if (!sources.includes('/data/fundmanager-public.json')) {
-        sources.push('/data/fundmanager-public.json');
+    if (IS_PROD_REMOTE_SNAPSHOT_HOST) {
+        return uniqueSources([REMOTE_SNAPSHOT_URL, '/data/fundmanager-data.json', '/data/fundmanager-public.json']);
     }
 
-    if (REMOTE_SNAPSHOT_URL && !sources.includes(REMOTE_SNAPSHOT_URL)) {
-        sources.push(REMOTE_SNAPSHOT_URL);
+    if (STATIC_PREVIEW_HOSTS.has(hostname)) {
+        return uniqueSources(['/data/fundmanager-data.json', '/data/fundmanager-public.json', REMOTE_SNAPSHOT_URL]);
     }
 
-    return sources;
+    if (isApiBackedHost(hostname)) {
+        return uniqueSources(['/api/fundmanager-data', REMOTE_SNAPSHOT_URL, '/data/fundmanager-data.json', '/data/fundmanager-public.json']);
+    }
+
+    return uniqueSources([REMOTE_SNAPSHOT_URL, '/data/fundmanager-data.json', '/data/fundmanager-public.json']);
 }
 
 const FundManager = () => {

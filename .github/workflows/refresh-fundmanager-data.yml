@@ -25,6 +25,8 @@ jobs:
 
       - name: Refresh static data
         run: npm run generate:data
+        env:
+          SIMMER_API_KEY: ${{ secrets.SIMMER_API_KEY }}
 
       - name: Commit data updates
         run: |

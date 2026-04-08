@@ -102,5 +102,7 @@ class WakeUpBridgeViewController: CAPBridgeViewController {
         // Explicitly register the local StoreKit bridge so release builds do not
         // depend on Capacitor's generated package scan to discover it.
         bridge?.registerPluginInstance(WakeUpPurchasesPlugin())
+        bridge?.registerPluginInstance(WakeUpWidgetBridgePlugin())
+        bridge?.registerPluginInstance(WakeUpAdMobPlugin())
     }
 }

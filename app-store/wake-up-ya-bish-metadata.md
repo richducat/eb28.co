@@ -5,8 +5,8 @@
 - Name: Wake Up Ya Bish
 - Subtitle: Retro alarm clock with attitude
 - Bundle ID: com.eb28.alarmclock
-- Version: 1.1.0
-- Build: 9
+- Version: 1.1.1
+- Build: 11
 - Primary category: Productivity
 - Secondary category: Lifestyle
 - Support URL: https://eb28.co/alarmclock/support/
@@ -41,9 +41,9 @@ alarm clock,wakeup,retro,productivity,timer,morning,habit,calendar
 
 ## What's New
 
-- Added a native auto-renewable monthly subscription to remove sponsor panels
-- Synced the latest web experience into the native iOS app
-- Added native calendar-aware dashboard updates and iOS release polish
+- Fixed the native calendar connection so the next event loads correctly
+- Unstuck the settings/profile flows and improved iPhone layout fit
+- Added native notification setup guidance and release-safe AdMob wiring groundwork
 
 ## Review Notes
 

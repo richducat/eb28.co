@@ -70,6 +70,8 @@ import {
   purchaseRemoveAdsSubscription,
   restoreRemoveAdsSubscription
 } from './wakeUpPurchases';
+import { hasConfiguredWakeUpAdMobBanner, syncWakeUpAdBanner } from './wakeUpAdMob';
+import { syncWakeUpWidgetState } from './wakeUpWidgetBridge';
 
 const ALARM_VOICES = [
   { id: 'standard', name: 'Classic Beep', type: 'free', icon: '🔔', sample: 'Standard digital clock piezo buzzer.', category: 'calm' },
@@ -98,6 +100,9 @@ const NATIVE_NOTIFICATION_SOUND_MAP = {
 const getNativeNotificationSound = (voiceId) => (
   NATIVE_NOTIFICATION_SOUND_MAP[voiceId] || NATIVE_NOTIFICATION_SOUND_MAP.standard
 );
+
+const NATIVE_ALARM_NOTIFICATION_ID = 1;
+const NATIVE_NOTIFICATION_TEST_ID = 99;
 
 let globalAudioCtx = null;
 
@@ -252,26 +257,37 @@ export default function AlarmClock() {
   }));
   const [isPurchaseBusy, setIsPurchaseBusy] = useState(false);
   const [subscriptionMessage, setSubscriptionMessage] = useState('');
+  const [notificationSetupMessage, setNotificationSetupMessage] = useState('');
+  const [isNotificationSetupBusy, setIsNotificationSetupBusy] = useState(false);
 
-  const ensureNotificationPermission = useCallback(async () => {
+  const syncNotificationPermissionState = useCallback(async ({ requestAccess = false } = {}) => {
     if (!Capacitor.isNativePlatform()) return true;
 
     try {
-      const current = await LocalNotifications.checkPermissions();
-      if (current.display === 'granted') {
-        setHasNativeNotificationAccess(true);
-        return true;
-      }
-
-      const requested = await LocalNotifications.requestPermissions();
-      const granted = requested.display === 'granted';
+      const permission = requestAccess
+        ? await LocalNotifications.requestPermissions()
+        : await LocalNotifications.checkPermissions();
+      const granted = permission.display === 'granted';
       setHasNativeNotificationAccess(granted);
       return granted;
     } catch (err) {
       console.error('Notification permission request failed', err);
+      setHasNativeNotificationAccess(false);
       return false;
     }
   }, []);
+
+  const ensureNotificationPermission = useCallback(async () => {
+    if (!Capacitor.isNativePlatform()) return true;
+
+    const granted = await syncNotificationPermissionState({ requestAccess: true });
+    setNotificationSetupMessage(
+      granted
+        ? 'Notifications are armed on this device.'
+        : 'Notifications are turned off. Enable them so alarms can fire after the app closes.'
+    );
+    return granted;
+  }, [syncNotificationPermissionState]);
 
   useEffect(() => {
     localStorage.setItem('eb28_alarm_hours', JSON.stringify(alarmHours));
@@ -497,7 +513,12 @@ export default function AlarmClock() {
     await clearDeliveredNativeNotifications();
     if (Capacitor.isNativePlatform()) {
       try {
-        await LocalNotifications.cancel({ notifications: [{ id: 1 }] });
+        await LocalNotifications.cancel({
+          notifications: [
+            { id: NATIVE_ALARM_NOTIFICATION_ID },
+            { id: NATIVE_NOTIFICATION_TEST_ID }
+          ]
+        });
       } catch (err) {
         console.warn('Failed to cancel pending native alarm', err);
       }
@@ -505,6 +526,13 @@ export default function AlarmClock() {
   };
 
   function handleNativeAlarmEvent(notificationPayload) {
+    const notificationKind = notificationPayload?.notification?.extra?.kind
+      || notificationPayload?.extra?.kind;
+    if (notificationKind === 'setup-test') {
+      setNotificationSetupMessage('Notification test delivered. Closed-app alarms are ready.');
+      return;
+    }
+
     const voiceId = notificationPayload?.notification?.extra?.voiceId
       || notificationPayload?.extra?.voiceId
       || selectedVoice;
@@ -525,14 +553,11 @@ export default function AlarmClock() {
   useEffect(() => {
     if (!Capacitor.isNativePlatform()) return;
 
-    LocalNotifications.checkPermissions()
-      .then((current) => {
-        setHasNativeNotificationAccess(current.display === 'granted');
-      })
+    syncNotificationPermissionState()
       .catch((err) => {
         console.warn('Notification permission check failed', err);
       });
-  }, []);
+  }, [syncNotificationPermissionState]);
 
   useEffect(() => {
     void syncRemoveAdsState();
@@ -569,7 +594,7 @@ export default function AlarmClock() {
     if (!Capacitor.isNativePlatform()) return;
 
     const syncNativeAlarm = async () => {
-      await LocalNotifications.cancel({ notifications: [{ id: 1 }] });
+      await LocalNotifications.cancel({ notifications: [{ id: NATIVE_ALARM_NOTIFICATION_ID }] });
 
       if (!isAlarmActive) {
         return;
@@ -593,7 +618,7 @@ export default function AlarmClock() {
         notifications: [{
             title: "⚠️ WAKE UP, YA BISH",
             body: "Time to grind. Your alarm is sounding.",
-            id: 1,
+            id: NATIVE_ALARM_NOTIFICATION_ID,
             schedule: countdownTarget
               ? { allowWhileIdle: true, at: targetTime }
               : { allowWhileIdle: true, on: { hour: targetH, minute: parseInt(alarmMinutes, 10), second: 0 } },
@@ -673,10 +698,20 @@ export default function AlarmClock() {
       const savedAudio = localStorage.getItem('eb28_custom_audio');
       if (savedAudio) setCustomAudioMap(JSON.parse(savedAudio));
     } catch (e) { console.warn('Failed to load storage', e); }
-    
-    // Globally register click listeners to unlock browser AudioContext policies
+
+    let unlocked = false;
+    const removeUnlocker = () => {
+      document.removeEventListener('click', unlocker);
+      document.removeEventListener('touchstart', unlocker);
+    };
+
+    // Warm audio once on first interaction instead of doing work on every tap.
     const unlocker = () => {
-      void warmAudioEngine();
+      if (unlocked) return;
+      void warmAudioEngine().finally(() => {
+        unlocked = true;
+        removeUnlocker();
+      });
     };
     document.addEventListener('click', unlocker);
     document.addEventListener('touchstart', unlocker);
@@ -687,15 +722,9 @@ export default function AlarmClock() {
     }
 
     return () => {
-      document.removeEventListener('click', unlocker);
-      document.removeEventListener('touchstart', unlocker);
+      removeUnlocker();
     };
   }, [warmAudioEngine]);
-
-  useEffect(() => {
-    if (!showSettings) return;
-    void warmAudioEngine();
-  }, [showSettings, warmAudioEngine]);
 
   // -- Google Calendar / iCal Feed Sync Engine --
   const fetchCalendar = async (url) => {
@@ -815,8 +844,8 @@ export default function AlarmClock() {
        const endOfRange = new Date(now + (7 * 24 * 60 * 60 * 1000));
        
        const { result } = await CapacitorCalendar.listEventsInRange({
-          startDate: now,
-          endDate: endOfRange.getTime()
+          from: now,
+          to: endOfRange.getTime()
        });
        
        if (result && result.length > 0) {
@@ -841,6 +870,46 @@ export default function AlarmClock() {
        setUpcomingEvent(null);
     }
   };
+
+  const scheduleNotificationSetupTest = useCallback(async () => {
+    if (!Capacitor.isNativePlatform()) return;
+
+    const fireDate = new Date(Date.now() + 5000);
+    await LocalNotifications.cancel({ notifications: [{ id: NATIVE_NOTIFICATION_TEST_ID }] });
+    await LocalNotifications.schedule({
+      notifications: [{
+        id: NATIVE_NOTIFICATION_TEST_ID,
+        title: 'Wake Up Ya Bish',
+        body: 'Notification test ping. Closed-app alarms should now work.',
+        schedule: { at: fireDate, allowWhileIdle: true },
+        sound: getNativeNotificationSound(selectedVoice),
+        extra: {
+          kind: 'setup-test',
+          voiceId: selectedVoice
+        }
+      }]
+    });
+
+    setNotificationSetupMessage(`Test ping armed for ${fireDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', second: '2-digit' })}.`);
+  }, [selectedVoice]);
+
+  const handleNotificationSetup = useCallback(async () => {
+    if (!Capacitor.isNativePlatform()) return;
+
+    setIsNotificationSetupBusy(true);
+    try {
+      const granted = await ensureNotificationPermission();
+      if (!granted) {
+        return;
+      }
+      await scheduleNotificationSetupTest();
+    } catch (err) {
+      console.error('Notification setup failed', err);
+      setNotificationSetupMessage('Notification setup failed. Try again in iOS and keep alerts enabled.');
+    } finally {
+      setIsNotificationSetupBusy(false);
+    }
+  }, [ensureNotificationPermission, scheduleNotificationSetupTest]);
 
   useEffect(() => {
     const isNative = Capacitor.isNativePlatform();
@@ -1128,6 +1197,13 @@ export default function AlarmClock() {
     : (Capacitor.isNativePlatform() ? 'Connect device calendar in profile.' : 'Paste an iCal feed in profile.');
   const canCancelAlarm = Boolean(isAlarmActive || countdownTarget || isRinging);
   const isAdFree = Boolean(removeAdsState.isSubscribed);
+  const hasNativeAdMobBanner = Capacitor.isNativePlatform() && hasConfiguredWakeUpAdMobBanner;
+  const shouldShowNativeBanner = hasNativeAdMobBanner
+    && !isAdFree
+    && !showSettings
+    && !showProfile
+    && !showHabitModal
+    && !isRinging;
   const sponsorMessage = SPONSORED_MESSAGES[phraseIndex % SPONSORED_MESSAGES.length];
   const removeAdsPriceLabel = formatRemoveAdsPrice(removeAdsState);
   const renewalLabel = removeAdsState.expirationDate
@@ -1135,13 +1211,14 @@ export default function AlarmClock() {
     : null;
 
   const openSettingsPanel = () => {
-    void warmAudioEngine();
     setShowSettings(true);
   };
   const openProfilePanel = () => {
     setTempCalUrl(calendarUrl);
     setSubscriptionMessage('');
+    setNotificationSetupMessage('');
     if (Capacitor.isNativePlatform()) {
+      void syncNotificationPermissionState();
       void fetchNativeCalendar();
     }
     void syncRemoveAdsState({ silent: true });
@@ -1158,6 +1235,48 @@ export default function AlarmClock() {
       window.open(sponsorMessage.url, '_blank', 'noopener,noreferrer');
     }
   };
+
+  useEffect(() => {
+    void syncWakeUpAdBanner({ visible: shouldShowNativeBanner });
+  }, [shouldShowNativeBanner]);
+
+  const syncHomeWidgetState = useCallback(async () => {
+    if (!Capacitor.isNativePlatform()) return;
+
+    try {
+      await syncWakeUpWidgetState({
+        colorSchemeKey,
+        alarmHours,
+        alarmMinutes,
+        alarmAmPm,
+        isAlarmActive: Boolean(isAlarmActive),
+        isMuted: Boolean(isMuted),
+        selectedVoice,
+        calendarLinked: Boolean(isCalendarLinked),
+        countdownTarget: countdownTarget ? countdownTarget.toISOString() : null,
+        upcomingEventSummary: nextEventSummary || null,
+        upcomingEventStart: upcomingEvent?.start ? upcomingEvent.start.toISOString() : null
+      });
+    } catch (err) {
+      console.warn('Widget sync failed', err);
+    }
+  }, [
+    alarmAmPm,
+    alarmHours,
+    alarmMinutes,
+    colorSchemeKey,
+    countdownTarget,
+    isAlarmActive,
+    isCalendarLinked,
+    isMuted,
+    nextEventSummary,
+    selectedVoice,
+    upcomingEvent
+  ]);
+
+  useEffect(() => {
+    void syncHomeWidgetState();
+  }, [syncHomeWidgetState]);
 
   const renderRemoveAdsPanel = () => (
     <div className="bg-[#10141a] border border-[#00f0ff]/35 rounded-xl p-4 shadow-[0_0_20px_rgba(0,240,255,0.08)] text-left">
@@ -1267,8 +1386,115 @@ export default function AlarmClock() {
     </div>
   );
 
+  const renderDeviceAccessPanel = () => (
+    <div className="space-y-3">
+      {Capacitor.isNativePlatform() ? (
+        <>
+          <div className="bg-[#0b1118] border border-[#00f0ff]/30 rounded-xl p-4 text-left shadow-[0_0_18px_rgba(0,240,255,0.08)]">
+            <span className="text-[#00f0ff] text-[10px] uppercase font-black tracking-[0.2em] block drop-shadow-[0_0_5px_#00f0ff]">
+              Notifications
+            </span>
+            <span className="mt-2 text-slate-300 text-[9px] uppercase block leading-relaxed">
+              {hasNativeNotificationAccess
+                ? 'Alarms can fire after the app closes.'
+                : 'Grant alert permission so alarms and countdowns can ring on device.'}
+            </span>
+            {notificationSetupMessage ? (
+              <span className="mt-2 block text-[8px] uppercase leading-relaxed text-[#39ff14]">
+                {notificationSetupMessage}
+              </span>
+            ) : null}
+            <div className="mt-3 flex gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  void handleNotificationSetup();
+                }}
+                disabled={isNotificationSetupBusy}
+                className={`flex-1 rounded-xl px-3 py-3 text-[8px] font-black uppercase tracking-[0.18em] transition-all ${
+                  isNotificationSetupBusy
+                    ? 'bg-slate-700 text-slate-400 cursor-wait'
+                    : 'bg-[#00f0ff] border-b-[4px] border-[#0099aa] text-black hover:brightness-110 active:translate-y-1 active:border-b-0'
+                }`}
+              >
+                {isNotificationSetupBusy
+                  ? 'Working...'
+                  : hasNativeNotificationAccess
+                    ? 'Send Test Ping'
+                    : 'Enable Alerts'}
+              </button>
+            </div>
+          </div>
+
+          <div className="bg-[#0a120e] border border-[#39ff14]/35 rounded-xl p-4 text-left shadow-[0_0_18px_rgba(57,255,20,0.08)]">
+            <span className="text-[#39ff14] text-[10px] uppercase font-black tracking-[0.2em] block drop-shadow-[0_0_5px_#39ff14]">
+              Calendar Access
+            </span>
+            <span className="mt-2 text-slate-300 text-[9px] uppercase block leading-relaxed">
+              {calendarPermissionState === 'granted'
+                ? upcomingEvent
+                  ? `Next event locked: ${nextEventStatusLabel} / ${nextEventSummary}.`
+                  : 'Calendar linked. Pulling your next event from iOS EventKit.'
+                : 'Connect device calendar so the active alarm card can show your next event.'}
+            </span>
+            <div className="mt-3 flex gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  void fetchNativeCalendar(true);
+                }}
+                className="flex-1 rounded-xl bg-[#39ff14] border-b-[4px] border-[#1b9900] px-3 py-3 text-[8px] font-black uppercase tracking-[0.18em] text-black hover:brightness-110 active:translate-y-1 active:border-b-0"
+              >
+                {calendarPermissionState === 'granted' ? 'Refresh Next Event' : 'Connect Calendar'}
+              </button>
+            </div>
+          </div>
+        </>
+      ) : (
+        <div className="bg-[#0a120e] border border-[#39ff14]/35 rounded-xl p-4 text-left shadow-[0_0_18px_rgba(57,255,20,0.08)]">
+          <span className="text-[#39ff14] text-[10px] uppercase font-black tracking-[0.2em] block drop-shadow-[0_0_5px_#39ff14]">
+            Calendar Feed
+          </span>
+          <span className="mt-2 text-slate-300 text-[9px] uppercase block leading-relaxed">
+            Paste a private .ics feed if you want the dashboard to show your next event on the web version.
+          </span>
+          <div className="mt-3 flex gap-2">
+            <input
+              type="text"
+              placeholder="Paste .ics URL"
+              value={tempCalUrl}
+              onChange={e => setTempCalUrl(e.target.value)}
+              className="flex-1 bg-black text-[#00f0ff] text-[8px] p-3 rounded-xl outline-none border border-slate-700"
+            />
+            <button
+              type="button"
+              onClick={() => {
+                if (tempCalUrl.trim()) {
+                  localStorage.setItem('eb28_calendar_url', tempCalUrl.trim());
+                  setCalendarUrl(tempCalUrl.trim());
+                }
+              }}
+              className="rounded-xl bg-[#39ff14] border-b-[4px] border-[#1b9900] px-4 text-[8px] font-black uppercase tracking-[0.18em] text-black hover:brightness-110 active:translate-y-1 active:border-b-0"
+            >
+              Sync
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+
   return (
-    <div className="relative w-full overflow-x-hidden overflow-y-auto h-[100dvh] pt-4 lg:pt-0 pb-4 flex items-start lg:items-center justify-center bg-[#000b12] touch-manipulation" style={{fontFamily: '"Press Start 2P", monospace'}}>
+    <div
+      className="relative w-full overflow-x-hidden overflow-y-auto min-h-[100dvh] flex items-start lg:items-center justify-center bg-[#000b12] touch-manipulation overscroll-contain"
+      style={{
+        fontFamily: '"Press Start 2P", monospace',
+        paddingTop: 'max(0.75rem, env(safe-area-inset-top))',
+        paddingBottom: shouldShowNativeBanner
+          ? 'max(5.5rem, calc(env(safe-area-inset-bottom) + 5rem))'
+          : 'max(1rem, calc(env(safe-area-inset-bottom) + 0.75rem))'
+      }}
+    >
       
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
@@ -1354,6 +1580,51 @@ export default function AlarmClock() {
           background: #39ff14;
           border-radius: 10px;
         }
+        @media (max-height: 860px) {
+          .wake-shell {
+            max-width: 408px;
+          }
+          .wake-shell-frame {
+            padding-top: 0.75rem;
+            padding-right: 0.75rem;
+            padding-bottom: 1.25rem;
+            padding-left: 0.75rem;
+          }
+          .wake-snooze {
+            height: 44px;
+            margin-bottom: 0.5rem;
+          }
+          .wake-screen {
+            padding: 0.75rem;
+          }
+          .wake-screen-clock {
+            font-size: clamp(3.1rem, 16vw, 6.2rem) !important;
+          }
+          .wake-control-deck {
+            margin-top: 0.5rem;
+            gap: 0.375rem;
+          }
+          .wake-mobile-actions {
+            margin-top: 0.625rem;
+          }
+          .wake-timers {
+            margin-top: 0.625rem;
+            gap: 0.375rem;
+          }
+          .wake-timers button {
+            height: 38px;
+          }
+          .wake-presets {
+            margin-top: 0.5rem;
+            gap: 0.375rem;
+          }
+          .wake-presets button {
+            height: 28px;
+          }
+          .wake-habit-mobile {
+            margin-top: 0.625rem;
+          }
+        }
       `}</style>
 
       {/* BACKGROUND LAYER */}
@@ -1409,10 +1680,10 @@ export default function AlarmClock() {
         THE CLOCK HARDWARE: Centered fully logic
         ======================================================================
       */}
-      <div className="relative w-full max-w-[440px] m-auto flex flex-col justify-center px-4 z-50 pointer-events-auto drop-shadow-[0_40px_40px_rgba(0,0,0,0.6)]">
+      <div className="wake-shell relative w-full max-w-[430px] m-auto flex flex-col justify-center px-4 z-50 pointer-events-auto drop-shadow-[0_40px_40px_rgba(0,0,0,0.6)]">
         
         {/* Main Plastic Shell - Miami Vice Gray/White aesthetic */}
-        <div className="w-full relative bg-[#e0e5ec] rounded-[24px] rounded-t-[40px] shadow-[inset_-5px_-5px_15px_rgba(0,0,0,0.2),_inset_5px_5px_15px_rgba(255,255,255,0.8)] border-[2px] border-[#cbd2d9] pb-8 pt-4 px-4 md:px-6 flex flex-col overflow-hidden">
+        <div className="wake-shell-frame w-full relative bg-[#e0e5ec] rounded-[24px] rounded-t-[40px] shadow-[inset_-5px_-5px_15px_rgba(0,0,0,0.2),_inset_5px_5px_15px_rgba(255,255,255,0.8)] border-[2px] border-[#cbd2d9] pb-8 pt-4 px-4 md:px-6 flex flex-col overflow-hidden">
           
           {/* Hardware Decal Logo Top Center */}
           <div className="text-center w-full mb-3 flex items-center justify-center gap-3">
@@ -1431,7 +1702,7 @@ export default function AlarmClock() {
           {/* SNOOZE BAR AT THE TOP (Massive chunky physical button) */}
           <button 
             onClick={handleSnoozeLight}
-            className={`w-full relative h-[50px] md:h-[70px] rounded-[16px] mb-3 md:mb-6 flex items-center justify-center border-b-[8px] border-r-[4px] active:scale-[0.98] outline-none transition-all cursor-pointer touch-manipulation ${isRinging ? 'animate-pulse' : ''}`}
+            className={`wake-snooze w-full relative h-[50px] md:h-[70px] rounded-[16px] mb-3 md:mb-6 flex items-center justify-center border-b-[8px] border-r-[4px] active:scale-[0.98] outline-none transition-all cursor-pointer touch-manipulation ${isRinging ? 'animate-pulse' : ''}`}
             style={{
                backgroundColor: isRinging ? currentScheme.active : (isLightOn ? currentScheme.active : currentScheme.shadow),
                borderColor: isLightOn ? currentScheme.shadow : currentScheme.inactive,
@@ -1451,7 +1722,7 @@ export default function AlarmClock() {
           </button>
 
           {/* LCD SCREEN WINDOW */}
-          <div className={`w-full bg-[#0a0f12] rounded-xl border-t-[8px] border-l-[8px] border-[#05080a] border-b-[2px] border-r-[2px] border-[#151f26] shadow-[inset_0_5px_25px_rgba(0,0,0,1)] p-4 relative overflow-hidden flex flex-col transition-all duration-300 ${isLightOn ? 'shadow-[0_0_60px_#00f0ff]' : ''}`}>
+          <div className={`wake-screen w-full bg-[#0a0f12] rounded-xl border-t-[8px] border-l-[8px] border-[#05080a] border-b-[2px] border-r-[2px] border-[#151f26] shadow-[inset_0_5px_25px_rgba(0,0,0,1)] p-4 relative overflow-hidden flex flex-col transition-all duration-300 ${isLightOn ? 'shadow-[0_0_60px_#00f0ff]' : ''}`}>
               
               <div className={`absolute top-0 left-0 w-full h-[50%] bg-gradient-to-b from-white/10 to-transparent pointer-events-none transition-opacity duration-300 ${isLightOn ? 'from-white/40' : ''}`} />
               
@@ -1477,7 +1748,7 @@ export default function AlarmClock() {
               </div>
 
               <div className="w-full flex justify-center items-center mt-4 mb-2 relative z-10 pl-2">
-                  <div className="text-center flex items-center justify-center -ml-2" 
+                  <div className="wake-screen-clock text-center flex items-center justify-center -ml-2" 
                       style={{
                         fontFamily: '"Digital-7", monospace',
                         fontSize: 'clamp(3.5rem, 18vw, 7.5rem)', 
@@ -1525,7 +1796,7 @@ export default function AlarmClock() {
           </div>
 
           {/* HARDWARE CONTROL DECK */}
-          <div className="w-full mt-3 md:mt-6 grid grid-cols-4 gap-2 md:gap-4 px-2">
+          <div className="wake-control-deck w-full mt-3 md:mt-6 grid grid-cols-4 gap-2 md:gap-4 px-2">
              {/* LEFT SIDE: ALARM TIME */}
              <div className="col-span-2 row-span-2 flex flex-col items-start bg-[#cfd6e0] px-2 py-2 md:py-3 rounded-lg shadow-[inset_1px_1px_5px_rgba(0,0,0,0.1)] relative overflow-hidden">
                <div className="text-[6.5px] md:text-[7px] font-bold text-slate-700 uppercase mb-2 flex flex-col gap-1 w-full">
@@ -1611,8 +1882,22 @@ export default function AlarmClock() {
              </div>
           </div>
 
+          {Capacitor.isNativePlatform() ? (
+            <div className="wake-mobile-actions w-full flex justify-between gap-4 mt-3 px-2">
+               <button onClick={openSettingsPanel} className="flex-1 bg-[#1a202c] border-b-[6px] border-[#0d1218] active:scale-95 rounded-xl h-[45px] flex items-center justify-center p-2 group cursor-pointer touch-manipulation transition-all">
+                  <Settings className="w-[18px] h-[18px] text-[#00f0ff] drop-shadow-[0_0_5px_#00f0ff] pointer-events-none" strokeWidth={3} />
+               </button>
+               <button onClick={() => setShowHabitModal(true)} className="flex-1 bg-[#1a202c] border-b-[6px] border-[#0d1218] active:scale-95 rounded-xl h-[45px] flex items-center justify-center p-2 group cursor-pointer touch-manipulation transition-all hover:brightness-125">
+                  <ListTodo className="w-[18px] h-[18px] text-[#39ff14] drop-shadow-[0_0_5px_#39ff14] pointer-events-none" strokeWidth={3} />
+               </button>
+               <button onClick={openProfilePanel} className="flex-1 bg-[#1a202c] border-b-[6px] border-[#0d1218] active:scale-95 rounded-xl h-[45px] flex items-center justify-center p-2 group cursor-pointer touch-manipulation transition-all hover:brightness-125">
+                  <User className="w-[18px] h-[18px] text-[#ff00aa] drop-shadow-[0_0_5px_#ff00aa] pointer-events-none" strokeWidth={3} />
+               </button>
+            </div>
+          ) : null}
+
           {/* DEDICATED QUICK TIMERS HARDWARE ROW */}
-          <div className="w-full px-2 mt-3 md:mt-5 grid grid-cols-2 md:flex flex-wrap gap-2">
+          <div className="wake-timers w-full px-2 mt-3 md:mt-5 grid grid-cols-2 md:flex flex-wrap gap-2">
              <button 
                 onClick={() => {
                   void setTimerMinutes(1);
@@ -1675,7 +1960,7 @@ export default function AlarmClock() {
           </div>
 
           {/* QUICK ALARM PRESETS */}
-          <div className="w-full px-2 mt-2 md:mt-3 grid grid-cols-3 gap-2">
+          <div className="wake-presets w-full px-2 mt-2 md:mt-3 grid grid-cols-3 gap-2">
              {[5, 6, 7].map(hour => {
                const isActivePreset = isAlarmActive && !countdownTarget && alarmHours === hour.toString().padStart(2, '0') && alarmMinutes === '00' && alarmAmPm === 'AM';
                return (
@@ -1710,7 +1995,7 @@ export default function AlarmClock() {
              })}
           </div>
 
-          {!isAdFree ? (
+          {!isAdFree && (!Capacitor.isNativePlatform() || !hasNativeAdMobBanner) ? (
             <div className="w-full mt-3 px-2">
               <div className="relative overflow-hidden rounded-xl border-[3px] border-[#ff00aa] bg-gradient-to-r from-[#140713] via-[#120814] to-[#071220] p-3 shadow-[0_0_20px_rgba(255,0,170,0.15)]">
                 <div className="absolute top-2 right-2 rounded-full bg-[#ffea00] px-2 py-1 text-[6px] font-black uppercase tracking-[0.2em] text-black">
@@ -1744,7 +2029,50 @@ export default function AlarmClock() {
           ) : null}
 
           {/* HABIT MASTERY PROGRESS HUD */}
-          <div className="w-full mt-3 md:mt-5 px-2">
+          <div className="wake-habit-mobile w-full mt-3 px-2 md:hidden">
+            <div className="bg-[#1a252d] border-[3px] border-[#0a0f12] rounded-xl p-3 shadow-[inset_0_3px_15px_rgba(0,0,0,0.8)] relative">
+              <div className="flex items-center justify-between gap-2">
+                <span className="bg-[#e0e5ec] text-[#000] text-[7px] font-black px-2 py-1 border-[2px] border-[#1a252d] uppercase">
+                  HABIT DAY {habitState.currentDay}
+                </span>
+                <button
+                  onClick={() => setShowHabitModal(true)}
+                  className="bg-[#ff00aa] text-white text-[7px] font-black px-2 py-1 border-[2px] border-[#1a252d] uppercase hover:brightness-125 cursor-pointer touch-manipulation"
+                >
+                  VIEW INTEL
+                </button>
+              </div>
+
+              <div className="mt-3 text-[9px] leading-relaxed text-[#00f0ff] drop-shadow-[0_0_5px_#00f0ff] font-['Space_Grotesk'] uppercase border-l-[3px] border-[#ff00aa] pl-2">
+                {isHabitCompletedToday ? 'Mission cleared for today.' : currentHabit.actionTip}
+              </div>
+
+              <div className="mt-3 flex items-center justify-between gap-3 border-t border-[#334654] pt-3">
+                <span className={`text-[7px] uppercase tracking-[0.18em] ${isHabitCompletedToday ? 'text-[#39ff14]' : 'text-[#ff00aa]'}`}>
+                  {isHabitCompletedToday ? 'Mission Complete' : 'Mission Pending'}
+                </span>
+                <button
+                  onClick={() => {
+                    if (isHabitCompletedToday) {
+                      setHabitState(prev => ({ ...prev, completedDate: null }));
+                      return;
+                    }
+                    initAudioContext();
+                    completeHabitForToday();
+                  }}
+                  className={`rounded-lg px-3 py-2 text-[7px] font-black uppercase tracking-[0.16em] ${
+                    isHabitCompletedToday
+                      ? 'bg-slate-700 text-slate-200'
+                      : 'bg-[#00f0ff] text-black'
+                  }`}
+                >
+                  {isHabitCompletedToday ? 'Undo' : 'Done'}
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div className="hidden w-full mt-3 md:mt-5 px-2 md:block">
             <div className="bg-[#1a252d] border-[3px] border-[#0a0f12] rounded-xl p-2 pb-2 md:p-3 md:pb-2 shadow-[inset_0_3px_15px_rgba(0,0,0,0.8)] relative flex flex-col justify-between">
               <div className="absolute -top-3 left-4 flex gap-2">
                 <span className="bg-[#e0e5ec] text-[#000] text-[8px] font-black px-2 py-0.5 border-[2px] border-[#1a252d] uppercase drop-shadow-md">
@@ -1802,7 +2130,8 @@ export default function AlarmClock() {
             </div>
           </div>
 
-          <div className="w-full flex justify-between gap-4 mt-6 px-2">
+          {!Capacitor.isNativePlatform() ? (
+            <div className="hidden w-full justify-between gap-4 mt-4 md:mt-6 px-2 md:flex">
              <button onClick={openSettingsPanel} className="flex-1 bg-[#1a202c] border-b-[6px] border-[#0d1218] active:scale-95 rounded-xl h-[45px] flex items-center justify-center p-2 group cursor-pointer touch-manipulation transition-all">
                 <Settings className="w-[18px] h-[18px] text-[#00f0ff] drop-shadow-[0_0_5px_#00f0ff] pointer-events-none" strokeWidth={3} />
              </button>
@@ -1812,19 +2141,23 @@ export default function AlarmClock() {
              <button onClick={openProfilePanel} className="flex-1 bg-[#1a202c] border-b-[6px] border-[#0d1218] active:scale-95 rounded-xl h-[45px] flex items-center justify-center p-2 group cursor-pointer touch-manipulation transition-all hover:brightness-125">
                 <User className="w-[18px] h-[18px] text-[#ff00aa] drop-shadow-[0_0_5px_#ff00aa] pointer-events-none" strokeWidth={3} />
              </button>
-          </div>
+            </div>
+          ) : null}
 
         </div>
         
         {showSettings && (
-          <div className="absolute inset-0 z-50 flex flex-col justify-end bg-black/60 backdrop-blur-sm p-4 animate-fade-in">
-             <div className="w-full bg-[#1e2530] border-t-8 border-[#0a0e14] rounded-t-3xl p-6 relative max-h-[80%] overflow-y-auto">
+          <div className="fixed inset-0 z-50 flex flex-col justify-end bg-black/70 p-4 animate-fade-in">
+             <div className="w-full max-w-[430px] mx-auto bg-[#1e2530] border-t-8 border-[#0a0e14] rounded-t-3xl p-6 relative max-h-[min(34rem,80dvh)] overflow-y-auto shadow-[0_-20px_60px_rgba(0,0,0,0.55)]">
                <button onClick={() => { setShowSettings(false); window.speechSynthesis.cancel(); safeStopAudio(); }} className="absolute top-4 right-5 text-white bg-slate-800 rounded-lg border-b-4 border-slate-900 active:border-b-0 active:translate-y-1 z-10 cursor-pointer touch-manipulation w-10 h-10 flex items-center justify-center font-black text-lg transition-transform hover:scale-105">✕</button>
                <h2 className="text-[12px] text-[#00f0ff] uppercase mb-6 mt-2 drop-shadow-[0_0_5px_#00f0ff]">Audio Settings</h2>
                <div className="space-y-3">
                  {ALARM_VOICES.map((voice) => (
-                   <button 
+                 <button 
                      key={voice.id}
+                     onPointerDown={() => {
+                        void warmAudioEngine();
+                     }}
                      onClick={(e) => {
                         setSelectedVoice(voice.id);
                         playSample(voice.id, e); // Give instant audio preview feedback!
@@ -1848,8 +2181,8 @@ export default function AlarmClock() {
 
         {/* PROFILE OVERLAY */}
         {showProfile && (
-          <div className="fixed inset-0 z-50 flex flex-col justify-center items-center bg-black/80 backdrop-blur-sm p-4 animate-fade-in">
-             <div className="w-full max-w-[360px] bg-[#1e2530] border-[3px] border-[#ff00aa] shadow-[0_0_50px_rgba(255,0,170,0.3)] rounded-3xl p-6 relative flex flex-col">
+          <div className="fixed inset-0 z-50 flex flex-col justify-center items-center overflow-y-auto bg-black/85 p-4 animate-fade-in">
+             <div className="w-full max-w-[360px] max-h-[min(40rem,88dvh)] overflow-y-auto bg-[#1e2530] border-[3px] border-[#ff00aa] shadow-[0_0_50px_rgba(255,0,170,0.3)] rounded-3xl p-6 relative flex flex-col">
                <button onClick={() => setShowProfile(false)} className="absolute top-4 right-5 text-slate-400 text-[20px] font-black hover:text-[#ff00aa] transition-colors">✕</button>
                
                <h2 className="text-[12px] text-[#ff00aa] uppercase mb-6 mt-2 text-center drop-shadow-[0_0_5px_#ff00aa] font-black tracking-widest">
@@ -1862,20 +2195,15 @@ export default function AlarmClock() {
                       <span className="text-slate-400 text-[9px] uppercase leading-relaxed block">Create a local auth profile to save your alarm setup, calendar link, and subscription state locally.</span>
                     </div>
                    {renderRemoveAdsPanel()}
+                   {renderDeviceAccessPanel()}
                    <input type="text" placeholder="CALLSIGN / NAME" value={tempName} onChange={e => setTempName(e.target.value)} className="w-full bg-slate-900 text-[#00f0ff] p-4 rounded-xl border-2 border-slate-700 focus:border-[#00f0ff] outline-none font-['Space_Grotesk'] tracking-widest uppercase text-center" />
                    <input type="email" placeholder="EMAIL ADDRESS" value={tempEmail} onChange={e => setTempEmail(e.target.value)} className="w-full bg-slate-900 text-[#00f0ff] p-4 rounded-xl border-2 border-slate-700 focus:border-[#00f0ff] outline-none font-['Space_Grotesk'] tracking-widest uppercase text-center" />
-                   <input type="text" placeholder="iCal Secret URL (Optional)" value={tempCalUrl} onChange={e => setTempCalUrl(e.target.value)} className="w-full bg-slate-900 text-[#00f0ff] p-4 rounded-xl border-2 border-slate-700 focus:border-[#00f0ff] outline-none font-['Space_Grotesk'] tracking-widest uppercase text-center text-[10px]" />
                    <button 
                      onClick={() => {
                         if(tempName.trim()) {
                           const profile = { name: tempName.trim(), email: tempEmail.trim() };
                           localStorage.setItem('eb28_user_profile', JSON.stringify(profile));
                           setUserProfile(profile);
-                          
-                          if(tempCalUrl.trim()) {
-                             localStorage.setItem('eb28_calendar_url', tempCalUrl.trim());
-                             setCalendarUrl(tempCalUrl.trim());
-                          }
                         }
                      }}
                      className="w-full mt-4 bg-[#ff00aa] text-white font-black uppercase tracking-widest p-4 rounded-xl border-b-[6px] border-[#990066] active:border-b-0 active:translate-y-1 shadow-[0_0_15px_#ff00aa] hover:brightness-110 transition-all cursor-pointer touch-manipulation"
@@ -1903,53 +2231,10 @@ export default function AlarmClock() {
                       <div className="absolute top-0 left-0 w-full h-1 bg-[#39ff14]" />
                       <span className="text-[#39ff14] text-[12px] uppercase font-black tracking-widest block drop-shadow-[0_0_8px_#39ff14] mb-2">AUTH LINKED</span>
                       <span className="text-slate-400 text-[9px] uppercase block leading-relaxed">Habit Mastery & Custom Audio Uploads are fully authorized.</span>
-                      {calendarUrl ? (
-                         <div className="mt-3 pt-3 border-t border-[#39ff14]/30 text-left">
-                            <span className="text-[#00f0ff] text-[8px] uppercase block break-all overflow-hidden text-ellipsis line-clamp-1 opacity-70">
-                               iCal Sync: {calendarUrl.substring(0, 40)}...
-                            </span>
-                            <span className="text-slate-500 text-[8px] uppercase block mt-2">
-                               {upcomingEvent ? `Next: ${nextEventStatusLabel} / ${nextEventSummary}` : 'Waiting for your next event.'}
-                            </span>
-                         </div>
-                      ) : Capacitor.isNativePlatform() ? (
-                         <div className="mt-3 pt-3 border-t border-[#39ff14]/30">
-                            <span className="text-slate-500 text-[8px] uppercase block mb-2">
-                              {calendarPermissionState === 'granted' ? 'Device Calendar Linked' : 'Native iOS EventKit Sync'}
-                            </span>
-                            <span className="text-[#00f0ff] text-[8px] uppercase block mb-2 leading-relaxed">
-                              {upcomingEvent ? `${nextEventStatusLabel} / ${nextEventSummary}` : 'Show your next event on the active alarm card.'}
-                            </span>
-                            <button 
-                              onClick={async () => {
-                                 try {
-                                    await fetchNativeCalendar(true);
-                                 } catch(e) { console.error('Native Auth Rejection', e); }
-                              }}
-                              className="w-full bg-[#39ff14] text-black px-3 py-2 text-[8px] font-black rounded hover:brightness-110 active:scale-95 cursor-pointer touch-manipulation uppercase"
-                            >
-                              {calendarPermissionState === 'granted' ? 'REFRESH NEXT EVENT' : 'CONNECT DEVICE CALENDAR'}
-                            </button>
-                         </div>
-                      ) : (
-                         <div className="mt-3 pt-3 border-t border-[#39ff14]/30">
-                            <span className="text-slate-500 text-[8px] uppercase block mb-2">Connect Google/Apple Calendar</span>
-                            <div className="flex gap-2">
-                               <input type="text" placeholder="Paste .ics URL" value={tempCalUrl} onChange={e => setTempCalUrl(e.target.value)} className="flex-1 bg-black text-[#00f0ff] text-[8px] p-2 rounded outline-none border border-slate-700" />
-                               <button 
-                                 onClick={() => {
-                                    if(tempCalUrl.trim()) {
-                                       localStorage.setItem('eb28_calendar_url', tempCalUrl.trim());
-                                       setCalendarUrl(tempCalUrl.trim());
-                                    }
-                                 }}
-                                 className="bg-[#39ff14] text-black px-3 text-[8px] font-black rounded hover:brightness-110 active:scale-95 cursor-pointer touch-manipulation"
-                               >
-                                 SYNC
-                               </button>
-                            </div>
-                         </div>
-                      )}
+                   </div>
+
+                   <div className="mb-8">
+                     {renderDeviceAccessPanel()}
                    </div>
 
                    <button 

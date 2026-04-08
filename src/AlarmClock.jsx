@@ -716,9 +716,16 @@ export default function AlarmClock() {
     document.addEventListener('click', unlocker);
     document.addEventListener('touchstart', unlocker);
     
-    // Register Service Worker for iOS Native Push Notifications API
+    // Keep the alarm service worker scoped so it does not control the entire eb28.co origin.
     if (!Capacitor.isNativePlatform() && 'serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW registration failed:', err));
+      const normalizedHostname = window.location.hostname.toLowerCase();
+      const isDedicatedAlarmHost = normalizedHostname === 'app.wakeupyabish.com';
+      const serviceWorkerUrl = isDedicatedAlarmHost ? '/sw.js' : '/alarmclock/sw.js';
+      const serviceWorkerOptions = isDedicatedAlarmHost ? undefined : { scope: '/alarmclock/' };
+
+      navigator.serviceWorker
+        .register(serviceWorkerUrl, serviceWorkerOptions)
+        .catch(err => console.log('SW registration failed:', err));
     }
 
     return () => {

@@ -8,15 +8,16 @@ import FundManager from './FundManager';
 import ReconAgentPage from './ReconAgentPage';
 import AlarmClock from './AlarmClock';
 import ThomasCustomHomesPage from './ThomasCustomHomesPage';
+import MelbourneWebStudioPage from './MelbourneWebStudioPage.tsx';
 import './index.css';
 import { applyDocumentSeo } from './seo.js';
-import { detectRouteKey } from './siteMeta.js';
+import { ensureLatestBuild } from './runtimeFreshness.js';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 const pathname = window.location.pathname.toLowerCase().replace(/\/$/, "");
 const hostname = window.location.hostname.toLowerCase();
-const routeKey = detectRouteKey({ pathname, hostname });
 const isNativeAlarmClockApp = Capacitor.isNativePlatform();
+const isDedicatedAlarmClockHostname = hostname === 'app.wakeupyabish.com';
 
 const isDashboardRoute =
   pathname === '/dash' ||
@@ -29,54 +30,102 @@ const isFundManagerRoute =
 const isReconAgentRoute =
   pathname === '/reconcile' ||
   hostname === 'reconcile.eb28.co';
-const isThomasCustomHomesRoute = pathname === '/tch';
+const isThomasCustomHomesRoute =
+  pathname === '/tch' ||
+  hostname === 'thomascustom.homes' ||
+  hostname === 'www.thomascustom.homes';
+const isMelbourneWebStudioRoute =
+  pathname === '/melbournewebstudio' ||
+  hostname === 'melbournewebstudio.eb28.co';
 const isAlarmClockRoute =
   isNativeAlarmClockApp ||
   pathname === '/alarmclock' ||
-  hostname === 'app.wakeupyabish.com';
+  isDedicatedAlarmClockHostname;
 
-applyDocumentSeo(routeKey);
+function renderApp() {
+  if (isDashboardRoute) {
+    root.render(
+      <React.StrictMode>
+        <Dashboard />
+      </React.StrictMode>
+    );
+    return;
+  }
 
-if (isDashboardRoute) {
-  root.render(
-    <React.StrictMode>
-      <Dashboard />
-    </React.StrictMode>
-  );
-} else if (isAppBuilderRoute) {
-  root.render(
-    <React.StrictMode>
-      <AppBuilderStudio />
-    </React.StrictMode>
-  );
-} else if (isFundManagerRoute) {
-  root.render(
-    <React.StrictMode>
-      <FundManager />
-    </React.StrictMode>
-  );
-} else if (isReconAgentRoute) {
-  root.render(
-    <React.StrictMode>
-      <ReconAgentPage />
-    </React.StrictMode>
-  );
-} else if (isThomasCustomHomesRoute) {
-  root.render(
-    <React.StrictMode>
-      <ThomasCustomHomesPage />
-    </React.StrictMode>
-  );
-} else if (isAlarmClockRoute) {
-  root.render(
-    <React.StrictMode>
-      <AlarmClock />
-    </React.StrictMode>
-  );
-} else {
+  if (isAppBuilderRoute) {
+    root.render(
+      <React.StrictMode>
+        <AppBuilderStudio />
+      </React.StrictMode>
+    );
+    return;
+  }
+
+  if (isFundManagerRoute) {
+    root.render(
+      <React.StrictMode>
+        <FundManager />
+      </React.StrictMode>
+    );
+    return;
+  }
+
+  if (isReconAgentRoute) {
+    root.render(
+      <React.StrictMode>
+        <ReconAgentPage />
+      </React.StrictMode>
+    );
+    return;
+  }
+
+  if (isThomasCustomHomesRoute) {
+    root.render(
+      <React.StrictMode>
+        <ThomasCustomHomesPage />
+      </React.StrictMode>
+    );
+    return;
+  }
+
+  if (isMelbourneWebStudioRoute) {
+    root.render(
+      <React.StrictMode>
+        <MelbourneWebStudioPage />
+      </React.StrictMode>
+    );
+    return;
+  }
+
+  if (isAlarmClockRoute) {
+    root.render(
+      <React.StrictMode>
+        <AlarmClock />
+      </React.StrictMode>
+    );
+    return;
+  }
+
   root.render(
     <React.StrictMode>
       <App />
     </React.StrictMode>
   );
 }
+
+async function boot() {
+  const redirectedToFreshBuild = await ensureLatestBuild({
+    hostname,
+    isAlarmClockRoute,
+    isNativeAlarmClockApp,
+  });
+
+  if (redirectedToFreshBuild) {
+    return;
+  }
+
+  applyDocumentSeo({ pathname, hostname });
+  renderApp();
+}
+
+void boot();

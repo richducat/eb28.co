@@ -9,6 +9,14 @@ const ORGANIZATION_ID = `${SITE_ORIGIN}/#organization`;
 const WEBSITE_ID = `${SITE_ORIGIN}/#website`;
 const DEFAULT_IMAGE = `${SITE_ORIGIN}/assets/execution_grid.png`;
 const FUNDMANAGER_IMAGE = `${SITE_ORIGIN}/assets/agents_grid.png`;
+export const THOMAS_CUSTOM_HOMES_SITE_ORIGIN = 'https://thomascustom.homes';
+const THOMAS_CUSTOM_HOMES_IMAGE = `${SITE_ORIGIN}/tch/og-image.png`;
+const THOMAS_CUSTOM_HOMES_CUSTOM_DOMAIN_IMAGE = `${THOMAS_CUSTOM_HOMES_SITE_ORIGIN}/og-image.png`;
+const THOMAS_CUSTOM_HOMES_HOSTNAMES = new Set([
+    'thomascustom.homes',
+    'www.thomascustom.homes',
+]);
+const MELBOURNE_WEB_STUDIO_CANONICAL_URL = 'http://melbournewebstudio.eb28.co/';
 
 const ORGANIZATION_SCHEMA = {
     '@context': 'https://schema.org',
@@ -165,10 +173,10 @@ const ROUTE_META = {
         ...BASE_ROUTE_META,
         key: 'tch',
         path: '/tch/',
-        title: 'Thomas Custom Homes Inc. | Custom Home Builder in Cocoa, FL',
+        title: 'Thomas Custom Homes Inc. | Custom Homes & Remodels in Cocoa, FL',
         description:
-            'Explore Thomas Custom Homes Inc. in Cocoa, Florida for custom homes, additions, whole-home remodels, and design-build construction planning.',
-        image: DEFAULT_IMAGE,
+            'Custom homes, additions, major remodels, and financing options in Cocoa and across Brevard County. View the process, testimonials, and request a project estimate.',
+        image: THOMAS_CUSTOM_HOMES_IMAGE,
         siteName: 'Thomas Custom Homes Inc.',
         themeColor: '#1c1917',
         colorScheme: 'light',
@@ -180,7 +188,7 @@ const ROUTE_META = {
                 name: 'Thomas Custom Homes Inc.',
                 url: `${SITE_ORIGIN}/tch/`,
                 description:
-                    'Custom home building, additions, and whole-home remodel information for Thomas Custom Homes Inc. in Cocoa, Florida.',
+                    'Custom home building, additions, financing information, and whole-home remodel information for Thomas Custom Homes Inc. in Cocoa, Florida.',
             },
             {
                 '@context': 'https://schema.org',
@@ -188,7 +196,7 @@ const ROUTE_META = {
                 name: 'Thomas Custom Homes Inc.',
                 url: `${SITE_ORIGIN}/tch/`,
                 telephone: '+1-321-587-1163',
-                image: DEFAULT_IMAGE,
+                image: THOMAS_CUSTOM_HOMES_IMAGE,
                 areaServed: ['Cocoa, Florida', 'Brevard County, Florida'],
                 address: {
                     '@type': 'PostalAddress',
@@ -198,9 +206,52 @@ const ROUTE_META = {
                     postalCode: '32922',
                     addressCountry: 'US',
                 },
-                sameAs: ['https://www.alignable.com/cocoa-fl/thomas-custom-homes-inc'],
                 description:
-                    'Thomas Custom Homes Inc. provides custom homes, whole-home remodels, additions, and design-build construction services.',
+                    'Thomas Custom Homes Inc. provides custom homes, whole-home remodels, additions, design-build construction services, and financing consultation information.',
+            },
+        ],
+    },
+    melbournewebstudio: {
+        ...BASE_ROUTE_META,
+        key: 'melbournewebstudio',
+        path: '/melbournewebstudio/',
+        canonicalUrlOverride: MELBOURNE_WEB_STUDIO_CANONICAL_URL,
+        title: 'Melbourne Web Studio | Websites for Local Businesses',
+        description:
+            'Melbourne Web Studio builds fast, professional websites for local businesses in Melbourne, Florida with transparent pricing and growth-focused support.',
+        image: DEFAULT_IMAGE,
+        siteName: 'Melbourne Web Studio',
+        themeColor: '#ffffff',
+        colorScheme: 'light',
+        includeInSitemap: true,
+        structuredData: [
+            {
+                '@context': 'https://schema.org',
+                '@type': 'WebPage',
+                name: 'Melbourne Web Studio',
+                url: MELBOURNE_WEB_STUDIO_CANONICAL_URL,
+                description:
+                    'Melbourne Web Studio offers website design, SEO support, and AI-powered growth systems for local businesses.',
+            },
+            {
+                '@context': 'https://schema.org',
+                '@type': 'ProfessionalService',
+                name: 'Melbourne Web Studio',
+                url: MELBOURNE_WEB_STUDIO_CANONICAL_URL,
+                telephone: '+1-602-306-3920',
+                image: DEFAULT_IMAGE,
+                areaServed: ['Melbourne, Florida', 'Brevard County, Florida', 'Space Coast'],
+                description:
+                    'Melbourne Web Studio helps local businesses launch websites, SEO foundations, and AI business systems.',
+                provider: {
+                    '@id': ORGANIZATION_ID,
+                },
+                serviceType: [
+                    'Website design',
+                    'Local SEO',
+                    'Managed hosting',
+                    'AI business automation',
+                ],
             },
         ],
     },
@@ -235,6 +286,7 @@ export const STATIC_ROUTE_OUTPUTS = [
     { routeKey: 'fundmanager', outputPath: 'fundmanager/index.html' },
     { routeKey: 'reconcile', outputPath: 'reconcile/index.html' },
     { routeKey: 'tch', outputPath: 'tch/index.html' },
+    { routeKey: 'melbournewebstudio', outputPath: 'melbournewebstudio/index.html' },
     { routeKey: 'dash', outputPath: 'dash/index.html' },
     { routeKey: 'notfound', outputPath: '404.html' },
 ];
@@ -242,6 +294,34 @@ export const STATIC_ROUTE_OUTPUTS = [
 function normalizePathname(pathname = '/') {
     const normalized = String(pathname).toLowerCase().replace(/\/+$/, '');
     return normalized || '/';
+}
+
+function buildThomasCustomHomesCustomDomainMeta(baseMeta) {
+    const canonicalUrl = `${THOMAS_CUSTOM_HOMES_SITE_ORIGIN}/`;
+
+    return {
+        ...baseMeta,
+        image: THOMAS_CUSTOM_HOMES_CUSTOM_DOMAIN_IMAGE,
+        canonicalUrlOverride: canonicalUrl,
+        structuredData: baseMeta.structuredData.map((entry) => {
+            if (entry['@type'] === 'WebPage') {
+                return {
+                    ...entry,
+                    url: canonicalUrl,
+                };
+            }
+
+            if (entry['@type'] === 'GeneralContractor') {
+                return {
+                    ...entry,
+                    url: canonicalUrl,
+                    image: THOMAS_CUSTOM_HOMES_CUSTOM_DOMAIN_IMAGE,
+                };
+            }
+
+            return entry;
+        }),
+    };
 }
 
 export function detectRouteKey({ pathname = '/', hostname = '' } = {}) {
@@ -268,8 +348,19 @@ export function detectRouteKey({ pathname = '/', hostname = '' } = {}) {
         return 'reconcile';
     }
 
-    if (normalizedPathname === '/tch') {
+    if (
+        normalizedPathname === '/tch' ||
+        normalizedHostname === 'thomascustom.homes' ||
+        normalizedHostname === 'www.thomascustom.homes'
+    ) {
         return 'tch';
+    }
+
+    if (
+        normalizedPathname === '/melbournewebstudio' ||
+        normalizedHostname === 'melbournewebstudio.eb28.co'
+    ) {
+        return 'melbournewebstudio';
     }
 
     return 'home';
@@ -278,11 +369,19 @@ export function detectRouteKey({ pathname = '/', hostname = '' } = {}) {
 export function getRouteMeta(routeOrLocation = 'home') {
     const routeKey =
         typeof routeOrLocation === 'string' ? routeOrLocation : detectRouteKey(routeOrLocation);
-    const baseMeta = ROUTE_META[routeKey] || ROUTE_META.home;
+    const normalizedHostname =
+        typeof routeOrLocation === 'string'
+            ? ''
+            : String(routeOrLocation.hostname || '').toLowerCase();
+    let baseMeta = ROUTE_META[routeKey] || ROUTE_META.home;
+
+    if (routeKey === 'tch' && THOMAS_CUSTOM_HOMES_HOSTNAMES.has(normalizedHostname)) {
+        baseMeta = buildThomasCustomHomesCustomDomainMeta(baseMeta);
+    }
 
     return {
         ...baseMeta,
-        canonicalUrl: `${SITE_ORIGIN}${baseMeta.path}`,
+        canonicalUrl: baseMeta.canonicalUrlOverride || `${SITE_ORIGIN}${baseMeta.path}`,
         routeKey,
     };
 }

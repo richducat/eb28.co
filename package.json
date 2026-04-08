@@ -7,7 +7,7 @@
     "dev": "vite",
     "generate:data": "node scripts/generate-static-data.mjs",
     "publish:fundmanager": "node scripts/publish-fundmanager-live.mjs",
-    "build": "vite build && node scripts/generate-route-pages.mjs && npm run generate:data && mkdir -p docs/alarmclock && cp docs/index.html docs/alarmclock/index.html",
+    "build": "node scripts/build-site.mjs",
     "preview": "vite preview"
   },
   "dependencies": {

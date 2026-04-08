@@ -32,6 +32,7 @@ const isReconAgentRoute =
   hostname === 'reconcile.eb28.co';
 const isThomasCustomHomesRoute =
   pathname === '/tch' ||
+  pathname.startsWith('/tch/') ||
   hostname === 'thomascustom.homes' ||
   hostname === 'www.thomascustom.homes';
 const isMelbourneWebStudioRoute =

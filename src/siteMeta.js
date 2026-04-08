@@ -1,3 +1,15 @@
+import {
+    THOMAS_COMPANY_NAME,
+    THOMAS_OFFICE_ADDRESS,
+    THOMAS_PRIMARY_ORIGIN,
+    THOMAS_SEO_PAGES,
+    getThomasCanonicalUrl,
+    getThomasEb28Path,
+    getThomasPageByRouteKey,
+    getThomasPageForLocation,
+    isThomasPrimaryHostname,
+} from './thomasSeoPages.js';
+
 export const SITE_NAME = 'EB28';
 export const SITE_ORIGIN = 'https://eb28.co';
 export const DEFAULT_THEME_COLOR = '#020617';
@@ -9,13 +21,9 @@ const ORGANIZATION_ID = `${SITE_ORIGIN}/#organization`;
 const WEBSITE_ID = `${SITE_ORIGIN}/#website`;
 const DEFAULT_IMAGE = `${SITE_ORIGIN}/assets/execution_grid.png`;
 const FUNDMANAGER_IMAGE = `${SITE_ORIGIN}/assets/agents_grid.png`;
-export const THOMAS_CUSTOM_HOMES_SITE_ORIGIN = 'https://thomascustom.homes';
+export const THOMAS_CUSTOM_HOMES_SITE_ORIGIN = THOMAS_PRIMARY_ORIGIN;
 const THOMAS_CUSTOM_HOMES_IMAGE = `${SITE_ORIGIN}/tch/og-image.png`;
 const THOMAS_CUSTOM_HOMES_CUSTOM_DOMAIN_IMAGE = `${THOMAS_CUSTOM_HOMES_SITE_ORIGIN}/og-image.png`;
-const THOMAS_CUSTOM_HOMES_HOSTNAMES = new Set([
-    'thomascustom.homes',
-    'www.thomascustom.homes',
-]);
 const MELBOURNE_WEB_STUDIO_CANONICAL_URL = 'http://melbournewebstudio.eb28.co/';
 
 const ORGANIZATION_SCHEMA = {
@@ -45,6 +53,119 @@ const BASE_ROUTE_META = {
     ogType: 'website',
     robots: DEFAULT_ROBOTS,
 };
+
+function buildThomasLocalBusinessSchema(imageUrl) {
+    return {
+        '@context': 'https://schema.org',
+        '@type': 'LocalBusiness',
+        name: THOMAS_COMPANY_NAME,
+        url: THOMAS_CUSTOM_HOMES_SITE_ORIGIN,
+        telephone: '+1-321-587-1163',
+        image: imageUrl,
+        areaServed: [
+            'Viera, Florida',
+            'Cocoa, Florida',
+            'Melbourne, Florida',
+            'Rockledge, Florida',
+            'Suntree, Florida',
+            'Brevard County, Florida',
+        ],
+        address: {
+            '@type': 'PostalAddress',
+            streetAddress: '846 N. Cocoa Blvd. Suite C',
+            addressLocality: 'Cocoa',
+            addressRegion: 'FL',
+            postalCode: '32922',
+            addressCountry: 'US',
+        },
+        description:
+            'Thomas Custom Homes builds custom homes in Viera, Cocoa, Melbourne, Rockledge, Suntree, and across Brevard County with build-on-your-lot, relocation, and personalized planning support.',
+    };
+}
+
+function buildThomasStructuredData(page, imageUrl) {
+    const canonicalUrl = getThomasCanonicalUrl(page, THOMAS_CUSTOM_HOMES_SITE_ORIGIN);
+    const structuredData = [
+        {
+            '@context': 'https://schema.org',
+            '@type': 'Organization',
+            name: THOMAS_COMPANY_NAME,
+            url: THOMAS_CUSTOM_HOMES_SITE_ORIGIN,
+            telephone: '+1-321-587-1163',
+        },
+        buildThomasLocalBusinessSchema(imageUrl),
+        {
+            '@context': 'https://schema.org',
+            '@type': 'WebPage',
+            name: page.h1,
+            url: canonicalUrl,
+            description: page.metaDescription,
+        },
+    ];
+
+    if (page.kind === 'service') {
+        structuredData.push({
+            '@context': 'https://schema.org',
+            '@type': 'Service',
+            name: page.serviceName || page.h1,
+            serviceType: page.serviceName || page.h1,
+            areaServed: 'Brevard County, Florida',
+            provider: {
+                '@type': 'LocalBusiness',
+                name: THOMAS_COMPANY_NAME,
+                address: THOMAS_OFFICE_ADDRESS,
+            },
+            url: canonicalUrl,
+        });
+    }
+
+    if (Array.isArray(page.faqItems) && page.faqItems.length > 0) {
+        structuredData.push({
+            '@context': 'https://schema.org',
+            '@type': 'FAQPage',
+            mainEntity: page.faqItems.map((item) => ({
+                '@type': 'Question',
+                name: item.question,
+                acceptedAnswer: {
+                    '@type': 'Answer',
+                    text: item.answer,
+                },
+            })),
+        });
+    }
+
+    return structuredData;
+}
+
+function buildThomasRouteMeta(page, { primaryHost }) {
+    const image = primaryHost ? THOMAS_CUSTOM_HOMES_CUSTOM_DOMAIN_IMAGE : THOMAS_CUSTOM_HOMES_IMAGE;
+    const shouldIndex = primaryHost && page.kind !== 'utility';
+
+    return {
+        ...BASE_ROUTE_META,
+        key: page.routeKey,
+        path: getThomasEb28Path(page),
+        title: page.title,
+        description: page.metaDescription,
+        image,
+        siteName: THOMAS_COMPANY_NAME,
+        themeColor: '#1c1917',
+        colorScheme: 'light',
+        robots: shouldIndex ? DEFAULT_ROBOTS : NOINDEX_ROBOTS,
+        includeInSitemap: false,
+        canonicalUrlOverride: getThomasCanonicalUrl(page, THOMAS_CUSTOM_HOMES_SITE_ORIGIN),
+        structuredData: buildThomasStructuredData(page, THOMAS_CUSTOM_HOMES_CUSTOM_DOMAIN_IMAGE),
+    };
+}
+
+const THOMAS_ROUTE_META = Object.fromEntries(
+    THOMAS_SEO_PAGES.map((page) => [
+        page.routeKey,
+        buildThomasRouteMeta(page, {
+            primaryHost: false,
+        }),
+    ]),
+);
 
 const ROUTE_META = {
     home: {
@@ -169,48 +290,7 @@ const ROUTE_META = {
             },
         ],
     },
-    tch: {
-        ...BASE_ROUTE_META,
-        key: 'tch',
-        path: '/tch/',
-        title: 'Thomas Custom Homes Inc. | Custom Homes & Remodels in Cocoa, FL',
-        description:
-            'Custom homes, additions, major remodels, and financing options in Cocoa and across Brevard County. View the process, testimonials, and request a project estimate.',
-        image: THOMAS_CUSTOM_HOMES_IMAGE,
-        siteName: 'Thomas Custom Homes Inc.',
-        themeColor: '#1c1917',
-        colorScheme: 'light',
-        includeInSitemap: true,
-        structuredData: [
-            {
-                '@context': 'https://schema.org',
-                '@type': 'WebPage',
-                name: 'Thomas Custom Homes Inc.',
-                url: `${SITE_ORIGIN}/tch/`,
-                description:
-                    'Custom home building, additions, financing information, and whole-home remodel information for Thomas Custom Homes Inc. in Cocoa, Florida.',
-            },
-            {
-                '@context': 'https://schema.org',
-                '@type': 'GeneralContractor',
-                name: 'Thomas Custom Homes Inc.',
-                url: `${SITE_ORIGIN}/tch/`,
-                telephone: '+1-321-587-1163',
-                image: THOMAS_CUSTOM_HOMES_IMAGE,
-                areaServed: ['Cocoa, Florida', 'Brevard County, Florida'],
-                address: {
-                    '@type': 'PostalAddress',
-                    streetAddress: '846 N. Cocoa Blvd. Suite C',
-                    addressLocality: 'Cocoa',
-                    addressRegion: 'FL',
-                    postalCode: '32922',
-                    addressCountry: 'US',
-                },
-                description:
-                    'Thomas Custom Homes Inc. provides custom homes, whole-home remodels, additions, design-build construction services, and financing consultation information.',
-            },
-        ],
-    },
+    ...THOMAS_ROUTE_META,
     melbournewebstudio: {
         ...BASE_ROUTE_META,
         key: 'melbournewebstudio',
@@ -285,7 +365,10 @@ export const STATIC_ROUTE_OUTPUTS = [
     { routeKey: 'appbuilder', outputPath: 'appbuilder/index.html' },
     { routeKey: 'fundmanager', outputPath: 'fundmanager/index.html' },
     { routeKey: 'reconcile', outputPath: 'reconcile/index.html' },
-    { routeKey: 'tch', outputPath: 'tch/index.html' },
+    ...THOMAS_SEO_PAGES.map((page) => ({
+        routeKey: page.routeKey,
+        outputPath: page.slug === '' ? 'tch/index.html' : `tch/${page.slug}/index.html`,
+    })),
     { routeKey: 'melbournewebstudio', outputPath: 'melbournewebstudio/index.html' },
     { routeKey: 'dash', outputPath: 'dash/index.html' },
     { routeKey: 'notfound', outputPath: '404.html' },
@@ -294,34 +377,6 @@ export const STATIC_ROUTE_OUTPUTS = [
 function normalizePathname(pathname = '/') {
     const normalized = String(pathname).toLowerCase().replace(/\/+$/, '');
     return normalized || '/';
-}
-
-function buildThomasCustomHomesCustomDomainMeta(baseMeta) {
-    const canonicalUrl = `${THOMAS_CUSTOM_HOMES_SITE_ORIGIN}/`;
-
-    return {
-        ...baseMeta,
-        image: THOMAS_CUSTOM_HOMES_CUSTOM_DOMAIN_IMAGE,
-        canonicalUrlOverride: canonicalUrl,
-        structuredData: baseMeta.structuredData.map((entry) => {
-            if (entry['@type'] === 'WebPage') {
-                return {
-                    ...entry,
-                    url: canonicalUrl,
-                };
-            }
-
-            if (entry['@type'] === 'GeneralContractor') {
-                return {
-                    ...entry,
-                    url: canonicalUrl,
-                    image: THOMAS_CUSTOM_HOMES_CUSTOM_DOMAIN_IMAGE,
-                };
-            }
-
-            return entry;
-        }),
-    };
 }
 
 export function detectRouteKey({ pathname = '/', hostname = '' } = {}) {
@@ -349,11 +404,19 @@ export function detectRouteKey({ pathname = '/', hostname = '' } = {}) {
     }
 
     if (
-        normalizedPathname === '/tch' ||
         normalizedHostname === 'thomascustom.homes' ||
-        normalizedHostname === 'www.thomascustom.homes'
+        normalizedHostname === 'www.thomascustom.homes' ||
+        normalizedPathname === '/tch' ||
+        normalizedPathname.startsWith('/tch/')
     ) {
-        return 'tch';
+        const thomasPage = getThomasPageForLocation({
+            pathname: normalizedPathname,
+            hostname: normalizedHostname,
+        });
+
+        if (thomasPage) {
+            return thomasPage.routeKey;
+        }
     }
 
     if (
@@ -375,8 +438,10 @@ export function getRouteMeta(routeOrLocation = 'home') {
             : String(routeOrLocation.hostname || '').toLowerCase();
     let baseMeta = ROUTE_META[routeKey] || ROUTE_META.home;
 
-    if (routeKey === 'tch' && THOMAS_CUSTOM_HOMES_HOSTNAMES.has(normalizedHostname)) {
-        baseMeta = buildThomasCustomHomesCustomDomainMeta(baseMeta);
+    if (routeKey.startsWith('thomas-') && isThomasPrimaryHostname(normalizedHostname)) {
+        baseMeta = buildThomasRouteMeta(getThomasPageByRouteKey(routeKey), {
+            primaryHost: true,
+        });
     }
 
     return {

@@ -9,6 +9,7 @@
 - Build: 11
 - Primary category: Productivity
 - Secondary category: Lifestyle
+- Marketing URL: https://eb28.co/
 - Support URL: https://eb28.co/alarmclock/support/
 - Privacy Policy URL: https://eb28.co/alarmclock/privacy/
 

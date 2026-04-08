@@ -51,7 +51,7 @@ export const THOMAS_SEO_PAGES = [
       'Thomas Custom Homes designs and builds custom residences for families who want more than a standard floor plan. Whether you are building in Viera, Cocoa, Melbourne, Rockledge, Suntree, or elsewhere in Brevard County, we help turn your lot, layout ideas, and budget goals into a finished home built around your life.',
       'From build-on-your-lot projects to higher-end custom homes with personalized finishes, our process is built around clear communication, practical planning, and quality craftsmanship. We work with homeowners who want a custom result without feeling lost in the process.',
     ],
-    summaryTitle: 'What this site is built to help with',
+    summaryTitle: 'How We Can Help',
     summaryItems: [
       'Build-on-your-lot planning in Viera and nearby communities',
       'Custom homes with layouts tailored to daily life and entertaining',
@@ -83,7 +83,7 @@ export const THOMAS_SEO_PAGES = [
       {
         title: 'Why Homeowners Choose Us',
         paragraphs: [
-          'The right builder should do more than promise a beautiful finished product. The right builder should also make the path feel organized from the beginning. Thomas Custom Homes is positioned for homeowners who want a builder that can listen closely, design intelligently, and manage the details that turn ideas into a finished home.',
+          'The right builder should do more than promise a beautiful finished product. The right builder should also make the path feel organized from the beginning. Homeowners often want a builder who can listen closely, plan intelligently, and manage the details that turn ideas into a finished home.',
           'We focus on building homes that feel personal instead of generic. That means aligning the floor plan with how you actually live, planning around your lot and its opportunities, and helping you make confident decisions about layout, finishes, and function.',
         ],
       },
@@ -113,12 +113,12 @@ export const THOMAS_SEO_PAGES = [
     metaDescription:
       'Looking for a custom home builder in Viera, FL? Thomas Custom Homes builds custom homes, build-on-your-lot homes, and luxury homes in 32940 and nearby communities.',
     h1: 'Custom Home Builder in Viera, Florida',
-    eyebrow: 'Primary Location Page',
+    eyebrow: 'Viera and 32940',
     heroImage:
       'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?q=80&w=2070&auto=format&fit=crop',
     heroParagraphs: [
       'If you are searching for a custom home builder in Viera, Florida, you are usually looking for more than a house. You are looking for the right location, the right layout, and the right long-term fit for your family and lifestyle. Thomas Custom Homes helps homeowners build custom residences in Viera with a process that keeps the project moving while protecting the details that matter.',
-      'Viera continues to attract buyers who want a strong combination of newer development, access to the Space Coast, and a polished community feel. That makes the market competitive, and it makes custom-home positioning especially valuable for buyers who do not want a production-home experience.',
+      'Viera continues to attract buyers who want a strong combination of newer development, access to the Space Coast, and a polished community feel. That makes the market competitive, and it makes a custom-home path especially valuable for buyers who do not want a production-home experience.',
     ],
     summaryTitle: 'What We Help With in Viera',
     summaryItems: [
@@ -130,9 +130,9 @@ export const THOMAS_SEO_PAGES = [
     ],
     sections: [
       {
-        title: 'Why This Page Should Convert',
+        title: 'Why Buyers Choose a Custom Approach in Viera',
         paragraphs: [
-          'A local searcher landing here should immediately understand that Thomas Custom Homes is a fit for Viera-specific custom-home work, not just generic construction. The goal is to make the service area, planning approach, and consultation path feel obvious from the first screen.',
+          'Buyers in Viera often want more flexibility than a production-home path can offer. A custom approach gives you room to plan around the lot, the way you live, and the finish level that matters most to you.',
           'Our approach is designed for clients who want flexibility in design, a more personalized build, and a finished home that reflects how they actually plan to live in the space.',
         ],
       },
@@ -172,7 +172,7 @@ export const THOMAS_SEO_PAGES = [
     metaDescription:
       'Thomas Custom Homes builds custom homes in Melbourne, FL with a streamlined build process, local expertise, and build-on-your-lot options.',
     h1: 'Custom Home Builder in Melbourne, Florida',
-    eyebrow: 'Location Page',
+    eyebrow: 'Melbourne, Florida',
     heroImage:
       'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?q=80&w=2070&auto=format&fit=crop',
     heroParagraphs: [
@@ -188,7 +188,7 @@ export const THOMAS_SEO_PAGES = [
     ],
     sections: [
       {
-        title: 'Why This Page Matters',
+        title: 'What Matters When You Compare Builders in Melbourne',
         paragraphs: [
           'If you are comparing builders in Melbourne, the difference should not come down to who uses the biggest promises. It should come down to who can align design, communication, and construction in a way that gives you confidence from the beginning.',
         ],
@@ -212,7 +212,7 @@ export const THOMAS_SEO_PAGES = [
     metaDescription:
       'Build a custom home in Rockledge, FL with Thomas Custom Homes. Local custom-home expertise, build-on-your-lot service, and a practical process from concept to completion.',
     h1: 'Custom Home Builder in Rockledge, Florida',
-    eyebrow: 'Location Page',
+    eyebrow: 'Rockledge, Florida',
     heroImage:
       'https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?q=80&w=2070&auto=format&fit=crop',
     heroParagraphs: [
@@ -228,9 +228,9 @@ export const THOMAS_SEO_PAGES = [
     ],
     sections: [
       {
-        title: 'Closing Perspective',
+        title: 'A More Personalized Build Path',
         paragraphs: [
-          'This page should reassure the buyer that the process is organized, local, and flexible enough to deliver a genuinely custom result.',
+          'Rockledge buyers often want a builder who can keep the process organized while still allowing real design flexibility. The goal is a home that feels tailored to your life instead of adapted from a template.',
         ],
       },
     ],
@@ -252,7 +252,7 @@ export const THOMAS_SEO_PAGES = [
     metaDescription:
       'Thomas Custom Homes serves Suntree, FL with custom-home construction, build-on-your-lot guidance, and high-quality personalized home design.',
     h1: 'Custom Home Builder in Suntree, Florida',
-    eyebrow: 'Location Page',
+    eyebrow: 'Suntree, Florida',
     heroImage:
       'https://images.unsplash.com/photo-1600566752355-35792bedcfea?q=80&w=2070&auto=format&fit=crop',
     heroParagraphs: [
@@ -268,9 +268,9 @@ export const THOMAS_SEO_PAGES = [
     ],
     sections: [
       {
-        title: 'Closing Perspective',
+        title: 'A Higher-Touch Experience',
         paragraphs: [
-          'This page positions Thomas Custom Homes as the local option for buyers who want a higher-touch building experience in and around Suntree.',
+          'For buyers in and around Suntree, a custom home often comes down to refinement, comfort, and a layout that feels intentional from room to room.',
         ],
       },
     ],
@@ -292,12 +292,12 @@ export const THOMAS_SEO_PAGES = [
     metaDescription:
       'Thomas Custom Homes builds custom homes and remodel-driven custom projects in Cocoa, FL. Talk with our team about your lot, design goals, and timeline.',
     h1: 'Custom Home Builder in Cocoa, Florida',
-    eyebrow: 'Location Page',
+    eyebrow: 'Cocoa, Florida',
     heroImage:
       'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?q=80&w=2070&auto=format&fit=crop',
     heroParagraphs: [
-      'Thomas Custom Homes already has Cocoa relevance through its current website positioning, and this page preserves that strength while sharpening the custom-home message for organic search. The page speaks to homeowners who want a builder capable of delivering a tailored home instead of a generic construction service.',
-      'Cocoa remains an important market for the broader Space Coast, and many homeowners search with a city-specific intent rather than a county-wide phrase. This page captures that traffic while clearly guiding users toward a consultation.',
+      'Thomas Custom Homes serves Cocoa homeowners who want a tailored home rather than a generic construction experience. Whether you are building on a lot or planning a larger custom project, the goal is a home that fits how you want to live.',
+      'Cocoa remains an important part of the broader Space Coast market, and many buyers begin by searching city by city. A city-specific consultation helps connect your lot, design goals, and timeline to the right next step.',
     ],
     summaryTitle: 'Core Offers in Cocoa',
     summaryItems: [
@@ -308,9 +308,9 @@ export const THOMAS_SEO_PAGES = [
     ],
     sections: [
       {
-        title: 'Closing Perspective',
+        title: 'Planning in Cocoa',
         paragraphs: [
-          'This page supports Cocoa visibility while the homepage and Viera pages drive the broader premium-intent strategy.',
+          'If you are planning a custom home in Cocoa, the next step is a conversation about lot status, design priorities, and the kind of finished result you want.',
         ],
       },
     ],
@@ -332,12 +332,12 @@ export const THOMAS_SEO_PAGES = [
     metaDescription:
       'Thomas Custom Homes serves Brevard County with custom-home construction, build-on-your-lot service, and personalized design-build guidance.',
     h1: 'Custom Home Builder in Brevard County, Florida',
-    eyebrow: 'Regional Page',
+    eyebrow: 'Brevard County, Florida',
     heroImage:
       'https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?q=80&w=2084&auto=format&fit=crop',
     heroParagraphs: [
-      'Some buyers search by city. Others search by county because they are still deciding where in the area they want to build. This page captures that broader search intent and directs buyers toward a consultation that narrows location, lot, and budget fit.',
-      'Thomas Custom Homes serves homeowners across the Brevard County market, including Viera, Cocoa, Melbourne, Rockledge, and Suntree. The goal is to position the company as a practical local option for custom-home construction across the county.',
+      'Some buyers search by city. Others search by county because they are still deciding where in the area they want to build. A broader Brevard County conversation can help narrow location, lot fit, and budget direction before plans become too specific.',
+      'Thomas Custom Homes serves homeowners across Brevard County, including Viera, Cocoa, Melbourne, Rockledge, and Suntree. If you are still comparing areas, we can help connect the right location with the kind of home you want to build.',
     ],
     summaryTitle: 'How This Page Supports Buyers',
     summaryItems: [
@@ -348,9 +348,9 @@ export const THOMAS_SEO_PAGES = [
     ],
     sections: [
       {
-        title: 'Next-Step Guidance',
+        title: 'Choose the Right Next Step',
         paragraphs: [
-          'This page should push users into either the contact form or the most relevant location page based on their intended build area.',
+          'If you already know the city, move into the matching location page. If you are still comparing areas, start with a consultation so the location, lot, and home goals are being considered together.',
         ],
       },
     ],
@@ -372,12 +372,12 @@ export const THOMAS_SEO_PAGES = [
     metaDescription:
       'Own land in Viera or nearby? Thomas Custom Homes builds custom homes on client-owned lots with a clear process and personalized planning.',
     h1: 'Build on Your Lot in Viera, Florida',
-    eyebrow: 'Service Page',
+    eyebrow: 'Build on Your Lot',
     heroImage:
       'https://images.unsplash.com/photo-1560518883-ce09059eeffa?q=80&w=1973&auto=format&fit=crop',
     heroParagraphs: [
       'If you already own land, or are actively evaluating land, building on your lot can give you more control over location, layout, privacy, and long-term value. Thomas Custom Homes works with buyers who want to use their own lot as the starting point for a fully custom home.',
-      'A build-on-your-lot project is not just about house design. It is also about lot fit, site considerations, access, and making smart decisions early. This page reassures buyers that the process can be broken into clear steps and managed professionally.',
+      'A build-on-your-lot project is not just about house design. It is also about lot fit, site considerations, access, and making smart decisions early. The process works best when those decisions are broken into clear steps and handled professionally.',
     ],
     summaryTitle: 'How the Process Works',
     summaryItems: [
@@ -412,12 +412,12 @@ export const THOMAS_SEO_PAGES = [
     metaDescription:
       'Thomas Custom Homes builds luxury custom homes in Viera, FL with personalized design, elevated finishes, and a detail-focused building process.',
     h1: 'Luxury Custom Homes in Viera, Florida',
-    eyebrow: 'Service Page',
+    eyebrow: 'Luxury Custom Homes',
     heroImage:
       'https://images.unsplash.com/photo-1600585154526-990dcea4db0d?q=80&w=2070&auto=format&fit=crop',
     heroParagraphs: [
-      'Luxury custom homes should feel personal, not performative. This page speaks to buyers who care about quality, scale, flow, and finish decisions that create a refined final product.',
-      'Thomas Custom Homes is positioned here as a builder for clients who want a more elevated home without losing the communication and practical planning that keep a project grounded.',
+      'Luxury custom homes should feel personal, not performative. Buyers looking in Viera often care about quality, scale, flow, and finish decisions that create a refined final product.',
+      'Thomas Custom Homes works with homeowners who want a more elevated home without losing the communication and practical planning that keep the project grounded.',
     ],
     summaryTitle: 'Luxury Themes',
     summaryItems: [
@@ -428,9 +428,9 @@ export const THOMAS_SEO_PAGES = [
     ],
     sections: [
       {
-        title: 'Closing Perspective',
+        title: 'What Higher-End Buyers Often Want',
         paragraphs: [
-          'This page should convert buyers who are looking specifically for a more premium custom-home experience in Viera and the surrounding market.',
+          'A more premium custom-home experience usually comes down to better flow, more intentional materials, and a home that feels distinctive without sacrificing everyday comfort.',
         ],
       },
     ],
@@ -452,14 +452,14 @@ export const THOMAS_SEO_PAGES = [
     metaDescription:
       'Planning a waterfront custom home in Viera or nearby? Thomas Custom Homes helps homeowners create personalized homes built for location, lifestyle, and long-term comfort.',
     h1: 'Waterfront Custom Homes in Viera, Florida',
-    eyebrow: 'Service Page',
+    eyebrow: 'Waterfront Custom Homes',
     heroImage:
       'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?q=80&w=1974&auto=format&fit=crop',
     heroParagraphs: [
-      'Waterfront buyers often care about more than square footage. They care about views, natural light, outdoor living, flow, and how the home feels in relation to the site. This page frames Thomas Custom Homes as a builder that understands lifestyle-based custom design.',
-      'Even when waterfront inventory is limited, this topic still attracts high-value search intent and should stay part of the site architecture.',
+      'Waterfront buyers often care about more than square footage. Views, natural light, outdoor living, and the relationship between the home and the site all matter.',
+      'A waterfront-oriented custom home works best when the layout, orientation, and day-to-day livability are planned together from the beginning.',
     ],
-    summaryTitle: 'What This Page Should Emphasize',
+    summaryTitle: 'What to Prioritize',
     summaryItems: [
       'Layout choices that maximize views and livability',
       'Indoor-outdoor design priorities',
@@ -468,9 +468,9 @@ export const THOMAS_SEO_PAGES = [
     ],
     sections: [
       {
-        title: 'Closing Perspective',
+        title: 'Planning Priorities',
         paragraphs: [
-          'This page captures buyers who are already thinking in terms of site, lifestyle, and long-term comfort rather than generic square footage.',
+          'Waterfront planning usually starts with the lot, the orientation, and how you want the home to feel throughout the day.',
         ],
       },
     ],
@@ -496,7 +496,7 @@ export const THOMAS_SEO_PAGES = [
     heroImage:
       'https://images.unsplash.com/photo-1513694203232-719a280e022f?q=80&w=2070&auto=format&fit=crop',
     heroParagraphs: [
-      'Many buyers looking at Viera are not local yet. They are planning a move, researching neighborhoods, comparing builders, and trying to understand how a remote build process would actually work. This page speaks directly to that situation.',
+      'Many buyers looking at Viera are not local yet. They are planning a move, researching neighborhoods, comparing builders, and trying to understand how a remote build process would actually work.',
       'Thomas Custom Homes helps out-of-state buyers build in Viera through a process built around planning calls, virtual check-ins, milestone communication, and a practical path from lot evaluation to finished home.',
     ],
     summaryTitle: 'What Remote Buyers Care About',
@@ -535,7 +535,8 @@ export const THOMAS_SEO_PAGES = [
     heroImage:
       'https://images.unsplash.com/photo-1484154218962-a197022b5858?q=80&w=2070&auto=format&fit=crop',
     heroParagraphs: [
-      'Relocating to Viera is a major move, and many buyers quickly realize that buying an existing home and building a custom home are two very different decisions. This page helps them understand why a custom build may be the right option if layout, finishes, and long-term fit matter.',
+      'Relocating to Viera is a major move, and many buyers quickly realize that buying an existing home and building a custom home are two very different decisions.',
+      'If layout, finishes, and long-term fit matter, it helps to compare the location and the custom-home path together instead of treating them as separate decisions.',
     ],
     summaryTitle: 'What to Clarify Early',
     summaryItems: [
@@ -546,9 +547,9 @@ export const THOMAS_SEO_PAGES = [
     ],
     sections: [
       {
-        title: 'Closing Perspective',
+        title: 'How to Approach the Move',
         paragraphs: [
-          'This guide should feel helpful and search-friendly rather than overly salesy. It should build trust, then drive the visitor toward a consultation.',
+          'A helpful first step is to get clear on area, lot status, timeline, and budget before you move too far into the process.',
         ],
       },
     ],
@@ -569,11 +570,11 @@ export const THOMAS_SEO_PAGES = [
     metaDescription:
       'Thomas Custom Homes helps buyers planning a second home or vacation home in Viera create a personalized build around comfort, flexibility, and long-term use.',
     h1: 'Vacation and Second Home Builder in Viera, Florida',
-    eyebrow: 'Buyer Profile Page',
+    eyebrow: 'Second-Home Planning',
     heroImage:
       'https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?q=80&w=2070&auto=format&fit=crop',
     heroParagraphs: [
-      'Some buyers are planning a primary residence. Others are planning a second home, part-time home, or long-term lifestyle property. This page speaks to the second-home buyer who wants a custom result and a process they can manage confidently.',
+      'Some buyers are planning a primary residence. Others are planning a second home, part-time home, or long-term lifestyle property.',
     ],
     summaryTitle: 'Message Points',
     summaryItems: [
@@ -584,9 +585,9 @@ export const THOMAS_SEO_PAGES = [
     ],
     sections: [
       {
-        title: 'Closing Perspective',
+        title: 'Planning a Second Home',
         paragraphs: [
-          'This page expands the lead net by targeting a buyer profile that often has strong budget capacity and clear intent.',
+          'If you are building a second or part-time home, the layout should match how often you will use it, how you host guests, and how you want the property to function over time.',
         ],
       },
     ],
@@ -607,7 +608,7 @@ export const THOMAS_SEO_PAGES = [
     metaDescription:
       'Thinking about the cost to build a home in Viera, FL? Use this guide to understand what drives budget, value, and planning decisions.',
     h1: 'What Affects the Cost to Build a Home in Viera, Florida?',
-    eyebrow: 'Research Guide',
+    eyebrow: 'Cost Guide',
     heroImage:
       'https://images.unsplash.com/photo-1560518883-ce09059eeffa?q=80&w=1973&auto=format&fit=crop',
     heroParagraphs: [
@@ -654,7 +655,7 @@ export const THOMAS_SEO_PAGES = [
     metaDescription:
       'Exploring where to build in Viera? This guide covers how to think about neighborhoods, lot fit, lifestyle, and custom-home planning.',
     h1: 'Best Neighborhoods in Viera, Florida for a Custom Home Search',
-    eyebrow: 'Research Guide',
+    eyebrow: 'Neighborhood Guide',
     heroImage:
       'https://images.unsplash.com/photo-1600573472591-ee6b68d14c68?q=80&w=2070&auto=format&fit=crop',
     heroParagraphs: [
@@ -675,7 +676,7 @@ export const THOMAS_SEO_PAGES = [
         ],
       },
       {
-        title: 'CTA Tie-In',
+        title: 'If You Are Still Deciding Where to Build',
         paragraphs: [
           'If you are still deciding where to build, Thomas Custom Homes can help you think through the right questions before you move too far into the process.',
         ],
@@ -722,9 +723,9 @@ export const THOMAS_SEO_PAGES = [
         ],
       },
       {
-        title: 'Closing Perspective',
+        title: 'When a Custom Path Fits Better',
         paragraphs: [
-          'If you already know you want a home that feels specifically designed for your life, a custom path is usually the better fit. Thomas Custom Homes is positioned for buyers who want that level of personalization.',
+          'If you already know you want a home that feels specifically designed for your life, a custom path is usually the better fit. Thomas Custom Homes works with buyers who want that level of personalization.',
         ],
       },
     ],

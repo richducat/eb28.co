@@ -272,7 +272,7 @@ function Hero({ page, hostname }) {
           </div>
           <div className="mt-8 rounded-2xl border border-white/10 bg-slate-950/35 p-5">
             <div className="text-xs font-bold uppercase tracking-[0.18em] text-slate-400">
-              Primary CTA
+              Next Step
             </div>
             <p className="mt-3 text-sm leading-relaxed text-slate-200">
               {page.primaryCtaCopy || THOMAS_PRIMARY_CTA_COPY}
@@ -290,7 +290,7 @@ function InlinePromo({ pageId, hostname, title, description }) {
   return (
     <div className="rounded-[2rem] border border-brand-primary/10 bg-brand-primary/5 p-6 shadow-sm">
       <div className="mb-3 text-xs font-bold uppercase tracking-[0.18em] text-brand-primary">
-        Recommended Next Step
+        Helpful Next Step
       </div>
       <h3 className="font-display text-2xl font-bold text-slate-900">{title || page.h1}</h3>
       <p className="mt-3 text-slate-600">
@@ -360,7 +360,7 @@ function SectionRenderer({ page, hostname }) {
           <div className="space-y-8">
             <div className="rounded-[2rem] border border-slate-100 bg-slate-950 p-8 text-white shadow-xl">
               <div className="text-xs font-bold uppercase tracking-[0.18em] text-brand-accent">
-                Consultation Fit
+                Start With a Consultation
               </div>
               <p className="mt-4 text-lg leading-relaxed text-slate-200">
                 The next helpful step is a conversation about your city, lot status, target timeline,
@@ -410,14 +410,14 @@ function HomeFeatures({ hostname }) {
       <div className="mx-auto max-w-7xl px-6">
         <div className="mb-12 max-w-3xl">
           <div className="mb-4 text-sm font-bold uppercase tracking-[0.2em] text-brand-accent">
-            Featured Landing Pages
+            Explore More
           </div>
           <h2 className="font-display text-4xl font-bold text-slate-900 md:text-5xl">
-            The Viera and Brevard search network starts here.
+            Explore Planning Options Across Viera and Brevard County.
           </h2>
           <p className="mt-4 text-lg text-slate-600">
-            These are the highest-priority pages from the SEO package, built to capture local,
-            build-on-your-lot, luxury, and relocation-driven custom-home intent.
+            These pages cover some of the most common starting points for buyers planning a custom
+            home, a build-on-your-lot project, or a move into the Viera and Brevard market.
           </p>
         </div>
 
@@ -455,10 +455,10 @@ function FeaturedProjects() {
       <div className="mx-auto max-w-7xl px-6">
         <div className="mb-12 max-w-3xl">
           <div className="mb-4 text-sm font-bold uppercase tracking-[0.2em] text-brand-accent">
-            Conversion Support
+            Project Inspiration
           </div>
           <h2 className="font-display text-4xl font-bold text-slate-900 md:text-5xl">
-            Planning pages work better when the build quality feels tangible.
+            Build quality is easier to understand when the finished result feels tangible.
           </h2>
         </div>
 
@@ -496,12 +496,12 @@ function RelatedLinks({ page, hostname }) {
       <div className="mx-auto max-w-7xl px-6">
         <div className="mb-10 max-w-3xl">
           <div className="mb-4 text-sm font-bold uppercase tracking-[0.2em] text-brand-accent">
-            Internal Links
+            Related Pages
           </div>
           <h2 className="font-display text-4xl font-bold text-slate-900">{page.relatedLinksTitle}</h2>
           <p className="mt-4 text-lg text-slate-600">
-            These pages are intentionally connected so visitors can move from local intent to the
-            most relevant planning or research step without getting lost.
+            Use these pages to move from a general question into the next planning step that fits
+            your lot, location, or custom-home goals.
           </p>
         </div>
 
@@ -582,7 +582,7 @@ function Testimonials() {
             Testimonials
           </div>
           <h2 className="font-display text-4xl font-bold text-slate-900 md:text-5xl">
-            Qualified visitors still want reassurance about the experience.
+            Homeowners and collaborators often remember the process as much as the finished work.
           </h2>
         </div>
 
@@ -757,8 +757,8 @@ function Contact({ page }) {
               {page.primaryCtaCopy || THOMAS_PRIMARY_CTA_COPY}
             </h2>
             <p className="mt-6 text-lg leading-relaxed text-slate-300">
-              The form below matches the SEO package handoff. It collects the city, lot status,
-              timeline, and project notes needed for a real follow-up conversation.
+              Share your city, lot status, timeline, and project notes so the follow-up
+              conversation can start with real context.
             </p>
             <div className="mt-8 space-y-5">
               <div className="flex items-center gap-4">

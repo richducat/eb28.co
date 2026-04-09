@@ -28,6 +28,7 @@ import {
   getThomasPageForLocation,
   getThomasPathForHostname,
 } from './thomasSeoPages.js';
+import ThomasCustomHomesHomepageClassic from './ThomasCustomHomesHomepageClassic.jsx';
 
 const FORM_ENDPOINT = 'https://formsubmit.co/ajax/richducat@gmail.com';
 
@@ -1072,14 +1073,16 @@ export default function ThomasCustomHomesPage() {
     typeof window === 'undefined' ? 'thomascustom.homes' : window.location.hostname.toLowerCase();
   const isHomePage = currentPage.id === 'thomas-home';
 
+  if (isHomePage) {
+    return <ThomasCustomHomesHomepageClassic />;
+  }
+
   return (
     <div className="bg-white font-sans text-slate-900">
       <Navbar hostname={hostname} />
       <main>
         <Hero page={currentPage} hostname={hostname} />
         <SectionRenderer page={currentPage} hostname={hostname} />
-        {isHomePage ? <HomeFeatures hostname={hostname} /> : null}
-        {isHomePage ? <FeaturedProjects /> : null}
         <FinalMoneyCta page={currentPage} hostname={hostname} />
         <RelatedLinks page={currentPage} hostname={hostname} />
         <Testimonials />

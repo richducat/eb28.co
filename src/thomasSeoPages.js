@@ -4,7 +4,7 @@ export const THOMAS_SITE_NAME = 'Thomas Custom Homes';
 export const THOMAS_COMPANY_NAME = 'Thomas Custom Homes Inc.';
 export const THOMAS_PHONE = '3215871163';
 export const THOMAS_PHONE_DISPLAY = '(321) 587-1163';
-export const THOMAS_OFFICE_ADDRESS = '846 N. Cocoa Blvd. Suite C, Cocoa, FL 32922';
+export const THOMAS_OFFICE_ADDRESS = '550 S N. Cocoa Blvd., Cocoa, FL 32922';
 export const THOMAS_PRIMARY_CTA_LABEL = 'Request a Consultation';
 export const THOMAS_PRIMARY_CTA_COPY =
   'Request a consultation to discuss your timeline, lot, budget, and design goals.';

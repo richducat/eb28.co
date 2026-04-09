@@ -72,7 +72,7 @@ function buildThomasLocalBusinessSchema(imageUrl) {
         ],
         address: {
             '@type': 'PostalAddress',
-            streetAddress: '846 N. Cocoa Blvd. Suite C',
+            streetAddress: '550 S N. Cocoa Blvd.',
             addressLocality: 'Cocoa',
             addressRegion: 'FL',
             postalCode: '32922',

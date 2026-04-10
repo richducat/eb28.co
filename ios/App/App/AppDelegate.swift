@@ -96,6 +96,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 }
 
 class WakeUpBridgeViewController: CAPBridgeViewController {
+    private func hasConfiguredAdMobAppId() -> Bool {
+        let appId = (Bundle.main.object(forInfoDictionaryKey: "GADApplicationIdentifier") as? String)?
+            .trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+
+        guard !appId.isEmpty else {
+            return false
+        }
+
+        guard !appId.contains("$(") else {
+            return false
+        }
+
+        return appId.hasPrefix("ca-app-pub-")
+    }
+
     override func capacitorDidLoad() {
         super.capacitorDidLoad()
 
@@ -103,6 +118,10 @@ class WakeUpBridgeViewController: CAPBridgeViewController {
         // depend on Capacitor's generated package scan to discover it.
         bridge?.registerPluginInstance(WakeUpPurchasesPlugin())
         bridge?.registerPluginInstance(WakeUpWidgetBridgePlugin())
-        bridge?.registerPluginInstance(WakeUpAdMobPlugin())
+        if hasConfiguredAdMobAppId() {
+            bridge?.registerPluginInstance(WakeUpAdMobPlugin())
+        } else {
+            NSLog("Wake Up Ya Bish: skipping AdMob bridge registration because no valid AdMob app id is configured for this build.")
+        }
     }
 }

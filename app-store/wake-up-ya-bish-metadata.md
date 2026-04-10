@@ -5,8 +5,8 @@
 - Name: Wake Up Ya Bish
 - Subtitle: Retro alarm clock with attitude
 - Bundle ID: com.eb28.alarmclock
-- Version: 1.1.1
-- Build: 11
+- Version: 1.1.2
+- Build: 15
 - Primary category: Productivity
 - Secondary category: Lifestyle
 - Marketing URL: https://eb28.co/
@@ -29,6 +29,7 @@ Features:
 - Quick countdown timers for short focus sessions and breaks
 - Retro-styled clock interface with big, glanceable time states
 - Optional calendar awareness to show the next upcoming event
+- Free tier sponsor banner with an optional `Remove Ads` subscription
 - Habit checkpoint flow designed to push momentum after the alarm stops
 
 Wake Up Ya Bish is built for people who want something bolder than a default alarm app.
@@ -42,18 +43,18 @@ alarm clock,wakeup,retro,productivity,timer,morning,habit,calendar
 
 ## What's New
 
-- Fixed the native calendar connection so the next event loads correctly
-- Unstuck the settings/profile flows and improved iPhone layout fit
-- Added native notification setup guidance and release-safe AdMob wiring groundwork
+- Added the live AdMob sponsor banner for the free tier
+- Added Google consent handling plus an in-app ad privacy options button
+- Updated the privacy policy and app metadata to match the ad-supported build
 
 ## Review Notes
 
 - The app uses local notifications for alarm delivery.
 - Calendar access is optional and only used to display the next upcoming event inside the app.
 - No login is required.
+- Build 15 adds the live Google AdMob banner to the free tier and keeps the existing `Remove Ads` subscription for users who want to hide the ad placement.
+- The ad flow now updates consent information on app launch, presents Google&rsquo;s consent form if required, and exposes a manual ad privacy options button inside the settings/profile flow.
+- The app launches cleanly on both iPhone and `iPad Air 11-inch (M3)` simulator/device families with the AdMob SDK enabled.
 - The app includes one auto-renewable monthly subscription: `Remove Ads` (`com.eb28.alarmclock.removeads.monthly`).
-- The subscription removes sponsor panels from the dashboard and can be purchased or restored from the profile sheet in the iOS app.
-- The subscription purchase card now includes functional links to the Privacy Policy and Terms of Use (Apple Standard EULA).
-- Build 9 replaces the direct subscription purchase lookup on iPadOS 17+ with Apple's native `SubscriptionStoreView` sheet for `com.eb28.alarmclock.removeads.monthly`, so tapping `Remove Ads` opens the live App Store subscription card instead of failing when StoreKit product metadata is still warming up.
-- Build 9 keeps a retry/backoff fallback around StoreKit product loading for status and restore checks while the App Store finishes syncing sandbox subscription metadata.
-- Verified on April 3, 2026 on the same simulator family Apple cited (`iPad Air 11-inch (M3)`) that tapping `Remove Ads` opens the native subscription sheet labeled `Wake Up Ya Bish Premium`.
+- To test the subscription, open the profile sheet and tap `Remove Ads` or `Restore`.
+- The subscription uses Apple's native `SubscriptionStoreView` flow and includes in-app Privacy Policy and Terms of Use links.

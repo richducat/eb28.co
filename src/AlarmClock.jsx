@@ -2,6 +2,7 @@ import { Capacitor } from "@capacitor/core";
 import { CalendarPermissionScope, CapacitorCalendar } from "@ebarooni/capacitor-calendar";
 import { LocalNotifications } from "@capacitor/local-notifications";
 import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { createPortal } from 'react-dom';
 
 // iOS Background Persistence & Native Lock Screen Widget Enablers
 let wakeLock = null;
@@ -32,7 +33,7 @@ const armBackgroundEngine = async (titleStr) => {
   if ('wakeLock' in navigator && !wakeLock) {
     try { wakeLock = await navigator.wakeLock.request('screen'); } catch (err) {}
   }
-  if ('mediaSession' in navigator) {
+  if ('mediaSession' in navigator && typeof window.MediaMetadata === 'function') {
     navigator.mediaSession.metadata = new MediaMetadata({
       title: `WAKE UP YA BISH ALARM`,
       artist: titleStr,
@@ -70,7 +71,11 @@ import {
   purchaseRemoveAdsSubscription,
   restoreRemoveAdsSubscription
 } from './wakeUpPurchases';
-import { hasConfiguredWakeUpAdMobBanner, syncWakeUpAdBanner } from './wakeUpAdMob';
+import {
+  hasConfiguredWakeUpAdMobBanner,
+  presentWakeUpAdPrivacyOptions,
+  syncWakeUpAdBanner
+} from './wakeUpAdMob';
 import { syncWakeUpWidgetState } from './wakeUpWidgetBridge';
 
 const ALARM_VOICES = [
@@ -105,6 +110,22 @@ const NATIVE_ALARM_NOTIFICATION_ID = 1;
 const NATIVE_NOTIFICATION_TEST_ID = 99;
 
 let globalAudioCtx = null;
+
+const cancelSpeechSynthesis = () => {
+  if ('speechSynthesis' in window) {
+    try {
+      window.speechSynthesis.cancel();
+    } catch (err) {
+      console.warn('Speech synthesis cancel failed', err);
+    }
+  }
+};
+
+const toCountdownDate = (value) => {
+  if (!value) return null;
+  const countdownDate = value instanceof Date ? value : new Date(value);
+  return Number.isNaN(countdownDate.getTime()) ? null : countdownDate;
+};
 
 export const initAudioContext = () => {
   if (!globalAudioCtx) {
@@ -220,13 +241,25 @@ export default function AlarmClock() {
     } catch { return defaultVal; }
   };
 
+  const getViewportHeight = () => {
+    if (typeof window === 'undefined') return 900;
+    const visualViewportHeight = Math.round(window.visualViewport?.height || 0);
+    const innerHeight = Math.round(window.innerHeight || 0);
+    return Math.min(
+      visualViewportHeight || Number.POSITIVE_INFINITY,
+      innerHeight || Number.POSITIVE_INFINITY
+    );
+  };
+
   const [colorSchemeKey, setColorSchemeKey] = useState(() => getSaved('eb28_color_scheme', 'standard'));
   useEffect(() => localStorage.setItem('eb28_color_scheme', JSON.stringify(colorSchemeKey)), [colorSchemeKey]);
   const [time, setTime] = useState(new Date());
+  const [viewportHeight, setViewportHeight] = useState(() => getViewportHeight());
   const [countdownTarget, setCountdownTarget] = useState(null);
   const [customAudioMap, setCustomAudioMap] = useState({});
   const [activeAudioObj, setActiveAudioObj] = useState(null);
   const activeAudioRef = useRef(null);
+  const alarmTimeInputRef = useRef(null);
 
   const safeSetAudio = (audioObj) => {
     setActiveAudioObj(audioObj);
@@ -259,6 +292,9 @@ export default function AlarmClock() {
   const [subscriptionMessage, setSubscriptionMessage] = useState('');
   const [notificationSetupMessage, setNotificationSetupMessage] = useState('');
   const [isNotificationSetupBusy, setIsNotificationSetupBusy] = useState(false);
+  const [adPrivacyMessage, setAdPrivacyMessage] = useState('');
+  const [isAdPrivacyBusy, setIsAdPrivacyBusy] = useState(false);
+  const [adPrivacyOptionsRequired, setAdPrivacyOptionsRequired] = useState(false);
 
   const syncNotificationPermissionState = useCallback(async ({ requestAccess = false } = {}) => {
     if (!Capacitor.isNativePlatform()) return true;
@@ -312,6 +348,23 @@ export default function AlarmClock() {
       loading: false
     }));
   }, [removeAdsState]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return undefined;
+
+    const syncViewportHeight = () => {
+      setViewportHeight(getViewportHeight());
+    };
+
+    syncViewportHeight();
+    window.addEventListener('resize', syncViewportHeight);
+    window.visualViewport?.addEventListener('resize', syncViewportHeight);
+
+    return () => {
+      window.removeEventListener('resize', syncViewportHeight);
+      window.visualViewport?.removeEventListener('resize', syncViewportHeight);
+    };
+  }, []);
 
   const isRingingRef = useRef(false);
   useEffect(() => {
@@ -493,6 +546,32 @@ export default function AlarmClock() {
     }
   }, []);
 
+  const handleAdPrivacyOptions = useCallback(async () => {
+    if (!Capacitor.isNativePlatform()) {
+      openExternalResource(SUBSCRIPTION_PRIVACY_URL);
+      return;
+    }
+
+    setIsAdPrivacyBusy(true);
+    setAdPrivacyMessage('Checking ad privacy choices...');
+
+    try {
+      const result = await presentWakeUpAdPrivacyOptions();
+      setAdPrivacyOptionsRequired(Boolean(result?.privacyOptionsRequired));
+      setAdPrivacyMessage(
+        result?.message
+        || (result?.presented
+          ? 'Ad privacy choices updated.'
+          : 'No additional ad privacy form is available right now.')
+      );
+    } catch (err) {
+      console.error('Ad privacy options failed', err);
+      setAdPrivacyMessage(err?.message || 'Unable to open ad privacy options right now.');
+    } finally {
+      setIsAdPrivacyBusy(false);
+    }
+  }, [openExternalResource]);
+
   const clearDeliveredNativeNotifications = async () => {
     if (!Capacitor.isNativePlatform()) return;
     try {
@@ -507,7 +586,7 @@ export default function AlarmClock() {
     setIsAlarmActive(false);
     setIsRinging(false);
     isRingingRef.current = false;
-    window.speechSynthesis.cancel();
+    cancelSpeechSynthesis();
     safeStopAudio();
     await disarmBackgroundEngine();
     await clearDeliveredNativeNotifications();
@@ -827,7 +906,9 @@ export default function AlarmClock() {
 
     try {
       const permission = requestAccess
-        ? await CapacitorCalendar.requestFullCalendarAccess()
+        ? (typeof CapacitorCalendar.requestFullCalendarAccess === 'function'
+            ? await CapacitorCalendar.requestFullCalendarAccess()
+            : await CapacitorCalendar.requestPermission({ scope: CalendarPermissionScope.READ_CALENDAR }))
         : await CapacitorCalendar.checkPermission({ scope: CalendarPermissionScope.READ_CALENDAR });
       const granted = permission.result === 'granted';
       setCalendarPermissionState(permission.result);
@@ -1016,7 +1097,7 @@ export default function AlarmClock() {
   const stopAlarm = async () => {
     setIsRinging(false);
     isRingingRef.current = false;
-    window.speechSynthesis.cancel();
+    cancelSpeechSynthesis();
     safeStopAudio();
     await clearDeliveredNativeNotifications();
     
@@ -1084,7 +1165,7 @@ export default function AlarmClock() {
       e.stopPropagation();
       e.preventDefault();
     }
-    window.speechSynthesis.cancel();
+    cancelSpeechSynthesis();
     safeStopAudio();
     await warmAudioEngine();
     
@@ -1158,10 +1239,12 @@ export default function AlarmClock() {
       // Loop the speech synthesis while alarm is ringing
       if (!isPreview) {
          utterance.onend = () => {
-            if (isRingingRef.current) window.speechSynthesis.speak(utterance);
+            if (isRingingRef.current && 'speechSynthesis' in window) window.speechSynthesis.speak(utterance);
          };
       }
-      window.speechSynthesis.speak(utterance);
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.speak(utterance);
+      }
     }
   };
 
@@ -1201,9 +1284,11 @@ export default function AlarmClock() {
     : (isCalendarLinked ? 'NO UPCOMING EVENT' : 'CALENDAR NOT CONNECTED');
   const nextEventDetailLabel = upcomingEvent
     ? nextEventSummary
-    : (Capacitor.isNativePlatform() ? 'Connect device calendar in profile.' : 'Paste an iCal feed in profile.');
+    : (Capacitor.isNativePlatform() ? 'Connect device calendar in settings.' : 'Paste an iCal feed in profile.');
   const canCancelAlarm = Boolean(isAlarmActive || countdownTarget || isRinging);
   const isAdFree = Boolean(removeAdsState.isSubscribed);
+  const isCompactViewport = viewportHeight <= 860;
+  const isExtraCompactViewport = viewportHeight <= 760;
   const hasNativeAdMobBanner = Capacitor.isNativePlatform() && hasConfiguredWakeUpAdMobBanner;
   const shouldShowNativeBanner = hasNativeAdMobBanner
     && !isAdFree
@@ -1218,12 +1303,19 @@ export default function AlarmClock() {
     : null;
 
   const openSettingsPanel = () => {
+    setNotificationSetupMessage('');
+    setAdPrivacyMessage('');
+    if (Capacitor.isNativePlatform()) {
+      void syncNotificationPermissionState();
+      void fetchNativeCalendar();
+    }
     setShowSettings(true);
   };
   const openProfilePanel = () => {
     setTempCalUrl(calendarUrl);
     setSubscriptionMessage('');
     setNotificationSetupMessage('');
+    setAdPrivacyMessage('');
     if (Capacitor.isNativePlatform()) {
       void syncNotificationPermissionState();
       void fetchNativeCalendar();
@@ -1244,7 +1336,24 @@ export default function AlarmClock() {
   };
 
   useEffect(() => {
-    void syncWakeUpAdBanner({ visible: shouldShowNativeBanner });
+    let cancelled = false;
+
+    const syncBanner = async () => {
+      try {
+        const result = await syncWakeUpAdBanner({ visible: shouldShowNativeBanner });
+        if (!cancelled && typeof result?.privacyOptionsRequired === 'boolean') {
+          setAdPrivacyOptionsRequired(Boolean(result.privacyOptionsRequired));
+        }
+      } catch (err) {
+        console.warn('Ad banner sync failed', err);
+      }
+    };
+
+    void syncBanner();
+
+    return () => {
+      cancelled = true;
+    };
   }, [shouldShowNativeBanner]);
 
   const syncHomeWidgetState = useCallback(async () => {
@@ -1260,7 +1369,7 @@ export default function AlarmClock() {
         isMuted: Boolean(isMuted),
         selectedVoice,
         calendarLinked: Boolean(isCalendarLinked),
-        countdownTarget: countdownTarget ? countdownTarget.toISOString() : null,
+        countdownTarget: toCountdownDate(countdownTarget)?.toISOString() ?? null,
         upcomingEventSummary: nextEventSummary || null,
         upcomingEventStart: upcomingEvent?.start ? upcomingEvent.start.toISOString() : null
       });
@@ -1456,6 +1565,53 @@ export default function AlarmClock() {
               </button>
             </div>
           </div>
+
+          {hasNativeAdMobBanner ? (
+            <div className="bg-[#160b1f] border border-[#ff00aa]/35 rounded-xl p-4 text-left shadow-[0_0_18px_rgba(255,0,170,0.08)]">
+              <span className="text-[#ff00aa] text-[10px] uppercase font-black tracking-[0.2em] block drop-shadow-[0_0_5px_#ff00aa]">
+                Ad Privacy
+              </span>
+              <span className="mt-2 text-slate-300 text-[9px] uppercase block leading-relaxed">
+                {adPrivacyOptionsRequired
+                  ? 'Google requires a privacy options button for this device. Open it here anytime.'
+                  : isAdFree
+                    ? 'Ads are removed on this device, but you can still review the ad privacy policy.'
+                    : 'Review the ad privacy policy or reopen Google ad choices for this device.'}
+              </span>
+              {adPrivacyMessage ? (
+                <span className="mt-2 block text-[8px] uppercase leading-relaxed text-[#ffd4ef]">
+                  {adPrivacyMessage}
+                </span>
+              ) : null}
+              <div className="mt-3 grid grid-cols-2 gap-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    void handleAdPrivacyOptions();
+                  }}
+                  disabled={isAdPrivacyBusy}
+                  className={`rounded-xl px-3 py-3 text-[8px] font-black uppercase tracking-[0.18em] transition-all ${
+                    isAdPrivacyBusy
+                      ? 'bg-slate-700 text-slate-400 cursor-wait'
+                      : 'bg-[#ff00aa] border-b-[4px] border-[#990066] text-white hover:brightness-110 active:translate-y-1 active:border-b-0'
+                  }`}
+                >
+                  {isAdPrivacyBusy
+                    ? 'Working...'
+                    : adPrivacyOptionsRequired
+                      ? 'Manage Choices'
+                      : 'Review Choices'}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => openExternalResource(SUBSCRIPTION_PRIVACY_URL)}
+                  className="rounded-xl bg-[#0b1118] border border-[#00f0ff]/30 px-3 py-3 text-[8px] font-black uppercase tracking-[0.18em] text-[#00f0ff] hover:brightness-110"
+                >
+                  Policy
+                </button>
+              </div>
+            </div>
+          ) : null}
         </>
       ) : (
         <div className="bg-[#0a120e] border border-[#39ff14]/35 rounded-xl p-4 text-left shadow-[0_0_18px_rgba(57,255,20,0.08)]">
@@ -1490,6 +1646,14 @@ export default function AlarmClock() {
       )}
     </div>
   );
+
+  const renderViewportOverlay = (overlay) => {
+    if (typeof document === 'undefined') {
+      return null;
+    }
+
+    return createPortal(overlay, document.body);
+  };
 
   return (
     <div
@@ -1628,8 +1792,21 @@ export default function AlarmClock() {
           .wake-presets button {
             height: 28px;
           }
+          .wake-mobile-feed {
+            display: none;
+          }
+          .wake-sponsored-card h3 {
+            font-size: 10px;
+          }
+          .wake-sponsored-card p {
+            display: none;
+          }
+          .wake-sponsored-card button {
+            padding-top: 0.45rem;
+            padding-bottom: 0.45rem;
+          }
           .wake-habit-mobile {
-            margin-top: 0.625rem;
+            display: none;
           }
         }
       `}</style>
@@ -1687,10 +1864,10 @@ export default function AlarmClock() {
         THE CLOCK HARDWARE: Centered fully logic
         ======================================================================
       */}
-      <div className="wake-shell relative w-full max-w-[430px] m-auto flex flex-col justify-center px-4 z-50 pointer-events-auto drop-shadow-[0_40px_40px_rgba(0,0,0,0.6)]">
+      <div className={`wake-shell relative w-full ${isCompactViewport ? 'max-w-[405px]' : 'max-w-[430px]'} m-auto flex flex-col justify-center px-4 z-50 pointer-events-auto drop-shadow-[0_40px_40px_rgba(0,0,0,0.6)]`}>
         
         {/* Main Plastic Shell - Miami Vice Gray/White aesthetic */}
-        <div className="wake-shell-frame w-full relative bg-[#e0e5ec] rounded-[24px] rounded-t-[40px] shadow-[inset_-5px_-5px_15px_rgba(0,0,0,0.2),_inset_5px_5px_15px_rgba(255,255,255,0.8)] border-[2px] border-[#cbd2d9] pb-8 pt-4 px-4 md:px-6 flex flex-col overflow-hidden">
+        <div className={`wake-shell-frame w-full relative bg-[#e0e5ec] rounded-[24px] rounded-t-[40px] shadow-[inset_-5px_-5px_15px_rgba(0,0,0,0.2),_inset_5px_5px_15px_rgba(255,255,255,0.8)] border-[2px] border-[#cbd2d9] ${isCompactViewport ? 'pb-5 pt-3 px-3' : 'pb-8 pt-4 px-4 md:px-6'} flex flex-col overflow-hidden`}>
           
           {/* Hardware Decal Logo Top Center */}
           <div className="text-center w-full mb-3 flex items-center justify-center gap-3">
@@ -1709,7 +1886,7 @@ export default function AlarmClock() {
           {/* SNOOZE BAR AT THE TOP (Massive chunky physical button) */}
           <button 
             onClick={handleSnoozeLight}
-            className={`wake-snooze w-full relative h-[50px] md:h-[70px] rounded-[16px] mb-3 md:mb-6 flex items-center justify-center border-b-[8px] border-r-[4px] active:scale-[0.98] outline-none transition-all cursor-pointer touch-manipulation ${isRinging ? 'animate-pulse' : ''}`}
+            className={`wake-snooze w-full relative ${isCompactViewport ? 'h-[44px] mb-2' : 'h-[50px] md:h-[70px] mb-3 md:mb-6'} rounded-[16px] flex items-center justify-center border-b-[8px] border-r-[4px] active:scale-[0.98] outline-none transition-all cursor-pointer touch-manipulation ${isRinging ? 'animate-pulse' : ''}`}
             style={{
                backgroundColor: isRinging ? currentScheme.active : (isLightOn ? currentScheme.active : currentScheme.shadow),
                borderColor: isLightOn ? currentScheme.shadow : currentScheme.inactive,
@@ -1729,7 +1906,7 @@ export default function AlarmClock() {
           </button>
 
           {/* LCD SCREEN WINDOW */}
-          <div className={`wake-screen w-full bg-[#0a0f12] rounded-xl border-t-[8px] border-l-[8px] border-[#05080a] border-b-[2px] border-r-[2px] border-[#151f26] shadow-[inset_0_5px_25px_rgba(0,0,0,1)] p-4 relative overflow-hidden flex flex-col transition-all duration-300 ${isLightOn ? 'shadow-[0_0_60px_#00f0ff]' : ''}`}>
+          <div className={`wake-screen w-full bg-[#0a0f12] rounded-xl border-t-[8px] border-l-[8px] border-[#05080a] border-b-[2px] border-r-[2px] border-[#151f26] shadow-[inset_0_5px_25px_rgba(0,0,0,1)] ${isCompactViewport ? 'p-3' : 'p-4'} relative overflow-hidden flex flex-col transition-all duration-300 ${isLightOn ? 'shadow-[0_0_60px_#00f0ff]' : ''}`}>
               
               <div className={`absolute top-0 left-0 w-full h-[50%] bg-gradient-to-b from-white/10 to-transparent pointer-events-none transition-opacity duration-300 ${isLightOn ? 'from-white/40' : ''}`} />
               
@@ -1754,11 +1931,11 @@ export default function AlarmClock() {
                  </div>
               </div>
 
-              <div className="w-full flex justify-center items-center mt-4 mb-2 relative z-10 pl-2">
+              <div className={`w-full flex justify-center items-center ${isCompactViewport ? 'mt-2.5 mb-1' : 'mt-4 mb-2'} relative z-10 pl-2`}>
                   <div className="wake-screen-clock text-center flex items-center justify-center -ml-2" 
                       style={{
                         fontFamily: '"Digital-7", monospace',
-                        fontSize: 'clamp(3.5rem, 18vw, 7.5rem)', 
+                        fontSize: isCompactViewport ? 'clamp(2.9rem, 15vw, 6.2rem)' : 'clamp(3.5rem, 18vw, 7.5rem)',
                         lineHeight: '0.8',
                         color: isAlarmActive ? currentScheme.active : currentScheme.inactive,
                         textShadow: isAlarmActive ? `0 0 10px ${currentScheme.shadow}, 0 0 20px ${currentScheme.shadow}, 0 0 35px ${currentScheme.shadow}` : 'none',
@@ -1770,7 +1947,7 @@ export default function AlarmClock() {
                    <span className={`opacity-90 -mx-1 md:-mx-2 mb-[10%] ${countdownTarget ? '' : 'animate-pulse'}`}>:</span>
                    {displayData.mainString.split(':')[1]}
                  </div>
-                 <div className="flex flex-col ml-3 gap-2 mt-4 md:mt-0">
+                 <div className={`flex flex-col ml-3 ${isCompactViewport ? 'gap-1.5 mt-3' : 'gap-2 mt-4 md:mt-0'}`}>
                     <span className={`text-[8px] font-['Press_Start_2P'] uppercase ${displayData.mode === 'AM' || displayData.mode === 'COUNTDOWN' ? 'text-[#00f0ff] drop-shadow-[0_0_8px_#00f0ff]' : 'text-slate-700'}`}>
                       {countdownTarget ? 'MIN' : 'AM'}
                     </span>
@@ -1780,7 +1957,8 @@ export default function AlarmClock() {
                  </div>
               </div>
 
-              <div className="mt-4 pt-3 w-full flex flex-col z-10 px-2 lg:hidden gap-2">
+              {!isCompactViewport ? (
+              <div className="wake-mobile-feed mt-4 pt-3 w-full flex flex-col z-10 px-2 lg:hidden gap-2">
                 <div className="flex items-center gap-3 overflow-hidden w-full px-1">
                   <span className="text-[7px] md:text-[8px] text-slate-400 font-bold uppercase shrink-0 tracking-widest">FEED</span>
                   <span className="text-[7px] md:text-[8px] text-[#39ff14] font-bold drop-shadow-[0_0_8px_#39ff14] truncate tracking-wider">
@@ -1800,41 +1978,54 @@ export default function AlarmClock() {
                   </span>
                 </div>
               </div>
+              ) : null}
           </div>
 
           {/* HARDWARE CONTROL DECK */}
-          <div className="wake-control-deck w-full mt-3 md:mt-6 grid grid-cols-4 gap-2 md:gap-4 px-2">
+          <div className={`wake-control-deck w-full ${isCompactViewport ? 'mt-2 grid gap-1.5 px-1' : 'mt-3 md:mt-6 grid gap-2 md:gap-4 px-2'} grid-cols-4`}>
              {/* LEFT SIDE: ALARM TIME */}
              <div className="col-span-2 row-span-2 flex flex-col items-start bg-[#cfd6e0] px-2 py-2 md:py-3 rounded-lg shadow-[inset_1px_1px_5px_rgba(0,0,0,0.1)] relative overflow-hidden">
-               <div className="text-[6.5px] md:text-[7px] font-bold text-slate-700 uppercase mb-2 flex flex-col gap-1 w-full">
-                 {countdownTarget ? (
-                   <span className="text-[#ff00aa] text-center leading-tight py-1 animate-pulse">COUNTDOWN<br/>ACTIVE</span>
-                 ) : (
-                   <>
-                     <span>ALARM SET:</span>
-                     <span className="text-black bg-white/50 px-1.5 py-0.5 rounded cursor-pointer touch-manipulation hover:bg-white transition-colors self-start shadow-sm border border-white/60">
-                       {alarmHours}:{alarmMinutes} {alarmAmPm}
-                     </span>
-                   </>
-                 )}
-               </div>
-               
-               {/* Hidden native time input overlay */}
-               {!countdownTarget && (
-                 <input 
-                   type="time" 
-                   className="absolute top-0 left-0 w-full h-[38%] z-40 opacity-0 cursor-pointer touch-manipulation" 
-                   onChange={handleTimePickerChange}
-                   value={get24HourString()}
-                 />
-               )}
+	               <div className="text-[6.5px] md:text-[7px] font-bold text-slate-700 uppercase mb-2 flex flex-col gap-1 w-full">
+	                 {countdownTarget ? (
+	                   <span className="text-[#ff00aa] text-center leading-tight py-1 animate-pulse">COUNTDOWN<br/>ACTIVE</span>
+	                 ) : (
+	                   <>
+	                     <span>ALARM SET:</span>
+	                     <button
+	                       type="button"
+	                       onClick={() => {
+	                         const timeInput = alarmTimeInputRef.current;
+	                         if (!timeInput) return;
+	                         if (typeof timeInput.showPicker === 'function') {
+	                           timeInput.showPicker();
+	                           return;
+	                         }
+	                         timeInput.click();
+	                       }}
+	                       className="text-black bg-white/50 px-1.5 py-0.5 rounded cursor-pointer touch-manipulation hover:bg-white transition-colors self-start shadow-sm border border-white/60"
+	                     >
+	                       {alarmHours}:{alarmMinutes} {alarmAmPm}
+	                     </button>
+	                   </>
+	                 )}
+	               </div>
+	               {!countdownTarget && (
+	                 <input
+	                   ref={alarmTimeInputRef}
+	                   type="time"
+	                   className="sr-only"
+	                   onChange={handleTimePickerChange}
+	                   value={get24HourString()}
+	                   aria-label="Pick alarm time"
+	                 />
+	               )}
 
-               <div className="w-full rounded-lg border border-white/40 bg-white/55 px-2 py-2 mb-3 shadow-[inset_0_1px_2px_rgba(255,255,255,0.5)]">
+               <div className={`w-full rounded-lg border border-white/40 bg-white/55 px-2 ${isCompactViewport ? 'py-1.5 mb-2' : 'py-2 mb-3'} shadow-[inset_0_1px_2px_rgba(255,255,255,0.5)]`}>
                  <span className="text-[6px] font-black tracking-[0.2em] text-slate-500 uppercase block mb-1">Next Event</span>
-                 <span className="text-[8px] font-black text-slate-800 uppercase leading-tight block">
+                 <span className={`${isCompactViewport ? 'text-[7px]' : 'text-[8px]'} font-black text-slate-800 uppercase leading-tight block`}>
                    {nextEventStatusLabel}
                  </span>
-                 <span className="text-[7px] text-slate-600 leading-tight uppercase block mt-1">
+                 <span className={`${isCompactViewport ? 'text-[6px]' : 'text-[7px]'} text-slate-600 leading-tight uppercase block mt-1 line-clamp-2`}>
                    {nextEventDetailLabel}
                  </span>
                </div>
@@ -1890,7 +2081,7 @@ export default function AlarmClock() {
           </div>
 
           {Capacitor.isNativePlatform() ? (
-            <div className="wake-mobile-actions w-full flex justify-between gap-4 mt-3 px-2">
+            <div className={`wake-mobile-actions w-full flex justify-between ${isCompactViewport ? 'gap-2 mt-2 px-1' : 'gap-4 mt-3 px-2'}`}>
                <button onClick={openSettingsPanel} className="flex-1 bg-[#1a202c] border-b-[6px] border-[#0d1218] active:scale-95 rounded-xl h-[45px] flex items-center justify-center p-2 group cursor-pointer touch-manipulation transition-all">
                   <Settings className="w-[18px] h-[18px] text-[#00f0ff] drop-shadow-[0_0_5px_#00f0ff] pointer-events-none" strokeWidth={3} />
                </button>
@@ -1904,12 +2095,12 @@ export default function AlarmClock() {
           ) : null}
 
           {/* DEDICATED QUICK TIMERS HARDWARE ROW */}
-          <div className="wake-timers w-full px-2 mt-3 md:mt-5 grid grid-cols-2 md:flex flex-wrap gap-2">
+          <div className={`wake-timers w-full ${isCompactViewport ? 'px-1 mt-2 gap-1.5' : 'px-2 mt-3 md:mt-5 gap-2'} grid grid-cols-2 md:flex flex-wrap`}>
              <button 
                 onClick={() => {
                   void setTimerMinutes(1);
                 }} 
-                className="flex-1 relative h-[42px] md:h-[50px] bg-[#ff2a2a] rounded-[12px] flex flex-col items-center justify-center border-b-[6px] border-r-[3px] border-[#990000] active:scale-[0.98] outline-none shadow-md cursor-pointer touch-manipulation transition-transform hover:brightness-110"
+                className={`flex-1 relative ${isCompactViewport ? 'h-[36px]' : 'h-[42px] md:h-[50px]'} bg-[#ff2a2a] rounded-[12px] flex flex-col items-center justify-center border-b-[6px] border-r-[3px] border-[#990000] active:scale-[0.98] outline-none shadow-md cursor-pointer touch-manipulation transition-transform hover:brightness-110`}
              >
                 <span className="text-[9px] md:text-[10px] text-white uppercase font-black drop-shadow-[1px_1px_0px_rgba(0,0,0,0.8)] tracking-wide">BLAST</span>
                 <span className="text-[6px] text-[#ffcccc] font-bold mt-0.5 tracking-widest">1 MIN</span>
@@ -1919,7 +2110,7 @@ export default function AlarmClock() {
                 onClick={() => {
                   void setTimerMinutes(3);
                 }} 
-                className="flex-1 relative h-[42px] md:h-[50px] bg-[#9d00ff] rounded-[12px] flex flex-col items-center justify-center border-b-[6px] border-r-[3px] border-[#550099] active:scale-[0.98] outline-none shadow-md cursor-pointer touch-manipulation transition-transform hover:brightness-110"
+                className={`flex-1 relative ${isCompactViewport ? 'h-[36px]' : 'h-[42px] md:h-[50px]'} bg-[#9d00ff] rounded-[12px] flex flex-col items-center justify-center border-b-[6px] border-r-[3px] border-[#550099] active:scale-[0.98] outline-none shadow-md cursor-pointer touch-manipulation transition-transform hover:brightness-110`}
              >
                 <span className="text-[9px] md:text-[10px] text-white uppercase font-black drop-shadow-[1px_1px_0px_rgba(0,0,0,0.8)] tracking-wide">BREATHE</span>
                 <span className="text-[6px] text-[#e6ccff] font-bold mt-0.5 tracking-widest">3 MIN</span>
@@ -1929,7 +2120,7 @@ export default function AlarmClock() {
                 onClick={() => {
                   void setTimerMinutes(5);
                 }} 
-                className="flex-1 relative h-[42px] md:h-[50px] bg-[#ffaa00] rounded-[12px] flex flex-col items-center justify-center border-b-[6px] border-r-[3px] border-[#996600] active:scale-[0.98] outline-none shadow-md cursor-pointer touch-manipulation transition-transform hover:brightness-110"
+                className={`flex-1 relative ${isCompactViewport ? 'h-[36px]' : 'h-[42px] md:h-[50px]'} bg-[#ffaa00] rounded-[12px] flex flex-col items-center justify-center border-b-[6px] border-r-[3px] border-[#996600] active:scale-[0.98] outline-none shadow-md cursor-pointer touch-manipulation transition-transform hover:brightness-110`}
              >
                 <span className="text-[9px] md:text-[10px] text-black uppercase font-black drop-shadow-[1px_1px_0px_rgba(255,255,255,0.8)] tracking-wide">PWR NAP</span>
                 <span className="text-[6px] text-[#664400] font-bold mt-0.5 tracking-widest">5 MIN</span>
@@ -1939,7 +2130,7 @@ export default function AlarmClock() {
                 onClick={() => {
                   void setTimerMinutes(15);
                 }} 
-                className="flex-1 relative h-[42px] md:h-[50px] bg-[#39ff14] rounded-[12px] flex flex-col items-center justify-center border-b-[6px] border-r-[3px] border-[#1b9900] active:scale-[0.98] outline-none shadow-md cursor-pointer touch-manipulation transition-transform hover:brightness-110"
+                className={`flex-1 relative ${isCompactViewport ? 'h-[36px]' : 'h-[42px] md:h-[50px]'} bg-[#39ff14] rounded-[12px] flex flex-col items-center justify-center border-b-[6px] border-r-[3px] border-[#1b9900] active:scale-[0.98] outline-none shadow-md cursor-pointer touch-manipulation transition-transform hover:brightness-110`}
              >
                 <span className="text-[9px] md:text-[10px] text-black uppercase font-black drop-shadow-[1px_1px_0px_rgba(255,255,255,0.8)] tracking-wide">HUSTLE</span>
                 <span className="text-[6px] text-[#0d3300] font-bold mt-0.5 tracking-widest">15 MIN</span>
@@ -1949,7 +2140,7 @@ export default function AlarmClock() {
                 onClick={() => {
                   void setTimerMinutes(25);
                 }} 
-                className="flex-1 relative h-[42px] md:h-[50px] bg-[#00f0ff] rounded-[12px] flex flex-col items-center justify-center border-b-[6px] border-r-[3px] border-[#0099aa] active:scale-[0.98] outline-none shadow-md cursor-pointer touch-manipulation transition-transform hover:brightness-110"
+                className={`flex-1 relative ${isCompactViewport ? 'h-[36px]' : 'h-[42px] md:h-[50px]'} bg-[#00f0ff] rounded-[12px] flex flex-col items-center justify-center border-b-[6px] border-r-[3px] border-[#0099aa] active:scale-[0.98] outline-none shadow-md cursor-pointer touch-manipulation transition-transform hover:brightness-110`}
              >
                 <span className="text-[9px] md:text-[10px] text-black uppercase font-black drop-shadow-[1px_1px_0px_rgba(255,255,255,0.8)] tracking-wide">POMODORO</span>
                 <span className="text-[6px] text-[#004455] font-bold mt-0.5 tracking-widest">25 MIN</span>
@@ -1959,7 +2150,7 @@ export default function AlarmClock() {
                 onClick={() => {
                   void setTimerMinutes(60);
                 }} 
-                className="flex-1 relative h-[42px] md:h-[50px] bg-[#ff00aa] rounded-[12px] flex flex-col items-center justify-center border-b-[6px] border-r-[3px] border-[#990066] active:scale-[0.98] outline-none shadow-md cursor-pointer touch-manipulation transition-transform hover:brightness-110"
+                className={`flex-1 relative ${isCompactViewport ? 'h-[36px]' : 'h-[42px] md:h-[50px]'} bg-[#ff00aa] rounded-[12px] flex flex-col items-center justify-center border-b-[6px] border-r-[3px] border-[#990066] active:scale-[0.98] outline-none shadow-md cursor-pointer touch-manipulation transition-transform hover:brightness-110`}
              >
                 <span className="text-[9px] md:text-[10px] text-white uppercase font-black drop-shadow-[1px_1px_0px_rgba(0,0,0,0.8)] tracking-wide">GRIND</span>
                 <span className="text-[6px] text-[#ffb3e6] font-bold mt-0.5 tracking-widest">60 MIN</span>
@@ -1967,7 +2158,7 @@ export default function AlarmClock() {
           </div>
 
           {/* QUICK ALARM PRESETS */}
-          <div className="wake-presets w-full px-2 mt-2 md:mt-3 grid grid-cols-3 gap-2">
+          <div className={`wake-presets w-full ${isCompactViewport ? 'px-1 mt-1.5 gap-1.5' : 'px-2 mt-2 md:mt-3 gap-2'} grid grid-cols-3`}>
              {[5, 6, 7].map(hour => {
                const isActivePreset = isAlarmActive && !countdownTarget && alarmHours === hour.toString().padStart(2, '0') && alarmMinutes === '00' && alarmAmPm === 'AM';
                return (
@@ -1984,7 +2175,7 @@ export default function AlarmClock() {
                      setCountdownTarget(null);
                      armBackgroundEngine(`Set for ${hStr}:00 AM`);
                    }}
-                   className={`relative h-[32px] md:h-[36px] rounded-[8px] flex items-center justify-center border-b-[4px] border-r-[2px] active:scale-[0.98] outline-none cursor-pointer touch-manipulation transition-all ${
+                   className={`relative ${isCompactViewport ? 'h-[28px]' : 'h-[32px] md:h-[36px]'} rounded-[8px] flex items-center justify-center border-b-[4px] border-r-[2px] active:scale-[0.98] outline-none cursor-pointer touch-manipulation transition-all ${
                      isActivePreset 
                        ? 'bg-[#00f0ff] border-[#0099aa] shadow-[0_0_10px_#00f0ff,inset_1px_1px_3px_rgba(255,255,255,0.8)]' 
                        : 'bg-[#cfd6e0] border-[#8a96a8] shadow-[inset_1px_1px_3px_rgba(255,255,255,0.8)] hover:brightness-105'
@@ -2003,39 +2194,61 @@ export default function AlarmClock() {
           </div>
 
           {!isAdFree && (!Capacitor.isNativePlatform() || !hasNativeAdMobBanner) ? (
-            <div className="w-full mt-3 px-2">
-              <div className="relative overflow-hidden rounded-xl border-[3px] border-[#ff00aa] bg-gradient-to-r from-[#140713] via-[#120814] to-[#071220] p-3 shadow-[0_0_20px_rgba(255,0,170,0.15)]">
-                <div className="absolute top-2 right-2 rounded-full bg-[#ffea00] px-2 py-1 text-[6px] font-black uppercase tracking-[0.2em] text-black">
-                  Sponsored
+            <div className="wake-sponsored-card w-full mt-3 px-2">
+              {isCompactViewport ? (
+                <div className="relative overflow-hidden rounded-xl border-[3px] border-[#ff00aa] bg-gradient-to-r from-[#140713] via-[#120814] to-[#071220] p-2.5 shadow-[0_0_20px_rgba(255,0,170,0.15)]">
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="min-w-0">
+                      <span className="text-[#00f0ff] text-[6px] uppercase tracking-[0.22em] block">
+                        Sponsored
+                      </span>
+                      <h3 className="mt-1 text-white text-[9px] font-black uppercase tracking-[0.14em] truncate">
+                        {sponsorMessage.headline}
+                      </h3>
+                    </div>
+                    <button
+                      onClick={openSponsoredDestination}
+                      className="shrink-0 rounded-lg bg-[#00f0ff] border-b-[4px] border-[#0099aa] px-3 py-2 text-[6px] font-black uppercase tracking-[0.18em] text-black hover:brightness-110 active:translate-y-1 active:border-b-0"
+                    >
+                      {isExtraCompactViewport ? 'Open' : sponsorMessage.cta}
+                    </button>
+                  </div>
                 </div>
-                <span className="text-[#00f0ff] text-[7px] uppercase tracking-[0.22em] block mb-2">
-                  Free Tier Signal
-                </span>
-                <h3 className="text-white text-[12px] font-black uppercase tracking-[0.14em] pr-16">
-                  {sponsorMessage.headline}
-                </h3>
-                <p className="mt-2 text-[8px] uppercase leading-relaxed text-slate-300 max-w-[95%]">
-                  {sponsorMessage.body}
-                </p>
-                <div className="mt-3 flex gap-2">
-                  <button
-                    onClick={openSponsoredDestination}
-                    className="rounded-lg bg-[#00f0ff] border-b-[4px] border-[#0099aa] px-3 py-2 text-[7px] font-black uppercase tracking-[0.18em] text-black hover:brightness-110 active:translate-y-1 active:border-b-0"
-                  >
-                    {sponsorMessage.cta}
-                  </button>
-                  <button
-                    onClick={openProfilePanel}
-                    className="rounded-lg bg-[#ff00aa] border-b-[4px] border-[#990066] px-3 py-2 text-[7px] font-black uppercase tracking-[0.18em] text-white hover:brightness-110 active:translate-y-1 active:border-b-0"
-                  >
-                    Remove Ads
-                  </button>
+              ) : (
+                <div className="relative overflow-hidden rounded-xl border-[3px] border-[#ff00aa] bg-gradient-to-r from-[#140713] via-[#120814] to-[#071220] p-3 shadow-[0_0_20px_rgba(255,0,170,0.15)]">
+                  <div className="absolute top-2 right-2 rounded-full bg-[#ffea00] px-2 py-1 text-[6px] font-black uppercase tracking-[0.2em] text-black">
+                    Sponsored
+                  </div>
+                  <span className="text-[#00f0ff] text-[7px] uppercase tracking-[0.22em] block mb-2">
+                    Free Tier Signal
+                  </span>
+                  <h3 className="text-white text-[12px] font-black uppercase tracking-[0.14em] pr-16">
+                    {sponsorMessage.headline}
+                  </h3>
+                  <p className="mt-2 text-[8px] uppercase leading-relaxed text-slate-300 max-w-[95%]">
+                    {sponsorMessage.body}
+                  </p>
+                  <div className="mt-3 flex gap-2">
+                    <button
+                      onClick={openSponsoredDestination}
+                      className="rounded-lg bg-[#00f0ff] border-b-[4px] border-[#0099aa] px-3 py-2 text-[7px] font-black uppercase tracking-[0.18em] text-black hover:brightness-110 active:translate-y-1 active:border-b-0"
+                    >
+                      {sponsorMessage.cta}
+                    </button>
+                    <button
+                      onClick={openProfilePanel}
+                      className="rounded-lg bg-[#ff00aa] border-b-[4px] border-[#990066] px-3 py-2 text-[7px] font-black uppercase tracking-[0.18em] text-white hover:brightness-110 active:translate-y-1 active:border-b-0"
+                    >
+                      Remove Ads
+                    </button>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
           ) : null}
 
           {/* HABIT MASTERY PROGRESS HUD */}
+          {!isCompactViewport ? (
           <div className="wake-habit-mobile w-full mt-3 px-2 md:hidden">
             <div className="bg-[#1a252d] border-[3px] border-[#0a0f12] rounded-xl p-3 shadow-[inset_0_3px_15px_rgba(0,0,0,0.8)] relative">
               <div className="flex items-center justify-between gap-2">
@@ -2078,6 +2291,7 @@ export default function AlarmClock() {
               </div>
             </div>
           </div>
+          ) : null}
 
           <div className="hidden w-full mt-3 md:mt-5 px-2 md:block">
             <div className="bg-[#1a252d] border-[3px] border-[#0a0f12] rounded-xl p-2 pb-2 md:p-3 md:pb-2 shadow-[inset_0_3px_15px_rgba(0,0,0,0.8)] relative flex flex-col justify-between">
@@ -2153,11 +2367,14 @@ export default function AlarmClock() {
 
         </div>
         
-        {showSettings && (
-          <div className="fixed inset-0 z-50 flex flex-col justify-end bg-black/70 p-4 animate-fade-in">
+        {showSettings ? renderViewportOverlay(
+          <div className="fixed inset-0 z-[140] flex flex-col justify-end bg-black/70 p-4 animate-fade-in pointer-events-auto">
              <div className="w-full max-w-[430px] mx-auto bg-[#1e2530] border-t-8 border-[#0a0e14] rounded-t-3xl p-6 relative max-h-[min(34rem,80dvh)] overflow-y-auto shadow-[0_-20px_60px_rgba(0,0,0,0.55)]">
-               <button onClick={() => { setShowSettings(false); window.speechSynthesis.cancel(); safeStopAudio(); }} className="absolute top-4 right-5 text-white bg-slate-800 rounded-lg border-b-4 border-slate-900 active:border-b-0 active:translate-y-1 z-10 cursor-pointer touch-manipulation w-10 h-10 flex items-center justify-center font-black text-lg transition-transform hover:scale-105">✕</button>
-               <h2 className="text-[12px] text-[#00f0ff] uppercase mb-6 mt-2 drop-shadow-[0_0_5px_#00f0ff]">Audio Settings</h2>
+               <button onClick={() => { setShowSettings(false); cancelSpeechSynthesis(); safeStopAudio(); }} className="absolute top-4 right-5 text-white bg-slate-800 rounded-lg border-b-4 border-slate-900 active:border-b-0 active:translate-y-1 z-10 cursor-pointer touch-manipulation w-10 h-10 flex items-center justify-center font-black text-lg transition-transform hover:scale-105">✕</button>
+               <h2 className="text-[12px] text-[#00f0ff] uppercase mb-6 mt-2 drop-shadow-[0_0_5px_#00f0ff]">Alarm & Device Settings</h2>
+               <div className="mb-4">
+                 {renderDeviceAccessPanel()}
+               </div>
                <div className="space-y-3">
                  {ALARM_VOICES.map((voice) => (
                  <button 
@@ -2180,15 +2397,15 @@ export default function AlarmClock() {
                    </button>
                  ))}
                </div>
-               
+
 
              </div>
-          </div>
-        )}
+          </div>,
+        ) : null}
 
         {/* PROFILE OVERLAY */}
-        {showProfile && (
-          <div className="fixed inset-0 z-50 flex flex-col justify-center items-center overflow-y-auto bg-black/85 p-4 animate-fade-in">
+        {showProfile ? renderViewportOverlay(
+          <div className="fixed inset-0 z-[140] flex flex-col justify-center items-center overflow-y-auto bg-black/85 p-4 animate-fade-in pointer-events-auto">
              <div className="w-full max-w-[360px] max-h-[min(40rem,88dvh)] overflow-y-auto bg-[#1e2530] border-[3px] border-[#ff00aa] shadow-[0_0_50px_rgba(255,0,170,0.3)] rounded-3xl p-6 relative flex flex-col">
                <button onClick={() => setShowProfile(false)} className="absolute top-4 right-5 text-slate-400 text-[20px] font-black hover:text-[#ff00aa] transition-colors">✕</button>
                
@@ -2262,12 +2479,12 @@ export default function AlarmClock() {
                  </div>
                )}
              </div>
-          </div>
-        )}
+          </div>,
+        ) : null}
 
         {/* MORNING MINDSET INTERCEPTION MODAL */}
-        {showHabitModal && (
-          <div className="absolute inset-0 z-[100] flex flex-col justify-center items-center bg-[#05080a]/95 backdrop-blur-md p-6 animate-fade-in text-center px-4 md:px-0">
+        {showHabitModal ? renderViewportOverlay(
+          <div className="fixed inset-0 z-[160] flex flex-col justify-center items-center bg-[#05080a]/95 backdrop-blur-md p-6 animate-fade-in text-center px-4 md:px-0 pointer-events-auto">
              <div className="w-full max-w-sm border-[3px] border-[#39ff14] shadow-[0_0_50px_rgba(57,255,20,0.3)] bg-gradient-to-b from-[#0a120e] to-[#040806] rounded-3xl p-6 relative flex flex-col overflow-hidden">
                 <div className="absolute -top-[1px] left-1/2 -translate-x-1/2 w-24 h-1.5 bg-[#39ff14] shadow-[0_2px_15px_#39ff14]" />
                 
@@ -2303,11 +2520,11 @@ export default function AlarmClock() {
                   ACKNOWLEDGE
                 </button>
              </div>
-          </div>
-        )}
+          </div>,
+        ) : null}
 
         {/* ALARM RINGING FULL-SCREEN OVERLAY */}
-        {isRinging && (
+        {isRinging ? renderViewportOverlay(
           <div 
             onClick={handleSnoozeLight}
             className="fixed inset-0 z-[200] flex flex-col items-center justify-center bg-black/85 backdrop-blur-sm cursor-pointer animate-pulse px-4"
@@ -2323,7 +2540,7 @@ export default function AlarmClock() {
                SLAM<br/>TO<br/>STOP<br/>ALARM
              </h1>
           </div>
-        )}
+        ) : null}
 
       </div>
     </div>

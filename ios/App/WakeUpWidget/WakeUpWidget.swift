@@ -207,74 +207,71 @@ private struct WakeUpWidgetView: View {
         ZStack {
             RetroWidgetBackground(glowColor: theme.glowColor)
 
-            VStack(alignment: .leading, spacing: 0) {
-                HStack(alignment: .top) {
+            VStack(alignment: .leading, spacing: 8) {
+                HStack(alignment: .center, spacing: 8) {
                     Text(dateLabel)
-                        .font(.system(size: 20, weight: .black, design: .monospaced))
+                        .font(.system(size: 12, weight: .black, design: .monospaced))
                         .foregroundStyle(Color(hex: 0x1AE7FF))
                         .shadow(color: Color(hex: 0x1AE7FF).opacity(0.6), radius: 10)
+                        .lineLimit(1)
 
-                    Spacer(minLength: 10)
+                    Spacer(minLength: 4)
 
-                    HStack(spacing: 10) {
+                    HStack(spacing: 4) {
                         ForEach(RetroTheme.allCases, id: \.rawValue) { scheme in
                             Circle()
                                 .fill(scheme == theme ? scheme.glowColor : scheme.glowColor.opacity(0.45))
-                                .frame(width: scheme == theme ? 18 : 14, height: scheme == theme ? 18 : 14)
+                                .frame(width: scheme == theme ? 10 : 8, height: scheme == theme ? 10 : 8)
                                 .overlay(
                                     Circle()
                                         .stroke(Color.black.opacity(0.65), lineWidth: 1)
                                 )
-                                .shadow(color: scheme.glowColor.opacity(scheme == theme ? 0.9 : 0.2), radius: scheme == theme ? 12 : 0)
+                                .shadow(color: scheme.glowColor.opacity(scheme == theme ? 0.9 : 0.2), radius: scheme == theme ? 6 : 0)
                         }
                     }
 
-                    VStack(alignment: .trailing, spacing: 4) {
+                    HStack(alignment: .center, spacing: 4) {
                         Text("ALM")
-                            .font(.system(size: 12, weight: .black, design: .monospaced))
+                            .font(.system(size: 9, weight: .black, design: .monospaced))
                             .foregroundStyle(Color(hex: 0x7C88A3))
                         Circle()
                             .fill(entry.state.isAlarmActive ? theme.glowColor : Color(hex: 0x3E4458))
-                            .frame(width: 12, height: 12)
-                            .shadow(color: theme.glowColor.opacity(entry.state.isAlarmActive ? 0.8 : 0), radius: 8)
+                            .frame(width: 8, height: 8)
+                            .shadow(color: theme.glowColor.opacity(entry.state.isAlarmActive ? 0.8 : 0), radius: 5)
                     }
                 }
 
-                Spacer(minLength: 18)
+                HStack(alignment: .center, spacing: 6) {
+                    SevenSegmentPair(value: timeComponents.hour, theme: theme, digitWidth: 42, digitHeight: 74, spacing: 5)
+                    SevenSegmentColon(theme: theme, dotSize: 8)
+                    SevenSegmentPair(value: timeComponents.minute, theme: theme, digitWidth: 42, digitHeight: 74, spacing: 5)
 
-                HStack(alignment: .center, spacing: 12) {
-                    SevenSegmentPair(value: timeComponents.hour, theme: theme, digitWidth: 62, digitHeight: 110, spacing: 8)
-                    SevenSegmentColon(theme: theme, dotSize: 12)
-                    SevenSegmentPair(value: timeComponents.minute, theme: theme, digitWidth: 62, digitHeight: 110, spacing: 8)
-
-                    VStack(alignment: .leading, spacing: 10) {
+                    VStack(alignment: .leading, spacing: 4) {
                         Text("AM")
-                            .font(.system(size: 18, weight: .black, design: .monospaced))
+                            .font(.system(size: 13, weight: .black, design: .monospaced))
                             .foregroundStyle(timeComponents.meridiem == "AM" ? Color(hex: 0x1AE7FF) : Color(hex: 0x47506B))
                         Text("PM")
-                            .font(.system(size: 18, weight: .black, design: .monospaced))
+                            .font(.system(size: 13, weight: .black, design: .monospaced))
                             .foregroundStyle(timeComponents.meridiem == "PM" ? Color(hex: 0x1AE7FF) : Color(hex: 0x47506B))
                     }
-                    .padding(.leading, 2)
+                    .padding(.leading, 1)
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
 
-                Spacer(minLength: 12)
-
-                VStack(alignment: .leading, spacing: 6) {
+                VStack(alignment: .leading, spacing: 4) {
                     Text(nextAlarmLabel)
-                        .font(.system(size: 11, weight: .black, design: .monospaced))
+                        .font(.system(size: 9, weight: .black, design: .monospaced))
                         .foregroundStyle(theme.displayColor)
                         .lineLimit(1)
 
                     Text(nextEventLine)
-                        .font(.system(size: 10, weight: .bold, design: .monospaced))
+                        .font(.system(size: 8, weight: .bold, design: .monospaced))
                         .foregroundStyle(Color(hex: 0x90A0BE))
                         .lineLimit(1)
                 }
             }
-            .padding(.horizontal, 18)
-            .padding(.vertical, 18)
+            .padding(.horizontal, 12)
+            .padding(.vertical, 12)
         }
         .wakeUpWidgetBackground()
     }

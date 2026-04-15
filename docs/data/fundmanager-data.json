@@ -1,11 +1,11 @@
 {
   "ok": true,
   "source": "ticker-site/data.json",
-  "updatedAt": "4/14/2026, 8:07:20 PM ET",
+  "updatedAt": "4/14/2026, 11:48:31 PM ET",
   "portfolio": {
     "balance": "$0.00",
-    "exposure": "$11.08",
-    "totalPnl": "-$57.68",
+    "exposure": "$13.06",
+    "totalPnl": "-$55.16",
     "positionsCount": 6,
     "winRate": "--",
     "profitFactor": "--",
@@ -26,7 +26,7 @@
   },
   "orchestrator": {
     "status": "IDLE",
-    "lastCycle": "2026-04-15T02:10:12.505Z",
+    "lastCycle": "2026-04-15T04:52:21.806Z",
     "detail": null
   }
 }

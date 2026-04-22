@@ -153,34 +153,10 @@ const App = () => {
       url: "https://teslahelper.app"
     },
     {
-      id: 1,
-      title: "Push to Skate Earn",
-      type: "Web Game",
-      url: "https://push-skate-to-earn-brotp1ofe-eb28-llcs-projects.vercel.app/"
-    },
-    {
-      id: 2,
-      title: "Echo Drift",
-      type: "Web Game",
-      url: "https://cosmicchat-hf9y6ds2w-eb28-llcs-projects.vercel.app/echodrift"
-    },
-    {
       id: 3,
       title: "FC Street",
       type: "Web Game",
       url: "https://fc-street.vercel.app/"
-    },
-    {
-      id: 4,
-      title: "Pixel Sort",
-      type: "Web Game",
-      url: "https://cosmicchat-five.vercel.app/game"
-    },
-    {
-      id: 5,
-      title: "Cosmic Chat",
-      type: "AI Chat App",
-      url: "https://cosmicchat-five.vercel.app"
     },
     {
       id: 6,

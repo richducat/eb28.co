@@ -31,14 +31,6 @@ const VARIANT_DIRECTION_PLANS = {
 
 const QUICK_STARTS = [
   {
-    title: 'Premium Coaching Hub',
-    prompt: 'Build a premium coaching website with onboarding quiz, progress dashboard, and member chat.',
-    template: 'community',
-    audience: 'members',
-    visualDirection: 'editorial-bold',
-    complexity: 3,
-  },
-  {
     title: 'High-Ticket Service Funnel',
     prompt: 'Create a service business site with instant quote flow, trust proof, and booking checkout.',
     template: 'commerce',

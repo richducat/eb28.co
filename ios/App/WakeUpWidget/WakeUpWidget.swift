@@ -192,6 +192,29 @@ private struct WakeUpWidgetView: View {
         return "\(header) \(time) \(summary.uppercased())"
     }
 
+    private func trimmed(_ value: String, limit: Int) -> String {
+        let normalized = value
+            .replacingOccurrences(of: "\\s+", with: " ", options: .regularExpression)
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+
+        guard normalized.count > limit else {
+            return normalized
+        }
+
+        guard limit > 3 else {
+            return String(normalized.prefix(max(0, limit)))
+        }
+
+        let prefix = String(normalized.prefix(limit - 3))
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        return "\(prefix)..."
+    }
+
+    private func normalizedLabel(_ value: String, fallback: String, limit: Int) -> String {
+        let label = trimmed(value, limit: limit)
+        return label.isEmpty ? fallback : label
+    }
+
     var body: some View {
         Group {
             switch family {
@@ -204,113 +227,167 @@ private struct WakeUpWidgetView: View {
     }
 
     private var mediumClock: some View {
-        ZStack {
-            RetroWidgetBackground(glowColor: theme.glowColor)
+        GeometryReader { proxy in
+            let size = proxy.size
+            let padding = max(10, min(14, size.width * 0.04))
+            let verticalSpacing = max(5, min(8, size.height * 0.045))
+            let digitHeight = max(54, min(72, size.height * 0.43))
+            let digitWidth = max(30, min(42, (size.width - padding * 2 - 36) / 4.45))
+            let digitSpacing = max(3, min(5, digitWidth * 0.12))
+            let colonSize = max(5, min(8, digitWidth * 0.18))
+            let statusFont = max(7, min(9, size.height * 0.055))
 
-            VStack(alignment: .leading, spacing: 8) {
-                HStack(alignment: .center, spacing: 8) {
-                    Text(dateLabel)
-                        .font(.system(size: 12, weight: .black, design: .monospaced))
-                        .foregroundStyle(Color(hex: 0x1AE7FF))
-                        .shadow(color: Color(hex: 0x1AE7FF).opacity(0.6), radius: 10)
-                        .lineLimit(1)
+            ZStack {
+                RetroWidgetBackground(glowColor: theme.glowColor)
 
-                    Spacer(minLength: 4)
+                VStack(alignment: .leading, spacing: verticalSpacing) {
+                    HStack(alignment: .center, spacing: 6) {
+                        Text(normalizedLabel(dateLabel, fallback: "TODAY", limit: 18))
+                            .font(.system(size: max(9, min(12, size.height * 0.07)), weight: .black, design: .monospaced))
+                            .foregroundStyle(Color(hex: 0x1AE7FF))
+                            .shadow(color: Color(hex: 0x1AE7FF).opacity(0.6), radius: 8)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.72)
+                            .truncationMode(.tail)
 
-                    HStack(spacing: 4) {
-                        ForEach(RetroTheme.allCases, id: \.rawValue) { scheme in
+                        Spacer(minLength: 3)
+
+                        HStack(spacing: 3) {
+                            ForEach(RetroTheme.allCases, id: \.rawValue) { scheme in
+                                Circle()
+                                    .fill(scheme == theme ? scheme.glowColor : scheme.glowColor.opacity(0.45))
+                                    .frame(width: scheme == theme ? 9 : 7, height: scheme == theme ? 9 : 7)
+                                    .overlay(
+                                        Circle()
+                                            .stroke(Color.black.opacity(0.65), lineWidth: 1)
+                                    )
+                                    .shadow(color: scheme.glowColor.opacity(scheme == theme ? 0.9 : 0.2), radius: scheme == theme ? 5 : 0)
+                            }
+                        }
+                        .layoutPriority(1)
+
+                        HStack(alignment: .center, spacing: 4) {
+                            Text("ALM")
+                                .font(.system(size: 8, weight: .black, design: .monospaced))
+                                .foregroundStyle(Color(hex: 0x7C88A3))
+                                .lineLimit(1)
                             Circle()
-                                .fill(scheme == theme ? scheme.glowColor : scheme.glowColor.opacity(0.45))
-                                .frame(width: scheme == theme ? 10 : 8, height: scheme == theme ? 10 : 8)
-                                .overlay(
-                                    Circle()
-                                        .stroke(Color.black.opacity(0.65), lineWidth: 1)
-                                )
-                                .shadow(color: scheme.glowColor.opacity(scheme == theme ? 0.9 : 0.2), radius: scheme == theme ? 6 : 0)
+                                .fill(entry.state.isAlarmActive ? theme.glowColor : Color(hex: 0x3E4458))
+                                .frame(width: 7, height: 7)
+                                .shadow(color: theme.glowColor.opacity(entry.state.isAlarmActive ? 0.8 : 0), radius: 5)
                         }
                     }
 
-                    HStack(alignment: .center, spacing: 4) {
-                        Text("ALM")
-                            .font(.system(size: 9, weight: .black, design: .monospaced))
-                            .foregroundStyle(Color(hex: 0x7C88A3))
-                        Circle()
-                            .fill(entry.state.isAlarmActive ? theme.glowColor : Color(hex: 0x3E4458))
-                            .frame(width: 8, height: 8)
-                            .shadow(color: theme.glowColor.opacity(entry.state.isAlarmActive ? 0.8 : 0), radius: 5)
+                    HStack(alignment: .center, spacing: max(3, min(6, size.width * 0.015))) {
+                        SevenSegmentPair(value: timeComponents.hour, theme: theme, digitWidth: digitWidth, digitHeight: digitHeight, spacing: digitSpacing)
+                        SevenSegmentColon(theme: theme, dotSize: colonSize)
+                        SevenSegmentPair(value: timeComponents.minute, theme: theme, digitWidth: digitWidth, digitHeight: digitHeight, spacing: digitSpacing)
+
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("AM")
+                                .font(.system(size: max(9, min(12, size.height * 0.075)), weight: .black, design: .monospaced))
+                                .foregroundStyle(timeComponents.meridiem == "AM" ? Color(hex: 0x1AE7FF) : Color(hex: 0x47506B))
+                                .lineLimit(1)
+                            Text("PM")
+                                .font(.system(size: max(9, min(12, size.height * 0.075)), weight: .black, design: .monospaced))
+                                .foregroundStyle(timeComponents.meridiem == "PM" ? Color(hex: 0x1AE7FF) : Color(hex: 0x47506B))
+                                .lineLimit(1)
+                        }
+                        .padding(.leading, 1)
                     }
-                }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .layoutPriority(2)
 
-                HStack(alignment: .center, spacing: 6) {
-                    SevenSegmentPair(value: timeComponents.hour, theme: theme, digitWidth: 42, digitHeight: 74, spacing: 5)
-                    SevenSegmentColon(theme: theme, dotSize: 8)
-                    SevenSegmentPair(value: timeComponents.minute, theme: theme, digitWidth: 42, digitHeight: 74, spacing: 5)
+                    VStack(alignment: .leading, spacing: 3) {
+                        Text(normalizedLabel(nextAlarmLabel, fallback: "STANDBY", limit: 28))
+                            .font(.system(size: statusFont, weight: .black, design: .monospaced))
+                            .foregroundStyle(theme.displayColor)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.68)
+                            .truncationMode(.tail)
 
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text("AM")
-                            .font(.system(size: 13, weight: .black, design: .monospaced))
-                            .foregroundStyle(timeComponents.meridiem == "AM" ? Color(hex: 0x1AE7FF) : Color(hex: 0x47506B))
-                        Text("PM")
-                            .font(.system(size: 13, weight: .black, design: .monospaced))
-                            .foregroundStyle(timeComponents.meridiem == "PM" ? Color(hex: 0x1AE7FF) : Color(hex: 0x47506B))
+                        Text(normalizedLabel(nextEventLine, fallback: "NO EVENT", limit: 34))
+                            .font(.system(size: max(6, statusFont - 1), weight: .bold, design: .monospaced))
+                            .foregroundStyle(Color(hex: 0x90A0BE))
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.68)
+                            .truncationMode(.tail)
                     }
-                    .padding(.leading, 1)
+                    .frame(maxWidth: .infinity, alignment: .leading)
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
-
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(nextAlarmLabel)
-                        .font(.system(size: 9, weight: .black, design: .monospaced))
-                        .foregroundStyle(theme.displayColor)
-                        .lineLimit(1)
-
-                    Text(nextEventLine)
-                        .font(.system(size: 8, weight: .bold, design: .monospaced))
-                        .foregroundStyle(Color(hex: 0x90A0BE))
-                        .lineLimit(1)
-                }
+                .padding(padding)
+                .frame(width: size.width, height: size.height, alignment: .topLeading)
             }
-            .padding(.horizontal, 12)
-            .padding(.vertical, 12)
+            .frame(width: size.width, height: size.height)
+            .clipped()
         }
         .wakeUpWidgetBackground()
     }
 
     private var smallClock: some View {
-        ZStack {
-            RetroWidgetBackground(glowColor: theme.glowColor)
+        GeometryReader { proxy in
+            let size = proxy.size
+            let padding = max(10, min(13, min(size.width, size.height) * 0.08))
+            let digitHeight = max(42, min(56, size.height * 0.36))
+            let digitWidth = max(22, min(30, (size.width - padding * 2 - 18) / 4.4))
+            let digitSpacing = max(2, min(4, digitWidth * 0.13))
+            let colonSize = max(4, min(6, digitWidth * 0.18))
+            let statusFont = max(6, min(8, size.height * 0.05))
 
-            VStack(alignment: .leading, spacing: 8) {
-                HStack {
-                    Text(entry.date.formatted(.dateTime.weekday(.abbreviated)).uppercased())
-                        .font(.system(size: 13, weight: .black, design: .monospaced))
-                        .foregroundStyle(Color(hex: 0x1AE7FF))
-                    Spacer()
-                    Circle()
-                        .fill(entry.state.isAlarmActive ? theme.glowColor : Color(hex: 0x3E4458))
-                        .frame(width: 10, height: 10)
-                        .shadow(color: theme.glowColor.opacity(entry.state.isAlarmActive ? 0.75 : 0), radius: 8)
-                }
+            ZStack {
+                RetroWidgetBackground(glowColor: theme.glowColor)
 
-                HStack(alignment: .center, spacing: 6) {
-                    SevenSegmentPair(value: timeComponents.hour, theme: theme, digitWidth: 31, digitHeight: 58, spacing: 4)
-                    SevenSegmentColon(theme: theme, dotSize: 6)
-                    SevenSegmentPair(value: timeComponents.minute, theme: theme, digitWidth: 31, digitHeight: 58, spacing: 4)
-                }
-                .frame(maxHeight: .infinity, alignment: .center)
+                VStack(alignment: .leading, spacing: max(5, min(7, size.height * 0.04))) {
+                    HStack(spacing: 6) {
+                        Text(normalizedLabel(entry.date.formatted(.dateTime.weekday(.abbreviated)).uppercased(), fallback: "NOW", limit: 8))
+                            .font(.system(size: max(10, min(13, size.height * 0.075)), weight: .black, design: .monospaced))
+                            .foregroundStyle(Color(hex: 0x1AE7FF))
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.72)
 
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(nextAlarmLabel)
-                        .font(.system(size: 10, weight: .black, design: .monospaced))
-                        .foregroundStyle(theme.displayColor)
-                        .lineLimit(1)
-                    Text(nextEventLine)
-                        .font(.system(size: 8, weight: .bold, design: .monospaced))
-                        .foregroundStyle(Color(hex: 0x90A0BE))
-                        .lineLimit(2)
+                        Spacer(minLength: 2)
+
+                        Text(timeComponents.meridiem)
+                            .font(.system(size: 8, weight: .black, design: .monospaced))
+                            .foregroundStyle(Color(hex: 0x90A0BE))
+                            .lineLimit(1)
+
+                        Circle()
+                            .fill(entry.state.isAlarmActive ? theme.glowColor : Color(hex: 0x3E4458))
+                            .frame(width: 8, height: 8)
+                            .shadow(color: theme.glowColor.opacity(entry.state.isAlarmActive ? 0.75 : 0), radius: 7)
+                    }
+
+                    HStack(alignment: .center, spacing: 4) {
+                        SevenSegmentPair(value: timeComponents.hour, theme: theme, digitWidth: digitWidth, digitHeight: digitHeight, spacing: digitSpacing)
+                        SevenSegmentColon(theme: theme, dotSize: colonSize)
+                        SevenSegmentPair(value: timeComponents.minute, theme: theme, digitWidth: digitWidth, digitHeight: digitHeight, spacing: digitSpacing)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .layoutPriority(2)
+
+                    VStack(alignment: .leading, spacing: 3) {
+                        Text(normalizedLabel(nextAlarmLabel, fallback: "STANDBY", limit: 18))
+                            .font(.system(size: statusFont, weight: .black, design: .monospaced))
+                            .foregroundStyle(theme.displayColor)
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.62)
+                            .truncationMode(.tail)
+
+                        Text(normalizedLabel(nextEventLine, fallback: "NO EVENT", limit: 24))
+                            .font(.system(size: max(5, statusFont - 1), weight: .bold, design: .monospaced))
+                            .foregroundStyle(Color(hex: 0x90A0BE))
+                            .lineLimit(2)
+                            .minimumScaleFactor(0.62)
+                            .truncationMode(.tail)
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
                 }
+                .padding(padding)
+                .frame(width: size.width, height: size.height, alignment: .topLeading)
             }
-            .padding(14)
+            .frame(width: size.width, height: size.height)
+            .clipped()
         }
         .wakeUpWidgetBackground()
     }
@@ -408,7 +485,7 @@ private struct SevenSegmentDigit: View {
     var body: some View {
         GeometryReader { geometry in
             let size = geometry.size
-            let thickness = max(8, min(size.width, size.height) * 0.14)
+            let thickness = max(5, min(size.width, size.height) * 0.14)
             let halfHeight = (size.height - (thickness * 3)) / 2
 
             ZStack {

@@ -23,10 +23,17 @@ const getConfiguredNativeBannerAdUnitId = () => (
 
 export const hasConfiguredWakeUpAdMobBanner = Boolean(getConfiguredNativeBannerAdUnitId());
 
+const hiddenBannerLayout = Object.freeze({
+  visible: false,
+  bannerHeight: 0,
+  bannerWidth: 0,
+  safeAreaBottom: 0
+});
+
 export const syncWakeUpAdBanner = async ({ visible }) => {
   if (!WakeUpAdMob) {
     return {
-      visible: false,
+      ...hiddenBannerLayout,
       canRequestAds: false,
       privacyOptionsRequired: false
     };

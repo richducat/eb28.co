@@ -1,10 +1,10 @@
 {
   "ok": true,
   "source": "ticker-site/data.json",
-  "updatedAt": "4/22/2026, 7:38:21 AM ET",
+  "updatedAt": "4/23/2026, 7:51:17 PM ET",
   "portfolio": {
     "balance": "$0.00",
-    "exposure": "$7.31",
+    "exposure": "$7.17",
     "totalPnl": "-$74.19",
     "positionsCount": 4,
     "winRate": "--",

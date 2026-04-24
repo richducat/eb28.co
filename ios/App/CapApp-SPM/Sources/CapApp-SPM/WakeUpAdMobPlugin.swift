@@ -52,13 +52,15 @@ public class WakeUpAdMobPlugin: CAPPlugin, CAPBridgedPlugin, BannerViewDelegate 
                 DispatchQueue.main.async {
                     guard canRequestAds else {
                         self.removeBanner()
-                        call.resolve([
+                        var payload: [String: Any] = [
                             "visible": false,
                             "adUnitId": adUnitId,
                             "canRequestAds": false,
                             "privacyOptionsRequired": privacyOptionsRequired,
                             "consentMessage": consentMessage ?? "Ad consent is not ready on this device yet."
-                        ])
+                        ]
+                        payload.merge(self.bannerMetrics(for: nil, in: containerView)) { _, new in new }
+                        call.resolve(payload)
                         return
                     }
 
@@ -84,6 +86,8 @@ public class WakeUpAdMobPlugin: CAPPlugin, CAPBridgedPlugin, BannerViewDelegate 
                         payload["consentMessage"] = consentMessage
                     }
 
+                    payload.merge(self.bannerMetrics(for: bannerView, in: containerView)) { _, new in new }
+
                     call.resolve(payload)
                 }
             }
@@ -92,14 +96,17 @@ public class WakeUpAdMobPlugin: CAPPlugin, CAPBridgedPlugin, BannerViewDelegate 
 
     @objc public func hideBanner(_ call: CAPPluginCall) {
         DispatchQueue.main.async {
+            let containerView = self.bannerContainerView ?? self.bridge?.viewController?.view ?? self.bridge?.webView
             self.removeBanner()
 
-            call.resolve([
+            var payload: [String: Any] = [
                 "visible": false,
                 "disabled": false,
                 "canRequestAds": ConsentInformation.shared.canRequestAds,
                 "privacyOptionsRequired": self.isPrivacyOptionsRequired
-            ])
+            ]
+            payload.merge(self.bannerMetrics(for: nil, in: containerView)) { _, new in new }
+            call.resolve(payload)
         }
     }
 
@@ -136,6 +143,20 @@ public class WakeUpAdMobPlugin: CAPPlugin, CAPBridgedPlugin, BannerViewDelegate 
 
     private var isPrivacyOptionsRequired: Bool {
         ConsentInformation.shared.privacyOptionsRequirementStatus == .required
+    }
+
+    private func bannerMetrics(for bannerView: BannerView?, in containerView: UIView?) -> [String: Any] {
+        let adSize = bannerView?.adSize.size ?? .zero
+        let measuredSize = bannerView?.bounds.size ?? .zero
+        let width = adSize.width > 0 ? adSize.width : measuredSize.width
+        let height = adSize.height > 0 ? adSize.height : measuredSize.height
+        let safeAreaBottom = containerView?.safeAreaInsets.bottom ?? 0
+
+        return [
+            "bannerHeight": Double(height),
+            "bannerWidth": Double(width),
+            "safeAreaBottom": Double(safeAreaBottom)
+        ]
     }
 
     private func prepareConsent(

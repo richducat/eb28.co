@@ -5,8 +5,8 @@
 - Name: Wake Up Ya Bish
 - Subtitle: Retro alarm clock with attitude
 - Bundle ID: com.eb28.alarmclock
-- Version: 1.1.2
-- Build: 15
+- Version: 1.1.3
+- Build: 16
 - Primary category: Productivity
 - Secondary category: Lifestyle
 - Marketing URL: https://eb28.co/
@@ -43,18 +43,18 @@ alarm clock,wakeup,retro,productivity,timer,morning,habit,calendar
 
 ## What's New
 
-- Added the live AdMob sponsor banner for the free tier
-- Added Google consent handling plus an in-app ad privacy options button
-- Updated the privacy policy and app metadata to match the ad-supported build
+- Improved the iOS launch experience with a dark startup shell
+- Tightened compact iPhone layouts so controls stay above the native ad banner
+- Reworked the small and medium widgets so clock digits and event text stay inside their boxes
 
 ## Review Notes
 
 - The app uses local notifications for alarm delivery.
 - Calendar access is optional and only used to display the next upcoming event inside the app.
 - No login is required.
-- Build 15 adds the live Google AdMob banner to the free tier and keeps the existing `Remove Ads` subscription for users who want to hide the ad placement.
-- The ad flow now updates consent information on app launch, presents Google&rsquo;s consent form if required, and exposes a manual ad privacy options button inside the settings/profile flow.
-- The app launches cleanly on both iPhone and `iPad Air 11-inch (M3)` simulator/device families with the AdMob SDK enabled.
+- Build 16 improves the iOS launch, native ad spacing, compact-height layout, and WidgetKit sizing from the previous ad-supported build.
+- The ad flow updates consent information on app launch, presents Google&rsquo;s consent form if required, and exposes a manual ad privacy options button inside the settings/profile flow.
+- The app launches cleanly on both iPhone and `iPad Air 11-inch (M3)` simulator/device families with the AdMob SDK enabled, and the repaired compact iPhone layout was verified with the native AdMob banner visible.
 - The app includes one auto-renewable monthly subscription: `Remove Ads` (`com.eb28.alarmclock.removeads.monthly`).
 - To test the subscription, open the profile sheet and tap `Remove Ads` or `Restore`.
 - The subscription uses Apple's native `SubscriptionStoreView` flow and includes in-app Privacy Policy and Terms of Use links.

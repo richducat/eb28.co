@@ -32,6 +32,8 @@ const isReconAgentRoute =
   pathname === '/reconcile' ||
   hostname === 'reconcile.eb28.co';
 const isLimitlessCreditGpsRoute =
+  pathname === '/limitless' ||
+  pathname.startsWith('/limitless/') ||
   pathname === '/credit-gps' ||
   pathname.startsWith('/credit-gps/') ||
   pathname === '/limitless-credit-gps' ||

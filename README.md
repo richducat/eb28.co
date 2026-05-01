@@ -25,7 +25,7 @@ If `OPENAI_API_KEY` is not set, the builder still works using a deterministic te
 
 ## Limitless Credit GPS
 
-- Route: `/credit-gps/`
+- Route: `/limitless/`
 - Build type: mobile-first responsive React PWA shell inside the existing Vite app
 - Core loop: goal selection -> credit profile quiz -> dashboard -> credit move simulator -> plain-English result -> action plan
 - Local MVP storage: browser `localStorage`
@@ -37,7 +37,7 @@ Key files:
 - `src/creditgps/simulationEngine.ts` - rule-based directional simulator and score-drop explanations
 - `src/creditgps/mockData.js` - goal, quiz, lesson, offer, and action-plan seed data
 - `src/creditgps/components.jsx` - reusable app cards and badges
-- `public/credit-gps/manifest.webmanifest` - PWA manifest
+- `public/limitless/manifest.webmanifest` - PWA manifest
 
 The simulator intentionally avoids exact score predictions, approval guarantees, pre-approved language, guaranteed removals, and legal advice. It uses educational language such as "likely direction," "estimated impact," "may affect your score," "actual results vary," and "approval is not guaranteed."
 

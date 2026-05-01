@@ -64,7 +64,7 @@ import {
 } from './creditgps/simulationEngine.ts';
 
 const STORAGE_KEY = 'limitless-credit-gps-state';
-const BASE_PATH = '/credit-gps';
+const BASE_PATH = '/limitless';
 
 const goalIcons = {
   buy_home: Home,
@@ -107,6 +107,9 @@ const defaultSimulationInputs = {
 
 function normalizePath(pathname = window.location.pathname) {
   const lower = pathname.toLowerCase().replace(/\/+$/, '') || BASE_PATH;
+  if (lower.startsWith('/credit-gps')) {
+    return lower.replace('/credit-gps', BASE_PATH) || BASE_PATH;
+  }
   if (lower.startsWith('/limitless-credit-gps')) {
     return lower.replace('/limitless-credit-gps', BASE_PATH) || BASE_PATH;
   }
@@ -1153,7 +1156,7 @@ export default function LimitlessCreditGPS() {
       manifest.setAttribute('data-creditgps-manifest', 'true');
       document.head.appendChild(manifest);
     }
-    manifest.href = '/credit-gps/manifest.webmanifest';
+    manifest.href = '/limitless/manifest.webmanifest';
   }, []);
 
   useEffect(() => {

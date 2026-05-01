@@ -23,6 +23,31 @@ Key behavior:
 
 If `OPENAI_API_KEY` is not set, the builder still works using a deterministic template mode.
 
+## Limitless Credit GPS
+
+- Route: `/credit-gps/`
+- Build type: mobile-first responsive React PWA shell inside the existing Vite app
+- Core loop: goal selection -> credit profile quiz -> dashboard -> credit move simulator -> plain-English result -> action plan
+- Local MVP storage: browser `localStorage`
+- Supabase-ready tables: `users`, `credit_profiles`, `simulations`, `action_plans`, `action_items`, `lessons`, `offers`, `offer_clicks`, `consultation_requests`
+
+Key files:
+
+- `src/LimitlessCreditGPS.jsx` - app shell, screens, local state, route handling
+- `src/creditgps/simulationEngine.ts` - rule-based directional simulator and score-drop explanations
+- `src/creditgps/mockData.js` - goal, quiz, lesson, offer, and action-plan seed data
+- `src/creditgps/components.jsx` - reusable app cards and badges
+- `public/credit-gps/manifest.webmanifest` - PWA manifest
+
+The simulator intentionally avoids exact score predictions, approval guarantees, pre-approved language, guaranteed removals, and legal advice. It uses educational language such as "likely direction," "estimated impact," "may affect your score," "actual results vary," and "approval is not guaranteed."
+
+Next development steps:
+
+- Connect Supabase Auth and persist the existing local state objects into the listed tables.
+- Add event tracking for simulator runs, saved simulations, offer reviews, and consultation requests.
+- Replace mock offer URLs with approved partner links and compliance-reviewed disclosures.
+- Add AI coach only after the rule-based simulator and compliance copy are stable.
+
 ## Deploying to GitHub Pages
 
 1. Build the static site:

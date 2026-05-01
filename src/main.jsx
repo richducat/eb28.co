@@ -7,6 +7,7 @@ import AppBuilderStudio from './AppBuilderStudio';
 import FundManager from './FundManager';
 import ReconAgentPage from './ReconAgentPage';
 import AlarmClock from './AlarmClock';
+import LimitlessCreditGPS from './LimitlessCreditGPS';
 import ThomasCustomHomesPage from './ThomasCustomHomesPage';
 import MelbourneWebStudioPage from './MelbourneWebStudioPage.tsx';
 import './index.css';
@@ -30,6 +31,12 @@ const isFundManagerRoute =
 const isReconAgentRoute =
   pathname === '/reconcile' ||
   hostname === 'reconcile.eb28.co';
+const isLimitlessCreditGpsRoute =
+  pathname === '/credit-gps' ||
+  pathname.startsWith('/credit-gps/') ||
+  pathname === '/limitless-credit-gps' ||
+  pathname.startsWith('/limitless-credit-gps/') ||
+  hostname === 'creditgps.eb28.co';
 const isThomasCustomHomesRoute =
   pathname === '/tch' ||
   pathname.startsWith('/tch/') ||
@@ -75,6 +82,15 @@ function renderApp() {
     root.render(
       <React.StrictMode>
         <ReconAgentPage />
+      </React.StrictMode>
+    );
+    return;
+  }
+
+  if (isLimitlessCreditGpsRoute) {
+    root.render(
+      <React.StrictMode>
+        <LimitlessCreditGPS />
       </React.StrictMode>
     );
     return;

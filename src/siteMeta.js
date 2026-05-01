@@ -290,6 +290,34 @@ const ROUTE_META = {
             },
         ],
     },
+    creditgps: {
+        ...BASE_ROUTE_META,
+        key: 'creditgps',
+        path: '/credit-gps/',
+        title: 'Limitless Credit GPS | Credit Decision Simulator',
+        description:
+            'Limitless Credit GPS helps users simulate common credit moves, understand likely credit impact direction, and choose a smarter next action before applying or changing accounts.',
+        image: DEFAULT_IMAGE,
+        includeInSitemap: true,
+        structuredData: [
+            ORGANIZATION_SCHEMA,
+            {
+                '@context': 'https://schema.org',
+                '@type': 'SoftwareApplication',
+                name: 'Limitless Credit GPS',
+                applicationCategory: 'FinanceApplication',
+                operatingSystem: 'Web',
+                isAccessibleForFree: true,
+                url: `${SITE_ORIGIN}/credit-gps/`,
+                image: DEFAULT_IMAGE,
+                description:
+                    'A free credit education and decision simulator that explains likely direction, risk, confidence, and next best action for common credit moves.',
+                provider: {
+                    '@id': ORGANIZATION_ID,
+                },
+            },
+        ],
+    },
     ...THOMAS_ROUTE_META,
     melbournewebstudio: {
         ...BASE_ROUTE_META,
@@ -365,6 +393,18 @@ export const STATIC_ROUTE_OUTPUTS = [
     { routeKey: 'appbuilder', outputPath: 'appbuilder/index.html' },
     { routeKey: 'fundmanager', outputPath: 'fundmanager/index.html' },
     { routeKey: 'reconcile', outputPath: 'reconcile/index.html' },
+    { routeKey: 'creditgps', outputPath: 'credit-gps/index.html' },
+    { routeKey: 'creditgps', outputPath: 'credit-gps/onboarding/index.html' },
+    { routeKey: 'creditgps', outputPath: 'credit-gps/quiz/index.html' },
+    { routeKey: 'creditgps', outputPath: 'credit-gps/dashboard/index.html' },
+    { routeKey: 'creditgps', outputPath: 'credit-gps/simulator/index.html' },
+    { routeKey: 'creditgps', outputPath: 'credit-gps/simulator/input/index.html' },
+    { routeKey: 'creditgps', outputPath: 'credit-gps/simulator/result/index.html' },
+    { routeKey: 'creditgps', outputPath: 'credit-gps/score-drop/index.html' },
+    { routeKey: 'creditgps', outputPath: 'credit-gps/learn/index.html' },
+    { routeKey: 'creditgps', outputPath: 'credit-gps/offers/index.html' },
+    { routeKey: 'creditgps', outputPath: 'credit-gps/consultation/index.html' },
+    { routeKey: 'creditgps', outputPath: 'credit-gps/plan/index.html' },
     ...THOMAS_SEO_PAGES.map((page) => ({
         routeKey: page.routeKey,
         outputPath: page.slug === '' ? 'tch/index.html' : `tch/${page.slug}/index.html`,
@@ -401,6 +441,16 @@ export function detectRouteKey({ pathname = '/', hostname = '' } = {}) {
 
     if (normalizedPathname === '/reconcile' || normalizedHostname === 'reconcile.eb28.co') {
         return 'reconcile';
+    }
+
+    if (
+        normalizedPathname === '/credit-gps' ||
+        normalizedPathname.startsWith('/credit-gps/') ||
+        normalizedPathname === '/limitless-credit-gps' ||
+        normalizedPathname.startsWith('/limitless-credit-gps/') ||
+        normalizedHostname === 'creditgps.eb28.co'
+    ) {
+        return 'creditgps';
     }
 
     if (

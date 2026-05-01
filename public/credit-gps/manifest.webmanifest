@@ -1,0 +1,18 @@
+{
+  "name": "Limitless Credit GPS",
+  "short_name": "Credit GPS",
+  "description": "A credit education and decision simulator for common credit moves.",
+  "start_url": "/credit-gps/",
+  "scope": "/credit-gps/",
+  "display": "standalone",
+  "background_color": "#07111f",
+  "theme_color": "#2563eb",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

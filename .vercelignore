@@ -1,0 +1,17 @@
+.git
+.DS_Store
+.herenow
+.playwright-cli
+.playwright-mcp
+.vercel
+Login Data
+node_modules
+output
+ugcmadash-*.png
+
+# Static output is rebuilt by Vercel from source during deploy.
+docs
+
+# Native/mobile build artifacts are not needed for the web deploy.
+ios
+app-store

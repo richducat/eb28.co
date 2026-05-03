@@ -5,6 +5,7 @@ import App from './App';
 import Dashboard from './Dashboard';
 import AppBuilderStudio from './AppBuilderStudio';
 import FundManager from './FundManager';
+import UgcmaDashboard from './UgcmaDashboard';
 import ReconAgentPage from './ReconAgentPage';
 import AlarmClock from './AlarmClock';
 import LimitlessCreditGPS from './LimitlessCreditGPS';
@@ -28,6 +29,9 @@ const isAppBuilderRoute = pathname === '/appbuilder';
 const isFundManagerRoute =
   pathname === '/fundmanager' ||
   hostname === 'fundmanager.eb28.co';
+const isUgcmaDashboardRoute =
+  pathname === '/ugcmadash' ||
+  hostname === 'ugcmadash.eb28.co';
 const isReconAgentRoute =
   pathname === '/reconcile' ||
   hostname === 'reconcile.eb28.co';
@@ -75,6 +79,15 @@ function renderApp() {
     root.render(
       <React.StrictMode>
         <FundManager />
+      </React.StrictMode>
+    );
+    return;
+  }
+
+  if (isUgcmaDashboardRoute) {
+    root.render(
+      <React.StrictMode>
+        <UgcmaDashboard />
       </React.StrictMode>
     );
     return;

@@ -257,6 +257,34 @@ const ROUTE_META = {
             },
         ],
     },
+    ugcmadash: {
+        ...BASE_ROUTE_META,
+        key: 'ugcmadash',
+        path: '/ugcmadash/',
+        title: 'OmniAds Dashboard | UGC Marketing Analytics | EB28',
+        description:
+            'A high-density UGC marketing dashboard for funnels, ad sources, bookings, no-shows, sales, and conversion performance.',
+        image: DEFAULT_IMAGE,
+        includeInSitemap: true,
+        structuredData: [
+            ORGANIZATION_SCHEMA,
+            {
+                '@context': 'https://schema.org',
+                '@type': 'WebApplication',
+                name: 'OmniAds Dashboard',
+                applicationCategory: 'BusinessApplication',
+                operatingSystem: 'Web',
+                isAccessibleForFree: true,
+                url: `${SITE_ORIGIN}/ugcmadash/`,
+                image: DEFAULT_IMAGE,
+                description:
+                    'A high-density advertising dashboard for cross-channel UGC campaign, funnel, lead source, and conversion monitoring.',
+                provider: {
+                    '@id': ORGANIZATION_ID,
+                },
+            },
+        ],
+    },
     reconcile: {
         ...BASE_ROUTE_META,
         key: 'reconcile',
@@ -392,6 +420,7 @@ export const STATIC_ROUTE_OUTPUTS = [
     { routeKey: 'home', outputPath: 'index.html' },
     { routeKey: 'appbuilder', outputPath: 'appbuilder/index.html' },
     { routeKey: 'fundmanager', outputPath: 'fundmanager/index.html' },
+    { routeKey: 'ugcmadash', outputPath: 'ugcmadash/index.html' },
     { routeKey: 'reconcile', outputPath: 'reconcile/index.html' },
     { routeKey: 'creditgps', outputPath: 'limitless/index.html' },
     { routeKey: 'creditgps', outputPath: 'limitless/onboarding/index.html' },
@@ -437,6 +466,10 @@ export function detectRouteKey({ pathname = '/', hostname = '' } = {}) {
 
     if (normalizedPathname === '/fundmanager' || normalizedHostname === 'fundmanager.eb28.co') {
         return 'fundmanager';
+    }
+
+    if (normalizedPathname === '/ugcmadash' || normalizedHostname === 'ugcmadash.eb28.co') {
+        return 'ugcmadash';
     }
 
     if (normalizedPathname === '/reconcile' || normalizedHostname === 'reconcile.eb28.co') {

@@ -40,7 +40,8 @@ async function main() {
   };
 
   run('npx', ['vite', 'build'], env);
-  await buildFlavorFeed(env);
+  await buildStaticSite('flavorfeed', env);
+  await buildStaticSite('servo', env);
   run(process.execPath, ['scripts/generate-route-pages.mjs'], env);
   run('npm', ['run', 'generate:data'], env);
 
@@ -53,9 +54,9 @@ async function main() {
   console.log(`Build complete: ${buildId}`);
 }
 
-async function buildFlavorFeed(env) {
-  const flavorFeedDir = path.join(repoRoot, 'sites', 'flavorfeed');
-  const packagePath = path.join(flavorFeedDir, 'package.json');
+async function buildStaticSite(siteName, env) {
+  const siteDir = path.join(repoRoot, 'sites', siteName);
+  const packagePath = path.join(siteDir, 'package.json');
 
   try {
     await fs.access(packagePath);
@@ -63,11 +64,21 @@ async function buildFlavorFeed(env) {
     return;
   }
 
-  run('npm', ['--prefix', flavorFeedDir, 'ci'], env);
-  run('npm', ['--prefix', flavorFeedDir, 'run', 'build'], env);
+  const lockPath = path.join(siteDir, 'package-lock.json');
+  let hasLock = false;
 
-  const sourceDir = path.join(flavorFeedDir, 'dist');
-  const targetDir = path.join(repoRoot, 'docs', 'flavorfeed');
+  try {
+    const lockStats = await fs.stat(lockPath);
+    hasLock = lockStats.size > 0;
+  } catch {
+    hasLock = false;
+  }
+
+  run('npm', ['--prefix', siteDir, hasLock ? 'ci' : 'install'], env);
+  run('npm', ['--prefix', siteDir, 'run', 'build'], env);
+
+  const sourceDir = path.join(siteDir, 'dist');
+  const targetDir = path.join(repoRoot, 'docs', siteName);
   await fs.rm(targetDir, { recursive: true, force: true });
   await fs.mkdir(path.dirname(targetDir), { recursive: true });
   await fs.cp(sourceDir, targetDir, { recursive: true });

@@ -11,6 +11,14 @@ RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule . /flavorfeed/index.html [L]
 
+RewriteCond %{HTTP_HOST} ^servo\.eb28\.co$ [NC]
+RewriteRule ^assets/(.*)$ /servo/assets/$1 [L]
+
+RewriteCond %{HTTP_HOST} ^servo\.eb28\.co$ [NC]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /servo/index.html [L]
+
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME}.php -f

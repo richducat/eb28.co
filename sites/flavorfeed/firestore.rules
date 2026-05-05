@@ -1,0 +1,73 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 0. Default Deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // 3. Helpers
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+    function incoming() {
+      return request.resource.data;
+    }
+    function existing() {
+      return resource.data;
+    }
+
+    // --- Users ---
+    function isValidUser(data) {
+      return data.uid == request.auth.uid &&
+             data.displayName is string && data.displayName.size() <= 100 &&
+             (data.bio == null || (data.bio is string && data.bio.size() <= 500));
+    }
+
+    match /users/{userId} {
+      allow get: if true;
+      allow list: if isSignedIn();
+      allow create: if isSignedIn() && isOwner(userId) && isValidUser(incoming());
+      allow update: if isSignedIn() && isOwner(userId) && isValidUser(incoming()) &&
+                      incoming().diff(existing()).affectedKeys().hasOnly(['displayName', 'bio', 'photoURL']);
+    }
+
+    // --- Recipes ---
+    function isValidRecipe(data) {
+      return data.authorId == request.auth.uid &&
+             data.title is string && data.title.size() <= 200 &&
+             data.imageURL is string && data.imageURL.size() <= 1000 &&
+             data.ingredients is list && data.ingredients.size() <= 50 &&
+             data.steps is list && data.steps.size() <= 50 &&
+             data.macros is map;
+    }
+
+    match /recipes/{recipeId} {
+      allow read: if true;
+      allow create: if isSignedIn() && isValidRecipe(incoming()) &&
+                      incoming().likesCount == 0;
+      allow update: if isSignedIn() && (
+        // Author edit
+        (isOwner(existing().authorId) && isValidRecipe(incoming()) && 
+         incoming().diff(existing()).affectedKeys().hasOnly(['title', 'imageURL', 'ingredients', 'steps', 'macros']))
+        ||
+        // Social reaction (likes count)
+        (incoming().diff(existing()).affectedKeys().hasOnly(['likesCount']) && 
+         (incoming().likesCount == existing().likesCount + 1 || incoming().likesCount == existing().likesCount - 1))
+      );
+      allow delete: if isOwner(existing().authorId);
+
+      // --- Likes subcollection ---
+      match /likes/{userId} {
+        allow read: if true;
+        allow write: if isOwner(userId);
+      }
+    }
+  }
+}

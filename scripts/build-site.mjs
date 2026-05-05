@@ -40,6 +40,7 @@ async function main() {
   };
 
   run('npx', ['vite', 'build'], env);
+  await buildFlavorFeed(env);
   run(process.execPath, ['scripts/generate-route-pages.mjs'], env);
   run('npm', ['run', 'generate:data'], env);
 
@@ -50,6 +51,26 @@ async function main() {
   );
 
   console.log(`Build complete: ${buildId}`);
+}
+
+async function buildFlavorFeed(env) {
+  const flavorFeedDir = path.join(repoRoot, 'sites', 'flavorfeed');
+  const packagePath = path.join(flavorFeedDir, 'package.json');
+
+  try {
+    await fs.access(packagePath);
+  } catch {
+    return;
+  }
+
+  run('npm', ['--prefix', flavorFeedDir, 'ci'], env);
+  run('npm', ['--prefix', flavorFeedDir, 'run', 'build'], env);
+
+  const sourceDir = path.join(flavorFeedDir, 'dist');
+  const targetDir = path.join(repoRoot, 'docs', 'flavorfeed');
+  await fs.rm(targetDir, { recursive: true, force: true });
+  await fs.mkdir(path.dirname(targetDir), { recursive: true });
+  await fs.cp(sourceDir, targetDir, { recursive: true });
 }
 
 main().catch((error) => {

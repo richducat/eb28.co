@@ -1,0 +1,56 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile information",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "displayName": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "bio": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "displayName", "createdAt"]
+    },
+    "Recipe": {
+      "title": "Recipe",
+      "description": "A shared cooking recipe with photos and macros",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "imageURL": { "type": "string" },
+        "ingredients": { "type": "array", "items": { "type": "string" } },
+        "steps": { "type": "array", "items": { "type": "string" } },
+        "macros": {
+          "type": "object",
+          "properties": {
+            "calories": { "type": "number" },
+            "protein": { "type": "number" },
+            "carbs": { "type": "number" },
+            "fat": { "type": "number" }
+          }
+        },
+        "authorId": { "type": "string" },
+        "authorName": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "likesCount": { "type": "number" }
+      },
+      "required": ["title", "imageURL", "ingredients", "steps", "authorId", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "Public and private user profiles"
+    },
+    "/recipes/{recipeId}": {
+      "schema": "Recipe",
+      "description": "Public recipe feed"
+    },
+    "/recipes/{recipeId}/likes/{userId}": {
+      "schema": { "type": "object", "properties": { "uid": { "type": "string" } } },
+      "description": "Tracks which users liked which recipe"
+    }
+  }
+}

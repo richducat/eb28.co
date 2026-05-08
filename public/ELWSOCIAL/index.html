@@ -337,13 +337,330 @@
       box-shadow: 12px 12px 0 rgba(0,0,0,.22);
       transform: rotate(1.5deg);
     }
+    .desktop-deck,
+    .mobile-deck {
+      width: 100%;
+    }
+    .mobile-deck {
+      display: none;
+    }
     @media screen {
-      body { display: grid; gap: 28px; padding: 28px; }
-      .slide { box-shadow: 0 18px 60px rgba(0,0,0,.40); transform-origin: top left; }
+      body {
+        display: block;
+        min-height: 100vh;
+        padding: 0;
+        overflow-x: hidden;
+      }
+      .desktop-deck {
+        --deck-scale: 1;
+        --deck-pad: 28px;
+        display: grid;
+        gap: 28px;
+        justify-items: center;
+        padding: var(--deck-pad);
+      }
+      .slide-frame {
+        position: relative;
+        width: calc(1600px * var(--deck-scale));
+        height: calc(900px * var(--deck-scale));
+        max-width: 100%;
+        overflow: hidden;
+        background: #071431;
+        box-shadow: 0 18px 60px rgba(0,0,0,.40);
+      }
+      .slide-frame > .slide {
+        position: absolute;
+        inset: 0 auto auto 0;
+        transform: scale(var(--deck-scale));
+        transform-origin: top left;
+      }
+    }
+    @media screen and (max-width: 760px) {
+      html {
+        background: #071431;
+      }
+      body {
+        background: #071431;
+      }
+      .desktop-deck {
+        display: none;
+      }
+      .mobile-deck {
+        display: block;
+        color: #f8fafc;
+        background: #071431;
+      }
+      .mobile-section {
+        position: relative;
+        overflow: hidden;
+        padding: 30px 20px;
+        border-bottom: 1px solid rgba(255,255,255,.12);
+      }
+      .mobile-hero {
+        min-height: 100svh;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        background: radial-gradient(circle at 90% 8%, rgba(98,216,255,.24), transparent 30%), linear-gradient(150deg, #06142f 0%, #113978 58%, #5d2e89 100%);
+      }
+      .mobile-brand {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        color: #fff2cf;
+        font-size: 19px;
+        font-weight: 950;
+        letter-spacing: .08em;
+      }
+      .mobile-mark {
+        display: grid;
+        place-items: center;
+        width: 48px;
+        height: 48px;
+        border: 3px solid #f3c86d;
+        font-size: 19px;
+        font-weight: 1000;
+        letter-spacing: 0;
+      }
+      .mobile-kicker {
+        margin: 30px 0 14px;
+        color: #f3c86d;
+        font-size: 13px;
+        font-weight: 1000;
+        letter-spacing: .13em;
+        text-transform: uppercase;
+      }
+      .mobile-tag {
+        display: inline-flex;
+        max-width: 100%;
+        margin-bottom: 18px;
+        padding: 10px 13px;
+        color: #071431;
+        background: #fff2cf;
+        border: 3px solid #f3c86d;
+        box-shadow: 6px 6px 0 rgba(0,0,0,.26);
+        font-size: 13px;
+        font-weight: 1000;
+        letter-spacing: .04em;
+        text-transform: uppercase;
+        transform: rotate(-1.5deg);
+      }
+      .mobile-deck h1,
+      .mobile-deck h2,
+      .mobile-deck h3,
+      .mobile-deck p {
+        margin: 0;
+        letter-spacing: 0;
+      }
+      .mobile-deck h1 {
+        max-width: 11ch;
+        color: #fff;
+        font-size: clamp(48px, 15vw, 64px);
+        line-height: .9;
+        font-weight: 1000;
+      }
+      .mobile-deck h2 {
+        color: #fff;
+        font-size: clamp(32px, 10vw, 46px);
+        line-height: .94;
+        font-weight: 1000;
+      }
+      .mobile-deck h3 {
+        color: #fff2cf;
+        font-size: 18px;
+        line-height: 1.08;
+        font-weight: 1000;
+        text-transform: uppercase;
+      }
+      .mobile-copy {
+        margin-top: 16px;
+        color: rgba(248,250,252,.90);
+        font-size: 19px;
+        line-height: 1.28;
+        font-weight: 760;
+      }
+      .mobile-product {
+        width: min(124%, 500px);
+        margin: 26px -74px 0 auto;
+        filter: drop-shadow(0 22px 36px rgba(0,0,0,.38));
+      }
+      .mobile-strip {
+        position: absolute;
+        left: -36px;
+        right: -36px;
+        bottom: 132px;
+        height: 92px;
+        background: #f3c86d;
+        transform: rotate(-6deg);
+        box-shadow: 0 18px 44px rgba(0,0,0,.24);
+      }
+      .mobile-hero-bottom {
+        position: relative;
+        z-index: 2;
+      }
+      .mobile-stats {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 10px;
+        margin-top: 22px;
+      }
+      .mobile-stat,
+      .mobile-card,
+      .mobile-day,
+      .mobile-workflow {
+        border: 1px solid rgba(255,255,255,.16);
+        background: rgba(255,255,255,.08);
+      }
+      .mobile-stat {
+        min-height: 86px;
+        padding: 13px 10px;
+      }
+      .mobile-stat b {
+        display: block;
+        color: #fff2cf;
+        font-size: 30px;
+        line-height: .9;
+        font-weight: 1000;
+      }
+      .mobile-stat span {
+        display: block;
+        margin-top: 8px;
+        color: rgba(248,250,252,.82);
+        font-size: 11px;
+        line-height: 1.12;
+        font-weight: 850;
+        text-transform: uppercase;
+      }
+      .mobile-card-grid {
+        display: grid;
+        gap: 12px;
+        margin-top: 22px;
+      }
+      .mobile-card,
+      .mobile-workflow {
+        padding: 18px;
+      }
+      .mobile-card p,
+      .mobile-workflow p {
+        margin-top: 8px;
+        color: rgba(248,250,252,.86);
+        font-size: 15px;
+        line-height: 1.26;
+        font-weight: 700;
+      }
+      .mobile-cream {
+        background: linear-gradient(135deg, #fff5d8 0%, #f6e6bd 62%, #d4eef2 100%);
+        color: #06142f;
+      }
+      .mobile-cream h2,
+      .mobile-cream h3 {
+        color: #06142f;
+      }
+      .mobile-cream .mobile-kicker {
+        color: #123f82;
+      }
+      .mobile-cream .mobile-copy,
+      .mobile-cream .mobile-card p,
+      .mobile-cream .mobile-workflow p {
+        color: #17305d;
+      }
+      .mobile-cream .mobile-card,
+      .mobile-cream .mobile-workflow,
+      .mobile-cream .mobile-day {
+        background: rgba(255,255,255,.58);
+        border-color: rgba(7,20,49,.14);
+      }
+      .mobile-scroll {
+        display: flex;
+        gap: 14px;
+        margin: 22px -20px 0 0;
+        padding: 0 20px 10px 0;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+      }
+      .mobile-scroll img {
+        flex: 0 0 auto;
+        scroll-snap-align: start;
+        object-fit: cover;
+        box-shadow: 0 20px 42px rgba(0,0,0,.30);
+      }
+      .mobile-feed {
+        width: min(72vw, 310px);
+        aspect-ratio: 1080 / 1350;
+        border: 4px solid rgba(255,242,207,.84);
+      }
+      .mobile-phone {
+        width: min(49vw, 205px);
+        aspect-ratio: 1080 / 1920;
+        border: 6px solid #0a1531;
+      }
+      .mobile-calendar {
+        display: grid;
+        gap: 10px;
+        margin-top: 22px;
+      }
+      .mobile-day {
+        display: grid;
+        grid-template-columns: 62px 1fr;
+        gap: 12px;
+        align-items: center;
+        padding: 13px;
+      }
+      .mobile-day b {
+        color: #fff2cf;
+        font-size: 14px;
+        font-weight: 1000;
+        text-transform: uppercase;
+      }
+      .mobile-day span {
+        color: rgba(248,250,252,.88);
+        font-size: 15px;
+        line-height: 1.16;
+        font-weight: 760;
+      }
+      .mobile-workflow {
+        display: grid;
+        gap: 4px;
+        margin-top: 12px;
+      }
+      .mobile-cta {
+        display: inline-flex;
+        margin-top: 22px;
+        padding: 14px 16px;
+        background: #071431;
+        border: 3px solid #f3c86d;
+        color: #fff2cf;
+        box-shadow: 7px 7px 0 rgba(243,200,109,.38);
+        font-size: 14px;
+        font-weight: 1000;
+        letter-spacing: .05em;
+        text-transform: uppercase;
+      }
+    }
+    @media print {
+      .desktop-deck {
+        display: block;
+        padding: 0;
+      }
+      .slide-frame {
+        width: 1600px;
+        height: 900px;
+        overflow: visible;
+        page-break-after: always;
+      }
+      .slide-frame > .slide {
+        position: relative;
+        transform: none;
+      }
+      .mobile-deck {
+        display: none !important;
+      }
     }
   </style>
 </head>
 <body>
+  <main class="desktop-deck" aria-label="EL World campaign presentation">
   <section class="slide blue cover">
     <div class="grid"></div>
     <div class="brand"><span class="mark">EL</span><span>EL WORLD</span></div>
@@ -544,5 +861,143 @@
     </div>
     <div class="caption"><span>EL World 14-Day Social Content Campaign</span><span>Prepared for launch planning</span></div>
   </section>
+  </main>
+
+  <main class="mobile-deck" aria-label="EL World mobile campaign overview">
+    <section class="mobile-section mobile-hero">
+      <div>
+        <div class="mobile-brand"><span class="mobile-mark">EL</span><span>EL WORLD</span></div>
+        <div class="mobile-kicker">Social Content Campaign</div>
+        <span class="mobile-tag">14-Day Social Content Campaign</span>
+        <h1>Clean-energy content built to sell the routine.</h1>
+        <p class="mobile-copy">Instagram, X, and TikTok content system for EL World Blueberry Almond Butter protein bars.</p>
+      </div>
+      <div class="mobile-hero-bottom">
+        <div class="mobile-strip"></div>
+        <img class="mobile-product" src="elw-og.jpeg" alt="">
+        <div class="mobile-stats">
+          <div class="mobile-stat"><b>14</b><span>days of content</span></div>
+          <div class="mobile-stat"><b>28</b><span>visual assets</span></div>
+          <div class="mobile-stat"><b>3</b><span>platforms</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="mobile-section mobile-cream">
+      <div class="mobile-kicker">What Is Included</div>
+      <h2>A complete social campaign built for launch.</h2>
+      <div class="mobile-card-grid">
+        <div class="mobile-card"><h3>Daily Content</h3><p>Fourteen days of Instagram captions, X posts, TikTok hooks, captions, and creator scripts.</p></div>
+        <div class="mobile-card"><h3>Upload-Ready Media</h3><p>Feed graphics and vertical graphics sized for mobile-first channels.</p></div>
+        <div class="mobile-card"><h3>Launch Checklist</h3><p>Claims, CTAs, visual direction, handles, offer details, and scheduling notes to confirm.</p></div>
+      </div>
+    </section>
+
+    <section class="mobile-section">
+      <div class="mobile-kicker">Brand Strategy</div>
+      <h2>Make the bar the easy default for the busy middle of the day.</h2>
+      <p class="mobile-copy">The campaign sells the habit: keep the right snack in the bag, desk, car, or gym tote before the day gets chaotic.</p>
+      <div class="mobile-card-grid">
+        <div class="mobile-card"><h3>Product Truth</h3><p>Blueberry Almond Butter protein bar with 13g protein and bovine collagen support.</p></div>
+        <div class="mobile-card"><h3>Conversion Path</h3><p>Shop the box or subscribe and save 15% on every order.</p></div>
+      </div>
+    </section>
+
+    <section class="mobile-section">
+      <div class="mobile-kicker">Feed Assets</div>
+      <h2>Graphics built for saves, shares, and product recognition.</h2>
+      <div class="mobile-scroll" aria-label="Instagram feed asset examples">
+        <img class="mobile-feed" src="assets/feed-png/day-01-feed.png" alt="">
+        <img class="mobile-feed" src="assets/feed-png/day-02-feed.png" alt="">
+        <img class="mobile-feed" src="assets/feed-png/day-08-feed.png" alt="">
+        <img class="mobile-feed" src="assets/feed-png/day-14-feed.png" alt="">
+      </div>
+    </section>
+
+    <section class="mobile-section mobile-cream">
+      <div class="mobile-kicker">TikTok and Reels</div>
+      <h2>Vertical covers support native creator videos.</h2>
+      <div class="mobile-scroll" aria-label="Vertical asset examples">
+        <img class="mobile-phone" src="assets/vertical-png/day-01-vertical.png" alt="">
+        <img class="mobile-phone" src="assets/vertical-png/day-03-vertical.png" alt="">
+        <img class="mobile-phone" src="assets/vertical-png/day-13-vertical.png" alt="">
+        <img class="mobile-phone" src="assets/vertical-png/day-14-vertical.png" alt="">
+      </div>
+    </section>
+
+    <section class="mobile-section">
+      <div class="mobile-kicker">14-Day Calendar</div>
+      <h2>Two weeks of platform-native content.</h2>
+      <div class="mobile-calendar">
+        <div class="mobile-day"><b>Day 1</b><span>Busy-day bar introduction</span></div>
+        <div class="mobile-day"><b>Day 2</b><span>Blueberry almond butter flavor</span></div>
+        <div class="mobile-day"><b>Day 3</b><span>13g protein made simple</span></div>
+        <div class="mobile-day"><b>Day 4</b><span>Between-meal fullness</span></div>
+        <div class="mobile-day"><b>Day 5</b><span>Gym bag snack</span></div>
+        <div class="mobile-day"><b>Day 6</b><span>Recovery day routine</span></div>
+        <div class="mobile-day"><b>Day 7</b><span>Customer taste proof</span></div>
+        <div class="mobile-day"><b>Day 8</b><span>Subscribe and save</span></div>
+        <div class="mobile-day"><b>Day 9</b><span>Breakfast backup</span></div>
+        <div class="mobile-day"><b>Day 10</b><span>Consistency mindset</span></div>
+        <div class="mobile-day"><b>Day 11</b><span>30-day challenge</span></div>
+        <div class="mobile-day"><b>Day 12</b><span>Breathwork snack reset</span></div>
+        <div class="mobile-day"><b>Day 13</b><span>Smart snack swap</span></div>
+        <div class="mobile-day"><b>Day 14</b><span>FAQ and recap</span></div>
+      </div>
+    </section>
+
+    <section class="mobile-section mobile-cream">
+      <div class="mobile-kicker">Platform Deliverables</div>
+      <h2>Organized for scheduling and creator handoff.</h2>
+      <div class="mobile-card-grid">
+        <div class="mobile-card"><h3>Instagram</h3><p>14 captions with hashtags, creative notes, and feed visuals.</p></div>
+        <div class="mobile-card"><h3>X</h3><p>14 concise posts, written handle-neutral until an official X handle is confirmed.</p></div>
+        <div class="mobile-card"><h3>TikTok</h3><p>14 hooks, captions, scripts or shot lists, plus vertical cover graphics.</p></div>
+      </div>
+    </section>
+
+    <section class="mobile-section">
+      <div class="mobile-kicker">Launch Workflow</div>
+      <h2>Recommended path from confirmation to scheduling.</h2>
+      <div class="mobile-workflow"><h3>1. Confirm Direction</h3><p>Confirm visual system, claims, offer, and calendar themes.</p></div>
+      <div class="mobile-workflow"><h3>2. Capture Content</h3><p>Film product-in-bag, desk drawer, gym bag, restock, taste test, and morning routine clips.</p></div>
+      <div class="mobile-workflow"><h3>3. Schedule Posts</h3><p>Load the CSV copy and visual assets into the confirmed publishing workflow.</p></div>
+      <div class="mobile-workflow"><h3>4. Monitor Signals</h3><p>Track saves, shares, watch time, profile visits, link clicks, and subscription starts.</p></div>
+      <div class="mobile-cta">Confirm Direction and Schedule</div>
+    </section>
+  </main>
+
+  <script>
+    (() => {
+      const deck = document.querySelector('.desktop-deck');
+      if (!deck) return;
+
+      deck.querySelectorAll(':scope > .slide').forEach((slide) => {
+        const frame = document.createElement('div');
+        frame.className = 'slide-frame';
+        frame.setAttribute('aria-label', slide.querySelector('.kicker')?.textContent?.trim() || 'Campaign slide');
+        deck.insertBefore(frame, slide);
+        frame.appendChild(slide);
+      });
+
+      const fitDeck = () => {
+        const viewport = window.innerWidth || document.documentElement.offsetWidth;
+        const pad = viewport < 1100 ? 16 : 28;
+        const scale = Math.min(1, Math.max(0.44, (viewport - pad * 2) / 1600));
+        deck.style.setProperty('--deck-pad', `${pad}px`);
+        deck.style.setProperty('--deck-scale', String(scale));
+      };
+
+      let frame = 0;
+      const requestFit = () => {
+        cancelAnimationFrame(frame);
+        frame = requestAnimationFrame(fitDeck);
+      };
+
+      fitDeck();
+      window.addEventListener('resize', requestFit, { passive: true });
+      window.addEventListener('orientationchange', requestFit, { passive: true });
+    })();
+  </script>
 </body>
 </html>

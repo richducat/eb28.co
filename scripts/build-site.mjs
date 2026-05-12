@@ -39,6 +39,7 @@ async function main() {
     BUILD_ID: buildId,
   };
 
+  run(process.execPath, ['scripts/generate-ugcma-dashboard-data.mjs'], env);
   run('npx', ['vite', 'build'], env);
   await buildStaticSite('flavorfeed', env);
   await buildStaticSite('servo', env);

@@ -25,6 +25,15 @@ import {
 const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY || '';
 const GEMINI_MODEL = import.meta.env.VITE_GEMINI_MODEL || 'gemini-3-flash-preview';
 
+const LOCAL_JARGON = {
+  'pt': 'PT means physical training. For a cadet, it usually means organized workouts, conditioning, runs, calisthenics, or fitness testing.',
+  'swab summer': 'Swab Summer is the Coast Guard Academy basic training period for incoming cadets. It is intense, structured, and meant to teach military discipline, teamwork, and resilience.',
+  'rack': 'Rack means bed. If a cadet says they are hitting the rack, they are going to sleep.',
+  'chow': 'Chow means food or mealtime. It is a casual military word for eating.',
+  'liberty': 'Liberty means approved free time away from normal duties. Rules and limits depend on the unit, school, or training phase.',
+  'formation': 'Formation is when cadets assemble in an organized group for accountability, instructions, inspection, or movement.',
+};
+
 export default function CadetCatch() {
   const [navStack, setNavStack] = useState(['onboarding']);
   const [activeTab, setActiveTab] = useState('scanner');
@@ -186,12 +195,20 @@ export default function CadetCatch() {
     });
   };
 
+  const getLocalJargonExplanation = (term) => {
+    const normalizedTerm = term.toLowerCase().trim();
+    return LOCAL_JARGON[normalizedTerm] || `${term.toUpperCase()} is not in the local decoder yet. In most academy contexts, acronyms and slang are tied to training, schedules, inspections, unit roles, or daily routines. Ask your cadet how their unit uses the term, because meanings can vary by branch and school.`;
+  };
+
   const handleAnalyzePhoto = async (imageUrl) => {
     setIsAnalyzing(true);
     setAiAnalysis('');
 
     try {
-      if (!GEMINI_API_KEY) throw new Error('Missing Gemini API key');
+      if (!GEMINI_API_KEY) {
+        setAiAnalysis('Local sitrep: This looks like a training or activity photo from a cadet event. The safest read is that your cadet may be in a structured drill, fitness, or team-building setting.\n\nLetter draft: Proud of you for showing up and doing the hard work. Keep trusting your training, leaning on your team, and taking it one day at a time. We are cheering for you from home.');
+        return;
+      }
 
       const base64Image = await getBase64FromUrl(imageUrl);
       const prompt = 'You are a helpful assistant for parents of military cadets. Look at this photo. Describe what activity is happening (e.g. drills, PT). Then, draft a short, sweet, encouraging letter the parent could send based on this activity.';
@@ -230,7 +247,10 @@ export default function CadetCatch() {
     setJargonExplanation('');
 
     try {
-      if (!GEMINI_API_KEY) throw new Error('Missing Gemini API key');
+      if (!GEMINI_API_KEY) {
+        setJargonExplanation(getLocalJargonExplanation(jargonTerm.trim()));
+        return;
+      }
 
       const prompt = `Define the military acronym/jargon: "${jargonTerm.trim()}". Explain what it means to a parent simply.`;
       const url = `https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`;

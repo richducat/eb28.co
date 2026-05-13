@@ -410,7 +410,7 @@ const ROUTE_META = {
                 name: 'CadetCatch',
                 applicationCategory: 'LifestyleApplication',
                 operatingSystem: 'Web',
-                isAccessibleForFree: true,
+                isAccessibleForFree: false,
                 url: `${SITE_ORIGIN}/cc/`,
                 image: DEFAULT_IMAGE,
                 description:

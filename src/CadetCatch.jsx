@@ -39,7 +39,6 @@ export default function CadetCatch() {
   const [activeTab, setActiveTab] = useState('scanner');
 
   const [userProfile, setUserProfile] = useState({ name: '', email: '', notifications: true });
-  const [subscription, setSubscription] = useState('none');
 
   const [cadets, setCadets] = useState([]);
   const [activeCadetId, setActiveCadetId] = useState(null);
@@ -95,13 +94,11 @@ export default function CadetCatch() {
     pushNav('paywall');
   };
 
-  const handleClearanceSelect = (tier) => {
-    setSubscription(tier);
+  const handleClearanceSelect = () => {
     pushNav('main');
   };
 
   const handleLogout = () => {
-    setSubscription('none');
     setCadets([]);
     setSavedPhotos([]);
     setMatches([]);
@@ -400,22 +397,11 @@ export default function CadetCatch() {
               </li>
             ))}
           </ul>
-          <button type="button" onClick={() => handleClearanceSelect('premium')} className={`w-full ${theme.primaryBg} ${theme.primaryActive} text-stone-900 font-black uppercase tracking-widest text-sm py-4 rounded-xl active:scale-[0.98] transition-transform`}>
+          <button type="button" onClick={handleClearanceSelect} className={`w-full ${theme.primaryBg} ${theme.primaryActive} text-stone-900 font-black uppercase tracking-widest text-sm py-4 rounded-xl active:scale-[0.98] transition-transform`}>
             Upgrade to Tactical
           </button>
         </div>
 
-        <div className={`w-full ${theme.surfaceElevated} rounded-3xl p-6 border ${theme.border} mb-6`}>
-          <h3 className="text-lg font-black uppercase tracking-wider text-stone-300">Civilian Access</h3>
-          <div className="text-xl font-black text-white my-1">Free</div>
-          <ul className="space-y-2 mb-6 mt-3">
-            <li className="flex items-center gap-2 text-stone-400 text-sm font-medium"><CheckCircle className="w-4 h-4" /> Manual scanning</li>
-            <li className="flex items-center gap-2 text-stone-400 text-sm font-medium"><CheckCircle className="w-4 h-4" /> Basic Decoder access</li>
-          </ul>
-          <button type="button" onClick={() => handleClearanceSelect('free')} className="w-full bg-stone-600 active:bg-stone-500 text-white font-bold uppercase tracking-widest text-sm py-3.5 rounded-xl active:scale-[0.98] transition-colors border border-stone-500">
-            Continue with Free
-          </button>
-        </div>
       </div>
     </div>
   );
@@ -671,7 +657,7 @@ export default function CadetCatch() {
             <div className="px-4 py-3 flex justify-between items-center">
               <span className="text-sm font-bold text-white uppercase tracking-wider">Clearance Level</span>
               <span className="text-xs font-black uppercase tracking-widest text-amber-500 bg-amber-500/20 px-2 py-1 rounded">
-                {subscription === 'premium' ? 'Tactical' : 'Civilian'}
+                Tactical
               </span>
             </div>
           </div>

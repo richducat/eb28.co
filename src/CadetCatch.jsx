@@ -803,25 +803,25 @@ export default function CadetCatch() {
     <div className="min-h-screen w-full bg-black sm:py-8 flex justify-center items-center font-sans text-stone-100 select-none">
       <div className="relative w-full h-[100dvh] sm:h-[844px] sm:max-w-[390px] bg-stone-900 sm:rounded-[3rem] sm:border-[12px] border-stone-800 overflow-hidden shadow-2xl flex flex-col">
         <div className="flex-1 relative overflow-hidden flex flex-col">
-          {currentView === 'onboarding' && <ViewOnboarding />}
-          {currentView === 'auth' && <ViewAuth />}
-          {currentView === 'paywall' && <ViewPaywall />}
+          {currentView === 'onboarding' && ViewOnboarding()}
+          {currentView === 'auth' && ViewAuth()}
+          {currentView === 'paywall' && ViewPaywall()}
 
           {currentView === 'main' && (
             <div className="h-full w-full flex flex-col relative bg-stone-950">
               <div className="flex-1 relative overflow-hidden bg-stone-950">
-                {activeTab === 'scanner' && <TabScanner />}
-                {activeTab === 'intel' && <TabIntel />}
-                {activeTab === 'roster' && <TabRoster />}
-                {activeTab === 'decoder' && <TabDecoder />}
-                {activeTab === 'profile' && <TabProfile />}
+                {activeTab === 'scanner' && TabScanner()}
+                {activeTab === 'intel' && TabIntel()}
+                {activeTab === 'roster' && TabRoster()}
+                {activeTab === 'decoder' && TabDecoder()}
+                {activeTab === 'profile' && TabProfile()}
               </div>
-              <TabBar />
+              {TabBar()}
             </div>
           )}
         </div>
 
-        {isSheetOpen && <PhotoDetailSheet />}
+        {isSheetOpen && PhotoDetailSheet()}
       </div>
 
       <style>{`

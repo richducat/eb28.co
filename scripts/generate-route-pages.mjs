@@ -13,6 +13,9 @@ const repoRoot = process.cwd();
 const docsDir = path.join(repoRoot, 'docs');
 const templatePath = path.join(docsDir, 'index.html');
 const buildId = process.env.BUILD_ID || 'development';
+const ROUTE_BOOT_LABELS = {
+    cc: 'CadetCatch',
+};
 
 function escapeAttribute(value) {
     return String(value)
@@ -38,6 +41,26 @@ function injectBuildMarkup(html) {
     return html.replace('</head>', `${buildMarkup}\n</head>`);
 }
 
+function injectRouteBootLabel(html, routeKey) {
+    const bootLabel = ROUTE_BOOT_LABELS[routeKey];
+    if (!bootLabel) {
+        return html;
+    }
+
+    return html.replace(
+        /(<span class="wake-boot-label">)([\s\S]*?)(<\/span>)/,
+        `$1${escapeAttribute(bootLabel)}$3`,
+    );
+}
+
+function makeRouteFileFriendly(html, routeKey) {
+    if (routeKey !== 'cc') {
+        return html;
+    }
+
+    return html.replace(/(src|href)="\/assets\//g, '$1="../assets/');
+}
+
 async function writeFile(relativePath, contents) {
     const fullPath = path.join(docsDir, relativePath);
     await fs.mkdir(path.dirname(fullPath), { recursive: true });
@@ -48,7 +71,13 @@ async function main() {
     const htmlTemplate = await fs.readFile(templatePath, 'utf8');
 
     for (const { routeKey, outputPath } of STATIC_ROUTE_OUTPUTS) {
-        await writeFile(outputPath, injectBuildMarkup(injectSeoMarkup(htmlTemplate, routeKey)));
+        await writeFile(
+            outputPath,
+            makeRouteFileFriendly(
+                injectRouteBootLabel(injectBuildMarkup(injectSeoMarkup(htmlTemplate, routeKey)), routeKey),
+                routeKey,
+            ),
+        );
     }
 
     await writeFile(

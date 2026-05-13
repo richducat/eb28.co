@@ -391,6 +391,36 @@ const ROUTE_META = {
             },
         ],
     },
+    cc: {
+        ...BASE_ROUTE_META,
+        key: 'cc',
+        path: '/cc/',
+        title: 'CadetCatch | Tactical Photo Recovery for Military Parents',
+        description:
+            'CadetCatch helps military families scan academy photo drops, save matched photos, and decode military jargon from a mobile-first command center.',
+        image: DEFAULT_IMAGE,
+        themeColor: '#1c1917',
+        colorScheme: 'dark',
+        includeInSitemap: true,
+        structuredData: [
+            ORGANIZATION_SCHEMA,
+            {
+                '@context': 'https://schema.org',
+                '@type': 'SoftwareApplication',
+                name: 'CadetCatch',
+                applicationCategory: 'LifestyleApplication',
+                operatingSystem: 'Web',
+                isAccessibleForFree: true,
+                url: `${SITE_ORIGIN}/cc/`,
+                image: DEFAULT_IMAGE,
+                description:
+                    'A mobile-first photo recovery and jargon decoder interface for parents of military cadets.',
+                provider: {
+                    '@id': ORGANIZATION_ID,
+                },
+            },
+        ],
+    },
     dash: {
         ...BASE_ROUTE_META,
         key: 'dash',
@@ -439,6 +469,7 @@ export const STATIC_ROUTE_OUTPUTS = [
         outputPath: page.slug === '' ? 'tch/index.html' : `tch/${page.slug}/index.html`,
     })),
     { routeKey: 'melbournewebstudio', outputPath: 'melbournewebstudio/index.html' },
+    { routeKey: 'cc', outputPath: 'cc/index.html' },
     { routeKey: 'dash', outputPath: 'dash/index.html' },
     { routeKey: 'notfound', outputPath: '404.html' },
 ];
@@ -509,6 +540,10 @@ export function detectRouteKey({ pathname = '/', hostname = '' } = {}) {
         normalizedHostname === 'melbournewebstudio.eb28.co'
     ) {
         return 'melbournewebstudio';
+    }
+
+    if (normalizedPathname === '/cc') {
+        return 'cc';
     }
 
     return 'home';

@@ -8,6 +8,7 @@ import FundManager from './FundManager';
 import UgcmaDashboard from './UgcmaDashboard';
 import ReconAgentPage from './ReconAgentPage';
 import AlarmClock from './AlarmClock';
+import CadetCatch from './CadetCatch';
 import LimitlessCreditGPS from './LimitlessCreditGPS';
 import ThomasCustomHomesPage from './ThomasCustomHomesPage';
 import MelbourneWebStudioPage from './MelbourneWebStudioPage.tsx';
@@ -51,6 +52,7 @@ const isThomasCustomHomesRoute =
 const isMelbourneWebStudioRoute =
   pathname === '/melbournewebstudio' ||
   hostname === 'melbournewebstudio.eb28.co';
+const isCadetCatchRoute = pathname === '/cc';
 const isAlarmClockRoute =
   isNativeAlarmClockApp ||
   pathname === '/alarmclock' ||
@@ -124,6 +126,15 @@ function renderApp() {
     root.render(
       <React.StrictMode>
         <MelbourneWebStudioPage />
+      </React.StrictMode>
+    );
+    return;
+  }
+
+  if (isCadetCatchRoute) {
+    root.render(
+      <React.StrictMode>
+        <CadetCatch />
       </React.StrictMode>
     );
     return;

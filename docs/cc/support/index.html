@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CadetCatch Support</title>
+    <meta name="description" content="Support information for the CadetCatch iOS app." />
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #0f0d0a;
+        --panel: rgba(29, 25, 19, 0.92);
+        --line: rgba(55, 209, 230, 0.24);
+        --text: #fffaf0;
+        --muted: #c8bda7;
+        --accent: #37d1e6;
+        --accent-2: #f5a012;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background:
+          radial-gradient(circle at top right, rgba(55, 209, 230, 0.16), transparent 34%),
+          radial-gradient(circle at bottom left, rgba(245, 160, 18, 0.18), transparent 30%),
+          var(--bg);
+        color: var(--text);
+      }
+
+      main {
+        width: min(880px, calc(100% - 32px));
+        margin: 32px auto;
+        padding: 28px;
+        border: 1px solid var(--line);
+        border-radius: 24px;
+        background: var(--panel);
+        box-shadow: 0 18px 60px rgba(0, 0, 0, 0.35);
+      }
+
+      h1,
+      h2 {
+        line-height: 1.1;
+      }
+
+      h1 {
+        margin: 0 0 12px;
+        font-size: clamp(2.2rem, 5vw, 3.4rem);
+      }
+
+      h2 {
+        margin: 28px 0 10px;
+        color: var(--accent-2);
+        font-size: 1.1rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      p,
+      li {
+        color: var(--muted);
+        font-size: 1rem;
+        line-height: 1.65;
+      }
+
+      a {
+        color: var(--accent);
+      }
+
+      .eyebrow {
+        display: inline-block;
+        margin-bottom: 14px;
+        padding: 7px 12px;
+        border: 1px solid rgba(55, 209, 230, 0.28);
+        border-radius: 999px;
+        color: var(--accent);
+        font-size: 0.78rem;
+        font-weight: 800;
+        letter-spacing: 0.16em;
+        text-transform: uppercase;
+      }
+
+      ul {
+        padding-left: 18px;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div class="eyebrow">CadetCatch</div>
+      <h1>Support</h1>
+      <p>
+        Use these notes for common CadetCatch setup steps, troubleshooting, and
+        App Review follow-up.
+      </p>
+
+      <h2>Core setup</h2>
+      <ul>
+        <li>Activate CadetCatch Pro from the first-run paywall.</li>
+        <li>Add a cadet from the Roster tab and choose a base photo if available.</li>
+        <li>Open Radar, select a scan mode, and run a sweep.</li>
+        <li>Review matches in Intel, save important matches, and generate sitrep drafts.</li>
+      </ul>
+
+      <h2>Troubleshooting</h2>
+      <ul>
+        <li>If a selected roster photo does not appear, choose the photo again from Roster.</li>
+        <li>If match cards are empty, return to Radar and run a new sweep.</li>
+        <li>If purchase products are unavailable, confirm the App Store Connect subscription is active.</li>
+        <li>Notification settings can be managed in iOS Settings after permission is requested.</li>
+      </ul>
+
+      <h2>Contact</h2>
+      <p>
+        For support requests, bug reports, or review follow-up, contact
+        <a href="https://eb28.co/#contact">https://eb28.co/#contact</a>.
+      </p>
+    </main>
+  </body>
+</html>

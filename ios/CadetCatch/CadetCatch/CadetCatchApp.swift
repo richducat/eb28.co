@@ -32,10 +32,33 @@ final class CadetCatchStore {
     var settings: UserSettings
     var sitrepDrafts: [String: String]
 
+    @ObservationIgnored private var isScreenshotMode = false
     @ObservationIgnored private let storageKey = "cadetcatch.native.state.v1"
     @ObservationIgnored private let defaults = UserDefaults.standard
 
     init() {
+        let processInfo = ProcessInfo.processInfo
+        isScreenshotMode = processInfo.arguments.contains("-cadetcatchScreenshotMode")
+
+        if isScreenshotMode {
+            let state = Self.screenshotState(
+                route: processInfo.cadetCatchArgumentValue(after: "-cadetcatchScreenshotRoute"),
+                tabName: processInfo.cadetCatchArgumentValue(after: "-cadetcatchScreenshotTab")
+            )
+            hasSeenOnboarding = state.hasSeenOnboarding
+            isPremium = state.isPremium
+            selectedTab = state.selectedTab
+            cadets = state.cadets
+            activeCadetID = state.activeCadetID
+            matches = state.matches
+            savedMatches = state.savedMatches
+            scanHistory = state.scanHistory
+            scanMode = state.scanMode
+            settings = state.settings
+            sitrepDrafts = state.sitrepDrafts
+            return
+        }
+
         if
             let data = defaults.data(forKey: "cadetcatch.native.state.v1"),
             let state = try? JSONDecoder.cadetCatch.decode(PersistedState.self, from: data)
@@ -187,6 +210,8 @@ final class CadetCatchStore {
     }
 
     private func persist() {
+        guard !isScreenshotMode else { return }
+
         let state = PersistedState(
             hasSeenOnboarding: hasSeenOnboarding,
             isPremium: isPremium,
@@ -204,6 +229,36 @@ final class CadetCatchStore {
         if let data = try? JSONEncoder.cadetCatch.encode(state) {
             defaults.set(data, forKey: storageKey)
         }
+    }
+
+    private static func screenshotState(route: String?, tabName: String?) -> PersistedState {
+        let primaryCadet = Cadet(name: "Maya R.", unit: "Alpha Company", relation: "Daughter", photoData: nil)
+        let secondaryCadet = Cadet(name: "Evan C.", unit: "Bravo Company", relation: "Nephew", photoData: nil)
+        let thirdCadet = Cadet(name: "Sam K.", unit: "Delta Platoon", relation: "Family Friend", photoData: nil)
+        let cadets = [primaryCadet, secondaryCadet, thirdCadet]
+        let matches = IntelMatch.sampleMatches(for: primaryCadet, mode: .deep)
+        let selectedTab = AppTab(rawValue: tabName ?? "") ?? .scanner
+        let routeName = route ?? "main"
+
+        return PersistedState(
+            hasSeenOnboarding: routeName != "onboarding",
+            isPremium: routeName != "paywall" && routeName != "onboarding",
+            selectedTab: selectedTab,
+            cadets: cadets,
+            activeCadetID: primaryCadet.id,
+            matches: matches,
+            savedMatches: Array(matches.prefix(2)),
+            scanHistory: [
+                ScanRecord(cadetName: primaryCadet.name, mode: ScanMode.deep.title, matchCount: 4, confidence: 96, scannedAt: Date().addingTimeInterval(-1_800)),
+                ScanRecord(cadetName: secondaryCadet.name, mode: ScanMode.smart.title, matchCount: 2, confidence: 91, scannedAt: Date().addingTimeInterval(-86_400)),
+                ScanRecord(cadetName: thirdCadet.name, mode: ScanMode.drops.title, matchCount: 3, confidence: 94, scannedAt: Date().addingTimeInterval(-172_800))
+            ],
+            scanMode: .deep,
+            settings: .default,
+            sitrepDrafts: matches.first.map {
+                [$0.id.uuidString: "Sitrep: Field training formation identified with 99% confidence from Academy Public Affairs.\n\nLetter draft: We saw a glimpse of your training today and could not be prouder. Keep showing up with grit, trust your team, and know home is cheering for you."]
+            } ?? [:]
+        )
     }
 }
 
@@ -250,6 +305,20 @@ final class PurchaseCenter {
         }
     }
 
+    func restorePurchases() async -> Bool {
+        isLoading = true
+        defer { isLoading = false }
+
+        do {
+            try await AppStore.sync()
+            errorMessage = nil
+            return true
+        } catch {
+            errorMessage = "Purchases could not be restored."
+            return false
+        }
+    }
+
     private func verified<T>(_ result: VerificationResult<T>) throws -> T {
         switch result {
         case .unverified:
@@ -289,6 +358,7 @@ struct IntelMatch: Identifiable, Codable, Hashable {
     var cadetID: Cadet.ID
     var cadetName: String
     var imageURL: URL
+    var assetName: String?
     var confidence: Int
     var source: String
     var activity: String
@@ -297,19 +367,20 @@ struct IntelMatch: Identifiable, Codable, Hashable {
     var createdAt = Date()
 
     static func sampleMatches(for cadet: Cadet, mode: ScanMode) -> [IntelMatch] {
-        let baseMatches: [(String, Int, String, String, String)] = [
-            ("https://images.unsplash.com/photo-1541845157-a6d2d100c931?auto=format&fit=crop&w=900&q=80", 96, "Academy Public Affairs", "Field training formation", "Today, 0640"),
-            ("https://images.unsplash.com/photo-1510925758641-869d353cecc7?auto=format&fit=crop&w=900&q=80", 92, "Parent Volunteer Drop", "Waterfront endurance block", "Yesterday, 1715"),
-            ("https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=900&q=80", 89, "Training Gallery", "PT and conditioning", "2 days ago"),
-            ("https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&w=900&q=80", 87, "Weekend Athletics", "Team practice window", "3 days ago")
+        let baseMatches: [(String, String, Int, String, String, String)] = [
+            ("https://images.unsplash.com/photo-1541845157-a6d2d100c931?auto=format&fit=crop&w=900&q=80", "SampleFormation", 96, "Academy Public Affairs", "Field training formation", "Today, 0640"),
+            ("https://images.unsplash.com/photo-1510925758641-869d353cecc7?auto=format&fit=crop&w=900&q=80", "SampleWaterfront", 92, "Parent Volunteer Drop", "Waterfront endurance block", "Yesterday, 1715"),
+            ("https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=900&q=80", "SamplePT", 89, "Training Gallery", "PT and conditioning", "2 days ago"),
+            ("https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&w=900&q=80", "SampleAthletics", 87, "Weekend Athletics", "Team practice window", "3 days ago")
         ]
 
-        return baseMatches.compactMap { url, confidence, source, activity, capturedAt in
+        return baseMatches.compactMap { url, assetName, confidence, source, activity, capturedAt in
             guard let imageURL = URL(string: url) else { return nil }
             return IntelMatch(
                 cadetID: cadet.id,
                 cadetName: cadet.name,
                 imageURL: imageURL,
+                assetName: assetName,
                 confidence: min(99, Int(Double(confidence) * mode.multiplier)),
                 source: source,
                 activity: activity,
@@ -455,6 +526,15 @@ private extension JSONDecoder {
     }
 }
 
+private extension ProcessInfo {
+    func cadetCatchArgumentValue(after name: String) -> String? {
+        guard let index = arguments.firstIndex(of: name) else { return nil }
+        let valueIndex = arguments.index(after: index)
+        guard valueIndex < arguments.endIndex else { return nil }
+        return arguments[valueIndex]
+    }
+}
+
 enum Theme {
     static let background = Color(red: 0.06, green: 0.055, blue: 0.048)
     static let surface = Color(red: 0.12, green: 0.11, blue: 0.095)
@@ -540,6 +620,7 @@ struct PaywallView: View {
     @Environment(CadetCatchStore.self) private var store
     @Environment(PurchaseCenter.self) private var purchases
     @State private var isPurchasing = false
+    @State private var isRestoring = false
 
     var body: some View {
         ScrollView {
@@ -619,10 +700,31 @@ struct PaywallView: View {
                         }
                     }
                     .buttonStyle(PrimaryButtonStyle())
+
+                    HStack(spacing: 18) {
+                        Button {
+                            Task {
+                                isRestoring = true
+                                let restored = await purchases.restorePurchases()
+                                if restored {
+                                    store.activatePremium()
+                                }
+                                isRestoring = false
+                            }
+                        } label: {
+                            Text(isRestoring ? "Restoring..." : "Restore")
+                        }
+
+                        Link("Privacy", destination: URL(string: "https://eb28.co/cc/privacy/")!)
+                        Link("Terms", destination: URL(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")!)
+                    }
+                    .font(.caption.weight(.bold))
+                    .foregroundStyle(Theme.muted)
+                    .frame(maxWidth: .infinity)
                 }
                 .premiumPanel()
 
-                Text("StoreKit product loading is wired to co.eb28.cadetcatch.pro.monthly. Until the App Store product exists, this build activates a local Pro preview for development.")
+                Text("Subscription renews monthly through Apple. Manage or cancel anytime in your App Store account settings.")
                     .font(.caption)
                     .foregroundStyle(Theme.muted)
                     .multilineTextAlignment(.center)
@@ -1129,21 +1231,7 @@ struct IntelCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             ZStack(alignment: .topTrailing) {
-                AsyncImage(url: match.imageURL) { phase in
-                    switch phase {
-                    case .success(let image):
-                        image.resizable().scaledToFill()
-                    case .failure:
-                        Rectangle().fill(Theme.elevated)
-                    case .empty:
-                        ZStack {
-                            Rectangle().fill(Theme.elevated)
-                            ProgressView().tint(Theme.amber)
-                        }
-                    @unknown default:
-                        Rectangle().fill(Theme.elevated)
-                    }
-                }
+                MatchImage(match: match, contentMode: .fill)
                 .frame(height: 142)
                 .clipped()
 
@@ -1193,16 +1281,8 @@ struct IntelDetailView: View {
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 18) {
-                    AsyncImage(url: match.imageURL) { phase in
-                        switch phase {
-                        case .success(let image):
-                            image.resizable().scaledToFit()
-                        case .empty:
-                            ProgressView().frame(maxWidth: .infinity, minHeight: 280)
-                        default:
-                            Rectangle().fill(Theme.elevated).frame(height: 280)
-                        }
-                    }
+                    MatchImage(match: match, contentMode: .fit)
+                    .frame(maxWidth: .infinity, minHeight: 280)
                     .background(Color.black, in: RoundedRectangle(cornerRadius: 22))
                     .clipShape(RoundedRectangle(cornerRadius: 22))
 
@@ -1274,6 +1354,35 @@ struct IntelDetailView: View {
                     }
                 } label: {
                     Image(systemName: store.isSaved(match) ? "bookmark.fill" : "bookmark")
+                }
+            }
+        }
+    }
+}
+
+struct MatchImage: View {
+    let match: IntelMatch
+    let contentMode: SwiftUI.ContentMode
+
+    var body: some View {
+        if let assetName = match.assetName {
+            Image(assetName)
+                .resizable()
+                .aspectRatio(contentMode: contentMode)
+        } else {
+            AsyncImage(url: match.imageURL) { phase in
+                switch phase {
+                case .success(let image):
+                    image.resizable().aspectRatio(contentMode: contentMode)
+                case .empty:
+                    ZStack {
+                        Rectangle().fill(Theme.elevated)
+                        ProgressView().tint(Theme.amber)
+                    }
+                case .failure:
+                    Rectangle().fill(Theme.elevated)
+                @unknown default:
+                    Rectangle().fill(Theme.elevated)
                 }
             }
         }
@@ -1369,7 +1478,9 @@ struct DecoderView: View {
 
 struct ProfileView: View {
     @Environment(CadetCatchStore.self) private var store
+    @Environment(PurchaseCenter.self) private var purchases
     @State private var showingResetAlert = false
+    @State private var isRestoring = false
 
     var body: some View {
         ScrollView {
@@ -1423,8 +1534,27 @@ struct ProfileView: View {
                 .overlay(RoundedRectangle(cornerRadius: 20).stroke(Color.white.opacity(0.08), lineWidth: 1))
 
                 VStack(spacing: 10) {
+                    Button {
+                        Task {
+                            isRestoring = true
+                            let restored = await purchases.restorePurchases()
+                            if restored {
+                                store.activatePremium()
+                            }
+                            isRestoring = false
+                        }
+                    } label: {
+                        ProfileAction(title: isRestoring ? "Restoring Purchases" : "Restore Purchases", symbol: "arrow.clockwise")
+                    }
+                    .buttonStyle(.plain)
+
                     ProfileAction(title: "Manage Subscription", symbol: "creditcard")
-                    ProfileAction(title: "Privacy and Data", symbol: "lock.shield")
+                    Link(destination: URL(string: "https://eb28.co/cc/privacy/")!) {
+                        ProfileAction(title: "Privacy Policy", symbol: "lock.shield")
+                    }
+                    Link(destination: URL(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")!) {
+                        ProfileAction(title: "Terms of Use", symbol: "doc.text")
+                    }
                     ProfileAction(title: "Export Saved Intel", symbol: "square.and.arrow.up")
                 }
 

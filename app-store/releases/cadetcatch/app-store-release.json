@@ -1,0 +1,114 @@
+{
+  "$schemaVersion": 1,
+  "app": {
+    "name": "CadetCatch",
+    "subtitle": "Find cadet photos faster",
+    "bundleId": "co.eb28.cadetcatch",
+    "sku": "cadetcatch-ios",
+    "platforms": ["iOS"],
+    "primaryCategory": "Lifestyle",
+    "secondaryCategory": "Lifestyle",
+    "copyright": "2026 EB28",
+    "ageRatingQuestionnaireCompleted": false,
+    "traderStatusReviewed": false,
+    "exportCompliance": {
+      "reviewed": true,
+      "documentationRequired": false,
+      "documentationStatus": "NOT_REQUIRED",
+      "infoPlistKeyConfigured": true
+    }
+  },
+  "version": {
+    "marketingVersion": "1.0.0",
+    "buildNumber": "1",
+    "releaseType": "MANUAL",
+    "phasedRelease": false,
+    "promotionalText": "Private watchlists, Pro scan modes, saved intel, AI sitrep drafts, and a military jargon decoder for cadet families.",
+    "description": "CadetCatch is a premium photo recovery command center for military parents and cadet families. Build a private roster, select a cadet, run fast scan modes, review match confidence, save important photo intel, and turn training moments into family-ready sitrep drafts.\n\nThe app also includes an offline academy jargon decoder that translates common military terms into plain English, making it easier for families to follow the cadet experience.",
+    "keywords": ["cadet", "military", "academy", "photos", "family", "parents", "jargon"],
+    "whatsNew": "Initial release."
+  },
+  "urls": {
+    "marketingUrl": "https://eb28.co/cc/",
+    "supportUrl": "https://eb28.co/cc/support/",
+    "privacyPolicyUrl": "https://eb28.co/cc/privacy/",
+    "userPrivacyChoicesUrl": "",
+    "termsUrl": "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/"
+  },
+  "review": {
+    "contactName": "Richard Ducat",
+    "contactEmail": "support@eb28.co",
+    "contactPhone": "+1-602-306-3920",
+    "demoRequired": false,
+    "demoUsername": "",
+    "demoPassword": "",
+    "notes": [
+      "No login is required.",
+      "Use Activate Pro on the paywall to enter the local Pro preview flow if StoreKit products are not available in the review environment.",
+      "Add a cadet from Roster, run a Radar sweep, then review matches in Intel."
+    ]
+  },
+  "distribution": {
+    "usesLogin": false,
+    "supportsIphone": true,
+    "supportsIpad": false,
+    "containsUserGeneratedContent": false,
+    "createsAccounts": false,
+    "requiresExternalHardware": false,
+    "usesPushNotifications": false,
+    "usesLocalNotifications": false
+  },
+  "monetization": {
+    "hasAds": false,
+    "adNetwork": "",
+    "appAdsTxtUrl": "",
+    "hasInAppPurchases": true,
+    "hasSubscriptions": true,
+    "paidAppsAgreementStatus": "PENDING",
+    "subscriptionUiIncludesRestore": true,
+    "subscriptionUiIncludesTerms": true,
+    "products": [
+      {
+        "id": "co.eb28.cadetcatch.pro.monthly",
+        "type": "autoRenewableSubscription",
+        "displayName": "CadetCatch Pro Monthly"
+      }
+    ]
+  },
+  "privacy": {
+    "privacyPolicyLinkedInApp": true,
+    "appPrivacyAnswersCurrent": false,
+    "trackingUsed": false,
+    "attFlowImplemented": false,
+    "accountDeletionImplemented": false,
+    "privacyManifestReviewed": true,
+    "requiredReasonApisReviewed": true,
+    "thirdPartySdkPrivacyReviewed": true
+  },
+  "assets": {
+    "appIconSource": "app-icon-1024.png",
+    "iphoneScreenshots": [
+      "screenshots/iphone-6-9/01-find-photos-faster-6-9.png",
+      "screenshots/iphone-6-9/02-match-confidence-6-9.png",
+      "screenshots/iphone-6-9/03-private-roster-6-9.png",
+      "screenshots/iphone-6-9/04-decoder-6-9.png",
+      "screenshots/iphone-6-9/05-pro-clearance-6-9.png"
+    ],
+    "ipadScreenshots": [],
+    "appPreviewVideos": []
+  },
+  "verification": {
+    "testedDevices": ["iPhone 17 Pro Max simulator"],
+    "testedFlows": [
+      "screenshot-mode fresh launch",
+      "Radar populated state",
+      "Intel populated state",
+      "Roster populated state",
+      "Decoder populated state",
+      "paywall launch state"
+    ],
+    "knownRisks": [
+      "Paid Apps Agreement and subscription product status must be confirmed in App Store Connect."
+    ]
+  }
+}

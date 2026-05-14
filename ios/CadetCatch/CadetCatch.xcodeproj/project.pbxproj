@@ -76,7 +76,7 @@
 				LastUpgradeCheck = 1430;
 				TargetAttributes = {
 					B227C0307BDADD11287D26A3 = {
-						DevelopmentTeam = "";
+						DevelopmentTeam = WN3K69XEP4;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -253,7 +253,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = WN3K69XEP4;
 				INFOPLIST_FILE = CadetCatch/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -262,7 +262,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = co.eb28.cadetcatch;
 				PRODUCT_NAME = CadetCatch;
 				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -273,7 +273,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = WN3K69XEP4;
 				INFOPLIST_FILE = CadetCatch/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -282,7 +282,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = co.eb28.cadetcatch;
 				PRODUCT_NAME = CadetCatch;
 				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

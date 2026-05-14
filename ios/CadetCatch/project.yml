@@ -21,8 +21,9 @@ targets:
         PRODUCT_NAME: CadetCatch
         INFOPLIST_FILE: CadetCatch/Info.plist
         ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        TARGETED_DEVICE_FAMILY: "1"
         CODE_SIGN_STYLE: Automatic
-        DEVELOPMENT_TEAM: ""
+        DEVELOPMENT_TEAM: WN3K69XEP4
     info:
       path: CadetCatch/Info.plist
       properties:
@@ -40,3 +41,4 @@ targets:
         NSPhotoLibraryUsageDescription: "CadetCatch uses selected photos only to register cadets in your private roster."
         NSCameraUsageDescription: "CadetCatch can use the camera to capture a base photo for your cadet roster."
         NSUserNotificationsUsageDescription: "CadetCatch sends alerts when a priority photo match is found."
+        ITSAppUsesNonExemptEncryption: false

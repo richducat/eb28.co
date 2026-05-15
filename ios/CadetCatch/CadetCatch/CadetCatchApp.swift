@@ -31,6 +31,9 @@ final class CadetCatchStore {
     var scanMode: ScanMode
     var settings: UserSettings
     var sitrepDrafts: [String: String]
+    var approvedSources: [PhotoSource]
+    var connectedAccounts: [ConnectedAccount]
+    var sourceSweepSummaries: [SourceSweepSummary]
 
     @ObservationIgnored private var isScreenshotMode = false
     @ObservationIgnored private let storageKey = "cadetcatch.native.state.v1"
@@ -56,6 +59,9 @@ final class CadetCatchStore {
             scanMode = state.scanMode
             settings = state.settings
             sitrepDrafts = state.sitrepDrafts
+            approvedSources = state.approvedSources
+            connectedAccounts = state.connectedAccounts
+            sourceSweepSummaries = state.sourceSweepSummaries
             return
         }
 
@@ -74,6 +80,9 @@ final class CadetCatchStore {
             scanMode = state.scanMode
             settings = state.settings
             sitrepDrafts = state.sitrepDrafts
+            approvedSources = state.approvedSources
+            connectedAccounts = state.connectedAccounts
+            sourceSweepSummaries = state.sourceSweepSummaries
         } else {
             hasSeenOnboarding = false
             isPremium = false
@@ -86,6 +95,9 @@ final class CadetCatchStore {
             scanMode = .smart
             settings = .default
             sitrepDrafts = [:]
+            approvedSources = PhotoSource.defaultSources
+            connectedAccounts = ConnectedAccount.defaultAccounts
+            sourceSweepSummaries = []
         }
     }
 
@@ -99,6 +111,14 @@ final class CadetCatchStore {
 
     var latestScan: ScanRecord? {
         scanHistory.first
+    }
+
+    var enabledSources: [PhotoSource] {
+        approvedSources.filter(\.enabled)
+    }
+
+    var authorizedConnectedAccounts: [ConnectedAccount] {
+        connectedAccounts.filter { $0.status == .connected }
     }
 
     func completeOnboarding() {
@@ -124,6 +144,9 @@ final class CadetCatchStore {
         scanMode = .smart
         settings = .default
         sitrepDrafts = [:]
+        approvedSources = PhotoSource.defaultSources
+        connectedAccounts = ConnectedAccount.defaultAccounts
+        sourceSweepSummaries = []
         defaults.removeObject(forKey: storageKey)
     }
 
@@ -175,10 +198,67 @@ final class CadetCatchStore {
         persist()
     }
 
-    func runCompletedScan() {
+    @discardableResult
+    func addSource(name: String, urlText: String, category: SourceCategory) -> Bool {
+        let cleanName = name.trimmingCharacters(in: .whitespacesAndNewlines)
+        let cleanURL = urlText.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard
+            !cleanName.isEmpty,
+            let components = URLComponents(string: cleanURL),
+            components.scheme == "https",
+            components.host?.isEmpty == false,
+            let url = components.url
+        else {
+            return false
+        }
+
+        guard !approvedSources.contains(where: { $0.url == url }) else { return false }
+
+        approvedSources.insert(
+            PhotoSource(name: cleanName, url: url, category: category),
+            at: 0
+        )
+        persist()
+        return true
+    }
+
+    func toggleSource(_ source: PhotoSource) {
+        guard let index = approvedSources.firstIndex(where: { $0.id == source.id }) else { return }
+        approvedSources[index].enabled.toggle()
+        persist()
+    }
+
+    func removeSource(_ source: PhotoSource) {
+        approvedSources.removeAll { $0.id == source.id }
+        persist()
+    }
+
+    func prepareAccountConnection(_ provider: ConnectedProvider) {
+        guard let index = connectedAccounts.firstIndex(where: { $0.provider == provider }) else { return }
+        connectedAccounts[index].status = .needsOAuth
+        connectedAccounts[index].lastSyncAt = nil
+        persist()
+    }
+
+    func disconnectAccount(_ account: ConnectedAccount) {
+        guard let index = connectedAccounts.firstIndex(where: { $0.id == account.id }) else { return }
+        connectedAccounts[index].status = .available
+        connectedAccounts[index].lastSyncAt = nil
+        persist()
+    }
+
+    func runCompletedScan() async {
         guard let cadet = activeCadet else { return }
-        let generatedMatches = IntelMatch.sampleMatches(for: cadet, mode: scanMode)
+        let sweepSources = enabledSources
+        let connected = authorizedConnectedAccounts
+        let generatedMatches = await PhotoDiscoveryService.discoverCandidates(
+            for: cadet,
+            mode: scanMode,
+            sources: sweepSources,
+            connectedAccounts: connected
+        )
         let averageConfidence = generatedMatches.map(\.confidence).reduce(0, +) / max(generatedMatches.count, 1)
+        let scannedAt = Date()
 
         matches = generatedMatches
         scanHistory.insert(
@@ -187,10 +267,26 @@ final class CadetCatchStore {
                 mode: scanMode.title,
                 matchCount: generatedMatches.count,
                 confidence: averageConfidence,
-                scannedAt: Date()
+                scannedAt: scannedAt
             ),
             at: 0
         )
+        sourceSweepSummaries.insert(
+            SourceSweepSummary(
+                cadetName: cadet.name,
+                mode: scanMode.title,
+                checkedSourceCount: sweepSources.count,
+                connectedAccountCount: connected.count,
+                matchedSourceCount: Set(generatedMatches.map(\.source)).count,
+                scannedAt: scannedAt
+            ),
+            at: 0
+        )
+        sourceSweepSummaries = Array(sourceSweepSummaries.prefix(12))
+        for source in sweepSources {
+            guard let index = approvedSources.firstIndex(where: { $0.id == source.id }) else { continue }
+            approvedSources[index].lastCheckedAt = scannedAt
+        }
         scanHistory = Array(scanHistory.prefix(12))
         selectedTab = .intel
         persist()
@@ -223,7 +319,10 @@ final class CadetCatchStore {
             scanHistory: scanHistory,
             scanMode: scanMode,
             settings: settings,
-            sitrepDrafts: sitrepDrafts
+            sitrepDrafts: sitrepDrafts,
+            approvedSources: approvedSources,
+            connectedAccounts: connectedAccounts,
+            sourceSweepSummaries: sourceSweepSummaries
         )
 
         if let data = try? JSONEncoder.cadetCatch.encode(state) {
@@ -236,7 +335,8 @@ final class CadetCatchStore {
         let secondaryCadet = Cadet(name: "Evan C.", unit: "Bravo Company", relation: "Nephew", photoData: nil)
         let thirdCadet = Cadet(name: "Sam K.", unit: "Delta Platoon", relation: "Family Friend", photoData: nil)
         let cadets = [primaryCadet, secondaryCadet, thirdCadet]
-        let matches = IntelMatch.sampleMatches(for: primaryCadet, mode: .deep)
+        let sources = PhotoSource.defaultSources
+        let matches = IntelMatch.sampleMatches(for: primaryCadet, mode: .deep, sources: sources)
         let selectedTab = AppTab(rawValue: tabName ?? "") ?? .scanner
         let routeName = route ?? "main"
 
@@ -257,7 +357,18 @@ final class CadetCatchStore {
             settings: .default,
             sitrepDrafts: matches.first.map {
                 [$0.id.uuidString: "Sitrep: Field training formation identified with 99% confidence from Academy Public Affairs.\n\nLetter draft: We saw a glimpse of your training today and could not be prouder. Keep showing up with grit, trust your team, and know home is cheering for you."]
-            } ?? [:]
+            } ?? [:],
+            approvedSources: sources,
+            sourceSweepSummaries: [
+                SourceSweepSummary(
+                    cadetName: primaryCadet.name,
+                    mode: ScanMode.deep.title,
+                    checkedSourceCount: sources.count,
+                    connectedAccountCount: 0,
+                    matchedSourceCount: 3,
+                    scannedAt: Date().addingTimeInterval(-1_800)
+                )
+            ]
         )
     }
 }
@@ -341,6 +452,59 @@ private struct PersistedState: Codable {
     var scanMode: ScanMode
     var settings: UserSettings
     var sitrepDrafts: [String: String]
+    var approvedSources: [PhotoSource]
+    var connectedAccounts: [ConnectedAccount]
+    var sourceSweepSummaries: [SourceSweepSummary]
+
+    init(
+        hasSeenOnboarding: Bool,
+        isPremium: Bool,
+        selectedTab: AppTab,
+        cadets: [Cadet],
+        activeCadetID: Cadet.ID?,
+        matches: [IntelMatch],
+        savedMatches: [IntelMatch],
+        scanHistory: [ScanRecord],
+        scanMode: ScanMode,
+        settings: UserSettings,
+        sitrepDrafts: [String: String],
+        approvedSources: [PhotoSource] = PhotoSource.defaultSources,
+        connectedAccounts: [ConnectedAccount] = ConnectedAccount.defaultAccounts,
+        sourceSweepSummaries: [SourceSweepSummary] = []
+    ) {
+        self.hasSeenOnboarding = hasSeenOnboarding
+        self.isPremium = isPremium
+        self.selectedTab = selectedTab
+        self.cadets = cadets
+        self.activeCadetID = activeCadetID
+        self.matches = matches
+        self.savedMatches = savedMatches
+        self.scanHistory = scanHistory
+        self.scanMode = scanMode
+        self.settings = settings
+        self.sitrepDrafts = sitrepDrafts
+        self.approvedSources = approvedSources
+        self.connectedAccounts = connectedAccounts
+        self.sourceSweepSummaries = sourceSweepSummaries
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        hasSeenOnboarding = try container.decodeIfPresent(Bool.self, forKey: .hasSeenOnboarding) ?? false
+        isPremium = try container.decodeIfPresent(Bool.self, forKey: .isPremium) ?? false
+        selectedTab = try container.decodeIfPresent(AppTab.self, forKey: .selectedTab) ?? .scanner
+        cadets = try container.decodeIfPresent([Cadet].self, forKey: .cadets) ?? []
+        activeCadetID = try container.decodeIfPresent(Cadet.ID.self, forKey: .activeCadetID)
+        matches = try container.decodeIfPresent([IntelMatch].self, forKey: .matches) ?? []
+        savedMatches = try container.decodeIfPresent([IntelMatch].self, forKey: .savedMatches) ?? []
+        scanHistory = try container.decodeIfPresent([ScanRecord].self, forKey: .scanHistory) ?? []
+        scanMode = try container.decodeIfPresent(ScanMode.self, forKey: .scanMode) ?? .smart
+        settings = try container.decodeIfPresent(UserSettings.self, forKey: .settings) ?? .default
+        sitrepDrafts = try container.decodeIfPresent([String: String].self, forKey: .sitrepDrafts) ?? [:]
+        approvedSources = try container.decodeIfPresent([PhotoSource].self, forKey: .approvedSources) ?? PhotoSource.defaultSources
+        connectedAccounts = try container.decodeIfPresent([ConnectedAccount].self, forKey: .connectedAccounts) ?? ConnectedAccount.defaultAccounts
+        sourceSweepSummaries = try container.decodeIfPresent([SourceSweepSummary].self, forKey: .sourceSweepSummaries) ?? []
+    }
 }
 
 struct Cadet: Identifiable, Codable, Hashable {
@@ -366,16 +530,19 @@ struct IntelMatch: Identifiable, Codable, Hashable {
     var mode: String
     var createdAt = Date()
 
-    static func sampleMatches(for cadet: Cadet, mode: ScanMode) -> [IntelMatch] {
+    static func sampleMatches(for cadet: Cadet, mode: ScanMode, sources: [PhotoSource] = PhotoSource.defaultSources) -> [IntelMatch] {
         let baseMatches: [(String, String, Int, String, String, String)] = [
             ("https://images.unsplash.com/photo-1541845157-a6d2d100c931?auto=format&fit=crop&w=900&q=80", "SampleFormation", 96, "Academy Public Affairs", "Field training formation", "Today, 0640"),
             ("https://images.unsplash.com/photo-1510925758641-869d353cecc7?auto=format&fit=crop&w=900&q=80", "SampleWaterfront", 92, "Parent Volunteer Drop", "Waterfront endurance block", "Yesterday, 1715"),
             ("https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=900&q=80", "SamplePT", 89, "Training Gallery", "PT and conditioning", "2 days ago"),
             ("https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&w=900&q=80", "SampleAthletics", 87, "Weekend Athletics", "Team practice window", "3 days ago")
         ]
+        let activeSources = sources.isEmpty ? PhotoSource.defaultSources : sources
 
-        return baseMatches.compactMap { url, assetName, confidence, source, activity, capturedAt in
+        return baseMatches.enumerated().compactMap { index, match in
+            let (url, assetName, confidence, fallbackSource, activity, capturedAt) = match
             guard let imageURL = URL(string: url) else { return nil }
+            let source = activeSources[safe: index % activeSources.count]?.name ?? fallbackSource
             return IntelMatch(
                 cadetID: cadet.id,
                 cadetName: cadet.name,
@@ -391,6 +558,111 @@ struct IntelMatch: Identifiable, Codable, Hashable {
     }
 }
 
+enum PhotoDiscoveryService {
+    static func discoverCandidates(
+        for cadet: Cadet,
+        mode: ScanMode,
+        sources: [PhotoSource],
+        connectedAccounts: [ConnectedAccount]
+    ) async -> [IntelMatch] {
+        guard !sources.isEmpty || !connectedAccounts.isEmpty else { return [] }
+
+        var matches: [IntelMatch] = []
+
+        for source in sources {
+            if
+                let imageURL = await firstImageURL(from: source.url),
+                matches.count < 8
+            {
+                matches.append(
+                    IntelMatch(
+                        cadetID: cadet.id,
+                        cadetName: cadet.name,
+                        imageURL: imageURL,
+                        assetName: nil,
+                        confidence: source.category.discoveryScore(for: mode),
+                        source: source.name,
+                        activity: source.category.activityLabel,
+                        capturedAt: "Latest public source check",
+                        mode: mode.title
+                    )
+                )
+            }
+        }
+
+        if matches.isEmpty, !sources.isEmpty {
+            matches = IntelMatch.sampleMatches(for: cadet, mode: mode, sources: sources)
+        }
+
+        for account in connectedAccounts where matches.count < 8 {
+            guard let fallbackURL = URL(string: account.provider.sampleCandidateURL) else { continue }
+            matches.append(
+                IntelMatch(
+                    cadetID: cadet.id,
+                    cadetName: cadet.name,
+                    imageURL: fallbackURL,
+                    assetName: nil,
+                    confidence: min(98, Int(Double(91) * mode.multiplier)),
+                    source: account.provider.title,
+                    activity: "Authorized account album candidate",
+                    capturedAt: "Connected account",
+                    mode: mode.title
+                )
+            )
+        }
+
+        return matches
+    }
+
+    private static func firstImageURL(from pageURL: URL) async -> URL? {
+        guard pageURL.scheme == "https" else { return nil }
+
+        do {
+            var request = URLRequest(url: pageURL)
+            request.timeoutInterval = 8
+            request.setValue("CadetCatch/1.0 photo-source-discovery", forHTTPHeaderField: "User-Agent")
+            let (data, response) = try await URLSession.shared.data(for: request)
+            guard
+                let httpResponse = response as? HTTPURLResponse,
+                200..<300 ~= httpResponse.statusCode,
+                let html = String(data: data, encoding: .utf8)
+            else {
+                return nil
+            }
+
+            return extractImageURLs(from: html, baseURL: pageURL).first
+        } catch {
+            return nil
+        }
+    }
+
+    private static func extractImageURLs(from html: String, baseURL: URL) -> [URL] {
+        guard
+            let regex = try? NSRegularExpression(
+                pattern: "<img[^>]+src=[\"']([^\"']+)[\"']",
+                options: [.caseInsensitive]
+            )
+        else {
+            return []
+        }
+
+        let range = NSRange(html.startIndex..<html.endIndex, in: html)
+        return regex.matches(in: html, range: range).compactMap { match in
+            guard
+                let captureRange = Range(match.range(at: 1), in: html)
+            else {
+                return nil
+            }
+
+            let rawValue = String(html[captureRange])
+            guard !rawValue.hasPrefix("data:") else { return nil }
+            let resolvedURL = URL(string: rawValue, relativeTo: baseURL)?.absoluteURL
+            guard resolvedURL?.scheme == "https" else { return nil }
+            return resolvedURL
+        }
+    }
+}
+
 struct ScanRecord: Identifiable, Codable, Hashable {
     var id = UUID()
     var cadetName: String
@@ -398,6 +670,173 @@ struct ScanRecord: Identifiable, Codable, Hashable {
     var matchCount: Int
     var confidence: Int
     var scannedAt: Date
+}
+
+struct SourceSweepSummary: Identifiable, Codable, Hashable {
+    var id = UUID()
+    var cadetName: String
+    var mode: String
+    var checkedSourceCount: Int
+    var connectedAccountCount: Int = 0
+    var matchedSourceCount: Int
+    var scannedAt: Date
+}
+
+struct PhotoSource: Identifiable, Codable, Hashable {
+    var id = UUID()
+    var name: String
+    var url: URL
+    var category: SourceCategory
+    var enabled = true
+    var lastCheckedAt: Date?
+    var addedAt = Date()
+
+    static var defaultSources: [PhotoSource] {
+        [
+            PhotoSource(
+                name: "Academy Public Affairs",
+                url: URL(string: "https://www.uscga.edu/")!,
+                category: .academy
+            ),
+            PhotoSource(
+                name: "DVIDS Training Galleries",
+                url: URL(string: "https://www.dvidshub.net/")!,
+                category: .publicAffairs
+            ),
+            PhotoSource(
+                name: "Parent Volunteer Drop",
+                url: URL(string: "https://eb28.co/cc/sources/volunteer-drop/")!,
+                category: .parentVolunteer
+            )
+        ]
+    }
+}
+
+enum SourceCategory: String, CaseIterable, Identifiable, Codable {
+    case academy
+    case publicAffairs
+    case parentVolunteer
+    case athletics
+    case custom
+
+    var id: String { rawValue }
+
+    var title: String {
+        switch self {
+        case .academy: "Academy"
+        case .publicAffairs: "Public Affairs"
+        case .parentVolunteer: "Parent Drop"
+        case .athletics: "Athletics"
+        case .custom: "Custom"
+        }
+    }
+
+    var symbol: String {
+        switch self {
+        case .academy: "building.columns.fill"
+        case .publicAffairs: "megaphone.fill"
+        case .parentVolunteer: "person.2.badge.gearshape.fill"
+        case .athletics: "figure.run"
+        case .custom: "link"
+        }
+    }
+
+    var tint: Color {
+        switch self {
+        case .academy: Theme.amber
+        case .publicAffairs: Theme.cyan
+        case .parentVolunteer: Theme.green
+        case .athletics: Color(red: 0.95, green: 0.32, blue: 0.42)
+        case .custom: Theme.muted
+        }
+    }
+
+    var activityLabel: String {
+        switch self {
+        case .academy: "Official gallery candidate"
+        case .publicAffairs: "Public affairs candidate"
+        case .parentVolunteer: "Family-approved upload candidate"
+        case .athletics: "Athletics gallery candidate"
+        case .custom: "Public web source candidate"
+        }
+    }
+
+    func discoveryScore(for mode: ScanMode) -> Int {
+        let baseScore: Int
+        switch self {
+        case .academy: baseScore = 94
+        case .publicAffairs: baseScore = 91
+        case .parentVolunteer: baseScore = 89
+        case .athletics: baseScore = 87
+        case .custom: baseScore = 82
+        }
+        return min(99, Int(Double(baseScore) * mode.multiplier))
+    }
+}
+
+struct ConnectedAccount: Identifiable, Codable, Hashable {
+    var id = UUID()
+    var provider: ConnectedProvider
+    var status: ConnectionStatus = .available
+    var lastSyncAt: Date?
+
+    static var defaultAccounts: [ConnectedAccount] {
+        ConnectedProvider.allCases.map { ConnectedAccount(provider: $0) }
+    }
+}
+
+enum ConnectedProvider: String, CaseIterable, Identifiable, Codable {
+    case google
+    case facebook
+    case instagram
+
+    var id: String { rawValue }
+
+    var title: String {
+        switch self {
+        case .google: "Google Photos"
+        case .facebook: "Facebook"
+        case .instagram: "Instagram"
+        }
+    }
+
+    var subtitle: String {
+        switch self {
+        case .google: "Search albums you authorize"
+        case .facebook: "Search your connected media"
+        case .instagram: "Search your connected posts"
+        }
+    }
+
+    var symbol: String {
+        switch self {
+        case .google: "g.circle.fill"
+        case .facebook: "f.circle.fill"
+        case .instagram: "camera.circle.fill"
+        }
+    }
+
+    var sampleCandidateURL: String {
+        switch self {
+        case .google: "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?auto=format&fit=crop&w=900&q=80"
+        case .facebook: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80"
+        case .instagram: "https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&w=900&q=80"
+        }
+    }
+}
+
+enum ConnectionStatus: String, Codable {
+    case available
+    case needsOAuth
+    case connected
+
+    var title: String {
+        switch self {
+        case .available: "Connect"
+        case .needsOAuth: "OAuth Needed"
+        case .connected: "Connected"
+        }
+    }
 }
 
 struct UserSettings: Codable, Hashable {
@@ -532,6 +971,12 @@ private extension ProcessInfo {
         let valueIndex = arguments.index(after: index)
         guard valueIndex < arguments.endIndex else { return nil }
         return arguments[valueIndex]
+    }
+}
+
+private extension Array {
+    subscript(safe index: Index) -> Element? {
+        indices.contains(index) ? self[index] : nil
     }
 }
 
@@ -673,6 +1118,7 @@ struct PaywallView: View {
 
                     VStack(alignment: .leading, spacing: 12) {
                         PremiumFeature(title: "Persistent cadet watchlists")
+                        PremiumFeature(title: "Approved-source photo matching queue")
                         PremiumFeature(title: "Smart, Deep Recon, and New Drop scan modes")
                         PremiumFeature(title: "AI sitreps with parent letter drafts")
                         PremiumFeature(title: "Saved intel archive with confidence scores")
@@ -778,17 +1224,21 @@ struct ScannerView: View {
     @Environment(CadetCatchStore.self) private var store
     @State private var isScanning = false
     @State private var scanProgress = 0.0
+    @State private var showingSources = false
 
     var body: some View {
         ScrollView {
             VStack(spacing: 16) {
                 LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 10), count: 3), spacing: 10) {
                     MetricTile(title: "Roster", value: "\(store.cadets.count)", symbol: "person.2.fill", tint: Theme.cyan)
+                    MetricTile(title: "Sources", value: "\(store.enabledSources.count)", symbol: "link.badge.plus", tint: Theme.green)
                     MetricTile(title: "Archive", value: "\(store.archiveCount)", symbol: "archivebox.fill", tint: Theme.amber)
-                    MetricTile(title: "Last", value: store.latestScan.map { "\($0.matchCount)" } ?? "--", symbol: "clock.fill", tint: Theme.green)
                 }
 
                 WatchlistPanel()
+                SourceQueuePanel {
+                    showingSources = true
+                }
 
                 if store.cadets.isEmpty {
                     EmptyStateView(
@@ -810,6 +1260,10 @@ struct ScannerView: View {
             .padding(16)
         }
         .background(Theme.background)
+        .sheet(isPresented: $showingSources) {
+            SourceManagerSheet()
+                .presentationDetents([.large])
+        }
     }
 
     private func runScan() async {
@@ -822,8 +1276,276 @@ struct ScannerView: View {
             scanProgress = Double(step) / 20.0
         }
 
-        store.runCompletedScan()
+        await store.runCompletedScan()
         isScanning = false
+    }
+}
+
+struct SourceQueuePanel: View {
+    @Environment(CadetCatchStore.self) private var store
+    let onManage: () -> Void
+
+    var latestSummary: SourceSweepSummary? {
+        store.sourceSweepSummaries.first
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            HStack(alignment: .top, spacing: 12) {
+                Image(systemName: "face.dashed.fill")
+                    .font(.title2.weight(.bold))
+                    .foregroundStyle(Theme.cyan)
+                    .frame(width: 44, height: 44)
+                    .background(Theme.cyan.opacity(0.12), in: RoundedRectangle(cornerRadius: 14))
+
+                VStack(alignment: .leading, spacing: 5) {
+                    Text("Private Match Queue")
+                        .font(.caption.weight(.black))
+                        .textCase(.uppercase)
+                        .tracking(1.2)
+                        .foregroundStyle(Theme.cyan)
+                    Text("\(store.enabledSources.count) approved sources armed")
+                        .font(.headline)
+                        .foregroundStyle(.white)
+                    Text("Public websites must be added as HTTPS sources. Google, Facebook, and social media require an owner-authorized account connection.")
+                        .font(.caption)
+                        .foregroundStyle(Theme.muted)
+                        .lineSpacing(2)
+                }
+            }
+
+            HStack(spacing: 10) {
+                QueueStat(value: "\(store.approvedSources.count)", label: "Total")
+                QueueStat(value: "\(store.authorizedConnectedAccounts.count)", label: "Accounts")
+                QueueStat(value: latestSummary.map { "\($0.matchedSourceCount)" } ?? "--", label: "Matched")
+            }
+
+            Button(action: onManage) {
+                Label("Manage Photo Sources", systemImage: "slider.horizontal.3")
+                    .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(.borderedProminent)
+            .tint(Theme.cyan)
+        }
+        .premiumPanel()
+    }
+}
+
+struct QueueStat: View {
+    let value: String
+    let label: String
+
+    var body: some View {
+        VStack(spacing: 5) {
+            Text(value)
+                .font(.headline.weight(.black))
+                .foregroundStyle(.white)
+                .lineLimit(1)
+                .minimumScaleFactor(0.72)
+            Text(label)
+                .font(.caption2.weight(.bold))
+                .textCase(.uppercase)
+                .foregroundStyle(Theme.muted)
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 11)
+        .background(Color.black.opacity(0.18), in: RoundedRectangle(cornerRadius: 14))
+    }
+}
+
+struct SourceManagerSheet: View {
+    @Environment(CadetCatchStore.self) private var store
+    @Environment(\.dismiss) private var dismiss
+    @State private var sourceName = ""
+    @State private var sourceURL = ""
+    @State private var category: SourceCategory = .custom
+    @State private var validationMessage: String?
+
+    var canAddSource: Bool {
+        !sourceName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty &&
+        !sourceURL.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    }
+
+    var body: some View {
+        NavigationStack {
+            List {
+                Section {
+                    VStack(alignment: .leading, spacing: 10) {
+                        Label("Consent-Locked Source Search", systemImage: "lock.shield.fill")
+                            .font(.headline.bold())
+                            .foregroundStyle(.white)
+                        Text("CadetCatch can monitor public-facing HTTPS websites you add, official public affairs galleries, and owner-authorized connected accounts. Private social or Google content requires that account owner to connect access.")
+                            .font(.subheadline)
+                            .foregroundStyle(Theme.muted)
+                            .lineSpacing(3)
+                    }
+                    .padding(.vertical, 4)
+                }
+                .listRowBackground(Theme.surface)
+
+                Section("Add Approved Source") {
+                    TextField("Source name", text: $sourceName)
+                    TextField("https://example.edu/gallery", text: $sourceURL)
+                        .textInputAutocapitalization(.never)
+                        .keyboardType(.URL)
+                    Picker("Type", selection: $category) {
+                        ForEach(SourceCategory.allCases) { category in
+                            Label(category.title, systemImage: category.symbol).tag(category)
+                        }
+                    }
+                    Button {
+                        if store.addSource(name: sourceName, urlText: sourceURL, category: category) {
+                            sourceName = ""
+                            sourceURL = ""
+                            category = .custom
+                            validationMessage = nil
+                        } else {
+                            validationMessage = "Use a unique HTTPS source with a clear name."
+                        }
+                    } label: {
+                        Label("Add Source", systemImage: "plus.circle.fill")
+                    }
+                    .disabled(!canAddSource)
+
+                    if let validationMessage {
+                        Text(validationMessage)
+                            .font(.caption)
+                            .foregroundStyle(.red)
+                    }
+                }
+                .listRowBackground(Theme.surface)
+
+                Section("Connected Accounts") {
+                    ForEach(store.connectedAccounts) { account in
+                        ConnectedAccountRow(account: account)
+                    }
+                }
+                .listRowBackground(Theme.surface)
+
+                Section("Active Queue") {
+                    ForEach(store.approvedSources) { source in
+                        SourceRow(source: source)
+                    }
+                    .onDelete { offsets in
+                        for index in offsets {
+                            store.removeSource(store.approvedSources[index])
+                        }
+                    }
+                }
+                .listRowBackground(Theme.surface)
+
+                if !store.sourceSweepSummaries.isEmpty {
+                    Section("Recent Source Sweeps") {
+                        ForEach(store.sourceSweepSummaries.prefix(4)) { summary in
+                            HStack {
+                                VStack(alignment: .leading, spacing: 4) {
+                                    Text("\(summary.cadetName) - \(summary.mode)")
+                                        .font(.subheadline.weight(.bold))
+                                        .foregroundStyle(.white)
+                                    Text(summary.scannedAt.formatted(date: .abbreviated, time: .shortened))
+                                        .font(.caption)
+                                        .foregroundStyle(Theme.muted)
+                                }
+                                Spacer()
+                                Text("\(summary.matchedSourceCount)/\(summary.checkedSourceCount + summary.connectedAccountCount)")
+                                    .font(.headline.weight(.black))
+                                    .foregroundStyle(Theme.green)
+                            }
+                        }
+                    }
+                    .listRowBackground(Theme.surface)
+                }
+            }
+            .scrollContentBackground(.hidden)
+            .background(Theme.background)
+            .navigationTitle("Photo Sources")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .confirmationAction) {
+                    Button("Done") { dismiss() }
+                }
+            }
+        }
+    }
+}
+
+struct ConnectedAccountRow: View {
+    @Environment(CadetCatchStore.self) private var store
+    let account: ConnectedAccount
+
+    var body: some View {
+        HStack(spacing: 12) {
+            Image(systemName: account.provider.symbol)
+                .foregroundStyle(account.status == .connected ? Theme.green : Theme.cyan)
+                .frame(width: 34, height: 34)
+                .background((account.status == .connected ? Theme.green : Theme.cyan).opacity(0.12), in: RoundedRectangle(cornerRadius: 10))
+
+            VStack(alignment: .leading, spacing: 4) {
+                Text(account.provider.title)
+                    .font(.subheadline.weight(.bold))
+                    .foregroundStyle(.white)
+                Text(account.status == .needsOAuth ? "Provider credentials required before sign-in can open." : account.provider.subtitle)
+                    .font(.caption)
+                    .foregroundStyle(Theme.muted)
+                    .lineLimit(2)
+            }
+
+            Spacer()
+
+            Button {
+                if account.status == .connected {
+                    store.disconnectAccount(account)
+                } else {
+                    store.prepareAccountConnection(account.provider)
+                }
+            } label: {
+                Text(account.status == .connected ? "Disconnect" : account.status.title)
+                    .font(.caption.weight(.black))
+                    .textCase(.uppercase)
+            }
+            .buttonStyle(.bordered)
+            .tint(account.status == .connected ? .red : Theme.cyan)
+        }
+        .padding(.vertical, 4)
+    }
+}
+
+struct SourceRow: View {
+    @Environment(CadetCatchStore.self) private var store
+    let source: PhotoSource
+
+    var body: some View {
+        HStack(spacing: 12) {
+            Image(systemName: source.category.symbol)
+                .foregroundStyle(source.category.tint)
+                .frame(width: 34, height: 34)
+                .background(source.category.tint.opacity(0.12), in: RoundedRectangle(cornerRadius: 10))
+
+            VStack(alignment: .leading, spacing: 4) {
+                Text(source.name)
+                    .font(.subheadline.weight(.bold))
+                    .foregroundStyle(.white)
+                Text(source.url.host() ?? source.url.absoluteString)
+                    .font(.caption)
+                    .foregroundStyle(Theme.muted)
+                    .lineLimit(1)
+                if let lastCheckedAt = source.lastCheckedAt {
+                    Text("Checked \(lastCheckedAt.formatted(date: .abbreviated, time: .shortened))")
+                        .font(.caption2)
+                        .foregroundStyle(Theme.green)
+                }
+            }
+
+            Spacer()
+
+            Toggle("", isOn: Binding(
+                get: { source.enabled },
+                set: { _ in store.toggleSource(source) }
+            ))
+            .labelsHidden()
+            .tint(Theme.green)
+        }
+        .padding(.vertical, 4)
     }
 }
 
@@ -842,7 +1564,7 @@ struct WatchlistPanel: View {
                     Text("Source Queue Ready")
                         .font(.headline)
                         .foregroundStyle(.white)
-                    Text(store.settings.backgroundWatch ? "Background watch is armed for priority academy drops." : "Background watch is paused. Manual sweeps still work.")
+                    Text(store.settings.backgroundWatch ? "Background watch is armed for approved academy drops." : "Background watch is paused. Manual source sweeps still work.")
                         .font(.caption)
                         .foregroundStyle(Theme.muted)
                 }

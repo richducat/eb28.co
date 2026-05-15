@@ -17,6 +17,9 @@ CadetCatch is now scaffolded as a native SwiftUI app separate from the existing 
 - Persistent private cadet roster.
 - PhotosPicker-based cadet base photo import.
 - Smart Sweep, Deep Recon, and New Drops scan modes.
+- Approved HTTPS photo-source queue for public-facing websites and official galleries.
+- Google Photos, Facebook, and Instagram account-connector scaffolding for owner-authorized sources.
+- Source discovery service that fetches image candidates from enabled public source pages.
 - Scan history and confidence-scored intel matches.
 - Saved intel archive.
 - Asset dossier sheet with local AI-style sitrep and parent letter draft.

@@ -20,13 +20,13 @@
   },
   "version": {
     "marketingVersion": "1.0.0",
-    "buildNumber": "3",
+    "buildNumber": "4",
     "releaseType": "MANUAL",
     "phasedRelease": false,
-    "promotionalText": "Private cadet rosters, public-source photo checks, saved finds, review notes, and a plain-English academy terms decoder.",
-    "description": "CadetCatch helps Coast Guard Academy families keep up with public cadet photos without digging through every gallery by hand.\n\nCreate a private roster on your iPhone, add approved public photo sources, scan those sources for possible face matches, review match confidence, save likely finds, and keep simple notes for family follow-up.\n\nCadetCatch only checks public HTTPS sources that you add or enable. It does not scan private social accounts, private photo libraries, or non-public websites unless a future connected-source version explicitly asks for that access.",
+    "promotionalText": "Private cadet rosters, public-source photo checks, covered previews, saved finds, review notes, and a plain-English academy terms decoder.",
+    "description": "CadetCatch helps Coast Guard Academy families keep up with public cadet photos without digging through every gallery by hand.\n\nCreate a private roster on your iPhone, add approved public photo sources, scan those sources for possible face matches, review match confidence, unlock covered results, save likely finds, and keep simple notes for family follow-up.\n\nCadetCatch only checks public HTTPS sources that you add or enable. It does not scan private social accounts, private photo libraries, or non-public websites unless a future connected-source version explicitly asks for that access.",
     "keywords": ["cadet", "military", "academy", "photos", "family", "parents", "coast"],
-    "whatsNew": "Initial TestFlight build with local roster, public-source photo checking, saved photos, review notes, and a cadet-family terms decoder."
+    "whatsNew": "Adds StoreKit purchase gates for one-time checks, one-photo unlocks, monthly access, covered result previews, and restore purchases."
   },
   "urls": {
     "marketingUrl": "https://eb28.co/cc/",
@@ -46,7 +46,8 @@
       "No login is required.",
       "Add a cadet profile from Roster using a clear face photo selected from Photos.",
       "Open Sources to enable or add public HTTPS photo pages. The app does not scan private accounts.",
-      "Open Home and run Check Public Sources, then review any possible matches in Photos.",
+      "Open Home and run Check Photos. Results are covered until an unlock purchase or monthly access is active.",
+      "Open Photos to review possible matches, unlock a photo, save an unlocked match, and create a review note.",
       "If a source has no usable images or no match above the threshold, the app reports that result instead of showing sample matches."
     ]
   },
@@ -64,12 +65,31 @@
     "hasAds": false,
     "adNetwork": "",
     "appAdsTxtUrl": "",
-    "hasInAppPurchases": false,
-    "hasSubscriptions": false,
-    "paidAppsAgreementStatus": "NOT_NEEDED",
-    "subscriptionUiIncludesRestore": false,
-    "subscriptionUiIncludesTerms": false,
-    "products": []
+    "hasInAppPurchases": true,
+    "hasSubscriptions": true,
+    "paidAppsAgreementStatus": "ACTIVE",
+    "subscriptionUiIncludesRestore": true,
+    "subscriptionUiIncludesTerms": true,
+    "products": [
+      {
+        "productId": "co.eb28.cadetcatch.search.once",
+        "type": "CONSUMABLE",
+        "name": "One-Time Photo Check",
+        "price": "2.00 USD"
+      },
+      {
+        "productId": "co.eb28.cadetcatch.photo.unlock",
+        "type": "CONSUMABLE",
+        "name": "Unlock One Photo",
+        "price": "2.00 USD"
+      },
+      {
+        "productId": "co.eb28.cadetcatch.family.monthly",
+        "type": "AUTO_RENEWABLE_SUBSCRIPTION",
+        "name": "Family Monthly",
+        "price": "12.50 USD/month"
+      }
+    ]
   },
   "privacy": {
     "privacyPolicyLinkedInApp": true,
@@ -99,14 +119,16 @@
       "fresh launch with EAGLE background",
       "add cadet with selected profile photo",
       "public HTTPS source management",
-      "public source scan with no sample-data fallback",
-      "photo review and saved photo flow",
+      "public source scan with covered result previews and no sample-data fallback",
+      "StoreKit purchase sheet and restore purchase controls",
+      "photo review, unlock, and saved photo flow",
       "plain-English terms decoder",
       "reset local data"
     ],
     "knownRisks": [
       "Public websites may change markup or block automated image access; the app surfaces empty/no-match states when a source cannot provide usable public images.",
-      "Private social account scanning is intentionally not included in this build."
+      "Private social account scanning is intentionally not included in this build.",
+      "StoreKit products must exist in App Store Connect before TestFlight purchase flows can return live products."
     ]
   }
 }

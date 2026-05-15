@@ -1,4 +1,5 @@
 import PhotosUI
+import StoreKit
 import SwiftUI
 import UIKit
 import Vision
@@ -6,12 +7,17 @@ import Vision
 @main
 struct CadetCatchApp: App {
     @State private var store = CadetCatchStore()
+    @State private var purchases = PurchaseManager()
 
     var body: some Scene {
         WindowGroup {
             AppFlowView()
                 .environment(store)
+                .environment(purchases)
                 .preferredColorScheme(.light)
+                .task {
+                    await purchases.configure()
+                }
         }
     }
 }
@@ -29,6 +35,9 @@ final class CadetCatchStore {
     var sources: [PhotoSource]
     var notes: [String: String]
     var lastScanMessage: String?
+    var previewSearchUsed: Bool
+    var searchCredits: Int
+    var unlockedImageURLs: Set<String>
 
     @ObservationIgnored private let storageKey = "cadetcatch.native.state.v2"
     @ObservationIgnored private let defaults = UserDefaults.standard
@@ -48,6 +57,9 @@ final class CadetCatchStore {
             sources = state.sources
             notes = state.notes
             lastScanMessage = state.lastScanMessage
+            previewSearchUsed = state.previewSearchUsed ?? false
+            searchCredits = state.searchCredits ?? 0
+            unlockedImageURLs = state.unlockedImageURLs ?? []
         } else {
             hasSeenOnboarding = false
             selectedTab = .home
@@ -59,6 +71,9 @@ final class CadetCatchStore {
             sources = PhotoSource.defaultSources
             notes = [:]
             lastScanMessage = nil
+            previewSearchUsed = false
+            searchCredits = 0
+            unlockedImageURLs = []
         }
     }
 
@@ -68,6 +83,66 @@ final class CadetCatchStore {
 
     var enabledSources: [PhotoSource] {
         sources.filter(\.enabled)
+    }
+
+    var previewSearchAvailable: Bool {
+        !previewSearchUsed
+    }
+
+    func canStartSearch(hasMonthlyAccess: Bool) -> Bool {
+        hasMonthlyAccess || searchCredits > 0 || previewSearchAvailable
+    }
+
+    func searchAccessLabel(hasMonthlyAccess: Bool) -> String {
+        if hasMonthlyAccess {
+            return "Monthly access active"
+        }
+        if searchCredits == 1 {
+            return "1 photo check available"
+        }
+        if searchCredits > 1 {
+            return "\(searchCredits) photo checks available"
+        }
+        if previewSearchAvailable {
+            return "Preview photo check available"
+        }
+        return "Purchase required for another check"
+    }
+
+    func beginSearch(hasMonthlyAccess: Bool) -> Bool {
+        if hasMonthlyAccess {
+            return true
+        }
+
+        if searchCredits > 0 {
+            searchCredits -= 1
+            persist()
+            return true
+        }
+
+        if previewSearchAvailable {
+            previewSearchUsed = true
+            persist()
+            return true
+        }
+
+        lastScanMessage = "Purchase a one-time photo check or start monthly access to continue."
+        persist()
+        return false
+    }
+
+    func addSearchCredit() {
+        searchCredits += 1
+        persist()
+    }
+
+    func isUnlocked(_ candidate: PhotoCandidate, hasMonthlyAccess: Bool) -> Bool {
+        hasMonthlyAccess || unlockedImageURLs.contains(candidate.imageURL.absoluteString)
+    }
+
+    func unlock(_ candidate: PhotoCandidate) {
+        unlockedImageURLs.insert(candidate.imageURL.absoluteString)
+        persist()
     }
 
     func completeOnboarding() {
@@ -204,6 +279,9 @@ final class CadetCatchStore {
         sources = PhotoSource.defaultSources
         notes = [:]
         lastScanMessage = nil
+        previewSearchUsed = false
+        searchCredits = 0
+        unlockedImageURLs = []
         defaults.removeObject(forKey: storageKey)
     }
 
@@ -218,7 +296,10 @@ final class CadetCatchStore {
             scanRecords: scanRecords,
             sources: sources,
             notes: notes,
-            lastScanMessage: lastScanMessage
+            lastScanMessage: lastScanMessage,
+            previewSearchUsed: previewSearchUsed,
+            searchCredits: searchCredits,
+            unlockedImageURLs: unlockedImageURLs
         )
 
         if let data = try? JSONEncoder.cadetCatch.encode(state) {
@@ -238,6 +319,188 @@ private struct PersistedState: Codable {
     var sources: [PhotoSource]
     var notes: [String: String]
     var lastScanMessage: String?
+    var previewSearchUsed: Bool?
+    var searchCredits: Int?
+    var unlockedImageURLs: Set<String>?
+}
+
+enum CommerceProduct: String, CaseIterable, Identifiable {
+    case oneTimeSearch = "co.eb28.cadetcatch.search.once"
+    case photoUnlock = "co.eb28.cadetcatch.photo.unlock"
+    case monthly = "co.eb28.cadetcatch.family.monthly"
+
+    var id: String { rawValue }
+
+    var title: String {
+        switch self {
+        case .oneTimeSearch: "One-Time Photo Check"
+        case .photoUnlock: "Unlock One Photo"
+        case .monthly: "Family Monthly"
+        }
+    }
+
+    var detail: String {
+        switch self {
+        case .oneTimeSearch: "Run one additional public-source photo check."
+        case .photoUnlock: "View, save, and share one matched photo."
+        case .monthly: "Continuous photo checks and unlocked matches while active."
+        }
+    }
+
+    var fallbackPrice: String {
+        switch self {
+        case .oneTimeSearch: "$2.00"
+        case .photoUnlock: "$2.00"
+        case .monthly: "$12.50/mo"
+        }
+    }
+}
+
+enum PurchaseOutcome: Equatable {
+    case success
+    case cancelled
+    case pending
+    case failed(String)
+
+    var completed: Bool {
+        if case .success = self { return true }
+        return false
+    }
+}
+
+@MainActor
+@Observable
+final class PurchaseManager {
+    var products: [Product] = []
+    var entitledProductIDs: Set<String> = []
+    var isLoadingProducts = false
+    var lastMessage: String?
+
+    @ObservationIgnored private var updatesTask: Task<Void, Never>?
+
+    var hasMonthlyAccess: Bool {
+        entitledProductIDs.contains(CommerceProduct.monthly.rawValue)
+    }
+
+    func configure() async {
+        if updatesTask == nil {
+            updatesTask = Task { [weak self] in
+                for await result in StoreKit.Transaction.updates {
+                    await self?.handle(transactionResult: result)
+                }
+            }
+        }
+
+        await loadProducts()
+        await refreshEntitlements()
+    }
+
+    func product(for commerceProduct: CommerceProduct) -> Product? {
+        products.first { $0.id == commerceProduct.rawValue }
+    }
+
+    func displayPrice(for commerceProduct: CommerceProduct) -> String {
+        product(for: commerceProduct)?.displayPrice ?? commerceProduct.fallbackPrice
+    }
+
+    func loadProducts() async {
+        guard !isLoadingProducts else { return }
+        isLoadingProducts = true
+        defer { isLoadingProducts = false }
+
+        do {
+            let loaded = try await Product.products(for: CommerceProduct.allCases.map(\.rawValue))
+            let order = Dictionary(uniqueKeysWithValues: CommerceProduct.allCases.enumerated().map { ($0.element.rawValue, $0.offset) })
+            products = loaded.sorted { first, second in
+                (order[first.id] ?? Int.max) < (order[second.id] ?? Int.max)
+            }
+            if loaded.isEmpty {
+                lastMessage = "In-app purchases are not available for this build yet."
+            }
+        } catch {
+            lastMessage = "Unable to load purchases. Try again later."
+        }
+    }
+
+    func purchase(_ commerceProduct: CommerceProduct) async -> PurchaseOutcome {
+        if products.isEmpty {
+            await loadProducts()
+        }
+
+        guard let product = product(for: commerceProduct) else {
+            let message = "This purchase is not configured in App Store Connect yet."
+            lastMessage = message
+            return .failed(message)
+        }
+
+        do {
+            let result = try await product.purchase()
+            switch result {
+            case .success(let verification):
+                let transaction = try checkVerified(verification)
+                if commerceProduct == .monthly {
+                    entitledProductIDs.insert(transaction.productID)
+                }
+                await transaction.finish()
+                lastMessage = "\(commerceProduct.title) is active."
+                return .success
+            case .userCancelled:
+                lastMessage = nil
+                return .cancelled
+            case .pending:
+                lastMessage = "Purchase is pending approval."
+                return .pending
+            @unknown default:
+                let message = "Purchase could not be completed."
+                lastMessage = message
+                return .failed(message)
+            }
+        } catch {
+            let message = "Purchase failed. Please try again."
+            lastMessage = message
+            return .failed(message)
+        }
+    }
+
+    func restorePurchases() async {
+        do {
+            try await AppStore.sync()
+            await refreshEntitlements()
+            lastMessage = hasMonthlyAccess ? "Monthly access restored." : "No active monthly purchase was found."
+        } catch {
+            lastMessage = "Restore failed. Please try again."
+        }
+    }
+
+    func refreshEntitlements() async {
+        var activeIDs = Set<String>()
+        for await result in StoreKit.Transaction.currentEntitlements {
+            guard let transaction = try? checkVerified(result) else { continue }
+            activeIDs.insert(transaction.productID)
+        }
+        entitledProductIDs = activeIDs
+    }
+
+    private func handle(transactionResult: VerificationResult<StoreKit.Transaction>) async {
+        guard let transaction = try? checkVerified(transactionResult) else {
+            lastMessage = "A purchase could not be verified."
+            return
+        }
+
+        if transaction.productID == CommerceProduct.monthly.rawValue {
+            await refreshEntitlements()
+        }
+        await transaction.finish()
+    }
+
+    private func checkVerified<T>(_ result: VerificationResult<T>) throws -> T {
+        switch result {
+        case .verified(let value):
+            return value
+        case .unverified:
+            throw StoreKitError.notAvailableInStorefront
+        }
+    }
 }
 
 struct Cadet: Identifiable, Codable, Hashable {
@@ -755,8 +1018,10 @@ struct MainTabView: View {
 
 struct HomeView: View {
     @Environment(CadetCatchStore.self) private var store
+    @Environment(PurchaseManager.self) private var purchases
     @State private var isScanning = false
     @State private var scanProgress = 0.0
+    @State private var showingPurchaseOptions = false
 
     var body: some View {
         ScrollView {
@@ -777,6 +1042,8 @@ struct HomeView: View {
                     SourceSummaryCard()
                     ScanCard(isScanning: isScanning, scanProgress: scanProgress) {
                         Task { await runScan() }
+                    } onShowPurchaseOptions: {
+                        showingPurchaseOptions = true
                     }
                     RecentScansCard()
                 }
@@ -784,10 +1051,26 @@ struct HomeView: View {
             .padding(16)
         }
         .background(Theme.background)
+        .sheet(isPresented: $showingPurchaseOptions) {
+            PurchaseOptionsSheet()
+                .presentationDetents([.medium, .large])
+        }
     }
 
     private func runScan() async {
         guard !isScanning else { return }
+        guard store.activeCadet != nil else {
+            store.lastScanMessage = "Add a cadet profile before checking photos."
+            return
+        }
+        guard !store.enabledSources.isEmpty else {
+            store.lastScanMessage = "Add at least one enabled public source."
+            return
+        }
+        guard store.beginSearch(hasMonthlyAccess: purchases.hasMonthlyAccess) else {
+            showingPurchaseOptions = true
+            return
+        }
         isScanning = true
         scanProgress = 0
         for step in 1...14 {
@@ -918,9 +1201,11 @@ struct SourceSummaryCard: View {
 
 struct ScanCard: View {
     @Environment(CadetCatchStore.self) private var store
+    @Environment(PurchaseManager.self) private var purchases
     let isScanning: Bool
     let scanProgress: Double
     let onScan: () -> Void
+    let onShowPurchaseOptions: () -> Void
 
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
@@ -936,6 +1221,18 @@ struct ScanCard: View {
                 }
                 Spacer()
             }
+
+            HStack(spacing: 8) {
+                Image(systemName: purchases.hasMonthlyAccess ? "checkmark.seal.fill" : "creditcard.fill")
+                    .foregroundStyle(purchases.hasMonthlyAccess ? Theme.green : Theme.orange)
+                Text(store.searchAccessLabel(hasMonthlyAccess: purchases.hasMonthlyAccess))
+                    .font(.caption.weight(.bold))
+                    .foregroundStyle(Theme.navyDark)
+                Spacer()
+            }
+            .padding(.horizontal, 12)
+            .padding(.vertical, 10)
+            .background(Theme.background, in: RoundedRectangle(cornerRadius: 14))
 
             if isScanning {
                 ProgressView(value: scanProgress)
@@ -953,13 +1250,31 @@ struct ScanCard: View {
             }
 
             Button(action: onScan) {
-                Label(isScanning ? "Checking Sources" : "Check Photos", systemImage: "face.dashed")
+                Label(isScanning ? "Checking Sources" : scanButtonTitle, systemImage: scanButtonSymbol)
                     .frame(maxWidth: .infinity)
             }
             .buttonStyle(PrimaryButtonStyle())
             .disabled(isScanning)
+
+            if !purchases.hasMonthlyAccess {
+                Button(action: onShowPurchaseOptions) {
+                    Text("View Purchase Options")
+                        .font(.subheadline.weight(.bold))
+                        .foregroundStyle(Theme.navy)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 10)
+                }
+            }
         }
         .appPanel()
+    }
+
+    private var scanButtonTitle: String {
+        store.canStartSearch(hasMonthlyAccess: purchases.hasMonthlyAccess) ? "Check Photos" : "Buy Photo Check"
+    }
+
+    private var scanButtonSymbol: String {
+        store.canStartSearch(hasMonthlyAccess: purchases.hasMonthlyAccess) ? "face.dashed" : "lock.open.fill"
     }
 }
 
@@ -996,6 +1311,150 @@ struct RecentScansCard: View {
             }
             .appPanel()
         }
+    }
+}
+
+struct PurchaseOptionsSheet: View {
+    @Environment(CadetCatchStore.self) private var store
+    @Environment(PurchaseManager.self) private var purchases
+    @Environment(\.dismiss) private var dismiss
+    @State private var busyProduct: CommerceProduct?
+    @State private var isRestoring = false
+
+    var body: some View {
+        NavigationStack {
+            ScrollView {
+                VStack(alignment: .leading, spacing: 16) {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Photo Access")
+                            .font(.title2.weight(.black))
+                            .foregroundStyle(Theme.navyDark)
+                        Text("Choose a one-time check or monthly access. Results remain covered until a photo unlock or monthly access is active.")
+                            .font(.subheadline)
+                            .foregroundStyle(Theme.muted)
+                            .lineSpacing(3)
+                    }
+                    .appPanel()
+
+                    CommerceOptionCard(product: .monthly, busyProduct: busyProduct) {
+                        await buy(.monthly)
+                    }
+
+                    CommerceOptionCard(product: .oneTimeSearch, busyProduct: busyProduct) {
+                        let outcome = await buy(.oneTimeSearch, shouldDismiss: false)
+                        if outcome.completed {
+                            store.addSearchCredit()
+                            dismiss()
+                        }
+                    }
+
+                    if let message = purchases.lastMessage {
+                        Text(message)
+                            .font(.caption.weight(.semibold))
+                            .foregroundStyle(Theme.muted)
+                            .padding(.horizontal, 2)
+                    }
+
+                    Button {
+                        Task {
+                            isRestoring = true
+                            await purchases.restorePurchases()
+                            isRestoring = false
+                        }
+                    } label: {
+                        Label(isRestoring ? "Restoring" : "Restore Purchases", systemImage: "arrow.clockwise")
+                            .frame(maxWidth: .infinity)
+                    }
+                    .buttonStyle(.bordered)
+                    .tint(Theme.navy)
+                    .disabled(isRestoring || busyProduct != nil)
+
+                    HStack(spacing: 14) {
+                        Link("Privacy", destination: URL(string: "https://eb28.co/cc/privacy/")!)
+                        Link("Terms", destination: URL(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")!)
+                    }
+                    .font(.caption.weight(.bold))
+                    .foregroundStyle(Theme.navy)
+                    .frame(maxWidth: .infinity)
+                }
+                .padding(16)
+            }
+            .background(Theme.background)
+            .navigationTitle("Purchases")
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Close") { dismiss() }
+                }
+            }
+            .task {
+                await purchases.loadProducts()
+            }
+        }
+    }
+
+    @discardableResult
+    private func buy(_ product: CommerceProduct, shouldDismiss: Bool = true) async -> PurchaseOutcome {
+        guard busyProduct == nil else { return .pending }
+        busyProduct = product
+        let outcome = await purchases.purchase(product)
+        busyProduct = nil
+        if shouldDismiss, outcome.completed {
+            dismiss()
+        }
+        return outcome
+    }
+}
+
+struct CommerceOptionCard: View {
+    @Environment(PurchaseManager.self) private var purchases
+    let product: CommerceProduct
+    let busyProduct: CommerceProduct?
+    let action: () async -> Void
+
+    var body: some View {
+        let isBusy = busyProduct == product
+        let isAvailable = purchases.product(for: product) != nil
+
+        VStack(alignment: .leading, spacing: 12) {
+            HStack(alignment: .top, spacing: 12) {
+                Image(systemName: product == .monthly ? "calendar.badge.checkmark" : "magnifyingglass")
+                    .font(.title3.weight(.bold))
+                    .foregroundStyle(Theme.orange)
+                    .frame(width: 42, height: 42)
+                    .background(Theme.orange.opacity(0.12), in: RoundedRectangle(cornerRadius: 13))
+
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(product.title)
+                        .font(.headline.weight(.black))
+                        .foregroundStyle(Theme.navyDark)
+                    Text(product.detail)
+                        .font(.caption)
+                        .foregroundStyle(Theme.muted)
+                        .lineSpacing(2)
+                }
+                Spacer()
+                Text(purchases.displayPrice(for: product))
+                    .font(.subheadline.weight(.black))
+                    .foregroundStyle(Theme.navy)
+            }
+
+            Button {
+                Task { await action() }
+            } label: {
+                HStack {
+                    if isBusy {
+                        ProgressView()
+                            .tint(.white)
+                    }
+                    Text(isAvailable ? "Continue" : "Not Available")
+                }
+                .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(PrimaryButtonStyle())
+            .disabled(isBusy || busyProduct != nil || !isAvailable)
+        }
+        .appPanel()
     }
 }
 
@@ -1058,13 +1517,17 @@ struct PhotosView: View {
 
 struct CandidateCard: View {
     @Environment(CadetCatchStore.self) private var store
+    @Environment(PurchaseManager.self) private var purchases
     let candidate: PhotoCandidate
 
     var body: some View {
+        let unlocked = store.isUnlocked(candidate, hasMonthlyAccess: purchases.hasMonthlyAccess)
+
         VStack(alignment: .leading, spacing: 0) {
             ZStack(alignment: .topTrailing) {
                 CandidateImage(url: candidate.imageURL, mode: .fill)
                     .frame(height: 144)
+                    .blur(radius: unlocked ? 0 : 9)
                     .clipped()
 
                 Text("\(candidate.confidence)%")
@@ -1074,6 +1537,10 @@ struct CandidateCard: View {
                     .padding(.vertical, 6)
                     .background(Theme.orange, in: Capsule())
                     .padding(8)
+
+                if !unlocked {
+                    LockedImageOverlay(label: "Unlock to View")
+                }
             }
 
             VStack(alignment: .leading, spacing: 6) {
@@ -1089,6 +1556,10 @@ struct CandidateCard: View {
                     Label("Saved", systemImage: "bookmark.fill")
                         .font(.caption2.weight(.bold))
                         .foregroundStyle(Theme.orange)
+                } else if !unlocked {
+                    Label("Covered", systemImage: "lock.fill")
+                        .font(.caption2.weight(.bold))
+                        .foregroundStyle(Theme.navy)
                 }
             }
             .padding(12)
@@ -1101,17 +1572,30 @@ struct CandidateCard: View {
 
 struct CandidateDetailView: View {
     @Environment(CadetCatchStore.self) private var store
+    @Environment(PurchaseManager.self) private var purchases
     let candidate: PhotoCandidate
     @State private var draft: String?
+    @State private var isUnlocking = false
+    @State private var isSubscribing = false
 
     var body: some View {
+        let unlocked = store.isUnlocked(candidate, hasMonthlyAccess: purchases.hasMonthlyAccess)
+
         NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
-                    CandidateImage(url: candidate.imageURL, mode: .fit)
-                        .frame(maxWidth: .infinity, minHeight: 280)
-                        .background(.black, in: RoundedRectangle(cornerRadius: 22))
-                        .clipShape(RoundedRectangle(cornerRadius: 22))
+                    ZStack {
+                        CandidateImage(url: candidate.imageURL, mode: .fit)
+                            .frame(maxWidth: .infinity, minHeight: 280)
+                            .blur(radius: unlocked ? 0 : 12)
+                            .background(.black, in: RoundedRectangle(cornerRadius: 22))
+                            .clipShape(RoundedRectangle(cornerRadius: 22))
+
+                        if !unlocked {
+                            LockedImageOverlay(label: "Photo Covered")
+                                .clipShape(RoundedRectangle(cornerRadius: 22))
+                        }
+                    }
 
                     HStack(spacing: 10) {
                         DetailBadge(value: "\(candidate.confidence)%", label: "Confidence")
@@ -1125,36 +1609,60 @@ struct CandidateDetailView: View {
                         Text(candidate.sourceHost)
                             .font(.subheadline)
                             .foregroundStyle(Theme.muted)
-                        Link("Open source image", destination: candidate.imageURL)
-                            .font(.subheadline.weight(.bold))
-                    }
-                    .appPanel()
-
-                    VStack(alignment: .leading, spacing: 12) {
-                        Text("Review note")
-                            .font(.headline.weight(.black))
-                            .foregroundStyle(Theme.navyDark)
-                        Text(draft ?? "Create a plain record of this reviewed candidate.")
-                            .font(.subheadline)
-                            .foregroundStyle(Theme.muted)
-                            .lineSpacing(3)
-                        HStack {
-                            Button("Create Note") {
-                                draft = store.draftNote(for: candidate)
-                            }
-                            .buttonStyle(.borderedProminent)
-                            .tint(Theme.navy)
-
-                            if let draft {
-                                ShareLink(item: draft) {
-                                    Label("Share", systemImage: "square.and.arrow.up")
-                                }
-                                .buttonStyle(.bordered)
-                                .tint(Theme.orange)
-                            }
+                        if unlocked {
+                            Link("Open source image", destination: candidate.imageURL)
+                                .font(.subheadline.weight(.bold))
+                        } else {
+                            Text("Unlock this photo or start monthly access to view and save the image.")
+                                .font(.subheadline)
+                                .foregroundStyle(Theme.muted)
+                                .lineSpacing(3)
                         }
                     }
                     .appPanel()
+
+                    if unlocked {
+                        VStack(alignment: .leading, spacing: 12) {
+                            Text("Review note")
+                                .font(.headline.weight(.black))
+                                .foregroundStyle(Theme.navyDark)
+                            Text(draft ?? "Create a plain record of this reviewed candidate.")
+                                .font(.subheadline)
+                                .foregroundStyle(Theme.muted)
+                                .lineSpacing(3)
+                            HStack {
+                                Button("Create Note") {
+                                    draft = store.draftNote(for: candidate)
+                                }
+                                .buttonStyle(.borderedProminent)
+                                .tint(Theme.navy)
+
+                                if let draft {
+                                    ShareLink(item: draft) {
+                                        Label("Share", systemImage: "square.and.arrow.up")
+                                    }
+                                    .buttonStyle(.bordered)
+                                    .tint(Theme.orange)
+                                }
+                            }
+                        }
+                        .appPanel()
+                    } else {
+                        LockedPurchasePanel(
+                            isUnlocking: isUnlocking,
+                            isSubscribing: isSubscribing,
+                            unlockPrice: purchases.displayPrice(for: .photoUnlock),
+                            monthlyPrice: purchases.displayPrice(for: .monthly),
+                            onUnlock: { Task { await unlockPhoto() } },
+                            onSubscribe: { Task { await subscribe() } }
+                        )
+                    }
+
+                    if let message = purchases.lastMessage, !unlocked {
+                        Text(message)
+                            .font(.caption.weight(.semibold))
+                            .foregroundStyle(Theme.muted)
+                    }
                 }
                 .padding(16)
             }
@@ -1162,17 +1670,36 @@ struct CandidateDetailView: View {
             .navigationTitle("Photo Review")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                Button {
-                    if store.isSaved(candidate) {
-                        store.removeSaved(candidate)
-                    } else {
-                        store.save(candidate)
+                if unlocked {
+                    Button {
+                        if store.isSaved(candidate) {
+                            store.removeSaved(candidate)
+                        } else {
+                            store.save(candidate)
+                        }
+                    } label: {
+                        Image(systemName: store.isSaved(candidate) ? "bookmark.fill" : "bookmark")
                     }
-                } label: {
-                    Image(systemName: store.isSaved(candidate) ? "bookmark.fill" : "bookmark")
                 }
             }
         }
+    }
+
+    private func unlockPhoto() async {
+        guard !isUnlocking else { return }
+        isUnlocking = true
+        let outcome = await purchases.purchase(.photoUnlock)
+        if outcome.completed {
+            store.unlock(candidate)
+        }
+        isUnlocking = false
+    }
+
+    private func subscribe() async {
+        guard !isSubscribing else { return }
+        isSubscribing = true
+        _ = await purchases.purchase(.monthly)
+        isSubscribing = false
     }
 }
 
@@ -1200,6 +1727,81 @@ struct CandidateImage: View {
                 Rectangle().fill(Theme.border.opacity(0.45))
             }
         }
+    }
+}
+
+struct LockedImageOverlay: View {
+    let label: String
+
+    var body: some View {
+        ZStack {
+            Theme.navyDark.opacity(0.62)
+            VStack(spacing: 8) {
+                Image(systemName: "lock.fill")
+                    .font(.title3.weight(.black))
+                    .foregroundStyle(.white)
+                Text(label)
+                    .font(.caption.weight(.black))
+                    .textCase(.uppercase)
+                    .tracking(0.9)
+                    .foregroundStyle(.white)
+                    .multilineTextAlignment(.center)
+            }
+            .padding(12)
+            .background(.black.opacity(0.46), in: RoundedRectangle(cornerRadius: 14))
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+}
+
+struct LockedPurchasePanel: View {
+    let isUnlocking: Bool
+    let isSubscribing: Bool
+    let unlockPrice: String
+    let monthlyPrice: String
+    let onUnlock: () -> Void
+    let onSubscribe: () -> Void
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            Text("Unlock this match")
+                .font(.headline.weight(.black))
+                .foregroundStyle(Theme.navyDark)
+            Text("The match is covered until a purchase is active. Unlock one photo or use monthly access for all current and future matches.")
+                .font(.subheadline)
+                .foregroundStyle(Theme.muted)
+                .lineSpacing(3)
+
+            VStack(spacing: 10) {
+                Button(action: onUnlock) {
+                    HStack {
+                        if isUnlocking {
+                            ProgressView().tint(.white)
+                        }
+                        Text("Unlock Photo \(unlockPrice)")
+                    }
+                    .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(PrimaryButtonStyle())
+                .disabled(isUnlocking || isSubscribing)
+
+                Button(action: onSubscribe) {
+                    HStack {
+                        if isSubscribing {
+                            ProgressView().tint(Theme.navy)
+                        }
+                        Text("Monthly Access \(monthlyPrice)")
+                            .font(.headline.weight(.bold))
+                    }
+                    .foregroundStyle(Theme.navy)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 14)
+                    .background(Theme.background, in: RoundedRectangle(cornerRadius: 16))
+                }
+                .disabled(isUnlocking || isSubscribing)
+            }
+        }
+        .appPanel()
     }
 }
 
@@ -1354,7 +1956,7 @@ struct SourcesView: View {
                     Label("Public HTTPS sources only", systemImage: "lock.shield.fill")
                         .font(.headline.weight(.black))
                         .foregroundStyle(Theme.navyDark)
-                    Text("CadetCatch checks public pages you approve. Private social or photo accounts are not scanned in this build.")
+                    Text("CadetCatch checks public pages you approve. Private social or photo accounts require an owner-authorized connector before they can be scanned.")
                         .font(.subheadline)
                         .foregroundStyle(Theme.muted)
                 }
@@ -1443,8 +2045,11 @@ struct SourceRow: View {
 
 struct MoreView: View {
     @Environment(CadetCatchStore.self) private var store
+    @Environment(PurchaseManager.self) private var purchases
     @State private var query = ""
     @State private var showingResetAlert = false
+    @State private var showingPurchaseOptions = false
+    @State private var isRestoring = false
 
     var filteredEntries: [JargonEntry] {
         guard !query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
@@ -1458,6 +2063,36 @@ struct MoreView: View {
 
     var body: some View {
         List {
+            Section("Photo Access") {
+                HStack {
+                    Label("Monthly Access", systemImage: purchases.hasMonthlyAccess ? "checkmark.seal.fill" : "lock.fill")
+                    Spacer()
+                    Text(purchases.hasMonthlyAccess ? "Active" : "Not Active")
+                        .font(.caption.weight(.black))
+                        .foregroundStyle(purchases.hasMonthlyAccess ? Theme.green : Theme.muted)
+                }
+                Button {
+                    showingPurchaseOptions = true
+                } label: {
+                    Label("Purchase Options", systemImage: "creditcard")
+                }
+                Button {
+                    Task {
+                        isRestoring = true
+                        await purchases.restorePurchases()
+                        isRestoring = false
+                    }
+                } label: {
+                    Label(isRestoring ? "Restoring" : "Restore Purchases", systemImage: "arrow.clockwise")
+                }
+                .disabled(isRestoring)
+                if let message = purchases.lastMessage {
+                    Text(message)
+                        .font(.caption)
+                        .foregroundStyle(Theme.muted)
+                }
+            }
+
             Section("Decoder") {
                 HStack {
                     Image(systemName: "magnifyingglass")
@@ -1495,6 +2130,10 @@ struct MoreView: View {
         }
         .scrollContentBackground(.hidden)
         .background(Theme.background)
+        .sheet(isPresented: $showingPurchaseOptions) {
+            PurchaseOptionsSheet()
+                .presentationDetents([.medium, .large])
+        }
         .alert("Reset CadetCatch?", isPresented: $showingResetAlert) {
             Button("Cancel", role: .cancel) {}
             Button("Reset", role: .destructive) {

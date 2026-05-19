@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#152923"/><stop offset="0.62" stop-color="#243b35"/><stop offset="1" stop-color="#7c521b"/></linearGradient>
+    <radialGradient id="sun" cx="78%" cy="18%" r="48%"><stop stop-color="#d7a34c" stop-opacity="0.45"/><stop offset="1" stop-color="#d7a34c" stop-opacity="0"/></radialGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#sun)"/>
+  <rect x="72" y="70" width="1056" height="490" rx="34" fill="#fffdf8" fill-opacity="0.08" stroke="#f7f1e6" stroke-opacity="0.18"/>
+  <text x="96" y="130" fill="#f1c77e" font-family="Arial, sans-serif" font-size="28" font-weight="700" letter-spacing="4">YORK INSPECTIONS LLC</text>
+  <text x="96" y="250" fill="#fffdf8" font-family="Georgia, serif" font-size="74" font-weight="700">Home inspections with</text>
+  <text x="96" y="330" fill="#f1c77e" font-family="Georgia, serif" font-size="82" font-style="italic" font-weight="700">clear next steps.</text>
+  <text x="96" y="405" fill="#f7f1e6" font-family="Arial, sans-serif" font-size="30">Merritt Island • Brevard County • Licensed &amp; Insured HI15022</text>
+  <g transform="translate(96 465)">
+    <rect width="260" height="68" rx="34" fill="#d7a34c"/>
+    <text x="130" y="43" text-anchor="middle" fill="#1f170c" font-family="Arial, sans-serif" font-size="24" font-weight="800">321-339-0167</text>
+  </g>
+</svg>

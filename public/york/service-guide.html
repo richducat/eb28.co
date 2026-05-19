@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>York Inspections Quick Service Guide</title>
+  <style>
+    :root { --pine:#152923; --green:#243b35; --brass:#b9802e; --cream:#f7f1e6; --ink:#15201d; --muted:#596861; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family: Arial, sans-serif; color:var(--ink); background:#efe5d5; }
+    .page { width: 8.5in; min-height: 11in; margin: 0 auto; background:#fffdf8; padding: .58in; position:relative; overflow:hidden; }
+    .page:before { content:""; position:absolute; inset:0 0 auto 0; height:16px; background:linear-gradient(90deg,var(--pine),var(--brass)); }
+    header { display:flex; justify-content:space-between; gap:24px; align-items:flex-start; border-bottom:2px solid #e4d7c3; padding:18px 0 22px; }
+    .brand h1 { margin:0; font-family: Georgia, serif; font-size:42px; letter-spacing:-2px; color:var(--pine); }
+    .brand p { margin:6px 0 0; color:var(--muted); font-size:15px; }
+    .contact { text-align:right; font-weight:700; color:var(--pine); font-size:14px; line-height:1.55; }
+    h2 { font-family: Georgia, serif; font-size:25px; color:var(--pine); margin:26px 0 12px; }
+    .grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    .card { border:1px solid #e4d7c3; border-radius:16px; padding:15px; background:#fbf7ef; }
+    .card strong { display:block; color:var(--pine); font-size:16px; margin-bottom:5px; }
+    .card span, li, p { color:var(--muted); font-size:13.5px; line-height:1.48; }
+    .prices { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+    .price { background:var(--pine); color:white; border-radius:16px; padding:14px; min-height:92px; }
+    .price strong { display:block; color:#f1c77e; font-size:13px; text-transform:uppercase; letter-spacing:.06em; }
+    .price b { display:block; font-size:25px; margin:6px 0; }
+    ul { margin:0; padding-left:18px; }
+    .footer { margin-top:24px; padding:18px; border-radius:18px; background:linear-gradient(135deg,var(--pine),var(--green)); color:white; display:flex; justify-content:space-between; align-items:center; gap:20px; }
+    .footer p { color:rgba(255,255,255,.74); margin:4px 0 0; }
+    .cta { background:#d7a34c; color:#1f170c; padding:13px 18px; border-radius:999px; font-weight:900; white-space:nowrap; }
+    @page { size: letter; margin: 0; }
+    @media print { body { background:white; } .page { margin:0; width:auto; min-height:auto; } }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header>
+      <div class="brand">
+        <h1>York Inspections</h1>
+        <p>Quick Service Guide • Merritt Island & Brevard County</p>
+      </div>
+      <div class="contact">
+        321-339-0167<br />
+        yorkinspectionsllc@gmail.com<br />
+        Lic. & Ins. #HI15022
+      </div>
+    </header>
+
+    <h2>Inspection services</h2>
+    <section class="prices">
+      <div class="price"><strong>Full home</strong><b>$299+</b><span>Buyer / seller inspection</span></div>
+      <div class="price"><strong>Insurance combo</strong><b>$95</b><span>Wind mitigation + 4-point</span></div>
+      <div class="price"><strong>Roof cert</strong><b>$45</b><span>Roof documentation</span></div>
+      <div class="price"><strong>Wind mitigation</strong><b>$55</b><span>Wind-risk feature review</span></div>
+      <div class="price"><strong>4-point</strong><b>$75</b><span>Roof, HVAC, plumbing, electrical</span></div>
+      <div class="price"><strong>Contractor</strong><b>Custom</b><span>Draw and recurring inspection needs</span></div>
+    </section>
+
+    <h2>Not sure what to request?</h2>
+    <section class="grid">
+      <div class="card"><strong>If your insurer asks about wind features</strong><span>Start with a wind mitigation inspection.</span></div>
+      <div class="card"><strong>If your insurer asks about major systems</strong><span>Start with a 4-point inspection.</span></div>
+      <div class="card"><strong>If your carrier needs both</strong><span>Request the insurance combo.</span></div>
+      <div class="card"><strong>If you are buying or selling</strong><span>Request a full buyer/seller home inspection.</span></div>
+    </section>
+
+    <h2>What to have ready</h2>
+    <section class="grid">
+      <div class="card"><strong>Property access</strong><span>Gate code, lockbox, entry notes, and preferred appointment timing.</span></div>
+      <div class="card"><strong>Insurance or closing deadline</strong><span>Share any report deadline or carrier requirements.</span></div>
+      <div class="card"><strong>Property details</strong><span>Approximate square footage, year built, roof age, and known concerns if available.</span></div>
+      <div class="card"><strong>Contact preference</strong><span>Let York know whether text, call, or email is best for follow-up.</span></div>
+    </section>
+
+    <h2>Service area</h2>
+    <p>Merritt Island, Cocoa, Cocoa Beach, Rockledge, Viera, Melbourne, Titusville, Cape Canaveral, Palm Bay, and surrounding Brevard County communities.</p>
+
+    <div class="footer">
+      <div><strong>Ready to request an inspection?</strong><p>Call/text directly or submit details online.</p></div>
+      <div class="cta">321-339-0167</div>
+    </div>
+  </main>
+</body>
+</html>

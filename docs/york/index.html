@@ -10,6 +10,13 @@
   <meta property="og:description" content="Premium home inspection services across Merritt Island and Brevard County. Fast scheduling, next-day e-reports, licensed and insured." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://eb28.co/york/" />
+
+  <meta name="theme-color" content="#152923" />
+  <meta property="og:image" content="https://eb28.co/york/assets/york-og.png" />
+  <meta property="og:image:alt" content="York Inspections LLC home inspections in Merritt Island and Brevard County" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="assets/favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,600;0,700;1,700&display=swap" rel="stylesheet">
@@ -59,6 +66,7 @@
       </a>
       <nav aria-label="Primary navigation">
         <a href="#services">Services</a>
+        <a href="#inspection-guide">Guide</a>
         <a href="#process">Process</a>
         <a href="#qualify">Request Inspection</a>
         <a href="#faq">FAQ</a>
@@ -136,6 +144,67 @@
         </div>
       </section>
 
+      <section id="inspection-guide" class="section-pad decision-section">
+        <div class="section-row">
+          <div class="section-head">
+            <p class="section-kicker">Helpful inspection guide</p>
+            <h2>Not sure which inspection you need?</h2>
+            <p>Many insurance and real-estate requests use similar language. These quick examples can help you choose the right starting point before York follows up.</p>
+          </div>
+          <a class="text-link" href="#qualify">Ask York to confirm →</a>
+        </div>
+        <div class="decision-grid">
+          <article><span>Insurance policy request</span><h3>Wind Mitigation</h3><p>Helpful when your insurer asks about roof shape, roof-to-wall connections, opening protection, or wind-resistance features.</p></article>
+          <article><span>Four major systems</span><h3>4-Point Inspection</h3><p>Common for insurance review when documentation is needed for roof, HVAC, plumbing, and electrical systems.</p></article>
+          <article class="highlight"><span>Most insurance needs</span><h3>Insurance Combo</h3><p>Combines wind mitigation and 4-point documentation when your carrier or agent needs both inspections together.</p></article>
+          <article><span>Buying or selling</span><h3>Full Home Inspection</h3><p>A broader visual inspection for buyers and sellers who want a clear understanding before moving forward.</p></article>
+        </div>
+      </section>
+
+      <section class="section-pad receive-section">
+        <div class="receive-panel">
+          <div>
+            <p class="section-kicker light">What you receive</p>
+            <h2>Clear reporting prepared for real decisions.</h2>
+            <p>After the inspection, York provides practical documentation that is organized around the property, the request, and the next decision you need to make.</p>
+          </div>
+          <div class="deliverables-grid">
+            <div><strong>Digital report</strong><span>Organized findings delivered electronically.</span></div>
+            <div><strong>Photo documentation</strong><span>Relevant images to support visible findings.</span></div>
+            <div><strong>Plain-language notes</strong><span>Clear observations without unnecessary confusion.</span></div>
+            <div><strong>Insurance-ready forms</strong><span>Wind mitigation, 4-point, and roof documentation when applicable.</span></div>
+            <div><strong>Fast follow-up</strong><span>Communication if clarification or next steps are needed.</span></div>
+            <div><strong>Local perspective</strong><span>Brevard County service with Space Coast property context.</span></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="about" class="section-pad about-prep-section">
+        <div class="about-card">
+          <p class="section-kicker">Local, licensed, prepared</p>
+          <h2>Meet York Inspections.</h2>
+          <p>Based in Merritt Island, York Inspections LLC helps homeowners, buyers, sellers, contractors, and real-estate professionals get clear inspection documentation across Brevard County.</p>
+          <div class="trust-list">
+            <span>Florida license HI15022</span>
+            <span>Licensed & insured</span>
+            <span>Call/text friendly</span>
+            <span>Insurance documentation available</span>
+          </div>
+          <a class="btn primary about-btn" href="tel:3213390167">Call or text York</a>
+        </div>
+        <div class="prep-card">
+          <p class="section-kicker">Before your inspection</p>
+          <h2>Help the visit go smoothly.</h2>
+          <ul class="prep-list">
+            <li>Confirm property access, gate codes, lockbox details, or entry instructions.</li>
+            <li>Share any insurance company requests, closing dates, or report deadlines.</li>
+            <li>Make sure utilities are on when they are needed for the inspection.</li>
+            <li>Send known concerns, prior reports, roof details, or policy notes if available.</li>
+            <li>Let York know who should receive the report and the best way to follow up.</li>
+          </ul>
+        </div>
+      </section>
+
       <section id="process" class="section-pad process-section">
         <div>
           <p class="section-kicker light">The process</p>
@@ -164,8 +233,8 @@
         <form id="inspectionQualifier" class="qualifier-card" action="https://formsubmit.co/ajax/yorkinspectionsllc@gmail.com" method="POST">
           <input type="hidden" name="_subject" value="Inspection request from eb28.co/york" />
           <input type="hidden" name="_captcha" value="false" />
-          <input type="hidden" name="lead_score" id="leadScore" value="0" />
-          <input type="hidden" name="qualification_summary" id="qualificationSummary" value="" />
+          <input type="hidden" name="request_priority_score" id="leadScore" value="0" />
+          <input type="hidden" name="request_summary" id="qualificationSummary" value="" />
           <div class="form-topline">
             <div>
               <span class="form-step-label">Step <b id="currentStepLabel">1</b> of 4</span>
@@ -290,6 +359,23 @@
         </form>
       </section>
 
+      <section id="partners" class="section-pad partner-section">
+        <div class="partner-content">
+          <p class="section-kicker light">For realtors, contractors & repeat needs</p>
+          <h2>Dependable inspection support for ongoing property work.</h2>
+          <p>York works with homeowners, real-estate professionals, contractors, and property contacts who need clear communication, reliable documentation, and straightforward scheduling for one-time or recurring inspection needs.</p>
+          <div class="partner-actions">
+            <a class="btn primary" href="#qualify">Request inspection support</a>
+            <a class="btn secondary" href="service-guide.pdf">Download service guide</a>
+          </div>
+        </div>
+        <div class="partner-points">
+          <div><strong>Realtor friendly</strong><span>Buyer, seller, and timeline-sensitive inspection needs.</span></div>
+          <div><strong>Contractor support</strong><span>Draw inspections and recurring documentation requests.</span></div>
+          <div><strong>Easy referral</strong><span>A simple service guide is available to share with clients or partners.</span></div>
+        </div>
+      </section>
+
       <section id="areas" class="section-pad location-band">
         <div class="location-copy">
           <p class="section-kicker">Local inspection coverage</p>
@@ -310,6 +396,17 @@
         <details><summary>How fast are reports delivered?</summary><p>York Inspections promotes quick e-report delivery, typically next day depending on inspection timing and scope.</p></details>
         <details><summary>Why does the form ask for property details?</summary><p>The extra details help York understand the inspection type, timing, access needs, and any insurance or real-estate requirements before following up.</p></details>
         <details><summary>Where does York Inspections serve?</summary><p>The company is based in Merritt Island and serves Brevard County and surrounding Space Coast communities.</p></details>
+        <details><summary>Can I share York Inspections with a client or referral partner?</summary><p>Yes. You can share the website or download the quick service guide for services, contact details, preparation notes, and service-area information.</p></details>
+      </section>
+
+      <section class="section-pad final-cta">
+        <p class="section-kicker light">Ready when you are</p>
+        <h2>Need an inspection in Brevard County?</h2>
+        <p>Request a follow-up online, or call/text York Inspections directly if you are working against a report deadline.</p>
+        <div class="hero-actions final-actions">
+          <a class="btn primary" href="#qualify">Request an inspection</a>
+          <a class="btn secondary" href="tel:3213390167">Call/text 321-339-0167</a>
+        </div>
       </section>
     </main>
 
@@ -325,6 +422,11 @@
       </div>
     </footer>
   </div>
+
+    <div class="mobile-sticky-cta" aria-label="Quick contact actions">
+      <a href="tel:3213390167">Call/Text</a>
+      <a href="#qualify">Request Inspection</a>
+    </div>
   <script src="qualifier.js"></script>
 </body>
 </html>

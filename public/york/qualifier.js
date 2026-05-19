@@ -91,7 +91,7 @@
     event.preventDefault();
     if (!validateStep()) return;
     const { score, band } = updateScore();
-    status.textContent = 'Sending qualification request...';
+    status.textContent = 'Sending your inspection request...';
     submit.disabled = true;
 
     try {
@@ -101,7 +101,7 @@
         body: new FormData(form)
       });
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      status.textContent = `Request sent. Qualification: ${band} (${score}/100). York Inspections will review and follow up.`;
+      status.textContent = 'Request sent. York Inspections will review your details and follow up.';
       form.reset();
       step = 0;
       setTimeout(render, 900);

@@ -1,1117 +1,373 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
-    Terminal, Activity, Calendar as CalendarIcon, PhoneMissed,
-    Target, TrendingUp, AlertTriangle, CheckCircle2, Palette,
-    Search as SearchIcon, Play, Pause, RefreshCw
+  AlertTriangle,
+  Bot,
+  CalendarClock,
+  CheckCircle2,
+  Clock3,
+  ExternalLink,
+  Filter,
+  Lock,
+  RefreshCw,
+  Search,
+  ShieldCheck,
+  Sparkles,
+  UserRoundCheck,
 } from 'lucide-react';
 
-/* ───────────────────────── Theme Definitions ───────────────────────── */
-const THEMES = {
-    matrix: {
-        name: 'MATRIX',
-        primary: '#39ff14',
-        accent: '#00ff41',
-        warn: '#f59e0b',
-        danger: '#ef4444',
-        bg: '#000000',
-        panelBg: 'rgba(0,0,0,0.5)',
-    },
-    amber: {
-        name: 'AMBER',
-        primary: '#ffbf00',
-        accent: '#ffd866',
-        warn: '#ff6b35',
-        danger: '#ff3333',
-        bg: '#0a0800',
-        panelBg: 'rgba(10,8,0,0.5)',
-    },
-    cyberpunk: {
-        name: 'CYBERPUNK',
-        primary: '#ff00ff',
-        accent: '#00ffff',
-        warn: '#ff6ec7',
-        danger: '#ff073a',
-        bg: '#0d0221',
-        panelBg: 'rgba(13,2,33,0.5)',
-    },
+const FALLBACK_LANES = [
+  'Today / Firefighting',
+  'Waiting on Richard',
+  'Admin / Ops',
+  'Life / Personal',
+  'Backlog',
+  'Done',
+];
+
+const LANE_META = {
+  'Today / Firefighting': {
+    icon: AlertTriangle,
+    color: 'from-red-500 to-orange-400',
+    accent: 'text-red-200',
+    ring: 'ring-red-400/30',
+    copy: 'Items I should actively protect, prep, or push today.',
+  },
+  'Waiting on Richard': {
+    icon: UserRoundCheck,
+    color: 'from-amber-400 to-yellow-300',
+    accent: 'text-amber-100',
+    ring: 'ring-amber-300/30',
+    copy: 'Decisions, approvals, money, or client-facing sends that need you.',
+  },
+  'Admin / Ops': {
+    icon: Bot,
+    color: 'from-cyan-400 to-blue-400',
+    accent: 'text-cyan-100',
+    ring: 'ring-cyan-300/30',
+    copy: 'Back-office cleanup, account hygiene, routing, and recurring systems.',
+  },
+  'Life / Personal': {
+    icon: CalendarClock,
+    color: 'from-fuchsia-400 to-violet-400',
+    accent: 'text-fuchsia-100',
+    ring: 'ring-fuchsia-300/30',
+    copy: 'Family, school, bills, logistics, and personal admin loops.',
+  },
+  Backlog: {
+    icon: Clock3,
+    color: 'from-slate-400 to-slate-300',
+    accent: 'text-slate-200',
+    ring: 'ring-slate-300/20',
+    copy: 'Important but not the thing to let hijack today.',
+  },
+  Done: {
+    icon: CheckCircle2,
+    color: 'from-emerald-400 to-green-300',
+    accent: 'text-emerald-100',
+    ring: 'ring-emerald-300/30',
+    copy: 'Recently closed loops kept visible for confidence and audit trail.',
+  },
 };
 
-/* ───────────────────────── Boot Sequence Lines ─────────────────────── */
-const BOOT_LINES = [
-    'EB28.OS BIOS v2.4.1',
-    'Copyright (c) 2026 EB28 Systems Corp.',
-    '',
-    'Initializing memory.............. 64MB OK',
-    'Loading kernel modules........... OK',
-    'Mounting /dev/zoho............... OK',
-    'Mounting /dev/ringcentral........ OK',
-    'Mounting /dev/calendar........... OK',
-    'Starting IMAP sync daemon........ OK',
-    'Checking database latency........ 24ms',
-    '',
-    'Running system diagnostics.......',
-    '  > API endpoints .............. ONLINE',
-    '  > Telephony trunk ............ ONLINE',
-    '  > Mail sync .................. LAGGING [!]',
-    '',
-    'Loading dashboard interface.......',
-    '',
-    '████████████████████████████████████████ 100%',
-    '',
-    'Welcome back, Richard.',
-    'Type "help" for available commands.',
-    '',
-];
+const AREA_STYLES = {
+  UGCMA: 'border-orange-300/30 bg-orange-400/10 text-orange-100',
+  TYFYS: 'border-blue-300/30 bg-blue-400/10 text-blue-100',
+  Personal: 'border-fuchsia-300/30 bg-fuchsia-400/10 text-fuchsia-100',
+  Admin: 'border-cyan-300/30 bg-cyan-400/10 text-cyan-100',
+  Ops: 'border-slate-300/30 bg-slate-400/10 text-slate-100',
+};
 
-const ACTIVITY_FILTERS = [
-    { key: 'all', label: 'ALL' },
-    { key: 'success', label: 'SUCCESS' },
-    { key: 'warning', label: 'WARNING' },
-    { key: 'cron', label: 'CRON' },
-    { key: 'info', label: 'INFO' },
-];
+function formatGeneratedAt(value) {
+  if (!value) return 'not synced yet';
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return String(value);
+  return date.toLocaleString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+    timeZoneName: 'short',
+  });
+}
 
-const SEARCH_HISTORY_KEY = 'eb28-command-center-search-history';
+function normalizeSearch(text) {
+  return String(text || '').toLowerCase();
+}
 
-const fetchJsonWithFallback = async (primaryUrl, fallbackUrl) => {
+export default function Dashboard() {
+  const [payload, setPayload] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [query, setQuery] = useState('');
+  const [area, setArea] = useState('all');
+
+  async function loadBoard() {
+    setLoading(true);
+    setError('');
     try {
-        const response = await fetch(primaryUrl, { cache: 'no-store' });
-        const payload = await response.json();
-        if (!response.ok) {
-            throw new Error(payload?.error || `HTTP ${response.status}`);
-        }
-        return { payload, source: 'api' };
-    } catch (_primaryErr) {
-        const fallbackResponse = await fetch(fallbackUrl, { cache: 'no-store' });
-        const fallbackPayload = await fallbackResponse.json();
-        if (!fallbackResponse.ok) {
-            throw new Error(fallbackPayload?.error || `Fallback HTTP ${fallbackResponse.status}`);
-        }
-        return { payload: fallbackPayload, source: 'static' };
+      const response = await fetch(`/data/assistant-kanban.json?ts=${Date.now()}`, { cache: 'no-store' });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data?.error || `HTTP ${response.status}`);
+      setPayload(data);
+    } catch (loadError) {
+      setError(loadError.message || 'Unable to load assistant board');
+    } finally {
+      setLoading(false);
     }
-};
+  }
 
-/* ───────────────────────── Boot Screen Component ───────────────────── */
-const BootScreen = ({ onComplete, theme }) => {
-    const [lines, setLines] = useState([]);
-    const [done, setDone] = useState(false);
-    const containerRef = useRef(null);
+  useEffect(() => {
+    loadBoard();
+    const interval = setInterval(loadBoard, 5 * 60 * 1000);
+    return () => clearInterval(interval);
+  }, []);
 
-    useEffect(() => {
-        let i = 0;
-        let fadeTimeout;
-        let completeTimeout;
-
-        const interval = setInterval(() => {
-            if (i < BOOT_LINES.length) {
-                setLines(prev => [...prev, BOOT_LINES[i]]);
-                i++;
-            } else {
-                clearInterval(interval);
-                fadeTimeout = setTimeout(() => {
-                    setDone(true);
-                    completeTimeout = setTimeout(onComplete, 400);
-                }, 600);
-            }
-        }, 80);
-
-        return () => {
-            clearInterval(interval);
-            clearTimeout(fadeTimeout);
-            clearTimeout(completeTimeout);
-        };
-    }, [onComplete]);
-
-    useEffect(() => {
-        if (containerRef.current) {
-            containerRef.current.scrollTop = containerRef.current.scrollHeight;
-        }
-    }, [lines]);
-
-    return (
-        <div
-            className={`min-h-screen font-mono p-8 flex flex-col justify-center transition-opacity duration-500 ${done ? 'opacity-0' : 'opacity-100'}`}
-            style={{ background: theme.bg, color: theme.primary }}
-        >
-            <div ref={containerRef} className="max-w-3xl mx-auto w-full overflow-y-auto max-h-[80vh]">
-                {lines.map((line, i) => (
-                    <div key={i} className="retro-text leading-relaxed whitespace-pre">
-                        {line}
-                    </div>
-                ))}
-                {!done && <span className="inline-block animate-pulse">█</span>}
-            </div>
-        </div>
-    );
-};
-
-const formatTimeLabel = (value) => {
-    if (!value) {
-        return '--:--:--';
-    }
-
-    const date = new Date(value);
-    if (Number.isNaN(date.getTime())) {
-        return String(value).slice(0, 8);
-    }
-
-    return date.toLocaleTimeString('en-US', { hour12: false });
-};
-
-const formatDateTimeLabel = (value) => {
-    if (!value) {
-        return 'n/a';
-    }
-
-    const date = new Date(value);
-    if (Number.isNaN(date.getTime())) {
-        return String(value);
-    }
-
-    return date.toLocaleString('en-US', {
-        month: 'short',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: false,
+  const items = payload?.items || [];
+  const lanes = payload?.lanes?.length ? payload.lanes : FALLBACK_LANES;
+  const areas = useMemo(() => ['all', ...Array.from(new Set(items.map((item) => item.area).filter(Boolean))).sort()], [items]);
+  const filteredItems = useMemo(() => {
+    const q = normalizeSearch(query);
+    return items.filter((item) => {
+      const areaMatch = area === 'all' || item.area === area;
+      if (!areaMatch) return false;
+      if (!q) return true;
+      return [item.title, item.next, item.area, item.sourceSection, item.lane].some((value) => normalizeSearch(value).includes(q));
     });
-};
+  }, [items, query, area]);
 
-const typeColor = (theme, type) => {
-    if (type === 'warning') {
-        return theme.warn;
-    }
-    if (type === 'cron') {
-        return theme.accent;
-    }
-    if (type === 'success') {
-        return theme.primary;
-    }
-    return `${theme.primary}cc`;
-};
+  const grouped = useMemo(() => {
+    return lanes.reduce((acc, lane) => {
+      acc[lane] = filteredItems.filter((item) => item.lane === lane);
+      return acc;
+    }, {});
+  }, [lanes, filteredItems]);
 
-/* ───────────────────────── Activity Log Component ──────────────────── */
-const ActivityLog = ({ theme }) => {
-    const [entries, setEntries] = useState([]);
-    const [filter, setFilter] = useState('all');
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState('');
-    const [meta, setMeta] = useState({ source: '', workspace: '' });
-    const logRef = useRef(null);
+  const totalOpen = items.filter((item) => !item.done).length;
+  const needsRichard = items.filter((item) => item.lane === 'Waiting on Richard').length;
+  const fireCount = items.filter((item) => item.lane === 'Today / Firefighting').length;
+  const doneCount = items.filter((item) => item.done).length;
+  const hermesOwned = items.filter((item) => !item.done && item.owner !== 'Richard decision').slice(0, 8);
+  const waitingOnRichard = items.filter((item) => !item.done && item.owner === 'Richard decision').slice(0, 6);
 
-    const loadFeed = useCallback(async () => {
-        setLoading(true);
-        setError('');
+  return (
+    <div className="min-h-screen overflow-hidden bg-[#060810] text-white">
+      <div className="pointer-events-none fixed inset-0 opacity-80">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(56,189,248,.22),transparent_32%),radial-gradient(circle_at_75%_15%,rgba(251,146,60,.18),transparent_28%),linear-gradient(135deg,#060810,#0f172a_45%,#111827)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,.045)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,.045)_1px,transparent_1px)] bg-[size:46px_46px] [mask-image:linear-gradient(to_bottom,black,transparent_85%)]" />
+      </div>
 
-        try {
-            const { payload, source } = await fetchJsonWithFallback(
-                '/api/activity-feed?limit=80',
-                '/data/activity-feed.json'
-            );
-
-            setEntries(Array.isArray(payload.items) ? payload.items : []);
-            setMeta({
-                source: payload.source || source,
-                workspace: payload.workspace || '',
-            });
-        } catch (fetchError) {
-            setEntries([]);
-            setError(fetchError.message);
-        } finally {
-            setLoading(false);
-        }
-    }, []);
-
-    useEffect(() => {
-        loadFeed();
-        const interval = setInterval(loadFeed, 60_000);
-        return () => clearInterval(interval);
-    }, [loadFeed]);
-
-    useEffect(() => {
-        if (logRef.current) {
-            logRef.current.scrollTop = 0;
-        }
-    }, [filter, entries.length]);
-
-    const filteredEntries = filter === 'all'
-        ? entries
-        : entries.filter((entry) => String(entry.type || '').toLowerCase() === filter);
-
-    return (
-        <div
-            className="border p-4 retro-text transition-all h-full"
-            style={{ borderColor: theme.primary, background: theme.panelBg, color: theme.primary }}
-        >
-            <div className="mb-3 border-b pb-2 flex flex-wrap items-center justify-between gap-2"
-                style={{ borderColor: `${theme.primary}80` }}>
-                <h2 className="text-xl font-bold flex items-center gap-2">
-                    <Terminal size={20} /> ACTIVITY FEED
-                </h2>
-                <button
-                    type="button"
-                    onClick={loadFeed}
-                    className="text-xs border px-2 py-1 transition-all hover:opacity-80"
-                    style={{ borderColor: `${theme.primary}99` }}
-                >
-                    <span className="inline-flex items-center gap-1">
-                        <RefreshCw size={12} />
-                        REFRESH
-                    </span>
-                </button>
+      <main className="relative mx-auto flex w-full max-w-[1800px] flex-col gap-6 px-4 py-6 sm:px-6 lg:px-8">
+        <header className="rounded-[2rem] border border-white/10 bg-white/[0.07] p-5 shadow-2xl shadow-black/30 backdrop-blur-xl sm:p-7">
+          <div className="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
+            <div className="max-w-4xl">
+              <div className="mb-3 flex flex-wrap items-center gap-2 text-xs font-semibold uppercase tracking-[0.28em] text-cyan-100/80">
+                <span className="inline-flex items-center gap-2 rounded-full border border-cyan-300/20 bg-cyan-300/10 px-3 py-1">
+                  <Sparkles size={14} /> Richard OS
+                </span>
+                <span className="rounded-full border border-white/10 bg-black/20 px-3 py-1">Daily Kanban</span>
+                <span className="rounded-full border border-white/10 bg-black/20 px-3 py-1">Assistant-managed</span>
+              </div>
+              <h1 className="text-4xl font-black tracking-tight text-white sm:text-6xl lg:text-7xl">
+                Hermes Command Board
+              </h1>
+              <p className="mt-3 max-w-3xl text-sm leading-6 text-slate-300 sm:text-base">
+                I own the execution. This dashboard should make it obvious what I am doing, what is waiting on you, when I expect to move it, and the exact unblock path when I hit a wall.
+              </p>
             </div>
-
-            <div className="mb-3 flex flex-wrap gap-2">
-                {ACTIVITY_FILTERS.map((option) => (
-                    <button
-                        key={option.key}
-                        type="button"
-                        onClick={() => setFilter(option.key)}
-                        className="text-xs border px-2 py-1 transition-all"
-                        style={{
-                            borderColor: filter === option.key ? typeColor(theme, option.key) : `${theme.primary}66`,
-                            color: filter === option.key ? typeColor(theme, option.key) : `${theme.primary}cc`,
-                            background: filter === option.key ? `${theme.primary}14` : 'transparent',
-                        }}
-                    >
-                        {option.label}
-                    </button>
-                ))}
+            <div className="grid gap-3 rounded-3xl border border-emerald-300/20 bg-emerald-300/10 p-4 text-sm text-emerald-50 sm:min-w-[340px]">
+              <div className="flex items-center gap-2 font-semibold uppercase tracking-[0.18em] text-emerald-100">
+                <ShieldCheck size={18} /> Safety Mode
+              </div>
+              <p className="text-emerald-50/80">
+                I move at the fastest safe pace available. I only stop for approvals, credentials/access, money, live account changes, or client-facing sends.
+              </p>
             </div>
+          </div>
 
-            <div ref={logRef} className="space-y-2 text-xs max-h-48 overflow-y-auto scrollbar-hide">
-                {loading && <div className="opacity-70">Loading activity feed...</div>}
-                {!loading && error && (
-                    <div style={{ color: theme.danger }}>ERROR: {error}</div>
-                )}
-                {!loading && !error && filteredEntries.length === 0 && (
-                    <div className="opacity-70">No matching activity records.</div>
-                )}
-                {!loading && !error && filteredEntries.map((entry) => {
-                    const type = String(entry.type || 'info').toLowerCase();
-                    return (
-                        <div key={entry.id} className="flex gap-3 opacity-90">
-                            <span style={{ color: `${theme.primary}99` }}>[{formatTimeLabel(entry.timestamp)}]</span>
-                            <span
-                                className="min-w-16"
-                                style={{ color: typeColor(theme, type) }}
-                            >
-                                {type.toUpperCase()}
-                            </span>
-                            <span className="flex-1">{entry.message}</span>
-                        </div>
-                    );
-                })}
+          <section className="mt-6 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+            <Metric label="I own" value={Math.max(totalOpen - needsRichard, 0)} tone="cyan" />
+            <Metric label="Moving today" value={fireCount} tone="red" />
+            <Metric label="Needs you" value={needsRichard} tone="amber" />
+            <Metric label="Recently done" value={doneCount} tone="emerald" />
+          </section>
+        </header>
+
+        <section className="grid gap-4 xl:grid-cols-[1.4fr_.9fr]">
+          <FocusPanel
+            title="I am doing the work"
+            subtitle="Assistant-owned items. Default assumption: I keep moving these without waiting on you."
+            items={hermesOwned}
+            empty="No assistant-owned work loaded yet."
+          />
+          <FocusPanel
+            title="I need Richard"
+            subtitle="Only the items where your approval, account access, or a human decision is the blocker."
+            items={waitingOnRichard}
+            empty="Nothing is waiting on you right now."
+            compact
+          />
+        </section>
+
+        <section className="flex flex-col gap-3 rounded-[1.5rem] border border-white/10 bg-black/25 p-4 backdrop-blur-xl lg:flex-row lg:items-center lg:justify-between">
+          <div className="flex flex-col gap-1 text-sm text-slate-300">
+            <div className="font-semibold text-white">Last synced: {formatGeneratedAt(payload?.generatedAt)}</div>
+            <div className="flex items-center gap-2 text-xs text-slate-400">
+              <Lock size={13} /> Source: {payload?.source || 'OPEN_LOOPS.md'} · {payload?.privacy || 'public-safe summary'}
             </div>
+          </div>
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+            <label className="relative block min-w-[260px]">
+              <Search className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+              <input
+                value={query}
+                onChange={(event) => setQuery(event.target.value)}
+                placeholder="Search loops..."
+                className="w-full rounded-2xl border border-white/10 bg-white/10 py-3 pl-10 pr-3 text-sm text-white outline-none placeholder:text-slate-500 focus:border-cyan-300/50"
+              />
+            </label>
+            <label className="relative block">
+              <Filter className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
+              <select
+                value={area}
+                onChange={(event) => setArea(event.target.value)}
+                className="min-w-[180px] appearance-none rounded-2xl border border-white/10 bg-slate-950 py-3 pl-9 pr-8 text-sm text-white outline-none focus:border-cyan-300/50"
+              >
+                {areas.map((name) => <option key={name} value={name}>{name === 'all' ? 'All areas' : name}</option>)}
+              </select>
+            </label>
+            <button
+              type="button"
+              onClick={loadBoard}
+              className="inline-flex items-center justify-center gap-2 rounded-2xl border border-cyan-300/20 bg-cyan-300/10 px-4 py-3 text-sm font-semibold text-cyan-100 transition hover:bg-cyan-300/20"
+            >
+              <RefreshCw size={16} className={loading ? 'animate-spin' : ''} /> Refresh
+            </button>
+          </div>
+        </section>
 
-            {(meta.source || meta.workspace) && (
-                <div className="mt-3 text-[10px] opacity-60">
-                    {meta.source ? `SOURCE: ${meta.source}` : ''}
-                    {meta.source && meta.workspace ? ' | ' : ''}
-                    {meta.workspace ? `WORKSPACE: ${meta.workspace}` : ''}
-                </div>
-            )}
+        {error && (
+          <div className="rounded-2xl border border-red-400/30 bg-red-500/10 p-4 text-sm text-red-100">
+            Board load warning: {error}
+          </div>
+        )}
+
+        <section className="flex gap-4 overflow-x-auto pb-3" aria-label="Full detailed board">
+          {lanes.map((lane) => (
+            <div key={lane} className="w-[330px] shrink-0 2xl:w-[360px]">
+              <Lane lane={lane} items={grouped[lane] || []} />
+            </div>
+          ))}
+        </section>
+
+        <footer className="flex flex-col gap-2 pb-6 text-xs text-slate-500 sm:flex-row sm:items-center sm:justify-between">
+          <span>Dashboard target: eb28.co/dash</span>
+          <a className="inline-flex items-center gap-1 text-cyan-300 hover:text-cyan-100" href="https://eb28.co/dash/" target="_blank" rel="noreferrer">
+            Open live board <ExternalLink size={13} />
+          </a>
+        </footer>
+      </main>
+    </div>
+  );
+}
+
+function FocusPanel({ title, subtitle, items, empty, compact = false }) {
+  return (
+    <section className="rounded-[1.5rem] border border-white/10 bg-white/[0.06] p-4 shadow-xl shadow-black/20 backdrop-blur-xl">
+      <div className="mb-4 flex items-start justify-between gap-3">
+        <div>
+          <h2 className="text-xl font-black tracking-tight text-white">{title}</h2>
+          <p className="mt-1 max-w-2xl text-xs leading-5 text-slate-400">{subtitle}</p>
         </div>
-    );
-};
+        <span className="rounded-full border border-white/10 bg-black/30 px-3 py-1 text-xs font-bold text-slate-200">{items.length}</span>
+      </div>
+      <div className={compact ? 'grid gap-2' : 'grid gap-3 lg:grid-cols-2'}>
+        {items.length === 0 ? (
+          <div className="rounded-2xl border border-dashed border-white/10 p-4 text-sm text-slate-500">{empty}</div>
+        ) : items.map((item) => <WorkRow key={item.id} item={item} compact={compact} />)}
+      </div>
+    </section>
+  );
+}
 
-/* ───────────────────────── Cron Status Panel ──────────────────────── */
-const CronPanel = ({ theme }) => {
-    const [jobs, setJobs] = useState([]);
-    const [schedulerStatus, setSchedulerStatus] = useState('');
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState('');
-    const [activeAction, setActiveAction] = useState('');
-    const [readOnlyMode, setReadOnlyMode] = useState(false);
+function WorkRow({ item, compact }) {
+  const areaStyle = AREA_STYLES[item.area] || AREA_STYLES.Ops;
+  return (
+    <article className="rounded-2xl border border-white/10 bg-slate-950/65 p-3">
+      <div className="flex flex-wrap items-center gap-2">
+        <span className={`rounded-full border px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.16em] ${areaStyle}`}>{item.area || 'Ops'}</span>
+        <span className="rounded-full border border-cyan-300/20 bg-cyan-300/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.16em] text-cyan-100">{item.owner || 'Hermes owns'}</span>
+        <span className="rounded-full border border-white/10 bg-white/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.16em] text-slate-200">{item.status || 'Queued'}</span>
+      </div>
+      <h3 className="mt-2 text-sm font-bold leading-snug text-white">{item.title}</h3>
+      <div className="mt-3 grid gap-2 text-xs leading-5 text-slate-300">
+        <div><span className="font-bold text-slate-100">When:</span> {item.eta || 'Queued by priority'}</div>
+        <div><span className="font-bold text-slate-100">Next:</span> {item.next || 'I will define the next concrete step from the source loop.'}</div>
+        {!compact && item.blocker && <div className="rounded-xl border border-amber-300/20 bg-amber-300/10 p-2 text-amber-100"><span className="font-bold">Blocker:</span> {item.blocker}</div>}
+        {item.unblock && <div className="text-slate-400"><span className="font-bold text-slate-300">Unblock path:</span> {item.unblock}</div>}
+      </div>
+    </article>
+  );
+}
 
-    const loadCronStatus = useCallback(async () => {
-        setLoading(true);
-        setError('');
+function Metric({ label, value, tone }) {
+  const tones = {
+    cyan: 'from-cyan-400/20 to-blue-400/10 text-cyan-100 border-cyan-300/20',
+    red: 'from-red-400/20 to-orange-400/10 text-red-100 border-red-300/20',
+    amber: 'from-amber-400/20 to-yellow-400/10 text-amber-100 border-amber-300/20',
+    emerald: 'from-emerald-400/20 to-green-400/10 text-emerald-100 border-emerald-300/20',
+  };
+  return (
+    <div className={`rounded-3xl border bg-gradient-to-br p-4 ${tones[tone]}`}>
+      <div className="text-3xl font-black">{value}</div>
+      <div className="mt-1 text-xs font-semibold uppercase tracking-[0.22em] opacity-80">{label}</div>
+    </div>
+  );
+}
 
-        try {
-            const { payload, source } = await fetchJsonWithFallback(
-                '/api/cron-status',
-                '/data/cron-status.json'
-            );
-
-            setReadOnlyMode(source === 'static');
-            setJobs(Array.isArray(payload.jobs) ? payload.jobs : []);
-            setSchedulerStatus(payload.scheduler?.status || (source === 'static' ? 'static-cache' : ''));
-
-            if (Array.isArray(payload.errors) && payload.errors.length) {
-                setError(payload.errors.join(' | '));
-            }
-        } catch (fetchError) {
-            setJobs([]);
-            setError(fetchError.message);
-        } finally {
-            setLoading(false);
-        }
-    }, []);
-
-    useEffect(() => {
-        loadCronStatus();
-        const interval = setInterval(loadCronStatus, 60_000);
-        return () => clearInterval(interval);
-    }, [loadCronStatus]);
-
-    const runAction = useCallback(async (action, id) => {
-        if (readOnlyMode) {
-            setError('Cron controls are disabled in static-cache mode.');
-            return;
-        }
-
-        setActiveAction(`${action}:${id}`);
-        setError('');
-
-        try {
-            const response = await fetch('/api/cron-status', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ action, id }),
-            });
-            const payload = await response.json();
-
-            if (!response.ok) {
-                throw new Error(payload.error || 'Cron command failed');
-            }
-
-            setJobs(Array.isArray(payload.jobs) ? payload.jobs : []);
-            setSchedulerStatus(payload.scheduler?.status || '');
-        } catch (actionError) {
-            setError(actionError.message);
-        } finally {
-            setActiveAction('');
-        }
-    }, [readOnlyMode]);
-
-    return (
-        <div
-            className="border p-4 retro-text transition-all h-full"
-            style={{ borderColor: theme.primary, background: theme.panelBg, color: theme.primary }}
-        >
-            <h2 className="text-xl font-bold mb-3 border-b pb-2 flex items-center gap-2"
-                style={{ borderColor: `${theme.primary}80` }}>
-                <CalendarIcon size={20} /> CRON SCHEDULE
-            </h2>
-
-            <div className="mb-3 text-xs opacity-80">
-                Scheduler: {schedulerStatus || 'unknown'}
+function Lane({ lane, items }) {
+  const meta = LANE_META[lane] || LANE_META.Backlog;
+  const Icon = meta.icon;
+  return (
+    <div className={`min-h-[360px] rounded-[1.5rem] border border-white/10 bg-white/[0.055] p-3 backdrop-blur-xl ring-1 ${meta.ring}`}>
+      <div className="mb-3 rounded-2xl border border-white/10 bg-black/25 p-3">
+        <div className="flex items-start justify-between gap-2">
+          <div>
+            <div className="flex items-center gap-2">
+              <span className={`grid h-8 w-8 place-items-center rounded-xl bg-gradient-to-br ${meta.color} text-slate-950`}>
+                <Icon size={17} />
+              </span>
+              <h2 className="text-sm font-black uppercase tracking-[0.12em] text-white">{lane}</h2>
             </div>
-
-            <div className="space-y-3 max-h-72 overflow-y-auto scrollbar-hide">
-                {loading && <div className="opacity-70 text-sm">Loading cron jobs...</div>}
-                {!loading && error && (
-                    <div className="text-sm" style={{ color: theme.warn }}>WARN: {error}</div>
-                )}
-                {!loading && !error && jobs.length === 0 && (
-                    <div className="opacity-70 text-sm">No cron jobs returned.</div>
-                )}
-                {jobs.map((job) => {
-                    const pauseAction = job.enabled ? 'pause' : 'resume';
-                    const runNowBusy = activeAction === `run:${job.id}`;
-                    const pauseBusy = activeAction === `${pauseAction}:${job.id}`;
-
-                    return (
-                        <div
-                            key={job.id}
-                            className="border p-3"
-                            style={{ borderColor: `${theme.primary}55` }}
-                        >
-                            <div className="flex items-start justify-between gap-2">
-                                <div>
-                                    <div className="text-sm font-bold">{job.name}</div>
-                                    <div className="text-xs opacity-70">ID: {job.id}</div>
-                                </div>
-                                <span
-                                    className="text-xs px-2 py-1 border"
-                                    style={{
-                                        borderColor: job.enabled ? `${theme.primary}80` : `${theme.warn}80`,
-                                        color: job.enabled ? theme.primary : theme.warn,
-                                    }}
-                                >
-                                    {job.enabled ? 'ACTIVE' : 'PAUSED'}
-                                </span>
-                            </div>
-                            <div className="mt-2 text-xs opacity-80">Schedule: {job.schedule || 'n/a'}</div>
-                            <div className="text-xs opacity-80">Next: {formatDateTimeLabel(job.nextRun)}</div>
-                            <div className="mt-3 flex flex-wrap gap-2">
-                                <button
-                                    type="button"
-                                    onClick={() => runAction('run', job.id)}
-                                    disabled={readOnlyMode || runNowBusy || Boolean(activeAction)}
-                                    className="border px-2 py-1 text-xs transition-all disabled:opacity-50"
-                                    style={{ borderColor: `${theme.primary}99` }}
-                                >
-                                    <span className="inline-flex items-center gap-1">
-                                        <Play size={12} />
-                                        {runNowBusy ? 'RUNNING...' : 'RUN NOW'}
-                                    </span>
-                                </button>
-                                <button
-                                    type="button"
-                                    onClick={() => runAction(pauseAction, job.id)}
-                                    disabled={readOnlyMode || pauseBusy || Boolean(activeAction)}
-                                    className="border px-2 py-1 text-xs transition-all disabled:opacity-50"
-                                    style={{ borderColor: `${theme.warn}99`, color: theme.warn }}
-                                >
-                                    <span className="inline-flex items-center gap-1">
-                                        <Pause size={12} />
-                                        {pauseBusy ? 'UPDATING...' : (job.enabled ? 'PAUSE' : 'RESUME')}
-                                    </span>
-                                </button>
-                            </div>
-                        </div>
-                    );
-                })}
-            </div>
+            <p className="mt-2 text-xs leading-5 text-slate-400">{meta.copy}</p>
+          </div>
+          <span className="rounded-full border border-white/10 bg-white/10 px-2 py-1 text-xs font-bold text-white">{items.length}</span>
         </div>
-    );
-};
+      </div>
+      <div className="flex max-h-[68vh] flex-col gap-3 overflow-y-auto pr-1">
+        {items.length === 0 ? (
+          <div className="rounded-2xl border border-dashed border-white/10 p-4 text-center text-xs text-slate-500">Nothing in this lane.</div>
+        ) : items.map((item) => <Card key={item.id} item={item} />)}
+      </div>
+    </div>
+  );
+}
 
-/* ───────────────────────── Search Panel ───────────────────────────── */
-const GlobalSearchPanel = ({ theme }) => {
-    const [query, setQuery] = useState('');
-    const [results, setResults] = useState([]);
-    const [history, setHistory] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState('');
-    const [meta, setMeta] = useState({ workspace: '', indexedFiles: 0 });
-
-    useEffect(() => {
-        try {
-            const saved = JSON.parse(window.localStorage.getItem(SEARCH_HISTORY_KEY) || '[]');
-            if (Array.isArray(saved)) {
-                setHistory(saved.slice(0, 8));
-            }
-        } catch {
-            setHistory([]);
-        }
-    }, []);
-
-    const persistHistory = useCallback((term) => {
-        const trimmed = term.trim();
-        if (!trimmed) {
-            return;
-        }
-
-        setHistory((previous) => {
-            const next = [trimmed, ...previous.filter((entry) => entry !== trimmed)].slice(0, 8);
-            window.localStorage.setItem(SEARCH_HISTORY_KEY, JSON.stringify(next));
-            return next;
-        });
-    }, []);
-
-    const runSearch = useCallback(async (term) => {
-        const trimmed = term.trim();
-        if (!trimmed) {
-            setResults([]);
-            setError('');
-            return;
-        }
-
-        setLoading(true);
-        setError('');
-
-        try {
-            const { payload } = await fetchJsonWithFallback(
-                `/api/search?q=${encodeURIComponent(trimmed)}&limit=20`,
-                `/data/search.json?q=${encodeURIComponent(trimmed)}&limit=20`
-            );
-
-            setResults(Array.isArray(payload.items) ? payload.items : []);
-            setMeta({
-                workspace: payload.workspace || '',
-                indexedFiles: Number(payload.indexedFiles) || 0,
-            });
-            persistHistory(trimmed);
-        } catch (searchError) {
-            setResults([]);
-            setError(searchError.message);
-        } finally {
-            setLoading(false);
-        }
-    }, [persistHistory]);
-
-    const onSubmit = useCallback((event) => {
-        event.preventDefault();
-        runSearch(query);
-    }, [query, runSearch]);
-
-    return (
-        <div
-            className="border p-4 retro-text transition-all h-full"
-            style={{ borderColor: theme.primary, background: theme.panelBg, color: theme.primary }}
-        >
-            <h2 className="text-xl font-bold mb-3 border-b pb-2 flex items-center gap-2"
-                style={{ borderColor: `${theme.primary}80` }}>
-                <SearchIcon size={20} /> GLOBAL SEARCH
-            </h2>
-
-            <form onSubmit={onSubmit} className="flex items-center gap-2 mb-3">
-                <input
-                    type="text"
-                    value={query}
-                    onChange={(event) => setQuery(event.target.value)}
-                    className="flex-1 bg-transparent border px-3 py-2 text-sm outline-none"
-                    style={{ borderColor: `${theme.primary}80`, color: theme.primary }}
-                    placeholder="Search memory, MEMORY.md, TODO*.json"
-                />
-                <button
-                    type="submit"
-                    className="border px-3 py-2 text-xs transition-all"
-                    style={{ borderColor: `${theme.primary}99` }}
-                >
-                    SEARCH
-                </button>
-            </form>
-
-            {history.length > 0 && (
-                <div className="mb-3 flex flex-wrap gap-2">
-                    {history.map((item) => (
-                        <button
-                            key={item}
-                            type="button"
-                            onClick={() => {
-                                setQuery(item);
-                                runSearch(item);
-                            }}
-                            className="text-xs border px-2 py-1 transition-all hover:opacity-80"
-                            style={{ borderColor: `${theme.primary}66` }}
-                        >
-                            {item}
-                        </button>
-                    ))}
-                </div>
-            )}
-
-            <div className="space-y-3 text-sm max-h-72 overflow-y-auto scrollbar-hide">
-                {loading && <div className="opacity-70">Searching...</div>}
-                {!loading && error && (
-                    <div style={{ color: theme.warn }}>WARN: {error}</div>
-                )}
-                {!loading && !error && results.length === 0 && query.trim() && (
-                    <div className="opacity-70">No results found.</div>
-                )}
-                {results.map((result) => (
-                    <div key={result.id} className="border p-3" style={{ borderColor: `${theme.primary}55` }}>
-                        <div className="text-xs opacity-70">{result.source}</div>
-                        <div className="font-bold">{result.title}</div>
-                        <div className="text-xs opacity-80 mt-1">{result.snippet}</div>
-                    </div>
-                ))}
-            </div>
-
-            {(meta.workspace || meta.indexedFiles > 0) && (
-                <div className="mt-3 text-[10px] opacity-60">
-                    {meta.indexedFiles > 0 ? `INDEXED FILES: ${meta.indexedFiles}` : ''}
-                    {meta.indexedFiles > 0 && meta.workspace ? ' | ' : ''}
-                    {meta.workspace ? `WORKSPACE: ${meta.workspace}` : ''}
-                </div>
-            )}
-        </div>
-    );
-};
-
-/* ───────────────────────── CLI Component ───────────────────────────── */
-const CLIInput = ({ onCommand, theme, history, inputRef }) => {
-    const [input, setInput] = useState('');
-    const [historyIdx, setHistoryIdx] = useState(-1);
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        if (!input.trim()) return;
-        onCommand(input.trim());
-        setInput('');
-        setHistoryIdx(-1);
-    };
-
-    const handleKeyDown = (e) => {
-        if (e.key === 'ArrowUp') {
-            e.preventDefault();
-            const newIdx = Math.min(historyIdx + 1, history.length - 1);
-            setHistoryIdx(newIdx);
-            if (history[history.length - 1 - newIdx]) {
-                setInput(history[history.length - 1 - newIdx]);
-            }
-        } else if (e.key === 'ArrowDown') {
-            e.preventDefault();
-            const newIdx = Math.max(historyIdx - 1, -1);
-            setHistoryIdx(newIdx);
-            setInput(newIdx === -1 ? '' : history[history.length - 1 - newIdx] || '');
-        }
-    };
-
-    useEffect(() => {
-        inputRef.current?.focus();
-    }, [inputRef]);
-
-    return (
-        <form onSubmit={handleSubmit} className="flex items-center gap-2">
-            <span className="retro-text font-bold whitespace-nowrap" style={{ color: theme.primary }}>
-                root@eb28:~$
-            </span>
-            <input
-                ref={inputRef}
-                type="text"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={handleKeyDown}
-                className="flex-1 bg-transparent outline-none font-mono text-sm caret-current"
-                style={{ color: theme.primary }}
-                autoComplete="off"
-                spellCheck="false"
-            />
-        </form>
-    );
-};
-
-/* ───────────────────────── Main Dashboard ──────────────────────────── */
-const Dashboard = () => {
-    const [booted, setBooted] = useState(true);
-    const [themeKey, setThemeKey] = useState('matrix');
-    const [time, setTime] = useState(new Date());
-    const [cmdHistory, setCmdHistory] = useState([]);
-    const [cmdOutput, setCmdOutput] = useState([]);
-    const cliInputRef = useRef(null);
-    const [priorities, setPriorities] = useState([
-        { id: 'mission-1', text: 'Intake page overhaul + mandatory fields', status: 'urgent' },
-        { id: 'mission-2', text: 'Fix runtime scheduler path (openclaw ENOENT)', status: 'urgent' },
-        { id: 'mission-3', text: 'Reconcile master action list (done / pending)', status: 'pending' },
-    ]);
-
-    const theme = THEMES[themeKey];
-
-    const [tyfysFeed, setTyfysFeed] = useState(null);
-    const [missionFeed, setMissionFeed] = useState(null);
-
-    useEffect(() => {
-        let mounted = true;
-        const loadFeed = async () => {
-            try {
-                const r = await fetch('/api/tyfys/feed');
-                const data = await r.json();
-                if (mounted) setTyfysFeed(data);
-            } catch {
-                try {
-                    const r2 = await fetch('/data/tyfys-feed.json');
-                    const data2 = await r2.json();
-                    if (mounted) setTyfysFeed(data2);
-                } catch {}
-            }
-        };
-        loadFeed();
-        const t = setInterval(loadFeed, 60000);
-        return () => { mounted = false; clearInterval(t); };
-    }, []);
-
-    useEffect(() => {
-        let mounted = true;
-        const loadMission = async () => {
-            try {
-                const r = await fetch('/data/mission-dashboard.json', { cache: 'no-store' });
-                const data = await r.json();
-                if (!mounted) return;
-                setMissionFeed(data);
-                if (Array.isArray(data?.topPriorities) && data.topPriorities.length) {
-                    setPriorities(data.topPriorities.map((item, idx) => ({
-                        id: item.id || `mission-${idx + 1}`,
-                        text: item.text || item.title || 'Untitled priority',
-                        status: item.status || 'pending',
-                    })));
-                }
-            } catch {
-                // keep defaults
-            }
-        };
-
-        loadMission();
-        const t = setInterval(loadMission, 60_000);
-        return () => { mounted = false; clearInterval(t); };
-    }, []);
-
-    useEffect(() => {
-        const timer = setInterval(() => setTime(new Date()), 1000);
-        return () => clearInterval(timer);
-    }, []);
-
-    const formatDate = (d) =>
-        d.toLocaleString('en-US', {
-            weekday: 'short', year: 'numeric', month: 'short', day: 'numeric',
-            hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false,
-        });
-
-    const metrics = {
-        revenue: missionFeed?.metrics?.mrr || `${tyfysFeed?.pipeline?.total || 0} Leads`,
-        calls: missionFeed?.metrics?.calls || `${Object.keys(tyfysFeed?.pipeline?.byPhase || {}).length} phases`,
-        conversion: missionFeed?.metrics?.conversion || `${(tyfysFeed?.now?.progressPct ?? 0)}%`
-    };
-
-    const pipeline = Array.isArray(missionFeed?.pipeline)
-        ? missionFeed.pipeline
-        : Object.entries(tyfysFeed?.pipeline?.byPhase || {}).map(([stage, count]) => ({
-            stage,
-            count,
-            value: `${Math.round((count / Math.max(1, tyfysFeed?.pipeline?.total || 1)) * 100)}%`
-        }));
-
-    const conflicts = Array.isArray(missionFeed?.schedulingConflicts)
-        ? missionFeed.schedulingConflicts
-        : [
-            { time: '14:00', event1: 'Client Sync', event2: 'Internal Review' },
-        ];
-
-    const missedComms = Array.isArray(missionFeed?.missedComms)
-        ? missionFeed.missedComms
-        : [
-            ...(tyfysFeed?.approvals || []).slice(0, 2).map((a) => ({ type: 'Approval', from: a.projectId, time: a.approvalType || 'approval needed', urgent: true })),
-            ...(tyfysFeed?.blocked || []).slice(0, 1).map((b) => ({ type: 'Blocked', from: b.projectId, time: (b.blockers || []).join(', '), urgent: true }))
-        ];
-
-    /* ── Command handler ── */
-    const handleCommand = useCallback((raw) => {
-        setCmdHistory(prev => [...prev, raw]);
-        const trimmed = raw.trim();
-        const firstSpace = trimmed.indexOf(' ');
-        const cmd = (firstSpace === -1 ? trimmed : trimmed.slice(0, firstSpace)).toLowerCase();
-        const arg = firstSpace === -1 ? '' : trimmed.slice(firstSpace + 1).trim();
-
-        switch (cmd) {
-            case 'help':
-                setCmdOutput(prev => [
-                    ...prev,
-                    '> Available commands:',
-                    '  theme [matrix|amber|cyberpunk]  – Switch color theme',
-                    '  add <task description>          – Add a new priority',
-                    '  done <task number>              – Mark priority as done',
-                    '  clear                           – Clear command output',
-                    '  status                          – Show system summary',
-                    '  reboot                          – Replay boot sequence',
-                    '  help                            – Show this message',
-                ]);
-                break;
-            case 'theme':
-                if (THEMES[arg.toLowerCase()]) {
-                    const nextTheme = THEMES[arg.toLowerCase()];
-                    setThemeKey(arg.toLowerCase());
-                    setCmdOutput(prev => [...prev, `> Theme switched to ${nextTheme.name}`]);
-                } else {
-                    setCmdOutput(prev => [
-                        ...prev,
-                        `> Unknown theme "${arg}". Available: ${Object.keys(THEMES).join(', ')}`,
-                    ]);
-                }
-                break;
-            case 'add':
-                if (arg) {
-                    setPriorities(prev => [...prev, { id: Date.now(), text: arg, status: 'pending' }]);
-                    setCmdOutput(prev => [...prev, `> Added priority: "${arg}"`]);
-                } else {
-                    setCmdOutput(prev => [...prev, '> Usage: add <task description>']);
-                }
-                break;
-            case 'done': {
-                const idx = parseInt(arg, 10) - 1;
-                if (!isNaN(idx) && idx >= 0 && idx < priorities.length) {
-                    setPriorities(prev => prev.map((p, i) => i === idx ? { ...p, status: 'done' } : p));
-                    setCmdOutput(prev => [...prev, `> Marked task #${idx + 1} as done`]);
-                } else {
-                    setCmdOutput(prev => [...prev, '> Usage: done <task number>']);
-                }
-                break;
-            }
-            case 'clear':
-                setCmdOutput([]);
-                break;
-            case 'status':
-                setCmdOutput(prev => [
-                    ...prev,
-                    `> EB28.OS Status Report – ${formatDate(new Date())}`,
-                    `  Theme: ${theme.name} | Priorities: ${priorities.length} | MRR: ${metrics.revenue}`,
-                    `  Uptime: ${Math.floor((Date.now() % 86400000) / 3600000)}h ${Math.floor((Date.now() % 3600000) / 60000)}m`,
-                ]);
-                break;
-            case 'reboot':
-                setCmdOutput([]);
-                setBooted(false);
-                break;
-            default:
-                setCmdOutput(prev => [...prev, `> Unknown command: "${cmd}". Type "help" for options.`]);
-        }
-    }, [metrics.revenue, priorities.length, theme.name]);
-
-    const handleRootClick = useCallback((event) => {
-        const target = event.target;
-        if (!(target instanceof Element)) {
-            return;
-        }
-
-        if (target.closest('button, a, input, textarea, select, label, [role="button"], [contenteditable="true"]')) {
-            return;
-        }
-
-        cliInputRef.current?.focus();
-    }, []);
-
-    /* ── Boot gate ── */
-    if (!booted) {
-        return <BootScreen onComplete={() => setBooted(true)} theme={theme} />;
-    }
-
-    return (
-        <div
-            className="min-h-screen font-mono p-4 md:p-8 relative overflow-hidden select-none"
-            style={{ background: theme.bg, color: theme.primary }}
-            onClick={handleRootClick}
-        >
-            {/* Background Image */}
-            <div className="absolute inset-0 -z-20">
-                <img src="/images/dashboard_bg.png" alt="Dashboard Hub" className="w-full h-full object-cover opacity-[0.05]" />
-            </div>
-
-            {/* CRT Scanline Overlay */}
-            <div className="absolute inset-0 crt-overlay"></div>
-
-            {/* Vignette */}
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.8)_100%)] pointer-events-none"></div>
-
-            <div className="max-w-7xl mx-auto relative z-10 flex flex-col gap-6">
-
-                {/* Header */}
-                <header
-                    className="border-b-2 pb-4 flex flex-col md:flex-row justify-between items-start md:items-end gap-4 retro-text"
-                    style={{ borderColor: theme.primary }}
-                >
-                    <div>
-                        <h1 className="text-3xl md:text-5xl font-bold tracking-wider flex items-center gap-4">
-                            <Terminal size={40} className="animate-pulse" />
-                            EB28.OS
-                        </h1>
-                        <p className="text-sm mt-2 opacity-80 uppercase tracking-widest cursor-blink">
-                            System Control Terminal v2.4
-                        </p>
-                    </div>
-                    <div className="flex items-center gap-6">
-                        {/* Theme Switcher */}
-                        <div className="flex items-center gap-2 text-sm">
-                            <Palette size={16} />
-                            {Object.entries(THEMES).map(([key, t]) => (
-                                <button
-                                    key={key}
-                                    onClick={(e) => { e.stopPropagation(); setThemeKey(key); }}
-                                    className="w-4 h-4 rounded-full border-2 transition-transform hover:scale-125"
-                                    style={{
-                                        background: t.primary,
-                                        borderColor: themeKey === key ? '#fff' : t.primary,
-                                        transform: themeKey === key ? 'scale(1.3)' : 'scale(1)',
-                                    }}
-                                    title={t.name}
-                                />
-                            ))}
-                        </div>
-                        <div className="text-right text-lg md:text-xl">{formatDate(time)}</div>
-                    </div>
-                </header>
-
-
-                <div
-                    className="border p-4 retro-text transition-all"
-                    style={{ borderColor: theme.accent || theme.primary, background: theme.panelBg }}
-                >
-                    <h2 className="text-xl font-bold mb-2 flex items-center gap-2" style={{ color: theme.accent || theme.primary }}>
-                        <Activity size={20} /> NOW FOCUS
-                    </h2>
-                    <div className="text-sm opacity-90">Project: {tyfysFeed?.now?.projectId || 'n/a'}</div>
-                    <div className="text-sm opacity-90">Action: {tyfysFeed?.now?.nowAction || 'n/a'}</div>
-                    <div className="mt-2 h-3 w-full bg-black border" style={{ borderColor: `${theme.primary}80` }}>
-                        <div className="h-full transition-all duration-700" style={{ width: `${tyfysFeed?.now?.progressPct || 0}%`, background: theme.accent || theme.primary }}></div>
-                    </div>
-                    <div className="text-xs mt-1">{tyfysFeed?.now?.progressLabel || '0% - idle'} {tyfysFeed?.now?.needsApproval ? ' • APPROVAL NEEDED' : ''}</div>
-                </div>
-
-                {/* Grid Layout */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-2">
-
-                    {/* ─── Priorities ─── */}
-                    <div
-                        className="border p-4 retro-text transition-all"
-                        style={{ borderColor: theme.primary, background: theme.panelBg }}
-                    >
-                        <h2 className="text-xl font-bold mb-4 border-b pb-2 flex items-center gap-2"
-                            style={{ borderColor: `${theme.primary}80` }}>
-                            <Target size={20} /> TODAY'S PRIORITIES
-                        </h2>
-                        <ul className="space-y-3">
-                            {priorities.map((p, idx) => (
-                                <li key={p.id} className="flex items-start gap-3">
-                                    <span className="opacity-40 text-xs mt-1">{idx + 1}.</span>
-                                    <span className={`mt-0.5 ${p.status === 'urgent' ? '' : p.status === 'done' ? 'opacity-40' : ''}`}
-                                        style={{ color: p.status === 'urgent' ? theme.danger : undefined }}>
-                                        {p.status === 'done' ? '[X]' : '[ ]'}
-                                    </span>
-                                    <span className={
-                                        p.status === 'urgent' ? 'animate-pulse' :
-                                            p.status === 'done' ? 'line-through opacity-40' : ''
-                                    } style={{ color: p.status === 'urgent' ? theme.danger : undefined }}>
-                                        {p.text}
-                                    </span>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-
-                    {/* ─── Sales Metrics ─── */}
-                    <div
-                        className="border p-4 retro-text transition-all"
-                        style={{ borderColor: theme.primary, background: theme.panelBg }}
-                    >
-                        <h2 className="text-xl font-bold mb-4 border-b pb-2 flex items-center gap-2"
-                            style={{ borderColor: `${theme.primary}80` }}>
-                            <TrendingUp size={20} /> ZOHO / RINGCENTRAL
-                        </h2>
-                        <div className="grid grid-cols-2 gap-4">
-                            <div className="border p-2" style={{ borderColor: `${theme.primary}4d` }}>
-                                <div className="text-xs opacity-70">MRR</div>
-                                <div className="text-2xl">{metrics.revenue}</div>
-                            </div>
-                            <div className="border p-2" style={{ borderColor: `${theme.primary}4d` }}>
-                                <div className="text-xs opacity-70">CALLS</div>
-                                <div className="text-2xl">{metrics.calls}</div>
-                            </div>
-                            <div className="border p-2 col-span-2" style={{ borderColor: `${theme.primary}4d` }}>
-                                <div className="text-xs opacity-70">CONVERSION</div>
-                                <div className="text-2xl" style={{ color: theme.warn }}>{metrics.conversion}</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* ─── Pipeline ─── */}
-                    <div
-                        className="border p-4 retro-text transition-all"
-                        style={{ borderColor: theme.primary, background: theme.panelBg }}
-                    >
-                        <h2 className="text-xl font-bold mb-4 border-b pb-2 flex items-center gap-2"
-                            style={{ borderColor: `${theme.primary}80` }}>
-                            <Activity size={20} /> PIPELINE STATUS
-                        </h2>
-                        <div className="space-y-4">
-                            {pipeline.map((s, i) => (
-                                <div key={i}>
-                                    <div className="flex justify-between text-sm mb-1">
-                                        <span>{s.stage} ({s.count})</span>
-                                        <span>{s.value}</span>
-                                    </div>
-                                    <div className="h-2 w-full bg-black border overflow-hidden"
-                                        style={{ borderColor: `${theme.primary}80` }}>
-                                        <div className="h-full transition-all duration-700"
-                                            style={{ width: `${(s.count / 20) * 100}%`, background: theme.primary }}></div>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-
-                    {/* ─── Missed Comms ─── */}
-                    <div className="border p-4 retro-text"
-                        style={{ borderColor: theme.danger, color: theme.danger, background: 'rgba(127,29,29,0.12)' }}>
-                        <h2 className="text-xl font-bold mb-4 border-b pb-2 flex items-center gap-2"
-                            style={{ borderColor: `${theme.danger}80` }}>
-                            <PhoneMissed size={20} /> MISSED COMMS
-                        </h2>
-                        <ul className="space-y-3">
-                            {missedComms.map((c, i) => (
-                                <li key={i} className={`flex justify-between items-center ${c.urgent ? 'animate-pulse' : ''}`}>
-                                    <div className="flex flex-col">
-                                        <span className="font-bold">[{c.type}] {c.from}</span>
-                                        <span className="text-xs opacity-80">{c.urgent ? 'URGENT' : 'Standard'}</span>
-                                    </div>
-                                    <span>{c.time}</span>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-
-                    {/* ─── Calendar Conflicts ─── */}
-                    <div className="border p-4 retro-text"
-                        style={{ borderColor: theme.warn, color: theme.warn, background: 'rgba(120,53,15,0.12)' }}>
-                        <h2 className="text-xl font-bold mb-4 border-b pb-2 flex items-center gap-2"
-                            style={{ borderColor: `${theme.warn}80` }}>
-                            <CalendarIcon size={20} /> SCHEDULING CONFLICTS
-                        </h2>
-                        {conflicts.length > 0 ? (
-                            <ul className="space-y-3">
-                                {conflicts.map((c, i) => (
-                                    <li key={i} className="flex flex-col border-l-2 pl-3"
-                                        style={{ borderColor: theme.warn }}>
-                                        <span className="text-lg font-bold">{c.time}</span>
-                                        <span className="text-sm">ERR: {c.event1}</span>
-                                        <span className="text-sm">ERR: {c.event2}</span>
-                                    </li>
-                                ))}
-                            </ul>
-                        ) : (
-                            <div className="text-center py-4 opacity-50">NO CONFLICTS DETECTED</div>
-                        )}
-                    </div>
-
-                    {/* ─── System Health ─── */}
-                    <div
-                        className="border p-4 retro-text transition-all"
-                        style={{ borderColor: theme.primary, background: theme.panelBg }}
-                    >
-                        <h2 className="text-xl font-bold mb-4 border-b pb-2 flex items-center gap-2"
-                            style={{ borderColor: `${theme.primary}80` }}>
-                            <Terminal size={20} /> SYSTEM HEALTH
-                        </h2>
-                        <div className="space-y-2 text-sm">
-                            {[
-                                { label: 'Zoho API', status: 'ONLINE', ok: true },
-                                { label: 'RingCentral', status: 'ONLINE', ok: true },
-                                { label: 'IMAP Sync', status: 'LAGGING', ok: false },
-                            ].map((s, i) => (
-                                <div key={i} className="flex justify-between items-center">
-                                    <span>{s.label}</span>
-                                    <span className="flex items-center gap-1"
-                                        style={{ color: s.ok ? theme.primary : theme.warn }}>
-                                        {s.ok ? <CheckCircle2 size={14} /> : <AlertTriangle size={14} />}
-                                        {s.status}
-                                    </span>
-                                </div>
-                            ))}
-                            <div className="flex justify-between"><span>DB Latency</span><span>24ms</span></div>
-                            <div className="flex justify-between"><span>Memory Use</span><span>64%</span></div>
-                        </div>
-                    </div>
-
-                </div>
-
-                {/* ─── Command Center Panels ─── */}
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <CronPanel theme={theme} />
-                    <GlobalSearchPanel theme={theme} />
-                </div>
-
-                {/* ─── Activity Log (full width) ─── */}
-                <ActivityLog theme={theme} />
-
-                {/* ─── CLI Terminal ─── */}
-                <div
-                    id="cli-input"
-                    className="border p-4 retro-text"
-                    style={{ borderColor: theme.primary, background: theme.panelBg }}
-                >
-                    {cmdOutput.length > 0 && (
-                        <div className="mb-3 space-y-1 text-sm max-h-32 overflow-y-auto scrollbar-hide">
-                            {cmdOutput.map((line, i) => (
-                                <div key={i} className="opacity-80 whitespace-pre">{line}</div>
-                            ))}
-                        </div>
-                    )}
-                    <CLIInput onCommand={handleCommand} theme={theme} history={cmdHistory} inputRef={cliInputRef} />
-                </div>
-            </div>
-        </div>
-    );
-};
-
-export default Dashboard;
+function Card({ item }) {
+  const areaStyle = AREA_STYLES[item.area] || AREA_STYLES.Ops;
+  return (
+    <article className="group rounded-2xl border border-white/10 bg-slate-950/70 p-3 shadow-lg shadow-black/20 transition hover:-translate-y-0.5 hover:border-cyan-200/30 hover:bg-slate-900/90">
+      <div className="mb-2 flex flex-wrap items-center gap-2">
+        <span className={`rounded-full border px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.16em] ${areaStyle}`}>{item.area || 'Ops'}</span>
+        <span className="text-[10px] uppercase tracking-[0.16em] text-slate-500">{item.id}</span>
+      </div>
+      <h3 className="text-sm font-bold leading-snug text-white">{item.title}</h3>
+      <div className="mt-2 flex flex-wrap gap-1.5 text-[10px] font-bold uppercase tracking-[0.12em]">
+        <span className="rounded-full bg-cyan-300/10 px-2 py-0.5 text-cyan-100">{item.owner || 'Hermes owns'}</span>
+        <span className="rounded-full bg-white/10 px-2 py-0.5 text-slate-200">{item.eta || 'Queued'}</span>
+      </div>
+      {item.next && <p className="mt-2 text-xs leading-5 text-slate-400">{item.next}</p>}
+      {item.blocker && <p className="mt-2 rounded-xl border border-amber-300/20 bg-amber-300/10 p-2 text-xs leading-5 text-amber-100"><span className="font-bold">Blocker:</span> {item.blocker}</p>}
+      <div className="mt-3 border-t border-white/10 pt-2 text-[10px] uppercase tracking-[0.16em] text-slate-500">{item.sourceSection}</div>
+    </article>
+  );
+}

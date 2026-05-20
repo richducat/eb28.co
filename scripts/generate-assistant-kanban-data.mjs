@@ -69,9 +69,10 @@ function classifyOwner(raw, lane) {
   return 'Hermes owns';
 }
 
-function classifyStatus(raw, lane, done) {
+function classifyStatus(raw, lane, done, owner) {
   const rl = String(raw || '').toLowerCase();
   if (done) return 'Done';
+  if (owner === 'Richard decision') return 'Waiting on you';
   if (lane === 'Waiting on Richard') return 'Waiting on you';
   if (['blocked', 'missing', 'needs approval', 'do not reply', 'without richard approval', 'verify whether', 'confirm whether'].some((word) => rl.includes(word))) return 'Blocked';
   if (['urgent', 'today', 'immediate', 'fire'].some((word) => rl.includes(word))) return 'In motion';
@@ -97,8 +98,9 @@ function extractBlocker(raw, lane, status) {
   return redactPublic(match ? match[0] : 'Blocked until the missing access, source, or decision is resolved.').slice(0, 180);
 }
 
-function extractUnblock(raw, lane, status) {
+function extractUnblock(raw, lane, status, owner) {
   const lower = String(raw || '').toLowerCase();
+  if (owner === 'Richard decision') return 'Richard gives the approval/decision; I execute immediately after.';
   if (lane === 'Waiting on Richard') return 'Richard approves the decision; then I execute the next step.';
   if (status !== 'Blocked') return 'I keep moving this without waiting on you.';
   if (lower.includes('oauth') || lower.includes('permission') || lower.includes('access')) return 'Grant/restore the named access once; I will retry and verify.';
@@ -127,7 +129,7 @@ function parseOpenLoops(markdown) {
     const rest = splitIndex >= 0 ? raw.slice(splitIndex + 1) : raw.slice(95);
     const lane = classifyLane({ done, section, raw });
     const owner = classifyOwner(raw, lane);
-    const status = classifyStatus(raw, lane, done);
+    const status = classifyStatus(raw, lane, done, owner);
 
     items.push({
       id: `loop-${String(items.length + 1).padStart(3, '0')}`,
@@ -140,7 +142,7 @@ function parseOpenLoops(markdown) {
       status,
       eta: classifyEta(raw, lane, done),
       blocker: extractBlocker(raw, lane, status),
-      unblock: extractUnblock(raw, lane, status),
+      unblock: extractUnblock(raw, lane, status, owner),
       next: extractNext(raw, rest),
     });
   }

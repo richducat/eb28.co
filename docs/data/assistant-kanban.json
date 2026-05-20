@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-20T13:04:35.113Z",
+  "generatedAt": "2026-05-20T13:06:40.269Z",
   "source": "working-context/OPEN_LOOPS.md",
   "sourceStatus": "workspace",
   "privacy": "Public-safe snapshot: detailed client names, emails, phones, exact artifacts, and money IDs are intentionally omitted or redacted.",
@@ -83,10 +83,10 @@
       "sourceSection": "Urgent / Today",
       "done": false,
       "owner": "Richard decision",
-      "status": "Queued",
+      "status": "Waiting on you",
       "eta": "Today",
       "blocker": "",
-      "unblock": "I keep moving this without waiting on you.",
+      "unblock": "Richard gives the approval/decision; I execute immediately after.",
       "next": "Smallest next action: Richard verify it was expected;"
     },
     {
@@ -181,10 +181,10 @@
       "sourceSection": "Urgent / Today",
       "done": false,
       "owner": "Richard decision",
-      "status": "Blocked",
+      "status": "Waiting on you",
       "eta": "Queued by priority",
-      "blocker": "Needs Richard approval/decision before I send, spend, or change live accounts.",
-      "unblock": "Grant/restore the named access once; I will retry and verify.",
+      "blocker": "",
+      "unblock": "Richard gives the approval/decision; I execute immediately after.",
       "next": "needed the same `why`/`next steps` rows as Sydney, and GetInsights visibility may differ by user (Richard saw 68 appointments but could not click into lead-level/campaign detail while Harry could)."
     },
     {
@@ -237,10 +237,10 @@
       "sourceSection": "Urgent / Today",
       "done": false,
       "owner": "Richard decision",
-      "status": "Blocked",
+      "status": "Waiting on you",
       "eta": "Today",
-      "blocker": "Needs Richard approval/decision before I send, spend, or change live accounts.",
-      "unblock": "Approve the send/change; I will handle the execution.",
+      "blocker": "",
+      "unblock": "Richard gives the approval/decision; I execute immediately after.",
       "next": "needs a same-day answer on whether marketing can sell ~3,125 boxes within five months so the manufacturer can choose a 6-month vs 12-month expiration/production path;"
     },
     {
@@ -251,10 +251,10 @@
       "sourceSection": "Urgent / Today",
       "done": false,
       "owner": "Richard decision",
-      "status": "Blocked",
+      "status": "Waiting on you",
       "eta": "Queued by priority",
-      "blocker": "Needs Richard approval/decision before I send, spend, or change live accounts.",
-      "unblock": "Approve the send/change; I will handle the execution.",
+      "blocker": "",
+      "unblock": "Richard gives the approval/decision; I execute immediately after.",
       "next": "Needs sales/intake follow-up and source attribution review;"
     },
     {
@@ -293,10 +293,10 @@
       "sourceSection": "Urgent / Today",
       "done": false,
       "owner": "Richard decision",
-      "status": "Blocked",
+      "status": "Waiting on you",
       "eta": "Today",
-      "blocker": "Needs Richard approval/decision before I send, spend, or change live accounts.",
-      "unblock": "Approve the send/change; I will handle the execution.",
+      "blocker": "",
+      "unblock": "Richard gives the approval/decision; I execute immediately after.",
       "next": "smallest next action is reschedule/confirm a firm Matteo alignment slot and ensure it lands on the right calendar, then give Jaamal a short status/readback so he is not left guessing."
     },
     {
@@ -363,10 +363,10 @@
       "sourceSection": "Urgent / Today",
       "done": false,
       "owner": "Richard decision",
-      "status": "Blocked",
+      "status": "Waiting on you",
       "eta": "Queued by priority",
-      "blocker": "Needs Richard approval/decision before I send, spend, or change live accounts.",
-      "unblock": "Approve the send/change; I will handle the execution.",
+      "blocker": "",
+      "unblock": "Richard gives the approval/decision; I execute immediately after.",
       "next": "Needs Karen/claims owner to confirm appeal status before/alongside payment collection;"
     },
     {
@@ -419,10 +419,10 @@
       "sourceSection": "Urgent / Today",
       "done": false,
       "owner": "Richard decision",
-      "status": "Blocked",
+      "status": "Waiting on you",
       "eta": "Queued by priority",
-      "blocker": "Needs Richard approval/decision before I send, spend, or change live accounts.",
-      "unblock": "Approve the send/change; I will handle the execution.",
+      "blocker": "",
+      "unblock": "Richard gives the approval/decision; I execute immediately after.",
       "next": "Needs careful client-service/legal-risk handling;"
     },
     {
@@ -461,10 +461,10 @@
       "sourceSection": "Urgent / Today",
       "done": false,
       "owner": "Richard decision",
-      "status": "Blocked",
+      "status": "Waiting on you",
       "eta": "Today",
-      "blocker": "Blocked until the missing access, source, or decision is resolved.",
-      "unblock": "I will either fix it directly or come back with the exact one-step permission/access/decision needed.",
+      "blocker": "",
+      "unblock": "Richard gives the approval/decision; I execute immediately after.",
       "next": "+140****3517 sent overnight/early 2026-05-13 voice-note transcripts asking Richard to (a) explain the pixel/Charlie AI issue clearly before the 10am/10:30 sync, (b) decide whether to dial back ad spend to stop bleeding w"
     },
     {
@@ -503,10 +503,10 @@
       "sourceSection": "Urgent / Today",
       "done": false,
       "owner": "Richard decision",
-      "status": "Blocked",
+      "status": "Waiting on you",
       "eta": "Today",
-      "blocker": "Needs Richard approval/decision before I send, spend, or change live accounts.",
-      "unblock": "Approve the send/change; I will handle the execution.",
+      "blocker": "",
+      "unblock": "Richard gives the approval/decision; I execute immediately after.",
       "next": "need lowest-cost conversions."
     },
     {
@@ -545,10 +545,10 @@
       "sourceSection": "Urgent / Today",
       "done": false,
       "owner": "Richard decision",
-      "status": "Blocked",
+      "status": "Waiting on you",
       "eta": "Queued by priority",
-      "blocker": "Needs Richard approval/decision before I send, spend, or change live accounts.",
-      "unblock": "Approve the send/change; I will handle the execution.",
+      "blocker": "",
+      "unblock": "Richard gives the approval/decision; I execute immediately after.",
       "next": "Needs approval/finance handling;"
     },
     {
@@ -741,10 +741,10 @@
       "sourceSection": "Urgent / Today",
       "done": false,
       "owner": "Richard decision",
-      "status": "Blocked",
+      "status": "Waiting on you",
       "eta": "Queued by priority",
-      "blocker": "Needs Richard approval/decision before I send, spend, or change live accounts.",
-      "unblock": "Approve the send/change; I will handle the execution.",
+      "blocker": "",
+      "unblock": "Richard gives the approval/decision; I execute immediately after.",
       "next": "Needs Richard parent approval/logistics reply;"
     },
     {
@@ -755,10 +755,10 @@
       "sourceSection": "Urgent / Today",
       "done": false,
       "owner": "Richard decision",
-      "status": "Blocked",
+      "status": "Waiting on you",
       "eta": "Queued by priority",
-      "blocker": "Needs Richard approval/decision before I send, spend, or change live accounts.",
-      "unblock": "Approve the send/change; I will handle the execution.",
+      "blocker": "",
+      "unblock": "Richard gives the approval/decision; I execute immediately after.",
       "next": "need your order ASAP bc Im ordering now from my guy."
     },
     {
@@ -786,7 +786,7 @@
       "status": "Waiting on you",
       "eta": "After your approval",
       "blocker": "Needs Richard approval/decision before I send, spend, or change live accounts.",
-      "unblock": "Richard approves the decision; then I execute the next step.",
+      "unblock": "Richard gives the approval/decision; I execute immediately after.",
       "next": "Mirela Dumitru from ZeroBounce emailed 2026-05-15 offering help with TYFYS email validation/deliverability setup. Potentially relevant to lead quality/deliverability; decide whether to book or ignore."
     },
     {
@@ -912,7 +912,7 @@
       "status": "Waiting on you",
       "eta": "After your approval",
       "blocker": "Needs Richard approval/decision before I send, spend, or change live accounts.",
-      "unblock": "Richard approves the decision; then I execute the next step.",
+      "unblock": "Richard gives the approval/decision; I execute immediately after.",
       "next": "unread important Lorraine Jones / Rippling thread “Re: still want to chat?” dated 2026-05-04; decide whether to respond."
     },
     {
@@ -1094,7 +1094,7 @@
       "status": "Waiting on you",
       "eta": "After your approval",
       "blocker": "Needs Richard approval/decision before I send, spend, or change live accounts.",
-      "unblock": "Richard approves the decision; then I execute the next step.",
+      "unblock": "Richard gives the approval/decision; I execute immediately after.",
       "next": "l."
     },
     {

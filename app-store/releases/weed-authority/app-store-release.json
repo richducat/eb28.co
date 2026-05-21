@@ -24,16 +24,16 @@
     "releaseType": "MANUAL",
     "phasedRelease": false,
     "promotionalText": "Find legal retailers, open official state rec portals, track allotment privately, and compare cannabis products before checkout.",
-    "description": "Weed Authority is a premium iPhone app for legal cannabis customers and medical marijuana patients.\n\nUse it to find nearby cannabis retailers, verify official state sources, open medical cannabis portals, save products, compare deals, and keep a private local receipt ledger before checkout.\n\nWhat you can do:\n\n- Search nearby cannabis retailers through Apple Maps\n- Save retailers and products for a cleaner shopping trip\n- Open official state cannabis portals and regulator resources\n- Store medical rec details locally on your iPhone\n- Track purchase entries against state-specific planning windows where limits are available\n- Compare flower, vapes, edibles, topicals, concentrates, tinctures, and pre-rolls\n- Learn how to verify licenses, read labels, and confirm eligibility before ordering\n\nWeed Authority does not require an account, does not run ads, and does not track users. Medical rec profile fields, saved products, saved retailers, and purchase ledger entries stay on the device unless the user chooses to open an external official state portal or retailer website.\n\nThe app does not provide medical advice, dosage recommendations, diagnosis, treatment, or legal advice. State registries, physicians, licensed retailers, and regulators remain the official source for eligibility, purchase limits, and compliance.\n\nPrivacy Policy: https://eb28.co/weedauthority/privacy/\nTerms: https://eb28.co/weedauthority/terms/",
+    "description": "Weed Authority is a premium iPhone app for legal cannabis customers and medical marijuana patients.\n\nUse it to find nearby cannabis retailers, verify official state sources, open medical cannabis portals, save products, compare deals, and keep a private local receipt ledger before checkout.\n\nWhat you can do:\n\n- Search nearby cannabis retailers through Apple Maps\n- Save retailers and products for a cleaner shopping trip\n- Open official state cannabis portals and regulator resources\n- Store medical rec details locally on your iPhone\n- Track purchase entries against state-specific planning windows where limits are available\n- Compare flower, vapes, edibles, topicals, concentrates, tinctures, and pre-rolls\n- Learn how to verify licenses, read labels, and confirm eligibility before ordering\n\nWeed Authority does not require an account, does not run ads, and does not track users. Medical rec profile fields, saved products, saved retailers, and purchase ledger entries stay on the device unless the user chooses to open an external official state portal or retailer website.\n\nThe app does not provide medical advice, dosage recommendations, diagnosis, treatment, or legal advice. State registries, physicians, licensed retailers, and regulators remain the official source for eligibility, purchase limits, and compliance.\n\nPrivacy Policy: https://weedauthority.eb28.co/privacy/\nTerms: https://weedauthority.eb28.co/terms/",
     "keywords": ["cannabis", "dispensary", "weed", "medical", "marijuana", "rec", "allotment", "delivery", "deals", "thc", "cbd"],
     "whatsNew": "Launch build with native retailer search, official state portal links, local rec vault, private purchase ledger, saved products, deals, and state cannabis education."
   },
   "urls": {
-    "marketingUrl": "https://eb28.co/weedauthority/",
-    "supportUrl": "https://eb28.co/weedauthority/support/",
-    "privacyPolicyUrl": "https://eb28.co/weedauthority/privacy/",
+    "marketingUrl": "https://weedauthority.eb28.co/",
+    "supportUrl": "https://weedauthority.eb28.co/support/",
+    "privacyPolicyUrl": "https://weedauthority.eb28.co/privacy/",
     "userPrivacyChoicesUrl": "",
-    "termsUrl": "https://eb28.co/weedauthority/terms/"
+    "termsUrl": "https://weedauthority.eb28.co/terms/"
   },
   "review": {
     "contactName": "Richard Ducat",
@@ -122,7 +122,7 @@
     ],
     "knownRisks": [
       "The existing App Store listing is id1252265730 under DIGITAL SYNC, LLC, THE with bundle ID com.weedauthority.weedauthority.",
-      "DNS for weedauthority.ed28.co or weedauthority.eb28.co must be created in Namecheap before the custom subdomain resolves."
+      "weedauthority.eb28.co is deployed on GitHub Pages with Namecheap DNS and enforced HTTPS. weedauthority.ed28.co is not managed in the connected Namecheap account."
     ]
   }
 }

@@ -28,8 +28,8 @@ Weed Authority does not require an account, does not run ads, and does not track
 
 The app does not provide medical advice, dosage recommendations, diagnosis, treatment, or legal advice. State registries, physicians, licensed retailers, and regulators remain the official source for eligibility, purchase limits, and compliance.
 
-Privacy Policy: https://eb28.co/weedauthority/privacy/
-Terms: https://eb28.co/weedauthority/terms/
+Privacy Policy: https://weedauthority.eb28.co/privacy/
+Terms: https://weedauthority.eb28.co/terms/
 
 ## Keywords
 cannabis,dispensary,weed,medical,marijuana,rec,allotment,delivery,deals,thc,cbd

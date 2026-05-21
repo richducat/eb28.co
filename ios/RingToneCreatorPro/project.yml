@@ -1,0 +1,64 @@
+name: RingToneCreatorPro
+options:
+  bundleIdPrefix: co.eb28
+  deploymentTarget:
+    iOS: "17.0"
+  createIntermediateGroups: true
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    SWIFT_STRICT_CONCURRENCY: minimal
+    MARKETING_VERSION: "1.0.0"
+    CURRENT_PROJECT_VERSION: "1"
+packages:
+  Firebase:
+    url: https://github.com/firebase/firebase-ios-sdk.git
+    from: 12.0.0
+  GoogleMobileAds:
+    url: https://github.com/googleads/swift-package-manager-google-mobile-ads.git
+    exactVersion: 13.2.0
+  GoogleUserMessagingPlatform:
+    url: https://github.com/googleads/swift-package-manager-google-user-messaging-platform.git
+    exactVersion: 3.1.0
+targets:
+  RingToneCreatorPro:
+    type: application
+    platform: iOS
+    sources:
+      - path: RingToneCreatorPro
+    dependencies:
+      - package: Firebase
+        product: FirebaseAuth
+      - package: Firebase
+        product: FirebaseFirestore
+      - package: Firebase
+        product: FirebaseCore
+      - package: GoogleMobileAds
+        product: GoogleMobileAds
+      - package: GoogleUserMessagingPlatform
+        product: GoogleUserMessagingPlatform
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: co.eb28.ringtonecreatorpro
+        PRODUCT_NAME: RingToneCreatorPro
+        INFOPLIST_FILE: RingToneCreatorPro/Info.plist
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        TARGETED_DEVICE_FAMILY: "1"
+        CODE_SIGN_STYLE: Automatic
+        DEVELOPMENT_TEAM: WN3K69XEP4
+        RINGTONE_GAD_APPLICATION_IDENTIFIER: ca-app-pub-3940256099942544~1458002511
+        RINGTONE_GAD_BANNER_AD_UNIT_ID: ca-app-pub-3940256099942544/2435281174
+      configs:
+        Release:
+          RINGTONE_GAD_APPLICATION_IDENTIFIER: "__REPLACE_WITH_RINGTONE_CREATOR_PRO_ADMOB_APP_ID__"
+          RINGTONE_GAD_BANNER_AD_UNIT_ID: "__REPLACE_WITH_RINGTONE_CREATOR_PRO_ADMOB_BANNER_ID__"
+schemes:
+  RingToneCreatorPro:
+    build:
+      targets:
+        RingToneCreatorPro: all
+    run:
+      config: Debug
+    archive:
+      config: Release

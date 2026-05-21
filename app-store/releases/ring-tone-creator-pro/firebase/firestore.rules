@@ -1,0 +1,36 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{userId} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+
+      allow create: if request.auth != null
+        && request.auth.uid == userId
+        && request.resource.data.email is string
+        && request.resource.data.freeExportLimit == 3
+        && request.resource.data.freeExportsUsed == 0;
+
+      allow update: if request.auth != null
+        && request.auth.uid == userId
+        && validUserUpdate();
+
+      allow delete: if request.auth != null && request.auth.uid == userId;
+
+      function validUserUpdate() {
+        let old = resource.data;
+        let next = request.resource.data;
+        let changed = next.diff(old).changedKeys();
+
+        return !changed.hasAny(['email', 'createdAt', 'freeExportLimit'])
+          && (
+            !changed.hasAny(['freeExportsUsed'])
+            || (
+              next.freeExportsUsed == old.freeExportsUsed + 1
+              && next.freeExportsUsed <= old.freeExportLimit
+            )
+          );
+      }
+    }
+  }
+}

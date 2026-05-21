@@ -1,0 +1,513 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		16E32ACCFD2945C5B1174253 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D9F2295A7AB328C7D79A9B5F /* GoogleService-Info.plist */; };
+		234501FD0DB4227D1067F595 /* Components.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C550DF25327AC2AB4D81771 /* Components.swift */; };
+		267952D71F1390E9054A9729 /* AdMobManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2588FA5EE80AC4161183AED /* AdMobManager.swift */; };
+		285D10468F73947637FC59FB /* RingToneCreatorProApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A7D259CCF53CFF14F729D6E /* RingToneCreatorProApp.swift */; };
+		302A07A9EED1564BB41AC0B3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AECD29709AF91022A3CF929A /* Assets.xcassets */; };
+		3191C622D7B2CDD10A242576 /* platinum-chime.wav in Resources */ = {isa = PBXBuildFile; fileRef = 122D105B4C1A8F354F991B3E /* platinum-chime.wav */; };
+		4085D1705CF5750B6E63672E /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 5967EA2335DE5C596E1EA6C5 /* FirebaseAuth */; };
+		476587BFC08DF93869D489D3 /* LibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CBA66FBD72219E6C6933F23 /* LibraryView.swift */; };
+		49AAAE0DC25A9165566CF6CC /* CreateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A6DB976BE50C028437ABC4A /* CreateView.swift */; };
+		58C8C40D3F020DFEFB37E20E /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = D0BBA8752AA2FA3515B9D417 /* GoogleMobileAds */; };
+		6D326366B53A802C820DF0EF /* AuthView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 907F574EFCC899964A450EB7 /* AuthView.swift */; };
+		71AB0E8E390ED836D359124E /* velvet-alert.wav in Resources */ = {isa = PBXBuildFile; fileRef = B2526EA0B8CA3C76B7490B9D /* velvet-alert.wav */; };
+		76F2A20B41E03139C365A6BF /* neon-pulse.wav in Resources */ = {isa = PBXBuildFile; fileRef = 9D4952FB8C55B3112616335A /* neon-pulse.wav */; };
+		7938EC3ED54E7A78DF8E88A7 /* ProView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0D7AB3B23C5691EBA1F7E78 /* ProView.swift */; };
+		7ADB2A14B769205C44816E6E /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 14DB9F041408FDE721DB8443 /* FirebaseFirestore */; };
+		7D1B303892A395BBB583DEF1 /* LibraryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 786CAAE32483CB66DAA00F66 /* LibraryStore.swift */; };
+		8077E06B6FE148E12741DBDD /* orbit-tone.wav in Resources */ = {isa = PBXBuildFile; fileRef = 6DFB90A66DCA9B8948FB4EF5 /* orbit-tone.wav */; };
+		96F00E22A2BA5C90C5C2F05A /* AppConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AF483ECA67DAE4D752D9767 /* AppConfig.swift */; };
+		9BDB247DC93BDDBD19D89594 /* EditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1732B893C035C8543004EA05 /* EditorView.swift */; };
+		B0378915E7775B5375FFDCCA /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B3091F263AA45B337A5B027 /* Models.swift */; };
+		B24F6565FBA72F29C1B6C3D8 /* PurchaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C6304E052C8096F5BEF5100 /* PurchaseManager.swift */; };
+		B92C9B5DAE10DD5EFE74B5B5 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15E17C53ECEA0D1476506EF5 /* RootView.swift */; };
+		BC2256D571BB2D47D891E66E /* BrowseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20962175EFEB722FE86A1987 /* BrowseView.swift */; };
+		C52F44DA789D48E68B930FBC /* focus-tap.wav in Resources */ = {isa = PBXBuildFile; fileRef = 52A544C40FF0CF99028661F1 /* focus-tap.wav */; };
+		C8D492B63D2587625D4F7E24 /* AuthSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C83923E5349B93C016F290E /* AuthSession.swift */; };
+		D21B4B8B9049FF27C3AE806E /* AudioRenderService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C450B1D46A5D2C60D74D2F2 /* AudioRenderService.swift */; };
+		DAE85359A52FD4EA1B73A25B /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = A564A7B70C17292E25A781A1 /* FirebaseCore */; };
+		DC0205701E238A6F12B9AD69 /* golden-rise.wav in Resources */ = {isa = PBXBuildFile; fileRef = 779C081CCF1E065C712ED7E0 /* golden-rise.wav */; };
+		F540E15C69AA8F6E62674FD1 /* AccountAndGuideViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADD9387BA4949CF0BA573B2B /* AccountAndGuideViews.swift */; };
+		FD07CE0647AFCFCA23C8019C /* GoogleUserMessagingPlatform in Frameworks */ = {isa = PBXBuildFile; productRef = F0A9AAF7B73BC42F012D11D2 /* GoogleUserMessagingPlatform */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		122D105B4C1A8F354F991B3E /* platinum-chime.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "platinum-chime.wav"; sourceTree = "<group>"; };
+		15E17C53ECEA0D1476506EF5 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		1732B893C035C8543004EA05 /* EditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorView.swift; sourceTree = "<group>"; };
+		1C450B1D46A5D2C60D74D2F2 /* AudioRenderService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioRenderService.swift; sourceTree = "<group>"; };
+		20962175EFEB722FE86A1987 /* BrowseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowseView.swift; sourceTree = "<group>"; };
+		2C6304E052C8096F5BEF5100 /* PurchaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PurchaseManager.swift; sourceTree = "<group>"; };
+		3A6DB976BE50C028437ABC4A /* CreateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateView.swift; sourceTree = "<group>"; };
+		458343072AA068A30CC699FF /* RingToneCreatorPro.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = RingToneCreatorPro.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		4AF483ECA67DAE4D752D9767 /* AppConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConfig.swift; sourceTree = "<group>"; };
+		52A544C40FF0CF99028661F1 /* focus-tap.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "focus-tap.wav"; sourceTree = "<group>"; };
+		58A1D2A19D7C96A6BA69A781 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		5C83923E5349B93C016F290E /* AuthSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthSession.swift; sourceTree = "<group>"; };
+		5CBA66FBD72219E6C6933F23 /* LibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryView.swift; sourceTree = "<group>"; };
+		6DFB90A66DCA9B8948FB4EF5 /* orbit-tone.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "orbit-tone.wav"; sourceTree = "<group>"; };
+		779C081CCF1E065C712ED7E0 /* golden-rise.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "golden-rise.wav"; sourceTree = "<group>"; };
+		786CAAE32483CB66DAA00F66 /* LibraryStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryStore.swift; sourceTree = "<group>"; };
+		7B3091F263AA45B337A5B027 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
+		8A7D259CCF53CFF14F729D6E /* RingToneCreatorProApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RingToneCreatorProApp.swift; sourceTree = "<group>"; };
+		8C550DF25327AC2AB4D81771 /* Components.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Components.swift; sourceTree = "<group>"; };
+		907F574EFCC899964A450EB7 /* AuthView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthView.swift; sourceTree = "<group>"; };
+		9D4952FB8C55B3112616335A /* neon-pulse.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "neon-pulse.wav"; sourceTree = "<group>"; };
+		ADD9387BA4949CF0BA573B2B /* AccountAndGuideViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountAndGuideViews.swift; sourceTree = "<group>"; };
+		AECD29709AF91022A3CF929A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		B2526EA0B8CA3C76B7490B9D /* velvet-alert.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = "velvet-alert.wav"; sourceTree = "<group>"; };
+		C2588FA5EE80AC4161183AED /* AdMobManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdMobManager.swift; sourceTree = "<group>"; };
+		D9F2295A7AB328C7D79A9B5F /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		F0D7AB3B23C5691EBA1F7E78 /* ProView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		97794B2D1F6366E7A1D58F54 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4085D1705CF5750B6E63672E /* FirebaseAuth in Frameworks */,
+				7ADB2A14B769205C44816E6E /* FirebaseFirestore in Frameworks */,
+				DAE85359A52FD4EA1B73A25B /* FirebaseCore in Frameworks */,
+				58C8C40D3F020DFEFB37E20E /* GoogleMobileAds in Frameworks */,
+				FD07CE0647AFCFCA23C8019C /* GoogleUserMessagingPlatform in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		7E722E6244E1B2007E49D4D1 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				458343072AA068A30CC699FF /* RingToneCreatorPro.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		9886A69E134CE4B223EBD5A4 /* RingToneCreatorPro */ = {
+			isa = PBXGroup;
+			children = (
+				ADD9387BA4949CF0BA573B2B /* AccountAndGuideViews.swift */,
+				C2588FA5EE80AC4161183AED /* AdMobManager.swift */,
+				4AF483ECA67DAE4D752D9767 /* AppConfig.swift */,
+				AECD29709AF91022A3CF929A /* Assets.xcassets */,
+				1C450B1D46A5D2C60D74D2F2 /* AudioRenderService.swift */,
+				5C83923E5349B93C016F290E /* AuthSession.swift */,
+				907F574EFCC899964A450EB7 /* AuthView.swift */,
+				20962175EFEB722FE86A1987 /* BrowseView.swift */,
+				8C550DF25327AC2AB4D81771 /* Components.swift */,
+				3A6DB976BE50C028437ABC4A /* CreateView.swift */,
+				1732B893C035C8543004EA05 /* EditorView.swift */,
+				D9F2295A7AB328C7D79A9B5F /* GoogleService-Info.plist */,
+				58A1D2A19D7C96A6BA69A781 /* Info.plist */,
+				786CAAE32483CB66DAA00F66 /* LibraryStore.swift */,
+				5CBA66FBD72219E6C6933F23 /* LibraryView.swift */,
+				7B3091F263AA45B337A5B027 /* Models.swift */,
+				F0D7AB3B23C5691EBA1F7E78 /* ProView.swift */,
+				2C6304E052C8096F5BEF5100 /* PurchaseManager.swift */,
+				8A7D259CCF53CFF14F729D6E /* RingToneCreatorProApp.swift */,
+				15E17C53ECEA0D1476506EF5 /* RootView.swift */,
+				9FAF178A28B018AA8324D8AD /* Resources */,
+			);
+			path = RingToneCreatorPro;
+			sourceTree = "<group>";
+		};
+		99C980454895E3D22F33E59A /* StarterTones */ = {
+			isa = PBXGroup;
+			children = (
+				52A544C40FF0CF99028661F1 /* focus-tap.wav */,
+				779C081CCF1E065C712ED7E0 /* golden-rise.wav */,
+				9D4952FB8C55B3112616335A /* neon-pulse.wav */,
+				6DFB90A66DCA9B8948FB4EF5 /* orbit-tone.wav */,
+				122D105B4C1A8F354F991B3E /* platinum-chime.wav */,
+				B2526EA0B8CA3C76B7490B9D /* velvet-alert.wav */,
+			);
+			path = StarterTones;
+			sourceTree = "<group>";
+		};
+		9FAF178A28B018AA8324D8AD /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				99C980454895E3D22F33E59A /* StarterTones */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		CE4BAF466F68ED559AB3F088 = {
+			isa = PBXGroup;
+			children = (
+				9886A69E134CE4B223EBD5A4 /* RingToneCreatorPro */,
+				7E722E6244E1B2007E49D4D1 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		9EF44678DBDC62673F099B83 /* RingToneCreatorPro */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 5A6564EB50F37302E8F4187A /* Build configuration list for PBXNativeTarget "RingToneCreatorPro" */;
+			buildPhases = (
+				F8516175C327109C40D3C812 /* Sources */,
+				EF5A96EC27E545ACD76BB61C /* Resources */,
+				97794B2D1F6366E7A1D58F54 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = RingToneCreatorPro;
+			packageProductDependencies = (
+				5967EA2335DE5C596E1EA6C5 /* FirebaseAuth */,
+				14DB9F041408FDE721DB8443 /* FirebaseFirestore */,
+				A564A7B70C17292E25A781A1 /* FirebaseCore */,
+				D0BBA8752AA2FA3515B9D417 /* GoogleMobileAds */,
+				F0A9AAF7B73BC42F012D11D2 /* GoogleUserMessagingPlatform */,
+			);
+			productName = RingToneCreatorPro;
+			productReference = 458343072AA068A30CC699FF /* RingToneCreatorPro.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		72A262D380162A2869C9D830 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					9EF44678DBDC62673F099B83 = {
+						DevelopmentTeam = WN3K69XEP4;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 8DB5FF1BD9D743693A7A8F9A /* Build configuration list for PBXProject "RingToneCreatorPro" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = CE4BAF466F68ED559AB3F088;
+			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				381C66DF64C160A8BCCEB041 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+				6A76D356FFC0B1EE7000B43D /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */,
+				39D68368934ED8B4E6B84044 /* XCRemoteSwiftPackageReference "swift-package-manager-google-user-messaging-platform" */,
+			);
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 7E722E6244E1B2007E49D4D1 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				9EF44678DBDC62673F099B83 /* RingToneCreatorPro */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		EF5A96EC27E545ACD76BB61C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				302A07A9EED1564BB41AC0B3 /* Assets.xcassets in Resources */,
+				16E32ACCFD2945C5B1174253 /* GoogleService-Info.plist in Resources */,
+				C52F44DA789D48E68B930FBC /* focus-tap.wav in Resources */,
+				DC0205701E238A6F12B9AD69 /* golden-rise.wav in Resources */,
+				76F2A20B41E03139C365A6BF /* neon-pulse.wav in Resources */,
+				8077E06B6FE148E12741DBDD /* orbit-tone.wav in Resources */,
+				3191C622D7B2CDD10A242576 /* platinum-chime.wav in Resources */,
+				71AB0E8E390ED836D359124E /* velvet-alert.wav in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		F8516175C327109C40D3C812 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F540E15C69AA8F6E62674FD1 /* AccountAndGuideViews.swift in Sources */,
+				267952D71F1390E9054A9729 /* AdMobManager.swift in Sources */,
+				96F00E22A2BA5C90C5C2F05A /* AppConfig.swift in Sources */,
+				D21B4B8B9049FF27C3AE806E /* AudioRenderService.swift in Sources */,
+				C8D492B63D2587625D4F7E24 /* AuthSession.swift in Sources */,
+				6D326366B53A802C820DF0EF /* AuthView.swift in Sources */,
+				BC2256D571BB2D47D891E66E /* BrowseView.swift in Sources */,
+				234501FD0DB4227D1067F595 /* Components.swift in Sources */,
+				49AAAE0DC25A9165566CF6CC /* CreateView.swift in Sources */,
+				9BDB247DC93BDDBD19D89594 /* EditorView.swift in Sources */,
+				7D1B303892A395BBB583DEF1 /* LibraryStore.swift in Sources */,
+				476587BFC08DF93869D489D3 /* LibraryView.swift in Sources */,
+				B0378915E7775B5375FFDCCA /* Models.swift in Sources */,
+				7938EC3ED54E7A78DF8E88A7 /* ProView.swift in Sources */,
+				B24F6565FBA72F29C1B6C3D8 /* PurchaseManager.swift in Sources */,
+				285D10468F73947637FC59FB /* RingToneCreatorProApp.swift in Sources */,
+				B92C9B5DAE10DD5EFE74B5B5 /* RootView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		62D0BD1D7062A9B6EA9596AB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_STRICT_CONCURRENCY = minimal;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		A88859540462EED79CF52580 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = WN3K69XEP4;
+				INFOPLIST_FILE = RingToneCreatorPro/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = co.eb28.ringtonecreatorpro;
+				PRODUCT_NAME = RingToneCreatorPro;
+				RINGTONE_GAD_APPLICATION_IDENTIFIER = "ca-app-pub-3940256099942544~1458002511";
+				RINGTONE_GAD_BANNER_AD_UNIT_ID = "ca-app-pub-3940256099942544/2435281174";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		D5062E77668835A7B3AF7EA1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = WN3K69XEP4;
+				INFOPLIST_FILE = RingToneCreatorPro/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = co.eb28.ringtonecreatorpro;
+				PRODUCT_NAME = RingToneCreatorPro;
+				RINGTONE_GAD_APPLICATION_IDENTIFIER = __REPLACE_WITH_RINGTONE_CREATOR_PRO_ADMOB_APP_ID__;
+				RINGTONE_GAD_BANNER_AD_UNIT_ID = __REPLACE_WITH_RINGTONE_CREATOR_PRO_ADMOB_BANNER_ID__;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		D6155C80B590226A7429C024 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_STRICT_CONCURRENCY = minimal;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		5A6564EB50F37302E8F4187A /* Build configuration list for PBXNativeTarget "RingToneCreatorPro" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A88859540462EED79CF52580 /* Debug */,
+				D5062E77668835A7B3AF7EA1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		8DB5FF1BD9D743693A7A8F9A /* Build configuration list for PBXProject "RingToneCreatorPro" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				D6155C80B590226A7429C024 /* Debug */,
+				62D0BD1D7062A9B6EA9596AB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		381C66DF64C160A8BCCEB041 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 12.0.0;
+			};
+		};
+		39D68368934ED8B4E6B84044 /* XCRemoteSwiftPackageReference "swift-package-manager-google-user-messaging-platform" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/googleads/swift-package-manager-google-user-messaging-platform.git";
+			requirement = {
+				kind = exactVersion;
+				version = 3.1.0;
+			};
+		};
+		6A76D356FFC0B1EE7000B43D /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/googleads/swift-package-manager-google-mobile-ads.git";
+			requirement = {
+				kind = exactVersion;
+				version = 13.2.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		14DB9F041408FDE721DB8443 /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 381C66DF64C160A8BCCEB041 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
+		5967EA2335DE5C596E1EA6C5 /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 381C66DF64C160A8BCCEB041 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+		A564A7B70C17292E25A781A1 /* FirebaseCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 381C66DF64C160A8BCCEB041 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCore;
+		};
+		D0BBA8752AA2FA3515B9D417 /* GoogleMobileAds */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 6A76D356FFC0B1EE7000B43D /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */;
+			productName = GoogleMobileAds;
+		};
+		F0A9AAF7B73BC42F012D11D2 /* GoogleUserMessagingPlatform */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 39D68368934ED8B4E6B84044 /* XCRemoteSwiftPackageReference "swift-package-manager-google-user-messaging-platform" */;
+			productName = GoogleUserMessagingPlatform;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 72A262D380162A2869C9D830 /* Project object */;
+}

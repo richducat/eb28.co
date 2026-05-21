@@ -1,0 +1,138 @@
+{
+  "$schemaVersion": 1,
+  "app": {
+    "name": "Ring Tone Creator Pro",
+    "subtitle": "Premium ringtone studio",
+    "bundleId": "co.eb28.ringtonecreatorpro",
+    "sku": "ringtonecreatorpro-ios",
+    "platforms": ["iOS"],
+    "primaryCategory": "Music",
+    "secondaryCategory": "Utilities",
+    "copyright": "2026 EB28",
+    "ageRatingQuestionnaireCompleted": true,
+    "traderStatusReviewed": true,
+    "exportCompliance": {
+      "reviewed": true,
+      "documentationRequired": false,
+      "documentationStatus": "NOT_REQUIRED",
+      "infoPlistKeyConfigured": true
+    }
+  },
+  "version": {
+    "marketingVersion": "1.0.0",
+    "buildNumber": "1",
+    "releaseType": "MANUAL",
+    "phasedRelease": false,
+    "promotionalText": "Create premium ringtone-ready files from audio, videos, recordings, and starter tones with a modern waveform editor.",
+    "description": "Ring Tone Creator Pro is a premium ringtone studio for iPhone.\n\nImport audio from Files, extract sound from videos, use local unprotected music you own, record your own clip, or start from a polished tone template. Trim the best section, preview the waveform, add fade in and fade out, save your projects, favorite your best tones, and export ringtone-ready files.\n\nWhat you can do:\n\n- Create ringtone-ready files from audio, video audio, recordings, and starter tones\n- Use a clean waveform editor with trim, fade, preview, rename, duplicate, favorite, and share tools\n- Save and re-edit ringtone projects in your private library\n- Claim three free exports after email signup\n- Upgrade to Unlimited for unlimited exports and no ads\n- Follow the built-in GarageBand install guide after export\n\nUser audio stays on your iPhone. Account and export-credit records are synced with Firebase so your free export limit is not just local device storage.\n\nUnlimited is an optional auto-renewable monthly subscription. Payment is charged to your Apple ID at confirmation and renews automatically unless cancelled at least 24 hours before the current period ends. You can manage or cancel in Apple ID subscriptions.\n\nPrivacy Policy: https://eb28.co/ringtonecreatorpro/privacy/\nTerms of Use (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/",
+    "keywords": ["ringtone", "tones", "music", "audio", "editor", "maker", "m4r", "voice", "trim"],
+    "whatsNew": "Launch build for Ring Tone Creator Pro with email signup, three free exports, waveform editing, starter tones, ringtone-ready export, StoreKit Unlimited, AdMob support, and GarageBand install guidance."
+  },
+  "urls": {
+    "marketingUrl": "https://eb28.co/ringtonecreatorpro/",
+    "supportUrl": "https://eb28.co/ringtonecreatorpro/support/",
+    "privacyPolicyUrl": "https://eb28.co/ringtonecreatorpro/privacy/",
+    "userPrivacyChoicesUrl": "",
+    "termsUrl": "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/"
+  },
+  "review": {
+    "contactName": "Richard Ducat",
+    "contactEmail": "support@eb28.co",
+    "contactPhone": "+1-602-306-3920",
+    "demoRequired": true,
+    "demoUsername": "reviewer+ringtonepro@eb28.co",
+    "demoPassword": "Review123!",
+    "notes": [
+      "Build 1 is a new native SwiftUI iPhone app.",
+      "The app requires email login. Use reviewer+ringtonepro@eb28.co / Review123! after creating the Firebase demo account.",
+      "Open Create to import audio from Files, extract audio from video, import unprotected local music, record audio, or choose Browse starter tones.",
+      "Open the editor to trim the waveform, set fades, rename the tone, and export.",
+      "Free users receive three remote Firestore-tracked exports. After that, the app presents Unlimited.",
+      "The subscription product is co.eb28.ringtonecreatorpro.unlimited.monthly.",
+      "Restore Purchases is available in Pro and paywall screens.",
+      "AdMob banners are shown only to free users outside the editor. Unlimited removes ads.",
+      "User audio stays on device. Firebase stores account and credit metadata only.",
+      "The app exports ringtone-ready files and provides GarageBand install guidance; it does not claim direct Settings ringtone mutation."
+    ]
+  },
+  "distribution": {
+    "usesLogin": true,
+    "supportsIphone": true,
+    "supportsIpad": false,
+    "containsUserGeneratedContent": false,
+    "createsAccounts": true,
+    "requiresExternalHardware": false,
+    "usesPushNotifications": false,
+    "usesLocalNotifications": false
+  },
+  "monetization": {
+    "hasAds": true,
+    "adNetwork": "Google AdMob",
+    "appAdsTxtUrl": "https://eb28.co/app-ads.txt",
+    "hasInAppPurchases": true,
+    "hasSubscriptions": true,
+    "paidAppsAgreementStatus": "ACTIVE",
+    "subscriptionUiIncludesRestore": true,
+    "subscriptionUiIncludesTerms": true,
+    "products": [
+      {
+        "id": "co.eb28.ringtonecreatorpro.unlimited.monthly",
+        "type": "AUTO_RENEWABLE_SUBSCRIPTION",
+        "name": "Ring Tone Creator Pro Unlimited",
+        "price": "$0.99/month"
+      }
+    ]
+  },
+  "privacy": {
+    "privacyPolicyLinkedInApp": true,
+    "appPrivacyAnswersCurrent": true,
+    "trackingUsed": false,
+    "attFlowImplemented": false,
+    "accountDeletionImplemented": true,
+    "privacyManifestReviewed": true,
+    "requiredReasonApisReviewed": true,
+    "thirdPartySdkPrivacyReviewed": true
+  },
+  "assets": {
+    "appIconSource": "app-icon-1024.png",
+    "iphoneScreenshots": [
+      "screenshots/iphone-69/01-create.png",
+      "screenshots/iphone-69/02-editor.png",
+      "screenshots/iphone-69/03-library.png",
+      "screenshots/iphone-69/04-signup.png",
+      "screenshots/iphone-69/05-pro.png",
+      "screenshots/iphone-69/06-install.png",
+      "screenshots/iphone-65/01-create.png",
+      "screenshots/iphone-65/02-editor.png",
+      "screenshots/iphone-65/03-library.png",
+      "screenshots/iphone-65/04-signup.png"
+    ],
+    "ipadScreenshots": [],
+    "appPreviewVideos": []
+  },
+  "verification": {
+    "testedDevices": [
+      "generic iPhone Simulator debug build",
+      "generic iOS device Release archive",
+      "local App Store export"
+    ],
+    "testedFlows": [
+      "XcodeGen project generation",
+      "Swift 6 simulator build",
+      "Release archive",
+      "App Store distribution export",
+      "Firebase signup/login wiring review",
+      "Firestore credit rules review",
+      "audio import/editor/export code path review",
+      "StoreKit subscription wiring review",
+      "AdMob/UMP wiring review",
+      "App Store metadata preflight"
+    ],
+    "knownRisks": [
+      "App Store Connect upload is blocked until the App Store app record exists for co.eb28.ringtonecreatorpro.",
+      "Real Firebase project config and reviewer demo account must be created before App Review because the checked-in plist is a placeholder.",
+      "Production AdMob app ID and banner ad unit must be created before App Review because Release still uses placeholders.",
+      "The App Store Connect subscription co.eb28.ringtonecreatorpro.unlimited.monthly must be created before App Review."
+    ]
+  }
+}

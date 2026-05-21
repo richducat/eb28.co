@@ -35,3 +35,11 @@ ringtone,tones,music,audio,editor,maker,m4r,voice,trim
 
 ## What's New
 Launch build for Ring Tone Creator Pro with email signup, three free exports, waveform editing, starter tones, ringtone-ready export, StoreKit Unlimited, AdMob support, and GarageBand install guidance.
+
+## Screenshot Marketing Copy
+- Create: Turn any sound into a signature ringtone
+- Editor: Edit the exact hook in seconds
+- Library: Keep every tone project organized
+- Signup: Get three exports when you sign up
+- Pro: Unlimited exports for $0.99/month
+- Install: Follow the guided iPhone install flow

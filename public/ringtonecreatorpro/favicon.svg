@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#070A10"/>
+      <stop offset="1" stop-color="#111823"/>
+    </linearGradient>
+    <radialGradient id="glow" cx=".72" cy=".24" r=".7">
+      <stop offset="0" stop-color="#14E0E8" stop-opacity=".42"/>
+      <stop offset="1" stop-color="#14E0E8" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="512" height="512" rx="108" fill="url(#bg)"/>
+  <rect width="512" height="512" rx="108" fill="url(#glow)"/>
+  <circle cx="256" cy="230" r="138" fill="none" stroke="#EEF6FC" stroke-opacity=".72" stroke-width="3"/>
+  <circle cx="256" cy="230" r="94" fill="none" stroke="#14E0E8" stroke-opacity=".82" stroke-width="3"/>
+  <path d="M172 229h12v-40h6v80h10v-116h7v154h10v-92h8v52h8v-130h8v184h9v-78h8v36h8v-108h8v136h9v-58h8v32h8v-98h8v92h9v-48h8v22h8v-64h8v44h11" fill="none" stroke="#14E0E8" stroke-linecap="round" stroke-width="5"/>
+  <path d="M168 108c54-34 126-38 184-6" fill="none" stroke="#FF466F" stroke-linecap="round" stroke-opacity=".82" stroke-width="4"/>
+  <text x="256" y="382" text-anchor="middle" fill="#F7FAFC" font-family="-apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif" font-size="70" font-weight="300" letter-spacing="8">RT</text>
+  <text x="256" y="429" text-anchor="middle" fill="#AEB8C8" font-family="-apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif" font-size="19" font-weight="300" letter-spacing="5">RING TONE</text>
+</svg>

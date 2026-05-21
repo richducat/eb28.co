@@ -100,6 +100,25 @@
   },
   "assets": {
     "appIconSource": "app-icon-1024.png",
+    "webIconSource": "web-icon-1024.png",
+    "screenshotSets": {
+      "iphone-69": [
+        "screenshots/iphone-69/01-create.png",
+        "screenshots/iphone-69/02-editor.png",
+        "screenshots/iphone-69/03-library.png",
+        "screenshots/iphone-69/04-signup.png",
+        "screenshots/iphone-69/05-pro.png",
+        "screenshots/iphone-69/06-install.png"
+      ],
+      "iphone-65": [
+        "screenshots/iphone-65/01-create.png",
+        "screenshots/iphone-65/02-editor.png",
+        "screenshots/iphone-65/03-library.png",
+        "screenshots/iphone-65/04-signup.png",
+        "screenshots/iphone-65/05-pro.png",
+        "screenshots/iphone-65/06-install.png"
+      ]
+    },
     "iphoneScreenshots": [
       "screenshots/iphone-69/01-create.png",
       "screenshots/iphone-69/02-editor.png",

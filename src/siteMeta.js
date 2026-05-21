@@ -262,9 +262,9 @@ const ROUTE_META = {
         ...BASE_ROUTE_META,
         key: 'ugcmadash',
         path: '/ugcmadash/',
-        title: 'OmniAds Dashboard | UGC Marketing Analytics | EB28',
+        title: 'UGCMA Live Watch | BU Performance Dashboard | EB28',
         description:
-            'A high-density UGC marketing dashboard for funnels, ad sources, bookings, no-shows, sales, and conversion performance.',
+            'A live UGCMA watch dashboard for BU1/Sydney and BU2/Nate spend, leads, bookings, sales, cash ROAS, and reconciliation risk.',
         image: DEFAULT_IMAGE,
         includeInSitemap: true,
         structuredData: [
@@ -272,14 +272,14 @@ const ROUTE_META = {
             {
                 '@context': 'https://schema.org',
                 '@type': 'WebApplication',
-                name: 'OmniAds Dashboard',
+                name: 'UGCMA Live Watch',
                 applicationCategory: 'BusinessApplication',
                 operatingSystem: 'Web',
                 isAccessibleForFree: true,
                 url: `${SITE_ORIGIN}/ugcmadash/`,
                 image: DEFAULT_IMAGE,
                 description:
-                    'A high-density advertising dashboard for cross-channel UGC campaign, funnel, lead source, and conversion monitoring.',
+                    'A BU-separated paid-media watch dashboard for UGCMA GetInsights metrics and quote-risk reconciliation.',
                 provider: {
                     '@id': ORGANIZATION_ID,
                 },

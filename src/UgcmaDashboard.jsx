@@ -14,7 +14,7 @@ import {
   Users,
 } from 'lucide-react';
 
-const rangeLabel = 'May 19 - Jun 18, 2025';
+const rangeLabel = 'Live UGCMA watch feed';
 const previousRangeLabel = 'Apr 19 - May 18, 2025';
 
 const filterOptions = [
@@ -209,7 +209,7 @@ function DashboardHeader() {
           </div>
           <div className="min-w-0">
             <h1 className="truncate text-base font-black tracking-tight text-white">
-              OmniAds <span className="font-semibold text-slate-400">Dashboard</span>
+              UGCMA <span className="font-semibold text-slate-400">Live Watch</span>
             </h1>
           </div>
         </div>
@@ -663,7 +663,7 @@ export default function UgcmaDashboard() {
         </div>
         <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
           <Panel className="overflow-hidden">
-            <SectionHeader title="Leads by Source" />
+            <SectionHeader title="Today Leads by BU" />
             <div className="p-5">
               <DonutChart sources={liveLeadSources} totalLeads={dashboardData?.totalLeads} />
               <button className="mt-5 w-full rounded-lg border border-slate-700 bg-slate-900/55 px-4 py-3 text-[11px] font-black text-slate-400 transition hover:border-slate-600 hover:text-white">
@@ -672,7 +672,7 @@ export default function UgcmaDashboard() {
             </div>
           </Panel>
           <Panel className="overflow-hidden">
-            <SectionHeader title="Stagnant Leads" />
+            <SectionHeader title="Open Risks / Reconciliation" />
             <div className="p-5">
               <StagnantLeads buckets={liveStagnant.buckets} total={liveStagnant.total} delta={liveStagnant.delta} note={liveStagnant.note} />
               <button className="mt-6 w-full rounded-lg border border-slate-700 bg-slate-900/55 px-4 py-3 text-[11px] font-black text-slate-400 transition hover:border-slate-600 hover:text-white">
@@ -681,7 +681,7 @@ export default function UgcmaDashboard() {
             </div>
           </Panel>
           <Panel className="overflow-hidden">
-            <SectionHeader title="Conversion Metrics" />
+            <SectionHeader title="Show / Close Watch" />
             <div className="p-5">
               <ConversionMetrics rows={liveConversion.rows} noShow={liveConversion.noShow} bookingSale={liveConversion.bookingSale} />
             </div>

@@ -37,4 +37,6 @@
 ## Reviewer Notes
 - The app exports ringtone-ready `.m4r` files and provides GarageBand installation guidance. It does not claim direct iOS Settings ringtone mutation.
 - Protected or streaming-only music is rejected with user-facing copy.
-- App Review submission requires the real Firebase config, reviewer demo account, production AdMob app ID/banner ID, active App Store Connect app record, and active subscription record. The current export uses Google AdMob test IDs so the build contains valid ad configuration without placeholder identifiers.
+- App Store Connect app record `6771739451` exists as `Ring Tone Creator Pro Studio`; the in-app display name is `Ring Tone Creator Pro`.
+- Subscription `co.eb28.ringtonecreatorpro.unlimited.monthly` / Apple ID `6771748572` is created and ready to submit.
+- Public App Review submission still requires the real Firebase config, reviewer demo account, and production AdMob app ID/banner ID. Build 1 uses the placeholder Firebase plist and Google AdMob test IDs.

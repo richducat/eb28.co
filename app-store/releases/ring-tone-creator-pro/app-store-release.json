@@ -2,9 +2,11 @@
   "$schemaVersion": 1,
   "app": {
     "name": "Ring Tone Creator Pro",
+    "appStoreConnectName": "Ring Tone Creator Pro Studio",
+    "appleAppId": "6771739451",
     "subtitle": "Premium ringtone studio",
     "bundleId": "co.eb28.ringtonecreatorpro",
-    "sku": "ringtonecreatorpro-ios",
+    "sku": "co.eb28.ringtonecreatorpro",
     "platforms": ["iOS"],
     "primaryCategory": "Music",
     "secondaryCategory": "Utilities",
@@ -77,6 +79,9 @@
     "products": [
       {
         "id": "co.eb28.ringtonecreatorpro.unlimited.monthly",
+        "appleId": "6771748572",
+        "subscriptionGroupId": "22104526",
+        "appStoreConnectStatus": "READY_TO_SUBMIT",
         "type": "AUTO_RENEWABLE_SUBSCRIPTION",
         "name": "Ring Tone Creator Pro Unlimited",
         "price": "$0.99/month"
@@ -111,6 +116,23 @@
     "appPreviewVideos": []
   },
   "verification": {
+    "appStoreConnect": {
+      "appRecordCreated": true,
+      "binaryUploaded": true,
+      "uploadedVersion": "1.0.0",
+      "uploadedBuild": "1",
+      "ipaPath": "output/appstore/ring-tone-creator-pro-1.0.0-build1/export/RingToneCreatorPro.ipa",
+      "uploadLogPath": "output/appstore/ring-tone-creator-pro-1.0.0-build1/upload-attempt-20260521-iconfix.log"
+    },
+    "testFlight": {
+      "internalGroup": "Ring Tone TestFlight",
+      "internalGroupId": "0824315b-8ce7-4848-a687-e6d0fdae8b96",
+      "externalGroup": "Ring Tone External",
+      "externalGroupId": "f5ed1f0f-a849-4407-8ef0-0890093f9f4d",
+      "internalTesters": ["richducat@gmail.com"],
+      "externalTesters": ["richducat@gmail.com", "evducat@icloud.com"],
+      "externalBuildStatus": "WAITING_FOR_REVIEW"
+    },
     "testedDevices": [
       "generic iPhone Simulator debug build",
       "generic iOS device Release archive",
@@ -129,11 +151,9 @@
       "App Store metadata preflight"
     ],
     "knownRisks": [
-      "App Store Connect upload is blocked until the App Store app record exists for co.eb28.ringtonecreatorpro.",
-      "Real Firebase project config and reviewer demo account must be created before App Review because the checked-in plist is a placeholder.",
+      "Real Firebase project config and reviewer demo account must be created before App Review because the checked-in plist is still a placeholder.",
       "Production AdMob app ID and banner ad unit must replace the temporary Google test IDs before public monetized launch.",
-      "App Store Connect app record for co.eb28.ringtonecreatorpro must exist before Xcode can upload the prepared IPA.",
-      "The App Store Connect subscription co.eb28.ringtonecreatorpro.unlimited.monthly must be created before App Review."
+      "External TestFlight build 1.0.0 (1) is waiting for Apple Beta App Review before external testers can install."
     ]
   }
 }

@@ -3,9 +3,9 @@
   "app": {
     "name": "Weed Authority",
     "subtitle": "Legal cannabis rec check",
-    "bundleId": "co.eb28.weedauthority",
+    "bundleId": "com.weedauthority.weedauthority",
     "sku": "weedauthority-ios",
-    "platforms": ["iOS"],
+    "platforms": ["iOS", "iPadOS"],
     "primaryCategory": "Medical",
     "secondaryCategory": "Lifestyle",
     "copyright": "2026 EB28",
@@ -19,7 +19,7 @@
     }
   },
   "version": {
-    "marketingVersion": "1.0.0",
+    "marketingVersion": "2.0.0",
     "buildNumber": "1",
     "releaseType": "MANUAL",
     "phasedRelease": false,
@@ -43,7 +43,7 @@
     "demoUsername": "",
     "demoPassword": "",
     "notes": [
-      "Build 1 is a new native SwiftUI iPhone app.",
+      "Version 2.0.0 build 1 is a new native SwiftUI iPhone app.",
       "No login is required.",
       "Open Explore to search Apple Maps for cannabis retailers by city, state, or ZIP. The curated retailer cards include regulator source links.",
       "Open Rec to unlock the local rec vault, store optional card details on device, open official state portals, and add purchase ledger entries.",
@@ -58,7 +58,7 @@
   "distribution": {
     "usesLogin": false,
     "supportsIphone": true,
-    "supportsIpad": false,
+    "supportsIpad": true,
     "containsUserGeneratedContent": false,
     "createsAccounts": false,
     "requiresExternalHardware": false,
@@ -95,12 +95,17 @@
       "screenshots/iphone-69/04-learn.png",
       "screenshots/iphone-69/05-account.png"
     ],
-    "ipadScreenshots": [],
+    "ipadScreenshots": [
+      "screenshots/ipad-13/01-explore.png",
+      "screenshots/ipad-13/02-rec.png",
+      "screenshots/ipad-13/03-deals.png"
+    ],
     "appPreviewVideos": []
   },
   "verification": {
     "testedDevices": [
-      "iPhone 17 Pro simulator"
+      "iPhone 17 Pro simulator",
+      "iPad Pro 13-inch simulator"
     ],
     "testedFlows": [
       "XcodeGen project generation",
@@ -112,11 +117,11 @@
       "Learn tab navigation",
       "Account tab navigation",
       "App Store screenshot capture",
+      "iPad screenshot capture",
       "App Store metadata preflight"
     ],
     "knownRisks": [
-      "The existing App Store listing is id1252265730 under DIGITAL SYNC, LLC, THE. Updating that exact listing requires App Store Connect access to that app and its original bundle identifier.",
-      "Production release upload requires a matching App Store Connect app record for the final bundle identifier.",
+      "The existing App Store listing is id1252265730 under DIGITAL SYNC, LLC, THE with bundle ID com.weedauthority.weedauthority.",
       "DNS for weedauthority.ed28.co or weedauthority.eb28.co must be created in Namecheap before the custom subdomain resolves."
     ]
   }

@@ -1,6 +1,6 @@
 # Weed Authority Review Notes
 
-Build 1 is a new native SwiftUI iPhone app.
+Version 2.0.0 build 1 is a new native SwiftUI iPhone app.
 
 No login is required.
 

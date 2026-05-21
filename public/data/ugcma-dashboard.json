@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-05-21T17:01:13.821259+00:00",
+  "generatedAt": "2026-05-21T17:07:57.154661+00:00",
   "rangeLabel": "Live UGCMA watch feed \u2022 12:46 ET",
   "totalLeads": "1,483",
   "feeds": [
@@ -8,7 +8,7 @@
       "status": "live",
       "value": "12:46 ET",
       "note": "30-minute read-only watch output is the dashboard feed source.",
-      "updatedAt": "May 21, 1:01 PM ET"
+      "updatedAt": "May 21, 1:07 PM ET"
     },
     {
       "name": "GetInsights Metrics",

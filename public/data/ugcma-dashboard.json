@@ -1,14 +1,14 @@
 {
-  "generatedAt": "2026-05-21T19:17:35.084397+00:00",
+  "generatedAt": "2026-05-21T19:31:53.798909+00:00",
   "rangeLabel": "Live UGCMA watch feed \u2022 2026-05-21 15-11-50",
-  "totalLeads": "393",
+  "totalLeads": "1,574",
   "feeds": [
     {
       "name": "UGCMA Watch Cron",
       "status": "live",
       "value": "2026-05-21 15-11-50",
       "note": "30-minute read-only watch output is the dashboard feed source.",
-      "updatedAt": "May 21, 3:17 PM ET"
+      "updatedAt": "May 21, 3:31 PM ET"
     },
     {
       "name": "GetInsights Metrics",
@@ -35,17 +35,17 @@
   "kpis": [
     {
       "label": "BU1 Spend Today",
-      "value": "n/a",
-      "delta": "n/a",
+      "value": "$7.167k",
+      "delta": "5.38x",
       "note": "Sydney / BU1 same-day cash ROAS",
       "tone": "cyan",
       "icon": "CircleDollarSign",
-      "positive": false
+      "positive": true
     },
     {
       "label": "BU1 Booked Today",
-      "value": "n/a",
-      "delta": "n/a",
+      "value": "42",
+      "delta": "26.2%",
       "note": "Sydney booked calls + show rate",
       "tone": "blue",
       "icon": "CalendarDays",
@@ -53,8 +53,8 @@
     },
     {
       "label": "BU1 Rolling Cash",
-      "value": "n/a",
-      "delta": "n/a",
+      "value": "$160.283k",
+      "delta": "1.76x",
       "note": "Rolling May 15\u201321; quote only after reconciliation",
       "tone": "violet",
       "icon": "Gauge",
@@ -62,8 +62,8 @@
     },
     {
       "label": "BU2 Spend Today",
-      "value": "`$3.656k`",
-      "delta": "`2.55x` cash ROAS",
+      "value": "$3.656k",
+      "delta": "2.55x cash ROAS",
       "note": "Nate / BU2 same-day cash ROAS",
       "tone": "emerald",
       "icon": "CircleDollarSign",
@@ -71,8 +71,8 @@
     },
     {
       "label": "BU2 Booked Today",
-      "value": "`31`",
-      "delta": "`16.1%`",
+      "value": "31",
+      "delta": "16.1%",
       "note": "Nate booked calls + show rate",
       "tone": "teal",
       "icon": "CalendarDays",
@@ -80,8 +80,8 @@
     },
     {
       "label": "BU2 Rolling Cash",
-      "value": "`$59.183k`",
-      "delta": "n/a",
+      "value": "$59.183k",
+      "delta": "1.04x",
       "note": "Rolling May 15\u201321; separate from BU1",
       "tone": "sky",
       "icon": "Gauge",
@@ -92,18 +92,49 @@
     {
       "title": "BU1 / Sydney \u2014 Today",
       "path": "Spend -> Leads -> Booked -> Shows -> Sales -> Cash",
-      "steps": [],
+      "steps": [
+        {
+          "label": "spend",
+          "value": "$7.167k",
+          "delta": "today"
+        },
+        {
+          "label": "leads",
+          "value": "1,181",
+          "delta": "today"
+        },
+        {
+          "label": "CPL",
+          "value": "$6.07",
+          "delta": "today"
+        },
+        {
+          "label": "booked",
+          "value": "42",
+          "delta": "today"
+        },
+        {
+          "label": "show",
+          "value": "26.2%",
+          "delta": "today"
+        },
+        {
+          "label": "deals sales",
+          "value": "3",
+          "delta": "today"
+        }
+      ],
       "rates": [
         {
-          "value": "n/a",
+          "value": "$6.07",
           "label": "CPL"
         },
         {
-          "value": "n/a",
+          "value": "26.2%",
           "label": "Show Rate"
         },
         {
-          "value": "n/a",
+          "value": "5.38x",
           "label": "Cash ROAS"
         }
       ]
@@ -114,46 +145,46 @@
       "steps": [
         {
           "label": "spend",
-          "value": "`$3.656k`",
+          "value": "$3.656k",
           "delta": "today"
         },
         {
           "label": "leads",
-          "value": "`393`",
+          "value": "393",
           "delta": "today"
         },
         {
           "label": "CPL",
-          "value": "`$9.30`",
+          "value": "$9.30",
           "delta": "today"
         },
         {
           "label": "booked",
-          "value": "`31`",
+          "value": "31",
           "delta": "today"
         },
         {
           "label": "show",
-          "value": "`16.1%`",
+          "value": "16.1%",
           "delta": "today"
         },
         {
-          "label": "analytics `2` closes",
-          "value": "funnel",
+          "label": "funnel analytics closes",
+          "value": "2",
           "delta": "today"
         }
       ],
       "rates": [
         {
-          "value": "`$9.30`",
+          "value": "$9.30",
           "label": "CPL"
         },
         {
-          "value": "`16.1%`",
+          "value": "16.1%",
           "label": "Show Rate"
         },
         {
-          "value": "`2.55x`",
+          "value": "2.55x",
           "label": "Cash ROAS"
         }
       ]
@@ -161,10 +192,41 @@
     {
       "title": "BU1 / Sydney \u2014 Rolling May 15\u201321",
       "path": "Rolling GetInsights lane view",
-      "steps": [],
+      "steps": [
+        {
+          "label": "spend",
+          "value": "$90.964k",
+          "delta": "rolling"
+        },
+        {
+          "label": "leads",
+          "value": "8,503",
+          "delta": "rolling"
+        },
+        {
+          "label": "booked",
+          "value": "324",
+          "delta": "rolling"
+        },
+        {
+          "label": "sales",
+          "value": "18",
+          "delta": "rolling"
+        },
+        {
+          "label": "revenue",
+          "value": "$121.100k",
+          "delta": "rolling"
+        },
+        {
+          "label": "cash",
+          "value": "$160.283k",
+          "delta": "rolling"
+        }
+      ],
       "rates": [
         {
-          "value": "n/a",
+          "value": "1.76x",
           "label": "Cash ROAS"
         }
       ]
@@ -175,38 +237,38 @@
       "steps": [
         {
           "label": "spend",
-          "value": "`$57.172k`",
+          "value": "$57.172k",
           "delta": "rolling"
         },
         {
           "label": "leads",
-          "value": "`4,467`",
+          "value": "4,467",
           "delta": "rolling"
         },
         {
           "label": "booked",
-          "value": "`137`",
+          "value": "137",
           "delta": "rolling"
         },
         {
           "label": "sales",
-          "value": "`8`",
+          "value": "8",
           "delta": "rolling"
         },
         {
           "label": "revenue",
-          "value": "`$60.000k`",
+          "value": "$60.000k",
           "delta": "rolling"
         },
         {
           "label": "cash",
-          "value": "`$59.183k`",
+          "value": "$59.183k",
           "delta": "rolling"
         }
       ],
       "rates": [
         {
-          "value": "n/a",
+          "value": "1.04x",
           "label": "Cash ROAS"
         }
       ]
@@ -215,14 +277,14 @@
   "leadSources": [
     {
       "label": "BU1 today leads",
-      "value": 0,
-      "share": "0.0%",
+      "value": 1181,
+      "share": "75.0%",
       "color": "#38bdf8"
     },
     {
       "label": "BU2 today leads",
       "value": 393,
-      "share": "100.0%",
+      "share": "25.0%",
       "color": "#8b5cf6"
     }
   ],
@@ -255,24 +317,24 @@
   },
   "conversionMetrics": {
     "noShow": {
-      "value": "n/a",
+      "value": "26.2%",
       "delta": "BU1 today"
     },
     "bookingSale": {
-      "value": "`16.1%`",
+      "value": "16.1%",
       "delta": "BU2 today"
     },
     "rows": [
       {
         "funnel": "BU1 / Sydney",
-        "noShow": "n/a",
+        "noShow": "26.2%",
         "noShowDelta": "show rate",
-        "saleRate": "n/a",
+        "saleRate": "deals 3",
         "saleDelta": "today sales"
       },
       {
         "funnel": "BU2 / Nate",
-        "noShow": "`16.1%`",
+        "noShow": "16.1%",
         "noShowDelta": "show rate",
         "saleRate": "n/a",
         "saleDelta": "deals/analytics mismatch watch"
@@ -306,37 +368,37 @@
     {
       "campaign": "BU1 / Sydney \u2014 today",
       "source": "GetInsights watch",
-      "leads": "n/a",
-      "bookings": "n/a",
-      "sales": "n/a",
-      "roas": "n/a",
+      "leads": "1,181",
+      "bookings": "42",
+      "sales": "deals 3",
+      "roas": "5.38x",
       "status": "Reconcile before quoting"
     },
     {
       "campaign": "BU1 / Sydney \u2014 rolling",
       "source": "GetInsights watch",
-      "leads": "n/a",
-      "bookings": "n/a",
-      "sales": "n/a",
-      "roas": "n/a",
+      "leads": "8,503",
+      "bookings": "324",
+      "sales": "18",
+      "roas": "1.76x",
       "status": "Rolling lane"
     },
     {
       "campaign": "BU2 / Nate \u2014 today",
       "source": "GetInsights watch",
-      "leads": "`393`",
-      "bookings": "`31`",
+      "leads": "393",
+      "bookings": "31",
       "sales": "n/a",
-      "roas": "`2.55x`",
+      "roas": "2.55x",
       "status": "Deals mismatch watch"
     },
     {
       "campaign": "BU2 / Nate \u2014 rolling",
       "source": "GetInsights watch",
-      "leads": "`4,467`",
-      "bookings": "`137`",
-      "sales": "`8`",
-      "roas": "n/a",
+      "leads": "4,467",
+      "bookings": "137",
+      "sales": "8",
+      "roas": "1.04x",
       "status": "Rolling lane"
     }
   ],

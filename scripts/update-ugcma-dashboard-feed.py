@@ -53,13 +53,17 @@ def clean_metric_line(line: str) -> str:
 def split_metrics(line: str) -> list[str]:
     if ':' in line:
         line = line.split(':', 1)[1]
-    return [part.strip().rstrip('.') for part in line.split(' / ') if part.strip()]
+    return [part.replace('`', '').strip().rstrip('.') for part in line.split(' / ') if part.strip()]
 
 
 def metric_value(parts: list[str], label_regex: str, fallback='n/a') -> str:
     for part in parts:
         if re.search(label_regex, part, re.I):
-            return re.sub(label_regex, '', part, flags=re.I).strip() or part
+            return re.sub(label_regex, '', part, flags=re.I).strip().strip('`') or part.strip('`')
+    if 'cash ROAS' in label_regex or 'cash roas' in label_regex.lower():
+        for part in reversed(parts):
+            if re.search(r'\b[0-9.]+x\b', part, re.I):
+                return part.strip().strip('`')
     return fallback
 
 
@@ -81,11 +85,87 @@ def first_int_near(parts: list[str], label: str) -> int:
     return 0
 
 
+def metric_step(part: str, delta: str) -> dict:
+    part = part.replace('`', '').strip()
+    money_first = re.match(r'(\$[0-9.,]+k?)\s+(.+)', part, re.I)
+    count_first = re.match(r'([0-9,]+(?:\.[0-9]+)?%?|[0-9.]+x)\s+(.+)', part, re.I)
+    count_inside = re.match(r'(.+?)\s+([0-9,]+(?:\.[0-9]+)?%?)\s+(.+)', part, re.I)
+    if money_first:
+        value, label = money_first.groups()
+    elif count_first:
+        value, label = count_first.groups()
+    elif count_inside:
+        before, value, after = count_inside.groups()
+        label = f'{before} {after}'
+    else:
+        value, label = part, ''
+    return {'label': label.strip(), 'value': value.strip(), 'delta': delta}
+
+
 def parse_lane(resp: str, lane: str, window: str) -> dict:
     token = f'{lane} {window}'.strip()
     line = line_matching(resp, token)
     parts = split_metrics(line)
     return {'line': line, 'parts': parts}
+
+
+def compact_spaces(text: str) -> str:
+    return re.sub(r'\s+', ' ', text).strip()
+
+
+def extract_metric_clause(text: str, patterns: list[str]) -> str:
+    haystack = compact_spaces(text)
+    for pattern in patterns:
+        match = re.search(pattern, haystack, re.I)
+        if match:
+            return match.group(1).strip().strip(' .;')
+    return ''
+
+
+def parse_metrics_from_sources(resp: str, items: list[str], lane: str, period: str) -> dict:
+    """Parse BU metrics from latest open-loop/watch prose.
+
+    The watch output is intentionally natural-language. Recent runs may say
+    "BU1/Sydney today is mostly stable at...", "Today: ..." under a BU1
+    section, or only include one lane in the strict bullet format. Prefer the
+    canonical OPEN_LOOPS item first, then fall back to the watch response.
+    """
+    latest_getinsights = next(
+        (
+            item for item in items
+            if 'GetInsights' in item
+            and 'BU1/Sydney today' in item
+            and 'BU2/Nate today' in item
+        ),
+        '',
+    )
+    sources = [latest_getinsights, resp]
+    if lane == 'bu1' and period == 'today':
+        patterns = [
+            r'BU1/Sydney today (?:now shows |is mostly stable at |is |: )(.*?)(?=, but|; BU1 rolling|\. Public|$)',
+            r'BU1/Sydney:.*?Today:\s*(.*?)(?=\. Funnel|\. Rolling|$)',
+        ]
+    elif lane == 'bu1' and period == 'rolling':
+        patterns = [
+            r'BU1 rolling(?: May 15[–-]21)?(?: is)?\s*(.*?)(?=\. Public|; Public|$)',
+            r'Rolling May 15[–-]21:\s*(.*?)(?=\. Public|$)',
+        ]
+    elif lane == 'bu2' and period == 'today':
+        patterns = [
+            r'BU2/Nate today (?:now shows |is |: )(.*?)(?=, but|; BU2 rolling|\. BU2 rolling|$)',
+        ]
+    else:
+        patterns = [
+            r'BU2 rolling(?: May 15[–-]21)?(?: is)?\s*(.*?)(?=\. BU1|; BU1|$)',
+        ]
+
+    for source in sources:
+        clause = extract_metric_clause(source, patterns)
+        if clause:
+            return {'line': clause, 'parts': split_metrics(clause)}
+    fallback_lane = {'bu1': 'BU1/Sydney', 'bu2': 'BU2/Nate'}[lane]
+    fallback_window = 'today' if period == 'today' else 'rolling'
+    return parse_lane(resp, fallback_lane if period == 'today' else f'{lane.upper()} rolling', fallback_window if period == 'today' else '')
 
 
 
@@ -240,10 +320,11 @@ def build_data(watch_path: Path) -> dict:
     run_match = re.search(r'UGCMA watch\s+[—-]\s+([^\n]+)', resp)
     watch_label = run_match.group(1).strip() if run_match else watch_path.stem.replace('_', ' ')
 
-    bu1_today = parse_lane(resp, 'BU1/Sydney', 'today')
-    bu1_roll = parse_lane(resp, 'BU1 rolling', '')
-    bu2_today = parse_lane(resp, 'BU2/Nate', 'today')
-    bu2_roll = parse_lane(resp, 'BU2 rolling', '')
+    items = open_loop_items()
+    bu1_today = parse_metrics_from_sources(resp, items, 'bu1', 'today')
+    bu1_roll = parse_metrics_from_sources(resp, items, 'bu1', 'rolling')
+    bu2_today = parse_metrics_from_sources(resp, items, 'bu2', 'today')
+    bu2_roll = parse_metrics_from_sources(resp, items, 'bu2', 'rolling')
 
     lanes = [
         ('BU1 / Sydney', bu1_today, bu1_roll, '#38bdf8'),
@@ -301,8 +382,6 @@ def build_data(watch_path: Path) -> dict:
         if capture and re.match(r'\d+\.', stripped):
             next_actions.append(re.sub(r'^\d+\.\s*', '', stripped))
     next_actions = next_actions[:6]
-    items = open_loop_items()
-
     total_today_leads = first_int_near(bu1_today_parts, 'leads') + first_int_near(bu2_today_parts, 'leads')
     bu1_cash_roas = metric_value(bu1_today_parts, r'.*cash ROAS', 'n/a')
     bu2_cash_roas = metric_value(bu2_today_parts, r'.*cash ROAS', 'n/a')
@@ -332,7 +411,7 @@ def build_data(watch_path: Path) -> dict:
             {
                 'title': 'BU1 / Sydney — Today',
                 'path': 'Spend -> Leads -> Booked -> Shows -> Sales -> Cash',
-                'steps': [{'label': p.split(' ', 1)[1] if p and p[0].isdigit() else p.split(' ', 1)[-1], 'value': p.split(' ', 1)[0], 'delta': 'today'} for p in bu1_today_parts[:6]],
+                'steps': [metric_step(p, 'today') for p in bu1_today_parts[:6]],
                 'rates': [
                     {'value': metric_value(bu1_today_parts, r'CPL'), 'label': 'CPL'},
                     {'value': metric_value(bu1_today_parts, r'show'), 'label': 'Show Rate'},
@@ -342,7 +421,7 @@ def build_data(watch_path: Path) -> dict:
             {
                 'title': 'BU2 / Nate — Today',
                 'path': 'Spend -> Leads -> Booked -> Shows -> Sales -> Cash',
-                'steps': [{'label': p.split(' ', 1)[1] if p and p[0].isdigit() else p.split(' ', 1)[-1], 'value': p.split(' ', 1)[0], 'delta': 'today'} for p in bu2_today_parts[:6]],
+                'steps': [metric_step(p, 'today') for p in bu2_today_parts[:6]],
                 'rates': [
                     {'value': metric_value(bu2_today_parts, r'CPL'), 'label': 'CPL'},
                     {'value': metric_value(bu2_today_parts, r'show'), 'label': 'Show Rate'},
@@ -352,13 +431,13 @@ def build_data(watch_path: Path) -> dict:
             {
                 'title': 'BU1 / Sydney — Rolling May 15–21',
                 'path': 'Rolling GetInsights lane view',
-                'steps': [{'label': p.split(' ', 1)[1] if p and p[0].isdigit() else p.split(' ', 1)[-1], 'value': p.split(' ', 1)[0], 'delta': 'rolling'} for p in bu1_roll_parts[:6]],
+                'steps': [metric_step(p, 'rolling') for p in bu1_roll_parts[:6]],
                 'rates': [{'value': metric_value(bu1_roll_parts, r'cash ROAS'), 'label': 'Cash ROAS'}],
             },
             {
                 'title': 'BU2 / Nate — Rolling May 15–21',
                 'path': 'Rolling GetInsights lane view',
-                'steps': [{'label': p.split(' ', 1)[1] if p and p[0].isdigit() else p.split(' ', 1)[-1], 'value': p.split(' ', 1)[0], 'delta': 'rolling'} for p in bu2_roll_parts[:6]],
+                'steps': [metric_step(p, 'rolling') for p in bu2_roll_parts[:6]],
                 'rates': [{'value': metric_value(bu2_roll_parts, r'cash ROAS'), 'label': 'Cash ROAS'}],
             },
         ],

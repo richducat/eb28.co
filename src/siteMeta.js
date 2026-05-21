@@ -262,9 +262,9 @@ const ROUTE_META = {
         ...BASE_ROUTE_META,
         key: 'ugcmadash',
         path: '/ugcmadash/',
-        title: 'UGCMA Live Watch | BU Performance Dashboard | EB28',
+        title: 'UGCMA Command Center | Richard Ops Dashboard | EB28',
         description:
-            'A live UGCMA watch dashboard for BU1/Sydney and BU2/Nate spend, leads, bookings, sales, cash ROAS, and reconciliation risk.',
+            'A full-scope UGCMA command dashboard for BU-separated metrics, next decisions, content handoffs, team back-and-forth, Richard to-dos, and reconciliation risk.',
         image: DEFAULT_IMAGE,
         includeInSitemap: true,
         structuredData: [
@@ -272,7 +272,7 @@ const ROUTE_META = {
             {
                 '@context': 'https://schema.org',
                 '@type': 'WebApplication',
-                name: 'UGCMA Live Watch',
+                name: 'UGCMA Command Center',
                 applicationCategory: 'BusinessApplication',
                 operatingSystem: 'Web',
                 isAccessibleForFree: true,

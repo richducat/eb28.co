@@ -20,6 +20,7 @@ CRON_DIR = Path('/Users/richardducat/.hermes/cron/output/11bb81317ca1')
 PUBLIC_JSON = REPO / 'public/data/ugcma-dashboard.json'
 DOCS_JSON = REPO / 'docs/data/ugcma-dashboard.json'
 LATEST_COPY = REPO / 'output/ugcma-dashboard/latest-watch.md'
+OPEN_LOOPS = Path('/Users/richardducat/.hermes/personal-assistant/working-context/OPEN_LOOPS.md')
 
 COLORS = ['#38bdf8', '#8b5cf6', '#22c55e', '#f59e0b']
 
@@ -86,6 +87,143 @@ def parse_lane(resp: str, lane: str, window: str) -> dict:
     parts = split_metrics(line)
     return {'line': line, 'parts': parts}
 
+
+
+
+def compact_text(text: str, limit: int = 190) -> str:
+    text = re.sub(r'`', '', text)
+    text = re.sub(r'\s+', ' ', text).strip()
+    return text if len(text) <= limit else text[:limit].rstrip() + '…'
+
+
+def open_loop_items() -> list[str]:
+    if not OPEN_LOOPS.exists():
+        return []
+    items = []
+    for line in OPEN_LOOPS.read_text(errors='replace').splitlines():
+        if line.startswith('- [ ] UGCMA'):
+            items.append(line.replace('- [ ] ', '', 1).strip())
+    return items
+
+
+def first_matching(items: list[str], *terms: str) -> str:
+    for item in items:
+        low = item.lower()
+        if all(term.lower() in low for term in terms):
+            return item
+    for item in items:
+        low = item.lower()
+        if any(term.lower() in low for term in terms):
+            return item
+    return ''
+
+
+def command_center(items: list[str], risks: list[str], coordination: list[str], launch: list[str], next_actions: list[str], watch_label: str) -> dict:
+    step_up = first_matching(items, 'OWNER STEP-UP MANDATE')
+    latest_getinsights = first_matching(items, 'GetInsights')
+    creative = first_matching(items, 'creative-system') or first_matching(items, 'recordable scripts')
+    relationship = first_matching(items, 'quit') or first_matching(items, 'relationship risk')
+    google = first_matching(items, 'Google go-live') or first_matching(items, 'Google Ads')
+    youtube = first_matching(items, 'YouTube') or first_matching(items, 'UTM')
+    booking = first_matching(items, 'booking-tag') or first_matching(items, 'calendar')
+
+    decisions = [
+        {
+            'title': 'Owner step-up operating posture',
+            'lane': 'Leadership',
+            'status': 'Active mandate',
+            'decision': 'Richard operates as accountable paid-media/ops lead; Hermes absorbs command-board/reporting/admin follow-through.',
+            'source': compact_text(step_up or 'Owner asked Richard to step up after Jaamal quit.'),
+        },
+        {
+            'title': 'What numbers are safe to quote upward?',
+            'lane': 'Metrics / GetInsights',
+            'status': 'Needs reconciliation',
+            'decision': 'Use BU-separated directionality; do not hard-quote cash/ROAS where analytics-close, deals, CRM, or cash disagree.',
+            'source': compact_text(latest_getinsights or (risks[0] if risks else 'GetInsights watch feed.')),
+        },
+        {
+            'title': 'Google / launch safety',
+            'lane': 'Traffic launch',
+            'status': 'Verify before claiming live',
+            'decision': 'Launch claims require platform state, public URLs, UTMs, booking tests, and BU-specific routing proof.',
+            'source': compact_text(google or (launch[0] if launch else 'Launch tracking watch.')),
+        },
+        {
+            'title': 'Booking/tag attribution blocker',
+            'lane': 'Calendar / CRM',
+            'status': 'Unblock path required',
+            'decision': 'Fix/verify booking tags and call-source attribution before scale/readout confidence.',
+            'source': compact_text(booking or 'Booking-tag blocker remains tracked in open loops.'),
+        },
+    ]
+
+    content_feed = [
+        {
+            'title': 'Daily content flywheel / SOP',
+            'owner': 'Richard + Jay-an/Harry/editor lane',
+            'status': 'Needs owner-grade handoff',
+            'next': 'Turn creative direction into recordable scripts, editor/tool workflow, and daily accountability loop.',
+            'source': compact_text(creative or 'Creative-system handoff is active.'),
+        },
+        {
+            'title': 'Sydney/Nate personalized scripts',
+            'owner': 'Richard / creators',
+            'status': 'Handoff watch',
+            'next': 'Confirm latest V2 packs are the ones being recorded; avoid stale PDF/script versions.',
+            'source': compact_text(first_matching(items, 'recordable scripts') or creative or ''),
+        },
+        {
+            'title': 'YouTube / organic UTM lane',
+            'owner': 'Lucho / tech-public thread',
+            'status': 'Tracking handoff',
+            'next': 'Keep UTM/destination link tracking visible in public ops thread; verify downstream analytics before crediting.',
+            'source': compact_text(youtube or ''),
+        },
+    ]
+
+    backforth_sources = [relationship, first_matching(items, 'Slack Desktop'), first_matching(items, 'Jamaal 10am'), first_matching(items, 'Lucho'), first_matching(items, 'Jay-an')]
+    backforth = []
+    for idx, src in enumerate([x for x in backforth_sources if x][:5], 1):
+        lane = 'Leadership risk' if 'quit' in src.lower() or 'relationship' in src.lower() else 'Team coordination'
+        backforth.append({
+            'title': compact_text(src.split(':', 1)[0].replace('UGCMA / ', ''), 90),
+            'lane': lane,
+            'status': 'Visible / tracked',
+            'next': 'Summarize neutrally, confirm owner-safe next action, and avoid blame language.',
+            'source': compact_text(src),
+        })
+    for msg in coordination[:3]:
+        backforth.append({'title': 'Latest coordination delta', 'lane': 'Watch feed', 'status': 'Live watch', 'next': 'Fold into next owner-safe update if material.', 'source': compact_text(msg)})
+    backforth = backforth[:6]
+
+    richard_todos = [
+        {'task': 'Send/hold owner-safe step-up update', 'priority': 'High', 'owner': 'Hermes drafts / Richard approves', 'unblock': 'Approve exact message before external send.'},
+        {'task': 'Maintain BU1 vs BU2 command view', 'priority': 'High', 'owner': 'Hermes', 'unblock': 'GetInsights MCP/feed availability + latest watch output.'},
+        {'task': 'Resolve quote-safe metric reconciliation', 'priority': 'High', 'owner': 'Hermes + data owners', 'unblock': 'Compare GetInsights funnel, deals, CRM, cash/Stripe/payment truth.'},
+        {'task': 'Verify content flywheel handoff is posted/owned', 'priority': 'High', 'owner': 'Hermes monitors / Richard leads', 'unblock': 'Confirm thread evidence and owner for recording/editing.'},
+    ]
+    for action in next_actions[:4]:
+        richard_todos.append({'task': compact_text(action, 130), 'priority': 'Watch action', 'owner': 'Richard/Hermes', 'unblock': 'Use smallest next action from latest watch.'})
+
+    return {
+        'mandate': {
+            'headline': 'Jaamal is out — Richard is stepping up as accountable UGCMA command lead.',
+            'status': 'Opportunity mode',
+            'objective': 'Maximize trust by making the business feel controlled: numbers, blockers, decisions, content, team follow-through, and owner updates in one place.',
+            'updatedAt': watch_label,
+        },
+        'decisionQueue': decisions,
+        'contentFeed': content_feed,
+        'teamBackforth': backforth,
+        'richardTodos': richard_todos[:8],
+        'sourceCoverage': [
+            {'source': 'GetInsights', 'status': 'Live when MCP/watch feed is connected', 'scope': 'BU metrics, funnel, cash/revenue/deals reconciliation'},
+            {'source': 'OPEN_LOOPS.md', 'status': 'Canonical', 'scope': 'Tasks, blockers, team back-and-forth, Richard/Hermes follow-through'},
+            {'source': 'Slack/iMessage/Voice Memos', 'status': 'UI-visible / artifact-based', 'scope': 'Team coordination, leadership risk, content handoffs'},
+            {'source': 'Meta/Google UI', 'status': 'Verification-gated', 'scope': 'Launch/spend state; never assume live from chat alone'},
+        ],
+    }
 
 def now_et_label() -> str:
     try:
@@ -163,6 +301,7 @@ def build_data(watch_path: Path) -> dict:
         if capture and re.match(r'\d+\.', stripped):
             next_actions.append(re.sub(r'^\d+\.\s*', '', stripped))
     next_actions = next_actions[:6]
+    items = open_loop_items()
 
     total_today_leads = first_int_near(bu1_today_parts, 'leads') + first_int_near(bu2_today_parts, 'leads')
     bu1_cash_roas = metric_value(bu1_today_parts, r'.*cash ROAS', 'n/a')
@@ -264,6 +403,7 @@ def build_data(watch_path: Path) -> dict:
             'launch': launch,
             'nextActions': next_actions,
         },
+        'commandCenter': command_center(items, risks, coordination, launch, next_actions, watch_label),
     }
     return data
 

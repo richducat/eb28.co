@@ -2,6 +2,13 @@ import React, { useEffect, useMemo, useState } from 'react';
 import {
   ArrowDownRight,
   ArrowUpRight,
+  ShieldAlert,
+  Rocket,
+  MessageSquareText,
+  FileText,
+  ClipboardList,
+  BriefcaseBusiness,
+  AlertTriangle,
   CalendarDays,
   CheckCircle2,
   ChevronDown,
@@ -165,6 +172,7 @@ const iconMap = {
   CircleDollarSign,
   Gauge,
   UserCheck,
+  AlertTriangle,
 };
 
 const toneClasses = {
@@ -209,7 +217,7 @@ function DashboardHeader() {
           </div>
           <div className="min-w-0">
             <h1 className="truncate text-base font-black tracking-tight text-white">
-              UGCMA <span className="font-semibold text-slate-400">Live Watch</span>
+              UGCMA <span className="font-semibold text-slate-400">Command Center</span>
             </h1>
           </div>
         </div>
@@ -223,7 +231,7 @@ function DashboardHeader() {
             Export
           </button>
           <div className="grid h-8 w-8 place-items-center rounded-full bg-slate-700 text-[11px] font-black text-slate-200">
-            CM
+            RD
           </div>
         </div>
       </div>
@@ -506,6 +514,129 @@ function ConversionMetrics({ rows = conversionRows, noShow = { value: '23.9%', d
 }
 
 
+
+function StatusPill({ children, tone = 'slate' }) {
+  const classes = {
+    emerald: 'border-emerald-400/25 bg-emerald-400/10 text-emerald-300',
+    amber: 'border-amber-400/25 bg-amber-400/10 text-amber-300',
+    rose: 'border-rose-400/25 bg-rose-400/10 text-rose-300',
+    blue: 'border-blue-400/25 bg-blue-400/10 text-blue-300',
+    slate: 'border-slate-600 bg-slate-900/55 text-slate-300',
+  };
+  return <span className={`rounded-full border px-2.5 py-1 text-[9px] font-black uppercase tracking-[0.12em] ${classes[tone] || classes.slate}`}>{children}</span>;
+}
+
+function MandatePanel({ mandate }) {
+  if (!mandate) return null;
+  return (
+    <Panel className="overflow-hidden border-blue-400/20 bg-gradient-to-br from-blue-950/50 via-slate-900/80 to-emerald-950/30">
+      <div className="grid gap-5 p-5 lg:grid-cols-[1.2fr_0.8fr] lg:items-center">
+        <div>
+          <div className="mb-3 flex flex-wrap items-center gap-2">
+            <StatusPill tone="blue">{mandate.status || 'Opportunity mode'}</StatusPill>
+            <StatusPill tone="emerald">Owner-facing command center</StatusPill>
+            <StatusPill tone="amber">No dropped balls</StatusPill>
+          </div>
+          <h2 className="text-2xl font-black tracking-tight text-white md:text-3xl">{mandate.headline}</h2>
+          <p className="mt-3 max-w-4xl text-sm font-semibold leading-6 text-slate-300">{mandate.objective}</p>
+        </div>
+        <div className="rounded-xl border border-slate-700/70 bg-slate-950/45 p-4">
+          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500">Operating promise</p>
+          <ul className="mt-3 space-y-2 text-xs font-bold leading-5 text-slate-300">
+            <li>• BU1/Sydney and BU2/Nate stay separated.</li>
+            <li>• Decisions show blocker + smallest unblock path.</li>
+            <li>• Team back-and-forth gets converted into owned follow-through.</li>
+            <li>• External messages stay approval-gated.</li>
+          </ul>
+          {mandate.updatedAt ? <p className="mt-4 text-[9px] font-black uppercase tracking-[0.18em] text-slate-600">Updated {mandate.updatedAt}</p> : null}
+        </div>
+      </div>
+    </Panel>
+  );
+}
+
+function DecisionQueuePanel({ items = [] }) {
+  if (!items.length) return null;
+  return (
+    <Panel className="overflow-hidden">
+      <SectionHeader title="Next Decisions" status="Owner-safe" meta="What Richard needs to know / decide next" />
+      <div className="grid grid-cols-1 gap-3 p-5 xl:grid-cols-2">
+        {items.map((item) => (
+          <div key={`${item.title}-${item.lane}`} className="rounded-xl border border-slate-700/70 bg-slate-900/45 p-4">
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <p className="text-[10px] font-black uppercase tracking-[0.18em] text-blue-300">{item.lane}</p>
+                <h3 className="mt-1 text-sm font-black text-white">{item.title}</h3>
+              </div>
+              <StatusPill tone={item.status?.toLowerCase().includes('needs') ? 'amber' : item.status?.toLowerCase().includes('verify') ? 'rose' : 'emerald'}>{item.status}</StatusPill>
+            </div>
+            <p className="mt-3 text-xs font-bold leading-5 text-slate-300">{item.decision}</p>
+            {item.source ? <p className="mt-3 border-t border-slate-700/60 pt-3 text-[10px] font-semibold leading-4 text-slate-500">Source: {item.source}</p> : null}
+          </div>
+        ))}
+      </div>
+    </Panel>
+  );
+}
+
+function WorkstreamCards({ title, status, meta, items = [], type = 'content' }) {
+  if (!items.length) return null;
+  return (
+    <Panel className="overflow-hidden">
+      <SectionHeader title={title} status={status} meta={meta} />
+      <div className="space-y-3 p-5">
+        {items.map((item, index) => (
+          <div key={`${title}-${index}`} className="rounded-xl border border-slate-700/65 bg-slate-900/45 p-4">
+            <div className="flex flex-wrap items-start justify-between gap-3">
+              <div className="min-w-0">
+                <p className="text-sm font-black text-white">{item.title || item.task}</p>
+                <p className="mt-1 text-[10px] font-black uppercase tracking-[0.16em] text-slate-500">{item.owner || item.lane || 'Richard / Hermes'}</p>
+              </div>
+              <StatusPill tone={item.priority === 'High' || item.status?.toLowerCase().includes('needs') ? 'amber' : 'slate'}>{item.status || item.priority || 'Tracked'}</StatusPill>
+            </div>
+            <p className="mt-3 text-xs font-bold leading-5 text-slate-300">{item.next || item.unblock}</p>
+            {item.source ? <p className="mt-3 text-[10px] font-semibold leading-4 text-slate-500">{item.source}</p> : null}
+          </div>
+        ))}
+      </div>
+    </Panel>
+  );
+}
+
+function SourceCoveragePanel({ items = [] }) {
+  if (!items.length) return null;
+  return (
+    <Panel className="overflow-hidden">
+      <SectionHeader title="Source Coverage" status="Truth map" meta="What each source is allowed to prove" />
+      <div className="grid grid-cols-1 gap-3 p-5 md:grid-cols-2 xl:grid-cols-4">
+        {items.map((item) => (
+          <div key={item.source} className="rounded-lg border border-slate-700/60 bg-slate-900/45 p-4">
+            <p className="text-[10px] font-black uppercase tracking-[0.18em] text-slate-400">{item.source}</p>
+            <p className="mt-2 text-xs font-black text-white">{item.status}</p>
+            <p className="mt-2 text-[10px] font-semibold leading-4 text-slate-500">{item.scope}</p>
+          </div>
+        ))}
+      </div>
+    </Panel>
+  );
+}
+
+function CommandCenterPanels({ commandCenter }) {
+  if (!commandCenter) return null;
+  return (
+    <div className="space-y-4">
+      <MandatePanel mandate={commandCenter.mandate} />
+      <DecisionQueuePanel items={commandCenter.decisionQueue} />
+      <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
+        <WorkstreamCards title="Content Feed / Creative Engine" status="Handoff" meta="Scripts, SOPs, creators, editor loop" items={commandCenter.contentFeed} />
+        <WorkstreamCards title="Internal Back-and-Forth" status="Tracked" meta="Slack/iMessage/team coordination without overclaiming" items={commandCenter.teamBackforth} />
+        <WorkstreamCards title="Richard / Hermes To-Do Board" status="Owned" meta="What must not fall through" items={commandCenter.richardTodos} />
+      </div>
+      <SourceCoveragePanel items={commandCenter.sourceCoverage} />
+    </div>
+  );
+}
+
 function FeedStatusPanel({ feeds = [] }) {
   if (!feeds.length) return null;
 
@@ -536,7 +667,7 @@ function RecentCallsPanel({ calls = [] }) {
 
   return (
     <Panel className="overflow-hidden">
-      <SectionHeader title="Recent Fathom Calls" status="Connected" meta="Team-call telemetry, no customer emails exposed" />
+      <SectionHeader title="Watch Deltas / Action Items" status="Connected" meta="Risks, blockers, and smallest actions" />
       <div className="overflow-x-auto">
         <table className="min-w-[760px] w-full text-left text-xs">
           <thead className="bg-slate-900/45 text-[10px] uppercase tracking-[0.18em] text-slate-500">
@@ -566,7 +697,7 @@ function RecentCallsPanel({ calls = [] }) {
 function PerformanceTable({ rows = performanceRows }) {
   return (
     <Panel className="overflow-hidden">
-      <SectionHeader title="Campaign Performance" status="Live" meta="Cross-channel revenue view" />
+      <SectionHeader title="BU Performance / Reconciliation" status="Live" meta="GetInsights lane view; source-safe status" />
       <div className="overflow-x-auto">
         <table className="min-w-[820px] w-full text-left text-xs">
           <thead className="bg-slate-900/45 text-[10px] uppercase tracking-[0.18em] text-slate-500">
@@ -639,6 +770,7 @@ export default function UgcmaDashboard() {
   const liveStagnant = dashboardData?.stagnantLeads ?? {};
   const liveConversion = dashboardData?.conversionMetrics ?? {};
   const livePerformanceRows = dashboardData?.performanceRows ?? performanceRows;
+  const liveCommandCenter = dashboardData?.commandCenter;
 
   return (
     <main className="min-h-screen bg-[#0b1121] text-slate-100 selection:bg-blue-500 selection:text-white">
@@ -655,6 +787,7 @@ export default function UgcmaDashboard() {
           </div>
         ) : null}
         <FeedStatusPanel feeds={dashboardData?.feeds} />
+        <CommandCenterPanels commandCenter={liveCommandCenter} />
         <KpiGrid items={liveKpis} />
         <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
           {liveFunnels.map((funnel) => (

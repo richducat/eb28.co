@@ -131,7 +131,8 @@
     "knownRisks": [
       "App Store Connect upload is blocked until the App Store app record exists for co.eb28.ringtonecreatorpro.",
       "Real Firebase project config and reviewer demo account must be created before App Review because the checked-in plist is a placeholder.",
-      "Production AdMob app ID and banner ad unit must be created before App Review because Release still uses placeholders.",
+      "Production AdMob app ID and banner ad unit must replace the temporary Google test IDs before public monetized launch.",
+      "App Store Connect app record for co.eb28.ringtonecreatorpro must exist before Xcode can upload the prepared IPA.",
       "The App Store Connect subscription co.eb28.ringtonecreatorpro.unlimited.monthly must be created before App Review."
     ]
   }

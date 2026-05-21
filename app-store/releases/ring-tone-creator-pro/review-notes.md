@@ -37,4 +37,4 @@
 ## Reviewer Notes
 - The app exports ringtone-ready `.m4r` files and provides GarageBand installation guidance. It does not claim direct iOS Settings ringtone mutation.
 - Protected or streaming-only music is rejected with user-facing copy.
-- App Review submission requires the real Firebase config, reviewer demo account, production AdMob app ID/banner ID, active App Store Connect app record, and active subscription record.
+- App Review submission requires the real Firebase config, reviewer demo account, production AdMob app ID/banner ID, active App Store Connect app record, and active subscription record. The current export uses Google AdMob test IDs so the build contains valid ad configuration without placeholder identifiers.

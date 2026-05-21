@@ -2,7 +2,7 @@
 
 ## Build
 - Version: 1.0.0
-- Build: 1
+- Build: 2
 - Bundle ID: `co.eb28.ringtonecreatorpro`
 
 ## Login
@@ -39,4 +39,4 @@
 - Protected or streaming-only music is rejected with user-facing copy.
 - App Store Connect app record `6771739451` exists as `Ring Tone Creator Pro Studio`; the in-app display name is `Ring Tone Creator Pro`.
 - Subscription `co.eb28.ringtonecreatorpro.unlimited.monthly` / Apple ID `6771748572` is created and ready to submit.
-- Public App Review submission still requires the real Firebase config, reviewer demo account, and production AdMob app ID/banner ID. Build 1 uses the placeholder Firebase plist and Google AdMob test IDs.
+- Public App Review submission still requires the real Firebase config, reviewer demo account, and production AdMob app ID/banner ID. Build 2 removes the blocking Firebase setup screen, but still must not be submitted as production-ready while the placeholder Firebase plist and Google AdMob test IDs remain.

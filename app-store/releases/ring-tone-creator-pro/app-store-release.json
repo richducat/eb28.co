@@ -22,7 +22,7 @@
   },
   "version": {
     "marketingVersion": "1.0.0",
-    "buildNumber": "1",
+    "buildNumber": "2",
     "releaseType": "MANUAL",
     "phasedRelease": false,
     "promotionalText": "Create premium ringtone-ready files from audio, videos, recordings, and starter tones with a modern waveform editor.",
@@ -173,6 +173,10 @@
       "Real Firebase project config and reviewer demo account must be created before App Review because the checked-in plist is still a placeholder.",
       "Production AdMob app ID and banner ad unit must replace the temporary Google test IDs before public monetized launch.",
       "External TestFlight build 1.0.0 (1) is waiting for Apple Beta App Review before external testers can install."
+    ],
+    "pendingBuild2Notes": [
+      "Build 2 removes the blocking Firebase setup screen so the app can launch into the main experience.",
+      "Build 2 is not production-submission-ready until the real Firebase config and production AdMob IDs are added."
     ]
   }
 }

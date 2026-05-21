@@ -13,9 +13,7 @@ struct RootView: View {
             PremiumBackground()
 
             Group {
-                if !auth.firebaseReady {
-                    FirebaseSetupRequiredView()
-                } else if !auth.isSignedIn {
+                if auth.firebaseReady && !auth.isSignedIn {
                     AuthView()
                 } else {
                     MainTabView()
@@ -47,32 +45,6 @@ struct RootView: View {
     }
 }
 
-struct FirebaseSetupRequiredView: View {
-    @Environment(AuthSession.self) private var auth
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 18) {
-            SmallCapsLabel(text: "Setup Required", color: Theme.warning)
-            Text("Firebase signup is wired, but this build needs the real Firebase app config.")
-                .font(.largeTitle.weight(.black))
-                .foregroundStyle(.white)
-                .lineLimit(4)
-                .minimumScaleFactor(0.72)
-            Text("Replace `GoogleService-Info.plist` with the Firebase iOS app config for `co.eb28.ringtonecreatorpro`, enable Email/Password Auth, and deploy the included Firestore rules. The app will then use remote account records and remote export credits.")
-                .font(.body)
-                .foregroundStyle(Theme.muted)
-                .lineSpacing(4)
-            if let message = auth.message {
-                Text(message)
-                    .font(.footnote.weight(.semibold))
-                    .foregroundStyle(Theme.warning)
-            }
-        }
-        .padding(24)
-        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
-    }
-}
-
 struct MainTabView: View {
     @Environment(LibraryStore.self) private var library
     @Environment(AuthSession.self) private var auth
@@ -88,6 +60,11 @@ struct MainTabView: View {
                     tabContent(tab)
                         .navigationTitle(tab.title)
                         .navigationBarTitleDisplayMode(.inline)
+                        .safeAreaInset(edge: .top) {
+                            if !auth.firebaseReady {
+                                BackendSetupBanner()
+                            }
+                        }
                         .toolbar {
                             ToolbarItem(placement: .topBarLeading) {
                                 CreditBadge(profile: auth.profile, hasUnlimited: purchases.hasUnlimited)
@@ -130,5 +107,28 @@ struct MainTabView: View {
         case .pro:
             ProView()
         }
+    }
+}
+
+struct BackendSetupBanner: View {
+    var body: some View {
+        HStack(alignment: .top, spacing: 10) {
+            Image(systemName: "icloud.slash")
+                .foregroundStyle(Theme.warning)
+            VStack(alignment: .leading, spacing: 3) {
+                Text("Account sync is being configured")
+                    .font(.caption.weight(.black))
+                    .foregroundStyle(.white)
+                Text("You can explore the app. Free export signup needs the production Firebase config.")
+                    .font(.caption2)
+                    .foregroundStyle(Theme.muted)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            Spacer(minLength: 0)
+        }
+        .padding(.horizontal, 14)
+        .padding(.vertical, 10)
+        .background(Theme.elevated.opacity(0.96))
+        .overlay(Rectangle().fill(Theme.line).frame(height: 1), alignment: .bottom)
     }
 }

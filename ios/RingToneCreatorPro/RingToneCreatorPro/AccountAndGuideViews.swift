@@ -14,37 +14,39 @@ struct AccountView: View {
                         PremiumPanel {
                             VStack(alignment: .leading, spacing: 12) {
                                 SmallCapsLabel(text: "Account", color: Theme.cyan)
-                                Text(auth.profile?.email ?? "Signed in")
+                                Text(accountTitle)
                                     .font(.title2.weight(.black))
                                     .foregroundStyle(.white)
-                                Text(purchases.hasUnlimited ? "Unlimited exports active" : "\(auth.profile?.freeExportsRemaining ?? 0) free exports remain")
+                                Text(accountDetail)
                                     .foregroundStyle(purchases.hasUnlimited ? Theme.success : Theme.warning)
                                     .font(.headline.weight(.bold))
                             }
                         }
 
-                        PremiumPanel {
-                            VStack(spacing: 12) {
-                                Button {
-                                    auth.signOut()
-                                    dismiss()
-                                } label: {
-                                    Label("Sign Out", systemImage: "rectangle.portrait.and.arrow.right")
-                                        .frame(maxWidth: .infinity)
-                                }
-                                .buttonStyle(.bordered)
-                                .tint(Theme.cyan)
-
-                                Button(role: .destructive) {
-                                    Task {
-                                        await auth.deleteAccount()
+                        if auth.firebaseReady && auth.isSignedIn {
+                            PremiumPanel {
+                                VStack(spacing: 12) {
+                                    Button {
+                                        auth.signOut()
                                         dismiss()
+                                    } label: {
+                                        Label("Sign Out", systemImage: "rectangle.portrait.and.arrow.right")
+                                            .frame(maxWidth: .infinity)
                                     }
-                                } label: {
-                                    Label("Delete Account", systemImage: "trash")
-                                        .frame(maxWidth: .infinity)
+                                    .buttonStyle(.bordered)
+                                    .tint(Theme.cyan)
+
+                                    Button(role: .destructive) {
+                                        Task {
+                                            await auth.deleteAccount()
+                                            dismiss()
+                                        }
+                                    } label: {
+                                        Label("Delete Account", systemImage: "trash")
+                                            .frame(maxWidth: .infinity)
+                                    }
+                                    .buttonStyle(.bordered)
                                 }
-                                .buttonStyle(.bordered)
                             }
                         }
 
@@ -76,6 +78,23 @@ struct AccountView: View {
                 }
             }
         }
+    }
+
+    private var accountTitle: String {
+        if let email = auth.profile?.email {
+            return email
+        }
+        return auth.firebaseReady ? "Create an account" : "Account sync pending"
+    }
+
+    private var accountDetail: String {
+        if purchases.hasUnlimited {
+            return "Unlimited exports active"
+        }
+        if let remaining = auth.profile?.freeExportsRemaining {
+            return "\(remaining) free exports remain"
+        }
+        return auth.firebaseReady ? "Sign in to claim three free exports" : "Firebase setup required for free exports"
     }
 }
 

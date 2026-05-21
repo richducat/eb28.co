@@ -27,7 +27,7 @@ final class AuthSession {
     func start() async {
         firebaseReady = FirebaseApp.app() != nil
         guard firebaseReady else {
-            message = "Add a real Firebase GoogleService-Info.plist to enable scalable email signup."
+            message = "Account signup is being configured. You can explore the app, but free exports need the production Firebase setup."
             return
         }
 

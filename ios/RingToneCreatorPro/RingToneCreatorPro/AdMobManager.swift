@@ -18,7 +18,7 @@ final class AdMobManager {
     }
 
     var hasConfiguredBanner: Bool {
-        adUnitID.hasPrefix("ca-app-pub-") && !adUnitID.contains("__REPLACE")
+        AppConfig.hasProductionAdMobIDs
     }
 
     func startIfPossible() {
@@ -28,6 +28,8 @@ final class AdMobManager {
     }
 
     func prepareConsent(from viewController: UIViewController?) {
+        guard hasConfiguredBanner else { return }
+
         let parameters = RequestParameters()
         parameters.isTaggedForUnderAgeOfConsent = false
 
@@ -89,7 +91,7 @@ final class BannerHostController: UIViewController, BannerViewDelegate {
     }
 
     func loadIfNeeded() {
-        guard adUnitID.hasPrefix("ca-app-pub-"), !adUnitID.contains("__REPLACE") else { return }
+        guard AppConfig.hasProductionAdMobIDs else { return }
         guard !didLoad else { return }
         didLoad = true
 

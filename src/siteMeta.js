@@ -21,6 +21,7 @@ const ORGANIZATION_ID = `${SITE_ORIGIN}/#organization`;
 const WEBSITE_ID = `${SITE_ORIGIN}/#website`;
 const DEFAULT_IMAGE = `${SITE_ORIGIN}/assets/execution_grid.png`;
 const FUNDMANAGER_IMAGE = `${SITE_ORIGIN}/assets/agents_grid.png`;
+const WEED_AUTHORITY_IMAGE = `${SITE_ORIGIN}/weedauthority/weedauthority-hero.png`;
 export const THOMAS_CUSTOM_HOMES_SITE_ORIGIN = THOMAS_PRIMARY_ORIGIN;
 const THOMAS_CUSTOM_HOMES_IMAGE = `${SITE_ORIGIN}/tch/og-image.png`;
 const THOMAS_CUSTOM_HOMES_CUSTOM_DOMAIN_IMAGE = `${THOMAS_CUSTOM_HOMES_SITE_ORIGIN}/og-image.png`;
@@ -391,6 +392,37 @@ const ROUTE_META = {
             },
         ],
     },
+    weedauthority: {
+        ...BASE_ROUTE_META,
+        key: 'weedauthority',
+        path: '/weedauthority/',
+        title: 'Weed Authority | Legal Cannabis and Medical Rec Check App',
+        description:
+            'Weed Authority is a premium iPhone app for finding legal cannabis retailers, checking official medical rec portals, tracking allotment privately, and shopping smarter before checkout.',
+        image: WEED_AUTHORITY_IMAGE,
+        siteName: 'Weed Authority',
+        themeColor: '#050706',
+        colorScheme: 'dark',
+        includeInSitemap: true,
+        structuredData: [
+            ORGANIZATION_SCHEMA,
+            {
+                '@context': 'https://schema.org',
+                '@type': 'SoftwareApplication',
+                name: 'Weed Authority',
+                applicationCategory: 'LifestyleApplication',
+                operatingSystem: 'iOS',
+                isAccessibleForFree: true,
+                url: `${SITE_ORIGIN}/weedauthority/`,
+                image: WEED_AUTHORITY_IMAGE,
+                description:
+                    'A native iPhone app for legal cannabis retailer discovery, official state medical cannabis portal access, private rec profile storage, and allotment planning.',
+                provider: {
+                    '@id': ORGANIZATION_ID,
+                },
+            },
+        ],
+    },
     cc: {
         ...BASE_ROUTE_META,
         key: 'cc',
@@ -469,6 +501,7 @@ export const STATIC_ROUTE_OUTPUTS = [
         outputPath: page.slug === '' ? 'tch/index.html' : `tch/${page.slug}/index.html`,
     })),
     { routeKey: 'melbournewebstudio', outputPath: 'melbournewebstudio/index.html' },
+    { routeKey: 'weedauthority', outputPath: 'weedauthority/index.html' },
     { routeKey: 'cc', outputPath: 'cc/index.html' },
     { routeKey: 'dash', outputPath: 'dash/index.html' },
     { routeKey: 'notfound', outputPath: '404.html' },
@@ -540,6 +573,15 @@ export function detectRouteKey({ pathname = '/', hostname = '' } = {}) {
         normalizedHostname === 'melbournewebstudio.eb28.co'
     ) {
         return 'melbournewebstudio';
+    }
+
+    if (
+        normalizedPathname === '/weedauthority' ||
+        normalizedPathname.startsWith('/weedauthority/') ||
+        normalizedHostname === 'weedauthority.eb28.co' ||
+        normalizedHostname === 'weedauthority.ed28.co'
+    ) {
+        return 'weedauthority';
     }
 
     if (normalizedPathname === '/cc') {

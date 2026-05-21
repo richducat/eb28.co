@@ -1,0 +1,123 @@
+{
+  "$schemaVersion": 1,
+  "app": {
+    "name": "Weed Authority",
+    "subtitle": "Legal cannabis rec check",
+    "bundleId": "co.eb28.weedauthority",
+    "sku": "weedauthority-ios",
+    "platforms": ["iOS"],
+    "primaryCategory": "Medical",
+    "secondaryCategory": "Lifestyle",
+    "copyright": "2026 EB28",
+    "ageRatingQuestionnaireCompleted": true,
+    "traderStatusReviewed": true,
+    "exportCompliance": {
+      "reviewed": true,
+      "documentationRequired": false,
+      "documentationStatus": "NOT_REQUIRED",
+      "infoPlistKeyConfigured": true
+    }
+  },
+  "version": {
+    "marketingVersion": "1.0.0",
+    "buildNumber": "1",
+    "releaseType": "MANUAL",
+    "phasedRelease": false,
+    "promotionalText": "Find legal retailers, open official state rec portals, track allotment privately, and compare cannabis products before checkout.",
+    "description": "Weed Authority is a premium iPhone app for legal cannabis customers and medical marijuana patients.\n\nUse it to find nearby cannabis retailers, verify official state sources, open medical cannabis portals, save products, compare deals, and keep a private local receipt ledger before checkout.\n\nWhat you can do:\n\n- Search nearby cannabis retailers through Apple Maps\n- Save retailers and products for a cleaner shopping trip\n- Open official state cannabis portals and regulator resources\n- Store medical rec details locally on your iPhone\n- Track purchase entries against state-specific planning windows where limits are available\n- Compare flower, vapes, edibles, topicals, concentrates, tinctures, and pre-rolls\n- Learn how to verify licenses, read labels, and confirm eligibility before ordering\n\nWeed Authority does not require an account, does not run ads, and does not track users. Medical rec profile fields, saved products, saved retailers, and purchase ledger entries stay on the device unless the user chooses to open an external official state portal or retailer website.\n\nThe app does not provide medical advice, dosage recommendations, diagnosis, treatment, or legal advice. State registries, physicians, licensed retailers, and regulators remain the official source for eligibility, purchase limits, and compliance.\n\nPrivacy Policy: https://eb28.co/weedauthority/privacy/\nTerms: https://eb28.co/weedauthority/terms/",
+    "keywords": ["cannabis", "dispensary", "weed", "medical", "marijuana", "rec", "allotment", "delivery", "deals", "thc", "cbd"],
+    "whatsNew": "Launch build with native retailer search, official state portal links, local rec vault, private purchase ledger, saved products, deals, and state cannabis education."
+  },
+  "urls": {
+    "marketingUrl": "https://eb28.co/weedauthority/",
+    "supportUrl": "https://eb28.co/weedauthority/support/",
+    "privacyPolicyUrl": "https://eb28.co/weedauthority/privacy/",
+    "userPrivacyChoicesUrl": "",
+    "termsUrl": "https://eb28.co/weedauthority/terms/"
+  },
+  "review": {
+    "contactName": "Richard Ducat",
+    "contactEmail": "support@eb28.co",
+    "contactPhone": "+1-602-306-3920",
+    "demoRequired": false,
+    "demoUsername": "",
+    "demoPassword": "",
+    "notes": [
+      "Build 1 is a new native SwiftUI iPhone app.",
+      "No login is required.",
+      "Open Explore to search Apple Maps for cannabis retailers by city, state, or ZIP. The curated retailer cards include regulator source links.",
+      "Open Rec to unlock the local rec vault, store optional card details on device, open official state portals, and add purchase ledger entries.",
+      "Open Deals to filter products, save products, and review product details without checkout or payment.",
+      "Open Learn to review official state source links and compliance education.",
+      "Open Account to access privacy, terms, support, and local data deletion.",
+      "The app does not sell cannabis, does not collect payment, does not provide medical dosage guidance, and does not scrape state registry credentials.",
+      "State registry portals and regulator websites open in Safari. Those external services are the official source for eligibility and purchase limits.",
+      "The app stores user-entered rec profile and receipt data locally on the device and has no ads, no account creation, and no tracking."
+    ]
+  },
+  "distribution": {
+    "usesLogin": false,
+    "supportsIphone": true,
+    "supportsIpad": false,
+    "containsUserGeneratedContent": false,
+    "createsAccounts": false,
+    "requiresExternalHardware": false,
+    "usesPushNotifications": false,
+    "usesLocalNotifications": false
+  },
+  "monetization": {
+    "hasAds": false,
+    "adNetwork": "",
+    "appAdsTxtUrl": "",
+    "hasInAppPurchases": false,
+    "hasSubscriptions": false,
+    "paidAppsAgreementStatus": "NOT_NEEDED",
+    "subscriptionUiIncludesRestore": false,
+    "subscriptionUiIncludesTerms": false,
+    "products": []
+  },
+  "privacy": {
+    "privacyPolicyLinkedInApp": true,
+    "appPrivacyAnswersCurrent": true,
+    "trackingUsed": false,
+    "attFlowImplemented": false,
+    "accountDeletionImplemented": false,
+    "privacyManifestReviewed": true,
+    "requiredReasonApisReviewed": true,
+    "thirdPartySdkPrivacyReviewed": true
+  },
+  "assets": {
+    "appIconSource": "app-icon-1024.png",
+    "iphoneScreenshots": [
+      "screenshots/iphone-69/01-explore.png",
+      "screenshots/iphone-69/02-rec.png",
+      "screenshots/iphone-69/03-deals.png",
+      "screenshots/iphone-69/04-learn.png",
+      "screenshots/iphone-69/05-account.png"
+    ],
+    "ipadScreenshots": [],
+    "appPreviewVideos": []
+  },
+  "verification": {
+    "testedDevices": [
+      "iPhone 17 Pro simulator"
+    ],
+    "testedFlows": [
+      "XcodeGen project generation",
+      "Swift 6 simulator build",
+      "iPhone simulator launch",
+      "Explore screen render",
+      "Rec tab navigation",
+      "Deals tab navigation",
+      "Learn tab navigation",
+      "Account tab navigation",
+      "App Store screenshot capture",
+      "App Store metadata preflight"
+    ],
+    "knownRisks": [
+      "The existing App Store listing is id1252265730 under DIGITAL SYNC, LLC, THE. Updating that exact listing requires App Store Connect access to that app and its original bundle identifier.",
+      "Production release upload requires a matching App Store Connect app record for the final bundle identifier.",
+      "DNS for weedauthority.ed28.co or weedauthority.eb28.co must be created in Namecheap before the custom subdomain resolves."
+    ]
+  }
+}

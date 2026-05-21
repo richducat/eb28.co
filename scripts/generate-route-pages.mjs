@@ -15,6 +15,7 @@ const templatePath = path.join(docsDir, 'index.html');
 const buildId = process.env.BUILD_ID || 'development';
 const ROUTE_BOOT_LABELS = {
     cc: 'CadetCatch',
+    weedauthority: 'Weed Authority',
 };
 
 function escapeAttribute(value) {

@@ -12,6 +12,7 @@ import CadetCatch from './CadetCatch';
 import LimitlessCreditGPS from './LimitlessCreditGPS';
 import ThomasCustomHomesPage from './ThomasCustomHomesPage';
 import MelbourneWebStudioPage from './MelbourneWebStudioPage.tsx';
+import WeedAuthorityPage from './WeedAuthorityPage.jsx';
 import './index.css';
 import { applyDocumentSeo } from './seo.js';
 import { ensureLatestBuild } from './runtimeFreshness.js';
@@ -52,6 +53,11 @@ const isThomasCustomHomesRoute =
 const isMelbourneWebStudioRoute =
   pathname === '/melbournewebstudio' ||
   hostname === 'melbournewebstudio.eb28.co';
+const isWeedAuthorityRoute =
+  pathname === '/weedauthority' ||
+  pathname.startsWith('/weedauthority/') ||
+  hostname === 'weedauthority.eb28.co' ||
+  hostname === 'weedauthority.ed28.co';
 const isCadetCatchRoute = pathname === '/cc';
 const isAlarmClockRoute =
   isNativeAlarmClockApp ||
@@ -126,6 +132,15 @@ function renderApp() {
     root.render(
       <React.StrictMode>
         <MelbourneWebStudioPage />
+      </React.StrictMode>
+    );
+    return;
+  }
+
+  if (isWeedAuthorityRoute) {
+    root.render(
+      <React.StrictMode>
+        <WeedAuthorityPage />
       </React.StrictMode>
     );
     return;

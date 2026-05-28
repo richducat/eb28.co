@@ -1,14 +1,14 @@
 {
-  "generatedAt": "2026-05-28T12:36:58.300652+00:00",
+  "generatedAt": "2026-05-28T12:43:29.822452+00:00",
   "rangeLabel": "Live UGCMA watch feed \u2022 May 28, 8:35 AM ET manual GetInsights refresh",
-  "totalLeads": "2",
+  "totalLeads": "389",
   "feeds": [
     {
       "name": "UGCMA Watch Cron",
       "status": "live",
       "value": "May 28, 8:35 AM ET manual GetInsights refresh",
       "note": "30-minute read-only watch output is the dashboard feed source.",
-      "updatedAt": "May 28, 8:36 AM ET"
+      "updatedAt": "May 28, 8:43 AM ET"
     },
     {
       "name": "GetInsights Metrics",
@@ -35,8 +35,8 @@
   "kpis": [
     {
       "label": "BU1 Spend Today",
-      "value": "Today is not launch/scale-safe. BU1 has same-day cash with zero sales/revenue, low show rate, and needs cash/source reconciliation; BU2 has  and bookings but zero ad leads/cash/sales today. Risk: Rolling May 23\u201328 shows BU2 healthier than BU1 on cash ROAS",
-      "delta": "Today is not launch/scale-safe. BU1 has same-day cash with zero sales/revenue, low show rate, and needs cash/source reconciliation; BU2 has spend and bookings but zero ad leads/cash/sales today. Risk: Rolling May 23\u201328 shows BU2 healthier than BU1 on cash ROAS",
+      "value": "$2.055k",
+      "delta": "1.70x cash ROAS",
       "note": "Sydney / BU1 same-day cash ROAS",
       "tone": "cyan",
       "icon": "CircleDollarSign",
@@ -44,8 +44,8 @@
     },
     {
       "label": "BU1 Booked Today",
-      "value": "n/a",
-      "delta": "Today is not launch/scale-safe. BU1 has same-day cash with zero sales/revenue, low  rate, and needs cash/source reconciliation; BU2 has spend and bookings but zero ad leads/cash/sales today. Risk: Rolling May 23\u201328 s BU2 healthier than BU1 on cash ROAS",
+      "value": "31",
+      "delta": "9.7%",
       "note": "Sydney booked calls + show rate",
       "tone": "blue",
       "icon": "CalendarDays",
@@ -53,8 +53,8 @@
     },
     {
       "label": "BU1 Rolling Cash",
-      "value": "Today is not launch/scale-safe. BU1 has same-day  with zero sales/revenue, low show rate, and needs /source reconciliation; BU2 has spend and bookings but zero ad leads//sales today. Risk: Rolling May 23\u201328 shows BU2 healthier than BU1 on  ROAS, but both lanes still need analytics-close vs deals reconciliation before hard-quoting upward. Launch/tracking: - Treat GetInsights as dashboard-source truth only; it does not prove Meta/Google live status, budget caps, final URLs, or BU-specific routing. Smallest next action: 1. Verify exact ad-platform status/budget caps/read-only spend by BU before saying anything is live/safe. 2. Reconcile BU1 same-day $3.500k  with 0 sales/revenue before quoting today. 3. Keep BU1/Sydney and BU2/Nate separated in every owner update. Updated: local manual GetInsights refresh only; no external messages, ad changes, calendar changes, or access changes made",
-      "delta": "Today is not launch/scale-safe. BU1 has same-day cash with zero sales/revenue, low show rate, and needs cash/source reconciliation; BU2 has spend and bookings but zero ad leads/cash/sales today. Risk: Rolling May 23\u201328 shows BU2 healthier than BU1 on , but both lanes still need analytics-close vs deals reconciliation before hard-quoting upward. Launch/tracking: - Treat GetInsights as dashboard-source truth only; it does not prove Meta/Google live status, budget caps, final URLs, or BU-specific routing. Smallest next action: 1. Verify exact ad-platform status/budget caps/read-only spend by BU before saying anything is live/safe. 2. Reconcile BU1 same-day $3.500k cash with 0 sales/revenue before quoting today. 3. Keep BU1/Sydney and BU2/Nate separated in every owner update. Updated: local manual GetInsights refresh only; no external messages, ad changes, calendar changes, or access changes made",
+      "value": "BU2 is healthier on rolling  ROAS, BU1 today has -with-0-sales quote-risk and weak show rate; do not claim live/safe/scale until ad-platform status, budget caps, URLs, BU-specific booking/test-lead path, and /source reconciliation are verified. Dashboard publisher blocker fixed locally by force-adding ignored generated JSON files; manual watch output saved for feed generation. No external messages/ad/platform/calendar/access changes made",
+      "delta": "BU2 is healthier on rolling , BU1 today has cash-with-0-sales quote-risk and weak show rate; do not claim live/safe/scale until ad-platform status, budget caps, URLs, BU-specific booking/test-lead path, and cash/source reconciliation are verified. Dashboard publisher blocker fixed locally by force-adding ignored generated JSON files; manual watch output saved for feed generation. No external messages/ad/platform/calendar/access changes made",
       "note": "Rolling May 15\u201321; quote only after reconciliation",
       "tone": "violet",
       "icon": "Gauge",
@@ -62,8 +62,8 @@
     },
     {
       "label": "BU2 Spend Today",
-      "value": "Today is not launch/scale-safe. BU1 has same-day cash with zero sales/revenue, low show rate, and needs cash/source reconciliation; BU2 has  and bookings but zero ad leads/cash/sales today. Risk: Rolling May 23\u201328 shows BU2 healthier than BU1 on cash ROAS",
-      "delta": "Today is not launch/scale-safe. BU1 has same-day cash with zero sales/revenue, low show rate, and needs cash/source reconciliation; BU2 has spend and bookings but zero ad leads/cash/sales today. Risk: Rolling May 23\u201328 shows BU2 healthier than BU1 on cash ROAS",
+      "value": "$339",
+      "delta": "0.00x cash ROAS",
       "note": "Nate / BU2 same-day cash ROAS",
       "tone": "emerald",
       "icon": "CircleDollarSign",
@@ -71,8 +71,8 @@
     },
     {
       "label": "BU2 Booked Today",
-      "value": "n/a",
-      "delta": "Today is not launch/scale-safe. BU1 has same-day cash with zero sales/revenue, low  rate, and needs cash/source reconciliation; BU2 has spend and bookings but zero ad leads/cash/sales today. Risk: Rolling May 23\u201328 s BU2 healthier than BU1 on cash ROAS",
+      "value": "11",
+      "delta": "27.3%",
       "note": "Nate booked calls + show rate",
       "tone": "teal",
       "icon": "CalendarDays",
@@ -80,8 +80,8 @@
     },
     {
       "label": "BU2 Rolling Cash",
-      "value": "n/a",
-      "delta": "n/a",
+      "value": "$18.650k",
+      "delta": "2.52x",
       "note": "Rolling May 15\u201321; separate from BU1",
       "tone": "sky",
       "icon": "Gauge",
@@ -94,22 +94,47 @@
       "path": "Spend -> Leads -> Booked -> Shows -> Sales -> Cash",
       "steps": [
         {
-          "label": "",
-          "value": "Today is not launch/scale-safe. BU1 has same-day cash with zero sales/revenue, low show rate, and needs cash/source reconciliation; BU2 has spend and bookings but zero ad leads/cash/sales today. Risk: Rolling May 23\u201328 shows BU2 healthier than BU1 on cash ROAS",
+          "label": "spend",
+          "value": "$2.055k",
+          "delta": "today"
+        },
+        {
+          "label": "ad leads",
+          "value": "389",
+          "delta": "today"
+        },
+        {
+          "label": "CPL",
+          "value": "$5.28",
+          "delta": "today"
+        },
+        {
+          "label": "booked",
+          "value": "31",
+          "delta": "today"
+        },
+        {
+          "label": "show",
+          "value": "9.7%",
+          "delta": "today"
+        },
+        {
+          "label": "analytics closes",
+          "value": "0",
           "delta": "today"
         }
       ],
       "rates": [
         {
-          "value": "n/a",
+          "value": "$5.28",
           "label": "CPL"
         },
         {
-          "value": "Today is not launch/scale-safe. BU1 has same-day cash with zero sales/revenue, low  rate, and needs cash/source reconciliation; BU2 has spend and bookings but zero ad leads/cash/sales today. Risk: Rolling May 23\u201328 s BU2 healthier than BU1 on cash ROAS",
+          "value": "9.7%",
           "label": "Show Rate"
         },
         {
-          "value": "Today is not launch/scale-safe. BU1 has same-day cash with zero sales/revenue, low show rate, and needs cash/source reconciliation; BU2 has spend and bookings but zero ad leads/cash/sales today. Risk: Rolling May 23\u201328 shows BU2 healthier than BU1 on",
+          "value": "1.70x",
           "label": "Cash ROAS"
         }
       ]
@@ -119,8 +144,33 @@
       "path": "Spend -> Leads -> Booked -> Shows -> Sales -> Cash",
       "steps": [
         {
-          "label": "",
-          "value": "Today is not launch/scale-safe. BU1 has same-day cash with zero sales/revenue, low show rate, and needs cash/source reconciliation; BU2 has spend and bookings but zero ad leads/cash/sales today. Risk: Rolling May 23\u201328 shows BU2 healthier than BU1 on cash ROAS",
+          "label": "spend",
+          "value": "$339",
+          "delta": "today"
+        },
+        {
+          "label": "ad leads",
+          "value": "0",
+          "delta": "today"
+        },
+        {
+          "label": "booked",
+          "value": "11",
+          "delta": "today"
+        },
+        {
+          "label": "show",
+          "value": "27.3%",
+          "delta": "today"
+        },
+        {
+          "label": "analytics closes",
+          "value": "0",
+          "delta": "today"
+        },
+        {
+          "label": "deals sales",
+          "value": "0",
           "delta": "today"
         }
       ],
@@ -130,11 +180,11 @@
           "label": "CPL"
         },
         {
-          "value": "Today is not launch/scale-safe. BU1 has same-day cash with zero sales/revenue, low  rate, and needs cash/source reconciliation; BU2 has spend and bookings but zero ad leads/cash/sales today. Risk: Rolling May 23\u201328 s BU2 healthier than BU1 on cash ROAS",
+          "value": "27.3%",
           "label": "Show Rate"
         },
         {
-          "value": "Today is not launch/scale-safe. BU1 has same-day cash with zero sales/revenue, low show rate, and needs cash/source reconciliation; BU2 has spend and bookings but zero ad leads/cash/sales today. Risk: Rolling May 23\u201328 shows BU2 healthier than BU1 on",
+          "value": "0.00x",
           "label": "Cash ROAS"
         }
       ]
@@ -144,14 +194,14 @@
       "path": "Rolling GetInsights lane view",
       "steps": [
         {
-          "label": "Today is not launch/scale-safe. BU1 has same-day cash with zero sales/revenue, low show rate, and needs cash/source reconciliation; BU2 has spend and bookings but zero ad leads/cash/sales today. Risk: Rolling May 23\u201328 shows BU2 healthier than BU1 on cash ROAS, but both lanes still need analytics-close vs deals reconciliation before hard-quoting upward. Launch/tracking: - Treat GetInsights as dashboard-source truth only; it does not prove Meta/Google live status, budget caps, final URLs, or BU-specific routing. Smallest next action: 1. Verify exact ad-platform status/budget caps/read-only spend by BU before saying anything is live/safe. 2. Reconcile BU1 same-day $3.500k cash with sales/revenue before quoting today. 3. Keep BU1/Sydney and BU2/Nate separated in every owner update. Updated: local manual GetInsights refresh only; no external messages, ad changes, calendar changes, or access changes made",
-          "value": "0",
+          "label": "",
+          "value": "BU2 is healthier on rolling cash ROAS, BU1 today has cash-with-0-sales quote-risk and weak show rate; do not claim live/safe/scale until ad-platform status, budget caps, URLs, BU-specific booking/test-lead path, and cash/source reconciliation are verified. Dashboard publisher blocker fixed locally by force-adding ignored generated JSON files; manual watch output saved for feed generation. No external messages/ad/platform/calendar/access changes made",
           "delta": "rolling"
         }
       ],
       "rates": [
         {
-          "value": "Today is not launch/scale-safe. BU1 has same-day cash with zero sales/revenue, low show rate, and needs cash/source reconciliation; BU2 has spend and bookings but zero ad leads/cash/sales today. Risk: Rolling May 23\u201328 shows BU2 healthier than BU1 on , but both lanes still need analytics-close vs deals reconciliation before hard-quoting upward. Launch/tracking: - Treat GetInsights as dashboard-source truth only; it does not prove Meta/Google live status, budget caps, final URLs, or BU-specific routing. Smallest next action: 1. Verify exact ad-platform status/budget caps/read-only spend by BU before saying anything is live/safe. 2. Reconcile BU1 same-day $3.500k cash with 0 sales/revenue before quoting today. 3. Keep BU1/Sydney and BU2/Nate separated in every owner update. Updated: local manual GetInsights refresh only; no external messages, ad changes, calendar changes, or access changes made",
+          "value": "BU2 is healthier on rolling , BU1 today has cash-with-0-sales quote-risk and weak show rate; do not claim live/safe/scale until ad-platform status, budget caps, URLs, BU-specific booking/test-lead path, and cash/source reconciliation are verified. Dashboard publisher blocker fixed locally by force-adding ignored generated JSON files; manual watch output saved for feed generation. No external messages/ad/platform/calendar/access changes made",
           "label": "Cash ROAS"
         }
       ]
@@ -161,14 +211,39 @@
       "path": "Rolling GetInsights lane view",
       "steps": [
         {
-          "label": "",
-          "value": "Today is not launch/scale-safe",
+          "label": "spend",
+          "value": "$7.394k",
+          "delta": "rolling"
+        },
+        {
+          "label": "ad leads",
+          "value": "837",
+          "delta": "rolling"
+        },
+        {
+          "label": "CPL",
+          "value": "$8.83",
+          "delta": "rolling"
+        },
+        {
+          "label": "booked",
+          "value": "77",
+          "delta": "rolling"
+        },
+        {
+          "label": "show",
+          "value": "35.1%",
+          "delta": "rolling"
+        },
+        {
+          "label": "analytics closes vs deals 3 sales",
+          "value": "2",
           "delta": "rolling"
         }
       ],
       "rates": [
         {
-          "value": "n/a",
+          "value": "2.52x",
           "label": "Cash ROAS"
         }
       ]
@@ -177,14 +252,14 @@
   "leadSources": [
     {
       "label": "BU1 today leads",
-      "value": 1,
-      "share": "50.0%",
+      "value": 389,
+      "share": "100.0%",
       "color": "#38bdf8"
     },
     {
       "label": "BU2 today leads",
-      "value": 1,
-      "share": "50.0%",
+      "value": 0,
+      "share": "0.0%",
       "color": "#8b5cf6"
     }
   ],
@@ -217,26 +292,26 @@
   },
   "conversionMetrics": {
     "noShow": {
-      "value": "Today is not launch/scale-safe. BU1 has same-day cash with zero sales/revenue, low  rate, and needs cash/source reconciliation; BU2 has spend and bookings but zero ad leads/cash/sales today. Risk: Rolling May 23\u201328 s BU2 healthier than BU1 on cash ROAS",
+      "value": "9.7%",
       "delta": "BU1 today"
     },
     "bookingSale": {
-      "value": "Today is not launch/scale-safe. BU1 has same-day cash with zero sales/revenue, low  rate, and needs cash/source reconciliation; BU2 has spend and bookings but zero ad leads/cash/sales today. Risk: Rolling May 23\u201328 s BU2 healthier than BU1 on cash ROAS",
+      "value": "27.3%",
       "delta": "BU2 today"
     },
     "rows": [
       {
         "funnel": "BU1 / Sydney",
-        "noShow": "Today is not launch/scale-safe. BU1 has same-day cash with zero sales/revenue, low  rate, and needs cash/source reconciliation; BU2 has spend and bookings but zero ad leads/cash/sales today. Risk: Rolling May 23\u201328 s BU2 healthier than BU1 on cash ROAS",
+        "noShow": "9.7%",
         "noShowDelta": "show rate",
-        "saleRate": "Today is not launch/scale-safe. BU1 has same-day cash with zero /revenue, low show rate, and needs cash/source reconciliation; BU2 has spend and bookings but zero ad leads/cash/ today. Risk: Rolling May 23\u201328 shows BU2 healthier than BU1 on cash ROAS",
+        "saleRate": "deals 0",
         "saleDelta": "today sales"
       },
       {
         "funnel": "BU2 / Nate",
-        "noShow": "Today is not launch/scale-safe. BU1 has same-day cash with zero sales/revenue, low  rate, and needs cash/source reconciliation; BU2 has spend and bookings but zero ad leads/cash/sales today. Risk: Rolling May 23\u201328 s BU2 healthier than BU1 on cash ROAS",
+        "noShow": "27.3%",
         "noShowDelta": "show rate",
-        "saleRate": "Today is not launch/scale-safe. BU1 has same-day cash with zero /revenue, low show rate, and needs cash/source reconciliation; BU2 has spend and bookings but zero ad leads/cash/ today. Risk: Rolling May 23\u201328 shows BU2 healthier than BU1 on cash ROAS",
+        "saleRate": "deals 0",
         "saleDelta": "deals/analytics mismatch watch"
       }
     ]
@@ -289,37 +364,37 @@
     {
       "campaign": "BU1 / Sydney \u2014 today",
       "source": "GetInsights watch",
-      "leads": "Today is not launch/scale-safe. BU1 has same-day cash with zero sales/revenue, low show rate, and needs cash/source reconciliation; BU2 has spend and bookings but zero ad /cash/sales today. Risk: Rolling May 23\u201328 shows BU2 healthier than BU1 on cash ROAS",
-      "bookings": "n/a",
-      "sales": "Today is not launch/scale-safe. BU1 has same-day cash with zero /revenue, low show rate, and needs cash/source reconciliation; BU2 has spend and bookings but zero ad leads/cash/ today. Risk: Rolling May 23\u201328 shows BU2 healthier than BU1 on cash ROAS",
-      "roas": "Today is not launch/scale-safe. BU1 has same-day cash with zero sales/revenue, low show rate, and needs cash/source reconciliation; BU2 has spend and bookings but zero ad leads/cash/sales today. Risk: Rolling May 23\u201328 shows BU2 healthier than BU1 on",
+      "leads": "389 ad",
+      "bookings": "31",
+      "sales": "deals 0",
+      "roas": "1.70x",
       "status": "Reconcile before quoting"
     },
     {
       "campaign": "BU1 / Sydney \u2014 rolling",
       "source": "GetInsights watch",
-      "leads": "Today is not launch/scale-safe. BU1 has same-day cash with zero sales/revenue, low show rate, and needs cash/source reconciliation; BU2 has spend and bookings but zero ad /cash/sales today. Risk: Rolling May 23\u201328 shows BU2 healthier than BU1 on cash ROAS, but both lanes still need analytics-close vs deals reconciliation before hard-quoting upward. Launch/tracking: - Treat GetInsights as dashboard-source truth only; it does not prove Meta/Google live status, budget caps, final URLs, or BU-specific routing. Smallest next action: 1. Verify exact ad-platform status/budget caps/read-only spend by BU before saying anything is live/safe. 2. Reconcile BU1 same-day $3.500k cash with 0 sales/revenue before quoting today. 3. Keep BU1/Sydney and BU2/Nate separated in every owner update. Updated: local manual GetInsights refresh only; no external messages, ad changes, calendar changes, or access changes made",
+      "leads": "n/a",
       "bookings": "n/a",
-      "sales": "Today is not launch/scale-safe. BU1 has same-day cash with zero /revenue, low show rate, and needs cash/source reconciliation; BU2 has spend and bookings but zero ad leads/cash/ today. Risk: Rolling May 23\u201328 shows BU2 healthier than BU1 on cash ROAS, but both lanes still need analytics-close vs deals reconciliation before hard-quoting upward. Launch/tracking: - Treat GetInsights as dashboard-source truth only; it does not prove Meta/Google live status, budget caps, final URLs, or BU-specific routing. Smallest next action: 1. Verify exact ad-platform status/budget caps/read-only spend by BU before saying anything is live/safe. 2. Reconcile BU1 same-day $3.500k cash with 0 /revenue before quoting today. 3. Keep BU1/Sydney and BU2/Nate separated in every owner update. Updated: local manual GetInsights refresh only; no external messages, ad changes, calendar changes, or access changes made",
-      "roas": "Today is not launch/scale-safe. BU1 has same-day cash with zero sales/revenue, low show rate, and needs cash/source reconciliation; BU2 has spend and bookings but zero ad leads/cash/sales today. Risk: Rolling May 23\u201328 shows BU2 healthier than BU1 on , but both lanes still need analytics-close vs deals reconciliation before hard-quoting upward. Launch/tracking: - Treat GetInsights as dashboard-source truth only; it does not prove Meta/Google live status, budget caps, final URLs, or BU-specific routing. Smallest next action: 1. Verify exact ad-platform status/budget caps/read-only spend by BU before saying anything is live/safe. 2. Reconcile BU1 same-day $3.500k cash with 0 sales/revenue before quoting today. 3. Keep BU1/Sydney and BU2/Nate separated in every owner update. Updated: local manual GetInsights refresh only; no external messages, ad changes, calendar changes, or access changes made",
+      "sales": "BU2 is healthier on rolling cash ROAS, BU1 today has cash-with-0- quote-risk and weak show rate; do not claim live/safe/scale until ad-platform status, budget caps, URLs, BU-specific booking/test-lead path, and cash/source reconciliation are verified. Dashboard publisher blocker fixed locally by force-adding ignored generated JSON files; manual watch output saved for feed generation. No external messages/ad/platform/calendar/access changes made",
+      "roas": "BU2 is healthier on rolling , BU1 today has cash-with-0-sales quote-risk and weak show rate; do not claim live/safe/scale until ad-platform status, budget caps, URLs, BU-specific booking/test-lead path, and cash/source reconciliation are verified. Dashboard publisher blocker fixed locally by force-adding ignored generated JSON files; manual watch output saved for feed generation. No external messages/ad/platform/calendar/access changes made",
       "status": "Rolling lane"
     },
     {
       "campaign": "BU2 / Nate \u2014 today",
       "source": "GetInsights watch",
-      "leads": "Today is not launch/scale-safe. BU1 has same-day cash with zero sales/revenue, low show rate, and needs cash/source reconciliation; BU2 has spend and bookings but zero ad /cash/sales today. Risk: Rolling May 23\u201328 shows BU2 healthier than BU1 on cash ROAS",
-      "bookings": "n/a",
-      "sales": "Today is not launch/scale-safe. BU1 has same-day cash with zero /revenue, low show rate, and needs cash/source reconciliation; BU2 has spend and bookings but zero ad leads/cash/ today. Risk: Rolling May 23\u201328 shows BU2 healthier than BU1 on cash ROAS",
-      "roas": "Today is not launch/scale-safe. BU1 has same-day cash with zero sales/revenue, low show rate, and needs cash/source reconciliation; BU2 has spend and bookings but zero ad leads/cash/sales today. Risk: Rolling May 23\u201328 shows BU2 healthier than BU1 on",
+      "leads": "0 ad",
+      "bookings": "11",
+      "sales": "deals 0",
+      "roas": "0.00x",
       "status": "Deals mismatch watch"
     },
     {
       "campaign": "BU2 / Nate \u2014 rolling",
       "source": "GetInsights watch",
-      "leads": "n/a",
-      "bookings": "n/a",
-      "sales": "n/a",
-      "roas": "n/a",
+      "leads": "837 ad",
+      "bookings": "77",
+      "sales": "analytics 2 closes vs deals 3",
+      "roas": "2.52x",
       "status": "Rolling lane"
     }
   ],

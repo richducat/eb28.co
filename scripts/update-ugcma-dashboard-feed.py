@@ -142,21 +142,21 @@ def parse_metrics_from_sources(resp: str, items: list[str], lane: str, period: s
     sources = [latest_getinsights, resp]
     if lane == 'bu1' and period == 'today':
         patterns = [
-            r'BU1/Sydney today (?:now shows |is mostly stable at |is |: )(.*?)(?=, but|; BU1 rolling|\. Public|$)',
+            r'BU1/Sydney today (?:now shows |is mostly stable at |is |: )(.*?)(?=\.\s*-\s*BU2/Nate|\.\s*BU2/Nate|, but|; BU1 rolling|\. Public|$)',
             r'BU1/Sydney:.*?Today:\s*(.*?)(?=\. Funnel|\. Rolling|$)',
         ]
     elif lane == 'bu1' and period == 'rolling':
         patterns = [
-            r'BU1 rolling(?: May 15[–-]21)?(?: is)?\s*(.*?)(?=\. Public|; Public|$)',
-            r'Rolling May 15[–-]21:\s*(.*?)(?=\. Public|$)',
+            r'BU1 rolling(?: May \d+[–-]\d+)?(?: is)?\s*(.*?)(?=\.\s*-\s*BU2 rolling|\.\s*BU2 rolling|\. Public|; Public|$)',
+            r'Rolling May \d+[–-]\d+:\s*(.*?)(?=\. Public|$)',
         ]
     elif lane == 'bu2' and period == 'today':
         patterns = [
-            r'BU2/Nate today (?:now shows |is |: )(.*?)(?=, but|; BU2 rolling|\. BU2 rolling|$)',
+            r'BU2/Nate today (?:now shows |is |: )(.*?)(?=\.\s*-\s*BU1 rolling|\.\s*BU1 rolling|, but|; BU2 rolling|\. BU2 rolling|$)',
         ]
     else:
         patterns = [
-            r'BU2 rolling(?: May 15[–-]21)?(?: is)?\s*(.*?)(?=\. BU1|; BU1|$)',
+            r'BU2 rolling(?: May \d+[–-]\d+)?(?: is)?\s*(.*?)(?=\.\s*Risk:|\.\s*Launch/tracking|$)',
         ]
 
     for source in sources:

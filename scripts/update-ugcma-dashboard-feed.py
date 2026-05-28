@@ -498,7 +498,9 @@ def write_if_changed(path: Path, content: str) -> bool:
 
 def deploy(paths: list[Path]) -> None:
     rels = [str(p.relative_to(REPO)) for p in paths]
-    subprocess.check_call(['git', 'add', *rels], cwd=REPO)
+    # The generated dashboard JSON files are intentionally force-added because
+    # repo-wide ignore rules cover generated data under public/ and docs/.
+    subprocess.check_call(['git', 'add', '-f', *rels], cwd=REPO)
     diff = subprocess.run(['git', 'diff', '--cached', '--quiet', '--', *rels], cwd=REPO)
     if diff.returncode == 0:
         return

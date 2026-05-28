@@ -1,35 +1,35 @@
 {
-  "generatedAt": "2026-05-28T15:49:48.160461+00:00",
-  "rangeLabel": "Live UGCMA watch feed \u2022 11:39 ET",
+  "generatedAt": "2026-05-28T16:19:59.803618+00:00",
+  "rangeLabel": "Live UGCMA watch feed \u2022 12:12 ET meaningful delta",
   "totalLeads": "0",
   "feeds": [
     {
       "name": "UGCMA Watch Cron",
       "status": "live",
-      "value": "11:39 ET",
+      "value": "12:12 ET meaningful delta",
       "note": "30-minute read-only watch output is the dashboard feed source.",
-      "updatedAt": "May 28, 11:49 AM ET"
+      "updatedAt": "May 28, 12:19 PM ET"
     },
     {
       "name": "GetInsights Metrics",
       "status": "live",
       "value": "BU split",
       "note": "Sydney/BU1 and Nate/BU2 preserved separately; no blended claims.",
-      "updatedAt": "11:39 ET"
+      "updatedAt": "12:12 ET meaningful delta"
     },
     {
       "name": "Attribution Safety",
       "status": "partial",
       "value": "reconcile",
       "note": "Cash/ROAS and analytics-close vs deals mismatches stay flagged until dashboard/CRM/cash agree.",
-      "updatedAt": "11:39 ET"
+      "updatedAt": "12:12 ET meaningful delta"
     },
     {
       "name": "Launch Tracking",
       "status": "partial",
       "value": "watch",
       "note": "Landing/success/booking pages checked; BU-specific booking tests still required when flagged.",
-      "updatedAt": "11:39 ET"
+      "updatedAt": "12:12 ET meaningful delta"
     }
   ],
   "kpis": [
@@ -171,13 +171,13 @@
     }
   ],
   "stagnantLeads": {
-    "total": "9",
+    "total": "4",
     "delta": "open risks",
     "note": "quote-risk / reconciliation / launch-safety items",
     "buckets": [
       {
         "label": "Cash/ROAS quote risk",
-        "value": 4,
+        "value": 3,
         "percent": 35.0
       },
       {
@@ -192,7 +192,7 @@
       },
       {
         "label": "Next actions",
-        "value": 4,
+        "value": 0,
         "percent": 20.0
       }
     ]
@@ -226,58 +226,30 @@
   "recentCalls": [
     {
       "id": "risk-1",
-      "startedAt": "11:39 ET",
-      "title": "Risk: still cash-with-0-sales quote-risk. Do not hard-quote same-day ROAS.",
+      "startedAt": "12:12 ET meaningful delta",
+      "title": "Key risk: cash moved up from `$3.500k` to `$6.350k` while sales/revenue stayed `0`, so same-day ROAS is more dangerous to hard-quote, not cleaner.",
       "host": "Risk / blocker",
       "actionItems": 1
     },
     {
       "id": "risk-2",
-      "startedAt": "11:39 ET",
-      "title": "Risk: spend continues while GetInsights shows zero ad leads and no same-day cash proof.",
+      "startedAt": "12:12 ET meaningful delta",
+      "title": "Performance/scale: not proven. BU1 same-day cash is unreconciled against `0` sales/revenue; BU2 still has same-day spend with `0` ad leads.",
       "host": "Risk / blocker",
       "actionItems": 1
     },
     {
       "id": "risk-3",
-      "startedAt": "11:39 ET",
-      "title": "Not proven. BU1 has cheap CPL and one more booked/show row, but cash still does not reconcile to sales. BU2 is still spend-with-0-ad-leads same-day.",
+      "startedAt": "12:12 ET meaningful delta",
+      "title": "Reconcile + investigate.",
       "host": "Risk / blocker",
       "actionItems": 1
     },
     {
       "id": "risk-4",
-      "startedAt": "11:39 ET",
-      "title": "Hold / reconcile / verify tracking-routing-platform state before scale or \u201clive-safe\u201d language.",
+      "startedAt": "12:12 ET meaningful delta",
+      "title": "2. BU1 cash-vs-sales is reconciled,",
       "host": "Risk / blocker",
-      "actionItems": 1
-    },
-    {
-      "id": "action-1",
-      "startedAt": "11:39 ET",
-      "title": "Read the actual UGCMA Slack `Harry, Jay-an` body or complete UGCMA Slack API access.",
-      "host": "Smallest next action",
-      "actionItems": 1
-    },
-    {
-      "id": "action-2",
-      "startedAt": "11:39 ET",
-      "title": "Authorized operator verifies exact Meta/Google campaign/ad-set status, budgets/caps, and pending edits.",
-      "host": "Smallest next action",
-      "actionItems": 1
-    },
-    {
-      "id": "action-3",
-      "startedAt": "11:39 ET",
-      "title": "Run BU1+BU2 public test lead/booking through booking success \u2192 Close owner \u2192 GetInsights tag/booked event \u2192 conversion proof.",
-      "host": "Smallest next action",
-      "actionItems": 1
-    },
-    {
-      "id": "action-4",
-      "startedAt": "11:39 ET",
-      "title": "Reconcile BU1 same-day `$3.500k` cash with `0` sales before Richard hard-quotes cash/ROAS.",
-      "host": "Smallest next action",
       "actionItems": 1
     }
   ],
@@ -320,30 +292,24 @@
     }
   ],
   "watchSummary": {
-    "sourceFile": "/Users/richardducat/.hermes/cron/output/11bb81317ca1/2026-05-28_11-41-45.md",
-    "watchLabel": "11:39 ET",
+    "sourceFile": "/Users/richardducat/.hermes/cron/output/11bb81317ca1/2026-05-28_12-16-57.md",
+    "watchLabel": "12:12 ET meaningful delta",
     "risks": [
-      "Risk: still cash-with-0-sales quote-risk. Do not hard-quote same-day ROAS.",
-      "Risk: spend continues while GetInsights shows zero ad leads and no same-day cash proof.",
-      "Not proven. BU1 has cheap CPL and one more booked/show row, but cash still does not reconcile to sales. BU2 is still spend-with-0-ad-leads same-day.",
-      "Hold / reconcile / verify tracking-routing-platform state before scale or \u201clive-safe\u201d language.",
-      "4. Reconcile BU1 same-day `$3.500k` cash with `0` sales before Richard hard-quotes cash/ROAS."
+      "Key risk: cash moved up from `$3.500k` to `$6.350k` while sales/revenue stayed `0`, so same-day ROAS is more dangerous to hard-quote, not cleaner.",
+      "Performance/scale: not proven. BU1 same-day cash is unreconciled against `0` sales/revenue; BU2 still has same-day spend with `0` ad leads.",
+      "Reconcile + investigate.",
+      "2. BU1 cash-vs-sales is reconciled,"
     ],
     "coordination": [],
     "launch": [],
-    "nextActions": [
-      "Read the actual UGCMA Slack `Harry, Jay-an` body or complete UGCMA Slack API access.",
-      "Authorized operator verifies exact Meta/Google campaign/ad-set status, budgets/caps, and pending edits.",
-      "Run BU1+BU2 public test lead/booking through booking success \u2192 Close owner \u2192 GetInsights tag/booked event \u2192 conversion proof.",
-      "Reconcile BU1 same-day `$3.500k` cash with `0` sales before Richard hard-quotes cash/ROAS."
-    ]
+    "nextActions": []
   },
   "commandCenter": {
     "mandate": {
       "headline": "Jaamal is out \u2014 Richard is stepping up as accountable UGCMA command lead.",
       "status": "Opportunity mode",
       "objective": "Maximize trust by making the business feel controlled: numbers, blockers, decisions, content, team follow-through, and owner updates in one place.",
-      "updatedAt": "11:39 ET"
+      "updatedAt": "12:12 ET meaningful delta"
     },
     "decisionQueue": [
       {
@@ -358,7 +324,7 @@
         "lane": "Metrics / GetInsights",
         "status": "Needs reconciliation",
         "decision": "Use BU-separated directionality; do not hard-quote cash/ROAS where analytics-close, deals, CRM, or cash disagree.",
-        "source": "UGCMA / 11:39 May 28 GetInsights spend creep + Slack body still blocked: Fresh read-only GetInsights pull moved same-day spend again after 11:04 without same-day sales/revenue reconciliation\u2026"
+        "source": "UGCMA / 12:12 May 28 BU1 ad-report Slack delta + GetInsights cash revision: Slack Desktop/OCR finally exposed readable #exec-mktg-sales thread context after earlier body-blocked runs: Harry\u2026"
       },
       {
         "title": "Google / launch safety",
@@ -407,11 +373,11 @@
         "source": "UGCMA / OWNER STEP-UP MANDATE: Jaamal quit and the owner directly asked Richard to step up. Assistant operating posture is now higher-ownership: maintain BU-separated paid-media command view\u2026"
       },
       {
-        "title": "11",
+        "title": "12",
         "lane": "Team coordination",
         "status": "Visible / tracked",
         "next": "Summarize neutrally, confirm owner-safe next action, and avoid blame language.",
-        "source": "UGCMA / 11:39 May 28 GetInsights spend creep + Slack body still blocked: Fresh read-only GetInsights pull moved same-day spend again after 11:04 without same-day sales/revenue reconciliation\u2026"
+        "source": "UGCMA / 12:12 May 28 BU1 ad-report Slack delta + GetInsights cash revision: Slack Desktop/OCR finally exposed readable #exec-mktg-sales thread context after earlier body-blocked runs: Harry\u2026"
       },
       {
         "title": "09",
@@ -421,11 +387,11 @@
         "source": "UGCMA / 09:54 Jamaal 10am leadership call + Nate Meta export delta: Slack Desktop/UI-visible Jamaal DM now shows two urgent same-morning asks: 08:54 ET \u201cNeed a 15 min sync to know where we a\u2026"
       },
       {
-        "title": "08",
+        "title": "12",
         "lane": "Team coordination",
         "status": "Visible / tracked",
         "next": "Summarize neutrally, confirm owner-safe next action, and avoid blame language.",
-        "source": "UGCMA / 08:50 May 28 webinar-funnel qualification + financial-barrier creative delta: Slack Desktop/UI-visible #temp-mkt-webinar-funnel-qual shows two urgent due-today ClickUp tasks: Compile\u2026"
+        "source": "UGCMA / 12:12 May 28 BU1 ad-report Slack delta + GetInsights cash revision: Slack Desktop/OCR finally exposed readable #exec-mktg-sales thread context after earlier body-blocked runs: Harry\u2026"
       },
       {
         "title": "11",
@@ -459,30 +425,6 @@
         "priority": "High",
         "owner": "Hermes monitors / Richard leads",
         "unblock": "Confirm thread evidence and owner for recording/editing."
-      },
-      {
-        "task": "Read the actual UGCMA Slack Harry, Jay-an body or complete UGCMA Slack API access.",
-        "priority": "Watch action",
-        "owner": "Richard/Hermes",
-        "unblock": "Use smallest next action from latest watch."
-      },
-      {
-        "task": "Authorized operator verifies exact Meta/Google campaign/ad-set status, budgets/caps, and pending edits.",
-        "priority": "Watch action",
-        "owner": "Richard/Hermes",
-        "unblock": "Use smallest next action from latest watch."
-      },
-      {
-        "task": "Run BU1+BU2 public test lead/booking through booking success \u2192 Close owner \u2192 GetInsights tag/booked event \u2192 conversion proof.",
-        "priority": "Watch action",
-        "owner": "Richard/Hermes",
-        "unblock": "Use smallest next action from latest watch."
-      },
-      {
-        "task": "Reconcile BU1 same-day $3.500k cash with 0 sales before Richard hard-quotes cash/ROAS.",
-        "priority": "Watch action",
-        "owner": "Richard/Hermes",
-        "unblock": "Use smallest next action from latest watch."
       }
     ],
     "sourceCoverage": [

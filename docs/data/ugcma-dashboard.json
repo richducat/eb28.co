@@ -1,35 +1,35 @@
 {
-  "generatedAt": "2026-05-28T19:45:57.488482+00:00",
-  "rangeLabel": "Live UGCMA watch feed \u2022 2026-05-28 15-43-52",
+  "generatedAt": "2026-05-28T20:19:51.601098+00:00",
+  "rangeLabel": "Live UGCMA watch feed \u2022 16:15 ET",
   "totalLeads": "0",
   "feeds": [
     {
       "name": "UGCMA Watch Cron",
       "status": "live",
-      "value": "2026-05-28 15-43-52",
+      "value": "16:15 ET",
       "note": "30-minute read-only watch output is the dashboard feed source.",
-      "updatedAt": "May 28, 3:45 PM ET"
+      "updatedAt": "May 28, 4:19 PM ET"
     },
     {
       "name": "GetInsights Metrics",
       "status": "live",
       "value": "BU split",
       "note": "Sydney/BU1 and Nate/BU2 preserved separately; no blended claims.",
-      "updatedAt": "2026-05-28 15-43-52"
+      "updatedAt": "16:15 ET"
     },
     {
       "name": "Attribution Safety",
       "status": "partial",
       "value": "reconcile",
       "note": "Cash/ROAS and analytics-close vs deals mismatches stay flagged until dashboard/CRM/cash agree.",
-      "updatedAt": "2026-05-28 15-43-52"
+      "updatedAt": "16:15 ET"
     },
     {
       "name": "Launch Tracking",
       "status": "partial",
       "value": "watch",
       "note": "Landing/success/booking pages checked; BU-specific booking tests still required when flagged.",
-      "updatedAt": "2026-05-28 15-43-52"
+      "updatedAt": "16:15 ET"
     }
   ],
   "kpis": [
@@ -171,18 +171,18 @@
     }
   ],
   "stagnantLeads": {
-    "total": "4",
+    "total": "2",
     "delta": "open risks",
     "note": "quote-risk / reconciliation / launch-safety items",
     "buckets": [
       {
         "label": "Cash/ROAS quote risk",
-        "value": 2,
+        "value": 1,
         "percent": 35.0
       },
       {
         "label": "BU2 deals mismatch",
-        "value": 0,
+        "value": 1,
         "percent": 25.0
       },
       {
@@ -226,29 +226,15 @@
   "recentCalls": [
     {
       "id": "risk-1",
-      "startedAt": "2026-05-28 15-43-52",
-      "title": "BU1 is directionally better on CPL/lead volume, but still quote-sensitive because analytics vs deals/cash do not reconcile.",
+      "startedAt": "16:15 ET",
+      "title": "BU2 remains a tracking/platform-source risk: spend exists with `0` ad leads and no sales/cash.",
       "host": "Risk / blocker",
       "actionItems": 1
     },
     {
       "id": "risk-2",
-      "startedAt": "2026-05-28 15-43-52",
-      "title": "Not enough proof to call scale-safe. This is still a hold/reconcile posture, not a scale/winner claim.",
-      "host": "Risk / blocker",
-      "actionItems": 1
-    },
-    {
-      "id": "risk-3",
-      "startedAt": "2026-05-28 15-43-52",
-      "title": "Hold / reconcile / investigate.",
-      "host": "Risk / blocker",
-      "actionItems": 1
-    },
-    {
-      "id": "risk-4",
-      "startedAt": "2026-05-28 15-43-52",
-      "title": "Do not hard-quote cash or ROAS externally from GetInsights alone.",
+      "startedAt": "16:15 ET",
+      "title": "BU1: hold/reconcile before hard-quoting or using scale language.",
       "host": "Risk / blocker",
       "actionItems": 1
     }
@@ -292,13 +278,11 @@
     }
   ],
   "watchSummary": {
-    "sourceFile": "/Users/richardducat/.hermes/cron/output/11bb81317ca1/2026-05-28_15-43-52.md",
-    "watchLabel": "2026-05-28 15-43-52",
+    "sourceFile": "/Users/richardducat/.hermes/cron/output/11bb81317ca1/2026-05-28_16-18-49.md",
+    "watchLabel": "16:15 ET",
     "risks": [
-      "BU1 is directionally better on CPL/lead volume, but still quote-sensitive because analytics vs deals/cash do not reconcile.",
-      "Not enough proof to call scale-safe. This is still a hold/reconcile posture, not a scale/winner claim.",
-      "Hold / reconcile / investigate.",
-      "Do not hard-quote cash or ROAS externally from GetInsights alone."
+      "BU2 remains a tracking/platform-source risk: spend exists with `0` ad leads and no sales/cash.",
+      "BU1: hold/reconcile before hard-quoting or using scale language."
     ],
     "coordination": [],
     "launch": [],
@@ -309,7 +293,7 @@
       "headline": "Jaamal is out \u2014 Richard is stepping up as accountable UGCMA command lead.",
       "status": "Opportunity mode",
       "objective": "Maximize trust by making the business feel controlled: numbers, blockers, decisions, content, team follow-through, and owner updates in one place.",
-      "updatedAt": "2026-05-28 15-43-52"
+      "updatedAt": "16:15 ET"
     },
     "decisionQueue": [
       {
@@ -324,7 +308,7 @@
         "lane": "Metrics / GetInsights",
         "status": "Needs reconciliation",
         "decision": "Use BU-separated directionality; do not hard-quote cash/ROAS where analytics-close, deals, CRM, or cash disagree.",
-        "source": "UGCMA / 15:39 May 28 GetInsights spend creep, no new source artifact: Fresh GetInsights vs 15:05 moved only dashboard metrics: BU1/Sydney $2.702k spend / 653 ad leads / $4.14 CPL / 37 booked\u2026"
+        "source": "UGCMA / 16:15 May 28 BU1 payment confirms cash revision; BU2 still zero-ad-lead risk: Slack API in #bu-01-new-payments exposed a new BU1 paid Whop payment at 16:06 ET \u2014 Aksa Asgher / Pro / $\u2026"
       },
       {
         "title": "Google / launch safety",

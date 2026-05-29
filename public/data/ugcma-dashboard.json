@@ -1,35 +1,35 @@
 {
-  "generatedAt": "2026-05-29T11:18:05.891238+00:00",
-  "rangeLabel": "Live UGCMA watch feed \u2022 2026-05-29 07-17-04",
+  "generatedAt": "2026-05-29T11:52:11.405673+00:00",
+  "rangeLabel": "Live UGCMA watch feed \u2022 07:48 ET",
   "totalLeads": "0",
   "feeds": [
     {
       "name": "UGCMA Watch Cron",
       "status": "live",
-      "value": "2026-05-29 07-17-04",
+      "value": "07:48 ET",
       "note": "30-minute read-only watch output is the dashboard feed source.",
-      "updatedAt": "May 29, 7:18 AM ET"
+      "updatedAt": "May 29, 7:52 AM ET"
     },
     {
       "name": "GetInsights Metrics",
       "status": "live",
       "value": "BU split",
       "note": "Sydney/BU1 and Nate/BU2 preserved separately; no blended claims.",
-      "updatedAt": "2026-05-29 07-17-04"
+      "updatedAt": "07:48 ET"
     },
     {
       "name": "Attribution Safety",
       "status": "partial",
       "value": "reconcile",
       "note": "Cash/ROAS and analytics-close vs deals mismatches stay flagged until dashboard/CRM/cash agree.",
-      "updatedAt": "2026-05-29 07-17-04"
+      "updatedAt": "07:48 ET"
     },
     {
       "name": "Launch Tracking",
       "status": "partial",
       "value": "watch",
       "note": "Landing/success/booking pages checked; BU-specific booking tests still required when flagged.",
-      "updatedAt": "2026-05-29 07-17-04"
+      "updatedAt": "07:48 ET"
     }
   ],
   "kpis": [
@@ -80,7 +80,7 @@
     },
     {
       "label": "BU2 Rolling Cash",
-      "value": "n/a",
+      "value": "$104.533k . Was the change right? - Creative/QA clarity improved, but this is not launch-safe proof. - Jay-an\u2019s QC claim is only communication/local-board evidence until Harry QA, final URLs, Meta/Google URL params, BU-specific test leads/bookings, confirmation emails, GHL/CRM/source fields, and GetInsights attribution are verified. Decision: - Hold/reconcile + fix creative/launch QA. - Smallest next action: Richard or Lucho should confirm whether the two BU1 winning angles are actually represented in the next ad batch before Lucho finalizes it. Source coverage: - Slack API-accessible channels after 06:10: 0 new messages. - exec-mktg-sales, temp-mkt-webinar-funnel-qual, new-bookings, and call-bookings-setting-notes remain unavailable/not-in-channel for the bot. - Gmail/Drive after 06:10: 0 UGCMA hits. Updated: - working-context/OPEN_LOOPS.md - daily-logs/2026-05-29.md - Local assistant kanban snapshot regenerated",
       "delta": "n/a",
       "note": "Rolling May 15\u201321; separate from BU1",
       "tone": "sky",
@@ -147,7 +147,28 @@
     {
       "title": "BU2 / Nate \u2014 Rolling May 15\u201321",
       "path": "Rolling GetInsights lane view",
-      "steps": [],
+      "steps": [
+        {
+          "label": "spend",
+          "value": "$68.196k",
+          "delta": "rolling"
+        },
+        {
+          "label": "booked",
+          "value": "249",
+          "delta": "rolling"
+        },
+        {
+          "label": "analytics closed vs deals 17 sales",
+          "value": "15",
+          "delta": "rolling"
+        },
+        {
+          "label": "cash. Was the change right? - Creative/QA clarity improved, but this is not launch-safe proof. - Jay-an\u2019s QC claim is only communication/local-board evidence until Harry QA, final URLs, Meta/Google URL params, BU-specific test leads/bookings, confirmation emails, GHL/CRM/source fields, and GetInsights attribution are verified. Decision: - Hold/reconcile + fix creative/launch QA. - Smallest next action: Richard or Lucho should confirm whether the two BU1 winning angles are actually represented in the next ad batch before Lucho finalizes it. Source coverage: - Slack API-accessible channels after 06:10: 0 new messages. - exec-mktg-sales, temp-mkt-webinar-funnel-qual, new-bookings, and call-bookings-setting-notes remain unavailable/not-in-channel for the bot. - Gmail/Drive after 06:10: 0 UGCMA hits. Updated: - working-context/OPEN_LOOPS.md - daily-logs/2026-05-29.md - Local assistant kanban snapshot regenerated",
+          "value": "$104.533k",
+          "delta": "rolling"
+        }
+      ],
       "rates": [
         {
           "value": "n/a",
@@ -171,7 +192,7 @@
     }
   ],
   "stagnantLeads": {
-    "total": "0",
+    "total": "1",
     "delta": "open risks",
     "note": "quote-risk / reconciliation / launch-safety items",
     "buckets": [
@@ -187,7 +208,7 @@
       },
       {
         "label": "Tracking tests",
-        "value": 0,
+        "value": 1,
         "percent": 20.0
       },
       {
@@ -223,7 +244,15 @@
       }
     ]
   },
-  "recentCalls": [],
+  "recentCalls": [
+    {
+      "id": "risk-1",
+      "startedAt": "07:48 ET",
+      "title": "Hold/reconcile + fix creative/launch QA.",
+      "host": "Risk / blocker",
+      "actionItems": 1
+    }
+  ],
   "performanceRows": [
     {
       "campaign": "BU1 / Sydney \u2014 today",
@@ -255,17 +284,19 @@
     {
       "campaign": "BU2 / Nate \u2014 rolling",
       "source": "GetInsights watch",
-      "leads": "n/a",
-      "bookings": "n/a",
-      "sales": "n/a",
+      "leads": "$104.533k cash. Was the change right? - Creative/QA clarity improved, but this is not launch-safe proof. - Jay-an\u2019s QC claim is only communication/local-board evidence until Harry QA, final URLs, Meta/Google URL params, BU-specific test /bookings, confirmation emails, GHL/CRM/source fields, and GetInsights attribution are verified. Decision: - Hold/reconcile + fix creative/launch QA. - Smallest next action: Richard or Lucho should confirm whether the two BU1 winning angles are actually represented in the next ad batch before Lucho finalizes it. Source coverage: - Slack API-accessible channels after 06:10: 0 new messages. - exec-mktg-sales, temp-mkt-webinar-funnel-qual, new-bookings, and call-bookings-setting-notes remain unavailable/not-in-channel for the bot. - Gmail/Drive after 06:10: 0 UGCMA hits. Updated: - working-context/OPEN_LOOPS.md - daily-logs/2026-05-29.md - Local assistant kanban snapshot regenerated",
+      "bookings": "249",
+      "sales": "analytics 15 closed vs deals 17",
       "roas": "n/a",
       "status": "Rolling lane"
     }
   ],
   "watchSummary": {
-    "sourceFile": "/Users/richardducat/.hermes/cron/output/11bb81317ca1/2026-05-29_07-17-04.md",
-    "watchLabel": "2026-05-29 07-17-04",
-    "risks": [],
+    "sourceFile": "/Users/richardducat/.hermes/cron/output/11bb81317ca1/2026-05-29_07-51-09.md",
+    "watchLabel": "07:48 ET",
+    "risks": [
+      "Hold/reconcile + fix creative/launch QA."
+    ],
     "coordination": [],
     "launch": [],
     "nextActions": []
@@ -275,7 +306,7 @@
       "headline": "Jaamal is out \u2014 Richard is stepping up as accountable UGCMA command lead.",
       "status": "Opportunity mode",
       "objective": "Maximize trust by making the business feel controlled: numbers, blockers, decisions, content, team follow-through, and owner updates in one place.",
-      "updatedAt": "2026-05-29 07-17-04"
+      "updatedAt": "07:48 ET"
     },
     "decisionQueue": [
       {
@@ -290,7 +321,7 @@
         "lane": "Metrics / GetInsights",
         "status": "Needs reconciliation",
         "decision": "Use BU-separated directionality; do not hard-quote cash/ROAS where analytics-close, deals, CRM, or cash disagree.",
-        "source": "UGCMA / 06:10 May 29 AM creative priority brief + source-mapping gate: New local artifact /Users/richardducat/Documents/New project/outputs/ugcma-am-feedback-brief-2026-05-29.md was generate\u2026"
+        "source": "UGCMA / 07:48 May 29 BU1 winning-ad confirmation ask + launch-QA still unclosed: Local UGCMA executive/CTA boards regenerated at 06:24\u201306:25 ET with a new leadership-prep delta from UI/local\u2026"
       },
       {
         "title": "Google / launch safety",
@@ -353,18 +384,18 @@
         "source": "UGCMA / 09:54 Jamaal 10am leadership call + Nate Meta export delta: Slack Desktop/UI-visible Jamaal DM now shows two urgent same-morning asks: 08:54 ET \u201cNeed a 15 min sync to know where we a\u2026"
       },
       {
-        "title": "06",
+        "title": "07",
         "lane": "Team coordination",
         "status": "Visible / tracked",
         "next": "Summarize neutrally, confirm owner-safe next action, and avoid blame language.",
-        "source": "UGCMA / 06:10 May 29 AM creative priority brief + source-mapping gate: New local artifact /Users/richardducat/Documents/New project/outputs/ugcma-am-feedback-brief-2026-05-29.md was generate\u2026"
+        "source": "UGCMA / 07:48 May 29 BU1 winning-ad confirmation ask + launch-QA still unclosed: Local UGCMA executive/CTA boards regenerated at 06:24\u201306:25 ET with a new leadership-prep delta from UI/local\u2026"
       },
       {
-        "title": "01",
+        "title": "07",
         "lane": "Team coordination",
         "status": "Visible / tracked",
         "next": "Summarize neutrally, confirm owner-safe next action, and avoid blame language.",
-        "source": "UGCMA / 01:02 May 29 creative docs refined + staggered PDFs shared; GetInsights unchanged: Three additional/updated Drive docs appeared after the 00:26 baseline: BU1/Sydney UGCMA BU1 Sydney\u2026"
+        "source": "UGCMA / 07:48 May 29 BU1 winning-ad confirmation ask + launch-QA still unclosed: Local UGCMA executive/CTA boards regenerated at 06:24\u201306:25 ET with a new leadership-prep delta from UI/local\u2026"
       }
     ],
     "richardTodos": [

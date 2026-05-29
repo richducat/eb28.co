@@ -1,41 +1,41 @@
 {
-  "generatedAt": "2026-05-29T14:43:05.773229+00:00",
-  "rangeLabel": "Live UGCMA watch feed \u2022 10:38 ET",
-  "totalLeads": "6",
+  "generatedAt": "2026-05-29T15:17:15.824199+00:00",
+  "rangeLabel": "Live UGCMA watch feed \u2022 11:15 ET",
+  "totalLeads": "0",
   "feeds": [
     {
       "name": "UGCMA Watch Cron",
       "status": "live",
-      "value": "10:38 ET",
+      "value": "11:15 ET",
       "note": "30-minute read-only watch output is the dashboard feed source.",
-      "updatedAt": "May 29, 10:43 AM ET"
+      "updatedAt": "May 29, 11:17 AM ET"
     },
     {
       "name": "GetInsights Metrics",
       "status": "live",
       "value": "BU split",
       "note": "Sydney/BU1 and Nate/BU2 preserved separately; no blended claims.",
-      "updatedAt": "10:38 ET"
+      "updatedAt": "11:15 ET"
     },
     {
       "name": "Attribution Safety",
       "status": "partial",
       "value": "reconcile",
       "note": "Cash/ROAS and analytics-close vs deals mismatches stay flagged until dashboard/CRM/cash agree.",
-      "updatedAt": "10:38 ET"
+      "updatedAt": "11:15 ET"
     },
     {
       "name": "Launch Tracking",
       "status": "partial",
       "value": "watch",
       "note": "Landing/success/booking pages checked; BU-specific booking tests still required when flagged.",
-      "updatedAt": "10:38 ET"
+      "updatedAt": "11:15 ET"
     }
   ],
   "kpis": [
     {
       "label": "BU1 Spend Today",
-      "value": "$0",
+      "value": "n/a",
       "delta": "n/a",
       "note": "Sydney / BU1 same-day cash ROAS",
       "tone": "cyan",
@@ -44,8 +44,8 @@
     },
     {
       "label": "BU1 Booked Today",
-      "value": "20",
-      "delta": "2 s",
+      "value": "n/a",
+      "delta": "n/a",
       "note": "Sydney booked calls + show rate",
       "tone": "blue",
       "icon": "CalendarDays",
@@ -62,7 +62,7 @@
     },
     {
       "label": "BU2 Spend Today",
-      "value": "$124",
+      "value": "n/a",
       "delta": "n/a",
       "note": "Nate / BU2 same-day cash ROAS",
       "tone": "emerald",
@@ -71,8 +71,8 @@
     },
     {
       "label": "BU2 Booked Today",
-      "value": "14",
-      "delta": "3 s",
+      "value": "n/a",
+      "delta": "n/a",
       "note": "Nate booked calls + show rate",
       "tone": "teal",
       "icon": "CalendarDays",
@@ -92,45 +92,14 @@
     {
       "title": "BU1 / Sydney \u2014 Today",
       "path": "Spend -> Leads -> Booked -> Shows -> Sales -> Cash",
-      "steps": [
-        {
-          "label": "spend",
-          "value": "$0",
-          "delta": "today"
-        },
-        {
-          "label": "ad leads",
-          "value": "6",
-          "delta": "today"
-        },
-        {
-          "label": "booked",
-          "value": "20",
-          "delta": "today"
-        },
-        {
-          "label": "shows",
-          "value": "2",
-          "delta": "today"
-        },
-        {
-          "label": "sales",
-          "value": "0",
-          "delta": "today"
-        },
-        {
-          "label": "revenue",
-          "value": "$0",
-          "delta": "today"
-        }
-      ],
+      "steps": [],
       "rates": [
         {
           "value": "n/a",
           "label": "CPL"
         },
         {
-          "value": "2 s",
+          "value": "n/a",
           "label": "Show Rate"
         },
         {
@@ -142,40 +111,14 @@
     {
       "title": "BU2 / Nate \u2014 Today",
       "path": "Spend -> Leads -> Booked -> Shows -> Sales -> Cash",
-      "steps": [
-        {
-          "label": "spend",
-          "value": "$124",
-          "delta": "today"
-        },
-        {
-          "label": "ad leads",
-          "value": "0",
-          "delta": "today"
-        },
-        {
-          "label": "booked",
-          "value": "14",
-          "delta": "today"
-        },
-        {
-          "label": "shows",
-          "value": "3",
-          "delta": "today"
-        },
-        {
-          "label": "sales/cash",
-          "value": "0",
-          "delta": "today"
-        }
-      ],
+      "steps": [],
       "rates": [
         {
           "value": "n/a",
           "label": "CPL"
         },
         {
-          "value": "3 s",
+          "value": "n/a",
           "label": "Show Rate"
         },
         {
@@ -216,8 +159,8 @@
   "leadSources": [
     {
       "label": "BU1 today leads",
-      "value": 6,
-      "share": "100.0%",
+      "value": 0,
+      "share": "0.0%",
       "color": "#38bdf8"
     },
     {
@@ -228,7 +171,7 @@
     }
   ],
   "stagnantLeads": {
-    "total": "1",
+    "total": "2",
     "delta": "open risks",
     "note": "quote-risk / reconciliation / launch-safety items",
     "buckets": [
@@ -239,7 +182,7 @@
       },
       {
         "label": "BU2 deals mismatch",
-        "value": 1,
+        "value": 0,
         "percent": 25.0
       },
       {
@@ -256,26 +199,26 @@
   },
   "conversionMetrics": {
     "noShow": {
-      "value": "2 s",
+      "value": "n/a",
       "delta": "BU1 today"
     },
     "bookingSale": {
-      "value": "3 s",
+      "value": "n/a",
       "delta": "BU2 today"
     },
     "rows": [
       {
         "funnel": "BU1 / Sydney",
-        "noShow": "2 s",
+        "noShow": "n/a",
         "noShowDelta": "show rate",
-        "saleRate": "0",
+        "saleRate": "n/a",
         "saleDelta": "today sales"
       },
       {
         "funnel": "BU2 / Nate",
-        "noShow": "3 s",
+        "noShow": "n/a",
         "noShowDelta": "show rate",
-        "saleRate": "0 /cash",
+        "saleRate": "n/a",
         "saleDelta": "deals/analytics mismatch watch"
       }
     ]
@@ -283,8 +226,15 @@
   "recentCalls": [
     {
       "id": "risk-1",
-      "startedAt": "10:38 ET",
-      "title": "Reconcile / investigate. Do not hard-quote BU1 cash or confirm BU2 tracking/live-safe status yet.",
+      "startedAt": "11:15 ET",
+      "title": "BU1 cash moved because of a new Whop payment, but dashboard sales/revenue did not reconcile.",
+      "host": "Risk / blocker",
+      "actionItems": 1
+    },
+    {
+      "id": "risk-2",
+      "startedAt": "11:15 ET",
+      "title": "**Hold / fix tracking + route QA / reconcile.**",
       "host": "Risk / blocker",
       "actionItems": 1
     }
@@ -293,9 +243,9 @@
     {
       "campaign": "BU1 / Sydney \u2014 today",
       "source": "GetInsights watch",
-      "leads": "6 ad",
-      "bookings": "20",
-      "sales": "0",
+      "leads": "n/a",
+      "bookings": "n/a",
+      "sales": "n/a",
       "roas": "n/a",
       "status": "Reconcile before quoting"
     },
@@ -311,9 +261,9 @@
     {
       "campaign": "BU2 / Nate \u2014 today",
       "source": "GetInsights watch",
-      "leads": "0 ad",
-      "bookings": "14",
-      "sales": "0 /cash",
+      "leads": "n/a",
+      "bookings": "n/a",
+      "sales": "n/a",
       "roas": "n/a",
       "status": "Deals mismatch watch"
     },
@@ -328,10 +278,11 @@
     }
   ],
   "watchSummary": {
-    "sourceFile": "/Users/richardducat/.hermes/cron/output/11bb81317ca1/2026-05-29_10-42-04.md",
-    "watchLabel": "10:38 ET",
+    "sourceFile": "/Users/richardducat/.hermes/cron/output/11bb81317ca1/2026-05-29_11-16-13.md",
+    "watchLabel": "11:15 ET",
     "risks": [
-      "Reconcile / investigate. Do not hard-quote BU1 cash or confirm BU2 tracking/live-safe status yet."
+      "BU1 cash moved because of a new Whop payment, but dashboard sales/revenue did not reconcile.",
+      "**Hold / fix tracking + route QA / reconcile.**"
     ],
     "coordination": [],
     "launch": [],
@@ -342,7 +293,7 @@
       "headline": "Jaamal is out \u2014 Richard is stepping up as accountable UGCMA command lead.",
       "status": "Opportunity mode",
       "objective": "Maximize trust by making the business feel controlled: numbers, blockers, decisions, content, team follow-through, and owner updates in one place.",
-      "updatedAt": "10:38 ET"
+      "updatedAt": "11:15 ET"
     },
     "decisionQueue": [
       {
@@ -357,7 +308,7 @@
         "lane": "Metrics / GetInsights",
         "status": "Needs reconciliation",
         "decision": "Use BU-separated directionality; do not hard-quote cash/ROAS where analytics-close, deals, CRM, or cash disagree.",
-        "source": "UGCMA / 10:38 May 29 Cortana BU2 test-volume blocker + BU1 cash revision + script-feedback deltas: Fresh GetInsights at 10:38 ET changed the 10:06 posture. BU1/Sydney same-day cash moved $7.\u2026"
+        "source": "UGCMA / 11:15 May 29 launch gate + tracking blocker + BU1 payment: Fresh 11:12 GetInsights moved BU1/Sydney cash again after the 10:38 baseline: same-day cash $8.642k\u2192$9.042k and rolling cas\u2026"
       },
       {
         "title": "Google / launch safety",
@@ -427,11 +378,11 @@
         "source": "UGCMA / 08:56 May 29 local board/thread asks + Cortana launch confirmation + BU2 editor blocker: Local/derived UGCMA boards regenerated at 08:34 ET and surfaced three Richard-facing asks not\u2026"
       },
       {
-        "title": "10",
+        "title": "11",
         "lane": "Team coordination",
         "status": "Visible / tracked",
         "next": "Summarize neutrally, confirm owner-safe next action, and avoid blame language.",
-        "source": "UGCMA / 10:38 May 29 Cortana BU2 test-volume blocker + BU1 cash revision + script-feedback deltas: Fresh GetInsights at 10:38 ET changed the 10:06 posture. BU1/Sydney same-day cash moved $7.\u2026"
+        "source": "UGCMA / 11:15 May 29 launch gate + tracking blocker + BU1 payment: Fresh 11:12 GetInsights moved BU1/Sydney cash again after the 10:38 baseline: same-day cash $8.642k\u2192$9.042k and rolling cas\u2026"
       }
     ],
     "richardTodos": [

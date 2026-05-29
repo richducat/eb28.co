@@ -1,35 +1,35 @@
 {
-  "generatedAt": "2026-05-29T03:20:05.281880+00:00",
-  "rangeLabel": "Live UGCMA watch feed \u2022 2026-05-28 23-19-03",
+  "generatedAt": "2026-05-29T03:56:36.404059+00:00",
+  "rangeLabel": "Live UGCMA watch feed \u2022 23:50 ET",
   "totalLeads": "0",
   "feeds": [
     {
       "name": "UGCMA Watch Cron",
       "status": "live",
-      "value": "2026-05-28 23-19-03",
+      "value": "23:50 ET",
       "note": "30-minute read-only watch output is the dashboard feed source.",
-      "updatedAt": "May 28, 11:20 PM ET"
+      "updatedAt": "May 28, 11:56 PM ET"
     },
     {
       "name": "GetInsights Metrics",
       "status": "live",
       "value": "BU split",
       "note": "Sydney/BU1 and Nate/BU2 preserved separately; no blended claims.",
-      "updatedAt": "2026-05-28 23-19-03"
+      "updatedAt": "23:50 ET"
     },
     {
       "name": "Attribution Safety",
       "status": "partial",
       "value": "reconcile",
       "note": "Cash/ROAS and analytics-close vs deals mismatches stay flagged until dashboard/CRM/cash agree.",
-      "updatedAt": "2026-05-28 23-19-03"
+      "updatedAt": "23:50 ET"
     },
     {
       "name": "Launch Tracking",
       "status": "partial",
       "value": "watch",
       "note": "Landing/success/booking pages checked; BU-specific booking tests still required when flagged.",
-      "updatedAt": "2026-05-28 23-19-03"
+      "updatedAt": "23:50 ET"
     }
   ],
   "kpis": [
@@ -263,8 +263,8 @@
     }
   ],
   "watchSummary": {
-    "sourceFile": "/Users/richardducat/.hermes/cron/output/11bb81317ca1/2026-05-28_23-19-03.md",
-    "watchLabel": "2026-05-28 23-19-03",
+    "sourceFile": "/Users/richardducat/.hermes/cron/output/11bb81317ca1/2026-05-28_23-55-34.md",
+    "watchLabel": "23:50 ET",
     "risks": [],
     "coordination": [],
     "launch": [],
@@ -275,7 +275,7 @@
       "headline": "Jaamal is out \u2014 Richard is stepping up as accountable UGCMA command lead.",
       "status": "Opportunity mode",
       "objective": "Maximize trust by making the business feel controlled: numbers, blockers, decisions, content, team follow-through, and owner updates in one place.",
-      "updatedAt": "2026-05-28 23-19-03"
+      "updatedAt": "23:50 ET"
     },
     "decisionQueue": [
       {
@@ -290,7 +290,7 @@
         "lane": "Metrics / GetInsights",
         "status": "Needs reconciliation",
         "decision": "Use BU-separated directionality; do not hard-quote cash/ROAS where analytics-close, deals, CRM, or cash disagree.",
-        "source": "UGCMA / 22:40 May 28 BU2 staggered-day test artifact + Richard CTA proof-gate brief: New local tactical brief working-context/UGCMA_MAY28_RICHARD_CTA_TACTICAL_2026-05-28.md consolidates Rich\u2026"
+        "source": "UGCMA / 23:50 May 28 Lucho BU1/Sydney draft + launch-readiness SOP: New local docs in /Users/richardducat/Documents/New project/outputs/ moved the late-night prep forward. ugcma-lucho-tonigh\u2026"
       },
       {
         "title": "Google / launch safety",
@@ -353,18 +353,18 @@
         "source": "UGCMA / 09:54 Jamaal 10am leadership call + Nate Meta export delta: Slack Desktop/UI-visible Jamaal DM now shows two urgent same-morning asks: 08:54 ET \u201cNeed a 15 min sync to know where we a\u2026"
       },
       {
-        "title": "22",
+        "title": "23",
         "lane": "Team coordination",
         "status": "Visible / tracked",
         "next": "Summarize neutrally, confirm owner-safe next action, and avoid blame language.",
-        "source": "UGCMA / 22:05 May 28 Flywheel EOD launch/tracking blocker + GetInsights no-change: Slack API #corp-marketing exposed Andrea's Flywheel EOD Report \u2014 May 28. New concrete blocker: report says\u2026"
+        "source": "UGCMA / 23:50 May 28 Lucho BU1/Sydney draft + launch-readiness SOP: New local docs in /Users/richardducat/Documents/New project/outputs/ moved the late-night prep forward. ugcma-lucho-tonigh\u2026"
       },
       {
-        "title": "16",
+        "title": "23",
         "lane": "Team coordination",
         "status": "Visible / tracked",
         "next": "Summarize neutrally, confirm owner-safe next action, and avoid blame language.",
-        "source": "UGCMA / 16:55 May 28 Slack launch/QA delta + GetInsights recheck: Slack Desktop/OCR exposed new private/thread context not available through the bot API: Torres wrote OK, closed the call. We\u2026"
+        "source": "UGCMA / 23:52 May 28 Cortana access only remaining Jay-an/Ann blocker: Richard clarified the Jay-an/Ann asks are done except he cannot find his Cortana access. Login page verified at https:/\u2026"
       }
     ],
     "richardTodos": [

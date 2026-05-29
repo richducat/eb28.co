@@ -1,35 +1,35 @@
 {
-  "generatedAt": "2026-05-29T06:13:35.627451+00:00",
-  "rangeLabel": "Live UGCMA watch feed \u2022 02:10 ET",
+  "generatedAt": "2026-05-29T06:47:52.050489+00:00",
+  "rangeLabel": "Live UGCMA watch feed \u2022 2026-05-29 02-46-50",
   "totalLeads": "0",
   "feeds": [
     {
       "name": "UGCMA Watch Cron",
       "status": "live",
-      "value": "02:10 ET",
+      "value": "2026-05-29 02-46-50",
       "note": "30-minute read-only watch output is the dashboard feed source.",
-      "updatedAt": "May 29, 2:13 AM ET"
+      "updatedAt": "May 29, 2:47 AM ET"
     },
     {
       "name": "GetInsights Metrics",
       "status": "live",
       "value": "BU split",
       "note": "Sydney/BU1 and Nate/BU2 preserved separately; no blended claims.",
-      "updatedAt": "02:10 ET"
+      "updatedAt": "2026-05-29 02-46-50"
     },
     {
       "name": "Attribution Safety",
       "status": "partial",
       "value": "reconcile",
       "note": "Cash/ROAS and analytics-close vs deals mismatches stay flagged until dashboard/CRM/cash agree.",
-      "updatedAt": "02:10 ET"
+      "updatedAt": "2026-05-29 02-46-50"
     },
     {
       "name": "Launch Tracking",
       "status": "partial",
       "value": "watch",
       "note": "Landing/success/booking pages checked; BU-specific booking tests still required when flagged.",
-      "updatedAt": "02:10 ET"
+      "updatedAt": "2026-05-29 02-46-50"
     }
   ],
   "kpis": [
@@ -171,7 +171,7 @@
     }
   ],
   "stagnantLeads": {
-    "total": "6",
+    "total": "2",
     "delta": "open risks",
     "note": "quote-risk / reconciliation / launch-safety items",
     "buckets": [
@@ -187,12 +187,12 @@
       },
       {
         "label": "Tracking tests",
-        "value": 1,
+        "value": 0,
         "percent": 20.0
       },
       {
         "label": "Next actions",
-        "value": 3,
+        "value": 0,
         "percent": 20.0
       }
     ]
@@ -226,44 +226,16 @@
   "recentCalls": [
     {
       "id": "risk-1",
-      "startedAt": "02:10 ET",
-      "title": "BU1/Sydney: hold/reconcile/fix tracking-routing.",
+      "startedAt": "2026-05-29 02-46-50",
+      "title": "Still quote-risk: do not hard-quote BU1/BU2 cash until the Bryce payment is tied to contact/source/deal/cash and the matching BU1 cash decrease is explained.",
       "host": "Risk / blocker",
       "actionItems": 1
     },
     {
       "id": "risk-2",
-      "startedAt": "02:10 ET",
-      "title": "BU2/Nate: hold/reconcile/fix tracking-routing separately.",
+      "startedAt": "2026-05-29 02-46-50",
+      "title": "Reconcile / investigate.",
       "host": "Risk / blocker",
-      "actionItems": 1
-    },
-    {
-      "id": "risk-3",
-      "startedAt": "02:10 ET",
-      "title": "Do not hard-quote cash or claim launch/scale safety from this alone.",
-      "host": "Risk / blocker",
-      "actionItems": 1
-    },
-    {
-      "id": "action-1",
-      "startedAt": "02:10 ET",
-      "title": "Confirm exact active BU1 and BU2 landing pages/forms currently receiving traffic.",
-      "host": "Smallest next action",
-      "actionItems": 1
-    },
-    {
-      "id": "action-2",
-      "startedAt": "02:10 ET",
-      "title": "Read-only inspect or run BU-specific test leads for IP address, source fields, UTM/click IDs, confirmation email, booking/success path, and GHL/Dialer/Close ownership.",
-      "host": "Smallest next action",
-      "actionItems": 1
-    },
-    {
-      "id": "action-3",
-      "startedAt": "02:10 ET",
-      "title": "Confirm which dispositions route to LNS and whether the 09:00 no-show workflow alignment actually happened.",
-      "host": "Smallest next action",
       "actionItems": 1
     }
   ],
@@ -306,27 +278,22 @@
     }
   ],
   "watchSummary": {
-    "sourceFile": "/Users/richardducat/.hermes/cron/output/11bb81317ca1/2026-05-29_02-12-33.md",
-    "watchLabel": "02:10 ET",
+    "sourceFile": "/Users/richardducat/.hermes/cron/output/11bb81317ca1/2026-05-29_02-46-50.md",
+    "watchLabel": "2026-05-29 02-46-50",
     "risks": [
-      "BU1/Sydney: hold/reconcile/fix tracking-routing.",
-      "BU2/Nate: hold/reconcile/fix tracking-routing separately.",
-      "Do not hard-quote cash or claim launch/scale safety from this alone."
+      "Still quote-risk: do not hard-quote BU1/BU2 cash until the Bryce payment is tied to contact/source/deal/cash and the matching BU1 cash decrease is explained.",
+      "Reconcile / investigate."
     ],
     "coordination": [],
     "launch": [],
-    "nextActions": [
-      "Confirm exact active BU1 and BU2 landing pages/forms currently receiving traffic.",
-      "Read-only inspect or run BU-specific test leads for IP address, source fields, UTM/click IDs, confirmation email, booking/success path, and GHL/Dialer/Close ownership.",
-      "Confirm which dispositions route to LNS and whether the 09:00 no-show workflow alignment actually happened."
-    ]
+    "nextActions": []
   },
   "commandCenter": {
     "mandate": {
       "headline": "Jaamal is out \u2014 Richard is stepping up as accountable UGCMA command lead.",
       "status": "Opportunity mode",
       "objective": "Maximize trust by making the business feel controlled: numbers, blockers, decisions, content, team follow-through, and owner updates in one place.",
-      "updatedAt": "02:10 ET"
+      "updatedAt": "2026-05-29 02-46-50"
     },
     "decisionQueue": [
       {
@@ -341,7 +308,7 @@
         "lane": "Metrics / GetInsights",
         "status": "Needs reconciliation",
         "decision": "Use BU-separated directionality; do not hard-quote cash/ROAS where analytics-close, deals, CRM, or cash disagree.",
-        "source": "UGCMA / 02:10 May 29 IP-address lead blocker + BU total stats; GetInsights unchanged: Slack API #corp-tech-it exposed a new funnel-routing/data-quality blocker: leads are being sent to Charl\u2026"
+        "source": "UGCMA / 02:44 May 29 BU2 payment + GetInsights cash reallocation quote-risk + local board blockers: Fresh GetInsights at 02:43 ET moved after the 02:10 baseline: BU2/Nate same-day now shows\u2026"
       },
       {
         "title": "Google / launch safety",
@@ -404,11 +371,11 @@
         "source": "UGCMA / 09:54 Jamaal 10am leadership call + Nate Meta export delta: Slack Desktop/UI-visible Jamaal DM now shows two urgent same-morning asks: 08:54 ET \u201cNeed a 15 min sync to know where we a\u2026"
       },
       {
-        "title": "01",
+        "title": "02",
         "lane": "Team coordination",
         "status": "Visible / tracked",
         "next": "Summarize neutrally, confirm owner-safe next action, and avoid blame language.",
-        "source": "UGCMA / 01:02 May 29 creative docs refined + staggered PDFs shared; GetInsights unchanged: Three additional/updated Drive docs appeared after the 00:26 baseline: BU1/Sydney UGCMA BU1 Sydney\u2026"
+        "source": "UGCMA / 02:44 May 29 BU2 payment + GetInsights cash reallocation quote-risk + local board blockers: Fresh GetInsights at 02:43 ET moved after the 02:10 baseline: BU2/Nate same-day now shows\u2026"
       },
       {
         "title": "01",
@@ -442,24 +409,6 @@
         "priority": "High",
         "owner": "Hermes monitors / Richard leads",
         "unblock": "Confirm thread evidence and owner for recording/editing."
-      },
-      {
-        "task": "Confirm exact active BU1 and BU2 landing pages/forms currently receiving traffic.",
-        "priority": "Watch action",
-        "owner": "Richard/Hermes",
-        "unblock": "Use smallest next action from latest watch."
-      },
-      {
-        "task": "Read-only inspect or run BU-specific test leads for IP address, source fields, UTM/click IDs, confirmation email, booking/success\u2026",
-        "priority": "Watch action",
-        "owner": "Richard/Hermes",
-        "unblock": "Use smallest next action from latest watch."
-      },
-      {
-        "task": "Confirm which dispositions route to LNS and whether the 09:00 no-show workflow alignment actually happened.",
-        "priority": "Watch action",
-        "owner": "Richard/Hermes",
-        "unblock": "Use smallest next action from latest watch."
       }
     ],
     "sourceCoverage": [

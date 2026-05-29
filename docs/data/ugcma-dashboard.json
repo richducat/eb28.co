@@ -1,35 +1,35 @@
 {
-  "generatedAt": "2026-05-29T10:45:16.836682+00:00",
-  "rangeLabel": "Live UGCMA watch feed \u2022 2026-05-29 06-44-15",
+  "generatedAt": "2026-05-29T11:18:05.891238+00:00",
+  "rangeLabel": "Live UGCMA watch feed \u2022 2026-05-29 07-17-04",
   "totalLeads": "0",
   "feeds": [
     {
       "name": "UGCMA Watch Cron",
       "status": "live",
-      "value": "2026-05-29 06-44-15",
+      "value": "2026-05-29 07-17-04",
       "note": "30-minute read-only watch output is the dashboard feed source.",
-      "updatedAt": "May 29, 6:45 AM ET"
+      "updatedAt": "May 29, 7:18 AM ET"
     },
     {
       "name": "GetInsights Metrics",
       "status": "live",
       "value": "BU split",
       "note": "Sydney/BU1 and Nate/BU2 preserved separately; no blended claims.",
-      "updatedAt": "2026-05-29 06-44-15"
+      "updatedAt": "2026-05-29 07-17-04"
     },
     {
       "name": "Attribution Safety",
       "status": "partial",
       "value": "reconcile",
       "note": "Cash/ROAS and analytics-close vs deals mismatches stay flagged until dashboard/CRM/cash agree.",
-      "updatedAt": "2026-05-29 06-44-15"
+      "updatedAt": "2026-05-29 07-17-04"
     },
     {
       "name": "Launch Tracking",
       "status": "partial",
       "value": "watch",
       "note": "Landing/success/booking pages checked; BU-specific booking tests still required when flagged.",
-      "updatedAt": "2026-05-29 06-44-15"
+      "updatedAt": "2026-05-29 07-17-04"
     }
   ],
   "kpis": [
@@ -263,8 +263,8 @@
     }
   ],
   "watchSummary": {
-    "sourceFile": "/Users/richardducat/.hermes/cron/output/11bb81317ca1/2026-05-29_06-44-15.md",
-    "watchLabel": "2026-05-29 06-44-15",
+    "sourceFile": "/Users/richardducat/.hermes/cron/output/11bb81317ca1/2026-05-29_07-17-04.md",
+    "watchLabel": "2026-05-29 07-17-04",
     "risks": [],
     "coordination": [],
     "launch": [],
@@ -275,7 +275,7 @@
       "headline": "Jaamal is out \u2014 Richard is stepping up as accountable UGCMA command lead.",
       "status": "Opportunity mode",
       "objective": "Maximize trust by making the business feel controlled: numbers, blockers, decisions, content, team follow-through, and owner updates in one place.",
-      "updatedAt": "2026-05-29 06-44-15"
+      "updatedAt": "2026-05-29 07-17-04"
     },
     "decisionQueue": [
       {

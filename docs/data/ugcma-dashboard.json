@@ -1,35 +1,35 @@
 {
-  "generatedAt": "2026-05-29T09:38:38.546199+00:00",
-  "rangeLabel": "Live UGCMA watch feed \u2022 05:35 ET",
-  "totalLeads": "3",
+  "generatedAt": "2026-05-29T10:12:07.585559+00:00",
+  "rangeLabel": "Live UGCMA watch feed \u2022 06:10 ET",
+  "totalLeads": "30",
   "feeds": [
     {
       "name": "UGCMA Watch Cron",
       "status": "live",
-      "value": "05:35 ET",
+      "value": "06:10 ET",
       "note": "30-minute read-only watch output is the dashboard feed source.",
-      "updatedAt": "May 29, 5:38 AM ET"
+      "updatedAt": "May 29, 6:12 AM ET"
     },
     {
       "name": "GetInsights Metrics",
       "status": "live",
       "value": "BU split",
       "note": "Sydney/BU1 and Nate/BU2 preserved separately; no blended claims.",
-      "updatedAt": "05:35 ET"
+      "updatedAt": "06:10 ET"
     },
     {
       "name": "Attribution Safety",
       "status": "partial",
       "value": "reconcile",
       "note": "Cash/ROAS and analytics-close vs deals mismatches stay flagged until dashboard/CRM/cash agree.",
-      "updatedAt": "05:35 ET"
+      "updatedAt": "06:10 ET"
     },
     {
       "name": "Launch Tracking",
       "status": "partial",
       "value": "watch",
       "note": "Landing/success/booking pages checked; BU-specific booking tests still required when flagged.",
-      "updatedAt": "05:35 ET"
+      "updatedAt": "06:10 ET"
     }
   ],
   "kpis": [
@@ -62,7 +62,7 @@
     },
     {
       "label": "BU2 Spend Today",
-      "value": "$27",
+      "value": "only crept $27 \u2192 $29, with 0 ad leads",
       "delta": "n/a",
       "note": "Nate / BU2 same-day cash ROAS",
       "tone": "emerald",
@@ -119,8 +119,8 @@
           "delta": "today"
         },
         {
-          "label": "revenue",
-          "value": "$0",
+          "label": "cash",
+          "value": "$7.000k",
           "delta": "today"
         }
       ],
@@ -144,12 +144,7 @@
       "path": "Spend -> Leads -> Booked -> Shows -> Sales -> Cash",
       "steps": [
         {
-          "label": "spend",
-          "value": "$27",
-          "delta": "today"
-        },
-        {
-          "label": "ad leads",
+          "label": "spend only crept $27 \u2192 $29, with ad leads",
           "value": "0",
           "delta": "today"
         },
@@ -217,13 +212,13 @@
     {
       "label": "BU1 today leads",
       "value": 3,
-      "share": "100.0%",
+      "share": "10.0%",
       "color": "#38bdf8"
     },
     {
       "label": "BU2 today leads",
-      "value": 0,
-      "share": "0.0%",
+      "value": 27,
+      "share": "90.0%",
       "color": "#8b5cf6"
     }
   ],
@@ -234,7 +229,7 @@
     "buckets": [
       {
         "label": "Cash/ROAS quote risk",
-        "value": 0,
+        "value": 1,
         "percent": 35.0
       },
       {
@@ -244,7 +239,7 @@
       },
       {
         "label": "Tracking tests",
-        "value": 0,
+        "value": 1,
         "percent": 20.0
       },
       {
@@ -283,15 +278,15 @@
   "recentCalls": [
     {
       "id": "risk-1",
-      "startedAt": "05:35 ET",
-      "title": "Why? Local dashboard/source artifacts regenerated and exposed platform/GHL state that doesn\u2019t reconcile cleanly.",
+      "startedAt": "06:10 ET",
+      "title": "Hold / reconcile / execute creative handoff cautiously.",
       "host": "Risk / blocker",
       "actionItems": 1
     },
     {
       "id": "risk-2",
-      "startedAt": "05:35 ET",
-      "title": "Decision: reconcile/investigate + fix tracking/source hygiene. Hold scale/live-safe claims.",
+      "startedAt": "06:10 ET",
+      "title": "Do not hard-quote cash or say launch/scale-safe.",
       "host": "Risk / blocker",
       "actionItems": 1
     }
@@ -318,7 +313,7 @@
     {
       "campaign": "BU2 / Nate \u2014 today",
       "source": "GetInsights watch",
-      "leads": "0 ad",
+      "leads": "spend only crept $27 \u2192 $29, with 0 ad",
       "bookings": "14",
       "sales": "0 /cash",
       "roas": "n/a",
@@ -335,11 +330,11 @@
     }
   ],
   "watchSummary": {
-    "sourceFile": "/Users/richardducat/.hermes/cron/output/11bb81317ca1/2026-05-29_05-37-36.md",
-    "watchLabel": "05:35 ET",
+    "sourceFile": "/Users/richardducat/.hermes/cron/output/11bb81317ca1/2026-05-29_06-11-05.md",
+    "watchLabel": "06:10 ET",
     "risks": [
-      "Why? Local dashboard/source artifacts regenerated and exposed platform/GHL state that doesn\u2019t reconcile cleanly.",
-      "Decision: reconcile/investigate + fix tracking/source hygiene. Hold scale/live-safe claims."
+      "Hold / reconcile / execute creative handoff cautiously.",
+      "Do not hard-quote cash or say launch/scale-safe."
     ],
     "coordination": [],
     "launch": [],
@@ -350,7 +345,7 @@
       "headline": "Jaamal is out \u2014 Richard is stepping up as accountable UGCMA command lead.",
       "status": "Opportunity mode",
       "objective": "Maximize trust by making the business feel controlled: numbers, blockers, decisions, content, team follow-through, and owner updates in one place.",
-      "updatedAt": "05:35 ET"
+      "updatedAt": "06:10 ET"
     },
     "decisionQueue": [
       {
@@ -365,7 +360,7 @@
         "lane": "Metrics / GetInsights",
         "status": "Needs reconciliation",
         "decision": "Use BU-separated directionality; do not hard-quote cash/ROAS where analytics-close, deals, CRM, or cash disagree.",
-        "source": "UGCMA / 05:35 May 29 platform/GHL source conflict + GetInsights recheck: Fresh GetInsights at 05:34 ET mostly reconfirmed the 05:01 posture: BU1/Sydney same-day $0 spend / 3 ad leads / 19 bo\u2026"
+        "source": "UGCMA / 06:10 May 29 AM creative priority brief + source-mapping gate: New local artifact /Users/richardducat/Documents/New project/outputs/ugcma-am-feedback-brief-2026-05-29.md was generate\u2026"
       },
       {
         "title": "Google / launch safety",
@@ -428,11 +423,11 @@
         "source": "UGCMA / 09:54 Jamaal 10am leadership call + Nate Meta export delta: Slack Desktop/UI-visible Jamaal DM now shows two urgent same-morning asks: 08:54 ET \u201cNeed a 15 min sync to know where we a\u2026"
       },
       {
-        "title": "02",
+        "title": "06",
         "lane": "Team coordination",
         "status": "Visible / tracked",
         "next": "Summarize neutrally, confirm owner-safe next action, and avoid blame language.",
-        "source": "UGCMA / 02:44 May 29 BU2 payment + GetInsights cash reallocation quote-risk + local board blockers: Fresh GetInsights at 02:43 ET moved after the 02:10 baseline: BU2/Nate same-day now shows\u2026"
+        "source": "UGCMA / 06:10 May 29 AM creative priority brief + source-mapping gate: New local artifact /Users/richardducat/Documents/New project/outputs/ugcma-am-feedback-brief-2026-05-29.md was generate\u2026"
       },
       {
         "title": "01",

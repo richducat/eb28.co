@@ -1,35 +1,35 @@
 {
-  "generatedAt": "2026-05-29T16:26:46.133218+00:00",
-  "rangeLabel": "Live UGCMA watch feed \u2022 12:23 ET",
+  "generatedAt": "2026-05-29T17:01:44.613957+00:00",
+  "rangeLabel": "Live UGCMA watch feed \u2022 12:58 ET",
   "totalLeads": "0",
   "feeds": [
     {
       "name": "UGCMA Watch Cron",
       "status": "live",
-      "value": "12:23 ET",
+      "value": "12:58 ET",
       "note": "30-minute read-only watch output is the dashboard feed source.",
-      "updatedAt": "May 29, 12:26 PM ET"
+      "updatedAt": "May 29, 1:01 PM ET"
     },
     {
       "name": "GetInsights Metrics",
       "status": "live",
       "value": "BU split",
       "note": "Sydney/BU1 and Nate/BU2 preserved separately; no blended claims.",
-      "updatedAt": "12:23 ET"
+      "updatedAt": "12:58 ET"
     },
     {
       "name": "Attribution Safety",
       "status": "partial",
       "value": "reconcile",
       "note": "Cash/ROAS and analytics-close vs deals mismatches stay flagged until dashboard/CRM/cash agree.",
-      "updatedAt": "12:23 ET"
+      "updatedAt": "12:58 ET"
     },
     {
       "name": "Launch Tracking",
       "status": "partial",
       "value": "watch",
       "note": "Landing/success/booking pages checked; BU-specific booking tests still required when flagged.",
-      "updatedAt": "12:23 ET"
+      "updatedAt": "12:58 ET"
     }
   ],
   "kpis": [
@@ -171,18 +171,18 @@
     }
   ],
   "stagnantLeads": {
-    "total": "4",
+    "total": "2",
     "delta": "open risks",
     "note": "quote-risk / reconciliation / launch-safety items",
     "buckets": [
       {
         "label": "Cash/ROAS quote risk",
-        "value": 3,
+        "value": 1,
         "percent": 35.0
       },
       {
         "label": "BU2 deals mismatch",
-        "value": 0,
+        "value": 1,
         "percent": 25.0
       },
       {
@@ -226,29 +226,15 @@
   "recentCalls": [
     {
       "id": "risk-1",
-      "startedAt": "12:23 ET",
-      "title": "Local GHL daily report still shows source hygiene risk:",
+      "startedAt": "12:58 ET",
+      "title": "Hold / fix launch QA / reconcile.",
       "host": "Risk / blocker",
       "actionItems": 1
     },
     {
       "id": "risk-2",
-      "startedAt": "12:23 ET",
-      "title": "Slack revealed the likely payment/contract/welcome-email automation lag, but the payment and dashboard movements do not reconcile cleanly enough to hard-quote.",
-      "host": "Risk / blocker",
-      "actionItems": 1
-    },
-    {
-      "id": "risk-3",
-      "startedAt": "12:23 ET",
-      "title": "Reconcile/investigate before Richard quotes numbers or confirms launch safety.",
-      "host": "Risk / blocker",
-      "actionItems": 1
-    },
-    {
-      "id": "risk-4",
-      "startedAt": "12:23 ET",
-      "title": "4. Do not hard-quote BU1 cash/revenue, publish, claim live-safe, or scale until mapping + route/tracking/platform status align.",
+      "startedAt": "12:58 ET",
+      "title": "Do not hard-quote cash or call this live/scale safe until BU1 cash-with-0-sales and BU2 spend-with-0-ad-leads reconcile.",
       "host": "Risk / blocker",
       "actionItems": 1
     }
@@ -292,13 +278,11 @@
     }
   ],
   "watchSummary": {
-    "sourceFile": "/Users/richardducat/.hermes/cron/output/11bb81317ca1/2026-05-29_12-25-44.md",
-    "watchLabel": "12:23 ET",
+    "sourceFile": "/Users/richardducat/.hermes/cron/output/11bb81317ca1/2026-05-29_12-59-31.md",
+    "watchLabel": "12:58 ET",
     "risks": [
-      "Local GHL daily report still shows source hygiene risk:",
-      "Slack revealed the likely payment/contract/welcome-email automation lag, but the payment and dashboard movements do not reconcile cleanly enough to hard-quote.",
-      "Reconcile/investigate before Richard quotes numbers or confirms launch safety.",
-      "4. Do not hard-quote BU1 cash/revenue, publish, claim live-safe, or scale until mapping + route/tracking/platform status align."
+      "Hold / fix launch QA / reconcile.",
+      "Do not hard-quote cash or call this live/scale safe until BU1 cash-with-0-sales and BU2 spend-with-0-ad-leads reconcile."
     ],
     "coordination": [],
     "launch": [],
@@ -309,7 +293,7 @@
       "headline": "Jaamal is out \u2014 Richard is stepping up as accountable UGCMA command lead.",
       "status": "Opportunity mode",
       "objective": "Maximize trust by making the business feel controlled: numbers, blockers, decisions, content, team follow-through, and owner updates in one place.",
-      "updatedAt": "12:23 ET"
+      "updatedAt": "12:58 ET"
     },
     "decisionQueue": [
       {
@@ -324,7 +308,7 @@
         "lane": "Metrics / GetInsights",
         "status": "Needs reconciliation",
         "decision": "Use BU-separated directionality; do not hard-quote cash/ROAS where analytics-close, deals, CRM, or cash disagree.",
-        "source": "UGCMA / 12:23 May 29 BU1 rolling sale/payment automation delay + launch-readiness blocker: Fresh 12:22 GetInsights moved BU1/Sydney rolling sales 27\u219228, revenue $177.700k\u2192$184.700k, cash $23\u2026"
+        "source": "UGCMA / 12:58 May 29 Meta staging guardrail + small GetInsights creep: New local artifacts at 12:37 ET (meta-staging-2026-05-29/ugcma-meta-live-webinar-staging-notes.md, ugcma-webinar-live-l\u2026"
       },
       {
         "title": "Google / launch safety",
@@ -391,14 +375,14 @@
         "lane": "Team coordination",
         "status": "Visible / tracked",
         "next": "Summarize neutrally, confirm owner-safe next action, and avoid blame language.",
-        "source": "UGCMA / 12:23 May 29 BU1 rolling sale/payment automation delay + launch-readiness blocker: Fresh 12:22 GetInsights moved BU1/Sydney rolling sales 27\u219228, revenue $177.700k\u2192$184.700k, cash $23\u2026"
+        "source": "UGCMA / 12:58 May 29 Meta staging guardrail + small GetInsights creep: New local artifacts at 12:37 ET (meta-staging-2026-05-29/ugcma-meta-live-webinar-staging-notes.md, ugcma-webinar-live-l\u2026"
       },
       {
         "title": "12",
         "lane": "Team coordination",
         "status": "Visible / tracked",
         "next": "Summarize neutrally, confirm owner-safe next action, and avoid blame language.",
-        "source": "UGCMA / 12:23 May 29 BU1 rolling sale/payment automation delay + launch-readiness blocker: Fresh 12:22 GetInsights moved BU1/Sydney rolling sales 27\u219228, revenue $177.700k\u2192$184.700k, cash $23\u2026"
+        "source": "UGCMA / 12:58 May 29 Meta staging guardrail + small GetInsights creep: New local artifacts at 12:37 ET (meta-staging-2026-05-29/ugcma-meta-live-webinar-staging-notes.md, ugcma-webinar-live-l\u2026"
       }
     ],
     "richardTodos": [

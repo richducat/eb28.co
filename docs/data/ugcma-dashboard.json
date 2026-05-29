@@ -1,35 +1,35 @@
 {
-  "generatedAt": "2026-05-29T12:25:36.725059+00:00",
-  "rangeLabel": "Live UGCMA watch feed \u2022 2026-05-29 08-24-34",
+  "generatedAt": "2026-05-29T13:00:34.781705+00:00",
+  "rangeLabel": "Live UGCMA watch feed \u2022 08:56 ET",
   "totalLeads": "0",
   "feeds": [
     {
       "name": "UGCMA Watch Cron",
       "status": "live",
-      "value": "2026-05-29 08-24-34",
+      "value": "08:56 ET",
       "note": "30-minute read-only watch output is the dashboard feed source.",
-      "updatedAt": "May 29, 8:25 AM ET"
+      "updatedAt": "May 29, 9:00 AM ET"
     },
     {
       "name": "GetInsights Metrics",
       "status": "live",
       "value": "BU split",
       "note": "Sydney/BU1 and Nate/BU2 preserved separately; no blended claims.",
-      "updatedAt": "2026-05-29 08-24-34"
+      "updatedAt": "08:56 ET"
     },
     {
       "name": "Attribution Safety",
       "status": "partial",
       "value": "reconcile",
       "note": "Cash/ROAS and analytics-close vs deals mismatches stay flagged until dashboard/CRM/cash agree.",
-      "updatedAt": "2026-05-29 08-24-34"
+      "updatedAt": "08:56 ET"
     },
     {
       "name": "Launch Tracking",
       "status": "partial",
       "value": "watch",
       "note": "Landing/success/booking pages checked; BU-specific booking tests still required when flagged.",
-      "updatedAt": "2026-05-29 08-24-34"
+      "updatedAt": "08:56 ET"
     }
   ],
   "kpis": [
@@ -171,13 +171,13 @@
     }
   ],
   "stagnantLeads": {
-    "total": "6",
+    "total": "1",
     "delta": "open risks",
     "note": "quote-risk / reconciliation / launch-safety items",
     "buckets": [
       {
         "label": "Cash/ROAS quote risk",
-        "value": 1,
+        "value": 0,
         "percent": 35.0
       },
       {
@@ -192,7 +192,7 @@
       },
       {
         "label": "Next actions",
-        "value": 4,
+        "value": 0,
         "percent": 20.0
       }
     ]
@@ -226,44 +226,9 @@
   "recentCalls": [
     {
       "id": "risk-1",
-      "startedAt": "2026-05-29 08-24-34",
-      "title": "Reconcile / investigate + fix tracking/routing.",
+      "startedAt": "08:56 ET",
+      "title": "Fix tracking/copy/reference access + reconcile.",
       "host": "Risk / blocker",
-      "actionItems": 1
-    },
-    {
-      "id": "risk-2",
-      "startedAt": "2026-05-29 08-24-34",
-      "title": "Do not hard-quote BU1 cash yet because GetInsights still has cash-with-0-sales / `$0` revenue.",
-      "host": "Risk / blocker",
-      "actionItems": 1
-    },
-    {
-      "id": "action-1",
-      "startedAt": "2026-05-29 08-24-34",
-      "title": "Tie Chayle Bucalo\u2019s `$891.66` installment to exact BU1 contact/source/deal/cash mapping.",
-      "host": "Smallest next action",
-      "actionItems": 1
-    },
-    {
-      "id": "action-2",
-      "startedAt": "2026-05-29 08-24-34",
-      "title": "Explain why BU1 same-day cash increased while sales/revenue stayed 0.",
-      "host": "Smallest next action",
-      "actionItems": 1
-    },
-    {
-      "id": "action-3",
-      "startedAt": "2026-05-29 08-24-34",
-      "title": "Test/inspect active `webinar` vs `Z. OLD - Webinar` submissions for IP address, source fields, UTM/click ID, GHL/Dialer/Close ownership.",
-      "host": "Smallest next action",
-      "actionItems": 1
-    },
-    {
-      "id": "action-4",
-      "startedAt": "2026-05-29 08-24-34",
-      "title": "Keep BU2 under watch for spend-with-0-ad-leads.",
-      "host": "Smallest next action",
       "actionItems": 1
     }
   ],
@@ -306,27 +271,21 @@
     }
   ],
   "watchSummary": {
-    "sourceFile": "/Users/richardducat/.hermes/cron/output/11bb81317ca1/2026-05-29_08-24-34.md",
-    "watchLabel": "2026-05-29 08-24-34",
+    "sourceFile": "/Users/richardducat/.hermes/cron/output/11bb81317ca1/2026-05-29_08-59-32.md",
+    "watchLabel": "08:56 ET",
     "risks": [
-      "Reconcile / investigate + fix tracking/routing.",
-      "Do not hard-quote BU1 cash yet because GetInsights still has cash-with-0-sales / `$0` revenue."
+      "Fix tracking/copy/reference access + reconcile."
     ],
     "coordination": [],
     "launch": [],
-    "nextActions": [
-      "Tie Chayle Bucalo\u2019s `$891.66` installment to exact BU1 contact/source/deal/cash mapping.",
-      "Explain why BU1 same-day cash increased while sales/revenue stayed 0.",
-      "Test/inspect active `webinar` vs `Z. OLD - Webinar` submissions for IP address, source fields, UTM/click ID, GHL/Dialer/Close ownership.",
-      "Keep BU2 under watch for spend-with-0-ad-leads."
-    ]
+    "nextActions": []
   },
   "commandCenter": {
     "mandate": {
       "headline": "Jaamal is out \u2014 Richard is stepping up as accountable UGCMA command lead.",
       "status": "Opportunity mode",
       "objective": "Maximize trust by making the business feel controlled: numbers, blockers, decisions, content, team follow-through, and owner updates in one place.",
-      "updatedAt": "2026-05-29 08-24-34"
+      "updatedAt": "08:56 ET"
     },
     "decisionQueue": [
       {
@@ -341,7 +300,7 @@
         "lane": "Metrics / GetInsights",
         "status": "Needs reconciliation",
         "decision": "Use BU-separated directionality; do not hard-quote cash/ROAS where analytics-close, deals, CRM, or cash disagree.",
-        "source": "UGCMA / 08:22 May 29 BU1 installment payment + IP/form clarification + GetInsights recheck: Slack API #bu-01-new-payments exposed a new BU1/Sydney Whop payment at 08:02 ET \u2014 Chayle Bucalo (t\u2026"
+        "source": "UGCMA / 08:56 May 29 local board/thread asks + Cortana launch confirmation + BU2 editor blocker: Local/derived UGCMA boards regenerated at 08:34 ET and surfaced three Richard-facing asks not\u2026"
       },
       {
         "title": "Google / launch safety",
@@ -404,18 +363,18 @@
         "source": "UGCMA / 09:54 Jamaal 10am leadership call + Nate Meta export delta: Slack Desktop/UI-visible Jamaal DM now shows two urgent same-morning asks: 08:54 ET \u201cNeed a 15 min sync to know where we a\u2026"
       },
       {
-        "title": "07",
+        "title": "08",
         "lane": "Team coordination",
         "status": "Visible / tracked",
         "next": "Summarize neutrally, confirm owner-safe next action, and avoid blame language.",
-        "source": "UGCMA / 07:48 May 29 BU1 winning-ad confirmation ask + launch-QA still unclosed: Local UGCMA executive/CTA boards regenerated at 06:24\u201306:25 ET with a new leadership-prep delta from UI/local\u2026"
+        "source": "UGCMA / 08:56 May 29 local board/thread asks + Cortana launch confirmation + BU2 editor blocker: Local/derived UGCMA boards regenerated at 08:34 ET and surfaced three Richard-facing asks not\u2026"
       },
       {
-        "title": "07",
+        "title": "08",
         "lane": "Team coordination",
         "status": "Visible / tracked",
         "next": "Summarize neutrally, confirm owner-safe next action, and avoid blame language.",
-        "source": "UGCMA / 07:48 May 29 BU1 winning-ad confirmation ask + launch-QA still unclosed: Local UGCMA executive/CTA boards regenerated at 06:24\u201306:25 ET with a new leadership-prep delta from UI/local\u2026"
+        "source": "UGCMA / 08:56 May 29 local board/thread asks + Cortana launch confirmation + BU2 editor blocker: Local/derived UGCMA boards regenerated at 08:34 ET and surfaced three Richard-facing asks not\u2026"
       }
     ],
     "richardTodos": [
@@ -442,30 +401,6 @@
         "priority": "High",
         "owner": "Hermes monitors / Richard leads",
         "unblock": "Confirm thread evidence and owner for recording/editing."
-      },
-      {
-        "task": "Tie Chayle Bucalo\u2019s $891.66 installment to exact BU1 contact/source/deal/cash mapping.",
-        "priority": "Watch action",
-        "owner": "Richard/Hermes",
-        "unblock": "Use smallest next action from latest watch."
-      },
-      {
-        "task": "Explain why BU1 same-day cash increased while sales/revenue stayed 0.",
-        "priority": "Watch action",
-        "owner": "Richard/Hermes",
-        "unblock": "Use smallest next action from latest watch."
-      },
-      {
-        "task": "Test/inspect active webinar vs Z. OLD - Webinar submissions for IP address, source fields, UTM/click ID, GHL/Dialer/Close ownershi\u2026",
-        "priority": "Watch action",
-        "owner": "Richard/Hermes",
-        "unblock": "Use smallest next action from latest watch."
-      },
-      {
-        "task": "Keep BU2 under watch for spend-with-0-ad-leads.",
-        "priority": "Watch action",
-        "owner": "Richard/Hermes",
-        "unblock": "Use smallest next action from latest watch."
       }
     ],
     "sourceCoverage": [

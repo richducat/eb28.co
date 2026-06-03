@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { Suspense, lazy, useState, useEffect } from 'react';
 import {
   Rocket,
   Code,
@@ -23,7 +23,8 @@ import {
   Cloud,
   HardDrive
 } from 'lucide-react';
-import LiveAgentDemo from './components/LiveAgentDemo';
+
+const LiveAgentDemo = lazy(() => import('./components/LiveAgentDemo'));
 
 const App = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -344,7 +345,7 @@ const App = () => {
             width="1600"
             height="900"
             decoding="async"
-            fetchPriority="high"
+            fetchpriority="high"
             className="w-full h-full object-cover opacity-20"
           />
         </div>
@@ -385,7 +386,16 @@ const App = () => {
           </div>
 
           <div className="mt-16">
-            <LiveAgentDemo scrollToSection={scrollToSection} />
+            <Suspense
+              fallback={
+                <div
+                  className="mx-auto h-[220px] max-w-3xl rounded-2xl border border-slate-800 bg-slate-900/70 shadow-2xl shadow-blue-950/20"
+                  aria-hidden="true"
+                />
+              }
+            >
+              <LiveAgentDemo scrollToSection={scrollToSection} />
+            </Suspense>
           </div>
         </div>
       </section>

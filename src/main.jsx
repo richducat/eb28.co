@@ -2,16 +2,6 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { Capacitor } from '@capacitor/core';
 import App from './App';
-import Dashboard from './Dashboard';
-import AppBuilderStudio from './AppBuilderStudio';
-import FundManager from './FundManager';
-import ReconAgentPage from './ReconAgentPage';
-import AlarmClock from './AlarmClock';
-import CadetCatch from './CadetCatch';
-import LimitlessCreditGPS from './LimitlessCreditGPS';
-import ThomasCustomHomesPage from './ThomasCustomHomesPage';
-import MelbourneWebStudioPage from './MelbourneWebStudioPage.tsx';
-import WeedAuthorityPage from './WeedAuthorityPage.jsx';
 import './index.css';
 import { applyDocumentSeo } from './seo.js';
 import { ensureLatestBuild } from './runtimeFreshness.js';
@@ -60,102 +50,71 @@ const isAlarmClockRoute =
   pathname === '/alarmclock' ||
   isDedicatedAlarmClockHostname;
 
-function renderApp() {
+function renderComponent(Component) {
+  root.render(
+    <React.StrictMode>
+      <Component />
+    </React.StrictMode>
+  );
+}
+
+async function renderRoute(loadComponent) {
+  const module = await loadComponent();
+  renderComponent(module.default);
+}
+
+async function renderApp() {
   if (isDashboardRoute) {
-    root.render(
-      <React.StrictMode>
-        <Dashboard />
-      </React.StrictMode>
-    );
+    await renderRoute(() => import('./Dashboard'));
     return;
   }
 
   if (isAppBuilderRoute) {
-    root.render(
-      <React.StrictMode>
-        <AppBuilderStudio />
-      </React.StrictMode>
-    );
+    await renderRoute(() => import('./AppBuilderStudio'));
     return;
   }
 
   if (isFundManagerRoute) {
-    root.render(
-      <React.StrictMode>
-        <FundManager />
-      </React.StrictMode>
-    );
+    await renderRoute(() => import('./FundManager'));
     return;
   }
 
   if (isReconAgentRoute) {
-    root.render(
-      <React.StrictMode>
-        <ReconAgentPage />
-      </React.StrictMode>
-    );
+    await renderRoute(() => import('./ReconAgentPage'));
     return;
   }
 
   if (isLimitlessCreditGpsRoute) {
-    root.render(
-      <React.StrictMode>
-        <LimitlessCreditGPS />
-      </React.StrictMode>
-    );
+    await renderRoute(() => import('./LimitlessCreditGPS'));
     return;
   }
 
   if (isThomasCustomHomesRoute) {
-    root.render(
-      <React.StrictMode>
-        <ThomasCustomHomesPage />
-      </React.StrictMode>
-    );
+    await renderRoute(() => import('./ThomasCustomHomesPage'));
     return;
   }
 
   if (isMelbourneWebStudioRoute) {
-    root.render(
-      <React.StrictMode>
-        <MelbourneWebStudioPage />
-      </React.StrictMode>
-    );
+    await renderRoute(() => import('./MelbourneWebStudioPage.tsx'));
     return;
   }
 
   if (isWeedAuthorityRoute) {
-    root.render(
-      <React.StrictMode>
-        <WeedAuthorityPage />
-      </React.StrictMode>
-    );
+    await renderRoute(() => import('./WeedAuthorityPage.jsx'));
     return;
   }
 
   if (isCadetCatchRoute) {
-    root.render(
-      <React.StrictMode>
-        <CadetCatch />
-      </React.StrictMode>
-    );
+    await renderRoute(() => import('./CadetCatch'));
     return;
   }
 
   if (isAlarmClockRoute) {
-    root.render(
-      <React.StrictMode>
-        <AlarmClock />
-      </React.StrictMode>
-    );
+    await renderRoute(() => import('./AlarmClock'));
     return;
   }
 
-  root.render(
-    <React.StrictMode>
-      <App />
-    </React.StrictMode>
-  );
+  renderComponent(App);
 }
 
 async function boot() {
@@ -170,7 +129,7 @@ async function boot() {
   }
 
   applyDocumentSeo({ pathname, hostname });
-  renderApp();
+  await renderApp();
 }
 
 void boot();

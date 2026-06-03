@@ -103,6 +103,22 @@ function summarizeCommand(result) {
   return String(output || '').trim().split(/\r?\n/).slice(-20).join('\n');
 }
 
+function getChromePath() {
+  if (process.env.CHROME_PATH && fs.existsSync(process.env.CHROME_PATH)) {
+    return process.env.CHROME_PATH;
+  }
+
+  const candidates = [
+    '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+    '/Applications/Google Chrome Canary.app/Contents/MacOS/Google Chrome Canary',
+    '/usr/bin/google-chrome',
+    '/usr/bin/chromium',
+    '/usr/bin/chromium-browser',
+  ];
+
+  return candidates.find((candidate) => fs.existsSync(candidate)) || null;
+}
+
 async function readArticles() {
   return JSON.parse(await fsp.readFile(ARTICLES_FILE, 'utf8'));
 }
@@ -397,33 +413,56 @@ function renderAnalyticsRows(rows) {
 
 async function runLighthouse(urls) {
   const results = [];
+  const chromePath = getChromePath();
+  const chromeFlagAttempts = [
+    '--headless=new --no-sandbox --disable-gpu --disable-dev-shm-usage --remote-debugging-port=0',
+    '--headless --no-sandbox --disable-gpu --disable-dev-shm-usage --remote-debugging-port=0',
+  ];
+
   for (const url of urls) {
     const outPath = path.join(OUTPUT_DIR, `lighthouse-${url.replace(/^https?:\/\//, '').replace(/[^a-z0-9]+/gi, '-')}.json`);
-    const result = runCommand('npx', [
-      '--yes',
-      'lighthouse',
-      url,
-      '--quiet',
-      '--chrome-flags=--headless',
-      '--only-categories=performance,seo,best-practices,accessibility',
-      '--output=json',
-      `--output-path=${outPath}`,
-    ]);
+    let result = null;
+    for (const chromeFlags of chromeFlagAttempts) {
+      const chromeUserDataDir = fs.mkdtempSync(path.join(os.tmpdir(), 'eb28-lh-chrome-'));
+      result = runCommand('npx', [
+        '--yes',
+        'lighthouse',
+        url,
+        '--quiet',
+        `--chrome-flags=${chromeFlags} --user-data-dir=${chromeUserDataDir}`,
+        '--only-categories=performance,seo,best-practices,accessibility',
+        '--output=json',
+        `--output-path=${outPath}`,
+      ], chromePath ? { env: { ...process.env, CHROME_PATH: chromePath } } : {});
+      fs.rmSync(chromeUserDataDir, { recursive: true, force: true });
+      if (result.ok) break;
+    }
     let scores = null;
+    let metrics = null;
     if (result.ok && fs.existsSync(outPath)) {
       try {
         const json = JSON.parse(fs.readFileSync(outPath, 'utf8'));
         scores = Object.fromEntries(
           Object.entries(json.categories || {}).map(([key, category]) => [key, Math.round(Number(category.score || 0) * 100)]),
         );
+        const audits = json.audits || {};
+        metrics = {
+          lcp: audits['largest-contentful-paint']?.displayValue || null,
+          cls: audits['cumulative-layout-shift']?.displayValue || null,
+          tbt: audits['total-blocking-time']?.displayValue || null,
+          speedIndex: audits['speed-index']?.displayValue || null,
+          unusedJs: audits['unused-javascript']?.displayValue || null,
+        };
       } catch {
         scores = null;
+        metrics = null;
       }
     }
     results.push({
       url,
       ok: result.ok,
       scores,
+      metrics,
       outputPath: result.ok ? outPath : null,
       summary: summarizeCommand(result),
     });
@@ -681,7 +720,13 @@ async function main() {
     '',
     lighthouse.length
       ? lighthouse
-          .map((item) => `- ${item.url}: ${item.ok ? JSON.stringify(item.scores) : `failed (${item.summary})`}`)
+          .map((item) => {
+            if (!item.ok) return `- ${item.url}: failed (${item.summary})`;
+            const metricSummary = item.metrics
+              ? `; LCP ${item.metrics.lcp || 'n/a'}, CLS ${item.metrics.cls || 'n/a'}, TBT ${item.metrics.tbt || 'n/a'}, Speed Index ${item.metrics.speedIndex || 'n/a'}`
+              : '';
+            return `- ${item.url}: ${JSON.stringify(item.scores)}${metricSummary}`;
+          })
           .join('\n')
       : '- Skipped by flags.',
     '',

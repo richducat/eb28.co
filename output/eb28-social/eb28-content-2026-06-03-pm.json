@@ -24,6 +24,13 @@
       "creativeBrief": "Carousel: Slide 1 problem statement, Slide 2 what to fix first, Slide 3 technical SEO checks, Slide 4 internal links, Slide 5 CTA to project brief.",
       "status": "ready_to_publish_when_eb28_social_channel_is_configured"
     },
+    "shortFormVideo": {
+      "hook": "Your AI receptionist should not answer everything. It should protect the lead handoff.",
+      "script": "Open with the common problem: local businesses miss calls, chats, and form leads after hours. Explain the EB28 rule: automate greetings, routing, FAQs, intake, reminders, and CRM capture, but keep pricing exceptions, complaints, custom recommendations, and final sales decisions with a human. Close by sending viewers to the EB28 AI receptionist guide.",
+      "shotList": "Screen capture of the article headline, quick cuts of a missed-call log and website form, overlay list of automate versus keep human, final card with eb28.co/blog/.",
+      "caption": "AI receptionist for local business: automate the first response, protect the human handoff, and measure whether leads actually convert. Full guide: eb28.co/blog/",
+      "status": "ready_to_publish_when_eb28_video_channel_is_configured"
+    },
     "x": {
       "caption": "AI Receptionist for Local Business: What to Automate and What to Keep Human\n\nThe key: connect the search intent to a page that is fast, useful, internally linked, and measured in Search Console.\n\nhttps://eb28.co/blog/ai-receptionist-for-local-business-what-to-automate-and-what-to-keep-human/",
       "status": "ready_to_publish"

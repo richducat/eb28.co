@@ -11,6 +11,94 @@ const BACKLOG_FILE = path.join(CONTENT_DIR, 'topic-backlog.json');
 const STATE_FILE = path.join(CONTENT_DIR, 'content-state.json');
 const OUTPUT_DIR = path.join(ROOT, 'output', 'eb28-social');
 
+const CLUSTER_INTERNAL_LINKS = {
+  'local-seo': [
+    {
+      label: 'Local SEO map pack checklist for Melbourne FL',
+      href: '/blog/local-seo-map-pack-melbourne-fl/',
+      reason: 'Connects Google visibility work to the map-pack signals buyers and search engines both see.',
+    },
+    {
+      label: 'Google Business Profile website builder checklist',
+      href: '/blog/google-business-profile-website-builder-melbourne/',
+      reason: 'Shows how the website and Google profile should support the same local buying intent.',
+    },
+    {
+      label: 'Melbourne Web Studio lead leak quiz',
+      href: '/melbournewebstudio/#quiz',
+      reason: 'Turns local-search research into a low-friction conversion path.',
+    },
+  ],
+  'melbourne-web-design': [
+    {
+      label: 'Melbourne FL web design cost guide',
+      href: '/blog/melbourne-fl-web-design-cost-guide-2026/',
+      reason: 'Helps comparison-stage buyers understand scope, price, and what a serious website should include.',
+    },
+    {
+      label: 'Website conversion checklist for Melbourne FL',
+      href: '/blog/website-conversion-checklist-melbourne-fl/',
+      reason: 'Links design decisions to calls, bookings, quote requests, and form completion.',
+    },
+    {
+      label: 'Melbourne Web Studio lead leak quiz',
+      href: '/melbournewebstudio/#quiz',
+      reason: 'Moves ready buyers from research into a practical first-fix recommendation.',
+    },
+  ],
+  conversion: [
+    {
+      label: 'Website conversion checklist for Melbourne FL',
+      href: '/blog/website-conversion-checklist-melbourne-fl/',
+      reason: 'Gives visitors a deeper diagnostic path for above-the-fold clarity, proof, forms, and follow-up.',
+    },
+    {
+      label: 'AI lead follow-up for local service businesses',
+      href: '/blog/ai-lead-follow-up-local-service-business/',
+      reason: 'Connects page conversion improvements to faster lead handling after the form is submitted.',
+    },
+    {
+      label: 'Melbourne Web Studio lead leak quiz',
+      href: '/melbournewebstudio/#quiz',
+      reason: 'Converts the conversion problem into a specific next step.',
+    },
+  ],
+  'lead-automation': [
+    {
+      label: 'AI lead follow-up for local service businesses',
+      href: '/blog/ai-lead-follow-up-local-service-business/',
+      reason: 'Connects automation ideas to the buyer moments where slow replies lose work.',
+    },
+    {
+      label: 'Website conversion checklist for Melbourne FL',
+      href: '/blog/website-conversion-checklist-melbourne-fl/',
+      reason: 'Shows how the page and follow-up path need to work together.',
+    },
+    {
+      label: 'Recon Agent founder beta',
+      href: '/reconcile/',
+      reason: 'Links operational automation readers into a concrete EB28 product path.',
+    },
+  ],
+  'private-ai': [
+    {
+      label: 'Private AI infrastructure for small businesses',
+      href: '/blog/private-ai-infrastructure-small-business/',
+      reason: 'Keeps AI infrastructure readers connected to the secure, practical implementation cluster.',
+    },
+    {
+      label: 'AI lead follow-up for local service businesses',
+      href: '/blog/ai-lead-follow-up-local-service-business/',
+      reason: 'Shows where private AI can support lead intake without replacing human judgment.',
+    },
+    {
+      label: 'EB28 private AI and app development homepage',
+      href: '/',
+      reason: 'Moves technical readers toward the core EB28 service path.',
+    },
+  ],
+};
+
 function parseArgs(argv) {
   const options = {
     write: false,
@@ -113,13 +201,43 @@ function chooseTopic(backlog, articles, runId) {
   return available[0];
 }
 
+function buildInternalLinks(article) {
+  const fallbackLinks = [
+    {
+      label: 'Website conversion checklist for Melbourne FL',
+      href: '/blog/website-conversion-checklist-melbourne-fl/',
+      reason: 'Connects the topic to the page changes most likely to create more qualified enquiries.',
+    },
+    {
+      label: 'Local SEO map pack checklist for Melbourne FL',
+      href: '/blog/local-seo-map-pack-melbourne-fl/',
+      reason: 'Keeps organic-growth content tied to the strongest local-search cluster.',
+    },
+    {
+      label: 'Melbourne Web Studio lead leak quiz',
+      href: '/melbournewebstudio/#quiz',
+      reason: 'Gives ready buyers a practical next step instead of a generic contact form.',
+    },
+  ];
+
+  const links = [...(CLUSTER_INTERNAL_LINKS[article.cluster] || fallbackLinks), ...fallbackLinks];
+  const seen = new Set();
+  return links
+    .filter((link) => link.href !== `/blog/${article.slug}/`)
+    .filter((link) => {
+      if (seen.has(link.href)) return false;
+      seen.add(link.href);
+      return true;
+    })
+    .slice(0, 4);
+}
+
 function buildArticle(topic, { date, slot, runId }) {
   const slug = slugify(topic.title);
   const clusterLabel = String(topic.cluster || 'organic-growth').replace(/-/g, ' ');
   const keyword = topic.primaryKeyword || topic.title;
   const angle = topic.angle || 'practical implementation';
-
-  return {
+  const article = {
     slug,
     title: topic.title,
     description: `${topic.title} explained for business owners who want more qualified organic leads, stronger search visibility, and a website system that converts.`,
@@ -199,6 +317,11 @@ function buildArticle(topic, { date, slot, runId }) {
       'website-conversion-checklist-melbourne-fl',
       'melbourne-fl-web-design-cost-guide-2026',
     ].filter((relatedSlug) => relatedSlug !== slug),
+  };
+
+  return {
+    ...article,
+    internalLinks: buildInternalLinks(article),
   };
 }
 

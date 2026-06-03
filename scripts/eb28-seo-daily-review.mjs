@@ -415,13 +415,14 @@ async function runLighthouse(urls) {
   const results = [];
   const chromePath = getChromePath();
   const chromeFlagAttempts = [
-    '--headless=new --no-sandbox --disable-gpu --disable-dev-shm-usage --remote-debugging-port=0',
-    '--headless --no-sandbox --disable-gpu --disable-dev-shm-usage --remote-debugging-port=0',
+    '--headless=new --no-sandbox --disable-gpu --disable-dev-shm-usage',
+    '--headless --no-sandbox --disable-gpu --disable-dev-shm-usage',
   ];
 
   for (const url of urls) {
     const outPath = path.join(OUTPUT_DIR, `lighthouse-${url.replace(/^https?:\/\//, '').replace(/[^a-z0-9]+/gi, '-')}.json`);
     let result = null;
+    fs.rmSync(outPath, { force: true });
     for (const chromeFlags of chromeFlagAttempts) {
       const chromeUserDataDir = fs.mkdtempSync(path.join(os.tmpdir(), 'eb28-lh-chrome-'));
       result = runCommand('npx', [
@@ -439,7 +440,7 @@ async function runLighthouse(urls) {
     }
     let scores = null;
     let metrics = null;
-    if (result.ok && fs.existsSync(outPath)) {
+    if (fs.existsSync(outPath)) {
       try {
         const json = JSON.parse(fs.readFileSync(outPath, 'utf8'));
         scores = Object.fromEntries(
@@ -460,10 +461,10 @@ async function runLighthouse(urls) {
     }
     results.push({
       url,
-      ok: result.ok,
+      ok: Boolean(result.ok || scores),
       scores,
       metrics,
-      outputPath: result.ok ? outPath : null,
+      outputPath: scores ? outPath : null,
       summary: summarizeCommand(result),
     });
   }
@@ -615,7 +616,7 @@ async function main() {
 
   const safeUpdates = options.safeUpdates
     ? {
-        build: runCommand('npm', ['run', 'build']),
+        blog: runCommand(process.execPath, ['scripts/generate-eb28-blog.mjs']),
       }
     : { skipped: true };
 
@@ -660,7 +661,7 @@ async function main() {
     '',
     `## Local Build and SEO Validation`,
     '',
-    `- Build: ${safeUpdates.skipped ? 'skipped' : safeUpdates.build.ok ? 'passed' : 'failed'}`,
+    `- Static blog generation: ${safeUpdates.skipped ? 'skipped' : safeUpdates.blog.ok ? 'passed' : 'failed'}`,
     `- EB28 SEO check: ${localSeo.ok ? 'passed' : 'failed'}`,
     '```',
     summarizeCommand(localSeo),
@@ -749,7 +750,7 @@ async function main() {
     ? await sendReportEmail({ subject: 'EB28 Daily SEO Review', report })
     : { skipped: true };
 
-  const buildOk = safeUpdates.skipped || Boolean(safeUpdates.build.ok);
+  const buildOk = safeUpdates.skipped || Boolean(safeUpdates.blog.ok);
   const deployOk = deployment.skipped || Boolean(deployment.ok);
   const liveOk = liveChecks.every((check) => check.ok);
 

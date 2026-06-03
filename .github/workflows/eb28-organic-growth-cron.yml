@@ -1,0 +1,143 @@
+name: EB28 Organic Growth Automation
+
+on:
+  schedule:
+    # GitHub cron is UTC. These four triggers are gated in the job so the
+    # content engine runs at 6 AM and 6 PM America/New_York across EST/EDT.
+    - cron: '0 10,11,22,23 * * *'
+  workflow_dispatch:
+    inputs:
+      slot:
+        description: 'Content slot to run'
+        required: false
+        default: auto
+        type: choice
+        options:
+          - auto
+          - am
+          - pm
+      run_seo_review:
+        description: 'Run SEO review after content generation'
+        required: false
+        default: auto
+        type: choice
+        options:
+          - auto
+          - always
+          - never
+
+permissions:
+  contents: write
+
+concurrency:
+  group: eb28-organic-growth-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  organic-growth:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install dependencies
+        run: npm ci || npm install
+
+      - name: Resolve Eastern content slot
+        id: slot
+        env:
+          INPUT_SLOT: ${{ github.event.inputs.slot || 'auto' }}
+          INPUT_SEO_REVIEW: ${{ github.event.inputs.run_seo_review || 'auto' }}
+        run: |
+          set -euo pipefail
+          eastern_hour="$(TZ=America/New_York date +%H)"
+          eastern_date="$(TZ=America/New_York date +%F)"
+
+          slot="$INPUT_SLOT"
+          if [ "$slot" = "auto" ]; then
+            case "$eastern_hour" in
+              06) slot="am" ;;
+              18) slot="pm" ;;
+              *)
+                echo "skip=true" >> "$GITHUB_OUTPUT"
+                echo "Skipped: current America/New_York hour is $eastern_hour, not 06 or 18."
+                exit 0
+                ;;
+            esac
+          fi
+
+          run_seo_review="false"
+          if [ "$INPUT_SEO_REVIEW" = "always" ] || { [ "$INPUT_SEO_REVIEW" = "auto" ] && [ "$slot" = "pm" ]; }; then
+            run_seo_review="true"
+          fi
+          if [ "$INPUT_SEO_REVIEW" = "never" ]; then
+            run_seo_review="false"
+          fi
+
+          echo "skip=false" >> "$GITHUB_OUTPUT"
+          echo "slot=$slot" >> "$GITHUB_OUTPUT"
+          echo "eastern_date=$eastern_date" >> "$GITHUB_OUTPUT"
+          echo "run_seo_review=$run_seo_review" >> "$GITHUB_OUTPUT"
+
+      - name: Generate EB28 blog content
+        if: steps.slot.outputs.skip != 'true'
+        run: |
+          node scripts/eb28-content-engine.mjs --write --slot "${{ steps.slot.outputs.slot }}" --date "${{ steps.slot.outputs.eastern_date }}"
+          node scripts/generate-eb28-blog.mjs
+          node scripts/check-eb28-seo.mjs
+
+      - name: Run daily SEO review after evening content
+        if: steps.slot.outputs.skip != 'true' && steps.slot.outputs.run_seo_review == 'true'
+        env:
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+          GOOGLE_REFRESH_TOKEN: ${{ secrets.GOOGLE_REFRESH_TOKEN }}
+          GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+          GOOGLE_SERVICE_ACCOUNT_FILE: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_FILE }}
+          GSC_SITE_URL: ${{ secrets.GSC_SITE_URL }}
+          GSC_SITEMAP_URL: ${{ secrets.GSC_SITEMAP_URL }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          RESEND_FROM_EMAIL: ${{ secrets.RESEND_FROM_EMAIL }}
+          GMAIL_TO: ${{ secrets.GMAIL_TO }}
+          SEO_REPORT_EMAIL_TO: ${{ secrets.SEO_REPORT_EMAIL_TO }}
+        run: |
+          node scripts/eb28-seo-daily-review.mjs \
+            --safe-updates \
+            --submit-sitemap \
+            --inspect-urls \
+            --send-email \
+            --run-lighthouse
+
+      - name: Commit organic-growth outputs
+        if: steps.slot.outputs.skip != 'true'
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add content/eb28/articles.json \
+            content/eb28/content-state.json \
+            content/eb28/seo-outreach-queue.md \
+            docs/blog \
+            docs/data/eb28-blog-feed.json \
+            docs/sitemap.xml
+
+          git add output/eb28-social 2>/dev/null || true
+          git add output/seo-daily/*.md 2>/dev/null || true
+
+          if git diff --cached --quiet; then
+            echo "No organic-growth changes to commit."
+            exit 0
+          fi
+
+          git commit -m "Auto-update EB28 organic growth content"
+          git pull --rebase origin main
+          git push origin HEAD:main

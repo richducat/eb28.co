@@ -116,6 +116,12 @@ function getRelatedArticles(article, allArticles) {
   return [...explicit, ...sameCluster, ...fallback].slice(0, 3);
 }
 
+function normalizeInternalLinks(article) {
+  return (article.internalLinks || [])
+    .filter((link) => link && link.href && link.label)
+    .slice(0, 6);
+}
+
 function baseStyles() {
   return `
     :root {
@@ -347,6 +353,45 @@ function baseStyles() {
       color: #1f3158;
       font-weight: 700;
     }
+    .next-links {
+      border: 1px solid #b8cdfd;
+      background: #f7faff;
+      border-radius: .5rem;
+      padding: 1.25rem;
+      margin: 2.5rem 0;
+    }
+    .next-links h2 {
+      margin-top: 0;
+    }
+    .next-link-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: .85rem;
+      margin-top: 1rem;
+    }
+    .next-link-card {
+      display: block;
+      border: 1px solid var(--line);
+      border-radius: .5rem;
+      background: #fff;
+      padding: 1rem;
+      text-decoration: none;
+    }
+    .next-link-card strong {
+      display: block;
+      color: var(--accent-dark);
+      line-height: 1.25;
+    }
+    .next-link-card span {
+      display: block;
+      color: var(--muted);
+      font-size: .9rem;
+      margin-top: .45rem;
+    }
+    .next-link-card:hover {
+      border-color: #86a8fb;
+      box-shadow: 0 10px 24px rgba(15, 23, 42, .07);
+    }
     .cta {
       margin: 3rem 0 0;
       padding: 1.5rem;
@@ -394,6 +439,7 @@ function baseStyles() {
       .nav { align-items: flex-start; flex-direction: column; }
       .grid { grid-template-columns: 1fr; }
       .article-layout { grid-template-columns: 1fr; }
+      .next-link-grid { grid-template-columns: 1fr; }
       .toc { position: static; }
       .hero-inner, .section, .article-shell { padding: 3rem 1rem; }
     }
@@ -591,6 +637,7 @@ function renderArticlePage(article, allArticles) {
   const sections = article.sections || [];
   const faqs = article.faqs || [];
   const citations = article.citations || [];
+  const internalLinks = normalizeInternalLinks(article);
   const structuredData = [
     {
       '@context': 'https://schema.org',
@@ -687,6 +734,29 @@ function renderArticlePage(article, allArticles) {
               .join('')}
 
             ${
+              internalLinks.length
+                ? `
+                  <section class="next-links" id="recommended-next-steps">
+                    <h2>Where to go next</h2>
+                    <p>If this hit the problem you are seeing, these pages will help you find the next leak before you spend money fixing the wrong thing.</p>
+                    <div class="next-link-grid">
+                      ${internalLinks
+                        .map(
+                          (link) => `
+                            <a class="next-link-card" href="${escapeHtml(link.href)}">
+                              <strong>${escapeHtml(link.label)}</strong>
+                              ${link.reason ? `<span>${escapeHtml(link.reason)}</span>` : ''}
+                            </a>
+                          `,
+                        )
+                        .join('')}
+                    </div>
+                  </section>
+                `
+                : ''
+            }
+
+            ${
               faqs.length
                 ? `
                   <section class="faq" id="faq">
@@ -735,6 +805,7 @@ function renderArticlePage(article, allArticles) {
             <div class="toc">
               <h2>On this page</h2>
               ${sections.map((section) => `<a href="#${slugId(section.heading)}">${escapeHtml(section.heading)}</a>`).join('')}
+              ${internalLinks.length ? '<a href="#recommended-next-steps">Where to go next</a>' : ''}
               ${faqs.length ? '<a href="#faq">FAQs</a>' : ''}
               ${citations.length ? '<a href="#sources">Sources</a>' : ''}
             </div>
@@ -838,7 +909,11 @@ async function updateSitemap(articles) {
   const locRegex = /<loc>([\s\S]*?)<\/loc>/g;
   let match;
   while ((match = locRegex.exec(existing))) {
-    addUrl(match[1].trim());
+    const existingUrl = match[1].trim();
+    if (existingUrl === `${SITE_ORIGIN}${BLOG_PATH}` || existingUrl.startsWith(`${SITE_ORIGIN}${BLOG_PATH}`)) {
+      continue;
+    }
+    addUrl(existingUrl);
   }
 
   addUrl(`${SITE_ORIGIN}${BLOG_PATH}`, articles[0]?.dateModified || articles[0]?.datePublished || '');

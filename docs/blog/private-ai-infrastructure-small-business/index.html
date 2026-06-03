@@ -248,6 +248,45 @@
       color: #1f3158;
       font-weight: 700;
     }
+    .next-links {
+      border: 1px solid #b8cdfd;
+      background: #f7faff;
+      border-radius: .5rem;
+      padding: 1.25rem;
+      margin: 2.5rem 0;
+    }
+    .next-links h2 {
+      margin-top: 0;
+    }
+    .next-link-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: .85rem;
+      margin-top: 1rem;
+    }
+    .next-link-card {
+      display: block;
+      border: 1px solid var(--line);
+      border-radius: .5rem;
+      background: #fff;
+      padding: 1rem;
+      text-decoration: none;
+    }
+    .next-link-card strong {
+      display: block;
+      color: var(--accent-dark);
+      line-height: 1.25;
+    }
+    .next-link-card span {
+      display: block;
+      color: var(--muted);
+      font-size: .9rem;
+      margin-top: .45rem;
+    }
+    .next-link-card:hover {
+      border-color: #86a8fb;
+      box-shadow: 0 10px 24px rgba(15, 23, 42, .07);
+    }
     .cta {
       margin: 3rem 0 0;
       padding: 1.5rem;
@@ -295,6 +334,7 @@
       .nav { align-items: flex-start; flex-direction: column; }
       .grid { grid-template-columns: 1fr; }
       .article-layout { grid-template-columns: 1fr; }
+      .next-link-grid { grid-template-columns: 1fr; }
       .toc { position: static; }
       .hero-inner, .section, .article-shell { padding: 3rem 1rem; }
     }
@@ -302,7 +342,7 @@
     <script type="application/ld+json">[{"@context":"https://schema.org","@type":"BlogPosting","headline":"Private AI Infrastructure for Small Businesses: When Local LLMs Make Sense","description":"A plain-English guide to private AI infrastructure, local LLMs, RAG systems, and secure business automation for small businesses handling sensitive data.","mainEntityOfPage":"https://eb28.co/blog/private-ai-infrastructure-small-business/","url":"https://eb28.co/blog/private-ai-infrastructure-small-business/","datePublished":"2026-06-02","dateModified":"2026-06-02","author":{"@type":"Organization","name":"EB28","url":"https://eb28.co"},"publisher":{"@type":"Organization","name":"EB28","url":"https://eb28.co","logo":{"@type":"ImageObject","url":"https://eb28.co/favicon.svg"}},"image":"https://eb28.co/assets/execution_grid.png","keywords":["private AI infrastructure for small business","private-ai"]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://eb28.co/"},{"@type":"ListItem","position":2,"name":"Blog","item":"https://eb28.co/blog/"},{"@type":"ListItem","position":3,"name":"Private AI Infrastructure for Small Businesses: When Local LLMs Make Sense","item":"https://eb28.co/blog/private-ai-infrastructure-small-business/"}]},{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Does private AI require buying expensive servers?","acceptedAnswer":{"@type":"Answer","text":"Not always. Some private AI workflows can run on managed private cloud infrastructure or a smaller local setup. The right hardware depends on model size, speed needs, data sensitivity, and budget."}},{"@type":"Question","name":"What is RAG?","acceptedAnswer":{"@type":"Answer","text":"RAG stands for retrieval-augmented generation. It lets an AI system retrieve relevant approved documents before answering, which can make responses more grounded in the business's actual knowledge base."}}]}]</script>
   </head>
   <body>
-
+    
     <a class="skip-link" href="#main-content">Skip to content</a>
     <header class="site-header">
       <nav class="nav" aria-label="Primary">
@@ -319,7 +359,7 @@
         </div>
       </nav>
     </header>
-
+  
     <main id="main-content">
       <section class="hero">
         <div class="hero-inner">
@@ -338,51 +378,81 @@
         <div class="article-layout">
           <article>
             <p class="quote">The goal is not more content for its own sake. The goal is a clearer path from search impression to qualified lead.</p>
-
+            
                   <section id="what-private-ai-actually-means">
                     <h2>What private AI actually means</h2>
                     <p>Private AI infrastructure usually means the business controls where sensitive prompts, documents, and outputs are processed. That can be a local machine, a private cloud instance, or a carefully permissioned hybrid system.</p><p>The goal is not to isolate every workflow by default. The goal is to separate sensitive internal knowledge from generic public-model tasks and build the right guardrails around both.</p>
                     <ul><li>Local or private-cloud model hosting for sensitive workflows</li><li>RAG systems that retrieve approved business documents</li><li>Access controls for staff, clients, and admin workflows</li><li>Logs, review queues, and human approval for risky actions</li></ul>
                   </section>
-
+                
                   <section id="when-a-local-llm-is-worth-it">
                     <h2>When a local LLM is worth it</h2>
                     <p>A local LLM makes sense when a business has recurring knowledge work, sensitive information, or workflows that should not depend entirely on public chat tools. It is especially useful for internal SOP search, quote drafting, lead qualification, and support workflows.</p><p>It is not always the cheapest or fastest option. The decision should be based on data sensitivity, workflow volume, response requirements, and maintenance expectations.</p>
-
+                    
                   </section>
-
+                
                   <section id="how-to-launch-without-overbuilding">
                     <h2>How to launch without overbuilding</h2>
                     <p>Start with one contained workflow. Connect a narrow knowledge base, define what the AI is allowed to do, add review steps, and measure time saved or leads recovered.</p><p>Once the first workflow proves value, expand into CRM updates, reporting, intake triage, reconciliation, or customer follow-up.</p>
                     <ul><li>Choose one repeatable workflow</li><li>Limit the first knowledge base to approved documents</li><li>Log outputs and require human approval for external messages</li><li>Measure speed, accuracy, and business impact</li></ul>
                   </section>
+                
 
+            
+                  <section class="next-links" id="recommended-next-steps">
+                    <h2>Where to go next</h2>
+                    <p>If this hit the problem you are seeing, these pages will help you find the next leak before you spend money fixing the wrong thing.</p>
+                    <div class="next-link-grid">
+                      
+                            <a class="next-link-card" href="/blog/ai-lead-follow-up-local-service-business/">
+                              <strong>AI lead follow-up for local service businesses</strong>
+                              <span>Shows a concrete revenue workflow where private AI can support lead handling.</span>
+                            </a>
+                          
+                            <a class="next-link-card" href="/blog/website-conversion-checklist-melbourne-fl/">
+                              <strong>Website conversion checklist for Melbourne FL</strong>
+                              <span>Connects AI infrastructure to the front-end experience that captures leads.</span>
+                            </a>
+                          
+                            <a class="next-link-card" href="/reconcile/">
+                              <strong>Recon Agent founder beta</strong>
+                              <span>Moves automation-minded readers into a concrete EB28 product path.</span>
+                            </a>
+                          
+                            <a class="next-link-card" href="/">
+                              <strong>EB28 private AI and app development homepage</strong>
+                              <span>Connects technical readers back to the main EB28 service offer.</span>
+                            </a>
+                          
+                    </div>
+                  </section>
+                
 
-
+            
                   <section class="faq" id="faq">
                     <h2>FAQs</h2>
-
+                    
                           <details>
                             <summary>Does private AI require buying expensive servers?</summary>
                             <p>Not always. Some private AI workflows can run on managed private cloud infrastructure or a smaller local setup. The right hardware depends on model size, speed needs, data sensitivity, and budget.</p>
                           </details>
-
+                        
                           <details>
                             <summary>What is RAG?</summary>
                             <p>RAG stands for retrieval-augmented generation. It lets an AI system retrieve relevant approved documents before answering, which can make responses more grounded in the business&#39;s actual knowledge base.</p>
                           </details>
-
+                        
                   </section>
+                
 
-
-
+            
                   <section id="sources">
                     <h2>Sources and citations</h2>
                     <ul>
                       <li><a href="https://www.nist.gov/itl/ai-risk-management-framework" rel="noopener noreferrer" target="_blank">NIST AI Risk Management Framework</a></li><li><a href="https://cloud.google.com/use-cases/retrieval-augmented-generation" rel="noopener noreferrer" target="_blank">Google Cloud: Retrieval augmented generation overview</a></li>
                     </ul>
                   </section>
-
+                
 
             <section class="cta">
               <h2>Turn this into a lead system</h2>
@@ -395,6 +465,7 @@
             <div class="toc">
               <h2>On this page</h2>
               <a href="#what-private-ai-actually-means">What private AI actually means</a><a href="#when-a-local-llm-is-worth-it">When a local LLM is worth it</a><a href="#how-to-launch-without-overbuilding">How to launch without overbuilding</a>
+              <a href="#recommended-next-steps">Where to go next</a>
               <a href="#faq">FAQs</a>
               <a href="#sources">Sources</a>
             </div>
@@ -412,13 +483,13 @@
         </div>
       </div>
     </main>
-
+    
     <footer class="footer">
       <div class="footer-inner">
         <span>© 2026 EB28. Built for organic leads, private AI infrastructure, and measurable local growth.</span>
         <span><a href="/sitemap.xml">Sitemap</a> · <a href="/blog/">Blog</a> · <a href="/melbournewebstudio/">Melbourne Web Studio</a></span>
       </div>
     </footer>
-
+  
   </body>
 </html>

@@ -118,18 +118,14 @@ async function renderApp() {
 }
 
 async function boot() {
-  const redirectedToFreshBuild = await ensureLatestBuild({
+  applyDocumentSeo({ pathname, hostname });
+  await renderApp();
+
+  void ensureLatestBuild({
     hostname,
     isAlarmClockRoute,
     isNativeAlarmClockApp,
   });
-
-  if (redirectedToFreshBuild) {
-    return;
-  }
-
-  applyDocumentSeo({ pathname, hostname });
-  await renderApp();
 }
 
 void boot();

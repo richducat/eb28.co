@@ -62,6 +62,24 @@ async function fileExists(filePath) {
   }
 }
 
+function isBlogHref(href) {
+  return /^\/blog\/[^/]+\/?(?:#[a-z0-9-]+)?$/i.test(String(href || ''));
+}
+
+function isCoreHref(href) {
+  return /^(\/$|\/melbournewebstudio\/(?:#[a-z0-9-]+)?$|\/reconcile\/(?:#[a-z0-9-]+)?$)/i.test(
+    String(href || ''),
+  );
+}
+
+function hrefTargetsCurrentArticle(href, slug) {
+  return String(href || '').replace(/#.*$/, '').replace(/\/$/, '') === `/blog/${slug}`;
+}
+
+function getExplicitInternalLinks(article) {
+  return (article.internalLinks || []).filter((link) => link && link.href && link.label);
+}
+
 async function checkStaticBasics() {
   const checks = [];
   const robots = await readText(path.join(DOCS_DIR, 'robots.txt'));
@@ -153,6 +171,37 @@ async function checkArticles() {
         ? pass(`${article.slug} has internal links to core pages`)
         : fail(`${article.slug} is missing core internal links`),
     );
+
+    const explicitInternalLinks = getExplicitInternalLinks(article);
+    checks.push(
+      explicitInternalLinks.length >= 3
+        ? pass(`${article.slug} has explicit internal-link metadata`)
+        : fail(`${article.slug} needs at least 3 explicit internal links`, {
+            count: explicitInternalLinks.length,
+          }),
+    );
+    checks.push(
+      explicitInternalLinks.some((link) => isBlogHref(link.href) && !hrefTargetsCurrentArticle(link.href, article.slug))
+        ? pass(`${article.slug} links to a different blog article`)
+        : fail(`${article.slug} needs at least one explicit link to another blog article`),
+    );
+    checks.push(
+      explicitInternalLinks.some((link) => isCoreHref(link.href))
+        ? pass(`${article.slug} links to a core service/conversion page`)
+        : fail(`${article.slug} needs at least one explicit link to a core service/conversion page`),
+    );
+    for (const link of explicitInternalLinks) {
+      checks.push(
+        !hrefTargetsCurrentArticle(link.href, article.slug)
+          ? pass(`${article.slug} internal link is not self-referential: ${link.href}`)
+          : fail(`${article.slug} has a self-referential internal link`, { href: link.href }),
+      );
+      checks.push(
+        html.includes(`href="${link.href}"`)
+          ? pass(`${article.slug} renders explicit internal link: ${link.href}`)
+          : fail(`${article.slug} does not render explicit internal link`, { href: link.href }),
+      );
+    }
   }
 
   return checks;

@@ -446,10 +446,10 @@ const Hero = () => {
               50+ Local Businesses Served
             </span>
           </div>
-          <h1 className="text-5xl md:text-6xl font-bold text-slate-900 leading-[1.1] mb-6">
+          <h2 className="text-5xl md:text-6xl font-bold text-slate-900 leading-[1.1] mb-6">
             Get a Website That <span className="text-blue-600">Actually Works</span> for Your
             Business.
-          </h1>
+          </h2>
           <p className="text-lg text-slate-600 mb-8 max-w-md leading-relaxed">
             No tech-speak, no hidden fees. Just a fast, professional site that helps locals find
             you.
@@ -483,7 +483,7 @@ const Hero = () => {
             width="900"
             height="1125"
             decoding="async"
-            fetchPriority="high"
+            fetchpriority="high"
             className="relative rounded-2xl shadow-2xl z-10 w-full object-cover aspect-[4/5] bg-slate-100"
           />
         </motion.div>
@@ -1295,6 +1295,7 @@ const OnboardingFunnel = () => {
   >("QUIZ");
   const [quizStep, setQuizStep] = useState(0);
   const [quizScore, setQuizScore] = useState(0);
+  const [quizAnswers, setQuizAnswers] = useState<Record<string, string>>({});
   const [websiteUrl, setWebsiteUrl] = useState("");
   const [isScanning, setIsScanning] = useState(false);
   const [scanProgress, setScanProgress] = useState(0);
@@ -1303,6 +1304,7 @@ const OnboardingFunnel = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [mockup, setMockup] = useState("");
   const [submissionError, setSubmissionError] = useState("");
+  const [qualifyErrors, setQualifyErrors] = useState<Record<string, string>>({});
 
   const [leadData, setLeadData] = useState({
     name: "",
@@ -1322,6 +1324,10 @@ const OnboardingFunnel = () => {
 
   const [selectedPackage, setSelectedPackage] = useState<any>(null);
   const [targetPackage, setTargetPackage] = useState<string | null>(null);
+  const [quickLeadData, setQuickLeadData] = useState({
+    bestTime: "",
+    notes: "",
+  });
 
   useEffect(() => {
     const savedLead = localStorage.getItem("leadData");
@@ -1337,41 +1343,164 @@ const OnboardingFunnel = () => {
 
   const quizQuestions = [
     {
-      q: "Is your website a passive revenue machine, or just a digital business card that's costing you money every month?",
-      desc: "If your site isn't generating at least 5 qualified leads per week on autopilot, it's a liability, not an asset.",
+      id: "primaryGoal",
+      shortLabel: "Goal",
+      question: "What do you need the website to do first?",
+      subtext: "Pick the outcome that would make the fastest difference for your business.",
+      options: [
+        {
+          label: "Bring in more local leads",
+          value: "local-leads",
+          helper: "More calls, quote requests, bookings, or form submissions from Melbourne-area searches.",
+          score: 2,
+          package: "The Power Foundation",
+        },
+        {
+          label: "Replace an outdated site",
+          value: "new-site",
+          helper: "The current site looks dated, loads slowly, or does not explain why someone should choose you.",
+          score: 1,
+          package: "The Professional Build",
+        },
+        {
+          label: "Automate follow-up",
+          value: "automation",
+          helper: "Leads come in, but replies, qualification, scheduling, or CRM updates are inconsistent.",
+          score: 2,
+          package: "AI Business Suite",
+        },
+      ],
     },
     {
-      q: "Are you invisible to 75% of your market? If you're not in the top 3 local results, you're literally handing your best clients to your competitors.",
-      desc: "The top 3 results get 75% of all clicks. Being on page 2 is the same as being nowhere.",
+      id: "biggestLeak",
+      shortLabel: "Leak",
+      question: "Where are you losing the most money right now?",
+      subtext: "This tells us whether the fix is mostly traffic, trust, conversion, or follow-up.",
+      options: [
+        {
+          label: "People cannot find us on Google",
+          value: "search-visibility",
+          helper: "Rankings, Google Business Profile, service pages, reviews, or citations are weak.",
+          score: 2,
+          package: "The Power Foundation",
+        },
+        {
+          label: "Visitors do not take action",
+          value: "conversion",
+          helper: "Traffic lands on the site, but the page does not turn interest into a real enquiry.",
+          score: 2,
+          package: "The Professional Build",
+        },
+        {
+          label: "Good leads slip through the cracks",
+          value: "follow-up",
+          helper: "Response speed, intake questions, routing, or reminders are not dependable yet.",
+          score: 1,
+          package: "AI Business Suite",
+        },
+      ],
     },
     {
-      q: "Are you still using a 'dumb' website in an AI-driven world? If your site doesn't adapt to visitors in real-time, you're losing them to smarter brands.",
-      desc: "Modern authority is built on interactive, personalized user experiences that convert at 3x the rate of static sites.",
+      id: "timeline",
+      shortLabel: "Timing",
+      question: "How soon do you want this producing leads?",
+      subtext: "A clear timeline helps us recommend the right first sprint instead of overscoping.",
+      options: [
+        {
+          label: "This week if possible",
+          value: "this-week",
+          helper: "I need a focused launch or repair plan immediately.",
+          score: 2,
+          package: "The Power Foundation",
+        },
+        {
+          label: "Within 30 days",
+          value: "thirty-days",
+          helper: "I want a serious build plan and a realistic launch schedule.",
+          score: 1,
+          package: "The Professional Build",
+        },
+        {
+          label: "I am comparing options",
+          value: "researching",
+          helper: "I want to understand what would actually move rankings and leads.",
+          score: 0,
+          package: "The Professional Build",
+        },
+      ],
     },
     {
-      q: "Would a total stranger trust your brand more than your biggest competitor within 3 seconds of landing on your page?",
-      desc: "Trust is the currency of the web. If a prospect sees a competitor as more 'alive' or professional, they'll choose them every time.",
-    },
-    {
-      q: "Could a 10-year-old understand exactly how to hire you in under 5 seconds? If not, your conversion rate is suffering from 'clarity friction'.",
-      desc: "The 'Grunt Test' is vital. If your value proposition isn't clear immediately, you've already lost the lead.",
+      id: "readiness",
+      shortLabel: "Fit",
+      question: "What kind of help do you want?",
+      subtext: "Choose the level of execution you want from Melbourne Web Studio.",
+      options: [
+        {
+          label: "Tell me exactly what to fix",
+          value: "audit-plan",
+          helper: "I want a clear priority list and the fastest path to better organic leads.",
+          score: 0,
+          package: "The Power Foundation",
+        },
+        {
+          label: "Build and launch it for me",
+          value: "done-for-me",
+          helper: "I want the website, SEO foundation, and conversion path handled.",
+          score: 1,
+          package: "The Professional Build",
+        },
+        {
+          label: "Build the full lead machine",
+          value: "full-system",
+          helper: "Website, SEO, AI intake, follow-up, reporting, and automation.",
+          score: 2,
+          package: "AI Business Suite",
+        },
+      ],
     },
   ];
 
-  const [feedback, setFeedback] = useState<"yes" | "no" | null>(null);
+  const scoreQuizAnswers = (answers: Record<string, string>) =>
+    quizQuestions.reduce((total, question) => {
+      const option = question.options.find((item) => item.value === answers[question.id]);
+      return total + (option?.score || 0);
+    }, 0);
 
-  const handleQuizAnswer = (isYes: boolean) => {
-    setFeedback(isYes ? "yes" : "no");
-    if (isYes) setQuizScore((prev) => prev + 1);
+  const getRecommendedPackage = (answers: Record<string, string>) => {
+    const packageCounts = quizQuestions.reduce<Record<string, number>>((counts, question) => {
+      const option = question.options.find((item) => item.value === answers[question.id]);
+      if (option?.package) counts[option.package] = (counts[option.package] || 0) + 1;
+      return counts;
+    }, {});
 
-    setTimeout(() => {
-      setFeedback(null);
-      if (quizStep < quizQuestions.length - 1) {
-        setQuizStep((prev) => prev + 1);
-      } else {
-        setFunnelStep("SCAN");
-      }
-    }, 600);
+    return (
+      Object.entries(packageCounts).sort((a, b) => b[1] - a[1])[0]?.[0] ||
+      "The Power Foundation"
+    );
+  };
+
+  const handleQuizSelect = (questionId: string, value: string) => {
+    setQuizAnswers((prev) => ({ ...prev, [questionId]: value }));
+  };
+
+  const handleQuizContinue = () => {
+    const currentQuestion = quizQuestions[quizStep];
+    if (!quizAnswers[currentQuestion.id]) return;
+
+    if (quizStep < quizQuestions.length - 1) {
+      setQuizStep((prev) => prev + 1);
+      return;
+    }
+
+    const finalScore = clamp(scoreQuizAnswers(quizAnswers), 0, 5);
+    const recommendedPackage = getRecommendedPackage(quizAnswers);
+    setQuizScore(finalScore);
+    setTargetPackage(recommendedPackage);
+    setFunnelStep("QUALIFY");
+  };
+
+  const handleQuizBack = () => {
+    if (quizStep > 0) setQuizStep((prev) => prev - 1);
   };
 
   const startScan = async () => {
@@ -1424,6 +1553,65 @@ const OnboardingFunnel = () => {
     setFunnelStep("ONBOARDING");
   };
 
+  const validateQualify = () => {
+    const nextErrors: Record<string, string> = {};
+    if (!leadData.name.trim()) nextErrors.name = "Enter your name.";
+    if (!leadData.businessName.trim()) nextErrors.businessName = "Enter the business name.";
+    if (!leadData.email.trim() || !isValidEmail(leadData.email)) {
+      nextErrors.email = "Enter a valid email.";
+    }
+    if (websiteUrl.trim()) {
+      try {
+        new URL(normalizeWebsiteUrl(websiteUrl));
+      } catch {
+        nextErrors.websiteUrl = "Enter a valid website URL or leave it blank.";
+      }
+    }
+    return nextErrors;
+  };
+
+  const submitPrequalification = async () => {
+    const nextErrors = validateQualify();
+    setQualifyErrors(nextErrors);
+    setSubmissionError("");
+
+    if (Object.keys(nextErrors).length) return;
+
+    const assessedUrl = websiteUrl.trim() || leadData.businessName.trim();
+    const result = buildAuthorityAnalysis(assessedUrl, quizScore);
+    setAiAnalysis(result);
+    localStorage.setItem("aiAnalysis", JSON.stringify(result));
+    localStorage.setItem("leadData", JSON.stringify(leadData));
+    if (websiteUrl.trim()) localStorage.setItem("websiteUrl", websiteUrl.trim());
+
+    setIsSubmitting(true);
+    try {
+      await submitLeadCapture({
+        ...leadData,
+        phone: leadData.phone.trim(),
+        websiteUrl: websiteUrl.trim() ? normalizeWebsiteUrl(websiteUrl) : "",
+        bestTime: quickLeadData.bestTime,
+        notes: quickLeadData.notes,
+        quizAnswers,
+        quizScore,
+        recommendedPackage: targetPackage || getRecommendedPackage(quizAnswers),
+        assessment: result.assessment,
+        killerInsight: result.killerInsight,
+        serviceNeed: "melbourne-web-studio-growth-quiz",
+        sourcePage: "melbournewebstudio.eb28.co",
+        _subject: `Melbourne Web Studio growth quiz for ${
+          leadData.businessName || leadData.name || "new lead"
+        }`,
+      });
+      setFunnelStep("RESULTS");
+    } catch (error) {
+      console.error("Prequalification failed", error);
+      setSubmissionError("We couldn't send this yet. Check the fields and try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   const submitOnboarding = async () => {
     if (!selectedPackage) {
       setSubmissionError("Pick a package first so we can finish your brief correctly.");
@@ -1465,125 +1653,176 @@ const OnboardingFunnel = () => {
     setIsSubmitting(false);
   };
 
-  const renderQuiz = () => (
-    <div className="bg-white rounded-[2.5rem] p-10 md:p-16 border border-slate-200 shadow-xl relative overflow-hidden">
-      <div className="absolute -top-24 -right-24 w-64 h-64 bg-blue-500/5 rounded-full blur-3xl animate-pulse"></div>
-      <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-emerald-500/5 rounded-full blur-3xl animate-pulse"></div>
+  const renderQuiz = () => {
+    const currentQuestion = quizQuestions[quizStep];
+    const selectedValue = quizAnswers[currentQuestion.id] || "";
+    const progress = ((quizStep + 1) / quizQuestions.length) * 100;
 
-      <div className="max-w-2xl mx-auto relative z-10">
-        <div className="mb-12">
-          <div className="flex justify-between items-end mb-4">
-            <div className="space-y-1">
-              <p className="text-[10px] font-black text-blue-600 uppercase tracking-[0.3em]">
-                Authority Audit
-              </p>
-              <h4 className="text-sm font-bold text-slate-900">
-                Step {quizStep + 1} of {quizQuestions.length}
-              </h4>
-            </div>
-            <div className="text-right">
-              <span className="text-2xl font-black text-slate-900">
-                {Math.round(((quizStep + 1) / quizQuestions.length) * 100)}%
-              </span>
-              <p className="text-[8px] font-bold text-slate-400 uppercase tracking-widest">
-                Progress
-              </p>
-            </div>
+    return (
+      <div className="grid gap-8 lg:grid-cols-[0.82fr_1.18fr] lg:items-center">
+        <div className="space-y-8">
+          <div className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-white px-4 py-2 text-xs font-black uppercase tracking-[0.16em] text-blue-700 shadow-sm">
+            <ShieldCheck className="h-4 w-4" />
+            Local Lead Growth Check
           </div>
-          <div className="w-full h-3 bg-slate-100 rounded-full overflow-hidden p-0.5 border border-slate-200/50">
-            <motion.div
-              initial={{ width: 0 }}
-              animate={{ width: `${((quizStep + 1) / quizQuestions.length) * 100}%` }}
-              transition={{ type: "spring", stiffness: 50, damping: 15 }}
-              className="h-full bg-gradient-to-r from-blue-600 to-blue-400 rounded-full relative"
-            >
-              <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_25%,rgba(255,255,255,0.2)_50%,transparent_75%)] bg-[length:250%_250%] animate-[shimmer_2s_infinite]"></div>
-            </motion.div>
+          <div>
+            <h1 className="max-w-3xl text-4xl font-black leading-[1.02] tracking-tight text-slate-950 md:text-6xl">
+              Find out what your website needs to start bringing in local customers.
+            </h1>
+            <p className="mt-6 max-w-2xl text-lg font-medium leading-relaxed text-slate-600">
+              Answer a few focused questions. I&apos;ll route you to the fastest website, SEO, or
+              automation plan for getting more qualified organic leads in Melbourne.
+            </p>
           </div>
-        </div>
-
-        <div className="min-h-[200px] flex flex-col justify-center">
-          <motion.div
-            key={quizStep}
-            initial={{ opacity: 0, y: 20, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -20, scale: 0.95 }}
-            className="mb-12"
-          >
-            <h3 className="text-3xl md:text-4xl font-bold text-slate-900 mb-6 tracking-tight leading-tight">
-              {quizQuestions[quizStep].q}
-            </h3>
-            <div className="flex gap-4 items-start bg-slate-50 p-6 rounded-2xl border border-slate-100">
-              <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center shadow-sm shrink-0">
-                <Lightbulb className="w-5 h-5 text-amber-500" />
+          <div className="grid gap-3 sm:grid-cols-3">
+            {[
+              ["1 minute", "No commitment"],
+              ["Local SEO", "Map-pack focused"],
+              ["Lead path", "Built for action"],
+            ].map(([label, value]) => (
+              <div key={label} className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+                <p className="text-[11px] font-black uppercase tracking-[0.16em] text-slate-400">
+                  {label}
+                </p>
+                <p className="mt-1 text-sm font-black text-slate-950">{value}</p>
               </div>
-              <p className="text-slate-600 text-lg leading-relaxed">
-                {quizQuestions[quizStep].desc}
-              </p>
-            </div>
-          </motion.div>
+            ))}
+          </div>
         </div>
 
-        <div className="flex flex-col sm:flex-row gap-4 relative">
-          {feedback && (
+        <div className="overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-2xl shadow-slate-200/70">
+          <div className="flex items-center justify-between gap-4 border-b border-slate-100 bg-white p-4">
+            <div className="flex min-w-0 items-center gap-3">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-slate-950 text-sm font-black text-white">
+                MW
+              </div>
+              <div className="min-w-0">
+                <p className="truncate text-sm font-black text-slate-950">
+                  Melbourne Web Studio
+                </p>
+                <p className="text-[10px] font-black uppercase tracking-[0.14em] text-slate-400">
+                  {quizStep === 0 ? "1-minute check" : `Step ${quizStep + 1} - ${currentQuestion.shortLabel}`}
+                </p>
+              </div>
+            </div>
+            <p className="shrink-0 text-right text-xs font-black text-slate-500">
+              {Math.round(progress)}%
+            </p>
+          </div>
+
+          <div className="h-1.5 bg-slate-100">
             <motion.div
-              initial={{ opacity: 0, scale: 0.5 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className={`absolute inset-0 z-20 flex items-center justify-center rounded-2xl backdrop-blur-sm ${
-                feedback === "yes" ? "bg-emerald-500/10" : "bg-slate-900/10"
-              }`}
-            >
-              <div
-                className={`w-20 h-20 rounded-full flex items-center justify-center shadow-2xl ${
-                  feedback === "yes" ? "bg-emerald-500" : "bg-slate-900"
+              className="h-full bg-amber-400"
+              initial={{ width: 0 }}
+              animate={{ width: `${progress}%` }}
+              transition={{ duration: 0.35 }}
+            />
+          </div>
+
+          <div className="p-5 md:p-8">
+            {quizStep === 0 && (
+              <div className="mb-4 rounded-lg border-l-2 border-amber-300 bg-amber-50/40 px-3 py-2.5">
+                <p className="text-[13px] font-black leading-tight text-slate-950">
+                  Answer a few questions below to find out what your site should qualify for.
+                </p>
+                <div className="mt-1 flex flex-wrap items-center gap-x-1.5 text-[10px] font-black uppercase tracking-[0.08em] text-slate-500">
+                  <span>Takes 1 minute</span>
+                  <span className="text-amber-500" aria-hidden="true">•</span>
+                  <span>Requires no commitment</span>
+                  <span className="text-amber-500" aria-hidden="true">•</span>
+                  <span>Fast, easy, free</span>
+                </div>
+              </div>
+            )}
+
+            {quizStep > 0 && (
+              <button
+                type="button"
+                onClick={handleQuizBack}
+                className="mb-4 inline-flex items-center gap-1 text-xs font-black uppercase tracking-[0.12em] text-slate-400 hover:text-slate-700"
+              >
+                <ArrowLeft className="h-3 w-3" />
+                Back
+              </button>
+            )}
+
+            <fieldset>
+              <legend className="text-2xl font-black leading-tight text-slate-950 md:text-3xl">
+                {currentQuestion.question}
+              </legend>
+              <p className="mt-2 text-sm font-semibold leading-relaxed text-slate-500">
+                {currentQuestion.subtext}
+              </p>
+
+              <div className="mt-5 space-y-3">
+                {currentQuestion.options.map((option) => {
+                  const isSelected = selectedValue === option.value;
+                  return (
+                    <button
+                      key={option.value}
+                      type="button"
+                      aria-pressed={isSelected}
+                      onClick={() => handleQuizSelect(currentQuestion.id, option.value)}
+                      className={`relative flex w-full items-start gap-3 rounded-xl border-[3px] p-4 text-left transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-amber-300/30 ${
+                        isSelected
+                          ? "border-amber-400 bg-amber-50 text-slate-950 shadow-[0_8px_20px_rgba(15,23,42,0.08)]"
+                          : "border-slate-200 bg-white text-slate-700 hover:border-amber-300 hover:bg-amber-50/40"
+                      }`}
+                    >
+                      <span
+                        className={`mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full border-2 transition-colors ${
+                          isSelected
+                            ? "border-slate-950 bg-slate-950 text-amber-300"
+                            : "border-slate-300 bg-slate-50 text-slate-400"
+                        }`}
+                      >
+                        {isSelected ? (
+                          <CheckCircle2 className="h-5 w-5" />
+                        ) : (
+                          <span className="h-2.5 w-2.5 rounded-full bg-slate-300" />
+                        )}
+                      </span>
+                      <span className="min-w-0 flex-1">
+                        <span className="block text-base font-black leading-snug text-slate-950">
+                          {option.label}
+                        </span>
+                        <span className="mt-1 block text-sm font-medium leading-snug text-slate-500">
+                          {option.helper}
+                        </span>
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+            </fieldset>
+
+            <div className="mt-6 border-t border-slate-100 pt-4">
+              <button
+                type="button"
+                onClick={handleQuizContinue}
+                disabled={!selectedValue}
+                className={`flex w-full items-center justify-center gap-2 rounded-xl py-3.5 text-base font-black transition-all ${
+                  selectedValue
+                    ? "bg-amber-400 text-slate-950 shadow-md hover:-translate-y-0.5 hover:bg-amber-500"
+                    : "cursor-not-allowed bg-slate-100 text-slate-500"
                 }`}
               >
-                {feedback === "yes" ? (
-                  <CheckCircle2 className="w-10 h-10 text-white" />
-                ) : (
-                  <XCircle className="w-10 h-10 text-white" />
-                )}
+                {quizStep === quizQuestions.length - 1 ? "Show My Growth Path" : "Continue"}
+                {selectedValue && <ArrowRight className="h-5 w-5" />}
+              </button>
+              <div className="mt-3 flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-center text-[11px] font-black uppercase tracking-[0.14em] text-slate-500">
+                <span>Fast response</span>
+                <span className="text-amber-500" aria-hidden="true">•</span>
+                <span>No spam</span>
+                <span className="text-amber-500" aria-hidden="true">•</span>
+                <span>Built for local leads</span>
               </div>
-            </motion.div>
-          )}
-
-          <button
-            onClick={() => handleQuizAnswer(true)}
-            disabled={!!feedback}
-            className="flex-1 bg-blue-600 text-white font-bold py-6 rounded-2xl hover:bg-blue-500 transition-all shadow-xl shadow-blue-900/20 flex items-center justify-center gap-3 group active:scale-95"
-          >
-            Yes, Absolutely
-            <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-          </button>
-          <button
-            onClick={() => handleQuizAnswer(false)}
-            disabled={!!feedback}
-            className="flex-1 bg-white text-slate-900 border-2 border-slate-200 font-bold py-6 rounded-2xl hover:bg-slate-50 hover:border-slate-300 transition-all active:scale-95"
-          >
-            Not Yet / Unsure
-          </button>
-        </div>
-
-        <div className="mt-12 flex items-center justify-center gap-8 opacity-50 grayscale">
-          <img
-            src="https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg"
-            alt="Google"
-            className="h-4"
-          />
-          <img
-            src="https://upload.wikimedia.org/wikipedia/commons/b/b9/Stripe_Logo%2C_revised_2016.svg"
-            alt="Stripe"
-            className="h-4"
-          />
-          <img
-            src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg"
-            alt="Amazon"
-            className="h-4"
-          />
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   const renderScan = () => (
     <div className="bg-slate-900 rounded-[2.5rem] p-10 md:p-16 text-white text-center shadow-2xl">
@@ -1667,15 +1906,17 @@ const OnboardingFunnel = () => {
               <div className="text-5xl font-black text-white mb-2">
                 {aiAnalysis?.rating}.0<span className="text-slate-600">/5</span>
               </div>
-              <p className="text-xs text-slate-400">Verified for {websiteUrl}</p>
+              <p className="text-xs text-slate-400">
+                Prepared for {websiteUrl ? getDomainLabel(websiteUrl) : leadData.businessName || "your business"}
+              </p>
             </div>
 
             <div className="space-y-4">
               <button
-                onClick={() => setFunnelStep("QUALIFY")}
+                onClick={() => setFunnelStep("PRICING")}
                 className="w-full bg-blue-600 text-white font-bold py-5 rounded-2xl hover:bg-blue-500 transition-all shadow-xl shadow-blue-900/40 flex items-center justify-center gap-3"
               >
-                Fix These Issues Now <Zap className="w-4 h-4" />
+                View Recommended Packages <Zap className="w-4 h-4" />
               </button>
               <button
                 onClick={() => window.open(DISCOVERY_CALL_URL, "_blank")}
@@ -1730,7 +1971,7 @@ const OnboardingFunnel = () => {
                         <button
                           onClick={() => {
                             setTargetPackage(pkgName);
-                            setFunnelStep("QUALIFY");
+                            setFunnelStep("PRICING");
                           }}
                           className="text-[10px] font-black uppercase tracking-widest text-blue-400 hover:text-blue-300 transition-colors whitespace-nowrap flex items-center gap-1 shrink-0"
                         >
@@ -1831,73 +2072,205 @@ const OnboardingFunnel = () => {
   );
 
   const renderQualify = () => (
-    <div className="bg-white rounded-[2.5rem] p-10 md:p-16 border border-slate-200 shadow-xl">
-      <div className="max-w-xl mx-auto">
-        <h3 className="text-3xl font-bold text-slate-900 mb-4 text-center">
-          Prequalification Form
-        </h3>
-        <p className="text-slate-500 text-center mb-10">
-          We only work with a limited number of clients to ensure maximum ROI. Please provide your
-          details to see if we&apos;re a fit.
+    <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[0.78fr_1.22fr] lg:items-start">
+      <div className="rounded-[2rem] bg-slate-950 p-6 text-white shadow-2xl shadow-slate-900/20 md:p-8">
+        <p className="text-[11px] font-black uppercase tracking-[0.22em] text-amber-300">
+          Final step
         </p>
-        <div className="space-y-6">
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
-                Full Name
-              </label>
-              <input
-                type="text"
-                value={leadData.name}
-                onChange={(e) => setLeadData({ ...leadData, name: e.target.value })}
-                className="w-full px-5 py-4 rounded-2xl border border-slate-100 bg-slate-50 focus:border-blue-600 outline-none transition-all"
-                placeholder="John Doe"
-              />
+        <h3 className="mt-3 text-3xl font-black leading-tight tracking-tight">
+          Get the growth path for your business.
+        </h3>
+        <p className="mt-4 text-sm font-medium leading-relaxed text-slate-300">
+          Send the quiz result and I&apos;ll review the fastest route to more organic leads:
+          website clarity, local SEO, follow-up automation, or the full system.
+        </p>
+        <div className="mt-8 space-y-3">
+          {[
+            "No generic audit PDF",
+            "Recommendation based on your answers",
+            "Email-first follow-up",
+          ].map((item) => (
+            <div key={item} className="flex items-center gap-3 rounded-2xl bg-white/5 p-3">
+              <CheckCircle2 className="h-5 w-5 shrink-0 text-amber-300" />
+              <span className="text-sm font-bold text-white">{item}</span>
             </div>
-            <div className="space-y-2">
-              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
-                Business Name
-              </label>
-              <input
-                type="text"
-                value={leadData.businessName}
-                onChange={(e) => setLeadData({ ...leadData, businessName: e.target.value })}
-                className="w-full px-5 py-4 rounded-2xl border border-slate-100 bg-slate-50 focus:border-blue-600 outline-none transition-all"
-                placeholder="Acme Corp"
-              />
+          ))}
+        </div>
+      </div>
+
+      <div className="rounded-[2rem] border border-slate-200 bg-white p-5 shadow-2xl shadow-slate-200/70 md:p-8">
+        <div className="mb-5 rounded-2xl border-2 border-blue-200 bg-blue-50/80 p-5">
+          <div className="flex items-start gap-3">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-900 text-white">
+              <User className="h-5 w-5" />
+            </div>
+            <div>
+              <p className="text-[11px] font-black uppercase tracking-[0.2em] text-blue-700">
+                Contact details
+              </p>
+              <h4 className="mt-1 text-xl font-black leading-tight text-slate-950">
+                Where should I send the plan?
+              </h4>
             </div>
           </div>
-          <div className="space-y-2">
-            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
-              Email Address
+        </div>
+
+        <div className="grid gap-4 md:grid-cols-2">
+          <div>
+            <label htmlFor="growth-name" className="mb-1.5 ml-1 block text-[11px] font-black uppercase tracking-[0.18em] text-blue-800">
+              Full name
             </label>
             <input
-              type="email"
-              value={leadData.email}
-              onChange={(e) => setLeadData({ ...leadData, email: e.target.value })}
-              className="w-full px-5 py-4 rounded-2xl border border-slate-100 bg-slate-50 focus:border-blue-600 outline-none transition-all"
-              placeholder="john@example.com"
+              id="growth-name"
+              type="text"
+              autoComplete="name"
+              value={leadData.name}
+              onChange={(e) => {
+                setLeadData({ ...leadData, name: e.target.value });
+                setQualifyErrors((prev) => ({ ...prev, name: "" }));
+              }}
+              className={`w-full rounded-xl border-2 bg-white px-4 py-3.5 font-bold text-slate-950 outline-none transition-all focus:ring-4 focus:ring-amber-300/25 ${
+                qualifyErrors.name ? "border-red-400 bg-red-50" : "border-slate-300 focus:border-amber-400"
+              }`}
+              placeholder="Your name"
             />
+            {qualifyErrors.name && <p className="mt-1 text-xs font-semibold text-red-600">{qualifyErrors.name}</p>}
           </div>
-          <div className="space-y-2">
-            <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
-              Phone Number
+
+          <div>
+            <label htmlFor="growth-business" className="mb-1.5 ml-1 block text-[11px] font-black uppercase tracking-[0.18em] text-blue-800">
+              Business
             </label>
             <input
+              id="growth-business"
+              type="text"
+              autoComplete="organization"
+              value={leadData.businessName}
+              onChange={(e) => {
+                setLeadData({ ...leadData, businessName: e.target.value });
+                setQualifyErrors((prev) => ({ ...prev, businessName: "" }));
+              }}
+              className={`w-full rounded-xl border-2 bg-white px-4 py-3.5 font-bold text-slate-950 outline-none transition-all focus:ring-4 focus:ring-amber-300/25 ${
+                qualifyErrors.businessName ? "border-red-400 bg-red-50" : "border-slate-300 focus:border-amber-400"
+              }`}
+              placeholder="Business name"
+            />
+            {qualifyErrors.businessName && (
+              <p className="mt-1 text-xs font-semibold text-red-600">{qualifyErrors.businessName}</p>
+            )}
+          </div>
+
+          <div>
+            <label htmlFor="growth-email" className="mb-1.5 ml-1 block text-[11px] font-black uppercase tracking-[0.18em] text-blue-800">
+              Email
+            </label>
+            <input
+              id="growth-email"
+              type="email"
+              autoComplete="email"
+              value={leadData.email}
+              onChange={(e) => {
+                setLeadData({ ...leadData, email: e.target.value });
+                setQualifyErrors((prev) => ({ ...prev, email: "" }));
+              }}
+              className={`w-full rounded-xl border-2 bg-white px-4 py-3.5 font-bold text-slate-950 outline-none transition-all focus:ring-4 focus:ring-amber-300/25 ${
+                qualifyErrors.email ? "border-red-400 bg-red-50" : "border-slate-300 focus:border-amber-400"
+              }`}
+              placeholder="you@business.com"
+            />
+            {qualifyErrors.email && <p className="mt-1 text-xs font-semibold text-red-600">{qualifyErrors.email}</p>}
+          </div>
+
+          <div>
+            <label htmlFor="growth-phone" className="mb-1.5 ml-1 block text-[11px] font-black uppercase tracking-[0.18em] text-blue-800">
+              Phone optional
+            </label>
+            <input
+              id="growth-phone"
               type="tel"
+              autoComplete="tel"
               value={leadData.phone}
               onChange={(e) => setLeadData({ ...leadData, phone: e.target.value })}
-              className="w-full px-5 py-4 rounded-2xl border border-slate-100 bg-slate-50 focus:border-blue-600 outline-none transition-all"
-              placeholder="0400 000 000"
+              className="w-full rounded-xl border-2 border-slate-300 bg-white px-4 py-3.5 font-bold text-slate-950 outline-none transition-all focus:border-amber-400 focus:ring-4 focus:ring-amber-300/25"
+              placeholder="Optional"
             />
           </div>
+
+          <div>
+            <label htmlFor="growth-website" className="mb-1.5 ml-1 block text-[11px] font-black uppercase tracking-[0.18em] text-blue-800">
+              Current website optional
+            </label>
+            <input
+              id="growth-website"
+              type="text"
+              autoComplete="url"
+              value={websiteUrl}
+              onChange={(e) => {
+                setWebsiteUrl(e.target.value);
+                setQualifyErrors((prev) => ({ ...prev, websiteUrl: "" }));
+              }}
+              className={`w-full rounded-xl border-2 bg-white px-4 py-3.5 font-bold text-slate-950 outline-none transition-all focus:ring-4 focus:ring-amber-300/25 ${
+                qualifyErrors.websiteUrl ? "border-red-400 bg-red-50" : "border-slate-300 focus:border-amber-400"
+              }`}
+              placeholder="yourbusiness.com"
+            />
+            {qualifyErrors.websiteUrl && (
+              <p className="mt-1 text-xs font-semibold text-red-600">{qualifyErrors.websiteUrl}</p>
+            )}
+          </div>
+
+          <div>
+            <label htmlFor="growth-best-time" className="mb-1.5 ml-1 block text-[11px] font-black uppercase tracking-[0.18em] text-blue-800">
+              Best reply window
+            </label>
+            <select
+              id="growth-best-time"
+              value={quickLeadData.bestTime}
+              onChange={(e) => setQuickLeadData({ ...quickLeadData, bestTime: e.target.value })}
+              className="w-full rounded-xl border-2 border-slate-300 bg-white px-4 py-3.5 font-bold text-slate-950 outline-none transition-all focus:border-amber-400 focus:ring-4 focus:ring-amber-300/25"
+            >
+              <option value="">Anytime</option>
+              <option value="Morning">Morning</option>
+              <option value="Afternoon">Afternoon</option>
+              <option value="Evening">Evening</option>
+            </select>
+          </div>
+        </div>
+
+        <div className="mt-4">
+          <label htmlFor="growth-notes" className="mb-1.5 ml-1 block text-[11px] font-black uppercase tracking-[0.18em] text-blue-800">
+            Anything I should know?
+          </label>
+          <textarea
+            id="growth-notes"
+            rows={3}
+            value={quickLeadData.notes}
+            onChange={(e) => setQuickLeadData({ ...quickLeadData, notes: e.target.value })}
+            className="w-full resize-none rounded-xl border-2 border-slate-300 bg-white px-4 py-3.5 font-bold text-slate-950 outline-none transition-all focus:border-amber-400 focus:ring-4 focus:ring-amber-300/25"
+            placeholder="Example: I need more roofing leads, my old site is slow, or I want to rank in Palm Bay too."
+          />
+        </div>
+
+        {submissionError && (
+          <div className="mt-4 flex items-start gap-2 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-semibold text-red-700">
+            <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
+            {submissionError}
+          </div>
+        )}
+
+        <div className="mt-6 border-t border-slate-100 pt-4">
           <button
-            onClick={() => setFunnelStep("PRICING")}
-            disabled={!leadData.name || !leadData.email || !isValidEmail(leadData.email) || !leadData.businessName}
-            className="w-full bg-slate-900 text-white font-bold py-5 rounded-2xl hover:bg-slate-800 transition-all shadow-xl shadow-slate-200 mt-4"
+            type="button"
+            onClick={submitPrequalification}
+            disabled={isSubmitting}
+            className="flex w-full items-center justify-center gap-2 rounded-xl bg-amber-400 py-4 text-base font-black text-slate-950 shadow-md transition-all hover:-translate-y-0.5 hover:bg-amber-500 disabled:cursor-wait disabled:opacity-70"
           >
-            View Qualified Packages
+            {isSubmitting ? <Loader2 className="h-5 w-5 animate-spin" /> : "Get My Growth Plan"}
+            {!isSubmitting && <ArrowRight className="h-5 w-5" />}
           </button>
+          <p className="mt-3 text-center text-[11px] font-bold uppercase tracking-[0.12em] text-slate-400">
+            Email follow-up only unless you choose to include a phone number.
+          </p>
         </div>
       </div>
     </div>
@@ -2238,8 +2611,13 @@ const OnboardingFunnel = () => {
   );
 
   return (
-    <section id="quiz" className="px-6 py-24 max-w-7xl mx-auto w-full">
-      <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+    <section id="quiz" className="bg-slate-50 px-4 py-10 md:px-6 md:py-16">
+      <motion.div
+        className="mx-auto w-full max-w-7xl"
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+      >
         {funnelStep === "QUIZ" && renderQuiz()}
         {funnelStep === "SCAN" && renderScan()}
         {funnelStep === "RESULTS" && renderResults()}
@@ -2923,10 +3301,6 @@ const Resources = () => {
           >
             View All Articles <ArrowRight className="w-4 h-4" />
           </button>
-        </div>
-
-        <div id="quiz" className="mb-24">
-          <OnboardingFunnel />
         </div>
 
         <div className="mb-16 rounded-[2rem] border border-slate-200 bg-slate-50 p-6 md:p-8">
@@ -3809,6 +4183,7 @@ export default function App() {
     <div className="min-h-screen bg-white font-sans selection:bg-blue-100 selection:text-blue-900 pt-20">
       <Navbar />
       <main>
+        <OnboardingFunnel />
         <Hero />
         <TrustSignals />
         <Process />

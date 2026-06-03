@@ -10,7 +10,7 @@ import { spawnSync } from 'node:child_process';
 
 const ROOT = process.cwd();
 const SITE_ORIGIN = 'https://eb28.co';
-const DEFAULT_GSC_SITE_URL = process.env.GSC_SITE_URL || 'sc-domain:eb28.co';
+const DEFAULT_GSC_SITE_URL = process.env.GSC_SITE_URL || 'https://eb28.co/';
 const DEFAULT_SITEMAP_URL = process.env.GSC_SITEMAP_URL || `${SITE_ORIGIN}/sitemap.xml`;
 const WEBMASTERS_SCOPE = 'https://www.googleapis.com/auth/webmasters';
 const GMAIL_SEND_SCOPE = 'https://www.googleapis.com/auth/gmail.send';

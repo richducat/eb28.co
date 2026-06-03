@@ -502,6 +502,81 @@ function buildInternalLinkActions(newestArticles, pageAnalytics) {
   );
 }
 
+function targetHrefCandidates(targetUrl) {
+  const url = new URL(targetUrl);
+  const pathname = url.pathname.endsWith('/') ? url.pathname : `${url.pathname}/`;
+  return [targetUrl, `${SITE_ORIGIN}${pathname}`, pathname, pathname.replace(/\/$/, '')];
+}
+
+function sourceUrlFromPage(page) {
+  if (!page) return null;
+  if (/^https?:\/\//i.test(page)) return page;
+  return `${SITE_ORIGIN}${page.startsWith('/') ? page : `/${page}`}`;
+}
+
+function defaultInternalLinkSources() {
+  return [`${SITE_ORIGIN}/`, `${SITE_ORIGIN}/melbournewebstudio/`, `${SITE_ORIGIN}/blog/`];
+}
+
+async function verifyInternalLinkCoverage(newestArticles, pageAnalytics) {
+  const targets = newestArticles.slice(0, 3);
+  if (!targets.length) return [];
+
+  const highPages = getHighPerformingPages(pageAnalytics.rows || [], 5)
+    .map((row) => sourceUrlFromPage(row.page))
+    .filter(Boolean);
+  const sourceUrls = [...new Set(highPages.length ? highPages : defaultInternalLinkSources())];
+  const coverage = [];
+
+  for (const sourceUrl of sourceUrls) {
+    let html = '';
+    let status = 0;
+    let ok = false;
+    try {
+      const response = await fetch(sourceUrl, {
+        headers: { 'user-agent': 'EB28 SEO internal link verifier (+https://eb28.co)' },
+      });
+      status = response.status;
+      ok = response.ok;
+      html = await response.text();
+    } catch (error) {
+      coverage.push({
+        sourceUrl,
+        ok: false,
+        status,
+        error: error.message,
+        links: targets.map((target) => ({ target, present: false })),
+      });
+      continue;
+    }
+
+    coverage.push({
+      sourceUrl,
+      ok,
+      status,
+      links: targets.map((target) => ({
+        target,
+        present: targetHrefCandidates(target.url).some((candidate) => html.includes(`href="${candidate}"`) || html.includes(`href='${candidate}'`)),
+      })),
+    });
+  }
+
+  return coverage;
+}
+
+function renderInternalLinkCoverage(coverage) {
+  if (!coverage.length) return ['- No internal-link coverage checks ran.'];
+  return coverage.flatMap((source) => {
+    if (!source.ok) {
+      return [`- ${source.sourceUrl}: unable to verify (${source.status || 0}${source.error ? `, ${source.error}` : ''}).`];
+    }
+    return source.links.map(({ target, present }) => {
+      const anchor = `"${target.primaryKeyword || target.title}"`;
+      return `- ${source.sourceUrl} ${present ? 'links to' : 'is missing a link to'} ${target.url} using a natural anchor target around ${anchor}.`;
+    });
+  });
+}
+
 async function runLighthouse(urls) {
   const results = [];
   const chromePath = getChromePath();
@@ -749,6 +824,7 @@ async function main() {
     ? await runLighthouse([SITE_ORIGIN, `${SITE_ORIGIN}/blog/`])
     : [];
   const internalLinkActions = buildInternalLinkActions(newestArticles, pageAnalytics);
+  const internalLinkCoverage = await verifyInternalLinkCoverage(newestArticles, pageAnalytics);
   const melbourneSubdomain = liveChecks.find((check) => check.url === `${MELBOURNE_WEB_STUDIO_ORIGIN}/`);
 
   const report = [
@@ -836,6 +912,10 @@ async function main() {
     `## Internal Link Actions`,
     '',
     ...internalLinkActions,
+    '',
+    `## Internal Link Coverage`,
+    '',
+    ...renderInternalLinkCoverage(internalLinkCoverage),
     '',
     `## Backlinks and Citations`,
     '',

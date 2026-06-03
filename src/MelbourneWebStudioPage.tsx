@@ -1056,7 +1056,7 @@ const Team = () => {
       setTimeout(() => setIsSuccess(false), 5000);
     } catch (error) {
       console.error("Direct inquiry failed", error);
-      setSubmitError("Something went wrong. Please try again or call us directly.");
+      setSubmitError("Something went wrong. Please try again or email richducat@gmail.com.");
     } finally {
       setIsSubmitting(false);
     }
@@ -3330,6 +3330,16 @@ const Resources = () => {
           </div>
           <div className="grid md:grid-cols-3 gap-4">
             {[
+              {
+                title: "AI Receptionist for Local Business",
+                href: "/blog/ai-receptionist-for-local-business-what-to-automate-and-what-to-keep-human/",
+                text: "What to automate, what to keep human, and how to keep ready buyers from going cold.",
+              },
+              {
+                title: "Website Audit Checklist for Melbourne FL",
+                href: "/blog/website-audit-checklist-for-melbourne-fl-businesses-losing-leads/",
+                text: "A practical lead-leak checklist for local businesses that need more calls from existing traffic.",
+              },
               {
                 title: "Melbourne FL Web Design Cost Guide",
                 href: "/blog/melbourne-fl-web-design-cost-guide-2026/",

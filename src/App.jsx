@@ -206,6 +206,18 @@ const App = () => {
 
   const seoArticles = [
     {
+      title: 'AI Receptionist for Local Business',
+      href: '/blog/ai-receptionist-for-local-business-what-to-automate-and-what-to-keep-human/',
+      cluster: 'Lead automation',
+      description: 'What to automate, what to keep human, and how to stop ready buyers from going cold.'
+    },
+    {
+      title: 'Website Audit Checklist for Melbourne FL',
+      href: '/blog/website-audit-checklist-for-melbourne-fl-businesses-losing-leads/',
+      cluster: 'Conversion',
+      description: 'A practical lead-leak checklist for local businesses that need more calls from the traffic they already have.'
+    },
+    {
       title: 'Best Website Builder in Melbourne FL',
       href: '/blog/best-website-builder-in-melbourne-fl-what-local-companies-should-look-for/',
       cluster: 'Melbourne web design',

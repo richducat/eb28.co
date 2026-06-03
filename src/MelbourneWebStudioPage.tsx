@@ -1345,27 +1345,27 @@ const OnboardingFunnel = () => {
     {
       id: "primaryGoal",
       shortLabel: "Goal",
-      question: "If your website could win one thing this month, what should it be?",
-      subtext: "Pick the outcome that would make the biggest difference to your business first.",
+      question: "What win would you feel in the business this month?",
+      subtext: "Pick the answer that would put the most money, time, or momentum back in your hands.",
       options: [
         {
-          label: "More calls from people nearby",
+          label: "More calls from people ready to buy",
           value: "local-leads",
-          helper: "Ready buyers find you, trust you, and reach out before they call someone else.",
+          helper: "Not more random traffic. More nearby people who already need what you sell.",
           score: 2,
           package: "The Power Foundation",
         },
         {
-          label: "A website that makes us look like the right choice",
+          label: "Stop looking smaller than the business really is",
           value: "new-site",
-          helper: "People land on the page and quickly feel safe contacting you.",
+          helper: "Your site should make a good prospect feel like they found the right place.",
           score: 1,
           package: "The Professional Build",
         },
         {
-          label: "Faster replies when someone is interested",
+          label: "Follow up before good leads disappear",
           value: "automation",
-          helper: "New enquiries get answered before the lead cools off.",
+          helper: "When someone raises a hand, they hear back while they still care.",
           score: 2,
           package: "AI Business Suite",
         },
@@ -1374,27 +1374,27 @@ const OnboardingFunnel = () => {
     {
       id: "biggestLeak",
       shortLabel: "Leak",
-      question: "Where does it feel like good customers are getting lost?",
-      subtext: "Most local businesses lose the sale in one of these three moments.",
+      question: "Where do you think good customers slip away?",
+      subtext: "Most local websites lose the job before the owner ever knows a buyer was there.",
       options: [
         {
-          label: "They never find us on Google",
+          label: "They search, but they find someone else first",
           value: "search-visibility",
-          helper: "A ready buyer searches, but another company gets seen first.",
+          helper: "The demand is already out there. Your competitor is just collecting it.",
           score: 2,
           package: "The Power Foundation",
         },
         {
-          label: "They visit, then leave without contacting us",
+          label: "They visit, but nothing makes them act",
           value: "conversion",
-          helper: "They look around, but the page does not make the next step feel obvious.",
+          helper: "They look around, feel unsure, and leave without calling, booking, or asking.",
           score: 2,
           package: "The Professional Build",
         },
         {
           label: "They reach out, then go cold",
           value: "follow-up",
-          helper: "The interest is real, but the reply comes too late or feels too scattered.",
+          helper: "The interest is real, but the reply is late, weak, or too easy to ignore.",
           score: 1,
           package: "AI Business Suite",
         },
@@ -1403,27 +1403,27 @@ const OnboardingFunnel = () => {
     {
       id: "timeline",
       shortLabel: "Timing",
-      question: "How soon would more of the right enquiries matter?",
-      subtext: "This keeps the answer practical, not bloated.",
+      question: "How expensive is this starting to feel?",
+      subtext: "This keeps the recommendation honest, not bloated.",
       options: [
         {
-          label: "Right now. I do not want to keep wasting demand",
+          label: "It is costing us work now",
           value: "this-week",
-          helper: "You want the fastest useful move, not a drawn-out process.",
+          helper: "You want the fastest smart fix, not another month of guessing.",
           score: 2,
           package: "The Power Foundation",
         },
         {
-          label: "This month. I want the right plan",
+          label: "It needs to get handled this month",
           value: "thirty-days",
-          helper: "You want a clean path, real priorities, and a sensible launch plan.",
+          helper: "You want the right plan, a clean path, and no wasted spend.",
           score: 1,
           package: "The Professional Build",
         },
         {
-          label: "I am still figuring out what is worth doing",
+          label: "I am not sure yet. Show me the leak",
           value: "researching",
-          helper: "You want to know what matters before you put money behind it.",
+          helper: "You want the problem named before you put money behind a fix.",
           score: 0,
           package: "The Professional Build",
         },
@@ -1432,8 +1432,8 @@ const OnboardingFunnel = () => {
     {
       id: "readiness",
       shortLabel: "Fit",
-      question: "What kind of help would actually feel useful?",
-      subtext: "Pick the answer that matches how hands-on you want this to be.",
+      question: "What would make this feel worth doing?",
+      subtext: "Pick the kind of help you actually want, not the biggest package on a menu.",
       options: [
         {
           label: "Tell me the first thing you would fix",
@@ -1443,9 +1443,9 @@ const OnboardingFunnel = () => {
           package: "The Power Foundation",
         },
         {
-          label: "Build the website and lead path for me",
+          label: "Build the page that makes people choose us",
           value: "done-for-me",
-          helper: "You want the page, proof, and calls-to-action handled properly.",
+          helper: "You want the offer, proof, and next step handled the right way.",
           score: 1,
           package: "The Professional Build",
         },
@@ -1663,22 +1663,22 @@ const OnboardingFunnel = () => {
         <div className="space-y-8">
           <div className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-white px-4 py-2 text-xs font-black uppercase tracking-[0.16em] text-blue-700 shadow-sm">
             <ShieldCheck className="h-4 w-4" />
-            Free Melbourne Lead Leak Quiz
+            Free 60-Second Lead Leak Finder
           </div>
           <div>
             <h1 className="max-w-3xl text-4xl font-black leading-[1.02] tracking-tight text-slate-950 md:text-6xl">
-              Where are your next customers getting lost?
+              Find the spot where buyers stop short.
             </h1>
             <p className="mt-6 max-w-2xl text-lg font-medium leading-relaxed text-slate-600">
-              Answer 4 quick questions and I&apos;ll point you to the first thing I would fix
-              to turn more local visitors into calls, bookings, and quote requests.
+              Answer 4 quick questions. I&apos;ll show you the first fix I&apos;d make if the job
+              was to turn more local visitors into calls, bookings, and quote requests.
             </p>
           </div>
           <div className="grid gap-3 sm:grid-cols-3">
             {[
-              ["Takes", "About 60 seconds"],
-              ["Built for", "Local buyers"],
-              ["You get", "One clear move"],
+              ["Time", "About 60 seconds"],
+              ["Built for", "Local service businesses"],
+              ["Result", "Your first fix"],
             ].map(([label, value]) => (
               <div key={label} className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
                 <p className="text-[11px] font-black uppercase tracking-[0.16em] text-slate-400">
@@ -1723,15 +1723,15 @@ const OnboardingFunnel = () => {
             {quizStep === 0 && (
               <div className="mb-4 rounded-lg border-l-2 border-amber-300 bg-amber-50/40 px-3 py-2.5">
                 <p className="text-[13px] font-black leading-tight text-slate-950">
-                  If buyers cannot find you, trust you, or get a fast reply, they call someone
-                  else. Let&apos;s find the spot that is costing you the easiest wins.
+                  If the right people cannot find you, believe you, or get a fast answer, they
+                  do not wait. They call the next business that feels easier to trust.
                 </p>
                 <div className="mt-1 flex flex-wrap items-center gap-x-1.5 text-[10px] font-black uppercase tracking-[0.08em] text-slate-500">
                   <span>Takes 1 minute</span>
                   <span className="text-amber-500" aria-hidden="true">•</span>
-                  <span>Requires no commitment</span>
+                  <span>No sales trap</span>
                   <span className="text-amber-500" aria-hidden="true">•</span>
-                  <span>Plain-English answer</span>
+                  <span>Plain answer</span>
                 </div>
               </div>
             )}
@@ -1808,15 +1808,15 @@ const OnboardingFunnel = () => {
                     : "cursor-not-allowed bg-slate-100 text-slate-500"
                 }`}
               >
-                {quizStep === quizQuestions.length - 1 ? "Reveal My Best First Fix" : "Keep Going"}
+                {quizStep === quizQuestions.length - 1 ? "Show Me The First Fix" : "Next Question"}
                 {selectedValue && <ArrowRight className="h-5 w-5" />}
               </button>
               <div className="mt-3 flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-center text-[11px] font-black uppercase tracking-[0.14em] text-slate-500">
                 <span>No sales pressure</span>
                 <span className="text-amber-500" aria-hidden="true">•</span>
-                <span>No confusing report</span>
+                <span>No canned PDF</span>
                 <span className="text-amber-500" aria-hidden="true">•</span>
-                <span>Just the next move</span>
+                <span>One useful answer</span>
               </div>
             </div>
           </div>
@@ -1882,7 +1882,7 @@ const OnboardingFunnel = () => {
             <div className="flex items-center gap-2 mb-6">
               <ShieldCheck className="w-6 h-6 text-emerald-400" />
               <span className="text-emerald-400 font-black uppercase tracking-[0.3em] text-[10px]">
-                Quick Read Complete
+                First Fix Ready
               </span>
             </div>
             <h3 className="text-4xl font-bold mb-6 tracking-tight leading-tight">
@@ -1891,7 +1891,7 @@ const OnboardingFunnel = () => {
 
             <div className="bg-slate-800/50 border border-slate-700 p-8 rounded-3xl mb-8 text-center">
               <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-4">
-                Customer Pull Score
+                Customer Confidence Score
               </p>
               <div className="flex justify-center gap-1 mb-4">
                 {[1, 2, 3, 4, 5].map((i) => (
@@ -1918,13 +1918,13 @@ const OnboardingFunnel = () => {
                 onClick={() => setFunnelStep("PRICING")}
                 className="w-full bg-blue-600 text-white font-bold py-5 rounded-2xl hover:bg-blue-500 transition-all shadow-xl shadow-blue-900/40 flex items-center justify-center gap-3"
               >
-                View Recommended Packages <Zap className="w-4 h-4" />
+                Show Me The Best Path <Zap className="w-4 h-4" />
               </button>
               <button
                 onClick={() => window.open(DISCOVERY_CALL_URL, "_blank")}
                 className="w-full bg-white text-slate-900 font-bold py-5 rounded-2xl hover:bg-slate-50 transition-all flex items-center justify-center gap-3"
               >
-                Book Strategy Consult <Calendar className="w-4 h-4" />
+                Talk Through The Fix <Calendar className="w-4 h-4" />
               </button>
             </div>
           </div>
@@ -1935,7 +1935,7 @@ const OnboardingFunnel = () => {
                 <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center">
                   <Sparkles className="w-5 h-5 text-white" />
                 </div>
-                <h4 className="text-xl font-bold">The Money Line</h4>
+                <h4 className="text-xl font-bold">The First Thing I Would Fix</h4>
               </div>
               <p className="text-blue-100 text-lg italic leading-relaxed">
                 &quot;{aiAnalysis?.killerInsight}&quot;
@@ -1944,7 +1944,7 @@ const OnboardingFunnel = () => {
 
             <div className="bg-slate-800/30 border border-slate-700 p-8 rounded-3xl">
               <h4 className="text-lg font-bold mb-4 flex items-center gap-2">
-                <Target className="w-5 h-5 text-emerald-400" /> Where Buyers May Be Slipping Away
+                <Target className="w-5 h-5 text-emerald-400" /> Where The Sale May Be Slipping Away
               </h4>
               <p className="text-slate-400 leading-relaxed text-lg">{aiAnalysis?.assessment}</p>
             </div>
@@ -1952,7 +1952,7 @@ const OnboardingFunnel = () => {
             <div className="grid md:grid-cols-2 gap-8">
               <div className="bg-slate-800/30 border border-slate-700 p-8 rounded-3xl">
                 <h4 className="text-sm font-black text-slate-500 uppercase tracking-widest mb-6">
-                  Best First Moves
+                  Moves I Would Make First
                 </h4>
                 <div className="space-y-4">
                   {aiAnalysis?.priorityFixes?.map((fix: string, i: number) => {
@@ -1988,7 +1988,7 @@ const OnboardingFunnel = () => {
 
               <div className="bg-slate-800/30 border border-slate-700 p-8 rounded-3xl flex flex-col justify-center items-center text-center">
                 <h4 className="text-sm font-black text-slate-500 uppercase tracking-widest mb-6">
-                  Local Advantage
+                  Size Of The Opening
                 </h4>
                 <div className="relative w-32 h-32 mb-4">
                   <svg className="w-full h-full transform -rotate-90">
@@ -2022,8 +2022,8 @@ const OnboardingFunnel = () => {
                   </div>
                 </div>
                 <p className="text-xs text-slate-500">
-                  You are outperforming {aiAnalysis?.competitiveEdge}% of local competitors in your
-                  niche.
+                  A directional read on how much room your site has to make a stronger first
+                  impression.
                 </p>
               </div>
             </div>
@@ -2032,25 +2032,25 @@ const OnboardingFunnel = () => {
 
         <div className="mt-12 pt-12 border-t border-slate-800">
           <h4 className="text-center text-sm font-black text-slate-500 uppercase tracking-[0.3em] mb-12">
-            Your First 90 Days
+            What I Would Do First
           </h4>
           <div className="grid md:grid-cols-3 gap-8 relative">
             <div className="absolute top-1/2 left-0 w-full h-0.5 bg-slate-800 -translate-y-1/2 hidden md:block"></div>
             {[
               {
                 day: "Day 1-30",
-                title: "Fix the first impression",
-                desc: "Make the offer clear, trustworthy, and easy to act on.",
+                title: "Make the first impression pay",
+                desc: "Clarify the offer, proof, and next step so buyers know why to choose you.",
               },
               {
                 day: "Day 31-60",
                 title: "Get found by better buyers",
-                desc: "Build the local search signals and proof that help people choose you.",
+                desc: "Build local search signals and proof around the terms your best customers use.",
               },
               {
                 day: "Day 61-90",
                 title: "Stop letting leads cool off",
-                desc: "Speed up intake, follow-up, and reporting so more interest turns into work.",
+                desc: "Tighten intake and follow-up so interest turns into booked work faster.",
               },
             ].map((step, i) => (
               <div
@@ -2080,17 +2080,16 @@ const OnboardingFunnel = () => {
           Final step
         </p>
         <h3 className="mt-3 text-3xl font-black leading-tight tracking-tight">
-          Want the fix I&apos;d make first if this were my business?
+          Want me to tell you where the money is leaking?
         </h3>
         <p className="mt-4 text-sm font-medium leading-relaxed text-slate-300">
-          Send the quiz and I&apos;ll review it like a buyer would: what they notice first,
-          what makes them hesitate, and the simplest move to get more calls, bookings, or
-          quote requests.
+          Send your answers. I&apos;ll look at it like a customer would and reply with the first
+          move I&apos;d make to get more good people to contact you.
         </p>
         <div className="mt-8 space-y-3">
           {[
-            "A real answer, not a canned PDF",
-            "One best next move in plain English",
+            "A human answer, not a template",
+            "The fix I would make first",
             "Email first. Phone only if you add it",
           ].map((item) => (
             <div key={item} className="flex items-center gap-3 rounded-2xl bg-white/5 p-3">
@@ -2109,10 +2108,10 @@ const OnboardingFunnel = () => {
             </div>
             <div>
               <p className="text-[11px] font-black uppercase tracking-[0.2em] text-blue-700">
-                Send my answer
+                Send me the fix
               </p>
               <h4 className="mt-1 text-xl font-black leading-tight text-slate-950">
-                Where should I send the first fix?
+                Where should I send your first-fix note?
               </h4>
             </div>
           </div>
@@ -2121,7 +2120,7 @@ const OnboardingFunnel = () => {
         <div className="grid gap-4 md:grid-cols-2">
           <div>
             <label htmlFor="growth-name" className="mb-1.5 ml-1 block text-[11px] font-black uppercase tracking-[0.18em] text-blue-800">
-              Full name
+              Your name
             </label>
             <input
               id="growth-name"
@@ -2142,7 +2141,7 @@ const OnboardingFunnel = () => {
 
           <div>
             <label htmlFor="growth-business" className="mb-1.5 ml-1 block text-[11px] font-black uppercase tracking-[0.18em] text-blue-800">
-              Business
+              Business name
             </label>
             <input
               id="growth-business"
@@ -2165,7 +2164,7 @@ const OnboardingFunnel = () => {
 
           <div>
             <label htmlFor="growth-email" className="mb-1.5 ml-1 block text-[11px] font-black uppercase tracking-[0.18em] text-blue-800">
-              Email
+              Best email
             </label>
             <input
               id="growth-email"
@@ -2201,7 +2200,7 @@ const OnboardingFunnel = () => {
 
           <div>
             <label htmlFor="growth-website" className="mb-1.5 ml-1 block text-[11px] font-black uppercase tracking-[0.18em] text-blue-800">
-              Current website optional
+              Website optional
             </label>
             <input
               id="growth-website"
@@ -2224,7 +2223,7 @@ const OnboardingFunnel = () => {
 
           <div>
             <label htmlFor="growth-best-time" className="mb-1.5 ml-1 block text-[11px] font-black uppercase tracking-[0.18em] text-blue-800">
-              Best reply window
+              Best time to reply
             </label>
             <select
               id="growth-best-time"
@@ -2242,7 +2241,7 @@ const OnboardingFunnel = () => {
 
         <div className="mt-4">
           <label htmlFor="growth-notes" className="mb-1.5 ml-1 block text-[11px] font-black uppercase tracking-[0.18em] text-blue-800">
-            What is bugging you most?
+            What do you think is costing you customers?
           </label>
           <textarea
             id="growth-notes"
@@ -2250,7 +2249,7 @@ const OnboardingFunnel = () => {
             value={quickLeadData.notes}
             onChange={(e) => setQuickLeadData({ ...quickLeadData, notes: e.target.value })}
             className="w-full resize-none rounded-xl border-2 border-slate-300 bg-white px-4 py-3.5 font-bold text-slate-950 outline-none transition-all focus:border-amber-400 focus:ring-4 focus:ring-amber-300/25"
-            placeholder="Example: I need more roofing calls, the site feels dated, or better leads keep choosing someone else."
+            placeholder="Example: We need more booked jobs, the site feels old, or better leads keep choosing someone else."
           />
         </div>
 
@@ -2268,11 +2267,11 @@ const OnboardingFunnel = () => {
             disabled={isSubmitting}
             className="flex w-full items-center justify-center gap-2 rounded-xl bg-amber-400 py-4 text-base font-black text-slate-950 shadow-md transition-all hover:-translate-y-0.5 hover:bg-amber-500 disabled:cursor-wait disabled:opacity-70"
           >
-            {isSubmitting ? <Loader2 className="h-5 w-5 animate-spin" /> : "Send My First Fix"}
+            {isSubmitting ? <Loader2 className="h-5 w-5 animate-spin" /> : "Send Me The First Fix"}
             {!isSubmitting && <ArrowRight className="h-5 w-5" />}
           </button>
           <p className="mt-3 text-center text-[11px] font-bold uppercase tracking-[0.12em] text-slate-400">
-            I&apos;ll reply by email unless you choose to include a phone number.
+            I&apos;ll reply by email. If you leave the phone blank, I won&apos;t call.
           </p>
         </div>
       </div>
@@ -2292,11 +2291,13 @@ const OnboardingFunnel = () => {
             progress has been restored.
           </motion.div>
         )}
-        <h3 className="text-3xl font-bold text-slate-900 mb-4">Select Your Growth Package</h3>
+        <h3 className="text-3xl font-bold text-slate-900 mb-4">
+          Choose the path you want priced.
+        </h3>
         <p className="text-slate-500">
-          Based on your answers and website check, these packages are recommended for{" "}
-          {leadData.businessName}. Choose one to build your project brief and we&apos;ll follow up
-          with the right scope and next steps.
+          Based on your answers, this is the practical next step for{" "}
+          {leadData.businessName || "your business"}. Choose the path that feels right and
+          I&apos;ll turn it into a clear scope, timeline, and next step.
         </p>
       </div>
       <div className="grid md:grid-cols-3 gap-8">
@@ -2356,7 +2357,7 @@ const OnboardingFunnel = () => {
             {(pkg.name === targetPackage ||
               (pkg.name === "The Power Foundation" && !targetPackage)) && (
               <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-blue-600 text-white text-[10px] font-black uppercase tracking-widest px-4 py-1.5 rounded-full shadow-lg z-20">
-                Recommended Solution
+                Likely Best Fit
               </div>
             )}
 
@@ -2423,7 +2424,7 @@ const OnboardingFunnel = () => {
                 <Loader2 className="w-5 h-5 animate-spin" />
               ) : (
                 <>
-                  Continue to Project Brief <ArrowRight className="w-4 h-4" />
+                  Build My Project Brief <ArrowRight className="w-4 h-4" />
                 </>
               )}
             </button>
@@ -2440,30 +2441,30 @@ const OnboardingFunnel = () => {
           <div className="w-10 h-10 bg-emerald-500 text-white rounded-xl flex items-center justify-center shadow-lg shadow-emerald-200">
             <CheckCircle className="w-6 h-6" />
           </div>
-          <h3 className="text-3xl font-bold text-slate-900">Build My Project Brief</h3>
+          <h3 className="text-3xl font-bold text-slate-900">Tell me what this needs to win.</h3>
         </div>
         <p className="text-slate-500 mb-10 text-lg">
-          Tell us what {selectedPackage?.name || "your project"} needs to do. We&apos;ll turn this
-          into a practical blueprint and follow up with scope, timeline, and checkout options.
+          Give me the basics for {selectedPackage?.name || "your project"}. I&apos;ll turn it into
+          a practical brief and follow up with scope, timing, and the cleanest way to get moving.
         </p>
 
         <div className="space-y-8">
           <div className="grid md:grid-cols-2 gap-6">
             <div className="space-y-2">
               <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
-                Industry / Niche
+                What kind of business is it?
               </label>
               <input
                 type="text"
                 value={onboardingData.industry}
                 onChange={(e) => setOnboardingData({ ...onboardingData, industry: e.target.value })}
                 className="w-full px-5 py-4 rounded-2xl border border-slate-100 bg-slate-50 focus:border-blue-600 outline-none transition-all"
-                placeholder="e.g. Luxury Real Estate"
+                placeholder="e.g. roofing, med spa, restaurant, law firm"
               />
             </div>
             <div className="space-y-2">
               <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
-                Target Audience
+                Who is the best customer?
               </label>
               <input
                 type="text"
@@ -2472,44 +2473,44 @@ const OnboardingFunnel = () => {
                   setOnboardingData({ ...onboardingData, targetAudience: e.target.value })
                 }
                 className="w-full px-5 py-4 rounded-2xl border border-slate-100 bg-slate-50 focus:border-blue-600 outline-none transition-all"
-                placeholder="e.g. First-time homebuyers"
+                placeholder="e.g. homeowners, parents, business owners"
               />
             </div>
           </div>
           <div className="space-y-2">
             <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
-              Primary Business Goals
+              What should this help you sell?
             </label>
             <textarea
               value={onboardingData.goals}
               onChange={(e) => setOnboardingData({ ...onboardingData, goals: e.target.value })}
               className="w-full px-5 py-4 rounded-2xl border border-slate-100 bg-slate-50 focus:border-blue-600 outline-none transition-all resize-none"
               rows={3}
-              placeholder="What do you want this website to achieve?"
+              placeholder="Tell me the calls, bookings, applications, or quote requests you want more of."
             />
           </div>
           <div className="space-y-2">
             <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
-              Brand Voice / Style
+              How should it feel?
             </label>
             <input
               type="text"
               value={onboardingData.brandVoice}
               onChange={(e) => setOnboardingData({ ...onboardingData, brandVoice: e.target.value })}
               className="w-full px-5 py-4 rounded-2xl border border-slate-100 bg-slate-50 focus:border-blue-600 outline-none transition-all"
-              placeholder="e.g. Professional, Bold, Minimalist"
+              placeholder="e.g. premium, local, tough, clean, family-owned"
             />
           </div>
           <div className="space-y-2">
             <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
-              Must-Have Features
+              What must be included?
             </label>
             <textarea
               value={onboardingData.features}
               onChange={(e) => setOnboardingData({ ...onboardingData, features: e.target.value })}
               className="w-full px-5 py-4 rounded-2xl border border-slate-100 bg-slate-50 focus:border-blue-600 outline-none transition-all resize-none"
               rows={3}
-              placeholder="e.g. Online booking, live chat, portfolio gallery"
+              placeholder="e.g. booking, quote form, financing page, reviews, before-and-after photos"
             />
           </div>
           <button
@@ -2521,7 +2522,7 @@ const OnboardingFunnel = () => {
               <Loader2 className="w-5 h-5 animate-spin" />
             ) : (
               <>
-                Generate My Project Blueprint <Sparkles className="w-5 h-5" />
+                Send My Project Brief <Sparkles className="w-5 h-5" />
               </>
             )}
           </button>
@@ -2539,17 +2540,17 @@ const OnboardingFunnel = () => {
           <div className="w-20 h-20 bg-emerald-500 text-white rounded-full flex items-center justify-center mx-auto mb-6 shadow-xl shadow-emerald-900/40">
             <CheckCircle2 className="w-10 h-10" />
           </div>
-          <h3 className="text-4xl font-bold mb-4">Project Brief Received!</h3>
+          <h3 className="text-4xl font-bold mb-4">I got your brief.</h3>
           <p className="text-slate-400 text-lg">
-            Your blueprint is ready below, and our team will follow up at {leadData.email} with
-            next steps.
+            The working plan is below, and I&apos;ll follow up at {leadData.email} with the next
+            step.
           </p>
         </div>
 
         <div className="bg-slate-800/50 backdrop-blur-xl border border-slate-700 p-8 md:p-12 rounded-[3rem] shadow-2xl">
           <div className="flex items-center gap-3 mb-8">
             <Layout className="w-6 h-6 text-blue-400" />
-            <h4 className="text-2xl font-bold">Your Project Blueprint</h4>
+            <h4 className="text-2xl font-bold">Your Working Plan</h4>
           </div>
           <div className="prose prose-invert max-w-none">
             <div className="bg-slate-900/50 p-8 rounded-2xl border border-slate-700/50 font-mono text-sm leading-relaxed whitespace-pre-wrap text-blue-100">
@@ -2559,23 +2560,23 @@ const OnboardingFunnel = () => {
           <div className="mt-10 grid md:grid-cols-3 gap-6">
             <div className="bg-slate-900/50 p-6 rounded-2xl border border-slate-700/50">
               <Target className="w-5 h-5 text-blue-400 mb-3" />
-              <h5 className="font-bold text-sm mb-1">Strategy Confirmed</h5>
+              <h5 className="font-bold text-sm mb-1">The goal is clear</h5>
               <p className="text-xs text-slate-500">
-                Your goals have been mapped to our build engine.
+                The plan is tied to the outcome you want from the site.
               </p>
             </div>
             <div className="bg-slate-900/50 p-6 rounded-2xl border border-slate-700/50">
               <Palette className="w-5 h-5 text-emerald-400 mb-3" />
-              <h5 className="font-bold text-sm mb-1">Brand Visuals Set</h5>
+              <h5 className="font-bold text-sm mb-1">The first impression matters</h5>
               <p className="text-xs text-slate-500">
-                Color palette and typography have been selected.
+                The page needs to make the right buyer feel safe taking the next step.
               </p>
             </div>
             <div className="bg-slate-900/50 p-6 rounded-2xl border border-slate-700/50">
               <Smartphone className="w-5 h-5 text-amber-400 mb-3" />
-              <h5 className="font-bold text-sm mb-1">Mobile Architecture</h5>
+              <h5 className="font-bold text-sm mb-1">Mobile comes first</h5>
               <p className="text-xs text-slate-500">
-                Responsive layout structure is ready for development.
+                Most buyers will judge it on a phone before they ever call.
               </p>
             </div>
           </div>
@@ -2583,7 +2584,7 @@ const OnboardingFunnel = () => {
 
         <div className="mt-12 text-center">
           <p className="text-slate-400 mb-6">
-            We&apos;ll review this brief within 24 hours and send the right scope, timeline, and
+            I&apos;ll review this brief within 24 hours and send the right scope, timeline, and
             secure payment options for {selectedPackage?.name || "your project"}.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -2591,7 +2592,7 @@ const OnboardingFunnel = () => {
               onClick={() => window.open(DISCOVERY_CALL_URL, "_blank")}
               className="bg-blue-600 text-white font-bold px-6 py-3 rounded-2xl hover:bg-blue-500 transition-all flex items-center gap-2"
             >
-              Book Strategy Call <Calendar className="w-4 h-4" />
+              Book A Strategy Call <Calendar className="w-4 h-4" />
             </button>
             <button
               onClick={() => {
@@ -2605,7 +2606,7 @@ const OnboardingFunnel = () => {
               }}
               className="bg-white/10 backdrop-blur-md text-white font-bold px-6 py-3 rounded-2xl hover:bg-white/20 transition-all border border-white/10 flex items-center gap-2"
             >
-              Download Blueprint <Download className="w-4 h-4" />
+              Download The Plan <Download className="w-4 h-4" />
             </button>
           </div>
         </div>

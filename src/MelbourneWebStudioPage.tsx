@@ -3351,6 +3351,11 @@ const Resources = () => {
                 text: "Google Business Profile, reviews, citations, and website signals working together.",
               },
               {
+                title: "How to Rank in the Melbourne FL Map Pack",
+                href: "/blog/how-to-rank-in-the-melbourne-fl-map-pack-without-spammy-seo/",
+                text: "How Google profile signals, reviews, citations, and website proof work together without spammy SEO.",
+              },
+              {
                 title: "Website Conversion Checklist",
                 href: "/blog/website-conversion-checklist-melbourne-fl/",
                 text: "Above-the-fold clarity, speed, proof, forms, and follow-up for more qualified leads.",

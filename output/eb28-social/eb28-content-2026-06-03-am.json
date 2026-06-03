@@ -1,0 +1,36 @@
+{
+  "brand": "EB28",
+  "generatedAt": "2026-06-03T03:00:39.839Z",
+  "runId": "2026-06-03-am",
+  "slot": "am",
+  "article": {
+    "title": "Website Audit Checklist for Melbourne FL Businesses Losing Leads",
+    "url": "https://eb28.co/blog/website-audit-checklist-for-melbourne-fl-businesses-losing-leads/",
+    "cluster": "conversion",
+    "primaryKeyword": "website audit Melbourne FL"
+  },
+  "posts": {
+    "blog": {
+      "title": "Website Audit Checklist for Melbourne FL Businesses Losing Leads",
+      "url": "https://eb28.co/blog/website-audit-checklist-for-melbourne-fl-businesses-losing-leads/",
+      "status": "ready_for_build_and_deploy"
+    },
+    "facebook": {
+      "caption": "Website Audit Checklist for Melbourne FL Businesses Losing Leads\n\nA practical guide for local businesses that want more qualified organic leads, stronger search visibility, and a faster path from visitor to customer.\n\nRead it: https://eb28.co/blog/website-audit-checklist-for-melbourne-fl-businesses-losing-leads/",
+      "status": "ready_to_publish"
+    },
+    "instagram": {
+      "caption": "website audit Melbourne FL: the practical version.\n\nWe broke down what to fix first, how to connect it to real lead flow, and what EB28 checks daily to keep search growth moving.\n\nRead the full guide at eb28.co/blog/",
+      "creativeBrief": "Carousel: Slide 1 problem statement, Slide 2 what to fix first, Slide 3 technical SEO checks, Slide 4 internal links, Slide 5 CTA to project brief.",
+      "status": "ready_to_publish_when_eb28_social_channel_is_configured"
+    },
+    "x": {
+      "caption": "Website Audit Checklist for Melbourne FL Businesses Losing Leads\n\nThe key: connect the search intent to a page that is fast, useful, internally linked, and measured in Search Console.\n\nhttps://eb28.co/blog/website-audit-checklist-for-melbourne-fl-businesses-losing-leads/",
+      "status": "ready_to_publish"
+    },
+    "linkedin": {
+      "caption": "New EB28 growth brief: Website Audit Checklist for Melbourne FL Businesses Losing Leads\n\nThis covers the practical SEO and conversion fixes that turn a business website into a more reliable organic lead path.\n\nhttps://eb28.co/blog/website-audit-checklist-for-melbourne-fl-businesses-losing-leads/",
+      "status": "ready_to_publish"
+    }
+  }
+}

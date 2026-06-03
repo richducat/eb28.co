@@ -68,5 +68,75 @@
     "title": "CRM Automation for Local Service Businesses: The Simple Stack That Works",
     "angle": "capture, qualify, follow up, and report",
     "intent": "commercial"
+  },
+  {
+    "cluster": "melbourne-web-design",
+    "primaryKeyword": "website designer near me Melbourne FL",
+    "title": "Website Designer Near Me in Melbourne FL: How to Choose Without Getting Burned",
+    "angle": "trust, local proof, speed, and ownership questions",
+    "intent": "commercial"
+  },
+  {
+    "cluster": "melbourne-web-design",
+    "primaryKeyword": "small business web design Melbourne FL",
+    "title": "Small Business Web Design in Melbourne FL: What Actually Brings Leads",
+    "angle": "practical local business website essentials",
+    "intent": "commercial"
+  },
+  {
+    "cluster": "local-seo",
+    "primaryKeyword": "Google Business Profile optimization Melbourne FL",
+    "title": "Google Business Profile Optimization in Melbourne FL: The Website Signals That Help",
+    "angle": "connect GBP, website content, reviews, and citations",
+    "intent": "commercial"
+  },
+  {
+    "cluster": "local-seo",
+    "primaryKeyword": "local SEO services Melbourne FL",
+    "title": "Local SEO Services in Melbourne FL: What Should Be Fixed Before You Pay Monthly",
+    "angle": "buyer checklist for avoiding vague retainers",
+    "intent": "commercial"
+  },
+  {
+    "cluster": "conversion",
+    "primaryKeyword": "lead generation website Melbourne FL",
+    "title": "Lead Generation Website in Melbourne FL: The Page Elements That Make People Act",
+    "angle": "above-the-fold promise, proof, CTA, and follow-up",
+    "intent": "lead-generation"
+  },
+  {
+    "cluster": "conversion",
+    "primaryKeyword": "website redesign Melbourne FL",
+    "title": "Website Redesign in Melbourne FL: Fix the Leaks Before You Rebuild Everything",
+    "angle": "diagnostic-first redesign planning",
+    "intent": "commercial"
+  },
+  {
+    "cluster": "lead-automation",
+    "primaryKeyword": "automated lead follow up for contractors",
+    "title": "Automated Lead Follow-Up for Contractors: How to Stop Losing Hot Enquiries",
+    "angle": "speed-to-lead and owner-controlled automation",
+    "intent": "commercial"
+  },
+  {
+    "cluster": "lead-automation",
+    "primaryKeyword": "AI appointment setter for small business",
+    "title": "AI Appointment Setter for Small Business: Where It Helps and Where It Hurts",
+    "angle": "automation boundaries and conversion handoff",
+    "intent": "commercial"
+  },
+  {
+    "cluster": "private-ai",
+    "primaryKeyword": "private AI for small business",
+    "title": "Private AI for Small Business: The Safe Way to Start Without Overbuilding",
+    "angle": "narrow workflow selection and data boundaries",
+    "intent": "commercial"
+  },
+  {
+    "cluster": "private-ai",
+    "primaryKeyword": "secure business AI assistant",
+    "title": "Secure Business AI Assistant: What to Keep Private From Day One",
+    "angle": "data control, access, logging, and human review",
+    "intent": "technical-commercial"
   }
 ]

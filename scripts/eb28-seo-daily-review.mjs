@@ -10,6 +10,7 @@ import { spawnSync } from 'node:child_process';
 
 const ROOT = process.cwd();
 const SITE_ORIGIN = 'https://eb28.co';
+const MELBOURNE_WEB_STUDIO_ORIGIN = 'https://melbournewebstudio.eb28.co';
 const DEFAULT_GSC_SITE_URL = process.env.GSC_SITE_URL || 'https://eb28.co/';
 const DEFAULT_SITEMAP_URL = process.env.GSC_SITEMAP_URL || `${SITE_ORIGIN}/sitemap.xml`;
 const WEBMASTERS_SCOPE = 'https://www.googleapis.com/auth/webmasters';
@@ -149,17 +150,27 @@ async function fetchUrlStatus(url) {
       },
     });
     const text = await response.text();
+    const isMelbourneWebStudioSubdomain = url.startsWith(`${MELBOURNE_WEB_STUDIO_ORIGIN}/`);
     return {
       ok: response.ok,
       status: response.status,
       finalUrl: response.url,
       contentType: response.headers.get('content-type') || '',
+      server: response.headers.get('server') || '',
       bytes: text.length,
       hasIndexableSignals:
         response.ok &&
         !/noindex/i.test(text) &&
         /<title>[\s\S]+<\/title>/i.test(text) &&
         /<link[^>]+rel=["']canonical["']/i.test(text),
+      melbourneWebStudioSignals: isMelbourneWebStudioSubdomain
+        ? {
+            servedByGithubPages: /github/i.test(response.headers.get('server') || ''),
+            hasExpectedCanonical: text.includes(`href="${MELBOURNE_WEB_STUDIO_ORIGIN}/"`),
+            referencesCurrentAppAssets: /\/assets\/index-[A-Za-z0-9_-]+\.js/.test(text),
+            likelyLegacyHost: /litespeed/i.test(response.headers.get('server') || ''),
+          }
+        : null,
     };
   } catch (error) {
     return {
@@ -306,22 +317,29 @@ async function submitSitemap({ siteUrl, sitemapUrl }) {
   }
 }
 
-async function getSearchAnalytics({ siteUrl }) {
+async function getSearchAnalytics({
+  siteUrl,
+  dimensions = ['query'],
+  rowLimit = 50,
+  startDate = daysAgo(31),
+  endDate = daysAgo(3),
+} = {}) {
   const token = await getAccessToken(WEBMASTERS_SCOPE);
   if (!token) {
     return {
       ok: false,
       skipped: true,
       reason: 'Missing Search Console credentials for Search Analytics average-position pull.',
+      dimensions,
       rows: [],
     };
   }
 
   const body = {
-    startDate: daysAgo(31),
-    endDate: daysAgo(3),
-    dimensions: ['query', 'page'],
-    rowLimit: 50,
+    startDate,
+    endDate,
+    dimensions,
+    rowLimit,
     type: 'web',
   };
 
@@ -338,9 +356,10 @@ async function getSearchAnalytics({ siteUrl }) {
     return {
       ok: true,
       dateRange: `${body.startDate} to ${body.endDate}`,
+      dimensions,
       rows: (json.rows || []).map((row) => ({
-        query: row.keys?.[0] || '',
-        page: row.keys?.[1] || '',
+        query: row.keys?.[dimensions.indexOf('query')] || '',
+        page: row.keys?.[dimensions.indexOf('page')] || '',
         clicks: row.clicks || 0,
         impressions: row.impressions || 0,
         ctr: row.ctr || 0,
@@ -348,7 +367,7 @@ async function getSearchAnalytics({ siteUrl }) {
       })),
     };
   } catch (error) {
-    return { ok: false, error: error.message, rows: [] };
+    return { ok: false, error: error.message, dimensions, rows: [] };
   }
 }
 
@@ -398,17 +417,89 @@ async function inspectUrls({ siteUrl, urls }) {
   };
 }
 
-function renderAnalyticsRows(rows) {
+function renderAnalyticsRows(rows, { includePage = true } = {}) {
   if (!rows?.length) return 'No Search Console rows returned.';
+  const headers = includePage
+    ? '| Query | Page | Clicks | Impr. | CTR | Avg. position |'
+    : '| Query | Clicks | Impr. | CTR | Avg. position |';
+  const separator = includePage
+    ? '| --- | --- | ---: | ---: | ---: | ---: |'
+    : '| --- | ---: | ---: | ---: | ---: |';
   return [
-    '| Query | Page | Clicks | Impr. | CTR | Avg. position |',
-    '| --- | --- | ---: | ---: | ---: | ---: |',
+    headers,
+    separator,
     ...rows.slice(0, 20).map((row) => {
       const ctr = `${(Number(row.ctr || 0) * 100).toFixed(1)}%`;
       const position = Number(row.position || 0).toFixed(1);
-      return `| ${row.query.replace(/\|/g, '/')} | ${row.page.replace(/\|/g, '/')} | ${row.clicks} | ${row.impressions} | ${ctr} | ${position} |`;
+      const safeQuery = row.query.replace(/\|/g, '/');
+      if (!includePage) {
+        return `| ${safeQuery} | ${row.clicks} | ${row.impressions} | ${ctr} | ${position} |`;
+      }
+      return `| ${safeQuery} | ${row.page.replace(/\|/g, '/')} | ${row.clicks} | ${row.impressions} | ${ctr} | ${position} |`;
     }),
   ].join('\n');
+}
+
+function getStrikingDistanceRows(rows, limit = 8) {
+  return (rows || [])
+    .filter((row) => Number(row.position) >= 4 && Number(row.position) <= 20 && Number(row.impressions) > 0)
+    .sort((a, b) => Number(b.impressions) - Number(a.impressions) || Number(a.position) - Number(b.position))
+    .slice(0, limit);
+}
+
+function getHighPerformingPages(rows, limit = 5) {
+  const byPage = new Map();
+  for (const row of rows || []) {
+    if (!row.page) continue;
+    const current = byPage.get(row.page) || {
+      page: row.page,
+      clicks: 0,
+      impressions: 0,
+      weightedPositionTotal: 0,
+      topQueries: [],
+    };
+    current.clicks += Number(row.clicks || 0);
+    current.impressions += Number(row.impressions || 0);
+    current.weightedPositionTotal += Number(row.position || 0) * Math.max(1, Number(row.impressions || 0));
+    current.topQueries.push(row);
+    byPage.set(row.page, current);
+  }
+
+  return [...byPage.values()]
+    .map((page) => ({
+      ...page,
+      position: page.impressions ? page.weightedPositionTotal / page.impressions : 0,
+      topQueries: page.topQueries
+        .sort((a, b) => Number(b.impressions) - Number(a.impressions) || Number(a.position) - Number(b.position))
+        .slice(0, 3),
+    }))
+    .sort((a, b) => Number(b.clicks) - Number(a.clicks) || Number(b.impressions) - Number(a.impressions))
+    .slice(0, limit);
+}
+
+function buildInternalLinkActions(newestArticles, pageAnalytics) {
+  const highPages = getHighPerformingPages(pageAnalytics.rows || [], 5);
+  const targets = newestArticles.slice(0, 3);
+
+  if (!targets.length) {
+    return ['- No newest article targets found. Run the content engine before the SEO review.'];
+  }
+
+  if (!highPages.length) {
+    return [
+      `- Search Console page rows are unavailable, so use owned authority pages as source links today: ${SITE_ORIGIN}/, ${SITE_ORIGIN}/melbournewebstudio/, and ${SITE_ORIGIN}/blog/.`,
+      ...targets.map((article) => `- Add or verify contextual links into ${article.url} from the homepage, Melbourne Web Studio page, and the blog hub.`),
+    ];
+  }
+
+  return highPages.flatMap((source) =>
+    targets.map((article) => {
+      const queryNote = source.topQueries.length
+        ? ` Top query: "${source.topQueries[0].query}" at avg. position ${Number(source.topQueries[0].position).toFixed(1)}.`
+        : '';
+      return `- From ${source.page}, add a contextual link to ${article.url} using a natural anchor around "${article.primaryKeyword}".${queryNote}`;
+    }),
+  );
 }
 
 async function runLighthouse(urls) {
@@ -568,7 +659,7 @@ async function sendViaFormSubmit({ subject, report }) {
   }
 }
 
-async function updateBacklinkQueue(newestArticles, analytics) {
+async function updateBacklinkQueue(newestArticles, { queryAnalytics, pageAnalytics }) {
   const queuePath = path.join(ROOT, 'content', 'eb28', 'seo-outreach-queue.md');
   let queue = '';
   try {
@@ -577,9 +668,8 @@ async function updateBacklinkQueue(newestArticles, analytics) {
     queue = '# EB28 SEO Outreach Queue\n\n';
   }
 
-  const strikingDistance = (analytics.rows || [])
-    .filter((row) => Number(row.position) >= 4 && Number(row.position) <= 20)
-    .slice(0, 5);
+  const strikingDistance = getStrikingDistanceRows(queryAnalytics.rows || [], 5);
+  const sourcePages = getHighPerformingPages(pageAnalytics.rows || [], 3);
   const selected = newestArticles[0];
   const stamp = new Date().toISOString().slice(0, 10);
   const note = [
@@ -594,6 +684,11 @@ async function updateBacklinkQueue(newestArticles, analytics) {
           .map((row) => `"${row.query}" at avg. position ${Number(row.position).toFixed(1)}`)
           .join('; ')}.`
       : '- Search Console striking-distance rows unavailable or empty; use newest/highest-priority cluster.',
+    sourcePages.length
+      ? `- High-performing internal-link sources: ${sourcePages
+          .map((row) => `${row.page} (${row.clicks} clicks, ${row.impressions} impressions)`)
+          .join('; ')}.`
+      : '- High-performing page rows unavailable; default to homepage, Melbourne Web Studio, and blog hub as source links.',
     '- Next authority action: pursue one legitimate local citation, one expert quote opportunity, and one partner resource mention. Avoid paid links and exact-match anchor spam.',
     '',
   ].join('\n');
@@ -612,7 +707,12 @@ async function main() {
   await fsp.mkdir(OUTPUT_DIR, { recursive: true });
 
   const newestArticles = await getNewestArticles(5);
-  const urlsToCheck = [`${SITE_ORIGIN}/sitemap.xml`, `${SITE_ORIGIN}/blog/`, ...newestArticles.slice(0, 4).map((article) => article.url)];
+  const urlsToCheck = [
+    `${SITE_ORIGIN}/sitemap.xml`,
+    `${SITE_ORIGIN}/blog/`,
+    `${MELBOURNE_WEB_STUDIO_ORIGIN}/`,
+    ...newestArticles.slice(0, 4).map((article) => article.url),
+  ];
 
   const safeUpdates = options.safeUpdates
     ? {
@@ -636,17 +736,20 @@ async function main() {
   const sitemapSubmission = options.submitSitemap
     ? await submitSitemap({ siteUrl: options.siteUrl, sitemapUrl: options.sitemapUrl })
     : { skipped: true };
-  const analytics = await getSearchAnalytics({ siteUrl: options.siteUrl });
+  const queryAnalytics = await getSearchAnalytics({ siteUrl: options.siteUrl, dimensions: ['query'], rowLimit: 50 });
+  const pageAnalytics = await getSearchAnalytics({ siteUrl: options.siteUrl, dimensions: ['query', 'page'], rowLimit: 100 });
   const inspections = options.inspectUrls
     ? await inspectUrls({
         siteUrl: options.siteUrl,
         urls: [`${SITE_ORIGIN}/blog/`, ...newestArticles.slice(0, 4).map((article) => article.url)],
       })
     : { skipped: true, results: [] };
-  const backlinkQueue = await updateBacklinkQueue(newestArticles, analytics);
+  const backlinkQueue = await updateBacklinkQueue(newestArticles, { queryAnalytics, pageAnalytics });
   const lighthouse = options.runLighthouse
     ? await runLighthouse([SITE_ORIGIN, `${SITE_ORIGIN}/blog/`])
     : [];
+  const internalLinkActions = buildInternalLinkActions(newestArticles, pageAnalytics);
+  const melbourneSubdomain = liveChecks.find((check) => check.url === `${MELBOURNE_WEB_STUDIO_ORIGIN}/`);
 
   const report = [
     `# EB28 Daily SEO Review`,
@@ -680,8 +783,17 @@ async function main() {
     '',
     ...liveChecks.map(
       (check) =>
-        `- ${check.url}: ${check.ok ? 'OK' : 'FAIL'} (${check.status || 0})${check.hasIndexableSignals ? ', indexable signals present' : ''}`,
+        `- ${check.url}: ${check.ok ? 'OK' : 'FAIL'} (${check.status || 0})${check.hasIndexableSignals ? ', indexable signals present' : ''}${check.server ? `, server ${check.server}` : ''}`,
     ),
+    melbourneSubdomain?.melbourneWebStudioSignals
+      ? `- Melbourne Web Studio subdomain alignment: ${
+          melbourneSubdomain.melbourneWebStudioSignals.servedByGithubPages
+            ? 'serving from GitHub Pages'
+            : melbourneSubdomain.melbourneWebStudioSignals.likelyLegacyHost
+              ? 'serving from a separate legacy host; update DNS/hosting so it serves the GitHub Pages build'
+              : 'server does not clearly match GitHub Pages'
+        }`
+      : '',
     '',
     `## Search Console`,
     '',
@@ -699,6 +811,7 @@ async function main() {
           ? 'completed'
           : 'completed with errors'
     }`,
+    '- URL handling note: the Search Console API can submit the sitemap and inspect URL status. Direct programmatic indexing requests are not used for these articles because Google limits the Indexing API to supported job posting and livestream pages.',
     ...(inspections.results || []).map(
       (result) =>
         `  - ${result.url}: ${result.ok ? `${result.verdict} / ${result.coverageState}` : `failed (${result.error})`}`,
@@ -706,11 +819,23 @@ async function main() {
     '',
     `## Actual Query Average Position`,
     '',
-    analytics.ok
-      ? `Date range: ${analytics.dateRange}`
-      : `Unavailable: ${analytics.reason || analytics.error || 'Search Console credentials missing or unauthorized.'}`,
+    queryAnalytics.ok
+      ? `Date range: ${queryAnalytics.dateRange}`
+      : `Unavailable: ${queryAnalytics.reason || queryAnalytics.error || 'Search Console credentials missing or unauthorized.'}`,
     '',
-    renderAnalyticsRows(analytics.rows || []),
+    renderAnalyticsRows(queryAnalytics.rows || [], { includePage: false }),
+    '',
+    `## Query/Page Opportunities`,
+    '',
+    pageAnalytics.ok
+      ? `Date range: ${pageAnalytics.dateRange}`
+      : `Unavailable: ${pageAnalytics.reason || pageAnalytics.error || 'Search Console credentials missing or unauthorized.'}`,
+    '',
+    renderAnalyticsRows(pageAnalytics.rows || [], { includePage: true }),
+    '',
+    `## Internal Link Actions`,
+    '',
+    ...internalLinkActions,
     '',
     `## Backlinks and Citations`,
     '',
@@ -760,8 +885,14 @@ async function main() {
     datedReportPath: datedPath,
     sitemapSubmission,
     analytics: {
-      ok: analytics.ok,
-      rows: (analytics.rows || []).slice(0, 5),
+      query: {
+        ok: queryAnalytics.ok,
+        rows: (queryAnalytics.rows || []).slice(0, 5),
+      },
+      queryPage: {
+        ok: pageAnalytics.ok,
+        rows: (pageAnalytics.rows || []).slice(0, 5),
+      },
     },
     inspections,
     email,

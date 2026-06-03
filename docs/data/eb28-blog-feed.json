@@ -1,8 +1,28 @@
 {
-  "generatedAt": "2026-06-03T02:22:07.557Z",
+  "generatedAt": "2026-06-03T03:01:43.797Z",
   "site": "https://eb28.co",
   "blogUrl": "https://eb28.co/blog/",
   "articles": [
+    {
+      "slug": "ai-receptionist-for-local-business-what-to-automate-and-what-to-keep-human",
+      "title": "AI Receptionist for Local Business: What to Automate and What to Keep Human",
+      "description": "AI Receptionist for Local Business: What to Automate and What to Keep Human for business owners who want clearer search visibility, better buyer trust, and a website path that turns interest into real enquiries.",
+      "cluster": "lead-automation",
+      "primaryKeyword": "AI receptionist for local business",
+      "url": "https://eb28.co/blog/ai-receptionist-for-local-business-what-to-automate-and-what-to-keep-human/",
+      "datePublished": "2026-06-03",
+      "dateModified": "2026-06-03"
+    },
+    {
+      "slug": "website-audit-checklist-for-melbourne-fl-businesses-losing-leads",
+      "title": "Website Audit Checklist for Melbourne FL Businesses Losing Leads",
+      "description": "Website Audit Checklist for Melbourne FL Businesses Losing Leads for business owners who want clearer search visibility, better buyer trust, and a website path that turns interest into real enquiries.",
+      "cluster": "conversion",
+      "primaryKeyword": "website audit Melbourne FL",
+      "url": "https://eb28.co/blog/website-audit-checklist-for-melbourne-fl-businesses-losing-leads/",
+      "datePublished": "2026-06-03",
+      "dateModified": "2026-06-03"
+    },
     {
       "slug": "ai-lead-follow-up-local-service-business",
       "title": "AI Lead Follow-Up for Local Service Businesses: Faster Response Without Chaos",

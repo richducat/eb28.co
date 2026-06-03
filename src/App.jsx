@@ -206,22 +206,22 @@ const App = () => {
 
   const seoArticles = [
     {
-      title: 'Melbourne FL Web Design Cost Guide',
-      href: '/blog/melbourne-fl-web-design-cost-guide-2026/',
+      title: 'Best Website Builder in Melbourne FL',
+      href: '/blog/best-website-builder-in-melbourne-fl-what-local-companies-should-look-for/',
       cluster: 'Melbourne web design',
-      description: 'What a lead-driven local website should include, where budget gets wasted, and how to measure ROI.'
+      description: 'What local companies should look for before trusting a website builder with their first impression.'
     },
     {
-      title: 'Local SEO Map Pack Checklist',
-      href: '/blog/local-seo-map-pack-melbourne-fl/',
+      title: 'How to Rank in the Melbourne FL Map Pack',
+      href: '/blog/how-to-rank-in-the-melbourne-fl-map-pack-without-spammy-seo/',
       cluster: 'Local SEO',
-      description: 'How Google Business Profile, website content, reviews, and citations work together for Melbourne businesses.'
+      description: 'How profile signals, website content, reviews, and citations work together without spammy SEO.'
     },
     {
-      title: 'Private AI Infrastructure for Small Businesses',
-      href: '/blog/private-ai-infrastructure-small-business/',
-      cluster: 'Private AI',
-      description: 'When local LLMs, RAG systems, and private automation make sense for sensitive business workflows.'
+      title: 'Website Conversion Checklist for Melbourne FL',
+      href: '/blog/website-conversion-checklist-melbourne-fl/',
+      cluster: 'Conversion',
+      description: 'The homepage, proof, CTA, and follow-up fixes that help local traffic become real enquiries.'
     }
   ];
 
@@ -296,6 +296,7 @@ const App = () => {
               <button onClick={() => scrollToSection('portfolio')} className="text-slate-300 hover:text-white transition-colors text-sm font-medium uppercase tracking-wide">Portfolio</button>
               <button onClick={() => scrollToSection('deployments')} className="text-slate-300 hover:text-white transition-colors text-sm font-medium uppercase tracking-wide">Deployments</button>
               <a href="/blog/" className="text-slate-300 hover:text-white transition-colors text-sm font-medium uppercase tracking-wide">Blog</a>
+              <a href="/melbournewebstudio/#quiz" className="text-slate-300 hover:text-white transition-colors text-sm font-medium uppercase tracking-wide">Melbourne Studio</a>
               <a href="/reconcile/" className="text-cyan-300 hover:text-cyan-200 transition-colors text-sm font-medium uppercase tracking-wide">Recon Agent</a>
               <button onClick={() => scrollToSection('packages')} className="text-slate-300 hover:text-white transition-colors text-sm font-medium uppercase tracking-wide text-blue-400">$10 AI Offer</button>
               <button onClick={() => scrollToSection('contact')} className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-full font-bold text-sm transition-all transform hover:scale-105 shadow-lg shadow-blue-600/30">
@@ -326,6 +327,7 @@ const App = () => {
               <button onClick={() => scrollToSection('portfolio')} className="block w-full text-left px-3 py-3 text-slate-300 hover:bg-slate-700 rounded-md font-medium">Portfolio</button>
               <button onClick={() => scrollToSection('deployments')} className="block w-full text-left px-3 py-3 text-slate-300 hover:bg-slate-700 rounded-md font-medium">Deployments</button>
               <a href="/blog/" className="block w-full text-left px-3 py-3 text-slate-300 hover:bg-slate-700 rounded-md font-medium">Blog</a>
+              <a href="/melbournewebstudio/#quiz" className="block w-full text-left px-3 py-3 text-slate-300 hover:bg-slate-700 rounded-md font-medium">Melbourne Studio</a>
               <a href="/reconcile/" className="block w-full text-left px-3 py-3 text-cyan-300 hover:bg-slate-700 rounded-md font-bold">Recon Agent Founder Beta</a>
               <button onClick={() => scrollToSection('packages')} className="block w-full text-left px-3 py-3 text-blue-400 hover:bg-slate-700 rounded-md font-bold">$10 AI Offer</button>
               <button onClick={() => scrollToSection('contact')} className="block w-full text-left px-3 py-3 bg-blue-600 text-white hover:bg-blue-700 rounded-md font-bold mt-4">Architect Your System</button>
@@ -345,7 +347,8 @@ const App = () => {
             width="1600"
             height="900"
             decoding="async"
-            fetchpriority="high"
+            loading="eager"
+            fetchPriority="high"
             className="w-full h-full object-cover opacity-20"
           />
         </div>

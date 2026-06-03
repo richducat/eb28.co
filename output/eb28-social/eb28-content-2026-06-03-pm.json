@@ -1,0 +1,36 @@
+{
+  "brand": "EB28",
+  "generatedAt": "2026-06-03T03:00:39.880Z",
+  "runId": "2026-06-03-pm",
+  "slot": "pm",
+  "article": {
+    "title": "AI Receptionist for Local Business: What to Automate and What to Keep Human",
+    "url": "https://eb28.co/blog/ai-receptionist-for-local-business-what-to-automate-and-what-to-keep-human/",
+    "cluster": "lead-automation",
+    "primaryKeyword": "AI receptionist for local business"
+  },
+  "posts": {
+    "blog": {
+      "title": "AI Receptionist for Local Business: What to Automate and What to Keep Human",
+      "url": "https://eb28.co/blog/ai-receptionist-for-local-business-what-to-automate-and-what-to-keep-human/",
+      "status": "ready_for_build_and_deploy"
+    },
+    "facebook": {
+      "caption": "AI Receptionist for Local Business: What to Automate and What to Keep Human\n\nA practical guide for local businesses that want more qualified organic leads, stronger search visibility, and a faster path from visitor to customer.\n\nRead it: https://eb28.co/blog/ai-receptionist-for-local-business-what-to-automate-and-what-to-keep-human/",
+      "status": "ready_to_publish"
+    },
+    "instagram": {
+      "caption": "AI receptionist for local business: the practical version.\n\nWe broke down what to fix first, how to connect it to real lead flow, and what EB28 checks daily to keep search growth moving.\n\nRead the full guide at eb28.co/blog/",
+      "creativeBrief": "Carousel: Slide 1 problem statement, Slide 2 what to fix first, Slide 3 technical SEO checks, Slide 4 internal links, Slide 5 CTA to project brief.",
+      "status": "ready_to_publish_when_eb28_social_channel_is_configured"
+    },
+    "x": {
+      "caption": "AI Receptionist for Local Business: What to Automate and What to Keep Human\n\nThe key: connect the search intent to a page that is fast, useful, internally linked, and measured in Search Console.\n\nhttps://eb28.co/blog/ai-receptionist-for-local-business-what-to-automate-and-what-to-keep-human/",
+      "status": "ready_to_publish"
+    },
+    "linkedin": {
+      "caption": "New EB28 growth brief: AI Receptionist for Local Business: What to Automate and What to Keep Human\n\nThis covers the practical SEO and conversion fixes that turn a business website into a more reliable organic lead path.\n\nhttps://eb28.co/blog/ai-receptionist-for-local-business-what-to-automate-and-what-to-keep-human/",
+      "status": "ready_to_publish"
+    }
+  }
+}

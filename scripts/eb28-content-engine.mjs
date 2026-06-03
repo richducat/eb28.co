@@ -99,6 +99,83 @@ const CLUSTER_INTERNAL_LINKS = {
   ],
 };
 
+const CLUSTER_MESSAGING = {
+  'local-seo': {
+    buyerProblem:
+      'The buyer is invisible until the moment they need help. If the business does not show up in local search, the job usually goes to whoever looks safest on Google first.',
+    firstFix:
+      'Start by lining up the Google Business Profile, homepage promise, service content, reviews, citations, and contact path so they all tell the same local story.',
+    system:
+      'The compounding loop is simple: publish the useful page, submit it, inspect it, watch query movement, then strengthen the page that is already earning impressions.',
+    bullets: [
+      'Match the page title to the exact local buying question',
+      'Add one proof point above the fold and one local FAQ below it',
+      'Link from the homepage, Melbourne Web Studio page, and related local SEO articles',
+      'Queue one legitimate citation or partner mention for the same cluster',
+    ],
+  },
+  'melbourne-web-design': {
+    buyerProblem:
+      'The buyer is not shopping for a prettier website. They are trying to avoid wasting money on another site that looks fine but does not bring in calls, quote requests, or bookings.',
+    firstFix:
+      'Start with the first screen: a clear offer, local relevance, visible proof, fast mobile loading, and one obvious next step.',
+    system:
+      'The durable build treats the website as the hub. Every article, Google profile signal, citation, and follow-up message should send buyers back to a page that can convert.',
+    bullets: [
+      'Answer price, timeline, trust, and local-fit objections before the contact form',
+      'Use internal links from EB28 and Melbourne Web Studio into the newest buying guides',
+      'Keep page speed and mobile layout stable before adding visual polish',
+      'Make the quiz or project brief easier to start than a generic contact form',
+    ],
+  },
+  conversion: {
+    buyerProblem:
+      'The buyer may already be visiting the site. The leak happens when they cannot quickly understand the offer, trust the business, or see what to do next.',
+    firstFix:
+      'Start by removing friction: sharpen the headline, move proof closer to the CTA, simplify the form, and make the follow-up promise specific.',
+    system:
+      'Conversion work compounds when every page gets measured, linked, refreshed, and tied to a lead path that responds before the buyer cools off.',
+    bullets: [
+      'Put the strongest proof near the first CTA',
+      'Keep forms short and make phone optional when email-first follow-up is the promise',
+      'Add internal links from pages with traffic into the newest conversion pages',
+      'Review Search Console positions 4-20 for pages that need better titles or FAQs',
+    ],
+  },
+  'lead-automation': {
+    buyerProblem:
+      'The buyer does not only need more leads. They need fewer missed opportunities after someone asks for help.',
+    firstFix:
+      'Start with the handoff after the form: confirmation, qualification, routing, reminders, and a fast human reply when the lead is worth it.',
+    system:
+      'Automation should support the sale without pretending to be the whole relationship. The best system captures intent, follows up quickly, and keeps the owner in control.',
+    bullets: [
+      'Map what happens in the first five minutes after a lead comes in',
+      'Separate simple FAQs from high-value consult requests',
+      'Link automation articles back to the website conversion checklist',
+      'Track source page and intent so follow-up can match the buyer problem',
+    ],
+  },
+  'private-ai': {
+    buyerProblem:
+      'The buyer wants AI speed without handing sensitive business data to tools they do not control.',
+    firstFix:
+      'Start with one narrow workflow: documents, SOPs, client history, finance review, or staff search. Build the private path before adding more moving parts.',
+    system:
+      'Private AI earns trust when access, data boundaries, retrieval quality, logging, and human review are planned before the first prompt is written.',
+    bullets: [
+      'Define which data can be used and which data stays out',
+      'Use private retrieval for documents that should not be pasted into public tools',
+      'Connect private AI pages to lead automation only where the workflow is clear',
+      'Use official citations and practical examples instead of hype',
+    ],
+  },
+};
+
+function getClusterMessaging(cluster) {
+  return CLUSTER_MESSAGING[cluster] || CLUSTER_MESSAGING.conversion;
+}
+
 function parseArgs(argv) {
   const options = {
     write: false,
@@ -237,10 +314,11 @@ function buildArticle(topic, { date, slot, runId }) {
   const clusterLabel = String(topic.cluster || 'organic-growth').replace(/-/g, ' ');
   const keyword = topic.primaryKeyword || topic.title;
   const angle = topic.angle || 'practical implementation';
+  const messaging = getClusterMessaging(topic.cluster || 'organic-growth');
   const article = {
     slug,
     title: topic.title,
-    description: `${topic.title} explained for business owners who want more qualified organic leads, stronger search visibility, and a website system that converts.`,
+    description: `${topic.title} for business owners who want clearer search visibility, better buyer trust, and a website path that turns interest into real enquiries.`,
     cluster: topic.cluster || 'organic-growth',
     primaryKeyword: keyword,
     datePublished: date,
@@ -248,44 +326,39 @@ function buildArticle(topic, { date, slot, runId }) {
     author: 'EB28',
     heroLabel: slot === 'am' ? 'Morning growth brief' : 'Evening growth brief',
     sourceRunId: runId,
-    summary: `A practical ${slot.toUpperCase()} guide for the ${clusterLabel} cluster, focused on ${angle} and measurable lead generation.`,
+    summary: `A plain-English ${slot.toUpperCase()} growth brief for the ${clusterLabel} cluster, focused on ${angle} and the first fix most likely to create qualified leads.`,
     sections: [
       {
-        heading: 'The search intent behind this topic',
+        heading: 'Why this search matters',
         body: [
-          `People searching for "${keyword}" are usually not looking for theory. They are trying to decide what to fix, who to hire, or how to make their current website produce more qualified leads.`,
-          `For EB28, this topic supports the ${clusterLabel} cluster by answering the buyer's next question in plain English and linking them toward a project brief when they are ready.`
+          `Someone searching for "${keyword}" is usually closer to a buying decision than a research rabbit hole. They want to know what to fix, who to trust, and whether the next step is worth their time.`,
+          messaging.buyerProblem,
         ],
         bullets: [
-          'Make the problem obvious in the first screen',
-          'Explain what a serious implementation includes',
-          'Connect the topic to local proof, speed, and conversion',
-          'Offer a direct next step instead of a vague contact prompt'
+          'Answer the question in the first few lines',
+          'Use the same phrase a real buyer would use',
+          'Show what a serious fix includes',
+          'Give the reader a direct next step instead of a vague contact prompt',
         ],
       },
       {
         heading: 'What to fix first',
         body: [
-          'Start with the parts that affect both rankings and revenue: crawlable content, a clear service promise, fast mobile rendering, trustworthy proof, and a lead path that works every time.',
-          'Do not bury the fix under a huge redesign. A small, measurable improvement to the page that already gets impressions can outperform a larger project that never ships.'
+          messaging.firstFix,
+          'Do not bury the fix inside a giant redesign. A small improvement to a page that already gets impressions can beat a bigger project that never ships.',
         ],
-        bullets: [
-          'Check the page title and meta description against the exact buyer intent',
-          'Add internal links from the homepage, Melbourne Web Studio page, and blog hub',
-          'Answer the top objection with a short FAQ',
-          'Track the source page on every form submission'
-        ],
+        bullets: messaging.bullets,
       },
       {
         heading: 'How EB28 turns it into a system',
         body: [
-          'The durable version is a loop: publish the page, submit and inspect the sitemap, measure Search Console query movement, improve pages ranking in positions 4-20, and add citations or outreach targets for the strongest clusters.',
-          'That loop is what the EB28 automation now runs daily. It keeps content production, technical SEO, internal links, Search Console checks, and reporting tied to the same ranking goal.'
+          messaging.system,
+          'That loop is what the EB28 automation runs daily. It keeps content production, technical SEO, internal links, Search Console checks, and reporting tied to the same ranking goal.',
         ],
         bullets: [
           'Publish two content updates daily at 6 AM and 6 PM Eastern',
           'Run a daily SEO review after the evening content cycle',
-          'Inspect the newest URLs and pull actual average position when Search Console credentials are available',
+          'Inspect the newest URLs and pull actual query average position when Search Console credentials are available',
           'Send a report to richducat@gmail.com when email credentials are configured'
         ],
       },

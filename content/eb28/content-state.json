@@ -1,6 +1,34 @@
 {
-  "updatedAt": "2026-06-02T23:19:59.831Z",
+  "updatedAt": "2026-06-03T03:00:39.881Z",
   "runs": [
+    {
+      "runId": "2026-06-03-pm",
+      "date": "2026-06-03",
+      "slot": "pm",
+      "createdAt": "2026-06-03T03:00:39.881Z",
+      "article": {
+        "slug": "ai-receptionist-for-local-business-what-to-automate-and-what-to-keep-human",
+        "title": "AI Receptionist for Local Business: What to Automate and What to Keep Human",
+        "url": "https://eb28.co/blog/ai-receptionist-for-local-business-what-to-automate-and-what-to-keep-human/",
+        "cluster": "lead-automation",
+        "primaryKeyword": "AI receptionist for local business"
+      },
+      "reportPath": "/Users/richardducat/GITHUB/eb28.co/output/eb28-social/eb28-content-2026-06-03-pm.json"
+    },
+    {
+      "runId": "2026-06-03-am",
+      "date": "2026-06-03",
+      "slot": "am",
+      "createdAt": "2026-06-03T03:00:39.840Z",
+      "article": {
+        "slug": "website-audit-checklist-for-melbourne-fl-businesses-losing-leads",
+        "title": "Website Audit Checklist for Melbourne FL Businesses Losing Leads",
+        "url": "https://eb28.co/blog/website-audit-checklist-for-melbourne-fl-businesses-losing-leads/",
+        "cluster": "conversion",
+        "primaryKeyword": "website audit Melbourne FL"
+      },
+      "reportPath": "/Users/richardducat/GITHUB/eb28.co/output/eb28-social/eb28-content-2026-06-03-am.json"
+    },
     {
       "runId": "2026-06-02-pm",
       "date": "2026-06-02",

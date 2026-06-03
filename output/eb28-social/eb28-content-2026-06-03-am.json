@@ -24,6 +24,18 @@
       "creativeBrief": "Carousel: Slide 1 problem statement, Slide 2 what to fix first, Slide 3 technical SEO checks, Slide 4 internal links, Slide 5 CTA to project brief.",
       "status": "ready_to_publish_when_eb28_social_channel_is_configured"
     },
+    "shortFormVideo": {
+      "hook": "If your Melbourne FL website is getting visits but not leads, audit this before buying more traffic.",
+      "script": "Open with the leak: visitors cannot quickly understand the offer, trust the business, or see the next step. Show the first fixes: sharpen the headline, move proof near the first CTA, shorten the form, make phone optional, and connect the page to faster email-first follow-up. Close with the project brief URL.",
+      "onScreenText": [
+        "Website audit Melbourne FL",
+        "Fix the leak before buying traffic",
+        "Headline, proof, form, follow-up",
+        "eb28.co/blog"
+      ],
+      "creativeBrief": "Vertical 30-45 second Reel/Short/TikTok. Use quick screen-record style cuts over the article, highlight checklist bullets, and end on the Melbourne Web Studio project brief CTA.",
+      "status": "ready_to_publish_when_eb28_owned_short_form_channel_is_verified"
+    },
     "x": {
       "caption": "Website Audit Checklist for Melbourne FL Businesses Losing Leads\n\nThe key: connect the search intent to a page that is fast, useful, internally linked, and measured in Search Console.\n\nhttps://eb28.co/blog/website-audit-checklist-for-melbourne-fl-businesses-losing-leads/",
       "status": "ready_to_publish"

@@ -1345,27 +1345,27 @@ const OnboardingFunnel = () => {
     {
       id: "primaryGoal",
       shortLabel: "Goal",
-      question: "What win would you feel in the business this month?",
-      subtext: "Pick the answer that would put the most money, time, or momentum back in your hands.",
+      question: "What would make this site worth fixing?",
+      subtext: "Pick the win you would notice in the business first.",
       options: [
         {
-          label: "More calls from people ready to buy",
+          label: "More calls from people who are already ready",
           value: "local-leads",
-          helper: "Not more random traffic. More nearby people who already need what you sell.",
+          helper: "The kind who need the work done, not people just browsing.",
           score: 2,
           package: "The Power Foundation",
         },
         {
-          label: "Stop looking smaller than the business really is",
+          label: "Look like the obvious choice before they call",
           value: "new-site",
-          helper: "Your site should make a good prospect feel like they found the right place.",
+          helper: "So a good prospect feels, yes, this is the right place.",
           score: 1,
           package: "The Professional Build",
         },
         {
-          label: "Follow up before good leads disappear",
+          label: "Stop losing people after they reach out",
           value: "automation",
-          helper: "When someone raises a hand, they hear back while they still care.",
+          helper: "Because a hot lead gets cold fast when the reply is slow.",
           score: 2,
           package: "AI Business Suite",
         },
@@ -1374,27 +1374,27 @@ const OnboardingFunnel = () => {
     {
       id: "biggestLeak",
       shortLabel: "Leak",
-      question: "Where do you think good customers slip away?",
-      subtext: "Most local websites lose the job before the owner ever knows a buyer was there.",
+      question: "Where do you think the money is slipping out?",
+      subtext: "Most owners never see the lost customer. They only see the quiet phone.",
       options: [
         {
-          label: "They search, but they find someone else first",
+          label: "They find another business first",
           value: "search-visibility",
-          helper: "The demand is already out there. Your competitor is just collecting it.",
+          helper: "The demand exists. Someone else is getting the click.",
           score: 2,
           package: "The Power Foundation",
         },
         {
-          label: "They visit, but nothing makes them act",
+          label: "They visit, but they do not feel sure",
           value: "conversion",
-          helper: "They look around, feel unsure, and leave without calling, booking, or asking.",
+          helper: "They look around, hesitate, and leave without calling.",
           score: 2,
           package: "The Professional Build",
         },
         {
-          label: "They reach out, then go cold",
+          label: "They ask a question, then disappear",
           value: "follow-up",
-          helper: "The interest is real, but the reply is late, weak, or too easy to ignore.",
+          helper: "They were interested. Then another company made it easier.",
           score: 1,
           package: "AI Business Suite",
         },
@@ -1403,27 +1403,27 @@ const OnboardingFunnel = () => {
     {
       id: "timeline",
       shortLabel: "Timing",
-      question: "How expensive is this starting to feel?",
-      subtext: "This keeps the recommendation honest, not bloated.",
+      question: "How soon does this need to start paying you back?",
+      subtext: "This helps me recommend the shortest practical route, not the biggest one.",
       options: [
         {
-          label: "It is costing us work now",
+          label: "Now. I can feel the missed work",
           value: "this-week",
-          helper: "You want the fastest smart fix, not another month of guessing.",
+          helper: "You want the fastest honest fix, not more guessing.",
           score: 2,
           package: "The Power Foundation",
         },
         {
-          label: "It needs to get handled this month",
+          label: "This month. It is time",
           value: "thirty-days",
-          helper: "You want the right plan, a clean path, and no wasted spend.",
+          helper: "You want a clean plan and a clear next step.",
           score: 1,
           package: "The Professional Build",
         },
         {
-          label: "I am not sure yet. Show me the leak",
+          label: "I am not sure yet. Show me what is broken",
           value: "researching",
-          helper: "You want the problem named before you put money behind a fix.",
+          helper: "You want the truth before you put money behind it.",
           score: 0,
           package: "The Professional Build",
         },
@@ -1432,27 +1432,27 @@ const OnboardingFunnel = () => {
     {
       id: "readiness",
       shortLabel: "Fit",
-      question: "What would make this feel worth doing?",
-      subtext: "Pick the kind of help you actually want, not the biggest package on a menu.",
+      question: "What kind of help would make this easy to say yes to?",
+      subtext: "Choose the level of help you actually want.",
       options: [
         {
-          label: "Tell me the first thing you would fix",
+          label: "Tell me the one thing you would fix first",
           value: "audit-plan",
-          helper: "You want the shortest honest answer before deciding anything else.",
+          helper: "A useful answer before you decide anything else.",
           score: 0,
           package: "The Power Foundation",
         },
         {
           label: "Build the page that makes people choose us",
           value: "done-for-me",
-          helper: "You want the offer, proof, and next step handled the right way.",
+          helper: "Offer, proof, trust, and the next step handled for you.",
           score: 1,
           package: "The Professional Build",
         },
         {
-          label: "Build the whole customer-getting system",
+          label: "Build the whole customer-getting machine",
           value: "full-system",
-          helper: "You want the site, Google, intake, follow-up, and reporting working together.",
+          helper: "Site, Google, intake, follow-up, and reporting working together.",
           score: 2,
           package: "AI Business Suite",
         },
@@ -1663,22 +1663,22 @@ const OnboardingFunnel = () => {
         <div className="space-y-8">
           <div className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-white px-4 py-2 text-xs font-black uppercase tracking-[0.16em] text-blue-700 shadow-sm">
             <ShieldCheck className="h-4 w-4" />
-            Free 60-Second Lead Leak Finder
+            Free 60-Second Lost Customer Check
           </div>
           <div>
             <h1 className="max-w-3xl text-4xl font-black leading-[1.02] tracking-tight text-slate-950 md:text-6xl">
-              Find the spot where buyers stop short.
+              See why good customers leave before they call.
             </h1>
             <p className="mt-6 max-w-2xl text-lg font-medium leading-relaxed text-slate-600">
-              Answer 4 quick questions. I&apos;ll show you the first fix I&apos;d make if the job
-              was to turn more local visitors into calls, bookings, and quote requests.
+              Answer 4 quick questions. I&apos;ll tell you the first fix I&apos;d make to help
+              more local buyers trust you, contact you, and choose you.
             </p>
           </div>
           <div className="grid gap-3 sm:grid-cols-3">
             {[
-              ["Time", "About 60 seconds"],
-              ["Built for", "Local service businesses"],
-              ["Result", "Your first fix"],
+              ["Takes", "About 60 seconds"],
+              ["Built for", "Local business owners"],
+              ["You get", "The first fix"],
             ].map(([label, value]) => (
               <div key={label} className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
                 <p className="text-[11px] font-black uppercase tracking-[0.16em] text-slate-400">
@@ -1723,8 +1723,8 @@ const OnboardingFunnel = () => {
             {quizStep === 0 && (
               <div className="mb-4 rounded-lg border-l-2 border-amber-300 bg-amber-50/40 px-3 py-2.5">
                 <p className="text-[13px] font-black leading-tight text-slate-950">
-                  If the right people cannot find you, believe you, or get a fast answer, they
-                  do not wait. They call the next business that feels easier to trust.
+                  A buyer does not say, &quot;This website confused me.&quot; They just leave,
+                  call someone else, and you never know they were ready to buy.
                 </p>
                 <div className="mt-1 flex flex-wrap items-center gap-x-1.5 text-[10px] font-black uppercase tracking-[0.08em] text-slate-500">
                   <span>Takes 1 minute</span>
@@ -1814,9 +1814,9 @@ const OnboardingFunnel = () => {
               <div className="mt-3 flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-center text-[11px] font-black uppercase tracking-[0.14em] text-slate-500">
                 <span>No sales pressure</span>
                 <span className="text-amber-500" aria-hidden="true">•</span>
-                <span>No canned PDF</span>
+                <span>No canned report</span>
                 <span className="text-amber-500" aria-hidden="true">•</span>
-                <span>One useful answer</span>
+                <span>One clear next move</span>
               </div>
             </div>
           </div>
@@ -2080,17 +2080,17 @@ const OnboardingFunnel = () => {
           Final step
         </p>
         <h3 className="mt-3 text-3xl font-black leading-tight tracking-tight">
-          Want me to tell you where the money is leaking?
+          Want me to find the first fix?
         </h3>
         <p className="mt-4 text-sm font-medium leading-relaxed text-slate-300">
-          Send your answers. I&apos;ll look at it like a customer would and reply with the first
-          move I&apos;d make to get more good people to contact you.
+          Send your answers and I&apos;ll look at your business the way a real buyer does:
+          what they notice, what they doubt, and what I&apos;d change first to get more calls.
         </p>
         <div className="mt-8 space-y-3">
           {[
-            "A human answer, not a template",
-            "The fix I would make first",
-            "Email first. Phone only if you add it",
+            "A real reply from me, not a canned audit",
+            "The first change I would make to win more calls",
+            "Email first. Phone only if you choose to add it",
           ].map((item) => (
             <div key={item} className="flex items-center gap-3 rounded-2xl bg-white/5 p-3">
               <CheckCircle2 className="h-5 w-5 shrink-0 text-amber-300" />
@@ -2108,10 +2108,10 @@ const OnboardingFunnel = () => {
             </div>
             <div>
               <p className="text-[11px] font-black uppercase tracking-[0.2em] text-blue-700">
-                Send me the fix
+                Send my first fix
               </p>
               <h4 className="mt-1 text-xl font-black leading-tight text-slate-950">
-                Where should I send your first-fix note?
+                Where should I send the recommendation?
               </h4>
             </div>
           </div>

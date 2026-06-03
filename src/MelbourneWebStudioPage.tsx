@@ -127,14 +127,14 @@ const buildAuthorityAnalysis = (websiteUrl: string, quizScore: number): Authorit
   if (issueLevel >= 4) {
     return {
       rating,
-      title: "The Invisible Local Favorite",
-      assessment: `${domain} has enough signal to prove the business is real, but it is not doing the heavy lifting of explaining value, building trust, and converting mobile visitors quickly. Right now the site feels more like a placeholder than a closer, which means stronger local competitors are collecting demand that should already be yours.`,
+      title: "Good business. Quiet website.",
+      assessment: `${domain} may be doing enough to prove the business is real, but it is not giving a busy local buyer enough reason to act right now. That means some people who should be calling you are probably clicking back, comparing options, and choosing the company that feels clearer, faster, and easier to trust.`,
       killerInsight:
-        "Your biggest leak is probably not traffic. It is the gap between first impression and first action on mobile.",
+        "Your biggest leak is probably not effort. It is the moment between a buyer landing on the page and deciding whether you feel like the obvious choice.",
       priorityFixes: [
-        "Rewrite the homepage for instant clarity and trust",
-        "Strengthen Google Business Profile and local SEO signals",
-        "Add a real lead-capture path that responds after hours",
+        "Make the first screen say who you help, what you do, and why they should call",
+        "Help more nearby buyers find you when they search on Google",
+        "Add a simple follow-up path so after-hours leads do not go cold",
       ],
       competitiveEdge,
     };
@@ -143,14 +143,14 @@ const buildAuthorityAnalysis = (websiteUrl: string, quizScore: number): Authorit
   if (issueLevel >= 2) {
     return {
       rating,
-      title: "The Rising Contender",
-      assessment: `${domain} already has a workable foundation, but it is still leaving too much revenue to chance. The brand can look sharper, the conversion path can be tighter, and the local authority signals need to feel more deliberate if you want the site to consistently outrank and out-convert nearby competitors.`,
+      title: "Close, but too easy to leave.",
+      assessment: `${domain} has a workable foundation, but a buyer still has to think too hard before taking the next step. The offer can feel sharper, the page can guide people more clearly, and your local proof can do more of the selling before a competitor gets the call.`,
       killerInsight:
-        "You do not need more pages first. You need a clearer path from landing to enquiry.",
+        "You may not need more pages first. You need fewer doubts between the first click and the first enquiry.",
       priorityFixes: [
-        "Tighten hero messaging and service-page conversion flow",
-        "Improve local search visibility and map-pack authority",
-        "Layer in automation for lead follow-up and qualification",
+        "Tighten the main message so buyers know they are in the right place",
+        "Give Google and local customers stronger proof that you serve this market",
+        "Make every enquiry easier to answer, qualify, and follow up",
       ],
       competitiveEdge,
     };
@@ -158,14 +158,14 @@ const buildAuthorityAnalysis = (websiteUrl: string, quizScore: number): Authorit
 
   return {
     rating,
-    title: "The Quiet Authority",
-    assessment: `${domain} is already doing several things right: the brand story is understandable, the offer feels legitimate, and the growth ceiling is higher than most local sites. The next step is not a rescue job. It is a focused authority build that increases trust, search visibility, and lead throughput without adding clutter.`,
+    title: "Trusted, with room to win more.",
+    assessment: `${domain} is already doing several things right. The business feels legitimate, the offer is understandable, and the next gains are likely hiding in small but important places: faster trust, clearer proof, better local search coverage, and quicker follow-up when someone is ready to talk.`,
     killerInsight:
-      "Small gains in speed, proof, and follow-up will likely create the biggest conversion lift from here.",
+      "You are not starting from zero. A few sharper signals can turn more of the traffic you already have into real conversations.",
     priorityFixes: [
-      "Polish authority signals with sharper proof and case studies",
-      "Expand local SEO coverage around high-intent services",
-      "Introduce AI-assisted follow-up for faster lead handling",
+      "Show stronger proof near every important call-to-action",
+      "Create more local search coverage around your best services",
+      "Speed up replies so interested buyers stay warm",
     ],
     competitiveEdge,
   };
@@ -334,7 +334,7 @@ const buildChatReply = (userMessage: string) => {
 
   if (lower.includes("website") || lower.includes("design") || lower.includes("redesign")) {
     return {
-      text: "That usually starts with the Professional Build. The web design article in Resources will feel relevant, and the Authority Audit is the quickest way to spot the biggest conversion gaps.",
+      text: "That usually starts with the Professional Build. The web design article in Resources will feel relevant, and the lead leak quiz is the quickest way to see what is stopping more visitors from contacting you.",
     };
   }
 
@@ -345,7 +345,7 @@ const buildChatReply = (userMessage: string) => {
   }
 
   return {
-    text: "That makes sense. Start with the Authority Audit and I’ll help narrow the best next step from there. If you already know the pain point, tell me whether it’s design, SEO, leads, or follow-up.",
+    text: "That makes sense. Start with the lead leak quiz and I’ll help narrow the best next step from there. If you already know the pain point, tell me whether it’s design, SEO, leads, or follow-up.",
   };
 };
 
@@ -1129,15 +1129,15 @@ const Team = () => {
             <div className="relative z-10">
               <h4 className="text-3xl font-bold mb-4">Ready to join the elite?</h4>
               <p className="text-slate-400 text-lg mb-8 max-w-xl leading-relaxed">
-                Our client list is exclusive. We only work with businesses ready for serious,
-                automated growth. Take the first step toward local dominance.
+                If your website is not bringing in enough of the right calls, start with the
+                quiz. I&apos;ll show you the first thing I would fix before you spend on anything else.
               </p>
               <div className="flex flex-wrap gap-4">
                 <button
                   onClick={() => document.getElementById("quiz")?.scrollIntoView({ behavior: "smooth" })}
                   className="bg-blue-600 hover:bg-blue-500 text-white font-bold px-8 py-4 rounded-2xl transition-all flex items-center justify-center gap-2 shadow-xl shadow-blue-900/40"
                 >
-                  Take the Authority Quiz <ArrowRight className="w-4 h-4" />
+                  Take the Lead Leak Quiz <ArrowRight className="w-4 h-4" />
                 </button>
                 <button
                   onClick={() =>
@@ -1345,27 +1345,27 @@ const OnboardingFunnel = () => {
     {
       id: "primaryGoal",
       shortLabel: "Goal",
-      question: "What would make this website pay for itself first?",
-      subtext: "Choose the win that would make the biggest difference in your business right now.",
+      question: "If your website could win one thing this month, what should it be?",
+      subtext: "Pick the outcome that would make the biggest difference to your business first.",
       options: [
         {
-          label: "More calls from local buyers",
+          label: "More calls from people nearby",
           value: "local-leads",
-          helper: "People nearby find you on Google, like what they see, and contact you.",
+          helper: "Ready buyers find you, trust you, and reach out before they call someone else.",
           score: 2,
           package: "The Power Foundation",
         },
         {
-          label: "A site customers trust immediately",
+          label: "A website that makes us look like the right choice",
           value: "new-site",
-          helper: "Your business looks current, credible, and easy to choose.",
+          helper: "People land on the page and quickly feel safe contacting you.",
           score: 1,
           package: "The Professional Build",
         },
         {
-          label: "Faster follow-up after someone asks",
+          label: "Faster replies when someone is interested",
           value: "automation",
-          helper: "New enquiries get answered quickly before they call the next company.",
+          helper: "New enquiries get answered before the lead cools off.",
           score: 2,
           package: "AI Business Suite",
         },
@@ -1374,27 +1374,27 @@ const OnboardingFunnel = () => {
     {
       id: "biggestLeak",
       shortLabel: "Leak",
-      question: "Where do you think good customers are slipping away?",
-      subtext: "Most local websites lose money in one of these three spots.",
+      question: "Where does it feel like good customers are getting lost?",
+      subtext: "Most local businesses lose the sale in one of these three moments.",
       options: [
         {
           label: "They never find us on Google",
           value: "search-visibility",
-          helper: "Your competitors show up first when someone is ready to buy.",
+          helper: "A ready buyer searches, but another company gets seen first.",
           score: 2,
           package: "The Power Foundation",
         },
         {
           label: "They visit, then leave without contacting us",
           value: "conversion",
-          helper: "The page does not give them enough reason to call, book, or request a quote.",
+          helper: "They look around, but the page does not make the next step feel obvious.",
           score: 2,
           package: "The Professional Build",
         },
         {
           label: "They reach out, then go cold",
           value: "follow-up",
-          helper: "The opportunity is real, but the response is too slow or too scattered.",
+          helper: "The interest is real, but the reply comes too late or feels too scattered.",
           score: 1,
           package: "AI Business Suite",
         },
@@ -1403,27 +1403,27 @@ const OnboardingFunnel = () => {
     {
       id: "timeline",
       shortLabel: "Timing",
-      question: "How soon would more good enquiries help?",
-      subtext: "This keeps the recommendation practical instead of bloated.",
+      question: "How soon would more of the right enquiries matter?",
+      subtext: "This keeps the answer practical, not bloated.",
       options: [
         {
-          label: "Right now. We are leaving money on the table",
+          label: "Right now. I do not want to keep wasting demand",
           value: "this-week",
-          helper: "You want the fastest useful fix, not a long discovery process.",
+          helper: "You want the fastest useful move, not a drawn-out process.",
           score: 2,
           package: "The Power Foundation",
         },
         {
           label: "This month. I want the right plan",
           value: "thirty-days",
-          helper: "You want a clean build path, timeline, and launch plan.",
+          helper: "You want a clean path, real priorities, and a sensible launch plan.",
           score: 1,
           package: "The Professional Build",
         },
         {
-          label: "I am still comparing what makes sense",
+          label: "I am still figuring out what is worth doing",
           value: "researching",
-          helper: "You want to know what is worth doing before you spend.",
+          helper: "You want to know what matters before you put money behind it.",
           score: 0,
           package: "The Professional Build",
         },
@@ -1432,27 +1432,27 @@ const OnboardingFunnel = () => {
     {
       id: "readiness",
       shortLabel: "Fit",
-      question: "How much help do you want?",
-      subtext: "Pick the level that feels right for where your business is today.",
+      question: "What kind of help would actually feel useful?",
+      subtext: "Pick the answer that matches how hands-on you want this to be.",
       options: [
         {
-          label: "Show me the highest-value fix",
+          label: "Tell me the first thing you would fix",
           value: "audit-plan",
-          helper: "You want a short, plain-English list of what to fix first.",
+          helper: "You want the shortest honest answer before deciding anything else.",
           score: 0,
           package: "The Power Foundation",
         },
         {
           label: "Build the website and lead path for me",
           value: "done-for-me",
-          helper: "You want the new site, trust signals, and calls-to-action handled.",
+          helper: "You want the page, proof, and calls-to-action handled properly.",
           score: 1,
           package: "The Professional Build",
         },
         {
           label: "Build the whole customer-getting system",
           value: "full-system",
-          helper: "You want the site, Google foundation, intake, follow-up, and reporting working together.",
+          helper: "You want the site, Google, intake, follow-up, and reporting working together.",
           score: 2,
           package: "AI Business Suite",
         },
@@ -1663,22 +1663,22 @@ const OnboardingFunnel = () => {
         <div className="space-y-8">
           <div className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-white px-4 py-2 text-xs font-black uppercase tracking-[0.16em] text-blue-700 shadow-sm">
             <ShieldCheck className="h-4 w-4" />
-            Free 1-Minute Website Lead Check
+            Free Melbourne Lead Leak Quiz
           </div>
           <div>
             <h1 className="max-w-3xl text-4xl font-black leading-[1.02] tracking-tight text-slate-950 md:text-6xl">
-              Is your website quietly costing you customers?
+              Where are your next customers getting lost?
             </h1>
             <p className="mt-6 max-w-2xl text-lg font-medium leading-relaxed text-slate-600">
-              Answer 4 quick questions and I&apos;ll show you the shortest path to more calls,
-              quote requests, and bookings from people already searching in Melbourne.
+              Answer 4 quick questions and I&apos;ll point you to the first thing I would fix
+              to turn more local visitors into calls, bookings, and quote requests.
             </p>
           </div>
           <div className="grid gap-3 sm:grid-cols-3">
             {[
-              ["1 minute", "Free check"],
-              ["Google leads", "Local-search ready"],
-              ["Next step", "Plain English"],
+              ["Takes", "About 60 seconds"],
+              ["Built for", "Local buyers"],
+              ["You get", "One clear move"],
             ].map(([label, value]) => (
               <div key={label} className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
                 <p className="text-[11px] font-black uppercase tracking-[0.16em] text-slate-400">
@@ -1723,15 +1723,15 @@ const OnboardingFunnel = () => {
             {quizStep === 0 && (
               <div className="mb-4 rounded-lg border-l-2 border-amber-300 bg-amber-50/40 px-3 py-2.5">
                 <p className="text-[13px] font-black leading-tight text-slate-950">
-                  Most local sites lose customers in one of three places: they are hard to
-                  find, hard to trust, or too slow to follow up. Let&apos;s find yours.
+                  If buyers cannot find you, trust you, or get a fast reply, they call someone
+                  else. Let&apos;s find the spot that is costing you the easiest wins.
                 </p>
                 <div className="mt-1 flex flex-wrap items-center gap-x-1.5 text-[10px] font-black uppercase tracking-[0.08em] text-slate-500">
                   <span>Takes 1 minute</span>
                   <span className="text-amber-500" aria-hidden="true">•</span>
                   <span>Requires no commitment</span>
                   <span className="text-amber-500" aria-hidden="true">•</span>
-                  <span>Fast, easy, free</span>
+                  <span>Plain-English answer</span>
                 </div>
               </div>
             )}
@@ -1808,15 +1808,15 @@ const OnboardingFunnel = () => {
                     : "cursor-not-allowed bg-slate-100 text-slate-500"
                 }`}
               >
-                {quizStep === quizQuestions.length - 1 ? "Show Me What To Fix First" : "Continue"}
+                {quizStep === quizQuestions.length - 1 ? "Reveal My Best First Fix" : "Keep Going"}
                 {selectedValue && <ArrowRight className="h-5 w-5" />}
               </button>
               <div className="mt-3 flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-center text-[11px] font-black uppercase tracking-[0.14em] text-slate-500">
-                <span>Fast response</span>
+                <span>No sales pressure</span>
                 <span className="text-amber-500" aria-hidden="true">•</span>
-                <span>No pressure</span>
+                <span>No confusing report</span>
                 <span className="text-amber-500" aria-hidden="true">•</span>
-                <span>Built for real local buyers</span>
+                <span>Just the next move</span>
               </div>
             </div>
           </div>
@@ -1829,10 +1829,10 @@ const OnboardingFunnel = () => {
     <div className="bg-slate-900 rounded-[2.5rem] p-10 md:p-16 text-white text-center shadow-2xl">
       {!isScanning && !scanProgress ? (
         <div className="max-w-xl mx-auto">
-          <h3 className="text-3xl font-bold mb-6">Check Your Website for Lead Leaks</h3>
+          <h3 className="text-3xl font-bold mb-6">Want me to look at the actual page?</h3>
           <p className="text-slate-400 mb-10">
-            Enter your current website if you have one. I&apos;ll look at what a buyer sees before
-            they decide to call, book, or leave.
+            Add your website if you have one. I&apos;ll look at it the way a buyer does before
+            they decide to call, book, or keep comparing.
           </p>
           <div className="relative mb-6">
             <Globe className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
@@ -1849,7 +1849,7 @@ const OnboardingFunnel = () => {
             disabled={!websiteUrl}
             className="w-full bg-blue-600 text-white font-bold py-5 rounded-2xl hover:bg-blue-500 transition-all disabled:opacity-50"
           >
-            Run Authority Scan
+            Check My Page
           </button>
         </div>
       ) : (
@@ -1882,7 +1882,7 @@ const OnboardingFunnel = () => {
             <div className="flex items-center gap-2 mb-6">
               <ShieldCheck className="w-6 h-6 text-emerald-400" />
               <span className="text-emerald-400 font-black uppercase tracking-[0.3em] text-[10px]">
-                Audit Complete
+                Quick Read Complete
               </span>
             </div>
             <h3 className="text-4xl font-bold mb-6 tracking-tight leading-tight">
@@ -1891,7 +1891,7 @@ const OnboardingFunnel = () => {
 
             <div className="bg-slate-800/50 border border-slate-700 p-8 rounded-3xl mb-8 text-center">
               <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-4">
-                True Authority Rating
+                Customer Pull Score
               </p>
               <div className="flex justify-center gap-1 mb-4">
                 {[1, 2, 3, 4, 5].map((i) => (
@@ -1935,7 +1935,7 @@ const OnboardingFunnel = () => {
                 <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center">
                   <Sparkles className="w-5 h-5 text-white" />
                 </div>
-                <h4 className="text-xl font-bold">The Killer Insight</h4>
+                <h4 className="text-xl font-bold">The Money Line</h4>
               </div>
               <p className="text-blue-100 text-lg italic leading-relaxed">
                 &quot;{aiAnalysis?.killerInsight}&quot;
@@ -1944,7 +1944,7 @@ const OnboardingFunnel = () => {
 
             <div className="bg-slate-800/30 border border-slate-700 p-8 rounded-3xl">
               <h4 className="text-lg font-bold mb-4 flex items-center gap-2">
-                <Target className="w-5 h-5 text-emerald-400" /> Revenue Leakage Assessment
+                <Target className="w-5 h-5 text-emerald-400" /> Where Buyers May Be Slipping Away
               </h4>
               <p className="text-slate-400 leading-relaxed text-lg">{aiAnalysis?.assessment}</p>
             </div>
@@ -1952,7 +1952,7 @@ const OnboardingFunnel = () => {
             <div className="grid md:grid-cols-2 gap-8">
               <div className="bg-slate-800/30 border border-slate-700 p-8 rounded-3xl">
                 <h4 className="text-sm font-black text-slate-500 uppercase tracking-widest mb-6">
-                  Priority Growth Fixes
+                  Best First Moves
                 </h4>
                 <div className="space-y-4">
                   {aiAnalysis?.priorityFixes?.map((fix: string, i: number) => {
@@ -1988,7 +1988,7 @@ const OnboardingFunnel = () => {
 
               <div className="bg-slate-800/30 border border-slate-700 p-8 rounded-3xl flex flex-col justify-center items-center text-center">
                 <h4 className="text-sm font-black text-slate-500 uppercase tracking-widest mb-6">
-                  Competitive Edge Score
+                  Local Advantage
                 </h4>
                 <div className="relative w-32 h-32 mb-4">
                   <svg className="w-full h-full transform -rotate-90">
@@ -2032,25 +2032,25 @@ const OnboardingFunnel = () => {
 
         <div className="mt-12 pt-12 border-t border-slate-800">
           <h4 className="text-center text-sm font-black text-slate-500 uppercase tracking-[0.3em] mb-12">
-            Your 90-Day Authority Roadmap
+            Your First 90 Days
           </h4>
           <div className="grid md:grid-cols-3 gap-8 relative">
             <div className="absolute top-1/2 left-0 w-full h-0.5 bg-slate-800 -translate-y-1/2 hidden md:block"></div>
             {[
               {
                 day: "Day 1-30",
-                title: "Foundation & AI",
-                desc: "Plugging the revenue leaks and deploying lead-capture AI agents.",
+                title: "Fix the first impression",
+                desc: "Make the offer clear, trustworthy, and easy to act on.",
               },
               {
                 day: "Day 31-60",
-                title: "Authority Scaling",
-                desc: "Dominating local search and building high-trust social proof.",
+                title: "Get found by better buyers",
+                desc: "Build the local search signals and proof that help people choose you.",
               },
               {
                 day: "Day 61-90",
-                title: "Automated Growth",
-                desc: "Full system integration and hands-free client acquisition.",
+                title: "Stop letting leads cool off",
+                desc: "Speed up intake, follow-up, and reporting so more interest turns into work.",
               },
             ].map((step, i) => (
               <div
@@ -2077,20 +2077,21 @@ const OnboardingFunnel = () => {
     <div className="mx-auto grid max-w-6xl gap-8 lg:grid-cols-[0.78fr_1.22fr] lg:items-start">
       <div className="rounded-[2rem] bg-slate-950 p-6 text-white shadow-2xl shadow-slate-900/20 md:p-8">
         <p className="text-[11px] font-black uppercase tracking-[0.22em] text-amber-300">
-          Your free plan
+          Final step
         </p>
         <h3 className="mt-3 text-3xl font-black leading-tight tracking-tight">
-          Want me to show you where the next customers are hiding?
+          Want the fix I&apos;d make first if this were my business?
         </h3>
         <p className="mt-4 text-sm font-medium leading-relaxed text-slate-300">
-          Send the answers and I&apos;ll look for the fastest honest win: what to fix first,
-          what to ignore, and how to stop losing the easy calls, bookings, and quote requests.
+          Send the quiz and I&apos;ll review it like a buyer would: what they notice first,
+          what makes them hesitate, and the simplest move to get more calls, bookings, or
+          quote requests.
         </p>
         <div className="mt-8 space-y-3">
           {[
-            "No canned audit or scare tactics",
-            "A plain-English next move",
-            "Email follow-up unless you add a phone",
+            "A real answer, not a canned PDF",
+            "One best next move in plain English",
+            "Email first. Phone only if you add it",
           ].map((item) => (
             <div key={item} className="flex items-center gap-3 rounded-2xl bg-white/5 p-3">
               <CheckCircle2 className="h-5 w-5 shrink-0 text-amber-300" />
@@ -2108,10 +2109,10 @@ const OnboardingFunnel = () => {
             </div>
             <div>
               <p className="text-[11px] font-black uppercase tracking-[0.2em] text-blue-700">
-                Contact details
+                Send my answer
               </p>
               <h4 className="mt-1 text-xl font-black leading-tight text-slate-950">
-                Where should I send your lead plan?
+                Where should I send the first fix?
               </h4>
             </div>
           </div>
@@ -2241,7 +2242,7 @@ const OnboardingFunnel = () => {
 
         <div className="mt-4">
           <label htmlFor="growth-notes" className="mb-1.5 ml-1 block text-[11px] font-black uppercase tracking-[0.18em] text-blue-800">
-            What should I pay attention to?
+            What is bugging you most?
           </label>
           <textarea
             id="growth-notes"
@@ -2249,7 +2250,7 @@ const OnboardingFunnel = () => {
             value={quickLeadData.notes}
             onChange={(e) => setQuickLeadData({ ...quickLeadData, notes: e.target.value })}
             className="w-full resize-none rounded-xl border-2 border-slate-300 bg-white px-4 py-3.5 font-bold text-slate-950 outline-none transition-all focus:border-amber-400 focus:ring-4 focus:ring-amber-300/25"
-            placeholder="Example: I need more roofing calls, my site feels dated, or I want to show up in Palm Bay too."
+            placeholder="Example: I need more roofing calls, the site feels dated, or better leads keep choosing someone else."
           />
         </div>
 
@@ -2267,7 +2268,7 @@ const OnboardingFunnel = () => {
             disabled={isSubmitting}
             className="flex w-full items-center justify-center gap-2 rounded-xl bg-amber-400 py-4 text-base font-black text-slate-950 shadow-md transition-all hover:-translate-y-0.5 hover:bg-amber-500 disabled:cursor-wait disabled:opacity-70"
           >
-            {isSubmitting ? <Loader2 className="h-5 w-5 animate-spin" /> : "Send Me My Lead Plan"}
+            {isSubmitting ? <Loader2 className="h-5 w-5 animate-spin" /> : "Send My First Fix"}
             {!isSubmitting && <ArrowRight className="h-5 w-5" />}
           </button>
           <p className="mt-3 text-center text-[11px] font-bold uppercase tracking-[0.12em] text-slate-400">
@@ -3529,14 +3530,14 @@ const Process = () => (
     <div className="max-w-7xl mx-auto">
       <div className="text-center mb-20">
         <h2 className="text-sm font-black text-blue-600 uppercase tracking-[0.3em] mb-4">
-          Our Authority Framework
+          How We Turn Visits Into Leads
         </h2>
         <h3 className="text-4xl md:text-5xl font-bold text-slate-900 tracking-tight">
-          A Proven 3-Step System to Dominate
+          A simple 3-step path to more local customers
         </h3>
         <p className="text-slate-500 mt-6 text-lg max-w-2xl mx-auto">
-          We don&apos;t just build websites. We build digital authority engines that work while you
-          sleep.
+          First we find what is making buyers hesitate. Then we fix the page, strengthen your local
+          search presence, and make follow-up easier.
         </p>
       </div>
 
@@ -3547,24 +3548,24 @@ const Process = () => (
           {
             step: "01",
             icon: Target,
-            title: "Audit & Strategy",
-            desc: "Stop guessing why your site isn't converting. We identify exactly where you're losing money and map out a clear path to take back your local market.",
+            title: "Find the lost calls",
+            desc: "We look at the page the way a buyer does and find the moments where people lose trust, get confused, or leave.",
             color: "bg-blue-600",
             shadow: "shadow-blue-200",
           },
           {
             step: "02",
             icon: Cpu,
-            title: "AI-Powered Build",
-            desc: "Your business doesn't sleep, and neither should your website. We build a smart, 24/7 lead machine that captures every opportunity while you focus on your work.",
+            title: "Make the choice easy",
+            desc: "We build the message, layout, proof, and calls-to-action so visitors know why to choose you and what to do next.",
             color: "bg-slate-900",
             shadow: "shadow-slate-200",
           },
           {
             step: "03",
             icon: Rocket,
-            title: "Launch & Scale",
-            desc: "Dominate the first page of Google and stay there. We launch your new authority engine and automate your growth so you can scale without the stress.",
+            title: "Get found and follow up",
+            desc: "We strengthen your local search foundation and make it easier to respond while the buyer is still ready to talk.",
             color: "bg-emerald-600",
             shadow: "shadow-emerald-200",
           },

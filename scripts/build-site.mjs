@@ -39,17 +39,12 @@ async function main() {
     BUILD_ID: buildId,
   };
 
-  run(process.execPath, ['scripts/generate-ugcma-dashboard-data.mjs'], env);
   run('npx', ['vite', 'build'], env);
   await buildStaticSite('flavorfeed', env);
   await buildStaticSite('servo', env);
   run(process.execPath, ['scripts/generate-route-pages.mjs'], env);
+  run(process.execPath, ['scripts/generate-eb28-blog.mjs'], env);
   run('npm', ['run', 'generate:data'], env);
-
-  // Keep /ugcmadash on the latest UGCMA watch feed. `generate:data` writes the
-  // older static dashboard snapshot, so this must run after the generic data
-  // generation step.
-  run('python3', ['scripts/update-ugcma-dashboard-feed.py'], env);
 
   await fs.mkdir(path.join(repoRoot, 'docs', 'alarmclock'), { recursive: true });
   await fs.copyFile(

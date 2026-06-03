@@ -1,0 +1,476 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EB28 Blog | Melbourne Web Design, Local SEO, Private AI and Lead Automation</title>
+    <meta name="description" content="EB28 guides for local businesses that want more organic leads from search, faster websites, local SEO, private AI infrastructure, and conversion automation." />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <link rel="canonical" href="https://eb28.co/blog/" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:site_name" content="EB28" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="EB28 Blog | Melbourne Web Design, Local SEO, Private AI and Lead Automation" />
+    <meta property="og:description" content="EB28 guides for local businesses that want more organic leads from search, faster websites, local SEO, private AI infrastructure, and conversion automation." />
+    <meta property="og:url" content="https://eb28.co/blog/" />
+    <meta property="og:image" content="https://eb28.co/assets/execution_grid.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="EB28 Blog | Melbourne Web Design, Local SEO, Private AI and Lead Automation" />
+    <meta name="twitter:description" content="EB28 guides for local businesses that want more organic leads from search, faster websites, local SEO, private AI infrastructure, and conversion automation." />
+    <meta name="twitter:image" content="https://eb28.co/assets/execution_grid.png" />
+    <style>
+    :root {
+      color-scheme: light;
+      --ink: #101827;
+      --muted: #4b5563;
+      --line: #d9e2ef;
+      --soft: #f6f8fb;
+      --accent: #155eef;
+      --accent-dark: #0f3f9e;
+      --green: #087443;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: #ffffff;
+      line-height: 1.65;
+    }
+    a { color: inherit; }
+    .skip-link {
+      position: absolute;
+      left: 1rem;
+      top: -4rem;
+      z-index: 20;
+      background: var(--ink);
+      color: white;
+      padding: .75rem 1rem;
+      border-radius: .5rem;
+    }
+    .skip-link:focus { top: 1rem; }
+    .site-header {
+      border-bottom: 1px solid var(--line);
+      background: rgba(255,255,255,.94);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .nav {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 1rem 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .brand {
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: .75rem;
+      font-weight: 850;
+      letter-spacing: 0;
+    }
+    .brand-mark {
+      width: 2.25rem;
+      height: 2.25rem;
+      border-radius: .5rem;
+      background: var(--ink);
+      color: white;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .85rem;
+    }
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .9rem;
+      align-items: center;
+      font-size: .92rem;
+      color: var(--muted);
+    }
+    .nav-links a { text-decoration: none; }
+    .nav-links a:hover { color: var(--accent); }
+    .cta-link {
+      background: var(--accent);
+      color: #fff !important;
+      padding: .7rem .95rem;
+      border-radius: .5rem;
+      font-weight: 800;
+    }
+    main { min-height: 70vh; }
+    .hero {
+      background: linear-gradient(180deg, #f8fbff 0%, #fff 100%);
+      border-bottom: 1px solid var(--line);
+    }
+    .hero-inner, .section, .article-shell {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 4.5rem 1.25rem;
+    }
+    .eyebrow {
+      margin: 0 0 .9rem;
+      color: var(--accent);
+      font-size: .76rem;
+      text-transform: uppercase;
+      letter-spacing: .14em;
+      font-weight: 850;
+    }
+    h1, h2, h3 { line-height: 1.12; letter-spacing: 0; }
+    h1 {
+      max-width: 890px;
+      margin: 0;
+      font-size: clamp(2.35rem, 6vw, 4.65rem);
+    }
+    .lead {
+      max-width: 760px;
+      margin: 1.25rem 0 0;
+      color: var(--muted);
+      font-size: clamp(1.04rem, 2vw, 1.25rem);
+    }
+    .meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .75rem;
+      margin-top: 1.5rem;
+      color: var(--muted);
+      font-size: .92rem;
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid var(--line);
+      background: white;
+      border-radius: 999px;
+      padding: .38rem .7rem;
+      font-weight: 700;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1rem;
+    }
+    .card {
+      border: 1px solid var(--line);
+      border-radius: .5rem;
+      background: white;
+      padding: 1.2rem;
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      min-height: 100%;
+    }
+    .card:hover { border-color: #9db8f9; box-shadow: 0 14px 36px rgba(15, 23, 42, .08); }
+    .card .kicker {
+      color: var(--accent);
+      font-size: .72rem;
+      font-weight: 850;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      margin-bottom: .85rem;
+    }
+    .card h2, .card h3 {
+      margin: 0;
+      font-size: 1.24rem;
+    }
+    .card p {
+      color: var(--muted);
+      margin: .85rem 0 0;
+    }
+    .card .read {
+      margin-top: auto;
+      padding-top: 1rem;
+      color: var(--accent);
+      font-weight: 850;
+    }
+    .band {
+      background: var(--soft);
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+    .article-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 280px;
+      gap: 3rem;
+      align-items: start;
+    }
+    article {
+      max-width: 760px;
+    }
+    article h2 {
+      font-size: 2rem;
+      margin: 2.75rem 0 .8rem;
+    }
+    article h3 {
+      margin: 1.5rem 0 .5rem;
+    }
+    article p {
+      color: #243044;
+      font-size: 1.05rem;
+    }
+    article ul {
+      padding-left: 1.25rem;
+      color: #243044;
+    }
+    article li { margin: .45rem 0; }
+    .toc, .aside-box {
+      border: 1px solid var(--line);
+      border-radius: .5rem;
+      padding: 1rem;
+      background: #fff;
+    }
+    .toc {
+      position: sticky;
+      top: 5.5rem;
+    }
+    .toc h2, .aside-box h2 {
+      font-size: 1rem;
+      margin: 0 0 .75rem;
+    }
+    .toc a, .aside-box a {
+      display: block;
+      color: var(--muted);
+      text-decoration: none;
+      margin: .55rem 0;
+      font-size: .92rem;
+    }
+    .toc a:hover, .aside-box a:hover { color: var(--accent); }
+    .quote {
+      border-left: 4px solid var(--accent);
+      background: #f5f8ff;
+      padding: 1rem 1.25rem;
+      border-radius: .5rem;
+      margin: 2rem 0;
+      color: #1f3158;
+      font-weight: 700;
+    }
+    .cta {
+      margin: 3rem 0 0;
+      padding: 1.5rem;
+      background: #0f172a;
+      color: white;
+      border-radius: .5rem;
+    }
+    .cta p { color: #cbd5e1; }
+    .cta a {
+      display: inline-flex;
+      margin-top: .75rem;
+      background: #fff;
+      color: #0f172a;
+      text-decoration: none;
+      border-radius: .5rem;
+      padding: .8rem 1rem;
+      font-weight: 850;
+    }
+    .faq details {
+      border: 1px solid var(--line);
+      border-radius: .5rem;
+      padding: 1rem;
+      margin: .75rem 0;
+      background: #fff;
+    }
+    .faq summary {
+      cursor: pointer;
+      font-weight: 850;
+    }
+    .footer {
+      border-top: 1px solid var(--line);
+      padding: 2rem 1.25rem;
+      color: var(--muted);
+      font-size: .9rem;
+    }
+    .footer-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: space-between;
+    }
+    @media (max-width: 860px) {
+      .nav { align-items: flex-start; flex-direction: column; }
+      .grid { grid-template-columns: 1fr; }
+      .article-layout { grid-template-columns: 1fr; }
+      .toc { position: static; }
+      .hero-inner, .section, .article-shell { padding: 3rem 1rem; }
+    }
+  </style>
+    <script type="application/ld+json">[{"@context":"https://schema.org","@type":"Blog","name":"EB28 Organic Growth Library","url":"https://eb28.co/blog/","description":"Practical guides on Melbourne web design, local SEO, website conversion, private AI infrastructure, and lead automation.","publisher":{"@type":"Organization","name":"EB28","url":"https://eb28.co"},"blogPost":[{"@type":"BlogPosting","headline":"AI Lead Follow-Up for Local Service Businesses: Faster Response Without Chaos","url":"https://eb28.co/blog/ai-lead-follow-up-local-service-business/","datePublished":"2026-06-02","dateModified":"2026-06-02"},{"@type":"BlogPosting","headline":"Best Website Builder in Melbourne FL: What Local Companies Should Look For","url":"https://eb28.co/blog/best-website-builder-in-melbourne-fl-what-local-companies-should-look-for/","datePublished":"2026-06-02","dateModified":"2026-06-02"},{"@type":"BlogPosting","headline":"Google Business Profile and Website Builder Strategy for Melbourne Companies","url":"https://eb28.co/blog/google-business-profile-website-builder-melbourne/","datePublished":"2026-06-02","dateModified":"2026-06-02"},{"@type":"BlogPosting","headline":"How to Rank in the Melbourne FL Map Pack Without Spammy SEO","url":"https://eb28.co/blog/how-to-rank-in-the-melbourne-fl-map-pack-without-spammy-seo/","datePublished":"2026-06-02","dateModified":"2026-06-02"},{"@type":"BlogPosting","headline":"Local SEO Map Pack Checklist for Melbourne FL Service Businesses","url":"https://eb28.co/blog/local-seo-map-pack-melbourne-fl/","datePublished":"2026-06-02","dateModified":"2026-06-02"},{"@type":"BlogPosting","headline":"Melbourne FL Web Design Cost Guide for Lead-Driven Local Businesses","url":"https://eb28.co/blog/melbourne-fl-web-design-cost-guide-2026/","datePublished":"2026-06-02","dateModified":"2026-06-02"},{"@type":"BlogPosting","headline":"Private AI Infrastructure for Small Businesses: When Local LLMs Make Sense","url":"https://eb28.co/blog/private-ai-infrastructure-small-business/","datePublished":"2026-06-02","dateModified":"2026-06-02"},{"@type":"BlogPosting","headline":"Website Conversion Checklist for Melbourne FL Businesses","url":"https://eb28.co/blog/website-conversion-checklist-melbourne-fl/","datePublished":"2026-06-02","dateModified":"2026-06-02"}]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://eb28.co/"},{"@type":"ListItem","position":2,"name":"Blog","item":"https://eb28.co/blog/"}]}]</script>
+  </head>
+  <body>
+
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <header class="site-header">
+      <nav class="nav" aria-label="Primary">
+        <a class="brand" href="/">
+          <span class="brand-mark">EB</span>
+          <span>EB28 Organic Growth Library</span>
+        </a>
+        <div class="nav-links">
+          <a href="/">Home</a>
+          <a href="/melbournewebstudio/">Melbourne Web Studio</a>
+          <a href="/reconcile/">Recon Agent</a>
+          <a href="/blog/">Blog</a>
+          <a class="cta-link" href="/melbournewebstudio/#quiz">Start Project</a>
+        </div>
+      </nav>
+    </header>
+
+    <main id="main-content">
+      <section class="hero">
+        <div class="hero-inner">
+          <p class="eyebrow">Organic lead engine</p>
+          <h1>Practical SEO, web design, and AI automation guides for businesses that need customers.</h1>
+          <p class="lead">These articles support EB28 and Melbourne Web Studio's search clusters: local web design, map-pack SEO, conversion, lead automation, and private AI infrastructure.</p>
+          <div class="meta-row">
+            <span class="pill">8 live articles</span>
+            <span class="pill">Updated June 2, 2026</span>
+            <span class="pill">Search-first internal linking</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <p class="eyebrow">Newest articles</p>
+        <div class="grid">
+
+                <a class="card" href="/blog/ai-lead-follow-up-local-service-business/">
+                  <span class="kicker">Lead Automation</span>
+                  <h2>AI Lead Follow-Up for Local Service Businesses: Faster Response Without Chaos</h2>
+                  <p>The fastest lead follow-up systems are not fully hands-off. They combine automation, qualification, CRM hygiene, and clear escalation rules so good prospects do not disappear.</p>
+                  <span class="read">Read the guide</span>
+                </a>
+
+                <a class="card" href="/blog/best-website-builder-in-melbourne-fl-what-local-companies-should-look-for/">
+                  <span class="kicker">Morning growth brief</span>
+                  <h2>Best Website Builder in Melbourne FL: What Local Companies Should Look For</h2>
+                  <p>A practical AM guide for the melbourne web design cluster, focused on evaluation criteria, not a self-serving list and measurable lead generation.</p>
+                  <span class="read">Read the guide</span>
+                </a>
+
+                <a class="card" href="/blog/google-business-profile-website-builder-melbourne/">
+                  <span class="kicker">GBP + Website</span>
+                  <h2>Google Business Profile and Website Builder Strategy for Melbourne Companies</h2>
+                  <p>Your Google Business Profile and website should operate as one local growth system, not two disconnected assets.</p>
+                  <span class="read">Read the guide</span>
+                </a>
+
+                <a class="card" href="/blog/how-to-rank-in-the-melbourne-fl-map-pack-without-spammy-seo/">
+                  <span class="kicker">Evening growth brief</span>
+                  <h2>How to Rank in the Melbourne FL Map Pack Without Spammy SEO</h2>
+                  <p>A practical PM guide for the local seo cluster, focused on profile, website, reviews, and citations working together and measurable lead generation.</p>
+                  <span class="read">Read the guide</span>
+                </a>
+
+                <a class="card" href="/blog/local-seo-map-pack-melbourne-fl/">
+                  <span class="kicker">Map Pack Growth</span>
+                  <h2>Local SEO Map Pack Checklist for Melbourne FL Service Businesses</h2>
+                  <p>Map-pack ranking depends on proximity, relevance, prominence, and trust signals. Your website should support every one of those signals instead of sitting apart from your Google Business Profile.</p>
+                  <span class="read">Read the guide</span>
+                </a>
+
+                <a class="card" href="/blog/melbourne-fl-web-design-cost-guide-2026/">
+                  <span class="kicker">Local Website ROI</span>
+                  <h2>Melbourne FL Web Design Cost Guide for Lead-Driven Local Businesses</h2>
+                  <p>Most local businesses do not need an oversized website project. They need fast pages, clear offers, trust proof, local SEO foundations, and a lead path that works on mobile.</p>
+                  <span class="read">Read the guide</span>
+                </a>
+
+                <a class="card" href="/blog/private-ai-infrastructure-small-business/">
+                  <span class="kicker">Private AI Systems</span>
+                  <h2>Private AI Infrastructure for Small Businesses: When Local LLMs Make Sense</h2>
+                  <p>Private AI is not about chasing hype. It is about giving a business useful automation while protecting client lists, SOPs, financial details, and internal knowledge.</p>
+                  <span class="read">Read the guide</span>
+                </a>
+
+                <a class="card" href="/blog/website-conversion-checklist-melbourne-fl/">
+                  <span class="kicker">Conversion Checklist</span>
+                  <h2>Website Conversion Checklist for Melbourne FL Businesses</h2>
+                  <p>Traffic does not create customers by itself. A local business website needs a clear offer, fast load, proof, frictionless forms, and a follow-up path.</p>
+                  <span class="read">Read the guide</span>
+                </a>
+
+        </div>
+      </section>
+
+      <section class="band">
+        <div class="section">
+          <p class="eyebrow">Cluster coverage</p>
+          <div class="grid">
+
+                  <div class="card">
+                    <span class="kicker">lead automation</span>
+                    <h3>1 supporting articles</h3>
+                    <p><a href="/blog/ai-lead-follow-up-local-service-business/">AI Lead Follow-Up for Local Service Businesses: Faster Response Without Chaos</a></p>
+                  </div>
+
+                  <div class="card">
+                    <span class="kicker">melbourne web design</span>
+                    <h3>2 supporting articles</h3>
+                    <p><a href="/blog/best-website-builder-in-melbourne-fl-what-local-companies-should-look-for/">Best Website Builder in Melbourne FL: What Local Companies Should Look For</a></p><p><a href="/blog/melbourne-fl-web-design-cost-guide-2026/">Melbourne FL Web Design Cost Guide for Lead-Driven Local Businesses</a></p>
+                  </div>
+
+                  <div class="card">
+                    <span class="kicker">local seo</span>
+                    <h3>3 supporting articles</h3>
+                    <p><a href="/blog/google-business-profile-website-builder-melbourne/">Google Business Profile and Website Builder Strategy for Melbourne Companies</a></p><p><a href="/blog/how-to-rank-in-the-melbourne-fl-map-pack-without-spammy-seo/">How to Rank in the Melbourne FL Map Pack Without Spammy SEO</a></p><p><a href="/blog/local-seo-map-pack-melbourne-fl/">Local SEO Map Pack Checklist for Melbourne FL Service Businesses</a></p>
+                  </div>
+
+                  <div class="card">
+                    <span class="kicker">private ai</span>
+                    <h3>1 supporting articles</h3>
+                    <p><a href="/blog/private-ai-infrastructure-small-business/">Private AI Infrastructure for Small Businesses: When Local LLMs Make Sense</a></p>
+                  </div>
+
+                  <div class="card">
+                    <span class="kicker">conversion</span>
+                    <h3>1 supporting articles</h3>
+                    <p><a href="/blog/website-conversion-checklist-melbourne-fl/">Website Conversion Checklist for Melbourne FL Businesses</a></p>
+                  </div>
+
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <p class="eyebrow">High-authority internal paths</p>
+        <div class="grid">
+
+              <a class="card" href="/">
+                <span class="kicker">Internal link source</span>
+                <h3>EB28 private AI and app development homepage</h3>
+                <p>Core service page for app development, private AI infrastructure, and lead-generation systems.</p>
+                <span class="read">Open page</span>
+              </a>
+
+              <a class="card" href="/melbournewebstudio/">
+                <span class="kicker">Internal link source</span>
+                <h3>Melbourne Web Studio local website builder page</h3>
+                <p>Local web design, SEO, and conversion offer for Melbourne and Brevard County businesses.</p>
+                <span class="read">Open page</span>
+              </a>
+
+              <a class="card" href="/reconcile/">
+                <span class="kicker">Internal link source</span>
+                <h3>Recon Agent founder beta</h3>
+                <p>Daily Stripe reconciliation product page for finance and operations founders.</p>
+                <span class="read">Open page</span>
+              </a>
+
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        <span>© 2026 EB28. Built for organic leads, private AI infrastructure, and measurable local growth.</span>
+        <span><a href="/sitemap.xml">Sitemap</a> · <a href="/blog/">Blog</a> · <a href="/melbournewebstudio/">Melbourne Web Studio</a></span>
+      </div>
+    </footer>
+
+  </body>
+</html>

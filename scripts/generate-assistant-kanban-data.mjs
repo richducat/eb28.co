@@ -47,7 +47,7 @@ function classifyLane({ done, section, raw }) {
 
 function classifyArea(raw) {
   const rl = String(raw || '').toLowerCase();
-  if (['ugcma', 'jamaal', 'nate', 'sydney', 'paid traffic'].some((word) => rl.includes(word))) return 'UGCMA';
+  if (['paid traffic'].some((word) => rl.includes(word))) return 'External';
   if (['tyfys', 'zoho', 'jenny', 'christina', 'karen', 'salesiq'].some((word) => rl.includes(word))) return 'TYFYS';
   if (['personal', 'kids', 'school', 'pickup'].some((word) => rl.includes(word))) return 'Personal';
   if (['gmail', 'calendar', 'drive', 'paypal', 'security'].some((word) => rl.includes(word))) return 'Admin';

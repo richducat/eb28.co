@@ -25,7 +25,7 @@ const WEED_AUTHORITY_IMAGE = `${SITE_ORIGIN}/weedauthority/weedauthority-hero.pn
 export const THOMAS_CUSTOM_HOMES_SITE_ORIGIN = THOMAS_PRIMARY_ORIGIN;
 const THOMAS_CUSTOM_HOMES_IMAGE = `${SITE_ORIGIN}/tch/og-image.png`;
 const THOMAS_CUSTOM_HOMES_CUSTOM_DOMAIN_IMAGE = `${THOMAS_CUSTOM_HOMES_SITE_ORIGIN}/og-image.png`;
-const MELBOURNE_WEB_STUDIO_CANONICAL_URL = 'http://melbournewebstudio.eb28.co/';
+const MELBOURNE_WEB_STUDIO_CANONICAL_URL = 'https://melbournewebstudio.eb28.co/';
 
 const ORGANIZATION_SCHEMA = {
     '@context': 'https://schema.org',
@@ -173,9 +173,9 @@ const ROUTE_META = {
         ...BASE_ROUTE_META,
         key: 'home',
         path: '/',
-        title: 'Private AI Infrastructure & Revenue Automation | EB28',
+        title: 'EB28 | Premier App Development & Private AI Infrastructure Near Me',
         description:
-            'EB28 builds private AI infrastructure, local LLM deployments, RAG systems, and revenue automation for businesses that need secure execution and measurable growth.',
+            'EB28 is a top-rated local app developer and private AI infrastructure builder. We design high-conversion websites, local LLM deployments, RAG systems, and automated lead generation engines for businesses.',
         image: DEFAULT_IMAGE,
         includeInSitemap: true,
         structuredData: [
@@ -188,16 +188,19 @@ const ROUTE_META = {
                 url: SITE_ORIGIN,
                 image: DEFAULT_IMAGE,
                 description:
-                    'Private AI infrastructure, local LLM deployment, secure RAG systems, and revenue automation services.',
-                areaServed: ['Florida', 'United States'],
+                    'Expert local app development, high-converting web design, private AI infrastructure, local LLM deployment, secure RAG systems, and revenue automation services.',
+                areaServed: ['Melbourne, Florida', 'Florida', 'United States'],
                 provider: {
                     '@id': ORGANIZATION_ID,
                 },
                 serviceType: [
+                    'App Development',
+                    'Website Builder',
                     'Private AI infrastructure',
                     'Local LLM deployment',
                     'RAG implementation',
                     'Revenue automation',
+                    'Lead generation'
                 ],
             },
         ],
@@ -252,34 +255,6 @@ const ROUTE_META = {
                 image: FUNDMANAGER_IMAGE,
                 description:
                     'A live monitoring dashboard for the EB28 fund manager orchestrator, lane health, and execution telemetry.',
-                provider: {
-                    '@id': ORGANIZATION_ID,
-                },
-            },
-        ],
-    },
-    ugcmadash: {
-        ...BASE_ROUTE_META,
-        key: 'ugcmadash',
-        path: '/ugcmadash/',
-        title: 'UGCMA Command Center | Richard Ops Dashboard | EB28',
-        description:
-            'A full-scope UGCMA command dashboard for BU-separated metrics, next decisions, content handoffs, team back-and-forth, Richard to-dos, and reconciliation risk.',
-        image: DEFAULT_IMAGE,
-        includeInSitemap: true,
-        structuredData: [
-            ORGANIZATION_SCHEMA,
-            {
-                '@context': 'https://schema.org',
-                '@type': 'WebApplication',
-                name: 'UGCMA Command Center',
-                applicationCategory: 'BusinessApplication',
-                operatingSystem: 'Web',
-                isAccessibleForFree: true,
-                url: `${SITE_ORIGIN}/ugcmadash/`,
-                image: DEFAULT_IMAGE,
-                description:
-                    'A BU-separated paid-media watch dashboard for UGCMA GetInsights metrics and quote-risk reconciliation.',
                 provider: {
                     '@id': ORGANIZATION_ID,
                 },
@@ -353,9 +328,9 @@ const ROUTE_META = {
         key: 'melbournewebstudio',
         path: '/melbournewebstudio/',
         canonicalUrlOverride: MELBOURNE_WEB_STUDIO_CANONICAL_URL,
-        title: 'Melbourne Web Studio | Websites for Local Businesses',
+        title: 'Melbourne Web Studio | Top Website Builder & Web Design Near Me',
         description:
-            'Melbourne Web Studio builds fast, professional websites for local businesses in Melbourne, Florida with transparent pricing and growth-focused support.',
+            'Melbourne Web Studio is the premier local web designer in Melbourne, FL. We build fast, professional websites with top-tier local SEO, transparent pricing, and AI-powered growth systems to drive leads.',
         image: DEFAULT_IMAGE,
         siteName: 'Melbourne Web Studio',
         themeColor: '#ffffff',
@@ -368,26 +343,29 @@ const ROUTE_META = {
                 name: 'Melbourne Web Studio',
                 url: MELBOURNE_WEB_STUDIO_CANONICAL_URL,
                 description:
-                    'Melbourne Web Studio offers website design, SEO support, and AI-powered growth systems for local businesses.',
+                    'Melbourne Web Studio offers expert website design, top-tier local SEO support, and AI-powered lead generation systems for local businesses.',
             },
             {
                 '@context': 'https://schema.org',
-                '@type': 'ProfessionalService',
+                '@type': 'LocalBusiness',
                 name: 'Melbourne Web Studio',
                 url: MELBOURNE_WEB_STUDIO_CANONICAL_URL,
-                telephone: '+1-602-306-3920',
+                email: 'richducat@gmail.com',
                 image: DEFAULT_IMAGE,
+                priceRange: '$$',
                 areaServed: ['Melbourne, Florida', 'Brevard County, Florida', 'Space Coast'],
                 description:
-                    'Melbourne Web Studio helps local businesses launch websites, SEO foundations, and AI business systems.',
+                    'Melbourne Web Studio helps local businesses launch high-converting websites, dominate local SEO, and implement AI business automation.',
                 provider: {
                     '@id': ORGANIZATION_ID,
                 },
                 serviceType: [
                     'Website design',
-                    'Local SEO',
-                    'Managed hosting',
+                    'Local SEO optimization',
+                    'Managed website hosting',
                     'AI business automation',
+                    'App development',
+                    'Lead generation'
                 ],
             },
         ],
@@ -482,7 +460,6 @@ export const STATIC_ROUTE_OUTPUTS = [
     { routeKey: 'home', outputPath: 'index.html' },
     { routeKey: 'appbuilder', outputPath: 'appbuilder/index.html' },
     { routeKey: 'fundmanager', outputPath: 'fundmanager/index.html' },
-    { routeKey: 'ugcmadash', outputPath: 'ugcmadash/index.html' },
     { routeKey: 'reconcile', outputPath: 'reconcile/index.html' },
     { routeKey: 'creditgps', outputPath: 'limitless/index.html' },
     { routeKey: 'creditgps', outputPath: 'limitless/onboarding/index.html' },
@@ -530,10 +507,6 @@ export function detectRouteKey({ pathname = '/', hostname = '' } = {}) {
 
     if (normalizedPathname === '/fundmanager' || normalizedHostname === 'fundmanager.eb28.co') {
         return 'fundmanager';
-    }
-
-    if (normalizedPathname === '/ugcmadash' || normalizedHostname === 'ugcmadash.eb28.co') {
-        return 'ugcmadash';
     }
 
     if (normalizedPathname === '/reconcile' || normalizedHostname === 'reconcile.eb28.co') {

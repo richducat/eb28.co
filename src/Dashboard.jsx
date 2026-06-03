@@ -70,7 +70,7 @@ const LANE_META = {
 };
 
 const AREA_STYLES = {
-  UGCMA: 'border-orange-300/30 bg-orange-400/10 text-orange-100',
+  External: 'border-orange-300/30 bg-orange-400/10 text-orange-100',
   TYFYS: 'border-blue-300/30 bg-blue-400/10 text-blue-100',
   Personal: 'border-fuchsia-300/30 bg-fuchsia-400/10 text-fuchsia-100',
   Admin: 'border-cyan-300/30 bg-cyan-400/10 text-cyan-100',

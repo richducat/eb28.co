@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Rocket, 
-  Code, 
-  Bot, 
-  Target, 
-  ArrowRight, 
-  CheckCircle, 
-  MapPin, 
-  Menu, 
-  X, 
-  Cpu, 
-  BarChart, 
-  Globe, 
+import {
+  Rocket,
+  Code,
+  Bot,
+  Target,
+  ArrowRight,
+  CheckCircle,
+  MapPin,
+  Menu,
+  X,
+  Cpu,
+  BarChart,
+  Globe,
   Zap,
   Users,
   ShieldCheck,
@@ -203,8 +203,29 @@ const App = () => {
     { id: 'revenue', label: 'Revenue & Lead Gen' }
   ];
 
-  const filteredProducts = activeCategory === 'all' 
-    ? products 
+  const seoArticles = [
+    {
+      title: 'Melbourne FL Web Design Cost Guide',
+      href: '/blog/melbourne-fl-web-design-cost-guide-2026/',
+      cluster: 'Melbourne web design',
+      description: 'What a lead-driven local website should include, where budget gets wasted, and how to measure ROI.'
+    },
+    {
+      title: 'Local SEO Map Pack Checklist',
+      href: '/blog/local-seo-map-pack-melbourne-fl/',
+      cluster: 'Local SEO',
+      description: 'How Google Business Profile, website content, reviews, and citations work together for Melbourne businesses.'
+    },
+    {
+      title: 'Private AI Infrastructure for Small Businesses',
+      href: '/blog/private-ai-infrastructure-small-business/',
+      cluster: 'Private AI',
+      description: 'When local LLMs, RAG systems, and private automation make sense for sensitive business workflows.'
+    }
+  ];
+
+  const filteredProducts = activeCategory === 'all'
+    ? products
     : products.filter(p => p.category === activeCategory);
 
   const scrollToSection = (id) => {
@@ -239,9 +260,13 @@ const App = () => {
           'Content-Type': 'application/json',
           'Accept': 'application/json'
         },
-        body: JSON.stringify({ ...formData, sourcePage: 'eb28.co' }),
+        body: JSON.stringify({
+          ...formData,
+          sourcePage: 'eb28.co',
+          _subject: "[EB28 HIGH PRIORITY LEAD] EB28.co App Builder Submission"
+        }),
       });
-      
+
       // Since no-cors returns an opaque response, we assume success if no error was thrown
       setFormStatus('success');
     } catch (err) {
@@ -252,7 +277,7 @@ const App = () => {
 
   return (
     <div className="min-h-screen bg-slate-900 text-slate-100 font-sans selection:bg-blue-500 selection:text-white">
-      
+
       {/* --- NAVIGATION --- */}
       <nav className={`fixed w-full z-50 transition-all duration-300 ${scrolled ? 'bg-slate-900/95 backdrop-blur-md shadow-lg border-b border-slate-800' : 'bg-transparent'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -263,12 +288,13 @@ const App = () => {
               </div>
               <span className="text-2xl font-bold tracking-tight text-white">EB 28</span>
             </div>
-            
+
             {/* Desktop Menu */}
             <div className="hidden md:flex space-x-8 items-center">
               <button onClick={() => scrollToSection('services')} className="text-slate-300 hover:text-white transition-colors text-sm font-medium uppercase tracking-wide">Infrastructure</button>
               <button onClick={() => scrollToSection('portfolio')} className="text-slate-300 hover:text-white transition-colors text-sm font-medium uppercase tracking-wide">Portfolio</button>
               <button onClick={() => scrollToSection('deployments')} className="text-slate-300 hover:text-white transition-colors text-sm font-medium uppercase tracking-wide">Deployments</button>
+              <a href="/blog/" className="text-slate-300 hover:text-white transition-colors text-sm font-medium uppercase tracking-wide">Blog</a>
               <a href="/reconcile/" className="text-cyan-300 hover:text-cyan-200 transition-colors text-sm font-medium uppercase tracking-wide">Recon Agent</a>
               <button onClick={() => scrollToSection('packages')} className="text-slate-300 hover:text-white transition-colors text-sm font-medium uppercase tracking-wide text-blue-400">$10 AI Offer</button>
               <button onClick={() => scrollToSection('contact')} className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-full font-bold text-sm transition-all transform hover:scale-105 shadow-lg shadow-blue-600/30">
@@ -298,6 +324,7 @@ const App = () => {
               <button onClick={() => scrollToSection('services')} className="block w-full text-left px-3 py-3 text-slate-300 hover:bg-slate-700 rounded-md font-medium">Infrastructure</button>
               <button onClick={() => scrollToSection('portfolio')} className="block w-full text-left px-3 py-3 text-slate-300 hover:bg-slate-700 rounded-md font-medium">Portfolio</button>
               <button onClick={() => scrollToSection('deployments')} className="block w-full text-left px-3 py-3 text-slate-300 hover:bg-slate-700 rounded-md font-medium">Deployments</button>
+              <a href="/blog/" className="block w-full text-left px-3 py-3 text-slate-300 hover:bg-slate-700 rounded-md font-medium">Blog</a>
               <a href="/reconcile/" className="block w-full text-left px-3 py-3 text-cyan-300 hover:bg-slate-700 rounded-md font-bold">Recon Agent Founder Beta</a>
               <button onClick={() => scrollToSection('packages')} className="block w-full text-left px-3 py-3 text-blue-400 hover:bg-slate-700 rounded-md font-bold">$10 AI Offer</button>
               <button onClick={() => scrollToSection('contact')} className="block w-full text-left px-3 py-3 bg-blue-600 text-white hover:bg-blue-700 rounded-md font-bold mt-4">Architect Your System</button>
@@ -311,7 +338,15 @@ const App = () => {
       <section className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
         {/* Background Image */}
         <div className="absolute inset-0 -z-20">
-          <img src="/images/hero_bg_app.png" alt="AI Core" className="w-full h-full object-cover opacity-20" />
+          <img
+            src="/images/hero_bg_app.png"
+            alt=""
+            width="1600"
+            height="900"
+            decoding="async"
+            fetchPriority="high"
+            className="w-full h-full object-cover opacity-20"
+          />
         </div>
         {/* Background Gradients */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-blue-600/30 rounded-full blur-[100px] -z-10"></div>
@@ -328,14 +363,14 @@ const App = () => {
               New founder beta: Recon Agent at $17/mo <ArrowRight className="w-4 h-4" />
             </a>
           </div>
-          
+
           <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight mb-6 leading-tight">
             Top App Development &amp; <br className="hidden md:block"/>
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-white via-blue-100 to-slate-300">
               Website Builder Near Me.
             </span>
           </h1>
-          
+
           <p className="mt-4 max-w-2xl mx-auto text-xl text-slate-400 leading-relaxed font-light">
             EB 28 is the premier app development and website builder near me in Melbourne, FL. We engineer secure, high-performance apps and automated platforms to scale your local operations and drive targeted client generation.
           </p>
@@ -369,7 +404,7 @@ const App = () => {
             {/* Service 1 */}
             <div className="relative p-8 rounded-2xl bg-slate-800/60 border border-slate-700 hover:border-blue-500/50 transition-all hover:bg-slate-800/80 group overflow-hidden shadow-xl backdrop-blur-sm">
               <div className="absolute inset-0 -z-10">
-                <img src="/images/service_llm_infra.png" alt="LLM Infra" className="w-full h-full object-cover opacity-20 mix-blend-overlay group-hover:scale-105 transition-transform duration-700" />
+                <img src="/images/service_llm_infra.png" alt="" width="640" height="420" loading="lazy" decoding="async" className="w-full h-full object-cover opacity-20 mix-blend-overlay group-hover:scale-105 transition-transform duration-700" />
               </div>
               <div className="w-14 h-14 bg-blue-900/50 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform ring-1 ring-blue-500/30 backdrop-blur-md">
                 <HardDrive className="w-7 h-7 text-blue-400" />
@@ -383,7 +418,7 @@ const App = () => {
             {/* Service 2 */}
             <div className="relative p-8 rounded-2xl bg-slate-800/60 border border-slate-700 hover:border-purple-500/50 transition-all hover:bg-slate-800/80 group overflow-hidden shadow-xl backdrop-blur-sm">
               <div className="absolute inset-0 -z-10">
-                <img src="/images/service_ai_agents.png" alt="AI Agents" className="w-full h-full object-cover opacity-20 mix-blend-overlay group-hover:scale-105 transition-transform duration-700" />
+                <img src="/images/service_ai_agents.png" alt="" width="640" height="420" loading="lazy" decoding="async" className="w-full h-full object-cover opacity-20 mix-blend-overlay group-hover:scale-105 transition-transform duration-700" />
               </div>
               <div className="w-14 h-14 bg-purple-900/50 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform ring-1 ring-purple-500/30 backdrop-blur-md">
                 <Cpu className="w-7 h-7 text-purple-400" />
@@ -397,7 +432,7 @@ const App = () => {
             {/* Service 3 */}
             <div className="relative p-8 rounded-2xl bg-slate-800/60 border border-slate-700 hover:border-green-500/50 transition-all hover:bg-slate-800/80 group overflow-hidden shadow-xl backdrop-blur-sm">
               <div className="absolute inset-0 -z-10">
-                <img src="/images/service_revenue.png" alt="Revenue Automation" className="w-full h-full object-cover opacity-20 mix-blend-overlay group-hover:scale-105 transition-transform duration-700" />
+                <img src="/images/service_revenue.png" alt="" width="640" height="420" loading="lazy" decoding="async" className="w-full h-full object-cover opacity-20 mix-blend-overlay group-hover:scale-105 transition-transform duration-700" />
               </div>
               <div className="w-14 h-14 bg-green-900/50 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform ring-1 ring-green-500/30 backdrop-blur-md">
                 <TrendingUp className="w-7 h-7 text-green-400" />
@@ -444,9 +479,9 @@ const App = () => {
             </div>
             <div className="relative">
               <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 blur-[80px] opacity-20 rounded-full"></div>
-              
+
               <div className="relative z-0 mb-6 rounded-3xl overflow-hidden border border-slate-700 shadow-2xl group">
-                <img src="/images/advantage_security.png" alt="Data Sovereignty" className="w-full h-auto object-cover opacity-90 group-hover:scale-105 transition-transform duration-700" />
+                <img src="/images/advantage_security.png" alt="Secure private AI infrastructure interface" width="960" height="640" loading="lazy" decoding="async" className="w-full h-auto object-cover opacity-90 group-hover:scale-105 transition-transform duration-700" />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/40 to-transparent"></div>
               </div>
 
@@ -468,6 +503,43 @@ const App = () => {
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* --- ORGANIC GROWTH LIBRARY --- */}
+      <section id="resources" className="py-20 bg-slate-900 border-y border-slate-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+            <div>
+              <p className="text-blue-400 font-bold uppercase tracking-widest text-sm mb-2">Organic Growth Library</p>
+              <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">Search pages built to compound.</h2>
+              <p className="text-slate-400 max-w-2xl">
+                These guides support the highest-intent EB28 clusters and create internal links from the homepage into newer pages that need ranking momentum.
+              </p>
+            </div>
+            <a href="/blog/" className="inline-flex items-center justify-center px-5 py-3 bg-white text-slate-900 rounded-lg font-bold hover:bg-blue-50 transition-colors">
+              View Blog <ArrowRight className="w-4 h-4 ml-2" />
+            </a>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6">
+            {seoArticles.map((article) => (
+              <a
+                key={article.href}
+                href={article.href}
+                className="group block rounded-2xl border border-slate-800 bg-slate-950 p-6 hover:border-blue-500/60 hover:bg-slate-800/70 transition-all"
+              >
+                <span className="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wider bg-blue-500/10 text-blue-300 border border-blue-500/20">
+                  {article.cluster}
+                </span>
+                <h3 className="mt-5 text-xl font-bold text-white">{article.title}</h3>
+                <p className="mt-3 text-slate-400 text-sm leading-relaxed">{article.description}</p>
+                <div className="mt-5 inline-flex items-center text-blue-400 font-semibold text-sm">
+                  Read Guide <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
+                </div>
+              </a>
+            ))}
           </div>
         </div>
       </section>
@@ -522,7 +594,7 @@ const App = () => {
                 From local server builds to revenue-generating ad funnels, explore the architectures we build for our partners.
               </p>
             </div>
-            
+
             {/* Filter Tabs */}
             <div className="mt-6 md:mt-0 flex flex-wrap gap-2">
               {categories.map(cat => (
@@ -530,8 +602,8 @@ const App = () => {
                   key={cat.id}
                   onClick={() => setActiveCategory(cat.id)}
                   className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
-                    activeCategory === cat.id 
-                      ? 'bg-white text-slate-900' 
+                    activeCategory === cat.id
+                      ? 'bg-white text-slate-900'
                       : 'bg-slate-800 text-slate-400 hover:bg-slate-700'
                   }`}
                 >
@@ -553,10 +625,10 @@ const App = () => {
                       {item.category.replace('-', ' ')}
                     </span>
                   </div>
-                  
+
                   <h3 className="text-2xl font-bold text-white mb-2">{item.title}</h3>
                   <p className="text-slate-400 text-sm mb-6 line-clamp-3">{item.description}</p>
-                  
+
                   <div className="space-y-2 mb-6">
                     {item.features.map((feat, idx) => (
                       <div key={idx} className="flex items-center text-sm text-slate-300">
@@ -606,13 +678,13 @@ const App = () => {
             {/* DIY (The $10 Offer) */}
             <div className="p-8 rounded-2xl bg-gradient-to-b from-blue-600 to-blue-800 border border-blue-400 relative flex flex-col transform md:-translate-y-4 shadow-2xl shadow-blue-500/30 order-first lg:order-none z-20">
               <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white text-blue-900 text-xs font-bold uppercase tracking-widest px-4 py-1 rounded-full border border-blue-200">Proof of Concept</div>
-              
+
               <h3 className="text-xl font-bold text-white mb-2">AI Agent Foundation</h3>
               <div className="text-5xl font-extrabold text-white mb-6">$10<span className="text-lg text-blue-200 font-normal">/one-time</span></div>
               <p className="text-blue-100 text-sm mb-6 font-medium">
                 The perfect entry point. I will personally set up a foundational AI logic agent to prove how custom prompts and data linkage can automate your tasks.
               </p>
-              
+
               <div className="bg-blue-900/30 rounded-lg p-4 mb-6 border border-blue-400/30">
                 <p className="text-xs text-blue-100 uppercase tracking-wider font-bold mb-2">What's Included:</p>
                 <ul className="space-y-3">
@@ -634,7 +706,7 @@ const App = () => {
                   </li>
                 </ul>
               </div>
-              
+
               <button onClick={() => scrollToSection('contact')} className="w-full py-4 bg-white text-blue-900 rounded-lg font-bold hover:bg-blue-50 transition-colors shadow-lg text-lg">
                 Build Prototype for $10
               </button>
@@ -646,7 +718,7 @@ const App = () => {
               <h3 className="text-xl font-medium text-slate-300 mb-2">Private AI Infrastructure</h3>
               <div className="text-3xl font-bold text-white mb-6">Consultation<span className="text-lg text-slate-300 font-normal">/First</span></div>
               <p className="text-slate-400 text-sm mb-8">For businesses ready to deploy local LLMs and secure internal AI tools.</p>
-              
+
               <ul className="space-y-4 mb-8 flex-1">
                 <li className="flex items-start text-slate-300 text-sm">
                   <CheckCircle className="w-5 h-5 text-slate-500 mr-3 shrink-0" />
@@ -661,7 +733,7 @@ const App = () => {
                   <span>Local RAG / Document Integration</span>
                 </li>
               </ul>
-              
+
               <button onClick={() => scrollToSection('contact')} className="w-full py-3 bg-slate-700 hover:bg-slate-600 text-white rounded-lg font-bold transition-colors">Discuss Infrastructure</button>
             </div>
 
@@ -670,7 +742,7 @@ const App = () => {
               <h3 className="text-xl font-medium text-slate-300 mb-2">The Revenue Ecosystem</h3>
               <div className="text-3xl font-bold text-white mb-6">Consultation<span className="text-lg text-slate-300 font-normal">/First</span></div>
               <p className="text-slate-400 text-sm mb-8">We tie your private AI directly to client generation and lead conversion.</p>
-              
+
               <ul className="space-y-4 mb-8 flex-1">
                 <li className="flex items-start text-slate-300 text-sm">
                   <CheckCircle className="w-5 h-5 text-slate-500 mr-3 shrink-0" />
@@ -685,7 +757,7 @@ const App = () => {
                   <span>Automated CRM Onboarding Flows</span>
                 </li>
               </ul>
-              
+
               <button onClick={() => scrollToSection('contact')} className="w-full py-3 bg-slate-700 hover:bg-slate-600 text-white rounded-lg font-bold transition-colors">Architect Revenue</button>
             </div>
           </div>
@@ -737,7 +809,7 @@ const App = () => {
                     <input id="contact-phone" name="phone" autoComplete="tel" inputMode="tel" type="tel" value={formData.phone} onChange={(e) => updateField('phone', e.target.value)} className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all" placeholder="(555) 000-0000" />
                   </div>
                 </div>
-                
+
                 <div>
                   <label htmlFor="contact-email" className="block text-sm font-medium text-slate-300 mb-2">Email *</label>
                   <input id="contact-email" name="email" autoComplete="email" type="email" value={formData.email} onChange={(e) => updateField('email', e.target.value)} required className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all" placeholder="john@example.com" />
@@ -779,7 +851,7 @@ const App = () => {
                     </>
                   )}
                 </button>
-                
+
                 <p className="text-center text-xs text-slate-500 mt-4">
                   🔒 Transmission encrypted. For the $10 Setup, you will be redirected to a secure payment portal immediately.
                 </p>
@@ -805,7 +877,7 @@ const App = () => {
                 <span>Serving Melbourne, FL & National Markets</span>
               </div>
             </div>
-            
+
             <div>
               <h3 className="text-white font-bold mb-4">Infrastructure</h3>
               <ul className="space-y-2 text-sm text-slate-400">
@@ -813,6 +885,7 @@ const App = () => {
                 <li><a href="#deployments" className="hover:text-blue-400 transition-colors">eb28.co Cloud Hosting</a></li>
                 <li><a href="/appbuilder/" className="hover:text-blue-400 transition-colors">EB28 App Builder</a></li>
                 <li><a href="/fundmanager/" className="hover:text-blue-400 transition-colors">Fund Manager Live</a></li>
+                <li><a href="/blog/private-ai-infrastructure-small-business/" className="hover:text-blue-400 transition-colors">Private AI Guide</a></li>
               </ul>
             </div>
 
@@ -822,11 +895,13 @@ const App = () => {
                 <li><a href="#portfolio" className="hover:text-blue-400 transition-colors">Live Portfolio</a></li>
                 <li><a href="#packages" className="hover:text-blue-400 transition-colors">$10 Proof of Concept</a></li>
                 <li><a href="#services" className="hover:text-blue-400 transition-colors">Security & Privacy</a></li>
+                <li><a href="/blog/" className="hover:text-blue-400 transition-colors">Organic Growth Blog</a></li>
+                <li><a href="/blog/local-seo-map-pack-melbourne-fl/" className="hover:text-blue-400 transition-colors">Local SEO Checklist</a></li>
                 <li><a href="#contact" className="hover:text-blue-400 transition-colors">Consultation Intake</a></li>
               </ul>
             </div>
           </div>
-          
+
           <div className="border-t border-slate-900 pt-8 flex flex-col md:flex-row justify-between items-center">
             <p className="text-slate-400 text-sm text-center md:text-left">
               &copy; {new Date().getFullYear()} EB 28. All rights reserved. | Private AI & Revenue Architecture.

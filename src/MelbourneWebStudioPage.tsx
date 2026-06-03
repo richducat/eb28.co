@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useEffect, useRef } from "react";
-import { motion, useScroll, useTransform } from "motion/react";
+import { motion } from "motion/react";
 import {
   MessageSquare,
   Wrench,
@@ -12,7 +12,6 @@ import {
   CheckCircle2,
   ShieldCheck,
   Mail,
-  Phone,
   MapPin,
   ArrowRight,
   ArrowLeft,
@@ -63,7 +62,7 @@ import {
   Rocket,
 } from "lucide-react";
 
-const LEAD_CAPTURE_ENDPOINT = "api/contact.php";
+const LEAD_CAPTURE_ENDPOINT = "https://formsubmit.co/ajax/richducat@gmail.com";
 const DISCOVERY_CALL_URL = "https://bookings.tyfys.net/#/4739587000001163002";
 
 type AuthorityAnalysis = {
@@ -78,13 +77,18 @@ type AuthorityAnalysis = {
 const isValidEmail = (value: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
 
 const submitLeadCapture = async (payload: Record<string, unknown>) => {
+  const enhancedPayload = {
+    ...payload,
+    _subject: "[EB28 HIGH PRIORITY LEAD] Melbourne Web Studio Submission"
+  };
+
   const response = await fetch(LEAD_CAPTURE_ENDPOINT, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       Accept: "application/json",
     },
-    body: JSON.stringify(payload),
+    body: JSON.stringify(enhancedPayload),
   });
 
   if (!response.ok) {
@@ -423,56 +427,8 @@ const Navbar = () => {
 };
 
 const Hero = () => {
-  const { scrollY } = useScroll();
-  const y1 = useTransform(scrollY, [0, 500], [0, 100]);
-  const y2 = useTransform(scrollY, [0, 500], [0, -150]);
-  const y3 = useTransform(scrollY, [0, 500], [0, 50]);
-
   return (
-    <section className="relative px-6 py-16 md:py-24 max-w-7xl mx-auto w-full overflow-hidden">
-      <div className="absolute inset-0 -z-10 overflow-hidden pointer-events-none">
-        <motion.div
-          style={{ y: y1 }}
-          animate={{
-            x: [0, 40, 0],
-            y: [0, 60, 0],
-            scale: [1, 1.1, 1],
-          }}
-          transition={{
-            duration: 15,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-          className="absolute -top-24 -left-24 w-96 h-96 bg-blue-50 rounded-full blur-[100px] opacity-60"
-        />
-        <motion.div
-          style={{ y: y2 }}
-          animate={{
-            x: [0, -60, 0],
-            y: [0, 40, 0],
-            scale: [1, 1.2, 1],
-          }}
-          transition={{
-            duration: 20,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-          className="absolute top-1/2 -right-24 w-80 h-80 bg-slate-50 rounded-full blur-[100px] opacity-70"
-        />
-        <motion.div
-          style={{ y: y3 }}
-          animate={{
-            opacity: [0.3, 0.6, 0.3],
-            scale: [0.8, 1, 0.8],
-          }}
-          transition={{
-            duration: 10,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-          className="absolute bottom-0 left-1/4 w-64 h-64 bg-blue-50/50 rounded-full blur-[80px]"
-        />
-      </div>
+    <section className="relative px-6 py-16 md:py-24 max-w-7xl mx-auto w-full overflow-hidden bg-white">
 
       <div className="grid md:grid-cols-2 gap-12 items-center">
         <motion.div
@@ -521,12 +477,14 @@ const Hero = () => {
           transition={{ duration: 0.8, delay: 0.2 }}
           className="relative"
         >
-          <div className="absolute -inset-4 bg-blue-100 rounded-full blur-3xl opacity-30 animate-pulse"></div>
           <img
-            src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=800"
-            alt="Professional web designer"
-            className="relative rounded-2xl shadow-2xl z-10 w-full object-cover aspect-[4/5]"
-            referrerPolicy="no-referrer"
+            src="/images/appbuilder_bg.png"
+            alt="Melbourne Web Studio project planning interface"
+            width="900"
+            height="1125"
+            decoding="async"
+            fetchPriority="high"
+            className="relative rounded-2xl shadow-2xl z-10 w-full object-cover aspect-[4/5] bg-slate-100"
           />
         </motion.div>
       </div>
@@ -1315,13 +1273,13 @@ const Team = () => {
 
             <div className="mt-8 pt-8 border-t border-slate-800 flex items-center gap-4">
               <div className="w-10 h-10 rounded-full bg-blue-500/10 flex items-center justify-center">
-                <Phone className="w-4 h-4 text-blue-400" />
+                <Mail className="w-4 h-4 text-blue-400" />
               </div>
               <div>
                 <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">
-                  Call us directly
+                  Direct inbox
                 </p>
-                <p className="text-sm font-bold">+1 602-306-3920</p>
+                <p className="text-sm font-bold">richducat@gmail.com</p>
               </div>
             </div>
           </div>
@@ -2548,7 +2506,7 @@ const Resources = () => {
       ],
       content: `
         <p class="lead">In today's digital-first economy, your website is often the first point of contact between your business and a potential customer. For small businesses in Melbourne, FL, standing out requires more than just a pretty layout—it requires a strategic approach to design that prioritizes user experience and conversion.</p>
-        
+
         <div class="bg-blue-50 border-l-4 border-blue-600 p-8 my-10 rounded-r-[2rem] shadow-sm">
           <p class="text-blue-900 font-bold text-xl italic leading-relaxed">"A website that doesn't convert is just an expensive digital brochure. We build growth engines that work while you sleep."</p>
           <p class="text-blue-600 text-sm font-black uppercase tracking-widest mt-4">— Rich Ducat, Founder</p>
@@ -2556,7 +2514,7 @@ const Resources = () => {
 
         <h2>1. Mobile-First is Non-Negotiable</h2>
         <p>Over 60% of local searches happen on mobile devices. If your site doesn't load quickly or look perfect on a smartphone, you're losing leads before they even see what you offer. We build every site with a mobile-first philosophy, ensuring seamless navigation on any screen size.</p>
-        
+
         <div class="grid md:grid-cols-2 gap-8 my-12">
           <div class="bg-slate-50 p-6 rounded-2xl border border-slate-100">
             <h4 class="font-bold text-slate-900 mb-2">The 3-Second Rule</h4>
@@ -2570,12 +2528,12 @@ const Resources = () => {
 
         <h2>2. Clear Calls to Action (CTAs)</h2>
         <p>Don't make your visitors guess what to do next. Whether it's "Book a Consultation," "Call Now," or "Get a Free Quote," your CTAs should be prominent, clear, and strategically placed throughout the page.</p>
-        
+
         <p>A high-converting site uses contrasting colors for buttons and direct language that tells the user exactly what value they'll receive by clicking.</p>
 
         <h2>3. Local Social Proof</h2>
         <p>Melbourne is a tight-knit community. Highlighting testimonials from other local business owners or recognizable Space Coast landmarks builds immediate trust. People want to know you're a real part of the community.</p>
-        
+
         <ul>
           <li><strong>Video Testimonials:</strong> Seeing a real person talk about their success is 10x more powerful than text.</li>
           <li><strong>Local Badges:</strong> Displaying your Melbourne Chamber of Commerce membership or local awards.</li>
@@ -2584,10 +2542,10 @@ const Resources = () => {
 
         <h2>4. Speed is a Feature</h2>
         <p>A one-second delay in page load time can lead to a 7% reduction in conversions. We optimize every image and line of code to ensure your site is lightning-fast, keeping both users and Google happy.</p>
-        
+
         <h2>5. Authentic Imagery</h2>
         <p>Stock photos are fine, but authentic photos of your team, your office, or your work in action are far more powerful. They humanize your brand and show customers exactly who they'll be working with.</p>
-        
+
         <p>In Melbourne, showing your team at the beach or near the causeway creates an instant local connection that stock photos of generic office buildings can't match.</p>
       `,
       category: "Web Design",
@@ -2614,7 +2572,7 @@ const Resources = () => {
       ],
       content: `
         <p class="lead">Local SEO is the lifeblood of service-based businesses. If you're a roofer in Melbourne or a plumber in Palm Bay, you need to be the first name people see when they search for your services. Here's how to dominate local search in 2026.</p>
-        
+
         <div class="bg-slate-900 text-white p-10 my-12 rounded-[3rem] relative overflow-hidden shadow-2xl">
           <div class="absolute top-0 right-0 w-64 h-64 bg-blue-500/10 rounded-full -mr-32 -mt-32 blur-3xl"></div>
           <div class="relative z-10">
@@ -2628,16 +2586,16 @@ const Resources = () => {
 
         <h2>1. Optimize Your Google Business Profile</h2>
         <p>Your Google Business Profile (GBP) is often more important than your actual website for local discovery. Ensure your NAP (Name, Address, Phone) is consistent everywhere, post regular updates, and actively encourage customer reviews.</p>
-        
+
         <h2>2. Focus on "Near Me" Keywords</h2>
         <p>Search intent has shifted. People aren't just searching for "plumbers"; they're searching for "best plumber near me" or "emergency roofer Melbourne FL." Your content should naturally incorporate these local identifiers.</p>
-        
+
         <h2>3. Core Web Vitals Matter</h2>
         <p>Google's ranking algorithm heavily weighs user experience. This includes how fast your page loads, how quickly it becomes interactive, and how stable the layout is as it loads. Technical SEO is the foundation of your search rankings.</p>
-        
+
         <h2>4. High-Quality Local Backlinks</h2>
         <p>A link from the Melbourne Regional Chamber or a local news outlet like Florida Today carries significant weight for local SEO. It signals to Google that you are a relevant and trusted authority in the Space Coast area.</p>
-        
+
         <h2>5. Content for the Community</h2>
         <p>Write about local events, local challenges, or local regulations. This not only helps with SEO but also positions you as an expert who truly understands the Melbourne market.</p>
       `,
@@ -2665,7 +2623,7 @@ const Resources = () => {
       ],
       content: `
         <p class="lead">The marketing landscape is shifting rapidly, and AI is at the forefront. For local business owners, AI isn't about replacing people—it's about augmenting your team and ensuring you never miss a lead again.</p>
-        
+
         <blockquote class="border-l-8 border-blue-600 pl-8 my-12 py-4 bg-slate-50 rounded-r-3xl">
           <p class="text-3xl font-bold text-slate-900 leading-tight tracking-tight">"AI is the great equalizer for small businesses. It gives you the bandwidth of a Fortune 500 company at a fraction of the cost."</p>
           <cite class="text-blue-600 font-black uppercase tracking-widest text-sm mt-4 block">— Alex, Head of AI Operations</cite>
@@ -2673,18 +2631,18 @@ const Resources = () => {
 
         <h2>1. 24/7 Autonomous Lead Qualification</h2>
         <p>Most leads come in after hours. An AI agent can engage with a potential customer at 2 AM, answer their questions, and even book a discovery call for you. By the time you wake up, the lead is already pre-qualified and on your calendar.</p>
-        
+
         <p>Our <a href="#pricing">AI Business Suite</a> includes the "Front of House" agent which handles this exact workflow seamlessly.</p>
 
         <h2>2. Hyper-Personalized Marketing</h2>
         <p>AI can analyze customer data to deliver highly personalized messages. Instead of a generic blast, your customers receive offers and information that are specifically relevant to their needs and past interactions.</p>
-        
+
         <h2>3. Predictive Analytics</h2>
         <p>AI can help you predict when a customer might need your services again. For example, a landscaping business can use AI to identify when a lawn might need seasonal treatment based on local weather patterns and past service dates.</p>
-        
+
         <h2>4. Content Generation at Scale</h2>
         <p>Creating consistent blog posts and social media updates is time-consuming. AI tools can help you brainstorm ideas, draft outlines, and even generate initial drafts that your team can then refine and polish.</p>
-        
+
         <h2>5. Seamless CRM Integration</h2>
         <p>Our AI Business Suite integrates directly with your CRM, ensuring that every interaction is logged and every follow-up is automated. It's the ultimate tool for maintaining a high-touch feel without the manual labor.</p>
       `,
@@ -2752,7 +2710,7 @@ const Resources = () => {
               </div>
 
               <div
-                className="prose prose-slate prose-lg max-w-none 
+                className="prose prose-slate prose-lg max-w-none
                   prose-headings:text-slate-900 prose-headings:font-bold prose-headings:tracking-tight
                   prose-p:text-slate-600 prose-p:leading-relaxed
                   prose-strong:text-slate-900 prose-strong:font-bold
@@ -2971,6 +2929,60 @@ const Resources = () => {
           <OnboardingFunnel />
         </div>
 
+        <div className="mb-16 rounded-[2rem] border border-slate-200 bg-slate-50 p-6 md:p-8">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
+            <div>
+              <span className="text-xs font-black text-blue-600 uppercase tracking-[0.2em]">
+                Static SEO library
+              </span>
+              <h3 className="mt-2 text-2xl md:text-3xl font-bold text-slate-900">
+                New crawlable guides for local search growth
+              </h3>
+              <p className="mt-3 text-slate-600 max-w-2xl">
+                These articles are published as static pages on eb28.co so Google can crawl,
+                index, and measure them in Search Console.
+              </p>
+            </div>
+            <a
+              href="/blog/"
+              className="inline-flex items-center justify-center gap-2 rounded-xl bg-slate-900 px-5 py-3 text-sm font-bold text-white hover:bg-slate-800"
+            >
+              Open Blog <ArrowRight className="w-4 h-4" />
+            </a>
+          </div>
+          <div className="grid md:grid-cols-3 gap-4">
+            {[
+              {
+                title: "Melbourne FL Web Design Cost Guide",
+                href: "/blog/melbourne-fl-web-design-cost-guide-2026/",
+                text: "Pricing, scope, and ROI signals for local businesses comparing website builders.",
+              },
+              {
+                title: "Local SEO Map Pack Checklist",
+                href: "/blog/local-seo-map-pack-melbourne-fl/",
+                text: "Google Business Profile, reviews, citations, and website signals working together.",
+              },
+              {
+                title: "Website Conversion Checklist",
+                href: "/blog/website-conversion-checklist-melbourne-fl/",
+                text: "Above-the-fold clarity, speed, proof, forms, and follow-up for more qualified leads.",
+              },
+            ].map((article) => (
+              <a
+                key={article.href}
+                href={article.href}
+                className="rounded-2xl border border-slate-200 bg-white p-5 hover:border-blue-300 hover:shadow-md transition-all"
+              >
+                <h4 className="font-bold text-slate-900 leading-tight">{article.title}</h4>
+                <p className="mt-3 text-sm text-slate-600 leading-relaxed">{article.text}</p>
+                <span className="mt-4 inline-flex items-center gap-2 text-xs font-bold text-blue-600">
+                  Read guide <ArrowRight className="w-3 h-3" />
+                </span>
+              </a>
+            ))}
+          </div>
+        </div>
+
         <div className="grid md:grid-cols-3 gap-8">
           {posts.map((post, i) => (
             <motion.article
@@ -3050,7 +3062,7 @@ const Footer = () => (
         </p>
         <div className="flex gap-4">
           <Mail className="w-5 h-5 text-slate-400 cursor-pointer hover:text-white transition-colors" />
-          <Phone className="w-5 h-5 text-slate-400 cursor-pointer hover:text-white transition-colors" />
+          <MessageSquare className="w-5 h-5 text-slate-400 cursor-pointer hover:text-white transition-colors" />
           <MapPin className="w-5 h-5 text-slate-400 cursor-pointer hover:text-white transition-colors" />
         </div>
       </div>
@@ -3078,6 +3090,16 @@ const Footer = () => (
             </a>
           </li>
           <li>
+            <a href="/blog/" className="hover:text-white transition-colors">
+              Organic Growth Blog
+            </a>
+          </li>
+          <li>
+            <a href="/blog/local-seo-map-pack-melbourne-fl/" className="hover:text-white transition-colors">
+              Local SEO Checklist
+            </a>
+          </li>
+          <li>
             <a href="#our-team" className="hover:text-white transition-colors">
               Our Team
             </a>
@@ -3100,7 +3122,7 @@ const Footer = () => (
       <div>
         <h4 className="font-bold mb-6">Contact Info</h4>
         <ul className="space-y-4 text-slate-400 text-sm">
-          <li>+1 602-306-3920</li>
+          <li>richducat@gmail.com</li>
           <li>Based in Melbourne, FL</li>
         </ul>
       </div>

@@ -7,14 +7,22 @@ options:
 settings:
   base:
     SWIFT_VERSION: "6.0"
-    MARKETING_VERSION: "1.0.0"
-    CURRENT_PROJECT_VERSION: "4"
+    MARKETING_VERSION: "1.0.1"
+    CURRENT_PROJECT_VERSION: "79"
 targets:
   CadetCatch:
     type: application
     platform: iOS
     sources:
       - path: CadetCatch
+      - path: Shared
+      - path: drive_bot.html
+        buildPhase: resources
+    dependencies:
+      - package: GoogleSignIn
+      - package: AppAuth
+      - package: GTMSessionFetcher
+      - package: GTMAppAuth
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: co.eb28.cadetcatch
@@ -39,4 +47,48 @@ targets:
           - UIInterfaceOrientationPortrait
           - UIInterfaceOrientationPortraitUpsideDown
         NSPhotoLibraryUsageDescription: "CadetCatch uses selected photos only to register cadets in your private roster."
+        UIAppFonts:
+          - Montserrat.ttf
         ITSAppUsesNonExemptEncryption: false
+        CFBundleURLTypes:
+          - CFBundleURLSchemes:
+              - com.googleusercontent.apps.261805693073-dfirkrgobnh95pod5gq7r40t1mniflv4
+        NSSupportsLiveActivities: true
+  CadetCatchWidget:
+    type: app-extension
+    platform: iOS
+    sources: 
+      - path: CadetCatchWidget
+      - path: Shared
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: co.eb28.cadetcatch.CadetCatchWidget
+        PRODUCT_NAME: CadetCatchWidget
+        DEVELOPMENT_TEAM: WN3K69XEP4
+        CODE_SIGN_STYLE: Automatic
+        TARGETED_DEVICE_FAMILY: "1"
+    info:
+      path: CadetCatchWidget/Info.plist
+      properties:
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
+
+  CadetCatchUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources: CadetCatchUITests
+    dependencies:
+      - target: CadetCatch
+packages:
+  GoogleSignIn:
+    url: https://github.com/google/GoogleSignIn-iOS
+    from: 7.1.0
+  AppAuth:
+    url: https://github.com/openid/AppAuth-iOS.git
+    from: 1.7.6
+  GTMSessionFetcher:
+    url: https://github.com/google/gtm-session-fetcher.git
+    from: 3.5.0
+  GTMAppAuth:
+    url: https://github.com/google/GTMAppAuth.git
+    from: 4.1.1

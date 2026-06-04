@@ -1,8 +1,18 @@
 {
-  "generatedAt": "2026-06-03T22:02:09.104Z",
+  "generatedAt": "2026-06-04T10:04:52.436Z",
   "site": "https://eb28.co",
   "blogUrl": "https://eb28.co/blog/",
   "articles": [
+    {
+      "slug": "local-rag-system-for-business-documents-a-plain-english-implementation-guide",
+      "title": "Local RAG System for Business Documents: Plain-English Guide",
+      "description": "Learn what a local RAG system does, when it makes sense for business documents, and how to protect sensitive data before connecting AI to staff workflows.",
+      "cluster": "private-ai",
+      "primaryKeyword": "local RAG system for business documents",
+      "url": "https://eb28.co/blog/local-rag-system-for-business-documents-a-plain-english-implementation-guide/",
+      "datePublished": "2026-06-04",
+      "dateModified": "2026-06-04"
+    },
     {
       "slug": "ai-receptionist-for-local-business-what-to-automate-and-what-to-keep-human",
       "title": "AI Receptionist for Local Business: What to Automate and What to Keep Human",

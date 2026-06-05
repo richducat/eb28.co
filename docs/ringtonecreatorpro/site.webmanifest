@@ -5,7 +5,7 @@
     { "src": "/ringtonecreatorpro/icon-192.png", "sizes": "192x192", "type": "image/png" },
     { "src": "/ringtonecreatorpro/icon-512.png", "sizes": "512x512", "type": "image/png" }
   ],
-  "theme_color": "#070A10",
-  "background_color": "#070A10",
+  "theme_color": "#05070C",
+  "background_color": "#05070C",
   "display": "standalone"
 }

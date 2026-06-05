@@ -49,6 +49,9 @@ const isAlarmClockRoute =
   isNativeAlarmClockApp ||
   pathname === '/alarmclock' ||
   isDedicatedAlarmClockHostname;
+const isFindMyCustomersRoute =
+  pathname === '/findmycustomers' ||
+  hostname === 'findmycustomers.eb28.co';
 
 function renderComponent(Component) {
   root.render(
@@ -111,6 +114,11 @@ async function renderApp() {
 
   if (isAlarmClockRoute) {
     await renderRoute(() => import('./AlarmClock'));
+    return;
+  }
+
+  if (isFindMyCustomersRoute) {
+    await renderRoute(() => import('./FindMyCustomers/App.jsx'));
     return;
   }
 

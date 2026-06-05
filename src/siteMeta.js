@@ -443,6 +443,16 @@ const ROUTE_META = {
         includeInSitemap: false,
         structuredData: [],
     },
+    findmycustomers: {
+        ...BASE_ROUTE_META,
+        key: 'findmycustomers',
+        path: '/findmycustomers/',
+        title: 'AdMaster AI | EB28',
+        description: 'Manage Apple, Google, Meta, TikTok, and X ads seamlessly with AI agents.',
+        image: DEFAULT_IMAGE,
+        includeInSitemap: true,
+        structuredData: [],
+    },
     notfound: {
         ...BASE_ROUTE_META,
         key: 'notfound',
@@ -481,6 +491,7 @@ export const STATIC_ROUTE_OUTPUTS = [
     { routeKey: 'weedauthority', outputPath: 'weedauthority/index.html' },
     { routeKey: 'cc', outputPath: 'cc/index.html' },
     { routeKey: 'dash', outputPath: 'dash/index.html' },
+    { routeKey: 'findmycustomers', outputPath: 'findmycustomers/index.html' },
     { routeKey: 'notfound', outputPath: '404.html' },
 ];
 
@@ -503,6 +514,13 @@ export function detectRouteKey({ pathname = '/', hostname = '' } = {}) {
 
     if (normalizedPathname === '/appbuilder') {
         return 'appbuilder';
+    }
+
+    if (
+        normalizedPathname === '/findmycustomers' ||
+        normalizedHostname === 'findmycustomers.eb28.co'
+    ) {
+        return 'findmycustomers';
     }
 
     if (normalizedPathname === '/fundmanager' || normalizedHostname === 'fundmanager.eb28.co') {

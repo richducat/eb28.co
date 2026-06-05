@@ -1,0 +1,49 @@
+{
+  "brand": "EB28",
+  "generatedAt": "2026-06-05T18:05:35.668Z",
+  "runId": "2026-06-05-pm",
+  "slot": "pm",
+  "article": {
+    "title": "Mobile Website Design in Melbourne FL: Why Most Lead Loss Happens on Phones",
+    "url": "https://eb28.co/blog/mobile-website-design-in-melbourne-fl-why-most-lead-loss-happens-on-phones/",
+    "cluster": "melbourne-web-design",
+    "primaryKeyword": "mobile website design Melbourne FL"
+  },
+  "publishPolicy": "Owned-social copy is prepared as drafts only. No external social channel was published because no EB28-owned account/channel was verified in this run.",
+  "posts": {
+    "blog": {
+      "title": "Mobile Website Design in Melbourne FL: Why Most Lead Loss Happens on Phones",
+      "url": "https://eb28.co/blog/mobile-website-design-in-melbourne-fl-why-most-lead-loss-happens-on-phones/",
+      "status": "ready_for_build_and_deploy"
+    },
+    "facebook": {
+      "caption": "Mobile Website Design in Melbourne FL: Why Most Lead Loss Happens on Phones\n\nA practical guide for local businesses that want more qualified organic leads, stronger search visibility, and a faster path from visitor to customer.\n\nRead it: https://eb28.co/blog/mobile-website-design-in-melbourne-fl-why-most-lead-loss-happens-on-phones/",
+      "status": "draft_ready_not_published_channel_unverified"
+    },
+    "instagram": {
+      "caption": "mobile website design Melbourne FL: the practical version.\n\nWe broke down what to fix first, how to connect it to real lead flow, and what EB28 checks daily to keep search growth moving.\n\nRead the full guide at eb28.co/blog/",
+      "creativeBrief": "Carousel: Slide 1 problem statement, Slide 2 what to fix first, Slide 3 technical SEO checks, Slide 4 internal links, Slide 5 CTA to project brief.",
+      "status": "ready_to_publish_when_eb28_social_channel_is_configured"
+    },
+    "x": {
+      "caption": "Mobile Website Design in Melbourne FL: Why Most Lead Loss Happens on Phones\n\nThe key: connect the search intent to a page that is fast, useful, internally linked, and measured in Search Console.\n\nhttps://eb28.co/blog/mobile-website-design-in-melbourne-fl-why-most-lead-loss-happens-on-phones/",
+      "status": "draft_ready_not_published_channel_unverified"
+    },
+    "linkedin": {
+      "caption": "New EB28 growth brief: Mobile Website Design in Melbourne FL: Why Most Lead Loss Happens on Phones\n\nThis covers the practical SEO and conversion fixes that turn a business website into a more reliable organic lead path.\n\nhttps://eb28.co/blog/mobile-website-design-in-melbourne-fl-why-most-lead-loss-happens-on-phones/",
+      "status": "draft_ready_not_published_channel_unverified"
+    },
+    "shortFormVideo": {
+      "hook": "Most local lead loss happens before a buyer ever reaches your form.",
+      "script": "Most Melbourne businesses think they have a website problem. On phones, it is usually a lead-path problem. The first screen has to say what you do, where you work, why someone should trust you, and what to do next. Then the page has to load fast and link into the right local SEO and conversion pages. EB28's newest brief breaks down the mobile fixes that stop qualified visitors from bouncing.",
+      "onScreenText": [
+        "Mobile visitors decide fast",
+        "Fix the first screen first",
+        "Make the next step obvious",
+        "Read the guide at eb28.co/blog"
+      ],
+      "creativeBrief": "Vertical 20-30 second explainer. Use a phone-screen walkthrough of the article, then cut to the Melbourne Web Studio quiz CTA. Keep branding simple and avoid any public phone contact.",
+      "status": "draft_ready_not_published_channel_unverified"
+    }
+  }
+}

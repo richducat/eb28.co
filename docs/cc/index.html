@@ -2,205 +2,103 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta name="eb28-build-id" content="cadetcatch-ios-1.0.0-4" />
-    <title>CadetCatch | Coast Guard Academy Photo Review</title>
-    <meta name="description" content="CadetCatch helps Coast Guard Academy families keep a private roster and review possible matches from public photo sources." />
-    <meta name="theme-color" content="#061329" />
-    <meta name="color-scheme" content="light" />
-    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+            <meta name="eb28-build-id" content="2026-06-05T19-22-55-122Z-03fb9141b" />
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+<title>CadetCatch | Tactical Photo Recovery for Military Parents</title>
+    <meta name="description" content="CadetCatch helps military families scan academy photo drops, save matched photos, and decode military jargon from a mobile-first command center." />
+    <meta name="theme-color" content="#1c1917" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
     <link rel="canonical" href="https://eb28.co/cc/" />
+    <meta property="og:locale" content="en_US" />
     <meta property="og:site_name" content="EB28" />
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="CadetCatch" />
-    <meta property="og:description" content="Private cadet rosters, public-source photo checks, covered previews, saved finds, and a plain-English academy terms decoder." />
+    <meta property="og:title" content="CadetCatch | Tactical Photo Recovery for Military Parents" />
+    <meta property="og:description" content="CadetCatch helps military families scan academy photo drops, save matched photos, and decode military jargon from a mobile-first command center." />
     <meta property="og:url" content="https://eb28.co/cc/" />
-    <meta property="og:image" content="https://eb28.co/cc/eagle.jpg" />
+    <meta property="og:image" content="https://eb28.co/assets/execution_grid.png" />
+    <meta property="og:image:alt" content="CadetCatch | Tactical Photo Recovery for Military Parents" />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="CadetCatch | Tactical Photo Recovery for Military Parents" />
+    <meta name="twitter:description" content="CadetCatch helps military families scan academy photo drops, save matched photos, and decode military jargon from a mobile-first command center." />
+    <meta name="twitter:image" content="https://eb28.co/assets/execution_grid.png" />
+    <script type="application/ld+json">[{"@context":"https://schema.org","@type":"Organization","@id":"https://eb28.co/#organization","name":"EB28","url":"https://eb28.co","logo":"https://eb28.co/favicon.svg"},{"@context":"https://schema.org","@type":"SoftwareApplication","name":"CadetCatch","applicationCategory":"LifestyleApplication","operatingSystem":"Web","isAccessibleForFree":false,"url":"https://eb28.co/cc/","image":"https://eb28.co/assets/execution_grid.png","description":"A mobile-first photo recovery and jargon decoder interface for parents of military cadets.","provider":{"@id":"https://eb28.co/#organization"}}]</script>
+<link rel="preload" as="image" href="/images/hero_bg_app.png" fetchpriority="high" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <script>
+      window.addEventListener('load', function () {
+        [
+          'https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Sora:wght@500;700;800&family=Space+Grotesk:wght@400;500;700&display=swap',
+          'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap',
+        ].forEach(function (href) {
+          var link = document.createElement('link');
+          link.rel = 'stylesheet';
+          link.href = href;
+          document.head.appendChild(link);
+        });
+      });
+    </script>
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Sora:wght@500;700;800&family=Space+Grotesk:wght@400;500;700&display=swap"
+      />
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap"
+      />
+    </noscript>
+
     <style>
-      :root {
-        --navy: #223c70;
-        --navy-dark: #061329;
-        --orange: #f2531b;
-        --ink: #0f1f3a;
-        --muted: #5f6e84;
-        --line: #d7dee8;
-        --paper: #f4f7fb;
-      }
-
-      * { box-sizing: border-box; }
-      body {
+      html,
+      body,
+      #root {
+        min-height: 100%;
         margin: 0;
-        color: var(--ink);
-        background: var(--paper);
-        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        background: #000b12;
       }
 
-      a { color: inherit; }
-
-      .hero {
-        min-height: 88vh;
-        display: flex;
-        align-items: end;
-        background:
-          linear-gradient(180deg, rgba(6, 19, 41, 0.08) 0%, rgba(6, 19, 41, 0.55) 48%, rgba(6, 19, 41, 0.98) 100%),
-          url("./eagle.jpg") center center / cover no-repeat;
-        color: #fff;
-        padding: 32px clamp(22px, 6vw, 72px) 56px;
+      body {
+        overflow-x: hidden;
       }
 
-      .hero-inner {
-        width: min(1040px, 100%);
-      }
-
-      .eyebrow {
-        color: var(--orange);
-        font-weight: 900;
-        letter-spacing: 0.16em;
-        text-transform: uppercase;
-        font-size: 0.78rem;
-      }
-
-      h1 {
-        max-width: 760px;
-        margin: 14px 0;
-        font-size: clamp(3rem, 9vw, 6.5rem);
-        line-height: 0.92;
-        letter-spacing: 0;
-      }
-
-      .lead {
-        max-width: 680px;
-        margin: 0 0 28px;
-        font-size: clamp(1.08rem, 2.2vw, 1.45rem);
-        line-height: 1.35;
-        color: rgba(255, 255, 255, 0.86);
-      }
-
-      .actions {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 12px;
-      }
-
-      .button {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        min-height: 50px;
-        padding: 0 20px;
-        border-radius: 10px;
-        text-decoration: none;
-        font-weight: 850;
-      }
-
-      .button.primary { background: var(--orange); color: #fff; }
-      .button.secondary { background: rgba(255, 255, 255, 0.12); color: #fff; border: 1px solid rgba(255,255,255,0.32); }
-
-      main {
-        padding: 54px clamp(22px, 6vw, 72px) 72px;
-      }
-
-      .section {
-        width: min(1040px, 100%);
-        margin: 0 auto;
-      }
-
-      .grid {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 16px;
-        margin-top: 24px;
-      }
-
-      .card {
-        background: #fff;
-        border: 1px solid var(--line);
-        border-radius: 8px;
-        padding: 22px;
-      }
-
-      .card h2 {
-        margin: 0 0 8px;
-        font-size: 1.05rem;
-      }
-
-      .card p, .section p {
-        color: var(--muted);
-        line-height: 1.55;
-      }
-
-      .notice {
-        margin-top: 28px;
-        background: var(--navy);
-        color: #fff;
-        border-radius: 8px;
-        padding: 22px;
-      }
-
-      .notice p { color: rgba(255, 255, 255, 0.82); margin: 6px 0 0; }
-
-      footer {
-        padding: 28px clamp(22px, 6vw, 72px);
-        color: var(--muted);
-        border-top: 1px solid var(--line);
-      }
-
-      footer nav {
-        display: flex;
-        gap: 18px;
-        flex-wrap: wrap;
-      }
-
-      @media (max-width: 760px) {
-        .grid { grid-template-columns: 1fr; }
-        .hero { min-height: 92vh; }
-      }
     </style>
+    <script type="module" crossorigin src="../assets/index-COvOBGvB.js"></script>
+    <link rel="stylesheet" crossorigin href="../assets/index-C7ucYcl6.css">
   </head>
   <body>
-    <section class="hero">
-      <div class="hero-inner">
-        <div class="eyebrow">USCGC EAGLE</div>
-        <h1>Find cadet photos faster.</h1>
-        <p class="lead">CadetCatch helps Coast Guard Academy families keep a private roster, check approved public photo sources, unlock likely finds, and review everything before anything is shared.</p>
-        <div class="actions">
-          <a class="button primary" href="#features">See what it does</a>
-          <a class="button secondary" href="./support/">Support</a>
-        </div>
-      </div>
-    </section>
-
-    <main id="features">
-      <section class="section">
-        <h2>Built for family photo review</h2>
-        <p>CadetCatch keeps the workflow simple: add a cadet profile, choose public sources, run a check, and review covered possible matches with confidence scores.</p>
-        <div class="grid">
-          <article class="card">
-            <h2>Private roster</h2>
-            <p>Cadet profiles and selected profile photos stay local on the device.</p>
-          </article>
-          <article class="card">
-            <h2>Public sources</h2>
-            <p>The app checks public HTTPS pages that are built in or added by the user.</p>
-          </article>
-          <article class="card">
-            <h2>Review first</h2>
-            <p>Possible matches stay covered until unlocked. Empty and no-match results are shown plainly.</p>
-          </article>
-        </div>
-        <div class="notice">
-          <strong>Privacy boundary</strong>
-          <p>This build does not scan private social accounts, private photo libraries, private websites, or logged-in pages.</p>
-        </div>
-      </section>
-    </main>
-
-    <footer>
-      <nav>
-        <a href="./privacy/">Privacy</a>
-        <a href="./support/">Support</a>
-      </nav>
-    </footer>
+    <div id="root"></div>
+    <noscript>
+      <main style="padding: 32px; font-family: Arial, sans-serif; background: #ffffff; color: #0f172a;">
+        <h1>EB28 organic growth resources</h1>
+        <p>Lead-focused website, local SEO, and automation guides for Melbourne, Florida businesses.</p>
+        <nav aria-label="EB28 organic growth resources">
+          <ul>
+            <li>
+              <a href="/blog/ai-receptionist-for-local-business-what-to-automate-and-what-to-keep-human/">
+                AI receptionist for local business
+              </a>
+            </li>
+            <li>
+              <a href="/blog/website-audit-checklist-for-melbourne-fl-businesses-losing-leads/">
+                Website audit Melbourne FL
+              </a>
+            </li>
+            <li>
+              <a href="/blog/how-to-rank-in-the-melbourne-fl-map-pack-without-spammy-seo/">
+                How to rank in Melbourne FL map pack
+              </a>
+            </li>
+            <li><a href="/melbournewebstudio/#quiz">Melbourne Web Studio growth quiz</a></li>
+            <li><a href="/blog/">EB28 blog</a></li>
+          </ul>
+        </nav>
+      </main>
+    </noscript>
   </body>
 </html>

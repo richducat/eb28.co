@@ -74,11 +74,13 @@ struct ProView: View {
                         .font(.caption.weight(.bold))
                         .foregroundStyle(Theme.cyan)
 
-                        Button("Manage Ad Privacy") {
-                            ads.presentPrivacyOptions(from: UIApplication.shared.topMostViewController)
+                        if ads.privacyOptionsRequired {
+                            Button("Manage Ad Privacy") {
+                                ads.presentPrivacyOptions(from: UIApplication.shared.topMostViewController)
+                            }
+                            .buttonStyle(.bordered)
+                            .tint(Theme.cyan)
                         }
-                        .buttonStyle(.bordered)
-                        .tint(Theme.cyan)
 
                         Button("Delete Account") {
                             Task { await auth.deleteAccount() }

@@ -95,6 +95,11 @@ struct RecProfile: Codable, Equatable {
     var expirationDate: Date = Calendar.current.date(byAdding: .month, value: 7, to: .now) ?? .now
     var notes: String = ""
     var acceptedPrivacy: Bool = false
+    
+    // Synced medical allotment fields
+    var syncedFlowerGrams: Double? = nil
+    var syncedConcentrateGrams: Double? = nil
+    var lastSyncDate: Date? = nil
 
     var isStarted: Bool {
         !legalName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ||
@@ -238,7 +243,7 @@ enum AuthorityContent {
             limitSummary: "Florida recommendations are route-specific and recorded in the Medical Marijuana Use Registry. The official amount-available page is the source of truth.",
             officialCheckSummary: "Open the Florida MMUR to view your patient certifications, orders, and amount-available calculation page.",
             defaultWindowDays: 70,
-            flowerLimitGrams: nil,
+            flowerLimitGrams: 70.87,
             concentrateLimitGrams: nil,
             thcLimitMilligrams: nil,
             sourceTitle: "Florida Office of Medical Marijuana Use"

@@ -5,7 +5,7 @@ enum AppConfig {
     static let displayName = "Ring Tone Creator Pro"
     static let bundleID = "co.eb28.ringtonecreatorpro"
     static let appVersion = "1.0.0"
-    static let buildNumber = "2"
+    static let buildNumber = "5"
     static let freeExportLimit = 3
     static let unlimitedProductID = "co.eb28.ringtonecreatorpro.unlimited.monthly"
     static let supportURL = URL(string: "https://eb28.co/ringtonecreatorpro/support/")!
@@ -20,7 +20,7 @@ enum AppConfig {
     static var bannerAdUnitID: String {
         Bundle.main.object(forInfoDictionaryKey: "RINGTONE_GAD_BANNER_AD_UNIT_ID") as? String
             ?? ProcessInfo.processInfo.environment["RINGTONE_GAD_BANNER_AD_UNIT_ID"]
-            ?? "ca-app-pub-3940256099942544/2435281174"
+            ?? "ca-app-pub-9665484869013517/3751917052"
     }
 
     static var hasProductionAdMobIDs: Bool {

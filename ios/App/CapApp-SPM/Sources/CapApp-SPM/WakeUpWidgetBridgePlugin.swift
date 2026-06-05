@@ -17,6 +17,12 @@ private struct WakeUpWidgetStatePayload: Codable {
     let countdownTarget: String?
     let upcomingEventSummary: String?
     let upcomingEventStart: String?
+    let habitDay: Int
+    let habitProgress: Int
+    let habitCompletedToday: Bool
+    let habitTitle: String
+    let quoteText: String
+    let quoteAuthor: String
     let updatedAt: String
 }
 
@@ -49,6 +55,12 @@ public class WakeUpWidgetBridgePlugin: CAPPlugin, CAPBridgedPlugin {
             countdownTarget: call.getString("countdownTarget"),
             upcomingEventSummary: call.getString("upcomingEventSummary"),
             upcomingEventStart: call.getString("upcomingEventStart"),
+            habitDay: min(67, max(1, call.getInt("habitDay") ?? 1)),
+            habitProgress: min(100, max(0, call.getInt("habitProgress") ?? 0)),
+            habitCompletedToday: call.getBool("habitCompletedToday") ?? false,
+            habitTitle: call.getString("habitTitle") ?? "Daily Mission",
+            quoteText: call.getString("quoteText") ?? "When one part of your day gets disrupted, do not call the whole day ruined. Ask what is my next best move now, and do only that.",
+            quoteAuthor: call.getString("quoteAuthor") ?? "Wake Up Ya Bish",
             updatedAt: isoFormatter.string(from: Date())
         )
 

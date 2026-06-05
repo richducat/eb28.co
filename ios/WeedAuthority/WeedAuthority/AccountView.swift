@@ -2,12 +2,9 @@ import SwiftUI
 
 struct AccountView: View {
     @Environment(AuthorityStore.self) private var store
+    @Environment(AdMobManager.self) private var ads
     @State private var webDestination: WebDestination?
     @State private var showingResetConfirmation = false
-
-    private let privacyURL = URL(string: "https://eb28.co/weedauthority/privacy/")!
-    private let supportURL = URL(string: "https://eb28.co/weedauthority/support/")!
-    private let termsURL = URL(string: "https://eb28.co/weedauthority/terms/")!
 
     var body: some View {
         NavigationStack {
@@ -15,6 +12,7 @@ struct AccountView: View {
                 VStack(spacing: 22) {
                     header
                     privacyPanel
+                    adPrivacyPanel
                     savedPanel
                     supportPanel
                 }
@@ -63,14 +61,39 @@ struct AccountView: View {
                     .lineSpacing(4)
                 HStack(spacing: 10) {
                     SecondaryActionButton(title: "Privacy", systemImage: "hand.raised.fill") {
-                        webDestination = WebDestination(url: privacyURL)
+                        webDestination = WebDestination(url: AppConfig.privacyURL)
                     }
                     SecondaryActionButton(title: "Terms", systemImage: "doc.text.fill") {
-                        webDestination = WebDestination(url: termsURL)
+                        webDestination = WebDestination(url: AppConfig.termsURL)
                     }
                 }
                 PrimaryActionButton(title: "Delete local data", systemImage: "trash.fill") {
                     showingResetConfirmation = true
+                }
+            }
+        }
+    }
+
+    private var adPrivacyPanel: some View {
+        AuthorityPanel {
+            VStack(alignment: .leading, spacing: 14) {
+                SectionHeader(eyebrow: "Ads", title: "Ad-supported banners")
+                Text("Weed Authority uses Google AdMob banner ads. Your rec profile, saved products, saved retailers, and purchase ledger stay local on this device.")
+                    .font(.system(size: 14))
+                    .foregroundStyle(Color.authorityMuted)
+                    .lineSpacing(4)
+                if let message = ads.message {
+                    Text(message)
+                        .font(.system(size: 12, weight: .semibold))
+                        .foregroundStyle(Color.authorityGold)
+                }
+                HStack(spacing: 10) {
+                    SecondaryActionButton(title: "Ad choices", systemImage: "slider.horizontal.3") {
+                        ads.presentPrivacyOptions(from: UIApplication.shared.topMostViewController)
+                    }
+                    SecondaryActionButton(title: "Google privacy", systemImage: "shield.lefthalf.filled") {
+                        webDestination = WebDestination(url: AppConfig.googlePrivacyURL)
+                    }
                 }
             }
         }
@@ -98,7 +121,7 @@ struct AccountView: View {
                     .foregroundStyle(Color.authorityMuted)
                     .lineSpacing(4)
                 PrimaryActionButton(title: "Open support", systemImage: "message.fill") {
-                    webDestination = WebDestination(url: supportURL)
+                    webDestination = WebDestination(url: AppConfig.supportURL)
                 }
             }
         }

@@ -15,6 +15,9 @@
 		504EC30F1FED79650016851F /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 504EC30E1FED79650016851F /* Assets.xcassets */; };
 		504EC3121FED79650016851F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 504EC3101FED79650016851F /* LaunchScreen.storyboard */; };
 		50B271D11FEDC1A000F3C39B /* public in Resources */ = {isa = PBXBuildFile; fileRef = 50B271D01FEDC1A000F3C39B /* public */; };
+		6A23B0010000000000000001 /* Assets.car in Resources */ = {isa = PBXBuildFile; fileRef = 6A23B0000000000000000001 /* Assets.car */; };
+		6A23B0010000000000000002 /* AppIcon60x60@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A23B0000000000000000002 /* AppIcon60x60@2x.png */; };
+		6A23B0010000000000000003 /* AppIcon76x76@2x~ipad.png in Resources */ = {isa = PBXBuildFile; fileRef = 6A23B0000000000000000003 /* AppIcon76x76@2x~ipad.png */; };
 		5C8382FF68792F95F2D44E7B /* WakeUpWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38EBE71EFAC914B0037AEF9D /* WakeUpWidget.swift */; };
 		8E152841603C3791DB4A00E1 /* WakeUpWidgetExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 257CFD25EB1FFDC86919EF5C /* WakeUpWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, CodeSignOnCopy, ); }; };
 /* End PBXBuildFile section */
@@ -57,6 +60,10 @@
 		504EC3111FED79650016851F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		504EC3131FED79650016851F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		50B271D01FEDC1A000F3C39B /* public */ = {isa = PBXFileReference; lastKnownFileType = folder; path = public; sourceTree = "<group>"; };
+		6A23B0000000000000000000 /* PrecompiledAssets */ = {isa = PBXFileReference; lastKnownFileType = folder; path = PrecompiledAssets; sourceTree = "<group>"; };
+		6A23B0000000000000000001 /* Assets.car */ = {isa = PBXFileReference; lastKnownFileType = file; name = Assets.car; path = PrecompiledAssets/Assets.car; sourceTree = "<group>"; };
+		6A23B0000000000000000002 /* AppIcon60x60@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "AppIcon60x60@2x.png"; path = "PrecompiledAssets/AppIcon60x60@2x.png"; sourceTree = "<group>"; };
+		6A23B0000000000000000003 /* AppIcon76x76@2x~ipad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "AppIcon76x76@2x~ipad.png"; path = "PrecompiledAssets/AppIcon76x76@2x~ipad.png"; sourceTree = "<group>"; };
 		65082DA9A77BB83715F04142 /* WakeUpWidget.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; path = WakeUpWidget.entitlements; sourceTree = "<group>"; };
 		958DCC722DB07C7200EA8C5F /* debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = debug.xcconfig; path = ../debug.xcconfig; sourceTree = SOURCE_ROOT; };
 		BC88A07D2F70428D005D8B0B /* Screen Recording 2026-03-22 at 11.30.04 AM.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; name = "Screen Recording 2026-03-22 at 11.30.04 AM.mov"; path = "../../../../../../var/folders/30/k7mjq62s6js2m01tck7py0380000gn/T/TemporaryItems/NSIRD_screencaptureui_pdBdZH/Screen Recording 2026-03-22 at 11.30.04 AM.mov"; sourceTree = "<group>"; };
@@ -106,10 +113,14 @@
 			children = (
 				50379B222058CBB4000EE86E /* capacitor.config.json */,
 				504EC3071FED79650016851F /* AppDelegate.swift */,
-				504EC30B1FED79650016851F /* Main.storyboard */,
-				504EC30E1FED79650016851F /* Assets.xcassets */,
-				504EC3101FED79650016851F /* LaunchScreen.storyboard */,
-				504EC3131FED79650016851F /* Info.plist */,
+					504EC30B1FED79650016851F /* Main.storyboard */,
+					504EC30E1FED79650016851F /* Assets.xcassets */,
+					504EC3101FED79650016851F /* LaunchScreen.storyboard */,
+					6A23B0000000000000000000 /* PrecompiledAssets */,
+					6A23B0000000000000000001 /* Assets.car */,
+					6A23B0000000000000000002 /* AppIcon60x60@2x.png */,
+					6A23B0000000000000000003 /* AppIcon76x76@2x~ipad.png */,
+					504EC3131FED79650016851F /* Info.plist */,
 				2FAD9762203C412B000D30F8 /* config.xml */,
 				50B271D01FEDC1A000F3C39B /* public */,
 				38BA08B99A3B52718398FB39 /* App.entitlements */,
@@ -167,12 +178,12 @@
 		504EC3031FED79650016851F /* App */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 504EC3161FED79650016851F /* Build configuration list for PBXNativeTarget "App" */;
-			buildPhases = (
-				504EC3001FED79650016851F /* Sources */,
-				504EC3011FED79650016851F /* Frameworks */,
-				504EC3021FED79650016851F /* Resources */,
-				D462439183C1FBC20B84EA4D /* Embed App Extensions */,
-			);
+				buildPhases = (
+					504EC3001FED79650016851F /* Sources */,
+					504EC3011FED79650016851F /* Frameworks */,
+					504EC3021FED79650016851F /* Resources */,
+					D462439183C1FBC20B84EA4D /* Embed App Extensions */,
+				);
 			buildRules = (
 			);
 			dependencies = (
@@ -240,13 +251,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				504EC3121FED79650016851F /* LaunchScreen.storyboard in Resources */,
-				50B271D11FEDC1A000F3C39B /* public in Resources */,
-				504EC30F1FED79650016851F /* Assets.xcassets in Resources */,
-				50379B232058CBB4000EE86E /* capacitor.config.json in Resources */,
-				504EC30D1FED79650016851F /* Main.storyboard in Resources */,
-				2FAD9763203C412B000D30F8 /* config.xml in Resources */,
-			);
+					50B271D11FEDC1A000F3C39B /* public in Resources */,
+					6A23B0010000000000000001 /* Assets.car in Resources */,
+					6A23B0010000000000000002 /* AppIcon60x60@2x.png in Resources */,
+					6A23B0010000000000000003 /* AppIcon76x76@2x~ipad.png in Resources */,
+					50379B232058CBB4000EE86E /* capacitor.config.json in Resources */,
+					2FAD9763203C412B000D30F8 /* config.xml in Resources */,
+				);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
@@ -307,7 +318,7 @@
 					CODE_SIGN_ENTITLEMENTS = WakeUpWidget/WakeUpWidget.entitlements;
 					CODE_SIGN_IDENTITY = "iPhone Distribution";
 					CODE_SIGN_STYLE = Manual;
-					CURRENT_PROJECT_VERSION = 16;
+					CURRENT_PROJECT_VERSION = 23;
 					DEVELOPMENT_TEAM = WN3K69XEP4;
 					GENERATE_INFOPLIST_FILE = NO;
 					INFOPLIST_FILE = WakeUpWidget/Info.plist;
@@ -317,7 +328,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-					MARKETING_VERSION = 1.1.3;
+					MARKETING_VERSION = 1.2.3;
 					PROVISIONING_PROFILE_SPECIFIER = "WakeUpYaBishWidget App Store";
 					PRODUCT_BUNDLE_IDENTIFIER = com.eb28.alarmclock.widget;
 					PRODUCT_NAME = "$(TARGET_NAME)";
@@ -444,7 +455,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = App/App.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 16;
+				CURRENT_PROJECT_VERSION = 23;
 				INFOPLIST_KEY_GADApplicationIdentifier = "$(WAKE_UP_GAD_APPLICATION_IDENTIFIER)";
 				DEVELOPMENT_TEAM = WN3K69XEP4;
 				INFOPLIST_FILE = App/Info.plist;
@@ -453,7 +464,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.1.3;
+				MARKETING_VERSION = 1.2.3;
 				OTHER_SWIFT_FLAGS = "$(inherited) \"-D\" \"COCOAPODS\" \"-DDEBUG\"";
 				PRODUCT_BUNDLE_IDENTIFIER = com.eb28.alarmclock;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -471,7 +482,7 @@
 					CODE_SIGN_ENTITLEMENTS = App/App.entitlements;
 					CODE_SIGN_IDENTITY = "iPhone Distribution";
 					CODE_SIGN_STYLE = Manual;
-					CURRENT_PROJECT_VERSION = 16;
+					CURRENT_PROJECT_VERSION = 23;
 					INFOPLIST_KEY_GADApplicationIdentifier = "$(WAKE_UP_GAD_APPLICATION_IDENTIFIER)";
 					DEVELOPMENT_TEAM = WN3K69XEP4;
 					INFOPLIST_FILE = App/Info.plist;
@@ -480,7 +491,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-					MARKETING_VERSION = 1.1.3;
+					MARKETING_VERSION = 1.2.3;
 					PROVISIONING_PROFILE_SPECIFIER = "WakeUpYaBish App Store";
 					PRODUCT_BUNDLE_IDENTIFIER = com.eb28.alarmclock;
 					PRODUCT_NAME = "$(TARGET_NAME)";
@@ -498,7 +509,7 @@
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				CODE_SIGN_ENTITLEMENTS = WakeUpWidget/WakeUpWidget.entitlements;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 16;
+				CURRENT_PROJECT_VERSION = 23;
 				DEVELOPMENT_TEAM = WN3K69XEP4;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = WakeUpWidget/Info.plist;
@@ -508,7 +519,7 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
-				MARKETING_VERSION = 1.1.3;
+				MARKETING_VERSION = 1.2.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.eb28.alarmclock.widget;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;

@@ -5,9 +5,11 @@
     "subtitle": "Find cadet photos faster",
     "bundleId": "co.eb28.cadetcatch",
     "sku": "cadetcatch-ios",
-    "platforms": ["iOS"],
+    "platforms": [
+      "iOS"
+    ],
     "primaryCategory": "Lifestyle",
-    "secondaryCategory": "Lifestyle",
+    "secondaryCategory": "Photo & Video",
     "copyright": "2026 EB28",
     "ageRatingQuestionnaireCompleted": true,
     "traderStatusReviewed": true,
@@ -20,13 +22,21 @@
   },
   "version": {
     "marketingVersion": "1.0.0",
-    "buildNumber": "4",
-    "releaseType": "MANUAL",
+    "buildNumber": "13",
+    "releaseType": "AUTOMATIC",
     "phasedRelease": false,
-    "promotionalText": "Private cadet rosters, public-source photo checks, covered previews, saved finds, review notes, and a plain-English academy terms decoder.",
-    "description": "CadetCatch helps Coast Guard Academy families keep up with public cadet photos without digging through every gallery by hand.\n\nCreate a private roster on your iPhone, add approved public photo sources, scan those sources for possible face matches, review match confidence, unlock covered results, save likely finds, and keep simple notes for family follow-up.\n\nCadetCatch only checks public HTTPS sources that you add or enable. It does not scan private social accounts, private photo libraries, or non-public websites unless a future connected-source version explicitly asks for that access.",
-    "keywords": ["cadet", "military", "academy", "photos", "family", "parents", "coast"],
-    "whatsNew": "Adds StoreKit purchase gates for one-time checks, one-photo unlocks, monthly access, covered result previews, and restore purchases."
+    "promotionalText": "Private cadet rosters, approved photo pages, hidden previews, saved finds, family notes, and a plain-English academy terms guide.",
+    "description": "CadetCatch helps Coast Guard Academy families keep up with cadet photos without digging through every gallery by hand.\n\nCreate a private roster on your iPhone, add approved photo pages, check those pages for possible face matches, review match details, view selected results, save likely finds, and keep simple notes for family follow-up.\n\nCadetCatch checks only photo pages you add or enable. Private albums stay private unless you choose to share an accessible link.\n\nPrivacy Policy: https://eb28.co/cc/privacy/\nTerms of Use (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/",
+    "keywords": [
+      "cadet",
+      "military",
+      "academy",
+      "photos",
+      "family",
+      "parents",
+      "coast"
+    ],
+    "whatsNew": "Adds visible photo-check progress, Pduddy Pics as a selected Facebook source, daily automatic photo checks, the USCGC EAGLE welcome image, Coast Guard themed typography, restore purchase controls, and explicit in-app subscription details with Privacy Policy and Terms of Use links."
   },
   "urls": {
     "marketingUrl": "https://eb28.co/cc/",
@@ -45,10 +55,11 @@
     "notes": [
       "No login is required.",
       "Add a cadet profile from Roster using a clear face photo selected from Photos.",
-      "Open Sources to enable or add public HTTPS photo pages. The app does not scan private accounts.",
-      "Open Home and run Check Photos. Results are covered until an unlock purchase or monthly access is active.",
-      "Open Photos to review possible matches, unlock a photo, save an unlocked match, and create a review note.",
-      "If a source has no usable images or no match above the threshold, the app reports that result instead of showing sample matches."
+      "Open Sources to confirm Coast Guard Academy, DVIDS, and Pduddy Pics are selected, or add another secure public photo page. Facebook photo or album links can also be added when the reviewer has permission to open the link in Safari.",
+      "Open Home and run Check Photos. The app shows the current source, discovered image count, checked image count, and possible match count while scanning. Previews stay hidden until single-photo or monthly access is active.",
+      "Open Photos to review possible matches, view a photo, save it, and create a family note.",
+      "Open Photo Access from More or a locked photo. The monthly subscription screen shows Family Monthly, 1 month, the monthly price, auto-renewal text, Restore Purchases, Privacy Policy, and Terms of Use (EULA) before purchase.",
+      "If a page has no usable images or no likely match, the app shows that result instead of showing unrelated results."
     ]
   },
   "distribution": {
@@ -72,22 +83,22 @@
     "subscriptionUiIncludesTerms": true,
     "products": [
       {
-        "productId": "co.eb28.cadetcatch.search.once",
+        "productId": "co.eb28.cadetcatch.search.once.v1",
         "type": "CONSUMABLE",
         "name": "One-Time Photo Check",
-        "price": "2.00 USD"
+        "price": "1.99 USD"
       },
       {
-        "productId": "co.eb28.cadetcatch.photo.unlock",
+        "productId": "co.eb28.cadetcatch.photo.unlock.v1",
         "type": "CONSUMABLE",
-        "name": "Unlock One Photo",
-        "price": "2.00 USD"
+        "name": "View One Photo",
+        "price": "1.99 USD"
       },
       {
-        "productId": "co.eb28.cadetcatch.family.monthly",
+        "productId": "co.eb28.cadetcatch.family.monthly.v1",
         "type": "AUTO_RENEWABLE_SUBSCRIPTION",
         "name": "Family Monthly",
-        "price": "12.50 USD/month"
+        "price": "12.99 USD/month"
       }
     ]
   },
@@ -104,31 +115,36 @@
   "assets": {
     "appIconSource": "app-icon-1024.png",
     "iphoneScreenshots": [
-      "screenshots/iphone-6-9/01-launch-eagle-6-9.png",
-      "screenshots/iphone-6-9/02-home-6-9.png",
-      "screenshots/iphone-6-9/03-roster-6-9.png",
-      "screenshots/iphone-6-9/04-sources-6-9.png",
-      "screenshots/iphone-6-9/05-decoder-6-9.png"
+      "screenshots/iphone-6-5/01-launch-eagle-6-5.png",
+      "screenshots/iphone-6-5/02-home-6-5.png",
+      "screenshots/iphone-6-5/03-photos-6-5.png",
+      "screenshots/iphone-6-5/04-roster-6-5.png",
+      "screenshots/iphone-6-5/05-sources-6-5.png"
     ],
     "ipadScreenshots": [],
     "appPreviewVideos": []
   },
   "verification": {
-    "testedDevices": ["iPhone 17 Pro Max simulator"],
+    "testedDevices": [
+      "iPhone 17 Pro Max simulator"
+    ],
     "testedFlows": [
       "fresh launch with EAGLE background",
       "add cadet with selected profile photo",
-      "public HTTPS source management",
-      "public source scan with covered result previews and no sample-data fallback",
-      "StoreKit purchase sheet and restore purchase controls",
-      "photo review, unlock, and saved photo flow",
-      "plain-English terms decoder",
-      "reset local data"
+      "secure public photo page management",
+      "Facebook photo link entry",
+      "photo check with hidden result previews and empty/no-match handling",
+      "purchase sheet with visible Family Monthly title, 1 month duration, price per month, auto-renewal disclosure, Privacy Policy link, Terms of Use (EULA) link, and restore purchase controls",
+      "photo review, view, and saved photo flow",
+      "daily photo check toggle in More",
+      "plain-English academy terms guide",
+      "clear saved app data"
     ],
     "knownRisks": [
-      "Public websites may change markup or block automated image access; the app surfaces empty/no-match states when a source cannot provide usable public images.",
-      "Private social account scanning is intentionally not included in this build.",
-      "StoreKit products must exist in App Store Connect before TestFlight purchase flows can return live products."
+      "Public websites may change markup or block automated image access; the app surfaces empty/no-match results when a page cannot provide usable public images.",
+      "Private Facebook group/media access is not included in this build; this build supports public Facebook photo pages and Facebook links that the reviewer can open in Safari.",
+      "Build 13 uses the supplied low-resolution USCGC EAGLE photo from the owner as the native iOS launch/splash image and welcome image, with the screenshot UI badge removed and no replacement EAGLE artwork.",
+      "In-app purchase products must be active in App Store Connect before TestFlight purchase flows can return live products."
     ]
   }
 }

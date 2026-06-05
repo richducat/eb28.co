@@ -20,20 +20,20 @@
   },
   "version": {
     "marketingVersion": "2.0.0",
-    "buildNumber": "1",
+    "buildNumber": "4",
     "releaseType": "MANUAL",
     "phasedRelease": false,
     "promotionalText": "Find legal retailers, open official state rec portals, track allotment privately, and compare cannabis products before checkout.",
-    "description": "Weed Authority is a premium iPhone app for legal cannabis customers and medical marijuana patients.\n\nUse it to find nearby cannabis retailers, verify official state sources, open medical cannabis portals, save products, compare deals, and keep a private local receipt ledger before checkout.\n\nWhat you can do:\n\n- Search nearby cannabis retailers through Apple Maps\n- Save retailers and products for a cleaner shopping trip\n- Open official state cannabis portals and regulator resources\n- Store medical rec details locally on your iPhone\n- Track purchase entries against state-specific planning windows where limits are available\n- Compare flower, vapes, edibles, topicals, concentrates, tinctures, and pre-rolls\n- Learn how to verify licenses, read labels, and confirm eligibility before ordering\n\nWeed Authority does not require an account, does not run ads, and does not track users. Medical rec profile fields, saved products, saved retailers, and purchase ledger entries stay on the device unless the user chooses to open an external official state portal or retailer website.\n\nThe app does not provide medical advice, dosage recommendations, diagnosis, treatment, or legal advice. State registries, physicians, licensed retailers, and regulators remain the official source for eligibility, purchase limits, and compliance.\n\nPrivacy Policy: https://weedauthority.eb28.co/privacy/\nTerms: https://weedauthority.eb28.co/terms/",
+    "description": "Weed Authority is a premium iPhone app for legal cannabis customers and medical marijuana patients.\n\nUse it to find nearby cannabis retailers, verify official state sources, open medical cannabis portals, save products, compare deals, and keep a private local receipt ledger before checkout.\n\nWhat you can do:\n\n- Search nearby cannabis retailers through Apple Maps\n- Save retailers and products for a cleaner shopping trip\n- Open official state cannabis portals and regulator resources\n- Store medical rec details locally on your iPhone\n- Track purchase entries against state-specific planning windows where limits are available\n- Compare flower, vapes, edibles, topicals, concentrates, tinctures, and pre-rolls\n- Learn how to verify licenses, read labels, and confirm eligibility before ordering\n\nWeed Authority does not require an account. The app uses Google AdMob banner ads with in-app ad privacy choices, while medical rec profile fields, saved products, saved retailers, and purchase ledger entries stay on the device unless the user chooses to open an external official state portal or retailer website.\n\nThe app does not provide medical advice, dosage recommendations, diagnosis, treatment, or legal advice. State registries, physicians, licensed retailers, and regulators remain the official source for eligibility, purchase limits, and compliance.\n\nPrivacy Policy: https://eb28.co/weedauthority/privacy/\nTerms: https://eb28.co/weedauthority/terms/",
     "keywords": ["cannabis", "dispensary", "weed", "medical", "marijuana", "rec", "allotment", "delivery", "deals", "thc", "cbd"],
-    "whatsNew": "Launch build with native retailer search, official state portal links, local rec vault, private purchase ledger, saved products, deals, and state cannabis education."
+    "whatsNew": "Launch build with native retailer search, official state portal links, local rec vault, private purchase ledger, saved products, deals, state cannabis education, and AdMob banner support."
   },
   "urls": {
-    "marketingUrl": "https://weedauthority.eb28.co/",
-    "supportUrl": "https://weedauthority.eb28.co/support/",
-    "privacyPolicyUrl": "https://weedauthority.eb28.co/privacy/",
+    "marketingUrl": "https://eb28.co/weedauthority/",
+    "supportUrl": "https://eb28.co/weedauthority/support/",
+    "privacyPolicyUrl": "https://eb28.co/weedauthority/privacy/",
     "userPrivacyChoicesUrl": "",
-    "termsUrl": "https://weedauthority.eb28.co/terms/"
+    "termsUrl": "https://eb28.co/weedauthority/terms/"
   },
   "review": {
     "contactName": "Richard Ducat",
@@ -43,16 +43,17 @@
     "demoUsername": "",
     "demoPassword": "",
     "notes": [
-      "Version 2.0.0 build 1 is a new native SwiftUI iPhone app.",
+      "Version 2.0.0 build 2 is a new native SwiftUI iPhone and iPad app.",
       "No login is required.",
       "Open Explore to search Apple Maps for cannabis retailers by city, state, or ZIP. The curated retailer cards include regulator source links.",
       "Open Rec to unlock the local rec vault, store optional card details on device, open official state portals, and add purchase ledger entries.",
       "Open Deals to filter products, save products, and review product details without checkout or payment.",
       "Open Learn to review official state source links and compliance education.",
-      "Open Account to access privacy, terms, support, and local data deletion.",
+      "Open Account to access privacy, terms, support, ad privacy choices, and local data deletion.",
       "The app does not sell cannabis, does not collect payment, does not provide medical dosage guidance, and does not scrape state registry credentials.",
       "State registry portals and regulator websites open in Safari. Those external services are the official source for eligibility and purchase limits.",
-      "The app stores user-entered rec profile and receipt data locally on the device and has no ads, no account creation, and no tracking."
+      "The app stores user-entered rec profile and receipt data locally on the device.",
+      "The app uses a dedicated Weed Authority Google AdMob iOS app and banner ad unit with Google User Messaging Platform privacy choices. It has no account creation and does not store state registry credentials."
     ]
   },
   "distribution": {
@@ -66,9 +67,11 @@
     "usesLocalNotifications": false
   },
   "monetization": {
-    "hasAds": false,
-    "adNetwork": "",
-    "appAdsTxtUrl": "",
+    "hasAds": true,
+    "adNetwork": "Google AdMob",
+    "appAdsTxtUrl": "https://eb28.co/app-ads.txt",
+    "adMobAppId": "ca-app-pub-9665484869013517~1395548152",
+    "bannerAdUnitId": "ca-app-pub-9665484869013517/7769384812",
     "hasInAppPurchases": false,
     "hasSubscriptions": false,
     "paidAppsAgreementStatus": "NOT_NEEDED",
@@ -89,16 +92,16 @@
   "assets": {
     "appIconSource": "app-icon-1024.png",
     "iphoneScreenshots": [
-      "screenshots/iphone-69/01-explore.png",
-      "screenshots/iphone-69/02-rec.png",
-      "screenshots/iphone-69/03-deals.png",
-      "screenshots/iphone-69/04-learn.png",
-      "screenshots/iphone-69/05-account.png"
+      "screenshots/iphone-65/01-find-legal-retailers.png",
+      "screenshots/iphone-65/02-check-your-rec.png",
+      "screenshots/iphone-65/03-compare-deals.png",
+      "screenshots/iphone-65/04-know-the-rules.png",
+      "screenshots/iphone-65/05-private-by-design.png"
     ],
     "ipadScreenshots": [
-      "screenshots/ipad-13/01-explore.png",
-      "screenshots/ipad-13/02-rec.png",
-      "screenshots/ipad-13/03-deals.png"
+      "screenshots/ipad-129/01-cannabis-planning.png",
+      "screenshots/ipad-129/02-rec-tools.png",
+      "screenshots/ipad-129/03-shop-smarter.png"
     ],
     "appPreviewVideos": []
   },
@@ -118,11 +121,14 @@
       "Account tab navigation",
       "App Store screenshot capture",
       "iPad screenshot capture",
+      "Google AdMob SDK wiring",
+      "Google UMP ad privacy flow wiring",
+      "app-ads.txt publisher file verification",
       "App Store metadata preflight"
     ],
     "knownRisks": [
       "The existing App Store listing is id1252265730 under DIGITAL SYNC, LLC, THE with bundle ID com.weedauthority.weedauthority.",
-      "weedauthority.eb28.co is deployed on GitHub Pages with Namecheap DNS and enforced HTTPS. weedauthority.ed28.co is not managed in the connected Namecheap account."
+      "The public launch pages are served from https://eb28.co/weedauthority/ with root app-ads.txt at https://eb28.co/app-ads.txt. weedauthority.ed28.co is not managed in the connected Namecheap account."
     ]
   }
 }

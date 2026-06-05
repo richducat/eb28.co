@@ -137,4 +137,55 @@
     image-rendering: pixelated;
     image-rendering: crisp-edges;
   }
+
+  /* RADIO-TEK Grid Background */
+  .bg-radio-grid {
+    background-color: #0b1016; /* Deep dark blue/black */
+    background-image:
+      linear-gradient(rgba(0, 255, 255, 0.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 255, 255, 0.08) 1px, transparent 1px);
+    background-size: 30px 30px;
+    background-position: center top;
+  }
+
+  /* RADIO-TEK Custom Shapes */
+  .shape-slant-right {
+    transform: skewX(-15deg);
+  }
+  .shape-slant-right > * {
+    transform: skewX(15deg);
+  }
+
+  .shape-slant-left {
+    transform: skewX(15deg);
+  }
+  .shape-slant-left > * {
+    transform: skewX(-15deg);
+  }
+
+  .shape-pill {
+    border-radius: 9999px;
+  }
+
+  .shape-oval {
+    border-radius: 50%;
+  }
+
+  .tech-border-notch {
+    clip-path: polygon(
+      0% 12px,
+      12px 0%,
+      calc(100% - 12px) 0%,
+      100% 12px,
+      100% calc(100% - 12px),
+      calc(100% - 12px) 100%,
+      12px 100%,
+      0% calc(100% - 12px)
+    );
+  }
+
+  .neon-text-yellow {
+    color: #ffff00;
+    text-shadow: 2px 2px 0px #ff00ff;
+  }
 }

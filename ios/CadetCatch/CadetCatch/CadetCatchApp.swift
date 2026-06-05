@@ -321,6 +321,8 @@ final class CadetCatchStore {
                 }
             }
             
+            candidates = scanResult.candidates
+
             guard !Task.isCancelled else {
                 scanProgress.isScanning = false
                 scanProgress.isCancelled = true
@@ -330,8 +332,6 @@ final class CadetCatchStore {
                 }
                 return
             }
-            
-            candidates = scanResult.candidates
             lastScanMessage = scanResult.message
 
             let scannedAt = Date()
@@ -766,7 +766,7 @@ enum PublicPhotoScanner {
             var results: [PhotoCandidate] = []
             var seenImages = Set<URL>()
             var activeTasks = 0
-            let maxConcurrency = 10
+            let maxConcurrency = 4
             
             var iterator = allImageURLs.makeIterator()
             
@@ -795,6 +795,7 @@ enum PublicPhotoScanner {
                 
                 group.addTask {
                     guard let imageData = await downloadImageData(from: url) else { return nil }
+                    await Task.yield()
                     guard let match = FaceMatcher.match(reference: reference.prints, candidateImageData: imageData) else { return nil }
                     guard match.confidence >= 60 else { return nil }
                     

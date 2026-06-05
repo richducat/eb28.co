@@ -4,11 +4,25 @@ import Foundation
 @Observable
 final class AuthorityStore {
     var selectedTab: AuthorityTab
-    var recProfile: RecProfile
+    var recProfile: RecProfile {
+        didSet {
+            if selectedStateID != recProfile.stateId {
+                selectedStateID = recProfile.stateId
+                persist()
+            }
+        }
+    }
     var purchaseEntries: [PurchaseEntry]
     var savedRetailerIDs: Set<String>
     var savedProductIDs: Set<String>
-    var selectedStateID: String
+    var selectedStateID: String {
+        didSet {
+            if recProfile.stateId != selectedStateID {
+                recProfile.stateId = selectedStateID
+                persist()
+            }
+        }
+    }
     var hasUnlockedRecVault: Bool
 
     @ObservationIgnored private let storageKey = "weedauthority.local.state.v1"
@@ -114,21 +128,40 @@ final class AuthorityStore {
     }
 
     func usage(for unit: PurchaseUnit, in state: StateProgram) -> Double {
-        let startDate = Calendar.current.date(byAdding: .day, value: -state.defaultWindowDays, to: .now) ?? .now
+        let windowDays: Int
+        if state.id == "FL" && (unit == .gramsFlower || unit == .ouncesFlower) {
+            windowDays = 35
+        } else {
+            windowDays = state.defaultWindowDays
+        }
+        let startDate = Calendar.current.date(byAdding: .day, value: -windowDays, to: .now) ?? .now
         return purchaseEntries
             .filter { $0.unit == unit && $0.purchasedAt >= startDate }
             .reduce(0) { $0 + $1.amount }
     }
 
     func remainingFlowerGrams(in state: StateProgram) -> Double? {
+        if state.id == recProfile.stateId, let synced = recProfile.syncedFlowerGrams {
+            return synced
+        }
         guard let limit = state.flowerLimitGrams else { return nil }
         let flowerGrams = usage(for: .gramsFlower, in: state) + (usage(for: .ouncesFlower, in: state) * 28.3495)
         return max(0, limit - flowerGrams)
     }
 
     func remainingConcentrateGrams(in state: StateProgram) -> Double? {
+        if state.id == recProfile.stateId, let synced = recProfile.syncedConcentrateGrams {
+            return synced
+        }
         guard let limit = state.concentrateLimitGrams else { return nil }
         return max(0, limit - usage(for: .gramsConcentrate, in: state))
+    }
+
+    func updateSyncedAllotment(flowerGrams: Double?, concentrateGrams: Double?) {
+        recProfile.syncedFlowerGrams = flowerGrams
+        recProfile.syncedConcentrateGrams = concentrateGrams
+        recProfile.lastSyncDate = .now
+        persist()
     }
 
     func persist() {

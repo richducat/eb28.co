@@ -3,32 +3,65 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     match /users/{userId} {
+      function isOwner() {
+        return request.auth != null && request.auth.uid == userId;
+      }
+
+      function allowedUserKeys() {
+        return [
+          'email',
+          'createdAt',
+          'updatedAt',
+          'freeExportLimit',
+          'freeExportsUsed',
+          'lastExportAt',
+          'subscriptionProductId',
+          'subscriptionStatusMirror',
+          'appVersion'
+        ];
+      }
+
+      function validUserShape(data) {
+        return data.keys().hasOnly(allowedUserKeys())
+          && data.email is string
+          && data.freeExportLimit is int
+          && data.freeExportsUsed is int
+          && data.subscriptionProductId is string
+          && data.subscriptionStatusMirror is string
+          && data.appVersion is string;
+      }
+
       allow read: if request.auth != null && request.auth.uid == userId;
 
-      allow create: if request.auth != null
-        && request.auth.uid == userId
+      allow create: if isOwner()
+        && validUserShape(request.resource.data)
         && request.resource.data.email is string
         && request.resource.data.freeExportLimit == 3
-        && request.resource.data.freeExportsUsed == 0;
+        && request.resource.data.freeExportsUsed == 0
+        && request.resource.data.subscriptionStatusMirror == 'free';
 
-      allow update: if request.auth != null
-        && request.auth.uid == userId
+      allow update: if isOwner()
         && validUserUpdate();
 
-      allow delete: if request.auth != null && request.auth.uid == userId;
+      allow delete: if isOwner();
 
       function validUserUpdate() {
         let old = resource.data;
         let next = request.resource.data;
-        let changed = next.diff(old).changedKeys();
+        let affected = next.diff(old).affectedKeys();
 
-        return !changed.hasAny(['email', 'createdAt', 'freeExportLimit'])
+        return validUserShape(next)
+          && !affected.hasAny(['email', 'createdAt', 'freeExportLimit'])
           && (
-            !changed.hasAny(['freeExportsUsed'])
+            !affected.hasAny(['freeExportsUsed'])
             || (
               next.freeExportsUsed == old.freeExportsUsed + 1
               && next.freeExportsUsed <= old.freeExportLimit
             )
+          )
+          && (
+            !affected.hasAny(['lastExportAt'])
+            || affected.hasAny(['freeExportsUsed'])
           );
       }
     }

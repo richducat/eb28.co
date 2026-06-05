@@ -1,6 +1,34 @@
 {
-  "updatedAt": "2026-06-04T10:02:33.255Z",
+  "updatedAt": "2026-06-05T18:01:47.746Z",
   "runs": [
+    {
+      "runId": "2026-06-05-pm",
+      "date": "2026-06-05",
+      "slot": "pm",
+      "createdAt": "2026-06-05T18:01:47.746Z",
+      "article": {
+        "slug": "mobile-website-design-in-melbourne-fl-why-most-lead-loss-happens-on-phones",
+        "title": "Mobile Website Design in Melbourne FL: Why Most Lead Loss Happens on Phones",
+        "url": "https://eb28.co/blog/mobile-website-design-in-melbourne-fl-why-most-lead-loss-happens-on-phones/",
+        "cluster": "melbourne-web-design",
+        "primaryKeyword": "mobile website design Melbourne FL"
+      },
+      "reportPath": "/Users/richardducat/GITHUB/eb28.co/output/eb28-social/eb28-content-2026-06-05-pm.json"
+    },
+    {
+      "runId": "2026-06-05-am",
+      "date": "2026-06-05",
+      "slot": "am",
+      "createdAt": "2026-06-05T10:01:45.090Z",
+      "article": {
+        "slug": "space-coast-local-seo-citations-where-real-authority-comes-from",
+        "title": "Space Coast Local SEO Citations: Where Real Authority Comes From",
+        "url": "https://eb28.co/blog/space-coast-local-seo-citations-where-real-authority-comes-from/",
+        "cluster": "local-seo",
+        "primaryKeyword": "Space Coast local SEO citations"
+      },
+      "reportPath": "/Users/richardducat/GITHUB/eb28.co/output/eb28-social/eb28-content-2026-06-05-am.json"
+    },
     {
       "runId": "2026-06-04-am",
       "date": "2026-06-04",

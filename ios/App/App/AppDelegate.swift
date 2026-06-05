@@ -21,6 +21,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        window = UIWindow(frame: UIScreen.main.bounds)
+        window?.rootViewController = WakeUpBridgeViewController()
+        window?.makeKeyAndVisible()
+
         installNotificationSounds()
         return true
     }
@@ -118,6 +122,7 @@ class WakeUpBridgeViewController: CAPBridgeViewController {
         // depend on Capacitor's generated package scan to discover it.
         bridge?.registerPluginInstance(WakeUpPurchasesPlugin())
         bridge?.registerPluginInstance(WakeUpWidgetBridgePlugin())
+        bridge?.registerPluginInstance(WakeUpNativeAlarmPlugin())
         if hasConfiguredAdMobAppId() {
             bridge?.registerPluginInstance(WakeUpAdMobPlugin())
         } else {

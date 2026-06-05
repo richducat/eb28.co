@@ -8,6 +8,61 @@ private struct AuthIdentity: Sendable {
     let email: String?
 }
 
+private func firestoreIntValue(_ value: Any?, fallback: Int) -> Int {
+    if let value = value as? Int {
+        return value
+    }
+    if let value = value as? Int64 {
+        return Int(value)
+    }
+    if let value = value as? Double {
+        return Int(value)
+    }
+    if let value = value as? NSNumber {
+        return value.intValue
+    }
+    return fallback
+}
+
+private func runExportCreditTransaction(uid: String, freeExportLimit: Int, appVersion: String, limitReachedMessage: String) async throws -> Bool {
+    let ref = Firestore.firestore().collection("users").document(uid)
+    return try await withCheckedThrowingContinuation { continuation in
+        Firestore.firestore().runTransaction({ transaction, errorPointer -> Any? in
+            do {
+                let snapshot = try transaction.getDocument(ref)
+                let data = snapshot.data() ?? [:]
+                let limit = firestoreIntValue(data["freeExportLimit"], fallback: freeExportLimit)
+                let used = firestoreIntValue(data["freeExportsUsed"], fallback: 0)
+                guard used < limit else {
+                    errorPointer?.pointee = NSError(
+                        domain: "RingToneCreatorPro",
+                        code: 402,
+                        userInfo: [NSLocalizedDescriptionKey: limitReachedMessage]
+                    )
+                    return nil
+                }
+
+                transaction.updateData([
+                    "freeExportsUsed": used + 1,
+                    "lastExportAt": FieldValue.serverTimestamp(),
+                    "updatedAt": FieldValue.serverTimestamp(),
+                    "appVersion": appVersion
+                ], forDocument: ref)
+                return true
+            } catch let error as NSError {
+                errorPointer?.pointee = error
+                return nil
+            }
+        }, completion: { result, error in
+            if let error {
+                continuation.resume(throwing: error)
+            } else {
+                continuation.resume(returning: (result as? Bool) ?? false)
+            }
+        })
+    }
+}
+
 @MainActor
 @Observable
 final class AuthSession {
@@ -165,8 +220,8 @@ final class AuthSession {
                 self?.profile = UserProfile(
                     id: user.uid,
                     email: data["email"] as? String ?? user.email ?? "",
-                    freeExportLimit: data["freeExportLimit"] as? Int ?? AppConfig.freeExportLimit,
-                    freeExportsUsed: data["freeExportsUsed"] as? Int ?? 0,
+                    freeExportLimit: firestoreIntValue(data["freeExportLimit"], fallback: AppConfig.freeExportLimit),
+                    freeExportsUsed: firestoreIntValue(data["freeExportsUsed"], fallback: 0),
                     subscriptionStatusMirror: data["subscriptionStatusMirror"] as? String ?? "free",
                     appVersion: data["appVersion"] as? String ?? AppConfig.appVersion,
                     lastExportAt: (data["lastExportAt"] as? Timestamp)?.dateValue()
@@ -261,43 +316,13 @@ final class AuthSession {
         ])
     }
 
-    private func incrementExportCredit(uid: String) async throws -> Bool {
-        let ref = Firestore.firestore().collection("users").document(uid)
-        return try await withCheckedThrowingContinuation { continuation in
-            Firestore.firestore().runTransaction({ transaction, errorPointer -> Any? in
-                do {
-                    let snapshot = try transaction.getDocument(ref)
-                    let data = snapshot.data() ?? [:]
-                    let limit = data["freeExportLimit"] as? Int ?? AppConfig.freeExportLimit
-                    let used = data["freeExportsUsed"] as? Int ?? 0
-                    guard used < limit else {
-                        errorPointer?.pointee = NSError(
-                            domain: "RingToneCreatorPro",
-                            code: 402,
-                            userInfo: [NSLocalizedDescriptionKey: ToneError.creditLimitReached.localizedDescription]
-                        )
-                        return nil
-                    }
-
-                    transaction.updateData([
-                        "freeExportsUsed": used + 1,
-                        "lastExportAt": FieldValue.serverTimestamp(),
-                        "updatedAt": FieldValue.serverTimestamp(),
-                        "appVersion": AppConfig.appVersion
-                    ], forDocument: ref)
-                    return true
-                } catch let error as NSError {
-                    errorPointer?.pointee = error
-                    return nil
-                }
-            }, completion: { result, error in
-                if let error {
-                    continuation.resume(throwing: error)
-                } else {
-                    continuation.resume(returning: (result as? Bool) ?? false)
-                }
-            })
-        }
+    nonisolated private func incrementExportCredit(uid: String) async throws -> Bool {
+        try await runExportCreditTransaction(
+            uid: uid,
+            freeExportLimit: AppConfig.freeExportLimit,
+            appVersion: AppConfig.appVersion,
+            limitReachedMessage: ToneError.creditLimitReached.localizedDescription
+        )
     }
 
     private func getDocument(_ ref: DocumentReference) async throws -> DocumentSnapshot {

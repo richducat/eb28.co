@@ -36,7 +36,7 @@ final class AdMobManager {
         ConsentInformation.shared.requestConsentInfoUpdate(with: parameters) { [weak self] error in
             Task { @MainActor in
                 if let error {
-                    self?.message = error.localizedDescription
+                    self?.message = Self.isMissingPrivacyForm(error) ? nil : error.localizedDescription
                     self?.canRequestAds = ConsentInformation.shared.canRequestAds
                     self?.privacyOptionsRequired = ConsentInformation.shared.privacyOptionsRequirementStatus == .required
                     return
@@ -57,11 +57,19 @@ final class AdMobManager {
     func presentPrivacyOptions(from viewController: UIViewController?) {
         ConsentForm.presentPrivacyOptionsForm(from: viewController) { [weak self] error in
             Task { @MainActor in
-                self?.message = error?.localizedDescription ?? "Ad privacy choices updated."
+                if let error {
+                    self?.message = Self.isMissingPrivacyForm(error) ? "Ad privacy choices are not required right now." : error.localizedDescription
+                } else {
+                    self?.message = "Ad privacy choices updated."
+                }
                 self?.canRequestAds = ConsentInformation.shared.canRequestAds
                 self?.privacyOptionsRequired = ConsentInformation.shared.privacyOptionsRequirementStatus == .required
             }
         }
+    }
+
+    private static func isMissingPrivacyForm(_ error: Error) -> Bool {
+        error.localizedDescription.localizedCaseInsensitiveContains("no form")
     }
 }
 

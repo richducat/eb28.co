@@ -26,9 +26,9 @@ Native SwiftUI app for Coast Guard Academy families to find possible cadet photo
 
 Create these exact product IDs in App Store Connect before a TestFlight build can sell or restore purchases:
 
-- `co.eb28.cadetcatch.search.once` - consumable one-time public photo check.
-- `co.eb28.cadetcatch.photo.unlock` - consumable one-photo unlock.
-- `co.eb28.cadetcatch.family.monthly` - auto-renewable monthly subscription.
+- `co.eb28.cadetcatch.search.once.v1` - consumable one-time public photo check.
+- `co.eb28.cadetcatch.photo.unlock.v1` - consumable one-photo unlock.
+- `co.eb28.cadetcatch.family.monthly.v1` - auto-renewable monthly subscription.
 
 The app intentionally does not unlock paid behavior when products are missing.
 

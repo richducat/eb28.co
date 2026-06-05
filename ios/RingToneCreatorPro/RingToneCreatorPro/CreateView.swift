@@ -1,4 +1,4 @@
-import MediaPlayer
+@preconcurrency import MediaPlayer
 import PhotosUI
 import SwiftUI
 import UniformTypeIdentifiers
@@ -221,23 +221,31 @@ struct MusicPicker: UIViewControllerRepresentable {
     func updateUIViewController(_ uiViewController: MPMediaPickerController, context: Context) {}
 
     func makeCoordinator() -> Coordinator {
-        Coordinator(parent: self)
+        Coordinator(selectedItem: $selectedItem, dismiss: dismiss)
     }
 
     final class Coordinator: NSObject, MPMediaPickerControllerDelegate {
-        let parent: MusicPicker
+        nonisolated(unsafe) private var selectedItem: Binding<MPMediaItem?>
+        private let dismissAction: DismissAction
 
-        init(parent: MusicPicker) {
-            self.parent = parent
+        init(selectedItem: Binding<MPMediaItem?>, dismiss: DismissAction) {
+            self.selectedItem = selectedItem
+            self.dismissAction = dismiss
         }
 
         func mediaPicker(_ mediaPicker: MPMediaPickerController, didPickMediaItems mediaItemCollection: MPMediaItemCollection) {
-            parent.selectedItem = mediaItemCollection.items.first
-            parent.dismiss()
+            selectedItem.wrappedValue = mediaItemCollection.items.first
+            let dismiss = dismissAction
+            MainActor.assumeIsolated {
+                dismiss()
+            }
         }
 
         func mediaPickerDidCancel(_ mediaPicker: MPMediaPickerController) {
-            parent.dismiss()
+            let dismiss = dismissAction
+            MainActor.assumeIsolated {
+                dismiss()
+            }
         }
     }
 }

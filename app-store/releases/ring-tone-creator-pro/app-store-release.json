@@ -7,7 +7,9 @@
     "subtitle": "Premium ringtone studio",
     "bundleId": "co.eb28.ringtonecreatorpro",
     "sku": "co.eb28.ringtonecreatorpro",
-    "platforms": ["iOS"],
+    "platforms": [
+      "iOS"
+    ],
     "primaryCategory": "Music",
     "secondaryCategory": "Utilities",
     "copyright": "2026 EB28",
@@ -22,12 +24,22 @@
   },
   "version": {
     "marketingVersion": "1.0.0",
-    "buildNumber": "2",
+    "buildNumber": "5",
     "releaseType": "MANUAL",
     "phasedRelease": false,
     "promotionalText": "Create premium ringtone-ready files from audio, videos, recordings, and starter tones with a modern waveform editor.",
     "description": "Ring Tone Creator Pro is a premium ringtone studio for iPhone.\n\nImport audio from Files, extract sound from videos, use local unprotected music you own, record your own clip, or start from a polished tone template. Trim the best section, preview the waveform, add fade in and fade out, save your projects, favorite your best tones, and export ringtone-ready files.\n\nWhat you can do:\n\n- Create ringtone-ready files from audio, video audio, recordings, and starter tones\n- Use a clean waveform editor with trim, fade, preview, rename, duplicate, favorite, and share tools\n- Save and re-edit ringtone projects in your private library\n- Claim three free exports after email signup\n- Upgrade to Unlimited for unlimited exports and no ads\n- Follow the built-in GarageBand install guide after export\n\nUser audio stays on your iPhone. Account and export-credit records are synced with Firebase so your free export limit is not just local device storage.\n\nUnlimited is an optional auto-renewable monthly subscription. Payment is charged to your Apple ID at confirmation and renews automatically unless cancelled at least 24 hours before the current period ends. You can manage or cancel in Apple ID subscriptions.\n\nPrivacy Policy: https://eb28.co/ringtonecreatorpro/privacy/\nTerms of Use (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/",
-    "keywords": ["ringtone", "tones", "music", "audio", "editor", "maker", "m4r", "voice", "trim"],
+    "keywords": [
+      "ringtone",
+      "tones",
+      "music",
+      "audio",
+      "editor",
+      "maker",
+      "m4r",
+      "voice",
+      "trim"
+    ],
     "whatsNew": "Launch build for Ring Tone Creator Pro with email signup, three free exports, waveform editing, starter tones, ringtone-ready export, StoreKit Unlimited, AdMob support, and GarageBand install guidance."
   },
   "urls": {
@@ -45,8 +57,9 @@
     "demoUsername": "reviewer+ringtonepro@eb28.co",
     "demoPassword": "Review123!",
     "notes": [
-      "Build 1 is a new native SwiftUI iPhone app.",
-      "The app requires email login. Use reviewer+ringtonepro@eb28.co / Review123! after creating the Firebase demo account.",
+      "Build 5 replaces build 4 for version 1.0.0 and fixes the export crash in the live free-credit Firestore transaction path while preserving the saved-project export path repair, top-bar export access, Firestore numeric credit parsing fix, and bottom navigation banner fix.",
+      "Build 5 is the native SwiftUI iPhone release candidate with the Firebase production config, deployed Firestore rules, verified reviewer account, and production AdMob IDs.",
+      "The app requires email login. Use reviewer+ringtonepro@eb28.co / Review123!; this Firebase Auth reviewer account has been created and verified against the production Firebase project.",
       "Open Create to import audio from Files, extract audio from video, import unprotected local music, record audio, or choose Browse starter tones.",
       "Open the editor to trim the waveform, set fades, rename the tone, and export.",
       "Free users receive three remote Firestore-tracked exports. After that, the app presents Unlimited.",
@@ -76,6 +89,14 @@
     "paidAppsAgreementStatus": "ACTIVE",
     "subscriptionUiIncludesRestore": true,
     "subscriptionUiIncludesTerms": true,
+    "adMob": {
+      "publisherId": "pub-9665484869013517",
+      "iosAppId": "ca-app-pub-9665484869013517~5583873475",
+      "bannerAdUnitId": "ca-app-pub-9665484869013517/3751917052",
+      "adUnitName": "Ring Tone Creator Pro Banner",
+      "appStoreLinked": false,
+      "appStoreLinkNote": "AdMob app was created before public App Store listing is searchable. Add App Store ID 6771739451 in AdMob after the listing is live so Google can complete app review."
+    },
     "products": [
       {
         "id": "co.eb28.ringtonecreatorpro.unlimited.monthly",
@@ -101,6 +122,8 @@
   "assets": {
     "appIconSource": "app-icon-1024.png",
     "webIconSource": "web-icon-1024.png",
+    "marketingMaterials": "marketing-materials.md",
+    "openGraphImage": "public/ringtonecreatorpro/og-image.png",
     "screenshotSets": {
       "iphone-69": [
         "screenshots/iphone-69/01-create.png",
@@ -139,18 +162,28 @@
       "appRecordCreated": true,
       "binaryUploaded": true,
       "uploadedVersion": "1.0.0",
-      "uploadedBuild": "1",
-      "ipaPath": "output/appstore/ring-tone-creator-pro-1.0.0-build1/export/RingToneCreatorPro.ipa",
-      "uploadLogPath": "output/appstore/ring-tone-creator-pro-1.0.0-build1/upload-attempt-20260521-iconfix.log"
+      "uploadedBuild": "5",
+      "ipaPath": "output/appstore/ring-tone-creator-pro-1.0.0-build5/export/RingToneCreatorPro.ipa",
+      "uploadLogPath": "output/appstore/ring-tone-creator-pro-1.0.0-build5/upload.log",
+      "appStoreConnectUploadStatus": "UPLOAD_SUCCEEDED_PROCESSING_ASC_UI_UNVERIFIED",
+      "iconVerifiedInUploadedArchive": true,
+      "iconVerification": "Build 5 archive/export completed on 2026-06-01 and the uploaded binary includes the refreshed AppIcon assets. The upload reached App Store Connect processing successfully, but the live processing/review UI still requires direct authenticated verification."
     },
     "testFlight": {
       "internalGroup": "Ring Tone TestFlight",
       "internalGroupId": "0824315b-8ce7-4848-a687-e6d0fdae8b96",
       "externalGroup": "Ring Tone External",
       "externalGroupId": "f5ed1f0f-a849-4407-8ef0-0890093f9f4d",
-      "internalTesters": ["richducat@gmail.com"],
-      "externalTesters": ["richducat@gmail.com", "evducat@icloud.com"],
-      "externalBuildStatus": "WAITING_FOR_REVIEW"
+      "internalTesters": [
+        "richducat@gmail.com"
+      ],
+      "externalTesters": [
+        "richducat@gmail.com",
+        "evducat@icloud.com"
+      ],
+      "externalBuildStatus": "ASC_STATUS_UNVERIFIED",
+      "externalBuild": "1.0.0 (5)",
+      "testerStatusVerified": "Configured target testers remain evducat@icloud.com and richducat@gmail.com, but build 5 assignment and processing could not be re-verified on 2026-06-01 because App Store Connect browser authentication failed locally."
     },
     "testedDevices": [
       "generic iPhone Simulator debug build",
@@ -162,21 +195,38 @@
       "Swift 6 simulator build",
       "Release archive",
       "App Store distribution export",
-      "Firebase signup/login wiring review",
-      "Firestore credit rules review",
+      "Verified Ring Tone External has exactly evducat@icloud.com and richducat@gmail.com as testers",
+      "Simulator launch verified the app no longer opens to the Firebase setup blocker",
+      "Premium 1024 app icon, web icon, Open Graph image, screenshot set, and marketing-materials.md generated",
+      "Firebase Auth reviewer login created and verified",
+      "Production Firebase plist installed for project ring-tone-creator-pro",
+      "Firestore credit rules deployed",
+      "Remote Firestore credit enforcement verified: freeExportsUsed increments 1-3 allowed, fourth export denied",
       "audio import/editor/export code path review",
       "StoreKit subscription wiring review",
+      "Production AdMob iOS app and banner ad unit created",
       "AdMob/UMP wiring review",
-      "App Store metadata preflight"
+      "App Store metadata preflight",
+      "Build 4 simulator build and launch verified after export/navigation fixes",
+      "Build 5 simulator login and export verified after Firestore transaction crash fix",
+      "Build 5 release archive completed",
+      "Build 5 App Store export completed",
+      "Build 5 upload reached App Store Connect processing"
     ],
     "knownRisks": [
-      "Real Firebase project config and reviewer demo account must be created before App Review because the checked-in plist is still a placeholder.",
-      "Production AdMob app ID and banner ad unit must replace the temporary Google test IDs before public monetized launch.",
-      "External TestFlight build 1.0.0 (1) is waiting for Apple Beta App Review before external testers can install."
+      "AdMob app is not yet linked to the public App Store listing because the app is not searchable/live in the App Store. Add App Store ID 6771739451 in AdMob after release.",
+      "App Store Connect browser authentication failed again on 2026-06-01, so the live build processing state, TestFlight assignment state, App Privacy answers, IAP readiness in ASC, and review submission state still could not be verified or advanced from this machine.",
+      "The build 5 upload reported third-party framework dSYM upload warnings for FirebaseFirestoreInternal, GoogleMobileAds, UserMessagingPlatform, absl, grpc, grpcpp, and openssl_grpc. This does not block binary upload, but symbol completeness remains imperfect for crash symbolication."
     ],
-    "pendingBuild2Notes": [
-      "Build 2 removes the blocking Firebase setup screen so the app can launch into the main experience.",
-      "Build 2 is not production-submission-ready until the real Firebase config and production AdMob IDs are added."
+    "build4Notes": [
+      "Build 4 fixes the free-user banner placement so it no longer covers tab navigation.",
+      "Build 4 repairs saved project file URLs after app container path changes so re-edit/export keeps working after updates.",
+      "Build 4 adds a top-bar export action and corrects Firestore numeric parsing for free-export credit display.",
+      "Build 4 keeps production Firebase, deployed Firestore rules, verified reviewer account, StoreKit product ID, and production AdMob IDs."
+    ],
+    "build5Notes": [
+      "Build 5 fixes the export crash caused by running the free-export Firestore transaction from main-actor-isolated context.",
+      "Build 5 preserves the saved-project export/re-edit repair, top-bar export action, Firestore credit parsing fix, reviewer login, production Firebase config, StoreKit product wiring, and production AdMob IDs."
     ]
   }
 }

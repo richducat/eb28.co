@@ -65,6 +65,13 @@ struct MainTabView: View {
                                 BackendSetupBanner()
                             }
                         }
+                        .safeAreaInset(edge: .bottom, spacing: 0) {
+                            if shouldShowBanner {
+                                AdBannerView()
+                                    .frame(height: 58)
+                                    .background(Theme.ink.opacity(0.96))
+                            }
+                        }
                         .toolbar {
                             ToolbarItem(placement: .topBarLeading) {
                                 CreditBadge(profile: auth.profile, hasUnlimited: purchases.hasUnlimited)
@@ -86,13 +93,10 @@ struct MainTabView: View {
             }
         }
         .tint(Theme.cyan)
-        .safeAreaInset(edge: .bottom) {
-            if !purchases.hasUnlimited && ads.hasConfiguredBanner {
-                AdBannerView()
-                    .frame(height: 58)
-                    .background(Theme.ink.opacity(0.96))
-            }
-        }
+    }
+
+    private var shouldShowBanner: Bool {
+        !purchases.hasUnlimited && ads.hasConfiguredBanner && ads.canRequestAds
     }
 
     @ViewBuilder

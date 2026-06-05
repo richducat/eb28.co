@@ -1,4 +1,4 @@
-import AVFoundation
+@preconcurrency import AVFoundation
 import Foundation
 
 enum AudioRenderService {
@@ -6,7 +6,7 @@ enum AudioRenderService {
         try FileManager.default.createDirectory(at: URL.exportDirectory, withIntermediateDirectories: true)
 
         let sourceAsset = AVURLAsset(url: project.sourceURL)
-        guard !sourceAsset.hasProtectedContent else {
+        guard try await !sourceAsset.load(.hasProtectedContent) else {
             throw ToneError.protectedMedia
         }
 

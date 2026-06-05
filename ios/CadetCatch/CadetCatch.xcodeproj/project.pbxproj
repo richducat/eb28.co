@@ -7,16 +7,66 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1275274C98EE724AA473D7DF /* CadetCatchWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B83125A9EB26970103B95C7 /* CadetCatchWidget.swift */; };
 		1803DF1673BDFACEC4E88FB8 /* CadetCatchApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B411A624FCCD2E03B314585D /* CadetCatchApp.swift */; };
+		7BFB0FCC3EE0DE8F7E453EDF /* ScanActivityAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF9BDE9017D1E75C5372F90E /* ScanActivityAttributes.swift */; };
+		7E81EC141AAA2DCEF9A2DADE /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3F6D70CBCE3F2ECAD841A5DF /* GoogleService-Info.plist */; };
+		84E31476B107183B7C57B437 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = A2FED9A84D982C3CA93BB578 /* GoogleSignIn */; };
 		A03F4DF05625A1AB7FB15488 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 83FA992840CE2C0778DA0D32 /* Assets.xcassets */; };
+		AF3B5835E634A18BD180306D /* GTMAppAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 9AD7B0DE8151607BF4ABCAE2 /* GTMAppAuth */; };
+		B4A649CB80775D86DE51B59E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 26E2C58DB4AC745A57AB0638 /* LaunchScreen.storyboard */; };
+		B9482FFA204AF8BF0E2FCC64 /* drive_bot.html in Resources */ = {isa = PBXBuildFile; fileRef = E8C96B8218BAF04E6D9EBBC0 /* drive_bot.html */; };
+		BA664DA3479CCEDA92A08A1C /* AppAuth in Frameworks */ = {isa = PBXBuildFile; productRef = CAEEF5ED1904BC7F8D21FE85 /* AppAuth */; };
+		BEA40F24BB61F6836ACB21DE /* ScanActivityAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF9BDE9017D1E75C5372F90E /* ScanActivityAttributes.swift */; };
+		D2BE76963AFCB5FBFEEEABEA /* GoogleDriveAuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50D3B4388739DA5E7EE42E15 /* GoogleDriveAuthManager.swift */; };
+		D830B0E7860C1F564045057B /* OFL.txt in Resources */ = {isa = PBXBuildFile; fileRef = A6360219BE0D5477842F4D3F /* OFL.txt */; };
+		DEAA1E860191473D44861339 /* CadetCatchUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 042B94A1A663DE2916765A72 /* CadetCatchUITests.swift */; };
+		ED5C223D6C5B9BAF960F2965 /* Montserrat.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7C05D3CC23E9A0B3B148B8D6 /* Montserrat.ttf */; };
+		F09183122658918324E28821 /* GTMSessionFetcher in Frameworks */ = {isa = PBXBuildFile; productRef = 5BDA0F8AE58E1C5C23982D86 /* GTMSessionFetcher */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		40D251E46838D833C03FB160 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 804619AD424441FA65DE6F89 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B227C0307BDADD11287D26A3;
+			remoteInfo = CadetCatch;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
+		042B94A1A663DE2916765A72 /* CadetCatchUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CadetCatchUITests.swift; sourceTree = "<group>"; };
+		0A56C1DA90F28238AE6C1568 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		0DC545E8E6D04B911D2AED56 /* CadetCatchUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = CadetCatchUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		182C8A978B5306A2C006921E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		26E2C58DB4AC745A57AB0638 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		3F6D70CBCE3F2ECAD841A5DF /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		4B83125A9EB26970103B95C7 /* CadetCatchWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CadetCatchWidget.swift; sourceTree = "<group>"; };
+		50D3B4388739DA5E7EE42E15 /* GoogleDriveAuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleDriveAuthManager.swift; sourceTree = "<group>"; };
 		5B60D0351E205A2FA21B2A52 /* CadetCatch.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = CadetCatch.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		7C05D3CC23E9A0B3B148B8D6 /* Montserrat.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Montserrat.ttf; sourceTree = "<group>"; };
 		83FA992840CE2C0778DA0D32 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		A6360219BE0D5477842F4D3F /* OFL.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = OFL.txt; sourceTree = "<group>"; };
 		B411A624FCCD2E03B314585D /* CadetCatchApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CadetCatchApp.swift; sourceTree = "<group>"; };
+		B8E06E933A1EE6AB69FAFA51 /* CadetCatchWidget.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = CadetCatchWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		DF9BDE9017D1E75C5372F90E /* ScanActivityAttributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanActivityAttributes.swift; sourceTree = "<group>"; };
+		E8C96B8218BAF04E6D9EBBC0 /* drive_bot.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = drive_bot.html; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		0F3A3098929004DF98032AF0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				84E31476B107183B7C57B437 /* GoogleSignIn in Frameworks */,
+				BA664DA3479CCEDA92A08A1C /* AppAuth in Frameworks */,
+				F09183122658918324E28821 /* GTMSessionFetcher in Frameworks */,
+				AF3B5835E634A18BD180306D /* GTMAppAuth in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		11663C825F56B086635A398E /* CadetCatch */ = {
@@ -24,36 +74,98 @@
 			children = (
 				83FA992840CE2C0778DA0D32 /* Assets.xcassets */,
 				B411A624FCCD2E03B314585D /* CadetCatchApp.swift */,
+				50D3B4388739DA5E7EE42E15 /* GoogleDriveAuthManager.swift */,
+				3F6D70CBCE3F2ECAD841A5DF /* GoogleService-Info.plist */,
 				182C8A978B5306A2C006921E /* Info.plist */,
+				26E2C58DB4AC745A57AB0638 /* LaunchScreen.storyboard */,
+				45588628ADAEC16B03DA577A /* Fonts */,
 			);
 			path = CadetCatch;
+			sourceTree = "<group>";
+		};
+		130ED415D6ECF8117225C0FE /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				DF9BDE9017D1E75C5372F90E /* ScanActivityAttributes.swift */,
+			);
+			path = Shared;
 			sourceTree = "<group>";
 		};
 		1DC52DB4CB219B41F63FD480 = {
 			isa = PBXGroup;
 			children = (
+				E8C96B8218BAF04E6D9EBBC0 /* drive_bot.html */,
 				11663C825F56B086635A398E /* CadetCatch */,
+				237017CBB01CD93A72880E25 /* CadetCatchUITests */,
+				FB7E3ACF8B11CE266B83DF17 /* CadetCatchWidget */,
+				130ED415D6ECF8117225C0FE /* Shared */,
 				B3E6CE07A7ADB3E94ADE7574 /* Products */,
 			);
+			sourceTree = "<group>";
+		};
+		237017CBB01CD93A72880E25 /* CadetCatchUITests */ = {
+			isa = PBXGroup;
+			children = (
+				042B94A1A663DE2916765A72 /* CadetCatchUITests.swift */,
+			);
+			path = CadetCatchUITests;
+			sourceTree = "<group>";
+		};
+		45588628ADAEC16B03DA577A /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				7C05D3CC23E9A0B3B148B8D6 /* Montserrat.ttf */,
+				A6360219BE0D5477842F4D3F /* OFL.txt */,
+			);
+			path = Fonts;
 			sourceTree = "<group>";
 		};
 		B3E6CE07A7ADB3E94ADE7574 /* Products */ = {
 			isa = PBXGroup;
 			children = (
 				5B60D0351E205A2FA21B2A52 /* CadetCatch.app */,
+				0DC545E8E6D04B911D2AED56 /* CadetCatchUITests.xctest */,
+				B8E06E933A1EE6AB69FAFA51 /* CadetCatchWidget.appex */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		FB7E3ACF8B11CE266B83DF17 /* CadetCatchWidget */ = {
+			isa = PBXGroup;
+			children = (
+				4B83125A9EB26970103B95C7 /* CadetCatchWidget.swift */,
+				0A56C1DA90F28238AE6C1568 /* Info.plist */,
+			);
+			path = CadetCatchWidget;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		747A0343FE859814696A38D3 /* CadetCatchWidget */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 17809C21F60ACCF684CA38DF /* Build configuration list for PBXNativeTarget "CadetCatchWidget" */;
+			buildPhases = (
+				662658993E62D2E1B2EE075C /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CadetCatchWidget;
+			packageProductDependencies = (
+			);
+			productName = CadetCatchWidget;
+			productReference = B8E06E933A1EE6AB69FAFA51 /* CadetCatchWidget.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 		B227C0307BDADD11287D26A3 /* CadetCatch */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 2786503B7965C3BC9DE9B34A /* Build configuration list for PBXNativeTarget "CadetCatch" */;
 			buildPhases = (
 				B995507AD5D6E1F4D966E17A /* Sources */,
 				1BDE4EDEF1D22585A1FEE32F /* Resources */,
+				0F3A3098929004DF98032AF0 /* Frameworks */,
 			);
 			buildRules = (
 			);
@@ -61,10 +173,32 @@
 			);
 			name = CadetCatch;
 			packageProductDependencies = (
+				A2FED9A84D982C3CA93BB578 /* GoogleSignIn */,
+				CAEEF5ED1904BC7F8D21FE85 /* AppAuth */,
+				5BDA0F8AE58E1C5C23982D86 /* GTMSessionFetcher */,
+				9AD7B0DE8151607BF4ABCAE2 /* GTMAppAuth */,
 			);
 			productName = CadetCatch;
 			productReference = 5B60D0351E205A2FA21B2A52 /* CadetCatch.app */;
 			productType = "com.apple.product-type.application";
+		};
+		E7DC8E8948829964D6089432 /* CadetCatchUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6B2CBC8EE929856C88B4B5A3 /* Build configuration list for PBXNativeTarget "CadetCatchUITests" */;
+			buildPhases = (
+				20DECC79C8F36C2935739861 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				868EE5E437B7A42B8EFC0AFB /* PBXTargetDependency */,
+			);
+			name = CadetCatchUITests;
+			packageProductDependencies = (
+			);
+			productName = CadetCatchUITests;
+			productReference = 0DC545E8E6D04B911D2AED56 /* CadetCatchUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
 
@@ -75,9 +209,16 @@
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 1430;
 				TargetAttributes = {
+					747A0343FE859814696A38D3 = {
+						DevelopmentTeam = WN3K69XEP4;
+						ProvisioningStyle = Automatic;
+					};
 					B227C0307BDADD11287D26A3 = {
 						DevelopmentTeam = WN3K69XEP4;
 						ProvisioningStyle = Automatic;
+					};
+					E7DC8E8948829964D6089432 = {
+						TestTargetID = B227C0307BDADD11287D26A3;
 					};
 				};
 			};
@@ -90,12 +231,20 @@
 			);
 			mainGroup = 1DC52DB4CB219B41F63FD480;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				305B0090BC58CE5D30C388F9 /* XCRemoteSwiftPackageReference "AppAuth-iOS" */,
+				7334C6B2D0B07EEBCE6B13C6 /* XCRemoteSwiftPackageReference "GTMAppAuth" */,
+				E0504458B7F9326416A68FE6 /* XCRemoteSwiftPackageReference "gtm-session-fetcher" */,
+				EB51B706C16752BDFA8DB56A /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = B3E6CE07A7ADB3E94ADE7574 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
 				B227C0307BDADD11287D26A3 /* CadetCatch */,
+				E7DC8E8948829964D6089432 /* CadetCatchUITests */,
+				747A0343FE859814696A38D3 /* CadetCatchWidget */,
 			);
 		};
 /* End PBXProject section */
@@ -106,21 +255,53 @@
 			buildActionMask = 2147483647;
 			files = (
 				A03F4DF05625A1AB7FB15488 /* Assets.xcassets in Resources */,
+				7E81EC141AAA2DCEF9A2DADE /* GoogleService-Info.plist in Resources */,
+				B4A649CB80775D86DE51B59E /* LaunchScreen.storyboard in Resources */,
+				ED5C223D6C5B9BAF960F2965 /* Montserrat.ttf in Resources */,
+				D830B0E7860C1F564045057B /* OFL.txt in Resources */,
+				B9482FFA204AF8BF0E2FCC64 /* drive_bot.html in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		20DECC79C8F36C2935739861 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DEAA1E860191473D44861339 /* CadetCatchUITests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		662658993E62D2E1B2EE075C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1275274C98EE724AA473D7DF /* CadetCatchWidget.swift in Sources */,
+				7BFB0FCC3EE0DE8F7E453EDF /* ScanActivityAttributes.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B995507AD5D6E1F4D966E17A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				1803DF1673BDFACEC4E88FB8 /* CadetCatchApp.swift in Sources */,
+				D2BE76963AFCB5FBFEEEABEA /* GoogleDriveAuthManager.swift in Sources */,
+				BEA40F24BB61F6836ACB21DE /* ScanActivityAttributes.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		868EE5E437B7A42B8EFC0AFB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B227C0307BDADD11287D26A3 /* CadetCatch */;
+			targetProxy = 40D251E46838D833C03FB160 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		5D938C84C53933B33D600A1A /* Release */ = {
@@ -157,7 +338,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 80;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -170,7 +351,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				MARKETING_VERSION = 1.0.0;
+				MARKETING_VERSION = 1.0.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -215,7 +396,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 4;
+				CURRENT_PROJECT_VERSION = 80;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -234,7 +415,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				MARKETING_VERSION = 1.0.0;
+				MARKETING_VERSION = 1.0.1;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -243,6 +424,24 @@
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		730365F487FC97705AA841F3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = WN3K69XEP4;
+				INFOPLIST_FILE = CadetCatchWidget/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = co.eb28.cadetcatch.CadetCatchWidget;
+				PRODUCT_NAME = CadetCatchWidget;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -286,14 +485,82 @@
 			};
 			name = Release;
 		};
+		B1850E25997CA5622E5EE98F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = WN3K69XEP4;
+				INFOPLIST_FILE = CadetCatchWidget/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = co.eb28.cadetcatch.CadetCatchWidget;
+				PRODUCT_NAME = CadetCatchWidget;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+		BF13A564EAB44F4471FA8EEA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = co.eb28.CadetCatchUITests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = CadetCatch;
+			};
+			name = Release;
+		};
+		FE06D81EDD5EE9A0FFD44366 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = co.eb28.CadetCatchUITests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = CadetCatch;
+			};
+			name = Debug;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		17809C21F60ACCF684CA38DF /* Build configuration list for PBXNativeTarget "CadetCatchWidget" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				730365F487FC97705AA841F3 /* Debug */,
+				B1850E25997CA5622E5EE98F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
 		2786503B7965C3BC9DE9B34A /* Build configuration list for PBXNativeTarget "CadetCatch" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				731C72DA8BF7A0D4B59EBB71 /* Debug */,
 				AB6155902CCF58A066AF543D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		6B2CBC8EE929856C88B4B5A3 /* Build configuration list for PBXNativeTarget "CadetCatchUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FE06D81EDD5EE9A0FFD44366 /* Debug */,
+				BF13A564EAB44F4471FA8EEA /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
@@ -308,6 +575,64 @@
 			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		305B0090BC58CE5D30C388F9 /* XCRemoteSwiftPackageReference "AppAuth-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/openid/AppAuth-iOS.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.7.6;
+			};
+		};
+		7334C6B2D0B07EEBCE6B13C6 /* XCRemoteSwiftPackageReference "GTMAppAuth" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google/GTMAppAuth.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.1.1;
+			};
+		};
+		E0504458B7F9326416A68FE6 /* XCRemoteSwiftPackageReference "gtm-session-fetcher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google/gtm-session-fetcher.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.5.0;
+			};
+		};
+		EB51B706C16752BDFA8DB56A /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/google/GoogleSignIn-iOS";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 7.1.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		5BDA0F8AE58E1C5C23982D86 /* GTMSessionFetcher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E0504458B7F9326416A68FE6 /* XCRemoteSwiftPackageReference "gtm-session-fetcher" */;
+			productName = GTMSessionFetcher;
+		};
+		9AD7B0DE8151607BF4ABCAE2 /* GTMAppAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7334C6B2D0B07EEBCE6B13C6 /* XCRemoteSwiftPackageReference "GTMAppAuth" */;
+			productName = GTMAppAuth;
+		};
+		A2FED9A84D982C3CA93BB578 /* GoogleSignIn */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = EB51B706C16752BDFA8DB56A /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
+			productName = GoogleSignIn;
+		};
+		CAEEF5ED1904BC7F8D21FE85 /* AppAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 305B0090BC58CE5D30C388F9 /* XCRemoteSwiftPackageReference "AppAuth-iOS" */;
+			productName = AppAuth;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 804619AD424441FA65DE6F89 /* Project object */;
 }

@@ -188,7 +188,7 @@ final class LibraryStore {
 
     private func createProject(from url: URL, kind: ToneSourceKind, title: String) async throws {
         let asset = AVURLAsset(url: url)
-        if asset.hasProtectedContent {
+        if try await asset.load(.hasProtectedContent) {
             throw ToneError.protectedMedia
         }
 
@@ -240,8 +240,14 @@ final class LibraryStore {
 
     private func requestMicrophoneAccess() async -> Bool {
         await withCheckedContinuation { continuation in
-            AVAudioSession.sharedInstance().requestRecordPermission { granted in
-                continuation.resume(returning: granted)
+            if #available(iOS 17.0, *) {
+                AVAudioApplication.requestRecordPermission { granted in
+                    continuation.resume(returning: granted)
+                }
+            } else {
+                AVAudioSession.sharedInstance().requestRecordPermission { granted in
+                    continuation.resume(returning: granted)
+                }
             }
         }
     }
@@ -251,8 +257,43 @@ final class LibraryStore {
             let data = UserDefaults.standard.data(forKey: storageKey),
             let decoded = try? JSONDecoder().decode([ToneProject].self, from: data)
         else { return }
-        projects = decoded
+        let repaired = decoded.map(repairStoredURLs)
+        projects = repaired
         activeProjectID = decoded.first?.id
+        if repaired != decoded {
+            save()
+        }
+    }
+
+    private func repairStoredURLs(_ project: ToneProject) -> ToneProject {
+        var repaired = project
+        repaired.sourceURL = repairedURL(
+            project.sourceURL,
+            searchDirectories: [URL.importDirectory, URL.recordingDirectory]
+        )
+        if let exportedURL = project.exportedURL {
+            repaired.exportedURL = repairedURL(
+                exportedURL,
+                searchDirectories: [URL.exportDirectory]
+            )
+        }
+        return repaired
+    }
+
+    private func repairedURL(_ url: URL, searchDirectories: [URL]) -> URL {
+        if FileManager.default.fileExists(atPath: url.path) {
+            return url
+        }
+
+        let filename = url.lastPathComponent
+        for directory in searchDirectories {
+            let candidate = directory.appendingPathComponent(filename)
+            if FileManager.default.fileExists(atPath: candidate.path) {
+                return candidate
+            }
+        }
+
+        return url
     }
 
     private func save() {

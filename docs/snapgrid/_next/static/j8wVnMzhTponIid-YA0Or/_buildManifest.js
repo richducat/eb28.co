@@ -21,13 +21,13 @@ self.__BUILD_MANIFEST = {
     "static/chunks/0ehoowtgndkp2.js"
   ],
   "/privacy": [
-    "static/chunks/02kjltiva82du.js"
+    "static/chunks/0apvo~9~.50it.js"
   ],
   "/support": [
     "static/chunks/0rybiby5xe..x.js"
   ],
   "/terms": [
-    "static/chunks/0nax6uzxy_.p5.js"
+    "static/chunks/017c6c_2x5z7i.js"
   ],
   "__rewrites": {
     "afterFiles": [],

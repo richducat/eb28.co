@@ -1,8 +1,28 @@
 {
-  "generatedAt": "2026-06-05T19:23:10.741Z",
+  "generatedAt": "2026-06-06T06:05:28.238Z",
   "site": "https://eb28.co",
   "blogUrl": "https://eb28.co/blog/",
   "articles": [
+    {
+      "slug": "space-coast-local-seo-citations-where-real-authority-comes-from",
+      "title": "Space Coast Local SEO Citations: Where Real Authority Comes From",
+      "description": "Learn how Space Coast businesses should use local SEO citations, Google profile consistency, and internal links to build search authority without directory spam.",
+      "cluster": "local-seo",
+      "primaryKeyword": "Space Coast local SEO citations",
+      "url": "https://eb28.co/blog/space-coast-local-seo-citations-where-real-authority-comes-from/",
+      "datePublished": "2026-06-06",
+      "dateModified": "2026-06-06"
+    },
+    {
+      "slug": "mobile-website-design-in-melbourne-fl-why-most-lead-loss-happens-on-phones",
+      "title": "Mobile Website Design in Melbourne FL: Why Most Lead Loss Happens on Phones",
+      "description": "Mobile Website Design in Melbourne FL: Why Most Lead Loss Happens on Phones for business owners who want clearer search visibility, better buyer trust, and a website path that turns interest into real enquiries.",
+      "cluster": "melbourne-web-design",
+      "primaryKeyword": "mobile website design Melbourne FL",
+      "url": "https://eb28.co/blog/mobile-website-design-in-melbourne-fl-why-most-lead-loss-happens-on-phones/",
+      "datePublished": "2026-06-05",
+      "dateModified": "2026-06-05"
+    },
     {
       "slug": "local-rag-system-for-business-documents-a-plain-english-implementation-guide",
       "title": "Local RAG System for Business Documents: Plain-English Guide",

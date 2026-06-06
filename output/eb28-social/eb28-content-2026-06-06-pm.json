@@ -1,0 +1,48 @@
+{
+  "brand": "EB28",
+  "generatedAt": "2026-06-06T18:01:35.373Z",
+  "runId": "2026-06-06-pm",
+  "slot": "pm",
+  "article": {
+    "title": "Small Business Homepage Optimization: The First 10 Seconds",
+    "url": "https://eb28.co/blog/small-business-homepage-optimization-the-first-10-seconds/",
+    "cluster": "conversion",
+    "primaryKeyword": "small business homepage optimization"
+  },
+  "posts": {
+    "blog": {
+      "title": "Small Business Homepage Optimization: The First 10 Seconds",
+      "url": "https://eb28.co/blog/small-business-homepage-optimization-the-first-10-seconds/",
+      "status": "ready_for_build_and_deploy"
+    },
+    "facebook": {
+      "caption": "Small Business Homepage Optimization: The First 10 Seconds\n\nA practical guide for local businesses that want more qualified organic leads, stronger search visibility, and a faster path from visitor to customer.\n\nRead it: https://eb28.co/blog/small-business-homepage-optimization-the-first-10-seconds/",
+      "status": "ready_to_publish_when_eb28_social_channel_is_verified"
+    },
+    "instagram": {
+      "caption": "small business homepage optimization: the practical version.\n\nWe broke down what to fix first, how to connect it to real lead flow, and what EB28 checks daily to keep search growth moving.\n\nRead the full guide at eb28.co/blog/",
+      "creativeBrief": "Carousel: Slide 1 problem statement, Slide 2 what to fix first, Slide 3 technical SEO checks, Slide 4 internal links, Slide 5 CTA to project brief.",
+      "status": "ready_to_publish_when_eb28_social_channel_is_configured"
+    },
+    "x": {
+      "caption": "Small Business Homepage Optimization: The First 10 Seconds\n\nThe key: connect the search intent to a page that is fast, useful, internally linked, and measured in Search Console.\n\nhttps://eb28.co/blog/small-business-homepage-optimization-the-first-10-seconds/",
+      "status": "ready_to_publish_when_eb28_social_channel_is_verified"
+    },
+    "linkedin": {
+      "caption": "New EB28 growth brief: Small Business Homepage Optimization: The First 10 Seconds\n\nThis covers the practical SEO and conversion fixes that turn a business website into a more reliable organic lead path.\n\nhttps://eb28.co/blog/small-business-homepage-optimization-the-first-10-seconds/",
+      "status": "ready_to_publish_when_eb28_social_channel_is_verified"
+    },
+    "shortFormVideo": {
+      "hook": "Most small business homepages lose the lead in the first 10 seconds.",
+      "script": "Open on the homepage above the fold. Point to three checks: the headline says what you do, proof sits near the first CTA, and the form does not ask for more than the buyer is ready to give. Close with the project brief URL.",
+      "shotList": [
+        "Screen recording of the article headline",
+        "Annotated homepage hero with headline, proof, and CTA callouts",
+        "Quick checklist overlay: clarity, proof, form, follow-up",
+        "Final frame with eb28.co/blog/ and Melbourne Web Studio project brief"
+      ],
+      "caption": "A homepage does not need to explain everything. It needs to make the next step obvious in the first 10 seconds.",
+      "status": "ready_to_publish_when_eb28_social_channel_is_verified"
+    }
+  }
+}

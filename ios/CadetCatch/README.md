@@ -1,6 +1,6 @@
 # CadetCatch Native iOS
 
-Native SwiftUI app for Coast Guard Academy families to find possible cadet photos from approved public sources.
+CadetCatch is now scaffolded as a native SwiftUI app separate from the existing `ios/App` Capacitor project.
 
 ## Project
 
@@ -8,40 +8,23 @@ Native SwiftUI app for Coast Guard Academy families to find possible cadet photo
 - Scheme: `CadetCatch`
 - Bundle ID: `co.eb28.cadetcatch`
 - Minimum iOS: `17.0`
-- Team ID: `WN3K69XEP4`
+- Project generator: `xcodegen generate`
 
-## Current Features
+## Current Native Features
 
-- EAGLE launch screen with Coast Guard Academy navy/orange theme.
-- Private on-device cadet roster using PhotosPicker for profile images.
-- Public HTTPS source management.
-- Local Apple Vision face comparison against public source images.
-- Locked result previews until a StoreKit unlock or monthly entitlement is active.
-- StoreKit 2 purchase flow, restore purchases flow, and entitlement refresh.
-- Saved photos and review notes for unlocked matches.
-- Plain-English academy terms decoder.
-- Server-side OpenAI assistant endpoint scaffolded at `api/cadetcatch-assistant.js`.
-
-## StoreKit Products
-
-Create these exact product IDs in App Store Connect before a TestFlight build can sell or restore purchases:
-
-- `co.eb28.cadetcatch.search.once` - consumable one-time public photo check.
-- `co.eb28.cadetcatch.photo.unlock` - consumable one-photo unlock.
-- `co.eb28.cadetcatch.family.monthly` - auto-renewable monthly subscription.
-
-The app intentionally does not unlock paid behavior when products are missing.
-
-## OpenAI Backend
-
-Do not put an OpenAI API key in the iOS app. Configure the server process with:
-
-```sh
-OPENAI_API_KEY=...
-CADETCATCH_OPENAI_MODEL=gpt-5-nano
-```
-
-The checked-in endpoint uses the Responses API and keeps the key server-side.
+- Premium onboarding and Pro activation flow.
+- StoreKit subscription scaffold for `co.eb28.cadetcatch.pro.monthly`.
+- Persistent private cadet roster.
+- PhotosPicker-based cadet base photo import.
+- Smart Sweep, Deep Recon, and New Drops scan modes.
+- Approved HTTPS photo-source queue for public-facing websites and official galleries.
+- Google Photos, Facebook, and Instagram account-connector scaffolding for owner-authorized sources.
+- Source discovery service that fetches image candidates from enabled public source pages.
+- Scan history and confidence-scored intel matches.
+- Saved intel archive.
+- Asset dossier sheet with local AI-style sitrep and parent letter draft.
+- Offline academy jargon decoder.
+- Profile/settings for priority alerts, background watch, subscription, and local data reset.
 
 ## Build
 
@@ -56,3 +39,10 @@ For unsigned device compilation:
 ```sh
 xcodebuild -project CadetCatch.xcodeproj -scheme CadetCatch -destination 'generic/platform=iOS' CODE_SIGNING_ALLOWED=NO build
 ```
+
+## App Store Setup Still Needed
+
+- Create the App Store Connect app record for `co.eb28.cadetcatch`.
+- Create the monthly subscription product `co.eb28.cadetcatch.pro.monthly`.
+- Set the Apple Developer Team ID in `project.yml`, then regenerate the project.
+- Replace the generated placeholder icon with final brand artwork when ready.

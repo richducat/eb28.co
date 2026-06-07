@@ -22,8 +22,12 @@
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
+	<key>NSCameraUsageDescription</key>
+	<string>CadetCatch can use the camera to capture a base photo for your cadet roster.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>CadetCatch uses selected photos only to register cadets in your private roster.</string>
+	<key>NSUserNotificationsUsageDescription</key>
+	<string>CadetCatch sends alerts when a priority photo match is found.</string>
 	<key>UILaunchScreen</key>
 	<dict>
 		<key>UIColorName</key>

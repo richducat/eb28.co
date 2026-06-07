@@ -1,5 +1,111 @@
 [
   {
+    "slug": "private-ai-vs-chatgpt-for-business-how-to-choose-the-right-workflow",
+    "title": "Private AI vs ChatGPT for Business: How to Choose the Right Workflow",
+    "description": "Compare private AI and ChatGPT for business workflows: what data to protect, when hosted tools fit, and how Melbourne firms can choose a safer lead-growth path.",
+    "cluster": "private-ai",
+    "primaryKeyword": "private AI vs ChatGPT for business",
+    "datePublished": "2026-06-07",
+    "dateModified": "2026-06-07",
+    "author": "EB28",
+    "heroLabel": "Morning growth brief",
+    "sourceRunId": "2026-06-07-am",
+    "summary": "A plain-English AM growth brief for the private AI cluster, focused on data boundaries, governance, implementation speed, and lead-focused next steps.",
+    "sections": [
+      {
+        "heading": "Why this search matters",
+        "body": [
+          "Someone searching for \"private AI vs ChatGPT for business\" is usually closer to a buying decision than a research rabbit hole. They want to know what to fix, who to trust, and whether the next step is worth their time.",
+          "The buyer wants AI speed, but they also need a clear boundary between low-risk drafting, internal document search, customer history, finance notes, and anything that should stay inside a controlled system."
+        ],
+        "bullets": [
+          "Answer the question in the first few lines",
+          "Use the same phrase a real buyer would use",
+          "Show when hosted AI is enough and when a private workflow is safer",
+          "Give the reader a direct next step instead of a vague contact prompt"
+        ]
+      },
+      {
+        "heading": "What to fix first",
+        "body": [
+          "Start with one narrow workflow: documents, SOPs, client history, finance review, or staff search. Classify the data first, then decide whether a hosted assistant, private retrieval layer, or human review step fits the risk.",
+          "Do not bury the fix inside a giant redesign. A small, well-governed workflow that ships can beat a bigger AI project that never makes it into daily operations."
+        ],
+        "bullets": [
+          "Separate public-model tasks from private-retrieval tasks",
+          "Document which data can be used, which data stays out, and who can access results",
+          "Connect private AI pages to lead automation only where the workflow and handoff are clear",
+          "Use official citations and practical examples instead of hype"
+        ]
+      },
+      {
+        "heading": "How EB28 turns it into a system",
+        "body": [
+          "Private AI earns trust when access, data boundaries, retrieval quality, logging, and human review are planned before the first prompt is written.",
+          "EB28 turns that comparison into a practical implementation path: map the workflow, protect the sensitive data, connect the right service page, and measure whether the content creates qualified enquiries."
+        ],
+        "bullets": [
+          "Map the workflow before choosing a model or vendor",
+          "Keep sensitive documents behind private retrieval and role-based access",
+          "Use ChatGPT-style hosted tools for low-risk drafting and ideation when policy allows",
+          "Track search queries, internal links, and CTA clicks so the guide can keep improving"
+        ]
+      }
+    ],
+    "faqs": [
+      {
+        "question": "When should a business choose private AI instead of ChatGPT?",
+        "answer": "Choose private AI when the workflow depends on sensitive documents, customer history, financial notes, regulated data, or internal knowledge that should stay inside a controlled system with access rules and review."
+      },
+      {
+        "question": "Can ChatGPT still fit a business workflow?",
+        "answer": "Yes. Hosted tools can work well for low-risk drafting, brainstorming, summaries, and training examples when company policy allows it. The important step is separating those tasks from private retrieval or customer-data workflows."
+      }
+    ],
+    "citations": [
+      {
+        "label": "NIST: AI Risk Management Framework",
+        "url": "https://www.nist.gov/itl/ai-risk-management-framework"
+      },
+      {
+        "label": "OWASP: Top 10 for Large Language Model Applications",
+        "url": "https://owasp.org/www-project-top-10-for-large-language-model-applications/"
+      },
+      {
+        "label": "Google Search Central: SEO Starter Guide",
+        "url": "https://developers.google.com/search/docs/fundamentals/seo-starter-guide"
+      }
+    ],
+    "relatedSlugs": [
+      "private-ai-infrastructure-small-business",
+      "local-rag-system-for-business-documents-a-plain-english-implementation-guide",
+      "website-conversion-checklist-melbourne-fl",
+      "ai-lead-follow-up-local-service-business"
+    ],
+    "internalLinks": [
+      {
+        "label": "Private AI infrastructure for small businesses",
+        "href": "/blog/private-ai-infrastructure-small-business/",
+        "reason": "Keeps AI infrastructure readers connected to the secure, practical implementation cluster."
+      },
+      {
+        "label": "AI lead follow-up for local service businesses",
+        "href": "/blog/ai-lead-follow-up-local-service-business/",
+        "reason": "Shows where private AI can support lead intake without replacing human judgment."
+      },
+      {
+        "label": "EB28 private AI and app development homepage",
+        "href": "/",
+        "reason": "Moves technical readers toward the core EB28 service path."
+      },
+      {
+        "label": "Website conversion checklist for Melbourne FL",
+        "href": "/blog/website-conversion-checklist-melbourne-fl/",
+        "reason": "Connects the topic to the page changes most likely to create more qualified enquiries."
+      }
+    ]
+  },
+  {
     "slug": "small-business-homepage-optimization-the-first-10-seconds",
     "title": "Small Business Homepage Optimization: The First 10 Seconds",
     "description": "Small Business Homepage Optimization: The First 10 Seconds for business owners who want clearer search visibility, better buyer trust, and a website path that turns interest into real enquiries.",

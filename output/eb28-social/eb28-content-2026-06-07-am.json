@@ -1,0 +1,48 @@
+{
+  "brand": "EB28",
+  "generatedAt": "2026-06-07T06:02:10.795Z",
+  "runId": "2026-06-07-am",
+  "slot": "am",
+  "article": {
+    "title": "Private AI vs ChatGPT for Business: How to Choose the Right Workflow",
+    "url": "https://eb28.co/blog/private-ai-vs-chatgpt-for-business-how-to-choose-the-right-workflow/",
+    "cluster": "private-ai",
+    "primaryKeyword": "private AI vs ChatGPT for business"
+  },
+  "posts": {
+    "blog": {
+      "title": "Private AI vs ChatGPT for Business: How to Choose the Right Workflow",
+      "url": "https://eb28.co/blog/private-ai-vs-chatgpt-for-business-how-to-choose-the-right-workflow/",
+      "status": "ready_for_build_and_deploy"
+    },
+    "facebook": {
+      "caption": "Private AI vs ChatGPT for Business: How to Choose the Right Workflow\n\nA practical guide for local businesses that want more qualified organic leads, stronger search visibility, and a faster path from visitor to customer.\n\nRead it: https://eb28.co/blog/private-ai-vs-chatgpt-for-business-how-to-choose-the-right-workflow/",
+      "status": "draft_ready_for_verified_eb28_channel_only"
+    },
+    "instagram": {
+      "caption": "Private AI vs ChatGPT for business: the practical version.\n\nHosted tools are useful. Private workflows matter when client history, internal documents, finance notes, or operational SOPs should stay inside a controlled system.\n\nRead the full guide at eb28.co/blog/",
+      "creativeBrief": "Carousel: Slide 1 decision point, Slide 2 hosted AI use cases, Slide 3 private workflow triggers, Slide 4 governance checklist, Slide 5 CTA to project brief.",
+      "status": "draft_ready_for_verified_eb28_channel_only"
+    },
+    "x": {
+      "caption": "Private AI vs ChatGPT for Business: How to Choose the Right Workflow\n\nThe key: connect the search intent to a page that is fast, useful, internally linked, and measured in Search Console.\n\nhttps://eb28.co/blog/private-ai-vs-chatgpt-for-business-how-to-choose-the-right-workflow/",
+      "status": "draft_ready_for_verified_eb28_channel_only"
+    },
+    "linkedin": {
+      "caption": "New EB28 growth brief: Private AI vs ChatGPT for Business: How to Choose the Right Workflow\n\nThe useful question is not whether one tool is always better. It is which workflow can safely handle the data, review step, and lead path in front of you.\n\nhttps://eb28.co/blog/private-ai-vs-chatgpt-for-business-how-to-choose-the-right-workflow/",
+      "status": "draft_ready_for_verified_eb28_channel_only"
+    },
+    "shortFormVideo": {
+      "hook": "Private AI vs ChatGPT is not a tool debate. It is a data-boundary decision.",
+      "script": [
+        "Start with the workflow, not the model.",
+        "If the task is drafting low-risk copy, a hosted assistant may be enough.",
+        "If the task touches client history, internal documents, finance notes, or SOPs, map a private retrieval path first.",
+        "The win is speed with governance: clear access rules, human review, and a lead path you can measure."
+      ],
+      "visualBrief": "45-second vertical video with split-screen workflow cards: hosted AI for low-risk drafting, private AI for sensitive data, then a final CTA card pointing to the EB28 project brief.",
+      "caption": "Private AI vs ChatGPT for business comes down to workflow risk, not hype. Read the guide at eb28.co/blog/.",
+      "status": "draft_ready_for_verified_eb28_channel_only"
+    }
+  }
+}

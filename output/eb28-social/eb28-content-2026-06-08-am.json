@@ -1,0 +1,46 @@
+{
+  "brand": "EB28",
+  "generatedAt": "2026-06-08T06:01:24.858Z",
+  "runId": "2026-06-08-am",
+  "slot": "am",
+  "article": {
+    "title": "CRM Automation for Local Service Businesses: The Simple Stack That Works",
+    "url": "https://eb28.co/blog/crm-automation-for-local-service-businesses-the-simple-stack-that-works/",
+    "cluster": "lead-automation",
+    "primaryKeyword": "CRM automation for local service business"
+  },
+  "posts": {
+    "blog": {
+      "title": "CRM Automation for Local Service Businesses: The Simple Stack That Works",
+      "url": "https://eb28.co/blog/crm-automation-for-local-service-businesses-the-simple-stack-that-works/",
+      "status": "ready_for_build_and_deploy"
+    },
+    "facebook": {
+      "caption": "CRM Automation for Local Service Businesses: The Simple Stack That Works\n\nA practical guide for local businesses that want more qualified organic leads, stronger search visibility, and a faster path from visitor to customer.\n\nRead it: https://eb28.co/blog/crm-automation-for-local-service-businesses-the-simple-stack-that-works/",
+      "status": "ready_to_publish"
+    },
+    "instagram": {
+      "caption": "CRM automation for local service business: the practical version.\n\nWe broke down what to fix first, how to connect it to real lead flow, and what EB28 checks daily to keep search growth moving.\n\nRead the full guide at eb28.co/blog/",
+      "creativeBrief": "Carousel: Slide 1 problem statement, Slide 2 what to fix first, Slide 3 technical SEO checks, Slide 4 internal links, Slide 5 CTA to project brief.",
+      "status": "ready_to_publish_when_eb28_social_channel_is_configured"
+    },
+    "x": {
+      "caption": "CRM Automation for Local Service Businesses: The Simple Stack That Works\n\nThe key: connect the search intent to a page that is fast, useful, internally linked, and measured in Search Console.\n\nhttps://eb28.co/blog/crm-automation-for-local-service-businesses-the-simple-stack-that-works/",
+      "status": "ready_to_publish"
+    },
+    "linkedin": {
+      "caption": "New EB28 growth brief: CRM Automation for Local Service Businesses: The Simple Stack That Works\n\nThis covers the practical SEO and conversion fixes that turn a business website into a more reliable organic lead path.\n\nhttps://eb28.co/blog/crm-automation-for-local-service-businesses-the-simple-stack-that-works/",
+      "status": "ready_to_publish"
+    },
+    "shortFormVideo": {
+      "hook": "Most local businesses do not need a bigger CRM first. They need the first five minutes after a lead comes in to stop leaking work.",
+      "brief": "30-45 second vertical video. Open with the missed-lead problem, show the simple stack: form capture, qualification, routing, reminders, and reporting, then close with the EB28 article URL and Melbourne Web Studio project brief.",
+      "shotList": [
+        "Screen recording of a website form submission moving into a CRM",
+        "Simple checklist overlay: capture, qualify, route, remind, report",
+        "Final frame with https://eb28.co/blog/crm-automation-for-local-service-businesses-the-simple-stack-that-works/"
+      ],
+      "status": "ready_to_produce_when_eb28_social_channel_is_configured"
+    }
+  }
+}

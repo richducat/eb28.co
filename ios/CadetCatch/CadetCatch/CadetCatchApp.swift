@@ -1,3 +1,4 @@
+import Photos
 import PhotosUI
 import StoreKit
 import SwiftUI
@@ -2158,6 +2159,7 @@ struct CandidateDetailView: View {
     @State private var draft: String?
     @State private var isUnlocking = false
     @State private var isSubscribing = false
+    @State private var saveToPhotosState: SaveToPhotosState = .idle
 
     var body: some View {
         let unlocked = store.isUnlocked(candidate, hasMonthlyAccess: purchases.hasMonthlyAccess)
@@ -2193,8 +2195,35 @@ struct CandidateDetailView: View {
                         if unlocked {
                             Link("Open source image", destination: candidate.imageURL)
                                 .font(.subheadline.weight(.bold))
+                            Button {
+                                Task { await saveMatchedPhotoToLibrary() }
+                            } label: {
+                                HStack {
+                                    if saveToPhotosState == .saving {
+                                        ProgressView().tint(.white)
+                                    }
+                                    Label(saveToPhotosState.buttonTitle, systemImage: saveToPhotosState.buttonIcon)
+                                }
+                                .frame(maxWidth: .infinity)
+                            }
+                            .buttonStyle(PrimaryButtonStyle())
+                            .disabled(saveToPhotosState == .saving)
+
+                            if let message = saveToPhotosState.message {
+                                Text(message)
+                                    .font(.caption.weight(.semibold))
+                                    .foregroundStyle(saveToPhotosState == .saved ? .green : Theme.muted)
+                            }
+
+                            if saveToPhotosState == .permissionDenied {
+                                Button("Open Settings") {
+                                    openPhotoSettings()
+                                }
+                                .font(.caption.weight(.bold))
+                                .foregroundStyle(Theme.orange)
+                            }
                         } else {
-                            Text("Unlock this photo or start monthly access to view and save the image.")
+                            Text("Unlock this photo or start monthly access to view the image.")
                                 .font(.subheadline)
                                 .foregroundStyle(Theme.muted)
                                 .lineSpacing(3)
@@ -2281,6 +2310,130 @@ struct CandidateDetailView: View {
         isSubscribing = true
         _ = await purchases.purchase(.monthly)
         isSubscribing = false
+    }
+
+    private func saveMatchedPhotoToLibrary() async {
+        guard saveToPhotosState != .saving else { return }
+        saveToPhotosState = .saving
+
+        do {
+            try await PhotoLibrarySaver.savePhoto(from: candidate.imageURL)
+            saveToPhotosState = .saved
+        } catch PhotoLibrarySaveError.permissionDenied {
+            saveToPhotosState = .permissionDenied
+        } catch PhotoLibrarySaveError.invalidImageData {
+            saveToPhotosState = .invalidImage
+        } catch {
+            saveToPhotosState = .failed
+        }
+    }
+
+    private func openPhotoSettings() {
+        guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
+        UIApplication.shared.open(url)
+    }
+}
+
+enum SaveToPhotosState: Equatable {
+    case idle
+    case saving
+    case saved
+    case permissionDenied
+    case invalidImage
+    case failed
+
+    var buttonTitle: String {
+        switch self {
+        case .saving: "Saving..."
+        case .saved: "Saved to Photos"
+        default: "Save to Photos"
+        }
+    }
+
+    var buttonIcon: String {
+        switch self {
+        case .saving: "arrow.down.circle"
+        case .saved: "checkmark.circle.fill"
+        default: "square.and.arrow.down"
+        }
+    }
+
+    var message: String? {
+        switch self {
+        case .idle, .saving:
+            nil
+        case .saved:
+            "Saved to your iPhone Photos library."
+        case .permissionDenied:
+            "Photos permission is denied or restricted. Allow Photos access in Settings to save this image."
+        case .invalidImage:
+            "The source image could not be saved. Try opening the source image and saving from Safari."
+        case .failed:
+            "Save failed. Check your connection and try again."
+        }
+    }
+}
+
+enum PhotoLibrarySaveError: Error {
+    case permissionDenied
+    case invalidImageData
+    case saveFailed
+}
+
+struct PhotoLibrarySaver {
+    static func savePhoto(from url: URL) async throws {
+        let status = await addOnlyAuthorizationStatus()
+        guard status == .authorized || status == .limited else {
+            throw PhotoLibrarySaveError.permissionDenied
+        }
+
+        let (data, response) = try await URLSession.shared.data(from: url)
+        guard !data.isEmpty, UIImage(data: data) != nil else {
+            throw PhotoLibrarySaveError.invalidImageData
+        }
+
+        try await writePhoto(data: data, originalFilename: originalFilename(for: url, response: response))
+    }
+
+    private static func addOnlyAuthorizationStatus() async -> PHAuthorizationStatus {
+        let currentStatus = PHPhotoLibrary.authorizationStatus(for: .addOnly)
+        guard currentStatus == .notDetermined else { return currentStatus }
+
+        return await withCheckedContinuation { continuation in
+            PHPhotoLibrary.requestAuthorization(for: .addOnly) { status in
+                continuation.resume(returning: status)
+            }
+        }
+    }
+
+    private static func writePhoto(data: Data, originalFilename: String) async throws {
+        try await withCheckedThrowingContinuation { continuation in
+            PHPhotoLibrary.shared().performChanges {
+                let request = PHAssetCreationRequest.forAsset()
+                let options = PHAssetResourceCreationOptions()
+                options.originalFilename = originalFilename
+                request.addResource(with: .photo, data: data, options: options)
+            } completionHandler: { success, error in
+                if success {
+                    continuation.resume(returning: ())
+                } else {
+                    continuation.resume(throwing: error ?? PhotoLibrarySaveError.saveFailed)
+                }
+            }
+        }
+    }
+
+    private static func originalFilename(for url: URL, response: URLResponse) -> String {
+        let responseName = response.suggestedFilename?.trimmingCharacters(in: .whitespacesAndNewlines)
+        let urlName = url.lastPathComponent.removingPercentEncoding?.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        if let responseName, !responseName.isEmpty {
+            return responseName
+        }
+        if let urlName, !urlName.isEmpty {
+            return urlName
+        }
+        return "CadetCatch-\(Int(Date().timeIntervalSince1970)).jpg"
     }
 }
 

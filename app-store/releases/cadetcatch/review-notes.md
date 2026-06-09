@@ -6,7 +6,7 @@ Use this file as the exact reviewer-facing source for the build being submitted.
 
 - App: CadetCatch
 - Version: 1.0.1
-- Build: 85
+- Build: 86
 
 ## Summary for App Review
 
@@ -27,7 +27,7 @@ CadetCatch is an iPhone app for cadet families to keep a private local roster, c
 4. Open Home and tap Check Photos. The app shows the current source, discovered image count, checked image count, and possible match count while scanning.
 5. Open Photos to review any possible matches. Previews stay hidden until single-photo or monthly access is active.
 6. Use the Photo Access purchase sheet to test one-time photo checks, monthly access, and Restore Purchases. The monthly section shows Family Monthly, 1 month, the monthly price, auto-renewal text, Privacy Policy, and Terms of Use (EULA) before purchase.
-7. Save a viewed match and create a family note.
+7. Save a viewed match to the iPhone Photos library, save it in the app, and create a family note.
 8. Open More and use the academy terms guide.
 
 ## Permissions and background behavior
@@ -59,4 +59,4 @@ CadetCatch is an iPhone app for cadet families to keep a private local roster, c
 - The app does not access private social accounts, private photo libraries, private websites, or logged-in pages in this build. Facebook links must be accessible to the reviewer in Safari.
 - If a page has no usable images, blocks image access, or has no likely match, the app shows that result instead of showing unrelated results.
 - In-app purchase products must be active in App Store Connect for TestFlight purchase testing.
-- Build 85 includes stricter face-match filtering and simulator-tested search fallback behavior while preserving the supplied low-resolution USCGC EAGLE photo from the owner as the native iOS launch/splash image and welcome image, with the screenshot UI badge removed and no replacement EAGLE artwork.
+- Build 86 adds Save to Photos for unlocked matched photos, includes stricter face-match filtering and simulator-tested search fallback behavior, and preserves the supplied low-resolution USCGC EAGLE photo from the owner as the native iOS launch/splash image and welcome image, with the screenshot UI badge removed and no replacement EAGLE artwork.

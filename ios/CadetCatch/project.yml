@@ -8,7 +8,7 @@ settings:
   base:
     SWIFT_VERSION: "6.0"
     MARKETING_VERSION: "1.0.1"
-    CURRENT_PROJECT_VERSION: "85"
+    CURRENT_PROJECT_VERSION: "86"
 targets:
   CadetCatch:
     type: application
@@ -47,6 +47,7 @@ targets:
           - UIInterfaceOrientationPortrait
           - UIInterfaceOrientationPortraitUpsideDown
         NSPhotoLibraryUsageDescription: "CadetCatch uses selected photos only to register cadets in your private roster."
+        NSPhotoLibraryAddUsageDescription: "CadetCatch saves matched photos you choose to your Photos library."
         UIAppFonts:
           - Montserrat.ttf
         ITSAppUsesNonExemptEncryption: false

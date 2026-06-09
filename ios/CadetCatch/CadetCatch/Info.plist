@@ -31,6 +31,8 @@
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>CadetCatch saves matched photos you choose to your Photos library.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>CadetCatch uses selected photos only to register cadets in your private roster.</string>
 	<key>NSSupportsLiveActivities</key>

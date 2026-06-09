@@ -4,7 +4,7 @@
   "appStoreConnectAppId": "6769565852",
   "platform": "iOS",
   "marketingVersion": "1.0.1",
-  "buildNumber": "85",
+  "buildNumber": "86",
   "baselineCommit": "392e8d52240be3c6543c84c1c8dd44922c33b15a",
   "baselineTree": "e7e797efef6cf811341eae4d2c182d33420b51df",
   "sourceIdentityType": "local git stash merge commit preserved as branch/worktree",
@@ -17,31 +17,31 @@
   "xcodegenProjectSpec": "ios/CadetCatch/project.yml",
   "scheme": "CadetCatch",
   "teamId": "WN3K69XEP4",
-  "approvalLevel": "chat-approved by Richard Ducat on 2026-06-09 for upload_build of CadetCatch 1.0.1 build 85 only; no TestFlight distribution, build selection, review submission, or release approval is included",
-  "archivePath": "/Users/richardducat/Documents/Codex/Release-Artifacts/CadetCatch/build-85-20260609/CadetCatch-1.0.1-85-20260609.xcarchive",
+  "approvalLevel": "no upload approval for build 86; local Save to Photos implementation candidate only",
+  "archivePath": "pending local archive for future build 86 upload",
   "appStoreConnectState": {
     "appStoreVersionId": null,
     "buildId": null,
     "reviewSubmissionId": null,
-    "appStoreState": "TESTFLIGHT_PROCESSING",
+    "appStoreState": "LOCAL_CANDIDATE_NOT_UPLOADED",
     "submittedAt": null,
     "lastLocalPreparationAt": "2026-06-09T20:09:29Z",
-    "uploadedAt": "2026-06-09T20:21:34Z",
-    "visibleAscVerificationAt": "2026-06-09T20:23:38Z",
-    "visibleAscStatus": "Processing",
-    "visibleAscCreatedAt": "Jun 9, 2026 4:21 PM",
-    "distributionLogPath": "/Users/richardducat/Documents/Codex/Release-Artifacts/CadetCatch/build-85-20260609/CadetCatch-1.0.1-85-20260609.xcdistributionlogs",
+    "uploadedAt": null,
+    "visibleAscVerificationAt": null,
+    "visibleAscStatus": "Not uploaded",
+    "visibleAscCreatedAt": null,
+    "distributionLogPath": null,
     "verificationBlocked": null
   },
   "sourceMetadataVerification": {
     "projectYmlMarketingVersion": "1.0.1",
-    "projectYmlCurrentProjectVersion": "85",
+    "projectYmlCurrentProjectVersion": "86",
     "projectYmlBundleId": "co.eb28.cadetcatch",
     "pbxMarketingVersions": [
       "1.0.1"
     ],
     "pbxCurrentProjectVersions": [
-      "85"
+      "86"
     ],
     "pbxBundleIds": [
       "co.eb28.CadetCatchUITests",
@@ -156,7 +156,7 @@
   ],
   "releaseJsonVersionObject": {
     "marketingVersion": "1.0.1",
-    "buildNumber": "85",
+    "buildNumber": "86",
     "releaseType": "MANUAL",
     "phasedRelease": false,
     "promotionalText": "Private cadet rosters, approved photo pages, hidden previews, saved finds, family notes, and a plain-English academy terms guide.",
@@ -170,13 +170,14 @@
       "parents",
       "coast"
     ],
-    "whatsNew": "Uploads build 85 with stricter face-match filtering, improved simulator-tested search fallback behavior, private roster setup, approved public photo sources, hidden result previews, saved finds, family notes, and purchase restore controls."
+    "whatsNew": "CadetCatch build 86 adds Save to Photos for unlocked matched photos while preserving stricter face-match filtering, simulator-tested search fallback behavior, private roster setup, approved public photo sources, hidden result previews, saved finds, family notes, and purchase restore controls."
   },
   "safetyNotes": [
     "Primary checkout /Users/richardducat/GITHUB/eb28.co is dirty and must not be used for release actions.",
     "Build 80 remains the known active App Store review recovery candidate from prior verified ASC evidence.",
     "Build 85 was uploaded to App Store Connect and visible ASC Build Uploads showed status Processing on 2026-06-09.",
-    "Do not distribute, select, submit for review, release, or expire builds without a separate exact approval record."
+    "Build 86 is a local Save to Photos candidate and has not been uploaded.",
+    "Do not upload, distribute, select, submit for review, release, or expire builds without a separate exact approval record."
   ],
   "createdAt": "2026-06-06T11:53:53.691778-04:00"
 }

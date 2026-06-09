@@ -7,7 +7,7 @@
 - Bundle ID: co.eb28.cadetcatch
 - SKU: cadetcatch-ios
 - Version: 1.0.1
-- Build: 80
+- Build: 85
 - Primary category: Lifestyle
 - Secondary category: Photo & Video
 - Marketing URL: https://eb28.co/cc/
@@ -36,7 +36,7 @@ cadet, military, academy, photos, family, parents, coast
 
 ## What's New
 
-Restores the build 80 CadetCatch update with private roster setup, approved public photo sources, hidden result previews, saved finds, family notes, and purchase restore controls.
+Uploads build 85 with stricter face-match filtering, improved simulator-tested search fallback behavior, private roster setup, approved public photo sources, hidden result previews, saved finds, family notes, and purchase restore controls.
 
 ## Review Notes
 
@@ -55,9 +55,9 @@ No login is required. Add a cadet profile from Roster using a clear face photo s
 
 ## Internal Launch Notes
 
-- App Store Connect version state: Waiting for Review on 2026-06-06
-- Attached build ID or build number: 80 (`df052001-85ae-4380-99a1-6ad808a40b9a`)
-- Review submission ID: 575c019e-da9a-404a-9074-a4e18168cc4a
+- App Store Connect version state: New TestFlight upload candidate prepared from local source on 2026-06-09; ASC login is required for live pre-upload build-list verification.
+- Attached build ID or build number: Pending upload for build 85
+- Review submission ID: Not applicable to this TestFlight upload candidate
 - Release after approval: After approval
 - In-app purchases and subscription status: Approved
 - Verification screenshots: app-store/releases/cadetcatch/app-store-connect-snapshots/

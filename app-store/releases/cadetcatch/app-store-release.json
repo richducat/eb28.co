@@ -22,7 +22,7 @@
   },
   "version": {
     "marketingVersion": "1.0.1",
-    "buildNumber": "80",
+    "buildNumber": "85",
     "releaseType": "MANUAL",
     "phasedRelease": false,
     "promotionalText": "Private cadet rosters, approved photo pages, hidden previews, saved finds, family notes, and a plain-English academy terms guide.",
@@ -36,7 +36,7 @@
       "parents",
       "coast"
     ],
-    "whatsNew": "Restores the build 80 CadetCatch update with private roster setup, approved public photo sources, hidden result previews, saved finds, family notes, and purchase restore controls."
+    "whatsNew": "Uploads build 85 with stricter face-match filtering, improved simulator-tested search fallback behavior, private roster setup, approved public photo sources, hidden result previews, saved finds, family notes, and purchase restore controls."
   },
   "urls": {
     "marketingUrl": "https://eb28.co/cc/",

@@ -736,18 +736,18 @@ enum PublicPhotoScanner {
     }()
 
     struct SendableReference: @unchecked Sendable {
-        let prints: [VNFeaturePrintObservation]
+        let descriptors: [FaceMatcher.FaceDescriptor]
     }
 
     static func scan(cadet: Cadet, sources: [PhotoSource], progress: ScannerProgress, onProgress: @escaping @Sendable (String) -> Void = { _ in }) async -> ScanResult {
-        guard let prints = FaceMatcher.referencePrints(from: cadet.photoData) else {
+        guard let descriptors = FaceMatcher.referencePrints(from: cadet.photoData) else {
             return ScanResult(
                 candidates: [],
                 checkedImageCount: 0,
                 message: "No face was detected in the cadet profile photo. Choose a clearer front-facing photo."
             )
         }
-        let reference = SendableReference(prints: prints)
+        let reference = SendableReference(descriptors: descriptors)
 
         var allImageURLs: [(PhotoSource, URL)] = []
         for source in sources {
@@ -796,8 +796,8 @@ enum PublicPhotoScanner {
                 group.addTask {
                     guard let imageData = await downloadImageData(from: url) else { return nil }
                     await Task.yield()
-                    guard let match = FaceMatcher.match(reference: reference.prints, candidateImageData: imageData) else { return nil }
-                    guard match.confidence >= 60 else { return nil }
+                    guard let match = FaceMatcher.match(reference: reference.descriptors, candidateImageData: imageData) else { return nil }
+                    guard match.confidence >= FaceMatcher.minimumAcceptedConfidence else { return nil }
                     
                     return PhotoCandidate(
                         cadetID: cadet.id,
@@ -972,46 +972,58 @@ struct FaceMatch {
 }
 
 enum FaceMatcher {
-    static func referencePrints(from imageData: Data) -> [VNFeaturePrintObservation]? {
-        let prints = featurePrints(in: imageData)
-        return prints.isEmpty ? nil : prints
+    struct FaceDescriptor: @unchecked Sendable {
+        let featurePrint: VNFeaturePrintObservation
+        let landmarkSignature: [Float]?
     }
 
-    static func match(reference: [VNFeaturePrintObservation], candidateImageData: Data) -> FaceMatch? {
-        let candidatePrints = featurePrints(in: candidateImageData)
-        guard !candidatePrints.isEmpty else { return nil }
+    private enum Configuration {
+        static let minimumAcceptedConfidence = 80
+        static let maxFacesPerImage = 8
+        static let missingLandmarkPenalty: Float = 0.06
+        static let landmarkDistanceWeight: Float = 0.35
+        static let maximumLandmarkDistance: Float = 0.36
+        static let bestDistance: Float = 0.16
+        static let worstDistance: Float = 0.88
+    }
 
-        var bestDistance = Float.greatestFiniteMagnitude
-        for referencePrint in reference {
-            for candidatePrint in candidatePrints {
-                var distance = Float(0)
-                do {
-                    try referencePrint.computeDistance(&distance, to: candidatePrint)
-                    bestDistance = min(bestDistance, distance)
-                } catch {
+    static var minimumAcceptedConfidence: Int { Configuration.minimumAcceptedConfidence }
+
+    static func referencePrints(from imageData: Data) -> [FaceDescriptor]? {
+        let descriptors = faceDescriptors(in: imageData)
+        return descriptors.isEmpty ? nil : descriptors
+    }
+
+    static func match(reference: [FaceDescriptor], candidateImageData: Data) -> FaceMatch? {
+        let candidateDescriptors = faceDescriptors(in: candidateImageData)
+        guard !candidateDescriptors.isEmpty else { return nil }
+
+        var bestConfidence = 0
+        for referenceDescriptor in reference {
+            for candidateDescriptor in candidateDescriptors {
+                guard let confidence = confidence(for: referenceDescriptor, comparedTo: candidateDescriptor) else {
                     continue
                 }
+                bestConfidence = max(bestConfidence, confidence)
             }
         }
 
-        guard bestDistance.isFinite else { return nil }
-        let confidence = max(0, min(99, Int((1.45 - Double(bestDistance)) * 76.0)))
-        return FaceMatch(confidence: confidence, faceCount: candidatePrints.count)
+        guard bestConfidence > 0 else { return nil }
+        return FaceMatch(confidence: bestConfidence, faceCount: candidateDescriptors.count)
     }
 
-    private static func featurePrints(in imageData: Data) -> [VNFeaturePrintObservation] {
+    private static func faceDescriptors(in imageData: Data) -> [FaceDescriptor] {
         guard let uiImage = UIImage(data: imageData), let cgImage = uiImage.cgImage else { return [] }
-
-        let faceRequest = VNDetectFaceRectanglesRequest()
         let orientation = CGImagePropertyOrientation(uiImage.imageOrientation)
-        let faceHandler = VNImageRequestHandler(cgImage: cgImage, orientation: orientation, options: [:])
-        try? faceHandler.perform([faceRequest])
 
-        let faceCrops = (faceRequest.results ?? [])
-            .prefix(8)
-            .compactMap { cropFace($0.boundingBox, from: cgImage) }
-
-        return faceCrops.compactMap { featurePrint(from: $0) }
+        return detectFaces(in: cgImage, orientation: orientation).compactMap { observation in
+            guard let crop = cropFace(observation, from: cgImage) else { return nil }
+            guard let featurePrint = featurePrint(from: crop) else { return nil }
+            return FaceDescriptor(
+                featurePrint: featurePrint,
+                landmarkSignature: landmarkSignature(for: observation)
+            )
+        }
     }
 
     private static func featurePrint(from image: CGImage) -> VNFeaturePrintObservation? {
@@ -1025,7 +1037,110 @@ enum FaceMatcher {
         }
     }
 
-    private static func cropFace(_ normalizedBox: CGRect, from image: CGImage) -> CGImage? {
+    private static func detectFaces(in image: CGImage, orientation: CGImagePropertyOrientation) -> [VNFaceObservation] {
+        let landmarkRequest = VNDetectFaceLandmarksRequest()
+        let landmarkHandler = VNImageRequestHandler(cgImage: image, orientation: orientation, options: [:])
+        if
+            (try? landmarkHandler.perform([landmarkRequest])) != nil,
+            let results = landmarkRequest.results,
+            !results.isEmpty
+        {
+            return Array(results
+                .sorted { area(of: $0.boundingBox) > area(of: $1.boundingBox) }
+                .prefix(Configuration.maxFacesPerImage))
+        }
+
+        let rectangleRequest = VNDetectFaceRectanglesRequest()
+        let rectangleHandler = VNImageRequestHandler(cgImage: image, orientation: orientation, options: [:])
+        guard
+            (try? rectangleHandler.perform([rectangleRequest])) != nil,
+            let results = rectangleRequest.results
+        else {
+            return []
+        }
+
+        return Array(results
+            .sorted { area(of: $0.boundingBox) > area(of: $1.boundingBox) }
+            .prefix(Configuration.maxFacesPerImage))
+    }
+
+    private static func confidence(for reference: FaceDescriptor, comparedTo candidate: FaceDescriptor) -> Int? {
+        var featureDistance = Float(0)
+        do {
+            try reference.featurePrint.computeDistance(&featureDistance, to: candidate.featurePrint)
+        } catch {
+            return nil
+        }
+
+        guard featureDistance.isFinite else { return nil }
+
+        var combinedDistance = featureDistance
+        if
+            let referenceSignature = reference.landmarkSignature,
+            let candidateSignature = candidate.landmarkSignature,
+            let structuralDistance = landmarkDistance(referenceSignature, candidateSignature)
+        {
+            guard structuralDistance <= Configuration.maximumLandmarkDistance else { return nil }
+            combinedDistance += structuralDistance * Configuration.landmarkDistanceWeight
+        } else {
+            combinedDistance += Configuration.missingLandmarkPenalty
+        }
+
+        return confidenceScore(for: combinedDistance)
+    }
+
+    private static func confidenceScore(for distance: Float) -> Int {
+        let normalized = (Configuration.worstDistance - distance) / (Configuration.worstDistance - Configuration.bestDistance)
+        return max(0, min(99, Int((normalized * 100).rounded())))
+    }
+
+    private static func landmarkDistance(_ reference: [Float], _ candidate: [Float]) -> Float? {
+        guard reference.count == candidate.count, !reference.isEmpty else { return nil }
+
+        let squaredSum = zip(reference, candidate).reduce(Float(0)) { partial, pair in
+            let delta = pair.0 - pair.1
+            return partial + (delta * delta)
+        }
+        return sqrt(squaredSum / Float(reference.count))
+    }
+
+    private static func landmarkSignature(for observation: VNFaceObservation) -> [Float]? {
+        guard let landmarks = observation.landmarks else { return nil }
+
+        guard
+            let leftEye = center(of: landmarks.leftPupil ?? landmarks.leftEye),
+            let rightEye = center(of: landmarks.rightPupil ?? landmarks.rightEye),
+            let nose = center(of: landmarks.nose ?? landmarks.noseCrest),
+            let mouth = center(of: landmarks.outerLips)
+        else {
+            return nil
+        }
+
+        let interocular = hypot(rightEye.x - leftEye.x, rightEye.y - leftEye.y)
+        guard interocular > 0.05 else { return nil }
+
+        let eyeMidpoint = CGPoint(x: (leftEye.x + rightEye.x) / 2, y: (leftEye.y + rightEye.y) / 2)
+        let leftBrowY = leftEye.y - 0.14
+        let rightBrowY = rightEye.y - 0.14
+        let mouthWidth = width(of: landmarks.outerLips)
+        let faceBox = observation.boundingBox
+
+        return [
+            Float((nose.x - eyeMidpoint.x) / interocular),
+            Float((nose.y - eyeMidpoint.y) / interocular),
+            Float((mouth.x - eyeMidpoint.x) / interocular),
+            Float((mouth.y - eyeMidpoint.y) / interocular),
+            Float(((center(of: landmarks.leftEyebrow)?.y ?? leftBrowY) - eyeMidpoint.y) / interocular),
+            Float(((center(of: landmarks.rightEyebrow)?.y ?? rightBrowY) - eyeMidpoint.y) / interocular),
+            Float((rightEye.y - leftEye.y) / interocular),
+            Float(mouthWidth / interocular),
+            Float(faceBox.width / faceBox.height),
+            Float((mouth.x - nose.x) / interocular)
+        ]
+    }
+
+    private static func cropFace(_ observation: VNFaceObservation, from image: CGImage) -> CGImage? {
+        let normalizedBox = structuralFaceBox(for: observation) ?? observation.boundingBox
         let width = CGFloat(image.width)
         let height = CGFloat(image.height)
         var rect = CGRect(
@@ -1034,11 +1149,80 @@ enum FaceMatcher {
             width: normalizedBox.width * width,
             height: normalizedBox.height * height
         )
-        let expansion = max(rect.width, rect.height) * 0.28
-        rect = rect.insetBy(dx: -expansion, dy: -expansion)
+        rect = rect.insetBy(dx: -(rect.width * 0.08), dy: -(rect.height * 0.1))
         rect = rect.intersection(CGRect(x: 0, y: 0, width: width, height: height))
         guard rect.width > 24, rect.height > 24 else { return nil }
         return image.cropping(to: rect)
+    }
+
+    private static func structuralFaceBox(for observation: VNFaceObservation) -> CGRect? {
+        guard let landmarks = observation.landmarks else { return nil }
+
+        let regions = [
+            landmarks.leftEyebrow,
+            landmarks.rightEyebrow,
+            landmarks.leftEye,
+            landmarks.rightEye,
+            landmarks.nose,
+            landmarks.noseCrest,
+            landmarks.outerLips,
+            landmarks.innerLips,
+            landmarks.faceContour
+        ]
+
+        let points = regions
+            .compactMap { $0 }
+            .flatMap(normalizedPoints(in:))
+        guard !points.isEmpty else { return nil }
+
+        let minX = points.map(\.x).min() ?? 0
+        let maxX = points.map(\.x).max() ?? 1
+        let minY = points.map(\.y).min() ?? 0
+        let maxY = points.map(\.y).max() ?? 1
+
+        let bounds = observation.boundingBox
+        let cropMinX = bounds.minX + bounds.width * max(minX - 0.18, 0)
+        let cropMaxX = bounds.minX + bounds.width * min(maxX + 0.18, 1)
+        let cropMinY = bounds.minY + bounds.height * max(minY - 0.12, 0)
+        let cropMaxY = bounds.minY + bounds.height * min(maxY + 0.2, 1)
+
+        guard cropMaxX > cropMinX, cropMaxY > cropMinY else { return nil }
+        return CGRect(
+            x: cropMinX,
+            y: cropMinY,
+            width: cropMaxX - cropMinX,
+            height: cropMaxY - cropMinY
+        )
+    }
+
+    private static func area(of rect: CGRect) -> CGFloat {
+        rect.width * rect.height
+    }
+
+    private static func center(of region: VNFaceLandmarkRegion2D?) -> CGPoint? {
+        guard let region else { return nil }
+        let points = normalizedPoints(in: region)
+        guard !points.isEmpty else { return nil }
+        let sum = points.reduce(CGPoint.zero) { partial, point in
+            CGPoint(x: partial.x + point.x, y: partial.y + point.y)
+        }
+        let count = CGFloat(points.count)
+        return CGPoint(x: sum.x / count, y: sum.y / count)
+    }
+
+    private static func width(of region: VNFaceLandmarkRegion2D?) -> CGFloat {
+        guard let region else { return 0 }
+        let points = normalizedPoints(in: region)
+        guard let minX = points.map(\.x).min(), let maxX = points.map(\.x).max() else { return 0 }
+        return maxX - minX
+    }
+
+    private static func normalizedPoints(in region: VNFaceLandmarkRegion2D) -> [CGPoint] {
+        let rawPoints = region.normalizedPoints
+        return (0..<region.pointCount).map { index in
+            let point = rawPoints[index]
+            return CGPoint(x: CGFloat(point.x), y: CGFloat(point.y))
+        }
     }
 }
 

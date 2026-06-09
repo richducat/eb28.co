@@ -1,0 +1,67 @@
+{
+  "capturedAt": "2026-06-06T20:53:03.263Z",
+  "build84": {
+    "id": "7d9ca1a1-f473-415c-a88a-1b54905ee604",
+    "num": "84",
+    "marketing": "1.0.1",
+    "uploaded": "2026-06-06T08:01:20-07:00",
+    "processing": "VALID",
+    "expired": false,
+    "internal": "IN_BETA_TESTING",
+    "external": "BETA_APPROVED",
+    "betaReview": {
+      "betaReviewState": "APPROVED",
+      "submittedDate": null
+    }
+  },
+  "build1": {
+    "id": "c2befa7a-c292-488d-b5b2-f4ef24a0a0c2",
+    "num": "1",
+    "marketing": "1.0.1",
+    "uploaded": "2026-06-06T08:51:29-07:00",
+    "processing": "VALID",
+    "expired": true,
+    "internal": "EXPIRED",
+    "external": "EXPIRED",
+    "betaReview": null
+  },
+  "appReview": {
+    "data": [
+      {
+        "type": "appStoreVersions",
+        "id": "1e1883dc-dde7-4c00-9f75-6d19b1daa8c0",
+        "attributes": {
+          "versionString": "1.0.1",
+          "appStoreState": "WAITING_FOR_REVIEW",
+          "appVersionState": "WAITING_FOR_REVIEW",
+          "releaseType": "AFTER_APPROVAL"
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/appStoreVersions/1e1883dc-dde7-4c00-9f75-6d19b1daa8c0"
+        }
+      },
+      {
+        "type": "appStoreVersions",
+        "id": "613e1855-8072-4949-912b-054a5ea99784",
+        "attributes": {
+          "versionString": "1.0",
+          "appStoreState": "READY_FOR_SALE",
+          "appVersionState": "READY_FOR_DISTRIBUTION",
+          "releaseType": "AFTER_APPROVAL"
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/appStoreVersions/613e1855-8072-4949-912b-054a5ea99784"
+        }
+      }
+    ],
+    "links": {
+      "self": "https://appstoreconnect.apple.com/iris/v1/apps/6769565852/appStoreVersions?fields%5BappStoreVersions%5D=versionString%2CreleaseType%2CappStoreState%2CappVersionState&filter%5Bplatform%5D=IOS&limit=10"
+    },
+    "meta": {
+      "paging": {
+        "total": 2,
+        "limit": 10
+      }
+    }
+  }
+}

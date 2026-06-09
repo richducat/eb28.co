@@ -6,8 +6,8 @@
 - Subtitle: Find cadet photos faster
 - Bundle ID: co.eb28.cadetcatch
 - SKU: cadetcatch-ios
-- Version: 1.0.0
-- Build: 13
+- Version: 1.0.1
+- Build: 80
 - Primary category: Lifestyle
 - Secondary category: Photo & Video
 - Marketing URL: https://eb28.co/cc/
@@ -36,7 +36,7 @@ cadet, military, academy, photos, family, parents, coast
 
 ## What's New
 
-Adds visible photo-check progress, Pduddy Pics as a selected Facebook source, daily automatic photo checks, the USCGC EAGLE welcome image, Coast Guard themed typography, restore purchase controls, and explicit in-app subscription details with Privacy Policy and Terms of Use links.
+Restores the build 80 CadetCatch update with private roster setup, approved public photo sources, hidden result previews, saved finds, family notes, and purchase restore controls.
 
 ## Review Notes
 
@@ -55,12 +55,12 @@ No login is required. Add a cadet profile from Roster using a clear face photo s
 
 ## Internal Launch Notes
 
-- App Store Connect version state: Ready for Sale on 2026-05-21
-- Attached build ID or build number: 13
-- Review submission ID: 42ff78ff-6b09-4251-8ebc-484917819f99
-- Automatic release after approval: Yes
+- App Store Connect version state: Waiting for Review on 2026-06-06
+- Attached build ID or build number: 80 (`df052001-85ae-4380-99a1-6ad808a40b9a`)
+- Review submission ID: 575c019e-da9a-404a-9074-a4e18168cc4a
+- Release after approval: After approval
 - In-app purchases and subscription status: Approved
-- Verification screenshots: output/verification/cadetcatch-build13-sources.png and output/verification/cadetcatch-build13-more-daily.png
+- Verification screenshots: app-store/releases/cadetcatch/app-store-connect-snapshots/
 - Post-approval checks to run:
   - Confirm live support and privacy URLs after Pages deployment.
   - Re-run photo checks against current Academy and public-affairs pages before external demo sessions.

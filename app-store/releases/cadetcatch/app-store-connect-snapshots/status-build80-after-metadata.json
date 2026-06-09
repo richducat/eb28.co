@@ -1,0 +1,276 @@
+{
+  "capturedAt": "2026-06-06T18:56:10.347Z",
+  "mode": "status",
+  "target": {
+    "appId": "6769565852",
+    "platform": "IOS",
+    "versionString": "1.0.1",
+    "buildNumber": "80"
+  },
+  "actions": [],
+  "state": {
+    "app": {
+      "id": "6769565852",
+      "name": "CadetCatch",
+      "bundleId": "co.eb28.cadetcatch"
+    },
+    "targetVersion": {
+      "id": "1e1883dc-dde7-4c00-9f75-6d19b1daa8c0",
+      "versionString": "1.0.1",
+      "platform": "IOS",
+      "appStoreState": "PREPARE_FOR_SUBMISSION",
+      "appVersionState": "PREPARE_FOR_SUBMISSION",
+      "releaseType": "AFTER_APPROVAL",
+      "createdDate": "2026-06-02T18:08:08-07:00"
+    },
+    "recentVersions": [
+      {
+        "id": "1e1883dc-dde7-4c00-9f75-6d19b1daa8c0",
+        "versionString": "1.0.1",
+        "platform": "IOS",
+        "appStoreState": "PREPARE_FOR_SUBMISSION",
+        "appVersionState": "PREPARE_FOR_SUBMISSION",
+        "releaseType": "AFTER_APPROVAL",
+        "createdDate": "2026-06-02T18:08:08-07:00"
+      },
+      {
+        "id": "613e1855-8072-4949-912b-054a5ea99784",
+        "versionString": "1.0",
+        "platform": "IOS",
+        "appStoreState": "READY_FOR_SALE",
+        "appVersionState": "READY_FOR_DISTRIBUTION",
+        "releaseType": "AFTER_APPROVAL",
+        "createdDate": "2026-05-14T15:19:59-07:00"
+      }
+    ],
+    "attachedBuild": {
+      "id": "df052001-85ae-4380-99a1-6ad808a40b9a",
+      "buildNumber": "80",
+      "marketingVersion": null,
+      "processingState": "VALID",
+      "uploadedDate": "2026-06-04T07:06:36-07:00",
+      "expired": false,
+      "usesNonExemptEncryption": false
+    },
+    "targetBuild": {
+      "id": "df052001-85ae-4380-99a1-6ad808a40b9a",
+      "buildNumber": "80",
+      "marketingVersion": null,
+      "processingState": "VALID",
+      "uploadedDate": "2026-06-04T07:06:36-07:00",
+      "expired": false,
+      "usesNonExemptEncryption": false
+    },
+    "recentBuilds": [
+      {
+        "id": "c2befa7a-c292-488d-b5b2-f4ef24a0a0c2",
+        "buildNumber": "1",
+        "marketingVersion": null,
+        "processingState": "VALID",
+        "uploadedDate": "2026-06-06T08:51:29-07:00",
+        "expired": false,
+        "usesNonExemptEncryption": false
+      },
+      {
+        "id": "7d9ca1a1-f473-415c-a88a-1b54905ee604",
+        "buildNumber": "84",
+        "marketingVersion": null,
+        "processingState": "VALID",
+        "uploadedDate": "2026-06-06T08:01:20-07:00",
+        "expired": false,
+        "usesNonExemptEncryption": false
+      },
+      {
+        "id": "046bc3b5-720a-4155-a8bd-de0f7b1179e6",
+        "buildNumber": "83",
+        "marketingVersion": null,
+        "processingState": "VALID",
+        "uploadedDate": "2026-06-06T07:22:01-07:00",
+        "expired": false,
+        "usesNonExemptEncryption": false
+      },
+      {
+        "id": "b29d7177-65ff-429c-af43-2c6edf27ecdc",
+        "buildNumber": "82",
+        "marketingVersion": null,
+        "processingState": "VALID",
+        "uploadedDate": "2026-06-05T17:43:17-07:00",
+        "expired": false,
+        "usesNonExemptEncryption": false
+      },
+      {
+        "id": "df052001-85ae-4380-99a1-6ad808a40b9a",
+        "buildNumber": "80",
+        "marketingVersion": null,
+        "processingState": "VALID",
+        "uploadedDate": "2026-06-04T07:06:36-07:00",
+        "expired": false,
+        "usesNonExemptEncryption": false
+      },
+      {
+        "id": "d44ca692-2290-40c7-a951-b97d02ecbf6e",
+        "buildNumber": "79",
+        "marketingVersion": null,
+        "processingState": "VALID",
+        "uploadedDate": "2026-06-04T05:59:56-07:00",
+        "expired": false,
+        "usesNonExemptEncryption": false
+      },
+      {
+        "id": "3eefd63a-b4ab-4f88-b6ae-d8c805bad86a",
+        "buildNumber": "78",
+        "marketingVersion": null,
+        "processingState": "VALID",
+        "uploadedDate": "2026-06-03T22:20:00-07:00",
+        "expired": false,
+        "usesNonExemptEncryption": false
+      },
+      {
+        "id": "03421bd5-8eb8-4a0c-886b-003103ed590a",
+        "buildNumber": "77",
+        "marketingVersion": null,
+        "processingState": "VALID",
+        "uploadedDate": "2026-06-03T20:51:59-07:00",
+        "expired": false,
+        "usesNonExemptEncryption": false
+      }
+    ],
+    "subscription": null,
+    "reviewSubmissions": [
+      {
+        "id": "42ff78ff-6b09-4251-8ebc-484917819f99",
+        "state": "COMPLETE",
+        "submittedDate": "2026-05-21T21:05:00.239Z",
+        "appStoreVersionForReview": {
+          "id": "613e1855-8072-4949-912b-054a5ea99784",
+          "versionString": "1.0",
+          "platform": "IOS",
+          "appStoreState": "READY_FOR_SALE",
+          "appVersionState": "READY_FOR_DISTRIBUTION",
+          "releaseType": null,
+          "createdDate": null
+        },
+        "items": [
+          {
+            "id": "NDJmZjc4ZmYtNmIwOS00MjUxLThlYmMtNDg0OTE3ODE5Zjk5fDZ8ODg1Njg5MDg0",
+            "state": "APPROVED",
+            "appStoreVersionId": null
+          }
+        ]
+      },
+      {
+        "id": "6aa3871d-5d95-4e64-b5f3-f8820f7d25c4",
+        "state": "COMPLETE",
+        "submittedDate": "2026-05-21T02:41:54.478Z",
+        "appStoreVersionForReview": {
+          "id": "613e1855-8072-4949-912b-054a5ea99784",
+          "versionString": "1.0",
+          "platform": "IOS",
+          "appStoreState": "READY_FOR_SALE",
+          "appVersionState": "READY_FOR_DISTRIBUTION",
+          "releaseType": null,
+          "createdDate": null
+        },
+        "items": [
+          {
+            "id": "NmFhMzg3MWQtNWQ5NS00ZTY0LWI1ZjMtZjg4MjBmN2QyNWM0fDZ8ODg1Njg5MDg0",
+            "state": "REMOVED",
+            "appStoreVersionId": null
+          }
+        ]
+      },
+      {
+        "id": "9b90e7c1-12a9-4eec-ab37-1af45010eb98",
+        "state": "COMPLETE",
+        "submittedDate": "2026-05-18T00:37:26.063Z",
+        "appStoreVersionForReview": {
+          "id": "613e1855-8072-4949-912b-054a5ea99784",
+          "versionString": "1.0",
+          "platform": "IOS",
+          "appStoreState": "READY_FOR_SALE",
+          "appVersionState": "READY_FOR_DISTRIBUTION",
+          "releaseType": null,
+          "createdDate": null
+        },
+        "items": [
+          {
+            "id": "OWI5MGU3YzEtMTJhOS00ZWVjLWFiMzctMWFmNDUwMTBlYjk4fDZ8ODg1Njg5MDg0",
+            "state": "REMOVED",
+            "appStoreVersionId": null
+          }
+        ]
+      },
+      {
+        "id": "54468d71-c646-412d-b904-5bf168dacb15",
+        "state": "COMPLETE",
+        "submittedDate": "2026-05-17T04:33:06.027Z",
+        "appStoreVersionForReview": {
+          "id": "613e1855-8072-4949-912b-054a5ea99784",
+          "versionString": "1.0",
+          "platform": "IOS",
+          "appStoreState": "READY_FOR_SALE",
+          "appVersionState": "READY_FOR_DISTRIBUTION",
+          "releaseType": null,
+          "createdDate": null
+        },
+        "items": [
+          {
+            "id": "NTQ0NjhkNzEtYzY0Ni00MTJkLWI5MDQtNWJmMTY4ZGFjYjE1fDZ8ODg1Njg5MDg0",
+            "state": "REMOVED",
+            "appStoreVersionId": null
+          }
+        ]
+      },
+      {
+        "id": "38812dc6-e3d6-4a45-ba73-872959d2ff8b",
+        "state": "COMPLETE",
+        "submittedDate": "2026-05-17T03:58:32.598Z",
+        "appStoreVersionForReview": {
+          "id": "613e1855-8072-4949-912b-054a5ea99784",
+          "versionString": "1.0",
+          "platform": "IOS",
+          "appStoreState": "READY_FOR_SALE",
+          "appVersionState": "READY_FOR_DISTRIBUTION",
+          "releaseType": null,
+          "createdDate": null
+        },
+        "items": [
+          {
+            "id": "Mzg4MTJkYzYtZTNkNi00YTQ1LWJhNzMtODcyOTU5ZDJmZjhifDZ8ODg1Njg5MDg0",
+            "state": "REMOVED",
+            "appStoreVersionId": null
+          }
+        ]
+      },
+      {
+        "id": "3de39f72-fbf0-4637-9425-b15d422dc4b3",
+        "state": "COMPLETE",
+        "submittedDate": "2026-05-16T01:21:01.817Z",
+        "appStoreVersionForReview": {
+          "id": "613e1855-8072-4949-912b-054a5ea99784",
+          "versionString": "1.0",
+          "platform": "IOS",
+          "appStoreState": "READY_FOR_SALE",
+          "appVersionState": "READY_FOR_DISTRIBUTION",
+          "releaseType": null,
+          "createdDate": null
+        },
+        "items": [
+          {
+            "id": "M2RlMzlmNzItZmJmMC00NjM3LTk0MjUtYjE1ZDQyMmRjNGIzfDZ8ODg1Njg5MDg0",
+            "state": "REMOVED",
+            "appStoreVersionId": null
+          }
+        ]
+      }
+    ]
+  },
+  "submissionResult": null,
+  "next": "Run this script with --submit to create/add the App Store version to review and submit it.",
+  "references": [
+    "https://developer.apple.com/documentation/appstoreconnectapi/patch-v1-appstoreversions-_id_-relationships-build",
+    "https://developer.apple.com/documentation/appstoreconnectapi/review-submissions",
+    "https://developer.apple.com/documentation/appstoreconnectapi/post-v1-reviewsubmissionitems",
+    "https://developer.apple.com/help/app-store-connect/manage-submissions-to-app-review/submit-an-app"
+  ]
+}

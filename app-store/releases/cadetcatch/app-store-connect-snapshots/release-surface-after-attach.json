@@ -1,0 +1,1286 @@
+{
+  "capturedAt": "2026-06-06T18:53:06.628Z",
+  "appId": "6769565852",
+  "versionId": "1e1883dc-dde7-4c00-9f75-6d19b1daa8c0",
+  "locId": "d91c7fcc-4b72-46cd-8020-8405f2dac403",
+  "versions": {
+    "ok": true,
+    "response": {
+      "data": [
+        {
+          "type": "appStoreVersions",
+          "id": "1e1883dc-dde7-4c00-9f75-6d19b1daa8c0",
+          "attributes": {
+            "platform": "IOS",
+            "versionString": "1.0.1",
+            "appStoreState": "PREPARE_FOR_SUBMISSION",
+            "appVersionState": "PREPARE_FOR_SUBMISSION",
+            "releaseType": "AFTER_APPROVAL",
+            "usesIdfa": null,
+            "downloadable": true,
+            "createdDate": "2026-06-02T18:08:08-07:00"
+          },
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/appStoreVersions/1e1883dc-dde7-4c00-9f75-6d19b1daa8c0"
+          }
+        },
+        {
+          "type": "appStoreVersions",
+          "id": "613e1855-8072-4949-912b-054a5ea99784",
+          "attributes": {
+            "platform": "IOS",
+            "versionString": "1.0",
+            "appStoreState": "READY_FOR_SALE",
+            "appVersionState": "READY_FOR_DISTRIBUTION",
+            "releaseType": "AFTER_APPROVAL",
+            "usesIdfa": null,
+            "downloadable": true,
+            "createdDate": "2026-05-14T15:19:59-07:00"
+          },
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/appStoreVersions/613e1855-8072-4949-912b-054a5ea99784"
+          }
+        }
+      ],
+      "links": {
+        "self": "https://appstoreconnect.apple.com/iris/v1/apps/6769565852/appStoreVersions?fields%5BappStoreVersions%5D=downloadable%2CcreatedDate%2CusesIdfa%2CversionString%2CreleaseType%2CappStoreState%2CappVersionState%2Cplatform&filter%5Bplatform%5D=IOS&limit=50"
+      },
+      "meta": {
+        "paging": {
+          "total": 2,
+          "limit": 50
+        }
+      }
+    }
+  },
+  "builds": {
+    "ok": true,
+    "response": {
+      "data": [
+        {
+          "type": "builds",
+          "id": "c2befa7a-c292-488d-b5b2-f4ef24a0a0c2",
+          "attributes": {
+            "version": "1",
+            "uploadedDate": "2026-06-06T08:51:29-07:00",
+            "expired": false,
+            "minOsVersion": "17.0",
+            "processingState": "VALID",
+            "buildAudienceType": "APP_STORE_ELIGIBLE",
+            "usesNonExemptEncryption": false
+          },
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/builds/c2befa7a-c292-488d-b5b2-f4ef24a0a0c2"
+          }
+        },
+        {
+          "type": "builds",
+          "id": "7d9ca1a1-f473-415c-a88a-1b54905ee604",
+          "attributes": {
+            "version": "84",
+            "uploadedDate": "2026-06-06T08:01:20-07:00",
+            "expired": false,
+            "minOsVersion": "17.0",
+            "processingState": "VALID",
+            "buildAudienceType": "APP_STORE_ELIGIBLE",
+            "usesNonExemptEncryption": false
+          },
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/builds/7d9ca1a1-f473-415c-a88a-1b54905ee604"
+          }
+        },
+        {
+          "type": "builds",
+          "id": "046bc3b5-720a-4155-a8bd-de0f7b1179e6",
+          "attributes": {
+            "version": "83",
+            "uploadedDate": "2026-06-06T07:22:01-07:00",
+            "expired": false,
+            "minOsVersion": "17.0",
+            "processingState": "VALID",
+            "buildAudienceType": "APP_STORE_ELIGIBLE",
+            "usesNonExemptEncryption": false
+          },
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/builds/046bc3b5-720a-4155-a8bd-de0f7b1179e6"
+          }
+        },
+        {
+          "type": "builds",
+          "id": "b29d7177-65ff-429c-af43-2c6edf27ecdc",
+          "attributes": {
+            "version": "82",
+            "uploadedDate": "2026-06-05T17:43:17-07:00",
+            "expired": false,
+            "minOsVersion": "17.0",
+            "processingState": "VALID",
+            "buildAudienceType": "APP_STORE_ELIGIBLE",
+            "usesNonExemptEncryption": false
+          },
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/builds/b29d7177-65ff-429c-af43-2c6edf27ecdc"
+          }
+        },
+        {
+          "type": "builds",
+          "id": "df052001-85ae-4380-99a1-6ad808a40b9a",
+          "attributes": {
+            "version": "80",
+            "uploadedDate": "2026-06-04T07:06:36-07:00",
+            "expired": false,
+            "minOsVersion": "17.0",
+            "processingState": "VALID",
+            "buildAudienceType": "APP_STORE_ELIGIBLE",
+            "usesNonExemptEncryption": false
+          },
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/builds/df052001-85ae-4380-99a1-6ad808a40b9a"
+          }
+        },
+        {
+          "type": "builds",
+          "id": "d44ca692-2290-40c7-a951-b97d02ecbf6e",
+          "attributes": {
+            "version": "79",
+            "uploadedDate": "2026-06-04T05:59:56-07:00",
+            "expired": false,
+            "minOsVersion": "17.0",
+            "processingState": "VALID",
+            "buildAudienceType": "APP_STORE_ELIGIBLE",
+            "usesNonExemptEncryption": false
+          },
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/builds/d44ca692-2290-40c7-a951-b97d02ecbf6e"
+          }
+        },
+        {
+          "type": "builds",
+          "id": "3eefd63a-b4ab-4f88-b6ae-d8c805bad86a",
+          "attributes": {
+            "version": "78",
+            "uploadedDate": "2026-06-03T22:20:00-07:00",
+            "expired": false,
+            "minOsVersion": "17.0",
+            "processingState": "VALID",
+            "buildAudienceType": "APP_STORE_ELIGIBLE",
+            "usesNonExemptEncryption": false
+          },
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/builds/3eefd63a-b4ab-4f88-b6ae-d8c805bad86a"
+          }
+        },
+        {
+          "type": "builds",
+          "id": "03421bd5-8eb8-4a0c-886b-003103ed590a",
+          "attributes": {
+            "version": "77",
+            "uploadedDate": "2026-06-03T20:51:59-07:00",
+            "expired": false,
+            "minOsVersion": "17.0",
+            "processingState": "VALID",
+            "buildAudienceType": "APP_STORE_ELIGIBLE",
+            "usesNonExemptEncryption": false
+          },
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/builds/03421bd5-8eb8-4a0c-886b-003103ed590a"
+          }
+        },
+        {
+          "type": "builds",
+          "id": "8d04e029-78ac-4282-9ce1-83f813b3381c",
+          "attributes": {
+            "version": "76",
+            "uploadedDate": "2026-06-03T19:54:20-07:00",
+            "expired": false,
+            "minOsVersion": "17.0",
+            "processingState": "VALID",
+            "buildAudienceType": "APP_STORE_ELIGIBLE",
+            "usesNonExemptEncryption": false
+          },
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/builds/8d04e029-78ac-4282-9ce1-83f813b3381c"
+          }
+        },
+        {
+          "type": "builds",
+          "id": "9f8653bb-f4e1-461b-8d53-2e34fc9f55eb",
+          "attributes": {
+            "version": "75",
+            "uploadedDate": "2026-06-03T16:46:51-07:00",
+            "expired": false,
+            "minOsVersion": "17.0",
+            "processingState": "VALID",
+            "buildAudienceType": "APP_STORE_ELIGIBLE",
+            "usesNonExemptEncryption": false
+          },
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/builds/9f8653bb-f4e1-461b-8d53-2e34fc9f55eb"
+          }
+        },
+        {
+          "type": "builds",
+          "id": "7590e30d-15b9-4120-999e-d9929c8963d2",
+          "attributes": {
+            "version": "74",
+            "uploadedDate": "2026-06-02T19:28:13-07:00",
+            "expired": false,
+            "minOsVersion": "17.0",
+            "processingState": "VALID",
+            "buildAudienceType": "APP_STORE_ELIGIBLE",
+            "usesNonExemptEncryption": false
+          },
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/builds/7590e30d-15b9-4120-999e-d9929c8963d2"
+          }
+        },
+        {
+          "type": "builds",
+          "id": "7ba60592-645a-48ae-aa3b-57a4e44087cd",
+          "attributes": {
+            "version": "73",
+            "uploadedDate": "2026-06-02T19:20:30-07:00",
+            "expired": false,
+            "minOsVersion": "17.0",
+            "processingState": "VALID",
+            "buildAudienceType": "APP_STORE_ELIGIBLE",
+            "usesNonExemptEncryption": false
+          },
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/builds/7ba60592-645a-48ae-aa3b-57a4e44087cd"
+          }
+        },
+        {
+          "type": "builds",
+          "id": "00648926-f323-4dba-8620-2a4def465f8b",
+          "attributes": {
+            "version": "72",
+            "uploadedDate": "2026-06-02T17:44:43-07:00",
+            "expired": false,
+            "minOsVersion": "17.0",
+            "processingState": "VALID",
+            "buildAudienceType": "APP_STORE_ELIGIBLE",
+            "usesNonExemptEncryption": false
+          },
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/builds/00648926-f323-4dba-8620-2a4def465f8b"
+          }
+        },
+        {
+          "type": "builds",
+          "id": "84834b41-6a89-426b-9633-c1fd33465d73",
+          "attributes": {
+            "version": "71",
+            "uploadedDate": "2026-06-02T16:22:30-07:00",
+            "expired": false,
+            "minOsVersion": "17.0",
+            "processingState": "VALID",
+            "buildAudienceType": "APP_STORE_ELIGIBLE",
+            "usesNonExemptEncryption": false
+          },
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/builds/84834b41-6a89-426b-9633-c1fd33465d73"
+          }
+        },
+        {
+          "type": "builds",
+          "id": "88a8775c-96b5-4b02-862a-eb075a51e7f9",
+          "attributes": {
+            "version": "70",
+            "uploadedDate": "2026-06-02T15:51:00-07:00",
+            "expired": false,
+            "minOsVersion": "17.0",
+            "processingState": "VALID",
+            "buildAudienceType": "APP_STORE_ELIGIBLE",
+            "usesNonExemptEncryption": false
+          },
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/builds/88a8775c-96b5-4b02-862a-eb075a51e7f9"
+          }
+        },
+        {
+          "type": "builds",
+          "id": "eb9320ee-4719-49ab-ad06-7e798ab2ef5c",
+          "attributes": {
+            "version": "69",
+            "uploadedDate": "2026-06-02T15:17:03-07:00",
+            "expired": false,
+            "minOsVersion": "17.0",
+            "processingState": "VALID",
+            "buildAudienceType": "APP_STORE_ELIGIBLE",
+            "usesNonExemptEncryption": false
+          },
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/builds/eb9320ee-4719-49ab-ad06-7e798ab2ef5c"
+          }
+        },
+        {
+          "type": "builds",
+          "id": "50f04adf-6cd0-4b49-bdf4-d166871f084b",
+          "attributes": {
+            "version": "68",
+            "uploadedDate": "2026-06-02T15:12:10-07:00",
+            "expired": false,
+            "minOsVersion": "17.0",
+            "processingState": "VALID",
+            "buildAudienceType": "APP_STORE_ELIGIBLE",
+            "usesNonExemptEncryption": false
+          },
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/builds/50f04adf-6cd0-4b49-bdf4-d166871f084b"
+          }
+        },
+        {
+          "type": "builds",
+          "id": "f42ed24d-270d-4442-af70-ca33c67ff3c8",
+          "attributes": {
+            "version": "67",
+            "uploadedDate": "2026-06-02T14:40:18-07:00",
+            "expired": false,
+            "minOsVersion": "17.0",
+            "processingState": "VALID",
+            "buildAudienceType": "APP_STORE_ELIGIBLE",
+            "usesNonExemptEncryption": false
+          },
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/builds/f42ed24d-270d-4442-af70-ca33c67ff3c8"
+          }
+        },
+        {
+          "type": "builds",
+          "id": "827394a1-7d11-44e8-82b1-26d7cae1215d",
+          "attributes": {
+            "version": "66",
+            "uploadedDate": "2026-06-02T13:52:05-07:00",
+            "expired": false,
+            "minOsVersion": "17.0",
+            "processingState": "VALID",
+            "buildAudienceType": "APP_STORE_ELIGIBLE",
+            "usesNonExemptEncryption": false
+          },
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/builds/827394a1-7d11-44e8-82b1-26d7cae1215d"
+          }
+        },
+        {
+          "type": "builds",
+          "id": "949a093c-9337-47d0-9b1d-5aea53ced2b5",
+          "attributes": {
+            "version": "65",
+            "uploadedDate": "2026-06-02T12:25:37-07:00",
+            "expired": false,
+            "minOsVersion": "17.0",
+            "processingState": "VALID",
+            "buildAudienceType": "APP_STORE_ELIGIBLE",
+            "usesNonExemptEncryption": false
+          },
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/builds/949a093c-9337-47d0-9b1d-5aea53ced2b5"
+          }
+        },
+        {
+          "type": "builds",
+          "id": "9faf78c1-a2e8-42d1-adf6-19430c907bca",
+          "attributes": {
+            "version": "64",
+            "uploadedDate": "2026-06-02T06:32:43-07:00",
+            "expired": false,
+            "minOsVersion": "17.0",
+            "processingState": "VALID",
+            "buildAudienceType": "APP_STORE_ELIGIBLE",
+            "usesNonExemptEncryption": false
+          },
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/builds/9faf78c1-a2e8-42d1-adf6-19430c907bca"
+          }
+        },
+        {
+          "type": "builds",
+          "id": "719ba8bb-a21b-455a-baf4-4de1fcf2ddf4",
+          "attributes": {
+            "version": "63",
+            "uploadedDate": "2026-06-02T06:05:32-07:00",
+            "expired": false,
+            "minOsVersion": "17.0",
+            "processingState": "VALID",
+            "buildAudienceType": "APP_STORE_ELIGIBLE",
+            "usesNonExemptEncryption": false
+          },
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/builds/719ba8bb-a21b-455a-baf4-4de1fcf2ddf4"
+          }
+        },
+        {
+          "type": "builds",
+          "id": "2669c4b8-f187-4690-beea-f17f66a0719a",
+          "attributes": {
+            "version": "62",
+            "uploadedDate": "2026-06-02T04:25:55-07:00",
+            "expired": false,
+            "minOsVersion": "17.0",
+            "processingState": "VALID",
+            "buildAudienceType": "APP_STORE_ELIGIBLE",
+            "usesNonExemptEncryption": false
+          },
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/builds/2669c4b8-f187-4690-beea-f17f66a0719a"
+          }
+        },
+        {
+          "type": "builds",
+          "id": "2569f927-7cc5-473b-848a-badf52ac6e0a",
+          "attributes": {
+            "version": "61",
+            "uploadedDate": "2026-06-01T19:59:51-07:00",
+            "expired": false,
+            "minOsVersion": "17.0",
+            "processingState": "VALID",
+            "buildAudienceType": "APP_STORE_ELIGIBLE",
+            "usesNonExemptEncryption": false
+          },
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/builds/2569f927-7cc5-473b-848a-badf52ac6e0a"
+          }
+        },
+        {
+          "type": "builds",
+          "id": "1d8e3e1e-a6b3-4cc3-afcb-fb21c3714d81",
+          "attributes": {
+            "version": "60",
+            "uploadedDate": "2026-06-01T18:46:18-07:00",
+            "expired": false,
+            "minOsVersion": "17.0",
+            "processingState": "VALID",
+            "buildAudienceType": "APP_STORE_ELIGIBLE",
+            "usesNonExemptEncryption": false
+          },
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/builds/1d8e3e1e-a6b3-4cc3-afcb-fb21c3714d81"
+          }
+        },
+        {
+          "type": "builds",
+          "id": "8e027e50-4361-49cd-aaf3-9df04f237b12",
+          "attributes": {
+            "version": "59",
+            "uploadedDate": "2026-06-01T18:14:04-07:00",
+            "expired": false,
+            "minOsVersion": "17.0",
+            "processingState": "VALID",
+            "buildAudienceType": "APP_STORE_ELIGIBLE",
+            "usesNonExemptEncryption": false
+          },
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/builds/8e027e50-4361-49cd-aaf3-9df04f237b12"
+          }
+        },
+        {
+          "type": "builds",
+          "id": "cdd53e58-3112-4859-aa16-312fe856c9ad",
+          "attributes": {
+            "version": "58",
+            "uploadedDate": "2026-06-01T16:52:03-07:00",
+            "expired": false,
+            "minOsVersion": "17.0",
+            "processingState": "VALID",
+            "buildAudienceType": "APP_STORE_ELIGIBLE",
+            "usesNonExemptEncryption": false
+          },
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/builds/cdd53e58-3112-4859-aa16-312fe856c9ad"
+          }
+        },
+        {
+          "type": "builds",
+          "id": "e354c27b-a62a-4e8d-92d9-8f30430c2716",
+          "attributes": {
+            "version": "57",
+            "uploadedDate": "2026-06-01T16:44:53-07:00",
+            "expired": false,
+            "minOsVersion": "17.0",
+            "processingState": "VALID",
+            "buildAudienceType": "APP_STORE_ELIGIBLE",
+            "usesNonExemptEncryption": false
+          },
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/builds/e354c27b-a62a-4e8d-92d9-8f30430c2716"
+          }
+        },
+        {
+          "type": "builds",
+          "id": "f3c33190-35a0-453a-bbee-7b450538d7e9",
+          "attributes": {
+            "version": "55",
+            "uploadedDate": "2026-06-01T16:15:16-07:00",
+            "expired": false,
+            "minOsVersion": "17.0",
+            "processingState": "VALID",
+            "buildAudienceType": "APP_STORE_ELIGIBLE",
+            "usesNonExemptEncryption": false
+          },
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/builds/f3c33190-35a0-453a-bbee-7b450538d7e9"
+          }
+        },
+        {
+          "type": "builds",
+          "id": "631e3483-9260-4139-ab3f-40fca28d1922",
+          "attributes": {
+            "version": "54",
+            "uploadedDate": "2026-06-01T16:03:12-07:00",
+            "expired": false,
+            "minOsVersion": "17.0",
+            "processingState": "VALID",
+            "buildAudienceType": "APP_STORE_ELIGIBLE",
+            "usesNonExemptEncryption": false
+          },
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/builds/631e3483-9260-4139-ab3f-40fca28d1922"
+          }
+        },
+        {
+          "type": "builds",
+          "id": "53c010ab-4768-407b-a231-f2d63e7da7ea",
+          "attributes": {
+            "version": "53",
+            "uploadedDate": "2026-06-01T14:51:21-07:00",
+            "expired": false,
+            "minOsVersion": "17.0",
+            "processingState": "VALID",
+            "buildAudienceType": "APP_STORE_ELIGIBLE",
+            "usesNonExemptEncryption": false
+          },
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/builds/53c010ab-4768-407b-a231-f2d63e7da7ea"
+          }
+        },
+        {
+          "type": "builds",
+          "id": "77239183-3700-4239-bc42-c9e2a427d4db",
+          "attributes": {
+            "version": "52",
+            "uploadedDate": "2026-06-01T14:38:33-07:00",
+            "expired": false,
+            "minOsVersion": "17.0",
+            "processingState": "VALID",
+            "buildAudienceType": "APP_STORE_ELIGIBLE",
+            "usesNonExemptEncryption": false
+          },
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/builds/77239183-3700-4239-bc42-c9e2a427d4db"
+          }
+        },
+        {
+          "type": "builds",
+          "id": "bedf3c48-6084-419f-b833-dbe547e441da",
+          "attributes": {
+            "version": "51",
+            "uploadedDate": "2026-06-01T10:34:37-07:00",
+            "expired": false,
+            "minOsVersion": "17.0",
+            "processingState": "VALID",
+            "buildAudienceType": "APP_STORE_ELIGIBLE",
+            "usesNonExemptEncryption": false
+          },
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/builds/bedf3c48-6084-419f-b833-dbe547e441da"
+          }
+        },
+        {
+          "type": "builds",
+          "id": "b076b38e-8042-4ade-a0a3-4aec35eb8fee",
+          "attributes": {
+            "version": "50",
+            "uploadedDate": "2026-06-01T07:54:00-07:00",
+            "expired": false,
+            "minOsVersion": "17.0",
+            "processingState": "VALID",
+            "buildAudienceType": "APP_STORE_ELIGIBLE",
+            "usesNonExemptEncryption": false
+          },
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/builds/b076b38e-8042-4ade-a0a3-4aec35eb8fee"
+          }
+        },
+        {
+          "type": "builds",
+          "id": "12aa9d96-58a6-443e-9fe7-c605ffeb8d6c",
+          "attributes": {
+            "version": "49",
+            "uploadedDate": "2026-06-01T07:31:51-07:00",
+            "expired": false,
+            "minOsVersion": "17.0",
+            "processingState": "VALID",
+            "buildAudienceType": "APP_STORE_ELIGIBLE",
+            "usesNonExemptEncryption": false
+          },
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/builds/12aa9d96-58a6-443e-9fe7-c605ffeb8d6c"
+          }
+        },
+        {
+          "type": "builds",
+          "id": "1485f87e-1cc4-4669-972e-33a83193d113",
+          "attributes": {
+            "version": "48",
+            "uploadedDate": "2026-05-31T17:42:10-07:00",
+            "expired": false,
+            "minOsVersion": "17.0",
+            "processingState": "VALID",
+            "buildAudienceType": "APP_STORE_ELIGIBLE",
+            "usesNonExemptEncryption": false
+          },
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/builds/1485f87e-1cc4-4669-972e-33a83193d113"
+          }
+        },
+        {
+          "type": "builds",
+          "id": "0e2c785a-3352-498e-9943-c694e1863249",
+          "attributes": {
+            "version": "47",
+            "uploadedDate": "2026-05-29T19:50:11-07:00",
+            "expired": false,
+            "minOsVersion": "17.0",
+            "processingState": "VALID",
+            "buildAudienceType": "APP_STORE_ELIGIBLE",
+            "usesNonExemptEncryption": false
+          },
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/builds/0e2c785a-3352-498e-9943-c694e1863249"
+          }
+        },
+        {
+          "type": "builds",
+          "id": "9f6e647f-dfd2-4a27-a2cf-a40c60cd23b8",
+          "attributes": {
+            "version": "46",
+            "uploadedDate": "2026-05-29T19:16:07-07:00",
+            "expired": false,
+            "minOsVersion": "17.0",
+            "processingState": "VALID",
+            "buildAudienceType": "APP_STORE_ELIGIBLE",
+            "usesNonExemptEncryption": false
+          },
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/builds/9f6e647f-dfd2-4a27-a2cf-a40c60cd23b8"
+          }
+        },
+        {
+          "type": "builds",
+          "id": "557bfb2b-b63d-4301-8ef5-b0c06954c4bf",
+          "attributes": {
+            "version": "45",
+            "uploadedDate": "2026-05-29T17:28:14-07:00",
+            "expired": false,
+            "minOsVersion": "17.0",
+            "processingState": "VALID",
+            "buildAudienceType": "APP_STORE_ELIGIBLE",
+            "usesNonExemptEncryption": false
+          },
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/builds/557bfb2b-b63d-4301-8ef5-b0c06954c4bf"
+          }
+        },
+        {
+          "type": "builds",
+          "id": "b0b2d141-a90a-496e-b345-30dff01bf607",
+          "attributes": {
+            "version": "44",
+            "uploadedDate": "2026-05-29T13:54:33-07:00",
+            "expired": false,
+            "minOsVersion": "17.0",
+            "processingState": "VALID",
+            "buildAudienceType": "APP_STORE_ELIGIBLE",
+            "usesNonExemptEncryption": false
+          },
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/builds/b0b2d141-a90a-496e-b345-30dff01bf607"
+          }
+        },
+        {
+          "type": "builds",
+          "id": "8ee8d54f-2745-488d-88ea-00fdfcf3b5ab",
+          "attributes": {
+            "version": "43",
+            "uploadedDate": "2026-05-29T09:16:00-07:00",
+            "expired": false,
+            "minOsVersion": "17.0",
+            "processingState": "VALID",
+            "buildAudienceType": "APP_STORE_ELIGIBLE",
+            "usesNonExemptEncryption": false
+          },
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/builds/8ee8d54f-2745-488d-88ea-00fdfcf3b5ab"
+          }
+        },
+        {
+          "type": "builds",
+          "id": "e6bba129-20ea-4500-87ba-d2e8cdbbf2ff",
+          "attributes": {
+            "version": "42",
+            "uploadedDate": "2026-05-29T09:11:13-07:00",
+            "expired": false,
+            "minOsVersion": "17.0",
+            "processingState": "VALID",
+            "buildAudienceType": "APP_STORE_ELIGIBLE",
+            "usesNonExemptEncryption": false
+          },
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/builds/e6bba129-20ea-4500-87ba-d2e8cdbbf2ff"
+          }
+        },
+        {
+          "type": "builds",
+          "id": "4811f0b5-9d00-4f7a-af3c-d7467d697c2d",
+          "attributes": {
+            "version": "41",
+            "uploadedDate": "2026-05-29T09:05:05-07:00",
+            "expired": false,
+            "minOsVersion": "17.0",
+            "processingState": "VALID",
+            "buildAudienceType": "APP_STORE_ELIGIBLE",
+            "usesNonExemptEncryption": false
+          },
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/builds/4811f0b5-9d00-4f7a-af3c-d7467d697c2d"
+          }
+        },
+        {
+          "type": "builds",
+          "id": "afc927c0-283f-49bb-b06b-ceab6dcd47ca",
+          "attributes": {
+            "version": "39",
+            "uploadedDate": "2026-05-28T22:36:42-07:00",
+            "expired": false,
+            "minOsVersion": "17.0",
+            "processingState": "VALID",
+            "buildAudienceType": "APP_STORE_ELIGIBLE",
+            "usesNonExemptEncryption": false
+          },
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/builds/afc927c0-283f-49bb-b06b-ceab6dcd47ca"
+          }
+        },
+        {
+          "type": "builds",
+          "id": "2a666072-6531-428c-9037-f956d065edd0",
+          "attributes": {
+            "version": "38",
+            "uploadedDate": "2026-05-28T22:00:54-07:00",
+            "expired": false,
+            "minOsVersion": "17.0",
+            "processingState": "VALID",
+            "buildAudienceType": "APP_STORE_ELIGIBLE",
+            "usesNonExemptEncryption": false
+          },
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/builds/2a666072-6531-428c-9037-f956d065edd0"
+          }
+        },
+        {
+          "type": "builds",
+          "id": "2fb90ad4-4bd5-483e-b110-a25fe85592e3",
+          "attributes": {
+            "version": "37",
+            "uploadedDate": "2026-05-27T07:22:54-07:00",
+            "expired": false,
+            "minOsVersion": "17.0",
+            "processingState": "VALID",
+            "buildAudienceType": "APP_STORE_ELIGIBLE",
+            "usesNonExemptEncryption": false
+          },
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/builds/2fb90ad4-4bd5-483e-b110-a25fe85592e3"
+          }
+        },
+        {
+          "type": "builds",
+          "id": "6880315c-32a7-43cf-96c9-44b2a1c8b722",
+          "attributes": {
+            "version": "36",
+            "uploadedDate": "2026-05-27T06:53:14-07:00",
+            "expired": false,
+            "minOsVersion": "17.0",
+            "processingState": "VALID",
+            "buildAudienceType": "APP_STORE_ELIGIBLE",
+            "usesNonExemptEncryption": false
+          },
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/builds/6880315c-32a7-43cf-96c9-44b2a1c8b722"
+          }
+        },
+        {
+          "type": "builds",
+          "id": "a5b2559b-dfca-4113-9e69-2ad27aaa5722",
+          "attributes": {
+            "version": "35",
+            "uploadedDate": "2026-05-24T17:27:34-07:00",
+            "expired": false,
+            "minOsVersion": "17.0",
+            "processingState": "VALID",
+            "buildAudienceType": "APP_STORE_ELIGIBLE",
+            "usesNonExemptEncryption": false
+          },
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/builds/a5b2559b-dfca-4113-9e69-2ad27aaa5722"
+          }
+        },
+        {
+          "type": "builds",
+          "id": "d951bb27-1756-4fba-9521-b9738b84b5d1",
+          "attributes": {
+            "version": "34",
+            "uploadedDate": "2026-05-24T13:14:46-07:00",
+            "expired": false,
+            "minOsVersion": "17.0",
+            "processingState": "VALID",
+            "buildAudienceType": "APP_STORE_ELIGIBLE",
+            "usesNonExemptEncryption": false
+          },
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/builds/d951bb27-1756-4fba-9521-b9738b84b5d1"
+          }
+        },
+        {
+          "type": "builds",
+          "id": "a5a77682-67bf-472f-98db-9fd1cecf282b",
+          "attributes": {
+            "version": "33",
+            "uploadedDate": "2026-05-24T11:10:36-07:00",
+            "expired": false,
+            "minOsVersion": "17.0",
+            "processingState": "VALID",
+            "buildAudienceType": "APP_STORE_ELIGIBLE",
+            "usesNonExemptEncryption": false
+          },
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/builds/a5a77682-67bf-472f-98db-9fd1cecf282b"
+          }
+        }
+      ],
+      "included": [
+        {
+          "type": "preReleaseVersions",
+          "id": "b477ebb8-9ee3-4c09-9909-6051fb60b0e8",
+          "attributes": {
+            "version": "1.0.1",
+            "platform": "IOS"
+          },
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/preReleaseVersions/b477ebb8-9ee3-4c09-9909-6051fb60b0e8"
+          }
+        }
+      ],
+      "links": {
+        "self": "https://appstoreconnect.apple.com/iris/v1/builds?fields%5BpreReleaseVersions%5D=version%2Cplatform&fields%5Bbuilds%5D=minOsVersion%2CprocessingState%2CbuildAudienceType%2Cexpired%2CusesNonExemptEncryption%2CuploadedDate%2Cversion&filter%5Bapp%5D=6769565852&include=preReleaseVersion&sort=-uploadedDate&limit=50",
+        "next": "https://appstoreconnect.apple.com/iris/v1/builds?fields%5Bbuilds%5D=minOsVersion%2CprocessingState%2CbuildAudienceType%2Cexpired%2CusesNonExemptEncryption%2CuploadedDate%2Cversion&fields%5BpreReleaseVersions%5D=version%2Cplatform&filter%5Bapp%5D=6769565852&include=preReleaseVersion&sort=-uploadedDate&cursor=Mg&limit=50"
+      },
+      "meta": {
+        "paging": {
+          "total": 80,
+          "nextCursor": "Mg",
+          "limit": 50
+        }
+      }
+    }
+  },
+  "attachedBuild": {
+    "ok": true,
+    "response": {
+      "data": {
+        "type": "builds",
+        "id": "df052001-85ae-4380-99a1-6ad808a40b9a",
+        "attributes": {
+          "version": "80",
+          "uploadedDate": "2026-06-04T07:06:36-07:00",
+          "expired": false,
+          "minOsVersion": "17.0",
+          "processingState": "VALID",
+          "buildAudienceType": "APP_STORE_ELIGIBLE",
+          "usesNonExemptEncryption": false
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/builds/df052001-85ae-4380-99a1-6ad808a40b9a"
+        }
+      },
+      "links": {
+        "self": "https://appstoreconnect.apple.com/iris/v1/appStoreVersions/1e1883dc-dde7-4c00-9f75-6d19b1daa8c0/build?fields%5Bbuilds%5D=minOsVersion%2CprocessingState%2CbuildAudienceType%2Cexpired%2CusesNonExemptEncryption%2CuploadedDate%2Cversion"
+      }
+    }
+  },
+  "localizations": {
+    "ok": true,
+    "response": {
+      "data": [
+        {
+          "type": "appStoreVersionLocalizations",
+          "id": "d91c7fcc-4b72-46cd-8020-8405f2dac403",
+          "attributes": {
+            "description": "CadetCatch helps Coast Guard Academy families keep up with cadet photos without digging through every gallery by hand.\n\nCreate a private roster on your iPhone, add approved photo pages, check those pages for possible face matches, review match details, view selected results, save likely finds, and keep simple notes for family follow-up.\n\nCadetCatch checks only photo pages you add or enable. Private albums stay private unless you choose to share an accessible link.\n\nPrivacy Policy: https://eb28.co/cc/privacy/\nTerms of Use (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/",
+            "locale": "en-US",
+            "keywords": "cadet,coast guard,academy,photos,family,parents,roster",
+            "marketingUrl": "https://eb28.co/cc/",
+            "promotionalText": null,
+            "supportUrl": "https://eb28.co/cc/support/",
+            "whatsNew": "Restores the build 57 CadetCatch update with private roster setup, approved public photo sources, hidden result previews, saved finds, family notes, and purchase restore controls."
+          },
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/appStoreVersionLocalizations/d91c7fcc-4b72-46cd-8020-8405f2dac403"
+          }
+        }
+      ],
+      "links": {
+        "self": "https://appstoreconnect.apple.com/iris/v1/appStoreVersions/1e1883dc-dde7-4c00-9f75-6d19b1daa8c0/appStoreVersionLocalizations?fields%5BappStoreVersionLocalizations%5D=whatsNew%2Ckeywords%2CmarketingUrl%2CsupportUrl%2Cdescription%2Clocale%2CpromotionalText&limit=20"
+      },
+      "meta": {
+        "paging": {
+          "total": 1,
+          "limit": 20
+        }
+      }
+    }
+  },
+  "reviewDetail": {
+    "ok": true,
+    "response": {
+      "data": {
+        "type": "appStoreReviewDetails",
+        "id": "5156ed7a-cec0-4239-a665-bd42f2b5d525",
+        "attributes": {
+          "contactFirstName": "Richard",
+          "contactLastName": "Ducat",
+          "contactPhone": "+16023063920",
+          "contactEmail": "support@eb28.co",
+          "demoAccountName": null,
+          "demoAccountPassword": null,
+          "demoAccountRequired": false,
+          "notes": "CadetCatch requires no login. To test build 57: launch the app, open Roster, and add a cadet profile with a clear face photo from Photos. Open Sources and confirm the built-in public photo sources are available, or add another secure public photo page that can be opened in Safari. Open Home and tap Check Photos. The app shows source progress, discovered image count, checked image count, and possible match count while scanning. Open Photos to review possible matches; previews remain covered until single-photo access or monthly access is active. Open Photo Access from More or from a locked photo to review Family Monthly, 1 month, monthly pricing, auto-renewal disclosure, Restore Purchases, Privacy Policy, and Terms of Use before purchase. Photos permission is used only for selected profile photos. CadetCatch checks secure public pages built in or added by the user and does not access private social accounts, private photo libraries, private websites, or logged-in pages in this build. No camera, location, tracking, ads, or push notifications are used."
+        },
+        "relationships": {
+          "appStoreReviewAttachments": {
+            "links": {
+              "self": "https://appstoreconnect.apple.com/iris/v1/appStoreReviewDetails/5156ed7a-cec0-4239-a665-bd42f2b5d525/relationships/appStoreReviewAttachments",
+              "related": "https://appstoreconnect.apple.com/iris/v1/appStoreReviewDetails/5156ed7a-cec0-4239-a665-bd42f2b5d525/appStoreReviewAttachments"
+            }
+          },
+          "appSandboxEntitlementUsages": {
+            "links": {
+              "self": "https://appstoreconnect.apple.com/iris/v1/appStoreReviewDetails/5156ed7a-cec0-4239-a665-bd42f2b5d525/relationships/appSandboxEntitlementUsages",
+              "related": "https://appstoreconnect.apple.com/iris/v1/appStoreReviewDetails/5156ed7a-cec0-4239-a665-bd42f2b5d525/appSandboxEntitlementUsages"
+            }
+          }
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/appStoreReviewDetails/5156ed7a-cec0-4239-a665-bd42f2b5d525"
+        }
+      },
+      "links": {
+        "self": "https://appstoreconnect.apple.com/iris/v1/appStoreVersions/1e1883dc-dde7-4c00-9f75-6d19b1daa8c0/appStoreReviewDetail"
+      }
+    }
+  },
+  "screenshots": {
+    "ok": true,
+    "response": {
+      "data": [
+        {
+          "type": "appScreenshotSets",
+          "id": "369a4826-f903-4ed0-ac80-e44198282053",
+          "attributes": {
+            "screenshotDisplayType": "APP_IPHONE_65"
+          },
+          "relationships": {
+            "appScreenshots": {
+              "meta": {
+                "paging": {
+                  "total": 5,
+                  "limit": 10
+                }
+              },
+              "data": [
+                {
+                  "type": "appScreenshots",
+                  "id": "dc09c8a8-1561-485a-94a5-eccf2746e114"
+                },
+                {
+                  "type": "appScreenshots",
+                  "id": "45c907e9-575b-4a4e-af50-aff249db89e1"
+                },
+                {
+                  "type": "appScreenshots",
+                  "id": "7a7d3105-33ef-4566-86e0-245ecbfbc701"
+                },
+                {
+                  "type": "appScreenshots",
+                  "id": "a3a6e18c-87d5-40d9-a133-205639a095cd"
+                },
+                {
+                  "type": "appScreenshots",
+                  "id": "6543186c-5a05-406e-853e-446474fe9d63"
+                }
+              ],
+              "links": {
+                "self": "https://appstoreconnect.apple.com/iris/v1/appScreenshotSets/369a4826-f903-4ed0-ac80-e44198282053/relationships/appScreenshots",
+                "related": "https://appstoreconnect.apple.com/iris/v1/appScreenshotSets/369a4826-f903-4ed0-ac80-e44198282053/appScreenshots"
+              }
+            }
+          },
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/appScreenshotSets/369a4826-f903-4ed0-ac80-e44198282053"
+          }
+        }
+      ],
+      "included": [
+        {
+          "type": "appScreenshots",
+          "id": "dc09c8a8-1561-485a-94a5-eccf2746e114",
+          "attributes": {
+            "fileSize": 3730023,
+            "fileName": "01-launch-eagle-6-5.png",
+            "sourceFileChecksum": "fb87c05f733afda3bff6293cd2220172",
+            "imageAsset": {
+              "templateUrl": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/ab/b3/c2/abb3c2a5-965b-9ef7-3b66-af52c4649372/01-launch-eagle-6-5.png/{w}x{h}bb.{f}",
+              "width": 1284,
+              "height": 2778
+            },
+            "assetDeliveryState": {
+              "errors": [],
+              "warnings": null,
+              "state": "COMPLETE"
+            }
+          },
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/appScreenshots/dc09c8a8-1561-485a-94a5-eccf2746e114"
+          }
+        },
+        {
+          "type": "appScreenshots",
+          "id": "45c907e9-575b-4a4e-af50-aff249db89e1",
+          "attributes": {
+            "fileSize": 661363,
+            "fileName": "02-home-6-5.png",
+            "sourceFileChecksum": "f7a18c395b02dccbc0b2c5f597e30951",
+            "imageAsset": {
+              "templateUrl": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/8a/5f/36/8a5f36e7-5517-e8d1-dd22-5fdcf366d9f8/02-home-6-5.png/{w}x{h}bb.{f}",
+              "width": 1284,
+              "height": 2778
+            },
+            "assetDeliveryState": {
+              "errors": [],
+              "warnings": null,
+              "state": "COMPLETE"
+            }
+          },
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/appScreenshots/45c907e9-575b-4a4e-af50-aff249db89e1"
+          }
+        },
+        {
+          "type": "appScreenshots",
+          "id": "7a7d3105-33ef-4566-86e0-245ecbfbc701",
+          "attributes": {
+            "fileSize": 261875,
+            "fileName": "04-roster-6-5.png",
+            "sourceFileChecksum": "ddbc58a74d75f960858eade15536f12f",
+            "imageAsset": {
+              "templateUrl": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource221/v4/43/e5/75/43e57545-61a4-276b-060c-e18282b53306/04-roster-6-5.png/{w}x{h}bb.{f}",
+              "width": 1284,
+              "height": 2778
+            },
+            "assetDeliveryState": {
+              "errors": [],
+              "warnings": null,
+              "state": "COMPLETE"
+            }
+          },
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/appScreenshots/7a7d3105-33ef-4566-86e0-245ecbfbc701"
+          }
+        },
+        {
+          "type": "appScreenshots",
+          "id": "a3a6e18c-87d5-40d9-a133-205639a095cd",
+          "attributes": {
+            "fileSize": 651612,
+            "fileName": "05-sources-6-5.png",
+            "sourceFileChecksum": "b8bd5bb361d8862404ffd5df44fae779",
+            "imageAsset": {
+              "templateUrl": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/5c/73/7f/5c737fbb-1eb7-fe9d-d2d8-2c4d5d306fe5/05-sources-6-5.png/{w}x{h}bb.{f}",
+              "width": 1284,
+              "height": 2778
+            },
+            "assetDeliveryState": {
+              "errors": [],
+              "warnings": null,
+              "state": "COMPLETE"
+            }
+          },
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/appScreenshots/a3a6e18c-87d5-40d9-a133-205639a095cd"
+          }
+        },
+        {
+          "type": "appScreenshots",
+          "id": "6543186c-5a05-406e-853e-446474fe9d63",
+          "attributes": {
+            "fileSize": 1070071,
+            "fileName": "03-photos-6-5.png",
+            "sourceFileChecksum": "be7637d5558581f5baa85072586faed6",
+            "imageAsset": {
+              "templateUrl": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource211/v4/34/c7/37/34c73789-e457-8f66-7974-03adfb68c56a/03-photos-6-5.png/{w}x{h}bb.{f}",
+              "width": 1284,
+              "height": 2778
+            },
+            "assetDeliveryState": {
+              "errors": [],
+              "warnings": null,
+              "state": "COMPLETE"
+            }
+          },
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/appScreenshots/6543186c-5a05-406e-853e-446474fe9d63"
+          }
+        }
+      ],
+      "links": {
+        "self": "https://appstoreconnect.apple.com/iris/v1/appStoreVersionLocalizations/d91c7fcc-4b72-46cd-8020-8405f2dac403/appScreenshotSets?fields%5BappScreenshotSets%5D=screenshotDisplayType%2CappScreenshots&fields%5BappScreenshots%5D=fileName%2CfileSize%2CassetDeliveryState%2CimageAsset%2CsourceFileChecksum&include=appScreenshots&limit=50"
+      },
+      "meta": {
+        "paging": {
+          "total": 1,
+          "limit": 50
+        }
+      }
+    }
+  },
+  "previews": {
+    "ok": true,
+    "response": {
+      "data": [],
+      "included": [],
+      "links": {
+        "self": "https://appstoreconnect.apple.com/iris/v1/appStoreVersionLocalizations/d91c7fcc-4b72-46cd-8020-8405f2dac403/appPreviewSets?fields%5BappPreviews%5D=fileName%2CvideoUrl%2CfileSize%2CassetDeliveryState%2CsourceFileChecksum%2CpreviewFrameTimeCode&fields%5BappPreviewSets%5D=previewType%2CappPreviews&include=appPreviews&limit=50"
+      },
+      "meta": {
+        "paging": {
+          "total": 0,
+          "limit": 50
+        }
+      }
+    }
+  },
+  "inAppPurchases": {
+    "ok": true,
+    "response": {
+      "data": [
+        {
+          "type": "inAppPurchases",
+          "id": "6769935314",
+          "attributes": {
+            "name": "One-Time Photo Check",
+            "productId": "co.eb28.cadetcatch.search.once.v1",
+            "inAppPurchaseType": "CONSUMABLE",
+            "state": "APPROVED"
+          },
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v2/inAppPurchases/6769935314"
+          }
+        },
+        {
+          "type": "inAppPurchases",
+          "id": "6769936039",
+          "attributes": {
+            "name": "Unlock One Photo",
+            "productId": "co.eb28.cadetcatch.photo.unlock.v1",
+            "inAppPurchaseType": "CONSUMABLE",
+            "state": "APPROVED"
+          },
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v2/inAppPurchases/6769936039"
+          }
+        }
+      ],
+      "links": {
+        "self": "https://appstoreconnect.apple.com/iris/v1/apps/6769565852/inAppPurchasesV2?fields%5BinAppPurchases%5D=productId%2Cname%2Cstate%2CinAppPurchaseType&limit=100"
+      },
+      "meta": {
+        "paging": {
+          "total": 2,
+          "limit": 100
+        }
+      }
+    }
+  },
+  "subscriptionGroups": {
+    "ok": true,
+    "response": {
+      "data": [
+        {
+          "type": "subscriptionGroups",
+          "id": "22093610",
+          "attributes": {
+            "referenceName": "CadetCatch Family"
+          },
+          "relationships": {
+            "subscriptions": {
+              "links": {
+                "self": "https://appstoreconnect.apple.com/iris/v1/subscriptionGroups/22093610/relationships/subscriptions",
+                "related": "https://appstoreconnect.apple.com/iris/v1/subscriptionGroups/22093610/subscriptions"
+              }
+            }
+          },
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/subscriptionGroups/22093610"
+          }
+        }
+      ],
+      "links": {
+        "self": "https://appstoreconnect.apple.com/iris/v1/apps/6769565852/subscriptionGroups?fields%5BsubscriptionGroups%5D=subscriptions%2CreferenceName&limit=100"
+      },
+      "meta": {
+        "paging": {
+          "total": 1,
+          "limit": 100
+        }
+      }
+    }
+  },
+  "subscriptions": [
+    {
+      "groupId": "22093610",
+      "referenceName": "CadetCatch Family",
+      "subscriptions": {
+        "ok": true,
+        "response": {
+          "data": [
+            {
+              "type": "subscriptions",
+              "id": "6769936708",
+              "attributes": {
+                "name": "Family Monthly",
+                "productId": "co.eb28.cadetcatch.family.monthly.v1",
+                "familySharable": false,
+                "state": "APPROVED",
+                "subscriptionPeriod": "ONE_MONTH",
+                "reviewNote": "Use the purchase sheet in build 6. This monthly subscription enables ongoing public-source photo checks and unlock access while active. Restore Purchases is available in More and in the purchase sheet.",
+                "groupLevel": 1
+              },
+              "links": {
+                "self": "https://appstoreconnect.apple.com/iris/v1/subscriptions/6769936708"
+              }
+            }
+          ],
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/subscriptionGroups/22093610/subscriptions?fields%5Bsubscriptions%5D=subscriptionPeriod%2CreviewNote%2CproductId%2Cname%2CfamilySharable%2Cstate%2CgroupLevel&limit=100"
+          },
+          "meta": {
+            "paging": {
+              "total": 1,
+              "limit": 100
+            }
+          }
+        }
+      }
+    }
+  ]
+}

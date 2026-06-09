@@ -1,0 +1,37 @@
+{
+  "capturedAt": "2026-06-06T18:55:47.776Z",
+  "versionId": "1e1883dc-dde7-4c00-9f75-6d19b1daa8c0",
+  "localizationUpdate": {
+    "description": "CadetCatch helps Coast Guard Academy families keep up with cadet photos without digging through every gallery by hand.\n\nCreate a private roster on your iPhone, add approved photo pages, check those pages for possible face matches, review match details, view selected results, save likely finds, and keep simple notes for family follow-up.\n\nCadetCatch checks only photo pages you add or enable. Private albums stay private unless you choose to share an accessible link.\n\nPrivacy Policy: https://eb28.co/cc/privacy/\nTerms of Use (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/",
+    "locale": "en-US",
+    "keywords": "cadet,coast guard,academy,photos,family,parents,roster",
+    "marketingUrl": "https://eb28.co/cc/",
+    "promotionalText": null,
+    "supportUrl": "https://eb28.co/cc/support/",
+    "whatsNew": "Restores the build 80 CadetCatch update with private roster setup, approved public photo sources, hidden result previews, saved finds, family notes, and purchase restore controls."
+  },
+  "reviewDetailUpdate": {
+    "contactFirstName": "Richard",
+    "contactLastName": "Ducat",
+    "contactPhone": "+16023063920",
+    "contactEmail": "support@eb28.co",
+    "demoAccountName": null,
+    "demoAccountPassword": null,
+    "demoAccountRequired": false,
+    "notes": "CadetCatch requires no login. To test build 80: launch the app, open Roster, and add a cadet profile with a clear face photo from Photos. Open Sources and confirm the built-in public photo sources are available, or add another secure public photo page that can be opened in Safari. Open Home and tap Check Photos. The app shows source progress, discovered image count, checked image count, and possible match count while scanning. Open Photos to review possible matches; previews remain covered until single-photo access or monthly access is active. Open Photo Access from More or from a locked photo to review Family Monthly, 1 month, monthly pricing, auto-renewal disclosure, Restore Purchases, Privacy Policy, and Terms of Use before purchase. Photos permission is used only for selected profile photos. CadetCatch checks secure public pages built in or added by the user and does not access private social accounts, private photo libraries, private websites, or logged-in pages in this build. No camera, location, tracking, ads, or push notifications are used."
+  },
+  "verifyLoc": {
+    "locale": "en-US",
+    "whatsNew": "Restores the build 80 CadetCatch update with private roster setup, approved public photo sources, hidden result previews, saved finds, family notes, and purchase restore controls."
+  },
+  "verifyReview": {
+    "contactFirstName": "Richard",
+    "contactLastName": "Ducat",
+    "contactPhone": "+16023063920",
+    "contactEmail": "support@eb28.co",
+    "demoAccountName": null,
+    "demoAccountPassword": null,
+    "demoAccountRequired": false,
+    "notes": "CadetCatch requires no login. To test build 80: launch the app, open Roster, and add a cadet profile with a clear face photo from Photos. Open Sources and confirm the built-in public photo sources are available, or add another secure public photo page that can be opened in Safari. Open Home and tap Check Photos. The app shows source progress, discovered image count, checked image count, and possible match count while scanning. Open Photos to review possible matches; previews remain covered until single-photo access or monthly access is active. Open Photo Access from More or from a locked photo to review Family Monthly, 1 month, monthly pricing, auto-renewal disclosure, Restore Purchases, Privacy Policy, and Terms of Use before purchase. Photos permission is used only for selected profile photos. CadetCatch checks secure public pages built in or added by the user and does not access private social accounts, private photo libraries, private websites, or logged-in pages in this build. No camera, location, tracking, ads, or push notifications are used."
+  }
+}

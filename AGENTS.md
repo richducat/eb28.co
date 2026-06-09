@@ -1,5 +1,24 @@
 # Repository Instructions
 
+## EB28 App Agency Release Safety
+
+This repository is governed by the canonical EB28 App Agency memory and release SOP:
+
+`/Users/richardducat/.hermes/personal-assistant/obsidian-vault/04 Systems/EB28 App Agency/SOP - Release Safety.md`
+
+Before any App Store, TestFlight, production deploy, release metadata, screenshot, app preview, subscription, IAP, build selection, review submission, build expiration, or public release action:
+
+- Read the app record in the EB28 App Agency vault.
+- Create or update the matching release-candidate record.
+- Confirm the source commit, version, build, bundle ID, metadata, media, icon, subscriptions/IAP, and reviewer notes are recorded.
+- Run the release gate script.
+- Require a matching approval record for the exact action.
+- Write a ledger entry after the action.
+
+Automatic production deploys and App Store mutations are forbidden unless the EB28 App Agency SOP has a matching approval record for that exact action.
+
+Do not archive, upload, submit, release, or deploy from a dirty checkout. Use an isolated git worktree and branch for implementation.
+
 ## App Store Submission Standard
 
 - Never submit, upload for review, or describe an App Store build as ready unless it is actually production-ready.

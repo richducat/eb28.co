@@ -1,0 +1,665 @@
+{
+  "capturedAt": "2026-06-06T20:50:42.498Z",
+  "actions": [
+    {
+      "action": "attach_build_84_to_internal_testers",
+      "ok": false,
+      "error": "POST /v1/betaGroups/0c81372e-152f-43e0-9c48-1b25f9a450de/relationships/builds failed 422: {\n  \"errors\" : [ {\n    \"id\" : \"e32a60af-0a80-4b01-86f3-c979f85d3e9a\",\n    \"status\" : \"422\",\n    \"code\" : \"ENTITY_UNPROCESSABLE\",\n    \"title\" : \"Builds cannot be assigned to this internal group.\",\n    \"detail\" : \"Cannot add internal group to a build.\"\n  } ]\n}",
+      "body": {
+        "errors": [
+          {
+            "id": "e32a60af-0a80-4b01-86f3-c979f85d3e9a",
+            "status": "422",
+            "code": "ENTITY_UNPROCESSABLE",
+            "title": "Builds cannot be assigned to this internal group.",
+            "detail": "Cannot add internal group to a build."
+          }
+        ]
+      }
+    },
+    {
+      "action": "update_build_84_what_to_test",
+      "ok": true,
+      "response": {
+        "data": {
+          "type": "betaBuildLocalizations",
+          "id": "0a3c43ad-8372-4e97-9663-cd6ca0ac25f4",
+          "attributes": {
+            "whatsNew": "CadetCatch build 84 for TestFlight validation: verify the latest roster, public photo source scanning, Google Drive/Facebook source handling, hidden previews, purchase/restore flow, and stability before continuing App Store review.",
+            "locale": "en-US"
+          },
+          "relationships": {
+            "build": {
+              "links": {
+                "self": "https://appstoreconnect.apple.com/iris/v1/betaBuildLocalizations/0a3c43ad-8372-4e97-9663-cd6ca0ac25f4/relationships/build",
+                "related": "https://appstoreconnect.apple.com/iris/v1/betaBuildLocalizations/0a3c43ad-8372-4e97-9663-cd6ca0ac25f4/build"
+              }
+            }
+          },
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/betaBuildLocalizations/0a3c43ad-8372-4e97-9663-cd6ca0ac25f4"
+          }
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/betaBuildLocalizations/0a3c43ad-8372-4e97-9663-cd6ca0ac25f4"
+        }
+      }
+    }
+  ],
+  "before": {
+    "data": {
+      "type": "betaGroups",
+      "id": "0c81372e-152f-43e0-9c48-1b25f9a450de",
+      "attributes": {
+        "name": "Internal Testers",
+        "isInternalGroup": true
+      },
+      "relationships": {
+        "builds": {
+          "meta": {
+            "paging": {
+              "total": 80,
+              "limit": 10
+            }
+          },
+          "data": [
+            {
+              "type": "builds",
+              "id": "827394a1-7d11-44e8-82b1-26d7cae1215d"
+            },
+            {
+              "type": "builds",
+              "id": "e6bba129-20ea-4500-87ba-d2e8cdbbf2ff"
+            },
+            {
+              "type": "builds",
+              "id": "557bfb2b-b63d-4301-8ef5-b0c06954c4bf"
+            },
+            {
+              "type": "builds",
+              "id": "1d8e3e1e-a6b3-4cc3-afcb-fb21c3714d81"
+            },
+            {
+              "type": "builds",
+              "id": "a5b2559b-dfca-4113-9e69-2ad27aaa5722"
+            },
+            {
+              "type": "builds",
+              "id": "8ee8d54f-2745-488d-88ea-00fdfcf3b5ab"
+            },
+            {
+              "type": "builds",
+              "id": "b29d7177-65ff-429c-af43-2c6edf27ecdc"
+            },
+            {
+              "type": "builds",
+              "id": "046bc3b5-720a-4155-a8bd-de0f7b1179e6"
+            },
+            {
+              "type": "builds",
+              "id": "d0f66c58-0768-4152-98ec-058d07ec84f5"
+            },
+            {
+              "type": "builds",
+              "id": "88a8775c-96b5-4b02-862a-eb075a51e7f9"
+            }
+          ],
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/betaGroups/0c81372e-152f-43e0-9c48-1b25f9a450de/relationships/builds",
+            "related": "https://appstoreconnect.apple.com/iris/v1/betaGroups/0c81372e-152f-43e0-9c48-1b25f9a450de/builds"
+          }
+        },
+        "betaTesters": {
+          "meta": {
+            "paging": {
+              "total": 3,
+              "limit": 10
+            }
+          },
+          "data": [
+            {
+              "type": "betaTesters",
+              "id": "970b8386-bdd5-46bb-b959-bad33fb3dcac"
+            },
+            {
+              "type": "betaTesters",
+              "id": "9f955a85-d3fb-4b2f-851a-9f835bc91266"
+            },
+            {
+              "type": "betaTesters",
+              "id": "6228b8ad-3818-4893-830c-f4a29973bd32"
+            }
+          ],
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/betaGroups/0c81372e-152f-43e0-9c48-1b25f9a450de/relationships/betaTesters",
+            "related": "https://appstoreconnect.apple.com/iris/v1/betaGroups/0c81372e-152f-43e0-9c48-1b25f9a450de/betaTesters"
+          }
+        }
+      },
+      "links": {
+        "self": "https://appstoreconnect.apple.com/iris/v1/betaGroups/0c81372e-152f-43e0-9c48-1b25f9a450de"
+      }
+    },
+    "included": [
+      {
+        "type": "betaTesters",
+        "id": "970b8386-bdd5-46bb-b959-bad33fb3dcac",
+        "attributes": {
+          "lastName": "Hallett",
+          "firstName": "Karen",
+          "email": "karen.hallett@mac.com"
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/betaTesters/970b8386-bdd5-46bb-b959-bad33fb3dcac"
+        }
+      },
+      {
+        "type": "betaTesters",
+        "id": "9f955a85-d3fb-4b2f-851a-9f835bc91266",
+        "attributes": {
+          "lastName": "Fish",
+          "firstName": "Ken",
+          "email": "kenfish@mac.com"
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/betaTesters/9f955a85-d3fb-4b2f-851a-9f835bc91266"
+        }
+      },
+      {
+        "type": "betaTesters",
+        "id": "6228b8ad-3818-4893-830c-f4a29973bd32",
+        "attributes": {
+          "lastName": "Ducat",
+          "firstName": "Richard",
+          "email": "richducat@gmail.com"
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/betaTesters/6228b8ad-3818-4893-830c-f4a29973bd32"
+        }
+      },
+      {
+        "type": "builds",
+        "id": "046bc3b5-720a-4155-a8bd-de0f7b1179e6",
+        "attributes": {
+          "uploadedDate": "2026-06-06T07:22:01-07:00",
+          "version": "83",
+          "processingState": "VALID"
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/builds/046bc3b5-720a-4155-a8bd-de0f7b1179e6"
+        }
+      },
+      {
+        "type": "builds",
+        "id": "b29d7177-65ff-429c-af43-2c6edf27ecdc",
+        "attributes": {
+          "uploadedDate": "2026-06-05T17:43:17-07:00",
+          "version": "82",
+          "processingState": "VALID"
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/builds/b29d7177-65ff-429c-af43-2c6edf27ecdc"
+        }
+      },
+      {
+        "type": "builds",
+        "id": "88a8775c-96b5-4b02-862a-eb075a51e7f9",
+        "attributes": {
+          "uploadedDate": "2026-06-02T15:51:00-07:00",
+          "version": "70",
+          "processingState": "VALID"
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/builds/88a8775c-96b5-4b02-862a-eb075a51e7f9"
+        }
+      },
+      {
+        "type": "builds",
+        "id": "827394a1-7d11-44e8-82b1-26d7cae1215d",
+        "attributes": {
+          "uploadedDate": "2026-06-02T13:52:05-07:00",
+          "version": "66",
+          "processingState": "VALID"
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/builds/827394a1-7d11-44e8-82b1-26d7cae1215d"
+        }
+      },
+      {
+        "type": "builds",
+        "id": "1d8e3e1e-a6b3-4cc3-afcb-fb21c3714d81",
+        "attributes": {
+          "uploadedDate": "2026-06-01T18:46:18-07:00",
+          "version": "60",
+          "processingState": "VALID"
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/builds/1d8e3e1e-a6b3-4cc3-afcb-fb21c3714d81"
+        }
+      },
+      {
+        "type": "builds",
+        "id": "557bfb2b-b63d-4301-8ef5-b0c06954c4bf",
+        "attributes": {
+          "uploadedDate": "2026-05-29T17:28:14-07:00",
+          "version": "45",
+          "processingState": "VALID"
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/builds/557bfb2b-b63d-4301-8ef5-b0c06954c4bf"
+        }
+      },
+      {
+        "type": "builds",
+        "id": "8ee8d54f-2745-488d-88ea-00fdfcf3b5ab",
+        "attributes": {
+          "uploadedDate": "2026-05-29T09:16:00-07:00",
+          "version": "43",
+          "processingState": "VALID"
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/builds/8ee8d54f-2745-488d-88ea-00fdfcf3b5ab"
+        }
+      },
+      {
+        "type": "builds",
+        "id": "e6bba129-20ea-4500-87ba-d2e8cdbbf2ff",
+        "attributes": {
+          "uploadedDate": "2026-05-29T09:11:13-07:00",
+          "version": "42",
+          "processingState": "VALID"
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/builds/e6bba129-20ea-4500-87ba-d2e8cdbbf2ff"
+        }
+      },
+      {
+        "type": "builds",
+        "id": "a5b2559b-dfca-4113-9e69-2ad27aaa5722",
+        "attributes": {
+          "uploadedDate": "2026-05-24T17:27:34-07:00",
+          "version": "35",
+          "processingState": "VALID"
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/builds/a5b2559b-dfca-4113-9e69-2ad27aaa5722"
+        }
+      },
+      {
+        "type": "builds",
+        "id": "d0f66c58-0768-4152-98ec-058d07ec84f5",
+        "attributes": {
+          "uploadedDate": "2026-05-17T17:30:45-07:00",
+          "version": "10",
+          "processingState": "VALID"
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/builds/d0f66c58-0768-4152-98ec-058d07ec84f5"
+        }
+      }
+    ],
+    "links": {
+      "self": "https://appstoreconnect.apple.com/iris/v1/betaGroups/0c81372e-152f-43e0-9c48-1b25f9a450de?fields%5BbetaGroups%5D=isInternalGroup%2Cname%2Cbuilds%2CbetaTesters&fields%5Bbuilds%5D=processingState%2CuploadedDate%2Cversion&fields%5BbetaTesters%5D=firstName%2ClastName%2Cemail&include=builds%2CbetaTesters"
+    }
+  },
+  "after": {
+    "data": {
+      "type": "betaGroups",
+      "id": "0c81372e-152f-43e0-9c48-1b25f9a450de",
+      "attributes": {
+        "name": "Internal Testers",
+        "isInternalGroup": true
+      },
+      "relationships": {
+        "builds": {
+          "meta": {
+            "paging": {
+              "total": 80,
+              "limit": 10
+            }
+          },
+          "data": [
+            {
+              "type": "builds",
+              "id": "827394a1-7d11-44e8-82b1-26d7cae1215d"
+            },
+            {
+              "type": "builds",
+              "id": "e6bba129-20ea-4500-87ba-d2e8cdbbf2ff"
+            },
+            {
+              "type": "builds",
+              "id": "557bfb2b-b63d-4301-8ef5-b0c06954c4bf"
+            },
+            {
+              "type": "builds",
+              "id": "1d8e3e1e-a6b3-4cc3-afcb-fb21c3714d81"
+            },
+            {
+              "type": "builds",
+              "id": "a5b2559b-dfca-4113-9e69-2ad27aaa5722"
+            },
+            {
+              "type": "builds",
+              "id": "8ee8d54f-2745-488d-88ea-00fdfcf3b5ab"
+            },
+            {
+              "type": "builds",
+              "id": "b29d7177-65ff-429c-af43-2c6edf27ecdc"
+            },
+            {
+              "type": "builds",
+              "id": "046bc3b5-720a-4155-a8bd-de0f7b1179e6"
+            },
+            {
+              "type": "builds",
+              "id": "d0f66c58-0768-4152-98ec-058d07ec84f5"
+            },
+            {
+              "type": "builds",
+              "id": "88a8775c-96b5-4b02-862a-eb075a51e7f9"
+            }
+          ],
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/betaGroups/0c81372e-152f-43e0-9c48-1b25f9a450de/relationships/builds",
+            "related": "https://appstoreconnect.apple.com/iris/v1/betaGroups/0c81372e-152f-43e0-9c48-1b25f9a450de/builds"
+          }
+        },
+        "betaTesters": {
+          "meta": {
+            "paging": {
+              "total": 3,
+              "limit": 10
+            }
+          },
+          "data": [
+            {
+              "type": "betaTesters",
+              "id": "970b8386-bdd5-46bb-b959-bad33fb3dcac"
+            },
+            {
+              "type": "betaTesters",
+              "id": "9f955a85-d3fb-4b2f-851a-9f835bc91266"
+            },
+            {
+              "type": "betaTesters",
+              "id": "6228b8ad-3818-4893-830c-f4a29973bd32"
+            }
+          ],
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/betaGroups/0c81372e-152f-43e0-9c48-1b25f9a450de/relationships/betaTesters",
+            "related": "https://appstoreconnect.apple.com/iris/v1/betaGroups/0c81372e-152f-43e0-9c48-1b25f9a450de/betaTesters"
+          }
+        }
+      },
+      "links": {
+        "self": "https://appstoreconnect.apple.com/iris/v1/betaGroups/0c81372e-152f-43e0-9c48-1b25f9a450de"
+      }
+    },
+    "included": [
+      {
+        "type": "betaTesters",
+        "id": "970b8386-bdd5-46bb-b959-bad33fb3dcac",
+        "attributes": {
+          "lastName": "Hallett",
+          "firstName": "Karen",
+          "email": "karen.hallett@mac.com"
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/betaTesters/970b8386-bdd5-46bb-b959-bad33fb3dcac"
+        }
+      },
+      {
+        "type": "betaTesters",
+        "id": "9f955a85-d3fb-4b2f-851a-9f835bc91266",
+        "attributes": {
+          "lastName": "Fish",
+          "firstName": "Ken",
+          "email": "kenfish@mac.com"
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/betaTesters/9f955a85-d3fb-4b2f-851a-9f835bc91266"
+        }
+      },
+      {
+        "type": "betaTesters",
+        "id": "6228b8ad-3818-4893-830c-f4a29973bd32",
+        "attributes": {
+          "lastName": "Ducat",
+          "firstName": "Richard",
+          "email": "richducat@gmail.com"
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/betaTesters/6228b8ad-3818-4893-830c-f4a29973bd32"
+        }
+      },
+      {
+        "type": "builds",
+        "id": "046bc3b5-720a-4155-a8bd-de0f7b1179e6",
+        "attributes": {
+          "uploadedDate": "2026-06-06T07:22:01-07:00",
+          "version": "83",
+          "processingState": "VALID"
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/builds/046bc3b5-720a-4155-a8bd-de0f7b1179e6"
+        }
+      },
+      {
+        "type": "builds",
+        "id": "b29d7177-65ff-429c-af43-2c6edf27ecdc",
+        "attributes": {
+          "uploadedDate": "2026-06-05T17:43:17-07:00",
+          "version": "82",
+          "processingState": "VALID"
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/builds/b29d7177-65ff-429c-af43-2c6edf27ecdc"
+        }
+      },
+      {
+        "type": "builds",
+        "id": "88a8775c-96b5-4b02-862a-eb075a51e7f9",
+        "attributes": {
+          "uploadedDate": "2026-06-02T15:51:00-07:00",
+          "version": "70",
+          "processingState": "VALID"
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/builds/88a8775c-96b5-4b02-862a-eb075a51e7f9"
+        }
+      },
+      {
+        "type": "builds",
+        "id": "827394a1-7d11-44e8-82b1-26d7cae1215d",
+        "attributes": {
+          "uploadedDate": "2026-06-02T13:52:05-07:00",
+          "version": "66",
+          "processingState": "VALID"
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/builds/827394a1-7d11-44e8-82b1-26d7cae1215d"
+        }
+      },
+      {
+        "type": "builds",
+        "id": "1d8e3e1e-a6b3-4cc3-afcb-fb21c3714d81",
+        "attributes": {
+          "uploadedDate": "2026-06-01T18:46:18-07:00",
+          "version": "60",
+          "processingState": "VALID"
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/builds/1d8e3e1e-a6b3-4cc3-afcb-fb21c3714d81"
+        }
+      },
+      {
+        "type": "builds",
+        "id": "557bfb2b-b63d-4301-8ef5-b0c06954c4bf",
+        "attributes": {
+          "uploadedDate": "2026-05-29T17:28:14-07:00",
+          "version": "45",
+          "processingState": "VALID"
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/builds/557bfb2b-b63d-4301-8ef5-b0c06954c4bf"
+        }
+      },
+      {
+        "type": "builds",
+        "id": "8ee8d54f-2745-488d-88ea-00fdfcf3b5ab",
+        "attributes": {
+          "uploadedDate": "2026-05-29T09:16:00-07:00",
+          "version": "43",
+          "processingState": "VALID"
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/builds/8ee8d54f-2745-488d-88ea-00fdfcf3b5ab"
+        }
+      },
+      {
+        "type": "builds",
+        "id": "e6bba129-20ea-4500-87ba-d2e8cdbbf2ff",
+        "attributes": {
+          "uploadedDate": "2026-05-29T09:11:13-07:00",
+          "version": "42",
+          "processingState": "VALID"
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/builds/e6bba129-20ea-4500-87ba-d2e8cdbbf2ff"
+        }
+      },
+      {
+        "type": "builds",
+        "id": "a5b2559b-dfca-4113-9e69-2ad27aaa5722",
+        "attributes": {
+          "uploadedDate": "2026-05-24T17:27:34-07:00",
+          "version": "35",
+          "processingState": "VALID"
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/builds/a5b2559b-dfca-4113-9e69-2ad27aaa5722"
+        }
+      },
+      {
+        "type": "builds",
+        "id": "d0f66c58-0768-4152-98ec-058d07ec84f5",
+        "attributes": {
+          "uploadedDate": "2026-05-17T17:30:45-07:00",
+          "version": "10",
+          "processingState": "VALID"
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/builds/d0f66c58-0768-4152-98ec-058d07ec84f5"
+        }
+      }
+    ],
+    "links": {
+      "self": "https://appstoreconnect.apple.com/iris/v1/betaGroups/0c81372e-152f-43e0-9c48-1b25f9a450de?fields%5BbetaGroups%5D=isInternalGroup%2Cname%2Cbuilds%2CbetaTesters&fields%5Bbuilds%5D=processingState%2CuploadedDate%2Cversion&fields%5BbetaTesters%5D=firstName%2ClastName%2Cemail&include=builds%2CbetaTesters"
+    }
+  },
+  "afterBuild": {
+    "data": {
+      "type": "builds",
+      "id": "7d9ca1a1-f473-415c-a88a-1b54905ee604",
+      "attributes": {
+        "version": "84",
+        "uploadedDate": "2026-06-06T08:01:20-07:00",
+        "expired": false,
+        "minOsVersion": "17.0",
+        "processingState": "VALID",
+        "buildAudienceType": "APP_STORE_ELIGIBLE",
+        "usesNonExemptEncryption": false
+      },
+      "relationships": {
+        "preReleaseVersion": {
+          "data": {
+            "type": "preReleaseVersions",
+            "id": "b477ebb8-9ee3-4c09-9909-6051fb60b0e8"
+          },
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/builds/7d9ca1a1-f473-415c-a88a-1b54905ee604/relationships/preReleaseVersion",
+            "related": "https://appstoreconnect.apple.com/iris/v1/builds/7d9ca1a1-f473-415c-a88a-1b54905ee604/preReleaseVersion"
+          }
+        },
+        "betaBuildLocalizations": {
+          "meta": {
+            "paging": {
+              "total": 1,
+              "limit": 10
+            }
+          },
+          "data": [
+            {
+              "type": "betaBuildLocalizations",
+              "id": "0a3c43ad-8372-4e97-9663-cd6ca0ac25f4"
+            }
+          ],
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/builds/7d9ca1a1-f473-415c-a88a-1b54905ee604/relationships/betaBuildLocalizations",
+            "related": "https://appstoreconnect.apple.com/iris/v1/builds/7d9ca1a1-f473-415c-a88a-1b54905ee604/betaBuildLocalizations"
+          }
+        },
+        "betaAppReviewSubmission": {
+          "data": null,
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/builds/7d9ca1a1-f473-415c-a88a-1b54905ee604/relationships/betaAppReviewSubmission",
+            "related": "https://appstoreconnect.apple.com/iris/v1/builds/7d9ca1a1-f473-415c-a88a-1b54905ee604/betaAppReviewSubmission"
+          }
+        },
+        "buildBetaDetail": {
+          "data": {
+            "type": "buildBetaDetails",
+            "id": "7d9ca1a1-f473-415c-a88a-1b54905ee604"
+          },
+          "links": {
+            "self": "https://appstoreconnect.apple.com/iris/v1/builds/7d9ca1a1-f473-415c-a88a-1b54905ee604/relationships/buildBetaDetail",
+            "related": "https://appstoreconnect.apple.com/iris/v1/builds/7d9ca1a1-f473-415c-a88a-1b54905ee604/buildBetaDetail"
+          }
+        }
+      },
+      "links": {
+        "self": "https://appstoreconnect.apple.com/iris/v1/builds/7d9ca1a1-f473-415c-a88a-1b54905ee604"
+      }
+    },
+    "included": [
+      {
+        "type": "preReleaseVersions",
+        "id": "b477ebb8-9ee3-4c09-9909-6051fb60b0e8",
+        "attributes": {
+          "version": "1.0.1",
+          "platform": "IOS"
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/preReleaseVersions/b477ebb8-9ee3-4c09-9909-6051fb60b0e8"
+        }
+      },
+      {
+        "type": "betaBuildLocalizations",
+        "id": "0a3c43ad-8372-4e97-9663-cd6ca0ac25f4",
+        "attributes": {
+          "whatsNew": "CadetCatch build 84 for TestFlight validation: verify the latest roster, public photo source scanning, Google Drive/Facebook source handling, hidden previews, purchase/restore flow, and stability before continuing App Store review.",
+          "locale": "en-US"
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/betaBuildLocalizations/0a3c43ad-8372-4e97-9663-cd6ca0ac25f4"
+        }
+      },
+      {
+        "type": "buildBetaDetails",
+        "id": "7d9ca1a1-f473-415c-a88a-1b54905ee604",
+        "attributes": {
+          "autoNotifyEnabled": true,
+          "internalBuildState": "IN_BETA_TESTING",
+          "externalBuildState": "READY_FOR_BETA_SUBMISSION"
+        },
+        "links": {
+          "self": "https://appstoreconnect.apple.com/iris/v1/buildBetaDetails/7d9ca1a1-f473-415c-a88a-1b54905ee604"
+        }
+      }
+    ],
+    "links": {
+      "self": "https://appstoreconnect.apple.com/iris/v1/builds/7d9ca1a1-f473-415c-a88a-1b54905ee604?fields%5BbuildBetaDetails%5D=autoNotifyEnabled%2CinternalBuildState%2CexternalBuildState&fields%5BbetaAppReviewSubmissions%5D=betaReviewState%2CsubmittedDate&fields%5BpreReleaseVersions%5D=version%2Cplatform&fields%5Bbuilds%5D=minOsVersion%2CprocessingState%2CbuildAudienceType%2CpreReleaseVersion%2CbetaAppReviewSubmission%2Cexpired%2CusesNonExemptEncryption%2CuploadedDate%2CbuildBetaDetail%2Cversion%2CbetaBuildLocalizations&fields%5BbetaBuildLocalizations%5D=whatsNew%2Clocale&include=preReleaseVersion%2CbetaAppReviewSubmission%2CbuildBetaDetail%2CbetaBuildLocalizations"
+    }
+  }
+}

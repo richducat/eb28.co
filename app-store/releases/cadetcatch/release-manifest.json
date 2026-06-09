@@ -1,0 +1,174 @@
+{
+  "appName": "CadetCatch",
+  "bundleId": "co.eb28.cadetcatch",
+  "appStoreConnectAppId": "6769565852",
+  "platform": "iOS",
+  "marketingVersion": "1.0.1",
+  "buildNumber": "80",
+  "baselineCommit": "392e8d52240be3c6543c84c1c8dd44922c33b15a",
+  "baselineTree": "e7e797efef6cf811341eae4d2c182d33420b51df",
+  "sourceIdentityType": "local git stash merge commit preserved as branch/worktree",
+  "baseParentCommit": "30916f31f2fe322572935bf5bad60dcd11871ea3",
+  "indexParentCommit": "f9fed1cef2468aa175437559b7fc65a641cccae9",
+  "sourceRef": "refs/heads/recovery/cadetcatch-build80",
+  "releaseBranch": "recovery/cadetcatch-build80",
+  "worktreePath": "/Users/richardducat/GITHUB/eb28-cadetcatch-build80",
+  "xcodeProjectPath": "ios/CadetCatch/CadetCatch.xcodeproj",
+  "xcodegenProjectSpec": "ios/CadetCatch/project.yml",
+  "scheme": "CadetCatch",
+  "teamId": "WN3K69XEP4",
+  "approvalLevel": "authorized by owner on 2026-06-06 to restore App Store Connect version 1.0.1 to build 80 and submit when gates pass",
+  "archivePath": "not found locally for build 80 during sweep",
+  "appStoreConnectState": {
+    "appStoreVersionId": "1e1883dc-dde7-4c00-9f75-6d19b1daa8c0",
+    "buildId": "df052001-85ae-4380-99a1-6ad808a40b9a",
+    "reviewSubmissionId": "575c019e-da9a-404a-9074-a4e18168cc4a",
+    "appStoreState": "WAITING_FOR_REVIEW",
+    "submittedAt": "2026-06-06T18:57:48.893Z"
+  },
+  "sourceMetadataVerification": {
+    "projectYmlMarketingVersion": "1.0.1",
+    "projectYmlCurrentProjectVersion": "80",
+    "projectYmlBundleId": "co.eb28.cadetcatch",
+    "pbxMarketingVersions": [
+      "1.0.1"
+    ],
+    "pbxCurrentProjectVersions": [
+      "80"
+    ],
+    "pbxBundleIds": [
+      "co.eb28.CadetCatchUITests",
+      "co.eb28.cadetcatch",
+      "co.eb28.cadetcatch.CadetCatchWidget"
+    ]
+  },
+  "localArtifactSweep": {
+    "build80ArchiveFound": false,
+    "nearestCadetCatchArchivesFound": [
+      {
+        "path": "/Users/richardducat/GITHUB/eb28.co/ios/CadetCatch/build/CadetCatch.xcarchive",
+        "marketingVersion": "1.0.1",
+        "buildNumber": "67"
+      },
+      {
+        "path": "/Users/richardducat/GITHUB/eb28.co/ios/CadetCatch/CadetCatch.xcarchive",
+        "marketingVersion": "1.0.0",
+        "buildNumber": "14"
+      }
+    ]
+  },
+  "changedFilesFromBaseParent": [
+    {
+      "status": "M",
+      "path": "app-store/releases/cadetcatch/app-icon-1024.png"
+    },
+    {
+      "status": "M",
+      "path": "app-store/releases/cadetcatch/app-store-metadata.md"
+    },
+    {
+      "status": "M",
+      "path": "app-store/releases/cadetcatch/app-store-release.json"
+    },
+    {
+      "status": "M",
+      "path": "app-store/releases/cadetcatch/review-notes.md"
+    },
+    {
+      "status": "M",
+      "path": "ios/CadetCatch/CadetCatch.xcodeproj/project.pbxproj"
+    },
+    {
+      "status": "M",
+      "path": "ios/CadetCatch/CadetCatch/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png"
+    },
+    {
+      "status": "M",
+      "path": "ios/CadetCatch/CadetCatch/Assets.xcassets/AppIcon.appiconset/Icon-20@2x.png"
+    },
+    {
+      "status": "M",
+      "path": "ios/CadetCatch/CadetCatch/Assets.xcassets/AppIcon.appiconset/Icon-20@3x.png"
+    },
+    {
+      "status": "M",
+      "path": "ios/CadetCatch/CadetCatch/Assets.xcassets/AppIcon.appiconset/Icon-29@2x.png"
+    },
+    {
+      "status": "M",
+      "path": "ios/CadetCatch/CadetCatch/Assets.xcassets/AppIcon.appiconset/Icon-29@3x.png"
+    },
+    {
+      "status": "M",
+      "path": "ios/CadetCatch/CadetCatch/Assets.xcassets/AppIcon.appiconset/Icon-40@2x.png"
+    },
+    {
+      "status": "M",
+      "path": "ios/CadetCatch/CadetCatch/Assets.xcassets/AppIcon.appiconset/Icon-40@3x.png"
+    },
+    {
+      "status": "M",
+      "path": "ios/CadetCatch/CadetCatch/Assets.xcassets/AppIcon.appiconset/Icon-60@2x.png"
+    },
+    {
+      "status": "M",
+      "path": "ios/CadetCatch/CadetCatch/Assets.xcassets/AppIcon.appiconset/Icon-60@3x.png"
+    },
+    {
+      "status": "M",
+      "path": "ios/CadetCatch/CadetCatch/Assets.xcassets/AppIcon.appiconset/Icon-76.png"
+    },
+    {
+      "status": "M",
+      "path": "ios/CadetCatch/CadetCatch/Assets.xcassets/AppIcon.appiconset/Icon-76@2x.png"
+    },
+    {
+      "status": "M",
+      "path": "ios/CadetCatch/CadetCatch/Assets.xcassets/AppIcon.appiconset/Icon-83_5@2x.png"
+    },
+    {
+      "status": "M",
+      "path": "ios/CadetCatch/CadetCatch/Assets.xcassets/EagleLaunch.imageset/EagleLaunch.jpg"
+    },
+    {
+      "status": "M",
+      "path": "ios/CadetCatch/CadetCatch/CadetCatchApp.swift"
+    },
+    {
+      "status": "M",
+      "path": "ios/CadetCatch/CadetCatch/Info.plist"
+    },
+    {
+      "status": "M",
+      "path": "ios/CadetCatch/README.md"
+    },
+    {
+      "status": "M",
+      "path": "ios/CadetCatch/project.yml"
+    }
+  ],
+  "releaseJsonVersionObject": {
+    "marketingVersion": "1.0.1",
+    "buildNumber": "80",
+    "releaseType": "MANUAL",
+    "phasedRelease": false,
+    "promotionalText": "Private cadet rosters, approved photo pages, hidden previews, saved finds, family notes, and a plain-English academy terms guide.",
+    "description": "CadetCatch helps Coast Guard Academy families keep up with cadet photos without digging through every gallery by hand.\n\nCreate a private roster on your iPhone, add approved photo pages, check those pages for possible face matches, review match details, view selected results, save likely finds, and keep simple notes for family follow-up.\n\nCadetCatch checks only photo pages you add or enable. Private albums stay private unless you choose to share an accessible link.\n\nPrivacy Policy: https://eb28.co/cc/privacy/\nTerms of Use (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/",
+    "keywords": [
+      "cadet",
+      "military",
+      "academy",
+      "photos",
+      "family",
+      "parents",
+      "coast"
+    ],
+    "whatsNew": "Restores the build 80 CadetCatch update with private roster setup, approved public photo sources, hidden result previews, saved finds, family notes, and purchase restore controls."
+  },
+  "safetyNotes": [
+    "Primary checkout /Users/richardducat/GITHUB/eb28.co is dirty and must not be used for release actions.",
+    "App Store Connect confirms build 80 exists, is VALID, is App Store eligible, and is now attached to iOS version 1.0.1.",
+    "Do not archive or upload another build unless build 80 becomes unavailable or invalid."
+  ],
+  "createdAt": "2026-06-06T11:53:53.691778-04:00"
+}

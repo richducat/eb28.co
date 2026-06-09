@@ -1,0 +1,25 @@
+{
+  "$schemaVersion": 1,
+  "appName": "CadetCatch",
+  "bundleId": "co.eb28.cadetcatch",
+  "appStoreConnectAppId": "6769565852",
+  "highestKnownUploadedBuild": 84,
+  "highestKnownAppStoreSubmittedBuild": 80,
+  "activeReview": {
+    "marketingVersion": "1.0.1",
+    "buildNumber": 80,
+    "buildId": "df052001-85ae-4380-99a1-6ad808a40b9a",
+    "reviewSubmissionId": "575c019e-da9a-404a-9074-a4e18168cc4a",
+    "state": "WAITING_FOR_REVIEW",
+    "verifiedFromSnapshot": "app-store/releases/cadetcatch/app-store-connect-snapshots/submit-build80.json",
+    "submittedAt": "2026-06-06T18:57:48.893Z"
+  },
+  "blockedBuildNumbers": [1, 13, 14, 57, 67, 77, 78, 79, 80, 82, 83, 84],
+  "nextUploadMustUseBuildNumberGreaterThan": 84,
+  "notes": [
+    "Build 80 is the active App Store review recovery candidate and must not be re-uploaded.",
+    "Builds 82, 83, 84 exist in App Store Connect/TestFlight evidence and must not be overwritten by stale source.",
+    "For a new app update, bump project.yml, pbxproj, app-store-release.json, release-manifest.json, review notes, and metadata to a new build number greater than 84."
+  ],
+  "lastUpdated": "2026-06-09"
+}

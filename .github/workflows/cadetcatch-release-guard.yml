@@ -1,0 +1,36 @@
+name: CadetCatch Release Guard
+
+on:
+  pull_request:
+    paths:
+      - 'app-store/releases/cadetcatch/**'
+      - 'ios/CadetCatch/**'
+      - 'scripts/**'
+      - 'package.json'
+      - '.github/workflows/cadetcatch-release-guard.yml'
+  push:
+    paths:
+      - 'app-store/releases/cadetcatch/**'
+      - 'ios/CadetCatch/**'
+      - 'scripts/**'
+      - 'package.json'
+      - '.github/workflows/cadetcatch-release-guard.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  release-guard:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Verify CadetCatch release surface
+        run: node scripts/verify-cadetcatch-release.mjs --mode release-surface

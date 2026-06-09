@@ -62,6 +62,7 @@ checkIdentity();
 checkVersionBuildConsistency();
 checkActiveText();
 checkScreenshots();
+checkBuildResources();
 checkLedger();
 checkModeSpecificRules();
 
@@ -164,6 +165,28 @@ function checkScreenshots() {
   }
   if (releaseJson.assets?.appPreviewVideos?.length) {
     failures.push('App preview videos are listed; verify this intentionally before App Store mutation.');
+  }
+}
+
+function checkBuildResources() {
+  const requiredResources = [
+    'ios/CadetCatch/Shared/ScanActivityAttributes.swift',
+    'ios/CadetCatch/CadetCatch/Fonts/Montserrat.ttf',
+    'ios/CadetCatch/CadetCatch/Fonts/OFL.txt',
+    'ios/CadetCatch/CadetCatch/GoogleService-Info.plist',
+    'ios/CadetCatch/CadetCatch/LaunchScreen.storyboard',
+    'ios/CadetCatch/drive_bot.html',
+  ];
+  for (const resource of requiredResources) {
+    if (!existsSync(rel(resource))) failures.push(`Required CadetCatch build resource is missing: ${resource}`);
+  }
+
+  const attributesPath = rel('ios/CadetCatch/Shared/ScanActivityAttributes.swift');
+  if (existsSync(attributesPath)) {
+    const attributes = read(attributesPath);
+    for (const token of ['ActivityAttributes', 'ContentState', 'progressString', 'isScanning', 'cadetName']) {
+      if (!attributes.includes(token)) failures.push(`ScanActivityAttributes.swift is missing expected token: ${token}`);
+    }
   }
 }
 

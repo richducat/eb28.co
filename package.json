@@ -16,6 +16,7 @@
     "appstore:preflight": "node scripts/app-store-preflight.mjs",
     "cadetcatch:release-gate": "node scripts/verify-cadetcatch-release.mjs --mode release-surface",
     "cadetcatch:upload-gate": "node scripts/verify-cadetcatch-release.mjs --mode upload",
+    "cadetcatch:sim-qa": "node scripts/cadetcatch-simulator-qa.mjs",
     "preview": "vite preview",
     "sync:ios": "npx cap sync ios && node scripts/ensure-wakeup-admob-spm.mjs"
   },

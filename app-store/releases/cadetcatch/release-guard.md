@@ -17,6 +17,10 @@ This folder has a repo-level guard to prevent old CadetCatch builds or stale App
 - `ios/CadetCatch/release_app.sh --approval-file /path/to/approval.md`
   - Refuses to archive or upload unless the upload gate passes first.
 
+- `npm run cadetcatch:sim-qa`
+  - Builds CadetCatch with full Xcode, installs it on an iPhone simulator, launches it, and saves a screenshot receipt under `output/cadetcatch-simulator/`.
+  - Uses `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer` automatically so it still works when macOS `xcode-select` points at Command Line Tools.
+
 ## Current Guard State
 
 - Active App Store review recovery candidate: `1.0.1 (80)`.
@@ -36,8 +40,9 @@ This folder has a repo-level guard to prevent old CadetCatch builds or stale App
    - `app-store/releases/cadetcatch/app-store-metadata.md`
    - `app-store/releases/cadetcatch/review-notes.md`
 4. Run `npm run cadetcatch:release-gate`.
-5. Commit the clean release candidate.
-6. Create a matching EB28 vault approval record for the exact `upload_build` action.
-7. Run `ios/CadetCatch/release_app.sh --approval-file /path/to/approval.md`.
+5. Run `npm run cadetcatch:sim-qa` and manually review the launched simulator.
+6. Commit the clean release candidate.
+7. Create a matching EB28 vault approval record for the exact `upload_build` action.
+8. Run `ios/CadetCatch/release_app.sh --approval-file /path/to/approval.md`.
 
 Do not edit App Store Connect, select builds, upload builds, submit for review, release, expire builds, or change TestFlight state unless the EB28 App Agency SOP approval record exists for that exact action.

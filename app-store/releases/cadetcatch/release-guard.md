@@ -21,6 +21,10 @@ This folder has a repo-level guard to prevent old CadetCatch builds or stale App
   - Builds CadetCatch with full Xcode, installs it on an iPhone simulator, launches it, and saves a screenshot receipt under `output/cadetcatch-simulator/`.
   - Uses `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer` automatically so it still works when macOS `xcode-select` points at Command Line Tools.
 
+- `npm run test:cadetcatch`
+  - The default plain-English command for future Codex sessions.
+  - Same simulator QA flow as `cadetcatch:sim-qa`, using the iPhone 17 Pro Max simulator.
+
 ## Current Guard State
 
 - Active App Store review recovery candidate: `1.0.1 (80)`.
@@ -40,7 +44,7 @@ This folder has a repo-level guard to prevent old CadetCatch builds or stale App
    - `app-store/releases/cadetcatch/app-store-metadata.md`
    - `app-store/releases/cadetcatch/review-notes.md`
 4. Run `npm run cadetcatch:release-gate`.
-5. Run `npm run cadetcatch:sim-qa` and manually review the launched simulator.
+5. Run `npm run test:cadetcatch` and manually review the launched simulator.
 6. Commit the clean release candidate.
 7. Create a matching EB28 vault approval record for the exact `upload_build` action.
 8. Run `ios/CadetCatch/release_app.sh --approval-file /path/to/approval.md`.

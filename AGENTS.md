@@ -19,6 +19,16 @@ Automatic production deploys and App Store mutations are forbidden unless the EB
 
 Do not archive, upload, submit, release, or deploy from a dirty checkout. Use an isolated git worktree and branch for implementation.
 
+## CadetCatch Local Simulator QA
+
+Richard should not have to remember the simulator command. After any CadetCatch iOS app/source change, run local simulator QA automatically before saying the change is ready and before any TestFlight/App Store step:
+
+`npm run test:cadetcatch`
+
+This command runs the release-surface guard, builds CadetCatch with full Xcode, installs it on an iPhone simulator, launches it, and saves a screenshot receipt under `output/cadetcatch-simulator/`.
+
+If simulator QA fails, fix the app or environment before continuing. Do not substitute TestFlight/App Store upload for local simulator QA.
+
 ## App Store Submission Standard
 
 - Never submit, upload for review, or describe an App Store build as ready unless it is actually production-ready.

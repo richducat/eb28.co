@@ -1,0 +1,68 @@
+{
+  "capturedAt": "2026-06-09T20:23:38Z",
+  "captureMethod": "visible App Store Connect UI via Chrome accessibility tree",
+  "appName": "CadetCatch",
+  "appStoreConnectAppId": "6769565852",
+  "team": "DIGITAL SYNC, LLC, THE",
+  "teamIdFromUrl": "69a6de93-26fc-47e3-e053-5b8c7c11a4d1",
+  "page": "TestFlight iOS Builds",
+  "preUploadVisibleBuilds": [
+    {
+      "version": "1.0.1",
+      "build": "1",
+      "uploadStatus": "Complete",
+      "dateCreated": "Jun 6, 2026 11:50 AM"
+    },
+    {
+      "version": "1.0.1",
+      "build": "84",
+      "uploadStatus": "Complete",
+      "dateCreated": "Jun 6, 2026 11:00 AM"
+    },
+    {
+      "version": "1.0.1",
+      "build": "83",
+      "uploadStatus": "Complete",
+      "dateCreated": "Jun 6, 2026 10:21 AM"
+    },
+    {
+      "version": "1.0.1",
+      "build": "82",
+      "uploadStatus": "Complete",
+      "dateCreated": "Jun 5, 2026 8:42 PM"
+    },
+    {
+      "version": "1.0.1",
+      "build": "80",
+      "uploadStatus": "Complete",
+      "dateCreated": "Jun 4, 2026 10:04 AM"
+    }
+  ],
+  "postUploadBuild": {
+    "version": "1.0.1",
+    "build": "85",
+    "uploadStatus": "Processing",
+    "dateCreated": "Jun 9, 2026 4:21 PM"
+  },
+  "xcodeArchiveReceipt": {
+    "archivePath": "/Users/richardducat/Documents/Codex/Release-Artifacts/CadetCatch/build-85-20260609/CadetCatch-1.0.1-85-20260609.xcarchive",
+    "distributionLogsPath": "/Users/richardducat/Documents/Codex/Release-Artifacts/CadetCatch/build-85-20260609/CadetCatch-1.0.1-85-20260609.xcdistributionlogs",
+    "uploadedBuildNumber": "85",
+    "uploadEventDate": "2026-06-09T20:21:34Z",
+    "uploadEventState": "success",
+    "uploadEventTitle": "Uploaded to Apple",
+    "providerId": "69a6de93-26fc-47e3-e053-5b8c7c11a4d1",
+    "teamId": "WN3K69XEP4"
+  },
+  "notPerformed": [
+    "TestFlight distribution",
+    "external tester submission",
+    "build selection",
+    "App Review submission",
+    "App Store release",
+    "metadata edits in ASC",
+    "screenshot/app preview edits",
+    "IAP/subscription edits",
+    "build expiration"
+  ]
+}

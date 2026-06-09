@@ -18,15 +18,20 @@
   "scheme": "CadetCatch",
   "teamId": "WN3K69XEP4",
   "approvalLevel": "chat-approved by Richard Ducat on 2026-06-09 for upload_build of CadetCatch 1.0.1 build 85 only; no TestFlight distribution, build selection, review submission, or release approval is included",
-  "archivePath": "pending local archive for build 85 upload",
+  "archivePath": "/Users/richardducat/Documents/Codex/Release-Artifacts/CadetCatch/build-85-20260609/CadetCatch-1.0.1-85-20260609.xcarchive",
   "appStoreConnectState": {
     "appStoreVersionId": null,
     "buildId": null,
     "reviewSubmissionId": null,
-    "appStoreState": "PENDING_TESTFLIGHT_UPLOAD",
+    "appStoreState": "TESTFLIGHT_PROCESSING",
     "submittedAt": null,
     "lastLocalPreparationAt": "2026-06-09T20:09:29Z",
-    "verificationBlocked": "ASC browser redirected to Apple Account login on 2026-06-09; live pre-upload build list requires authentication."
+    "uploadedAt": "2026-06-09T20:21:34Z",
+    "visibleAscVerificationAt": "2026-06-09T20:23:38Z",
+    "visibleAscStatus": "Processing",
+    "visibleAscCreatedAt": "Jun 9, 2026 4:21 PM",
+    "distributionLogPath": "/Users/richardducat/Documents/Codex/Release-Artifacts/CadetCatch/build-85-20260609/CadetCatch-1.0.1-85-20260609.xcdistributionlogs",
+    "verificationBlocked": null
   },
   "sourceMetadataVerification": {
     "projectYmlMarketingVersion": "1.0.1",
@@ -170,7 +175,8 @@
   "safetyNotes": [
     "Primary checkout /Users/richardducat/GITHUB/eb28.co is dirty and must not be used for release actions.",
     "Build 80 remains the known active App Store review recovery candidate from prior verified ASC evidence.",
-    "Build 85 is prepared as a new TestFlight upload candidate only. Do not distribute, select, submit for review, release, or expire builds without a separate exact approval record."
+    "Build 85 was uploaded to App Store Connect and visible ASC Build Uploads showed status Processing on 2026-06-09.",
+    "Do not distribute, select, submit for review, release, or expire builds without a separate exact approval record."
   ],
   "createdAt": "2026-06-06T11:53:53.691778-04:00"
 }

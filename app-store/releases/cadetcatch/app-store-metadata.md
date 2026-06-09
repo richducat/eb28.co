@@ -55,8 +55,8 @@ No login is required. Add a cadet profile from Roster using a clear face photo s
 
 ## Internal Launch Notes
 
-- App Store Connect version state: New TestFlight upload candidate prepared from local source on 2026-06-09; ASC login is required for live pre-upload build-list verification.
-- Attached build ID or build number: Pending upload for build 85
+- App Store Connect version state: Build 85 uploaded to TestFlight processing on 2026-06-09.
+- Attached build ID or build number: Build 85 visible in Build Uploads as Processing, created Jun 9, 2026 4:21 PM.
 - Review submission ID: Not applicable to this TestFlight upload candidate
 - Release after approval: After approval
 - In-app purchases and subscription status: Approved

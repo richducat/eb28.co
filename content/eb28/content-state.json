@@ -1,6 +1,20 @@
 {
-  "updatedAt": "2026-06-08T06:01:24.858Z",
+  "updatedAt": "2026-06-09T06:03:12.167Z",
   "runs": [
+    {
+      "runId": "2026-06-09-am",
+      "date": "2026-06-09",
+      "slot": "am",
+      "createdAt": "2026-06-09T06:03:12.167Z",
+      "article": {
+        "slug": "website-designer-near-me-in-melbourne-fl-how-to-choose-without-getting-burned",
+        "title": "Website Designer Near Me Melbourne FL: Vet Before You Hire",
+        "url": "https://eb28.co/blog/website-designer-near-me-in-melbourne-fl-how-to-choose-without-getting-burned/",
+        "cluster": "melbourne-web-design",
+        "primaryKeyword": "website designer near me Melbourne FL"
+      },
+      "reportPath": "output/eb28-social/eb28-content-2026-06-09-am.json"
+    },
     {
       "runId": "2026-06-08-am",
       "date": "2026-06-08",
@@ -13,7 +27,7 @@
         "cluster": "lead-automation",
         "primaryKeyword": "CRM automation for local service business"
       },
-      "reportPath": "/Users/richardducat/GITHUB/eb28.co/output/eb28-social/eb28-content-2026-06-08-am.json"
+      "reportPath": "output/eb28-social/eb28-content-2026-06-08-am.json"
     },
     {
       "runId": "2026-06-07-am",
@@ -27,7 +41,7 @@
         "cluster": "private-ai",
         "primaryKeyword": "private AI vs ChatGPT for business"
       },
-      "reportPath": "/Users/richardducat/GITHUB/eb28.co/output/eb28-social/eb28-content-2026-06-07-am.json"
+      "reportPath": "output/eb28-social/eb28-content-2026-06-07-am.json"
     },
     {
       "runId": "2026-06-06-pm",
@@ -41,7 +55,7 @@
         "cluster": "conversion",
         "primaryKeyword": "small business homepage optimization"
       },
-      "reportPath": "/Users/richardducat/GITHUB/eb28.co/output/eb28-social/eb28-content-2026-06-06-pm.json"
+      "reportPath": "output/eb28-social/eb28-content-2026-06-06-pm.json"
     },
     {
       "runId": "2026-06-06-am",
@@ -55,7 +69,7 @@
         "cluster": "local-seo",
         "primaryKeyword": "Space Coast local SEO citations"
       },
-      "reportPath": "/Users/richardducat/GITHUB/eb28.co/output/eb28-social/eb28-content-2026-06-06-am.json"
+      "reportPath": "output/eb28-social/eb28-content-2026-06-06-am.json"
     },
     {
       "runId": "2026-06-05-pm",
@@ -69,7 +83,7 @@
         "cluster": "melbourne-web-design",
         "primaryKeyword": "mobile website design Melbourne FL"
       },
-      "reportPath": "/private/tmp/eb28-deploy-bRl5dm/output/eb28-social/eb28-content-2026-06-05-pm.json"
+      "reportPath": "output/eb28-social/eb28-content-2026-06-05-pm.json"
     },
     {
       "runId": "2026-06-05-am",
@@ -83,7 +97,7 @@
         "cluster": "local-seo",
         "primaryKeyword": "Space Coast local SEO citations"
       },
-      "reportPath": "/Users/richardducat/GITHUB/eb28.co/output/eb28-social/eb28-content-2026-06-05-am.json"
+      "reportPath": "output/eb28-social/eb28-content-2026-06-05-am.json"
     },
     {
       "runId": "2026-06-04-am",
@@ -97,7 +111,7 @@
         "cluster": "private-ai",
         "primaryKeyword": "local RAG system for business documents"
       },
-      "reportPath": "/Users/richardducat/GITHUB/eb28.co/output/eb28-social/eb28-content-2026-06-04-am.json"
+      "reportPath": "output/eb28-social/eb28-content-2026-06-04-am.json"
     },
     {
       "runId": "2026-06-03-pm",
@@ -111,7 +125,7 @@
         "cluster": "lead-automation",
         "primaryKeyword": "AI receptionist for local business"
       },
-      "reportPath": "/Users/richardducat/GITHUB/eb28.co/output/eb28-social/eb28-content-2026-06-03-pm.json"
+      "reportPath": "output/eb28-social/eb28-content-2026-06-03-pm.json"
     },
     {
       "runId": "2026-06-03-am",
@@ -125,7 +139,7 @@
         "cluster": "conversion",
         "primaryKeyword": "website audit Melbourne FL"
       },
-      "reportPath": "/Users/richardducat/GITHUB/eb28.co/output/eb28-social/eb28-content-2026-06-03-am.json"
+      "reportPath": "output/eb28-social/eb28-content-2026-06-03-am.json"
     },
     {
       "runId": "2026-06-02-pm",
@@ -139,7 +153,7 @@
         "cluster": "local-seo",
         "primaryKeyword": "how to rank in Melbourne FL map pack"
       },
-      "reportPath": "/Users/richardducat/GITHUB/eb28.co/output/eb28-social/eb28-content-2026-06-02-pm.json"
+      "reportPath": "output/eb28-social/eb28-content-2026-06-02-pm.json"
     },
     {
       "runId": "2026-06-02-am",
@@ -153,7 +167,7 @@
         "cluster": "melbourne-web-design",
         "primaryKeyword": "best website builder Melbourne FL"
       },
-      "reportPath": "/Users/richardducat/GITHUB/eb28.co/output/eb28-social/eb28-content-2026-06-02-am.json"
+      "reportPath": "output/eb28-social/eb28-content-2026-06-02-am.json"
     }
   ]
 }

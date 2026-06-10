@@ -55,8 +55,8 @@ No login is required. Add a cadet profile from Roster using a clear face photo s
 
 ## Internal Launch Notes
 
-- App Store Connect version state: Build 86 local candidate; not uploaded.
-- Attached build ID or build number: Pending future upload for build 86.
+- App Store Connect version state: Build 86 uploaded by Xcode; package processing per upload receipt.
+- Attached build ID or build number: Build 86 uploaded; ASC build ID not yet verified in visible UI.
 - Review submission ID: Not applicable to this TestFlight upload candidate
 - Release after approval: After approval
 - In-app purchases and subscription status: Approved

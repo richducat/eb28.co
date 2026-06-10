@@ -17,20 +17,20 @@
   "xcodegenProjectSpec": "ios/CadetCatch/project.yml",
   "scheme": "CadetCatch",
   "teamId": "WN3K69XEP4",
-  "approvalLevel": "chat approval captured for upload_build build 86; exact vault approval record required before external mutation",
-  "archivePath": "pending archive for approved build 86 upload",
+  "approvalLevel": "upload_build approval used for build 86 only",
+  "archivePath": "/Users/richardducat/Documents/Codex/Release-Artifacts/CadetCatch/build-86-20260610/CadetCatch-1.0.1-86-20260610.xcarchive",
   "appStoreConnectState": {
     "appStoreVersionId": null,
     "buildId": null,
     "reviewSubmissionId": null,
-    "appStoreState": "LOCAL_CANDIDATE_NOT_UPLOADED",
+    "appStoreState": "UPLOADED_PROCESSING_FROM_XCODE_RECEIPT",
     "submittedAt": null,
     "lastLocalPreparationAt": "2026-06-10T19:43:02Z",
-    "uploadedAt": null,
+    "uploadedAt": "2026-06-10T19:56:28Z",
     "visibleAscVerificationAt": null,
-    "visibleAscStatus": "Not uploaded",
+    "visibleAscStatus": "Not verified in visible ASC UI; Xcode upload receipt says uploaded package is processing",
     "visibleAscCreatedAt": null,
-    "distributionLogPath": null,
+    "distributionLogPath": "/Users/richardducat/Documents/Codex/Release-Artifacts/CadetCatch/build-86-20260610/CadetCatch-1.0.1-86-20260610.xcdistributionlogs",
     "verificationBlocked": null
   },
   "sourceMetadataVerification": {
@@ -120,13 +120,13 @@
     "Primary checkout /Users/richardducat/GITHUB/eb28.co is dirty and must not be used for release actions.",
     "Build 85 was uploaded to App Store Connect and visible ASC Build Uploads showed status Processing on 2026-06-09.",
     "Build 86 is the Save to Photos candidate, descended from the build 85 receipt commit and preserving face-match changes.",
-    "Build 86 has not been uploaded at this manifest update point.",
-    "Do not distribute TestFlight, select for App Review, submit for review, release, expire builds, edit metadata/screenshots/previews, or edit IAP/subscriptions without a separate exact approval record."
+    "Do not distribute TestFlight, select for App Review, submit for review, release, expire builds, edit metadata/screenshots/previews, or edit IAP/subscriptions without a separate exact approval record.",
+    "Build 86 upload completed by xcodebuild on 2026-06-10; package is processing per Xcode upload receipt."
   ],
   "createdAt": "2026-06-06T11:53:53.691778-04:00",
   "localVerification": {
-    "releaseGate": "passed before bookkeeping correction; rerun required after this commit",
-    "simulatorQA": "passed before bookkeeping correction; rerun required after this commit",
+    "releaseGate": "passed at source commit 7c2c033eeeaadf79af314f60220edd69e7db4d8d",
+    "simulatorQA": "passed at source commit 7c2c033eeeaadf79af314f60220edd69e7db4d8d",
     "saveToPhotosManualSimulatorQA": {
       "status": "passed",
       "simulator": "iPhone 17 Pro Max iOS 26.5",
@@ -138,5 +138,5 @@
       "verifiedAt": "2026-06-10T19:43:02Z"
     }
   },
-  "updatedAt": "2026-06-10T19:43:02Z"
+  "updatedAt": "2026-06-10T19:56:28Z"
 }

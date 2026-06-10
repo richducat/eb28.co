@@ -1,0 +1,33 @@
+{
+  "appName": "CadetCatch",
+  "bundleId": "co.eb28.cadetcatch",
+  "appStoreConnectAppId": "6769565852",
+  "action": "upload_build",
+  "marketingVersion": "1.0.1",
+  "buildNumber": "86",
+  "sourceCommit": "7c2c033eeeaadf79af314f60220edd69e7db4d8d",
+  "archivePath": "/Users/richardducat/Documents/Codex/Release-Artifacts/CadetCatch/build-86-20260610/CadetCatch-1.0.1-86-20260610.xcarchive",
+  "distributionLogPath": "/Users/richardducat/Documents/Codex/Release-Artifacts/CadetCatch/build-86-20260610/CadetCatch-1.0.1-86-20260610.xcdistributionlogs",
+  "uploadedAt": "2026-06-10T19:56:28Z",
+  "xcodeExportResult": "EXPORT_SUCCEEDED",
+  "xcodeUploadReceipt": [
+    "Progress 100%: Uploaded package is processing.",
+    "Progress 100%: Upload succeeded.",
+    "Uploaded CadetCatch",
+    "** EXPORT SUCCEEDED **"
+  ],
+  "externalStateVerifiedBy": "xcodebuild -exportArchive authenticated App Store Connect upload response",
+  "visibleAscUiVerified": false,
+  "notPerformed": [
+    "TestFlight distribution",
+    "external tester submission",
+    "build selection for App Review",
+    "App Review submission",
+    "App Store release",
+    "metadata edit",
+    "screenshot or app preview edit",
+    "IAP or subscription edit",
+    "build expiration",
+    "remove from review"
+  ]
+}

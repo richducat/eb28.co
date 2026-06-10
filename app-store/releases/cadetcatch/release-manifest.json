@@ -5,27 +5,27 @@
   "platform": "iOS",
   "marketingVersion": "1.0.1",
   "buildNumber": "86",
-  "baselineCommit": "392e8d52240be3c6543c84c1c8dd44922c33b15a",
-  "baselineTree": "e7e797efef6cf811341eae4d2c182d33420b51df",
-  "sourceIdentityType": "local git stash merge commit preserved as branch/worktree",
-  "baseParentCommit": "30916f31f2fe322572935bf5bad60dcd11871ea3",
-  "indexParentCommit": "f9fed1cef2468aa175437559b7fc65a641cccae9",
-  "sourceRef": "refs/heads/feature/cadetcatch-face-match-quality",
-  "releaseBranch": "feature/cadetcatch-face-match-quality",
-  "worktreePath": "/Users/richardducat/GITHUB/eb28-cadetcatch-face-match-quality",
+  "baselineCommit": "7c04c92c123c200bd73693e431f049c4fa2dec17",
+  "baselineTree": "2374b7b19defa200312ac08d70381628bead8fc6",
+  "sourceIdentityType": "isolated git worktree branch descended from CadetCatch build 85 TestFlight receipt",
+  "baseParentCommit": "7c04c92c123c200bd73693e431f049c4fa2dec17",
+  "indexParentCommit": null,
+  "sourceRef": "refs/heads/feature/cadetcatch-save-to-photos",
+  "releaseBranch": "feature/cadetcatch-save-to-photos",
+  "worktreePath": "/Users/richardducat/GITHUB/eb28-cadetcatch-save-to-photos",
   "xcodeProjectPath": "ios/CadetCatch/CadetCatch.xcodeproj",
   "xcodegenProjectSpec": "ios/CadetCatch/project.yml",
   "scheme": "CadetCatch",
   "teamId": "WN3K69XEP4",
-  "approvalLevel": "no upload approval for build 86; local Save to Photos implementation candidate only",
-  "archivePath": "pending local archive for future build 86 upload",
+  "approvalLevel": "chat approval captured for upload_build build 86; exact vault approval record required before external mutation",
+  "archivePath": "pending archive for approved build 86 upload",
   "appStoreConnectState": {
     "appStoreVersionId": null,
     "buildId": null,
     "reviewSubmissionId": null,
     "appStoreState": "LOCAL_CANDIDATE_NOT_UPLOADED",
     "submittedAt": null,
-    "lastLocalPreparationAt": "2026-06-09T20:09:29Z",
+    "lastLocalPreparationAt": "2026-06-10T19:43:02Z",
     "uploadedAt": null,
     "visibleAscVerificationAt": null,
     "visibleAscStatus": "Not uploaded",
@@ -67,15 +67,15 @@
   "changedFilesFromBaseParent": [
     {
       "status": "M",
-      "path": "app-store/releases/cadetcatch/app-icon-1024.png"
-    },
-    {
-      "status": "M",
       "path": "app-store/releases/cadetcatch/app-store-metadata.md"
     },
     {
       "status": "M",
       "path": "app-store/releases/cadetcatch/app-store-release.json"
+    },
+    {
+      "status": "M",
+      "path": "app-store/releases/cadetcatch/release-manifest.json"
     },
     {
       "status": "M",
@@ -87,67 +87,11 @@
     },
     {
       "status": "M",
-      "path": "ios/CadetCatch/CadetCatch/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png"
-    },
-    {
-      "status": "M",
-      "path": "ios/CadetCatch/CadetCatch/Assets.xcassets/AppIcon.appiconset/Icon-20@2x.png"
-    },
-    {
-      "status": "M",
-      "path": "ios/CadetCatch/CadetCatch/Assets.xcassets/AppIcon.appiconset/Icon-20@3x.png"
-    },
-    {
-      "status": "M",
-      "path": "ios/CadetCatch/CadetCatch/Assets.xcassets/AppIcon.appiconset/Icon-29@2x.png"
-    },
-    {
-      "status": "M",
-      "path": "ios/CadetCatch/CadetCatch/Assets.xcassets/AppIcon.appiconset/Icon-29@3x.png"
-    },
-    {
-      "status": "M",
-      "path": "ios/CadetCatch/CadetCatch/Assets.xcassets/AppIcon.appiconset/Icon-40@2x.png"
-    },
-    {
-      "status": "M",
-      "path": "ios/CadetCatch/CadetCatch/Assets.xcassets/AppIcon.appiconset/Icon-40@3x.png"
-    },
-    {
-      "status": "M",
-      "path": "ios/CadetCatch/CadetCatch/Assets.xcassets/AppIcon.appiconset/Icon-60@2x.png"
-    },
-    {
-      "status": "M",
-      "path": "ios/CadetCatch/CadetCatch/Assets.xcassets/AppIcon.appiconset/Icon-60@3x.png"
-    },
-    {
-      "status": "M",
-      "path": "ios/CadetCatch/CadetCatch/Assets.xcassets/AppIcon.appiconset/Icon-76.png"
-    },
-    {
-      "status": "M",
-      "path": "ios/CadetCatch/CadetCatch/Assets.xcassets/AppIcon.appiconset/Icon-76@2x.png"
-    },
-    {
-      "status": "M",
-      "path": "ios/CadetCatch/CadetCatch/Assets.xcassets/AppIcon.appiconset/Icon-83_5@2x.png"
-    },
-    {
-      "status": "M",
-      "path": "ios/CadetCatch/CadetCatch/Assets.xcassets/EagleLaunch.imageset/EagleLaunch.jpg"
-    },
-    {
-      "status": "M",
       "path": "ios/CadetCatch/CadetCatch/CadetCatchApp.swift"
     },
     {
       "status": "M",
       "path": "ios/CadetCatch/CadetCatch/Info.plist"
-    },
-    {
-      "status": "M",
-      "path": "ios/CadetCatch/README.md"
     },
     {
       "status": "M",
@@ -174,10 +118,25 @@
   },
   "safetyNotes": [
     "Primary checkout /Users/richardducat/GITHUB/eb28.co is dirty and must not be used for release actions.",
-    "Build 80 remains the known active App Store review recovery candidate from prior verified ASC evidence.",
     "Build 85 was uploaded to App Store Connect and visible ASC Build Uploads showed status Processing on 2026-06-09.",
-    "Build 86 is a local Save to Photos candidate and has not been uploaded.",
-    "Do not upload, distribute, select, submit for review, release, or expire builds without a separate exact approval record."
+    "Build 86 is the Save to Photos candidate, descended from the build 85 receipt commit and preserving face-match changes.",
+    "Build 86 has not been uploaded at this manifest update point.",
+    "Do not distribute TestFlight, select for App Review, submit for review, release, expire builds, edit metadata/screenshots/previews, or edit IAP/subscriptions without a separate exact approval record."
   ],
-  "createdAt": "2026-06-06T11:53:53.691778-04:00"
+  "createdAt": "2026-06-06T11:53:53.691778-04:00",
+  "localVerification": {
+    "releaseGate": "passed before bookkeeping correction; rerun required after this commit",
+    "simulatorQA": "passed before bookkeeping correction; rerun required after this commit",
+    "saveToPhotosManualSimulatorQA": {
+      "status": "passed",
+      "simulator": "iPhone 17 Pro Max iOS 26.5",
+      "sourceImageURL": "https://tyfys.net/cadetcatch/1561275132664580.jpg",
+      "detailScreenshot": "output/cadetcatch-simulator/save-detail-before-tap.png",
+      "successScreenshot": "output/cadetcatch-simulator/save-after-save-tap.png",
+      "savedSimulatorPhotoPath": "/Users/richardducat/Library/Developer/CoreSimulator/Devices/7C85426B-CA76-4F78-9D8A-557AD2C88426/data/Media/DCIM/100APPLE/IMG_0009.JPG",
+      "savedImagePixelSize": "2048x1365",
+      "verifiedAt": "2026-06-10T19:43:02Z"
+    }
+  },
+  "updatedAt": "2026-06-10T19:43:02Z"
 }

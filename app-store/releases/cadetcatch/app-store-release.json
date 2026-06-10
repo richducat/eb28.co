@@ -135,15 +135,16 @@
       "Facebook photo link entry",
       "photo check with hidden result previews and empty/no-match handling",
       "purchase sheet with visible Family Monthly title, 1 month duration, price per month, auto-renewal disclosure, Privacy Policy link, Terms of Use (EULA) link, and restore purchase controls",
-      "photo review, view, and saved photo flow",
       "daily photo check toggle in More",
       "plain-English academy terms guide",
-      "clear saved app data"
+      "clear saved app data",
+      "photo review, view, in-app save, and Save to Photos flow",
+      "Save to Photos writes an unlocked live server image to the iOS simulator Photos library"
     ],
     "knownRisks": [
       "Public websites may change markup or block automated image access; the app surfaces empty/no-match results when a page cannot provide usable public images.",
       "Private Facebook group/media access is not included in this build; this build supports public Facebook photo pages and Facebook links that the reviewer can open in Safari.",
-      "Build 80 uses the supplied low-resolution USCGC EAGLE photo from the owner as the native iOS launch/splash image and welcome image, with the screenshot UI badge removed and no replacement EAGLE artwork.",
+      "Build 86 preserves the supplied low-resolution USCGC EAGLE photo from the owner as the native iOS launch/splash image and welcome image, with the screenshot UI badge removed and no replacement EAGLE artwork.",
       "In-app purchase products must be active in App Store Connect before TestFlight purchase flows can return live products."
     ]
   }

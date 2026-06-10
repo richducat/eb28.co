@@ -5,8 +5,8 @@ import { fileURLToPath } from 'node:url';
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const roots = ['docs/ELW', 'public/ELW'];
-const lockedJsName = 'index-BIQb1w8S-lisa-lock.js';
-const lockedCssName = 'index-D7w1zK2H-lisa-lock.css';
+const lockedJsName = 'index-jjAchhLg-lisa-lock.js';
+const lockedCssName = 'index-BEIthGNw-lisa-lock.css';
 const requiredAssetTokens = [
   'Best Value',
   'Bovine Collagen Support',
@@ -15,18 +15,23 @@ const requiredAssetTokens = [
   'Protein",value:"13g",dv:"20%"',
   'Choose your 8 pack option',
   'hero-thrive gold-text-shine',
-  'est-badge-flat-bottom',
+  'est-badge-flat-bottom absolute bottom-0 left-8 h-[5.625rem] w-[8.5rem] overflow-hidden',
+  'gold-shine flex h-28 w-28 translate-x-3 flex-col',
   'Product carousel controls',
 ];
 const requiredCssTokens = [
   'hero-thrive-shine',
-  'clip-path:inset(0 0 24% round 9999px)',
+  'clip-path:inset(0)',
   'animation:',
 ];
 const forbiddenAssetTokens = [
   'No Added Sugars',
   'Keto-Friendly Macros',
   'Best [-Value',
+  'h-32 w-32 flex-col',
+];
+const forbiddenCssTokens = [
+  'clip-path:inset(0 0 24% round 9999px)',
 ];
 
 function walk(dir, out = []) {
@@ -70,6 +75,9 @@ for (const root of roots) {
   }
   for (const token of forbiddenAssetTokens) {
     if (asset.includes(token)) failures.push(`${path.relative(repoRoot, assetPath)} contains backdated/forbidden token: ${token}`);
+  }
+  for (const token of forbiddenCssTokens) {
+    if (css.includes(token)) failures.push(`${path.relative(repoRoot, cssPath)} contains blob/forbidden CSS token: ${token}`);
   }
 }
 

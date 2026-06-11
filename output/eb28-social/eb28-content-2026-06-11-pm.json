@@ -1,0 +1,54 @@
+{
+  "brand": "EB28",
+  "generatedAt": "2026-06-11T22:03:19.645Z",
+  "runId": "2026-06-11-pm",
+  "slot": "pm",
+  "article": {
+    "title": "Local SEO Services in Melbourne FL: What Should Be Fixed Before You Pay Monthly",
+    "url": "https://eb28.co/blog/local-seo-services-in-melbourne-fl-what-should-be-fixed-before-you-pay-monthly/",
+    "cluster": "local-seo",
+    "primaryKeyword": "local SEO services Melbourne FL"
+  },
+  "posts": {
+    "blog": {
+      "title": "Local SEO Services in Melbourne FL: What Should Be Fixed Before You Pay Monthly",
+      "url": "https://eb28.co/blog/local-seo-services-in-melbourne-fl-what-should-be-fixed-before-you-pay-monthly/",
+      "status": "ready_for_build_and_deploy"
+    },
+    "facebook": {
+      "caption": "Local SEO Services in Melbourne FL: What Should Be Fixed Before You Pay Monthly\n\nA practical guide for local businesses that want more qualified organic leads, stronger search visibility, and a faster path from visitor to customer.\n\nRead it: https://eb28.co/blog/local-seo-services-in-melbourne-fl-what-should-be-fixed-before-you-pay-monthly/",
+      "status": "draft_only_not_published"
+    },
+    "instagram": {
+      "caption": "local SEO services Melbourne FL: the practical version.\n\nWe broke down what to fix first, how to connect it to real lead flow, and what EB28 checks daily to keep search growth moving.\n\nRead the full guide at eb28.co/blog/",
+      "creativeBrief": "Carousel: Slide 1 problem statement, Slide 2 what to fix first, Slide 3 technical SEO checks, Slide 4 internal links, Slide 5 CTA to project brief.",
+      "status": "draft_only_not_published"
+    },
+    "x": {
+      "caption": "Local SEO Services in Melbourne FL: What Should Be Fixed Before You Pay Monthly\n\nThe key: connect the search intent to a page that is fast, useful, internally linked, and measured in Search Console.\n\nhttps://eb28.co/blog/local-seo-services-in-melbourne-fl-what-should-be-fixed-before-you-pay-monthly/",
+      "status": "draft_only_not_published"
+    },
+    "linkedin": {
+      "caption": "New EB28 growth brief: Local SEO Services in Melbourne FL: What Should Be Fixed Before You Pay Monthly\n\nThis covers the practical SEO and conversion fixes that turn a business website into a more reliable organic lead path.\n\nhttps://eb28.co/blog/local-seo-services-in-melbourne-fl-what-should-be-fixed-before-you-pay-monthly/",
+      "status": "draft_only_not_published"
+    },
+    "short_form_video": {
+      "platformFit": [
+        "Instagram Reels",
+        "Facebook Reels",
+        "LinkedIn short video"
+      ],
+      "hook": "Before you pay monthly for local SEO, make sure the website is not leaking trust.",
+      "script": [
+        "Open with the Google search result and the first screen of the website.",
+        "Call out the three checks: local promise, proof near the CTA, and a working follow-up path.",
+        "Show the article URL and invite Melbourne business owners to run the Melbourne Web Studio lead leak quiz."
+      ],
+      "visualBrief": "Screen-record the article hero, internal-link cards, and Melbourne Web Studio quiz section. Keep the edit clean, captioned, and service-focused.",
+      "caption": "Local SEO services should start with the basics buyers and Google both see: the page promise, proof, internal links, and the contact path. Read the guide: https://eb28.co/blog/local-seo-services-in-melbourne-fl-what-should-be-fixed-before-you-pay-monthly/",
+      "status": "draft_only_not_published"
+    }
+  },
+  "publicationStatus": "draft_only_not_published",
+  "channelVerification": "No external social channel was verified in this repo run; copy is owned-social draft material only."
+}

@@ -1,0 +1,42 @@
+{
+  "brand": "EB28",
+  "generatedAt": "2026-06-11T06:02:22.553Z",
+  "runId": "2026-06-11-am",
+  "slot": "am",
+  "article": {
+    "title": "Google Business Profile Optimization Melbourne FL: Website Signals",
+    "url": "https://eb28.co/blog/google-business-profile-optimization-in-melbourne-fl-the-website-signals-that-help/",
+    "cluster": "local-seo",
+    "primaryKeyword": "Google Business Profile optimization Melbourne FL"
+  },
+  "posts": {
+    "blog": {
+      "title": "Google Business Profile Optimization Melbourne FL: Website Signals",
+      "url": "https://eb28.co/blog/google-business-profile-optimization-in-melbourne-fl-the-website-signals-that-help/",
+      "status": "ready_for_build_and_deploy"
+    },
+    "facebook": {
+      "caption": "Google Business Profile Optimization Melbourne FL: Website Signals\n\nA practical guide for local businesses that want more qualified organic leads, stronger search visibility, and a faster path from visitor to customer.\n\nRead it: https://eb28.co/blog/google-business-profile-optimization-in-melbourne-fl-the-website-signals-that-help/",
+      "status": "draft_only_pending_verified_eb28_channel"
+    },
+    "instagram": {
+      "caption": "Google Business Profile optimization Melbourne FL: the practical version.\n\nWe broke down what to fix first, how to connect it to real lead flow, and what EB28 checks daily to keep search growth moving.\n\nRead the full guide at eb28.co/blog/",
+      "creativeBrief": "Carousel: Slide 1 problem statement, Slide 2 what to fix first, Slide 3 technical SEO checks, Slide 4 internal links, Slide 5 CTA to project brief.",
+      "status": "draft_only_pending_verified_eb28_channel"
+    },
+    "x": {
+      "caption": "Google Business Profile Optimization Melbourne FL: Website Signals\n\nThe key: connect the search intent to a page that is fast, useful, internally linked, and measured in Search Console.\n\nhttps://eb28.co/blog/google-business-profile-optimization-in-melbourne-fl-the-website-signals-that-help/",
+      "status": "draft_only_pending_verified_eb28_channel"
+    },
+    "linkedin": {
+      "caption": "New EB28 growth brief: Google Business Profile Optimization Melbourne FL: Website Signals\n\nThis covers the practical SEO and conversion fixes that turn a business website into a more reliable organic lead path.\n\nhttps://eb28.co/blog/google-business-profile-optimization-in-melbourne-fl-the-website-signals-that-help/",
+      "status": "draft_only_pending_verified_eb28_channel"
+    },
+    "shortFormVideo": {
+      "hook": "Your Google profile is not the whole local SEO system.",
+      "brief": "30-45 seconds. Show a Google Business Profile, then cut to the connected website signals: matching service headline, reviews, local FAQ, internal links, fast mobile contact path, and Search Console review loop.",
+      "caption": "Google Business Profile optimization in Melbourne FL works best when the profile, website, reviews, citations, and lead path all tell the same local story. Full guide: https://eb28.co/blog/google-business-profile-optimization-in-melbourne-fl-the-website-signals-that-help/",
+      "status": "draft_only_pending_verified_eb28_channel"
+    }
+  }
+}

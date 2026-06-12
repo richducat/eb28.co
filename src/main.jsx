@@ -55,6 +55,9 @@ const isAlarmClockRoute =
 const isFindMyCustomersRoute =
   pathname === '/findmycustomers' ||
   hostname === 'findmycustomers.eb28.co';
+const isWelcomeRoute =
+  pathname === '/welcome' ||
+  pathname.startsWith('/welcome/');
 
 function renderComponent(Component) {
   root.render(
@@ -127,6 +130,11 @@ async function renderApp() {
 
   if (isFindMyCustomersRoute) {
     await renderRoute(() => import('./FindMyCustomers/App.jsx'));
+    return;
+  }
+
+  if (isWelcomeRoute) {
+    await renderRoute(() => import('./WelcomePage.jsx'));
     return;
   }
 

@@ -53,6 +53,28 @@
   </head>
   <body>
     <div id="root"></div>
+    <script>
+      // Loads GA4 only when a measurement ID is set in /analytics-config.json,
+      // so analytics activates from config without a rebuild.
+      (function () {
+        fetch('/analytics-config.json', { cache: 'no-store' })
+          .then(function (r) { return r.ok ? r.json() : null; })
+          .then(function (cfg) {
+            var id = cfg && String(cfg.ga4MeasurementId || '').trim();
+            if (!id) return;
+            var s = document.createElement('script');
+            s.async = true;
+            s.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(id);
+            document.head.appendChild(s);
+            window.dataLayer = window.dataLayer || [];
+            function gtag() { window.dataLayer.push(arguments); }
+            window.gtag = gtag;
+            gtag('js', new Date());
+            gtag('config', id);
+          })
+          .catch(function () {});
+      })();
+    </script>
     <noscript>
       <main style="padding: 32px; font-family: Arial, sans-serif; background: #ffffff; color: #0f172a;">
         <h1>EB28 organic growth resources</h1>

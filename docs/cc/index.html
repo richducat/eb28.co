@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-            <meta name="eb28-build-id" content="2026-06-12T05-34-26-366Z-a601c3381" />
+            <meta name="eb28-build-id" content="2026-06-12T05-36-53-686Z-43aa88995" />
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
@@ -68,11 +68,33 @@
       }
 
     </style>
-    <script type="module" crossorigin src="../assets/index-fyp4d4w7.js"></script>
-    <link rel="stylesheet" crossorigin href="../assets/index-ZDoZhUdZ.css">
+    <script type="module" crossorigin src="../assets/index-DmsqbaTK.js"></script>
+    <link rel="stylesheet" crossorigin href="../assets/index-DsNRCTHK.css">
   </head>
   <body>
     <div id="root"></div>
+    <script>
+      // Loads GA4 only when a measurement ID is set in /analytics-config.json,
+      // so analytics activates from config without a rebuild.
+      (function () {
+        fetch('/analytics-config.json', { cache: 'no-store' })
+          .then(function (r) { return r.ok ? r.json() : null; })
+          .then(function (cfg) {
+            var id = cfg && String(cfg.ga4MeasurementId || '').trim();
+            if (!id) return;
+            var s = document.createElement('script');
+            s.async = true;
+            s.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(id);
+            document.head.appendChild(s);
+            window.dataLayer = window.dataLayer || [];
+            function gtag() { window.dataLayer.push(arguments); }
+            window.gtag = gtag;
+            gtag('js', new Date());
+            gtag('config', id);
+          })
+          .catch(function () {});
+      })();
+    </script>
     <noscript>
       <main style="padding: 32px; font-family: Arial, sans-serif; background: #ffffff; color: #0f172a;">
         <h1>EB28 organic growth resources</h1>

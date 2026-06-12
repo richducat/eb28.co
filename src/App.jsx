@@ -24,6 +24,8 @@ import {
   HardDrive
 } from 'lucide-react';
 
+import { useCheckoutConfig, checkoutUrlFor } from './useCheckoutConfig.js';
+
 const LiveAgentDemo = lazy(() => import('./components/LiveAgentDemo'));
 
 const App = () => {
@@ -40,6 +42,10 @@ const App = () => {
   });
   const [formStatus, setFormStatus] = useState('idle'); // idle | submitting | success | error
   const [formError, setFormError] = useState('');
+  // Stripe Payment Link URLs from /checkout-config.json. Buy buttons activate
+  // automatically when a URL is configured; otherwise CTAs fall back to the form.
+  const checkoutProducts = useCheckoutConfig();
+  const diyCheckoutUrl = checkoutUrlFor(checkoutProducts, 'diy-ai-foundation');
 
   // Handle scroll effect for navbar
   useEffect(() => {
@@ -71,60 +77,67 @@ const App = () => {
       title: "DIY AI Foundation Build",
       category: "ai-agents",
       price: "$10.00",
-      description: "The perfect proof-of-concept. I will personally set up a foundational AI agent to demonstrate how private logic can transform your workflow.",
+      description: "Try us for $10. We set up a working AI agent around one task in your business — secure account, your data linked, custom prompt — delivered to your inbox within 24 hours.",
       features: ["Secure Account Setup", "Basic Knowledge Base Link", "Custom System Prompt"],
       icon: <Bot className="w-8 h-8 text-white" />,
-      highlight: true
+      highlight: true,
+      checkoutId: 'diy-ai-foundation',
+      serviceValue: '10-dollar-bot'
     },
     {
       id: 1,
       title: "On-Premise LLM Server",
       category: "infrastructure",
       price: "Custom Quote",
-      description: "Run advanced AI models (Llama, Mistral) directly on your own office hardware. Zero cloud dependency. Absolute data sovereignty.",
+      description: "Your own private ChatGPT-style AI, running on hardware you own. Nothing leaves your building — your client data stays yours, even with the internet off.",
       features: ["Hardware Spec & Setup", "Local Model Deployment", "Offline Capability"],
       icon: <Server className="w-8 h-8 text-blue-500" />,
-      highlight: false
+      highlight: false,
+      serviceValue: 'on-prem'
     },
     {
       id: 2,
       title: "eb28.co Cloud AI Hosting",
       category: "infrastructure",
       price: "Custom Quote",
-      description: "Rent partitioned, highly-secure GPU instances on our proprietary cloud to run your customized LLMs without the hardware upfront cost.",
+      description: "All the privacy of your own AI without buying hardware. We host your models on dedicated, secured eb28.co instances and handle the maintenance.",
       features: ["High-Performance Compute", "Encrypted Data Pipelines", "Managed Maintenance"],
       icon: <Cloud className="w-8 h-8 text-purple-500" />,
-      highlight: false
+      highlight: false,
+      serviceValue: 'cloud'
     },
     {
       id: 3,
       title: "Local RAG Knowledge Base",
       category: "ai-agents",
       price: "Custom Quote",
-      description: "Chat securely with your internal documents, SOPs, and client histories. Your data never leaves your private infrastructure.",
+      description: "An AI that has actually read your documents. Ask questions of your SOPs, client histories, and files — privately, on your own infrastructure.",
       features: ["Vector Database Setup", "Semantic Search Integration", "Role-Based Access"],
       icon: <Database className="w-8 h-8 text-green-500" />,
-      highlight: false
+      highlight: false,
+      serviceValue: 'rag'
     },
     {
       id: 4,
       title: "Automated Client Gen Matrix",
       category: "revenue",
       price: "Custom Quote",
-      description: "High-intent lead capture systems infused with AI qualification that feed directly into automated CRM customer journeys.",
+      description: "A lead machine that never sleeps. Captures high-intent leads, qualifies them with AI, and follows up automatically through your CRM.",
       features: ["AI Lead Qualification", "Dynamic Email Sequences", "Florida Market SEO"],
       icon: <Users className="w-8 h-8 text-orange-500" />,
-      highlight: false
+      highlight: false,
+      serviceValue: 'revenue'
     },
     {
       id: 5,
       title: "Ad-to-AI Conversion Funnel",
       category: "revenue",
       price: "Custom Quote",
-      description: "We buy the ads and route the traffic to an autonomous AI agent that closes deals and manages onboarding automatically.",
+      description: "We run the ads, an AI agent answers every click instantly, qualifies the buyer, and books the deal — so paid traffic never waits on a human.",
       features: ["Paid Media Management", "Instant AI Response", "ROAS Analytics"],
       icon: <Target className="w-8 h-8 text-red-500" />,
-      highlight: false
+      highlight: false,
+      serviceValue: 'revenue'
     }
   ];
 
@@ -257,6 +270,15 @@ const App = () => {
 
   const updateField = (field, value) => {
     setFormData(prev => ({ ...prev, [field]: value }));
+  };
+
+  // Pre-select the right service before scrolling, so quote requests arrive
+  // tagged with the product the visitor was looking at.
+  const goToContactFor = (serviceValue) => {
+    if (serviceValue) {
+      updateField('serviceNeed', serviceValue);
+    }
+    scrollToSection('contact');
   };
 
   const handleFormSubmit = async (e) => {
@@ -398,9 +420,15 @@ const App = () => {
           </p>
 
           <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
-            <button onClick={() => scrollToSection('packages')} className="group px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white rounded-lg font-bold text-lg transition-all shadow-lg shadow-blue-500/25 flex items-center justify-center transform hover:-translate-y-1">
-              Start Your AI Core for $10 <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </button>
+            {diyCheckoutUrl ? (
+              <a href={diyCheckoutUrl} className="group px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white rounded-lg font-bold text-lg transition-all shadow-lg shadow-blue-500/25 flex items-center justify-center transform hover:-translate-y-1">
+                Start Your AI Core for $10 <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </a>
+            ) : (
+              <button onClick={() => scrollToSection('packages')} className="group px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white rounded-lg font-bold text-lg transition-all shadow-lg shadow-blue-500/25 flex items-center justify-center transform hover:-translate-y-1">
+                Start Your AI Core for $10 <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </button>
+            )}
             <button onClick={() => scrollToSection('contact')} className="px-8 py-4 bg-slate-800/50 hover:bg-slate-700/50 border border-slate-700 text-white rounded-lg font-bold text-lg transition-all flex items-center justify-center backdrop-blur-sm">
               Consult on Infrastructure
             </button>
@@ -676,13 +704,17 @@ const App = () => {
                     <a href={item.ctaHref} className="px-4 py-2 bg-white text-slate-900 rounded-lg font-bold text-sm hover:bg-cyan-50 transition-colors flex items-center">
                       {item.ctaLabel || 'Open'} <ArrowRight className="w-4 h-4 ml-1" />
                     </a>
+                  ) : item.checkoutId && checkoutUrlFor(checkoutProducts, item.checkoutId) ? (
+                    <a href={checkoutUrlFor(checkoutProducts, item.checkoutId)} className="px-4 py-2 bg-blue-700 text-white rounded-lg font-bold text-sm hover:bg-blue-600 transition-colors flex items-center shadow-lg shadow-blue-700/40">
+                      Buy Now <ArrowRight className="w-4 h-4 ml-1" />
+                    </a>
                   ) : item.highlight ? (
-                     <button onClick={() => scrollToSection('contact')} className="px-4 py-2 bg-blue-700 text-white rounded-lg font-bold text-sm hover:bg-blue-600 transition-colors flex items-center shadow-lg shadow-blue-700/40">
+                     <button onClick={() => goToContactFor(item.serviceValue)} className="px-4 py-2 bg-blue-700 text-white rounded-lg font-bold text-sm hover:bg-blue-600 transition-colors flex items-center shadow-lg shadow-blue-700/40">
                      Build It <ArrowRight className="w-4 h-4 ml-1" />
                    </button>
                   ) : (
-                    <button onClick={() => scrollToSection('contact')} className="px-4 py-2 bg-white text-slate-900 rounded-lg font-bold text-sm hover:bg-blue-50 transition-colors flex items-center">
-                      Deploy <ArrowRight className="w-4 h-4 ml-1" />
+                    <button onClick={() => goToContactFor(item.serviceValue)} className="px-4 py-2 bg-white text-slate-900 rounded-lg font-bold text-sm hover:bg-blue-50 transition-colors flex items-center">
+                      Get Quote <ArrowRight className="w-4 h-4 ml-1" />
                     </button>
                   )}
                 </div>
@@ -738,10 +770,18 @@ const App = () => {
                 </ul>
               </div>
 
-              <button onClick={() => scrollToSection('contact')} className="w-full py-4 bg-white text-blue-900 rounded-lg font-bold hover:bg-blue-50 transition-colors shadow-lg text-lg">
-                Build Prototype for $10
-              </button>
-              <p className="text-center text-xs text-blue-200 mt-3">Delivered securely within 24 hours.</p>
+              {diyCheckoutUrl ? (
+                <a href={diyCheckoutUrl} className="block w-full py-4 bg-white text-blue-900 rounded-lg font-bold hover:bg-blue-50 transition-colors shadow-lg text-lg text-center">
+                  Buy Now — $10
+                </a>
+              ) : (
+                <button onClick={() => goToContactFor('10-dollar-bot')} className="w-full py-4 bg-white text-blue-900 rounded-lg font-bold hover:bg-blue-50 transition-colors shadow-lg text-lg">
+                  Build Prototype for $10
+                </button>
+              )}
+              <p className="text-center text-xs text-blue-200 mt-3">
+                {diyCheckoutUrl ? 'Secure Stripe checkout. Setup starts the moment you pay.' : 'Delivered securely within 24 hours.'}
+              </p>
             </div>
 
             {/* Infrastructure Build */}
@@ -853,6 +893,7 @@ const App = () => {
                     <option value="10-dollar-bot">🔥 Deploy $10 Proof of Concept Bot</option>
                     <option value="on-prem">On-Premise Local LLM Setup</option>
                     <option value="cloud">eb28.co Cloud AI Hosting</option>
+                    <option value="rag">Local RAG Knowledge Base</option>
                     <option value="revenue">Revenue Automation & Paid Ads</option>
                     <option value="consultation">General Tech/Strategy Consultation</option>
                   </select>
@@ -884,7 +925,7 @@ const App = () => {
                 </button>
 
                 <p className="text-center text-xs text-slate-500 mt-4">
-                  🔒 Transmission encrypted. For the $10 Setup, you will be redirected to a secure payment portal immediately.
+                  🔒 Transmission encrypted. We reply within one business day — usually much faster.
                 </p>
               </form>
             )}

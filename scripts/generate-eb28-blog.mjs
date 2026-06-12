@@ -467,6 +467,7 @@ function renderHead({ title, description, canonicalUrl, ogType = 'website', stru
     <meta name="twitter:image" content="${SITE_ORIGIN}/assets/execution_grid.png" />
     <style>${baseStyles()}</style>
     ${structuredData.length ? `<script type="application/ld+json">${JSON.stringify(structuredData).replace(/</g, '\\u003c')}</script>` : ''}
+    <script>(function(){fetch('/analytics-config.json',{cache:'no-store'}).then(function(r){return r.ok?r.json():null;}).then(function(cfg){var id=cfg&&String(cfg.ga4MeasurementId||'').trim();if(!id)return;var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id='+encodeURIComponent(id);document.head.appendChild(s);window.dataLayer=window.dataLayer||[];function gtag(){window.dataLayer.push(arguments);}window.gtag=gtag;gtag('js',new Date());gtag('config',id);}).catch(function(){});})();</script>
   `;
 }
 

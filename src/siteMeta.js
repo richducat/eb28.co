@@ -482,6 +482,17 @@ const ROUTE_META = {
         includeInSitemap: true,
         structuredData: [],
     },
+    welcome: {
+        ...BASE_ROUTE_META,
+        key: 'welcome',
+        path: '/welcome/',
+        title: 'Welcome Aboard | EB28',
+        description: 'Payment received. Complete your two-minute onboarding and your EB28 setup starts immediately.',
+        image: DEFAULT_IMAGE,
+        robots: NOINDEX_ROBOTS,
+        includeInSitemap: false,
+        structuredData: [],
+    },
     notfound: {
         ...BASE_ROUTE_META,
         key: 'notfound',
@@ -522,6 +533,7 @@ export const STATIC_ROUTE_OUTPUTS = [
     { routeKey: 'cc', outputPath: 'cc/index.html' },
     { routeKey: 'dash', outputPath: 'dash/index.html' },
     { routeKey: 'findmycustomers', outputPath: 'findmycustomers/index.html' },
+    { routeKey: 'welcome', outputPath: 'welcome/index.html' },
     { routeKey: 'notfound', outputPath: '404.html' },
 ];
 
@@ -563,6 +575,10 @@ export function detectRouteKey({ pathname = '/', hostname = '' } = {}) {
 
     if (normalizedPathname === '/reconcile' || normalizedHostname === 'reconcile.eb28.co') {
         return 'reconcile';
+    }
+
+    if (normalizedPathname === '/welcome' || normalizedPathname.startsWith('/welcome/')) {
+        return 'welcome';
     }
 
     if (

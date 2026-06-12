@@ -1,0 +1,15 @@
+{
+  "_instructions": "Paste a Stripe Payment Link URL into checkoutUrl for each product. Buy buttons across the site activate automatically once a URL is present — no rebuild needed. In Stripe, set each payment link's after-payment confirmation to redirect to the matching welcomeUrl so customers land on automated onboarding.",
+  "products": {
+    "diy-ai-foundation": {
+      "label": "DIY AI Foundation Build — $10 one-time",
+      "checkoutUrl": "",
+      "welcomeUrl": "https://eb28.co/welcome/?p=diy-ai-foundation"
+    },
+    "recon-agent-beta": {
+      "label": "Recon Agent Founder Beta — $17/mo subscription",
+      "checkoutUrl": "",
+      "welcomeUrl": "https://eb28.co/welcome/?p=recon-agent-beta"
+    }
+  }
+}

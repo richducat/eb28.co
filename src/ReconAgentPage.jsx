@@ -82,15 +82,28 @@ export default function ReconAgentPage() {
     async function loadRuntimeConfig() {
       try {
         const response = await fetch('/recon-agent-config.json', { cache: 'no-store' });
-        if (!response.ok) {
+        if (response.ok) {
+          const payload = await response.json();
+          const checkoutUrl = String(payload?.checkoutUrl || '').trim();
+
+          if (!cancelled && checkoutUrl) {
+            setRuntimeCheckoutUrl(checkoutUrl);
+            return;
+          }
+        }
+
+        // Fall back to the shared checkout config so payment links only
+        // need to be pasted in one place.
+        const shared = await fetch('/checkout-config.json', { cache: 'no-store' });
+        if (!shared.ok) {
           return;
         }
 
-        const payload = await response.json();
-        const checkoutUrl = String(payload?.checkoutUrl || '').trim();
+        const sharedPayload = await shared.json();
+        const sharedUrl = String(sharedPayload?.products?.['recon-agent-beta']?.checkoutUrl || '').trim();
 
-        if (!cancelled && checkoutUrl) {
-          setRuntimeCheckoutUrl(checkoutUrl);
+        if (!cancelled && sharedUrl) {
+          setRuntimeCheckoutUrl(sharedUrl);
         }
       } catch {
         // The page keeps working without runtime config.

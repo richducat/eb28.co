@@ -4,7 +4,7 @@ import { AGENT_ROSTER as AGENTS } from './fundmanagerMeta';
 
 const PROD_REMOTE_SNAPSHOT_HOSTS = new Set(['eb28.co', 'www.eb28.co', 'fundmanager.eb28.co']);
 const STATIC_PREVIEW_HOSTS = new Set(['localhost', '127.0.0.1']);
-const PROD_REMOTE_SNAPSHOT_URL = 'https://fundstate.eb28.co/fund-state.json';
+const PROD_REMOTE_SNAPSHOT_URL = 'https://raw.githubusercontent.com/richducat/eb28.co/fund-state/fund-state.json';
 const SOURCE_TIMEOUT_MS = 5000;
 const IS_PROD_REMOTE_SNAPSHOT_HOST =
     typeof window !== 'undefined' && PROD_REMOTE_SNAPSHOT_HOSTS.has(window.location.hostname.toLowerCase());

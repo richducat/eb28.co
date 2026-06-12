@@ -1,0 +1,43 @@
+{
+  "brand": "EB28",
+  "generatedAt": "2026-06-12T10:03:04.221Z",
+  "runId": "2026-06-12-am",
+  "slot": "am",
+  "publishingGuard": "Draft owned-social copy only. Do not publish to any external social channel until the exact EB28-owned account and channel are verified by a repo script or connector.",
+  "article": {
+    "title": "Lead Generation Website Melbourne FL: Page Elements That Convert",
+    "url": "https://eb28.co/blog/lead-generation-website-in-melbourne-fl-the-page-elements-that-make-people-act/",
+    "cluster": "conversion",
+    "primaryKeyword": "lead generation website Melbourne FL"
+  },
+  "posts": {
+    "blog": {
+      "title": "Lead Generation Website Melbourne FL: Page Elements That Convert",
+      "url": "https://eb28.co/blog/lead-generation-website-in-melbourne-fl-the-page-elements-that-make-people-act/",
+      "status": "ready_for_build_and_deploy"
+    },
+    "facebook": {
+      "caption": "Lead Generation Website Melbourne FL: Page Elements That Convert\n\nA practical guide for local businesses that want more qualified organic leads, stronger search visibility, and a faster path from visitor to customer.\n\nDraft link: https://eb28.co/blog/lead-generation-website-in-melbourne-fl-the-page-elements-that-make-people-act/",
+      "status": "draft_only_verified_channel_required"
+    },
+    "instagram": {
+      "caption": "lead generation website Melbourne FL: the practical version.\n\nWe broke down what to fix first, how to connect it to real lead flow, and what EB28 checks daily to keep search growth moving.\n\nRead the full guide at eb28.co/blog/",
+      "creativeBrief": "Carousel: Slide 1 problem statement, Slide 2 what to fix first, Slide 3 technical SEO checks, Slide 4 internal links, Slide 5 CTA to project brief.",
+      "status": "draft_only_verified_channel_required"
+    },
+    "x": {
+      "caption": "Lead Generation Website Melbourne FL: Page Elements That Convert\n\nThe key: connect the search intent to a page that is fast, useful, internally linked, and measured in Search Console.\n\nDraft link: https://eb28.co/blog/lead-generation-website-in-melbourne-fl-the-page-elements-that-make-people-act/",
+      "status": "draft_only_verified_channel_required"
+    },
+    "linkedin": {
+      "caption": "New EB28 growth brief: Lead Generation Website Melbourne FL: Page Elements That Convert\n\nThis covers the practical SEO and conversion fixes that turn a business website into a more reliable organic lead path.\n\nDraft link: https://eb28.co/blog/lead-generation-website-in-melbourne-fl-the-page-elements-that-make-people-act/",
+      "status": "draft_only_verified_channel_required"
+    },
+    "shortFormVideo": {
+      "hook": "Your website may be getting traffic and still losing the lead in the first 10 seconds.",
+      "brief": "15-30 seconds. Open on a local business homepage. Show the above-the-fold promise, proof near the CTA, short form, fast follow-up promise, and internal links into local SEO/conversion content. End with the Melbourne Web Studio lead leak quiz.",
+      "caption": "A lead generation website in Melbourne FL does not need more clutter. It needs a clear promise, proof, one low-friction next step, and follow-up before the buyer cools off.",
+      "status": "draft_only_verified_channel_required"
+    }
+  }
+}

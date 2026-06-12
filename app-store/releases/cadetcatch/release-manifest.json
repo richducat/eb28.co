@@ -126,7 +126,12 @@
   "createdAt": "2026-06-06T11:53:53.691778-04:00",
   "localVerification": {
     "releaseGate": "passed for build 87 candidate; final source commit is recorded in the EB28 vault release-candidate record",
-    "simulatorQA": "passed for build 87 candidate with screenshot output/cadetcatch-simulator/cadetcatch-2026-06-12T17-21-36-771Z.png; final source commit is recorded in the EB28 vault release-candidate record",
+    "simulatorQA": "passed for build 87 candidate with screenshot output/cadetcatch-simulator/cadetcatch-2026-06-12T17-31-44-583Z.png; final source commit is recorded in the EB28 vault release-candidate record",
+    "matchedPhotoPreviewQA": {
+      "status": "passed",
+      "receipt": "/tmp/cadetcatch-face-test/preview-cache-proof.png",
+      "note": "Seeded proof used an intentionally unavailable source URL and local preview bytes to verify result cards do not render as blank placeholders."
+    },
     "saveToPhotosManualSimulatorQA": {
       "status": "passed",
       "simulator": "iPhone 17 Pro Max iOS 26.5",

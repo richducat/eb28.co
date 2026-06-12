@@ -55,6 +55,73 @@ const reportLines = [
   { label: 'Receipt emails to check', value: '4', tone: 'text-cyan-300' },
 ];
 
+const proofStats = [
+  { value: '60 sec', label: 'Your entire morning money check, in plain English' },
+  { value: '5 min', label: 'One-time setup — connect Stripe, forward receipts, done' },
+  { value: 'Read-only', label: 'We can look, never touch. Your money stays yours' },
+  { value: '$17/mo', label: 'No contract. Cancel any month, keep your CSV exports' },
+];
+
+const comparisons = [
+  {
+    title: 'Do it yourself',
+    price: 'Hours of your week',
+    points: [
+      'Payout archaeology across Stripe, email, and spreadsheets',
+      'Easy to miss a short payout or a late refund',
+      'You become the part-time bookkeeper you never hired',
+    ],
+    highlight: false,
+  },
+  {
+    title: 'Recon Agent',
+    price: '$17/mo',
+    points: [
+      'Checked every single day, automatically',
+      'Plain-English briefing + a short list of what needs a look',
+      'CSV and notes your bookkeeper can use as-is',
+    ],
+    highlight: true,
+  },
+  {
+    title: 'Hire a bookkeeper',
+    price: '$300+/mo',
+    points: [
+      'Looks at your books monthly, not daily',
+      'Still asks you to explain the weird Stripe stuff',
+      'Great later — Recon Agent feeds them clean data now',
+    ],
+    highlight: false,
+  },
+];
+
+const faqs = [
+  {
+    q: 'Is my Stripe data safe?',
+    a: 'Access is read-only — Recon Agent can look at your Stripe activity but can never move money, issue refunds, or change anything. Your data is used to build your reports and nothing else.',
+  },
+  {
+    q: 'What do I have to set up?',
+    a: 'Two things, once: connect your Stripe account and forward (or alias) your receipts inbox. It takes about five minutes and we walk you through both during onboarding.',
+  },
+  {
+    q: 'What happens right after I pay?',
+    a: 'You land on a two-minute onboarding page that collects your Stripe email and finance inbox. Your first morning briefing arrives within one business day.',
+  },
+  {
+    q: 'Do I have to replace my bookkeeper or my tools?',
+    a: 'No. Recon Agent sits in front of them: it catches issues daily and produces the CSV and notes your bookkeeper or accountant actually wants, so their hours go further.',
+  },
+  {
+    q: 'What if it is not for me?',
+    a: 'It is a monthly plan with no contract. Cancel any month from your Stripe receipt and keep every report and export you received.',
+  },
+  {
+    q: 'Why is it only $17?',
+    a: 'Founder beta pricing. Early customers get the low price locked in and a direct line to shape what gets built next. The price rises when the beta closes.',
+  },
+];
+
 function scrollToReserve() {
   const section = document.getElementById('reserve-form');
   if (!section) {
@@ -196,6 +263,35 @@ export default function ReconAgentPage() {
     <main className="eb28-appbuilder font-body relative min-h-screen overflow-hidden text-slate-100">
       <div className="eb28-appbuilder-noise pointer-events-none absolute inset-0" />
 
+      {/* --- NAVIGATION --- */}
+      <nav className="sticky top-0 z-40 border-b border-white/10 bg-slate-950/80 backdrop-blur-md">
+        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+          <a href="/" className="flex items-center gap-3">
+            <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-cyan-500 to-blue-600 text-sm font-bold text-white shadow-lg shadow-cyan-500/20">
+              EB
+            </span>
+            <span className="leading-tight">
+              <span className="block text-sm font-bold text-white">Recon Agent</span>
+              <span className="block text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-400">by EB28</span>
+            </span>
+          </a>
+          <div className="flex items-center gap-6">
+            <a href="#how" className="hidden text-xs font-semibold uppercase tracking-[0.16em] text-slate-300 transition-colors hover:text-white sm:block">How it works</a>
+            <a href="#pricing" className="hidden text-xs font-semibold uppercase tracking-[0.16em] text-slate-300 transition-colors hover:text-white sm:block">Pricing</a>
+            <a href="#faq" className="hidden text-xs font-semibold uppercase tracking-[0.16em] text-slate-300 transition-colors hover:text-white sm:block">FAQ</a>
+            {checkoutUrl ? (
+              <a href={checkoutUrl} className="rounded-full bg-white px-5 py-2 text-sm font-bold text-slate-950 transition-transform hover:-translate-y-0.5 hover:bg-cyan-50">
+                Get Started — {FOUNDER_PRICE}
+              </a>
+            ) : (
+              <button type="button" onClick={scrollToReserve} className="rounded-full bg-white px-5 py-2 text-sm font-bold text-slate-950 transition-transform hover:-translate-y-0.5 hover:bg-cyan-50">
+                Get Started — {FOUNDER_PRICE}
+              </button>
+            )}
+          </div>
+        </div>
+      </nav>
+
       <section className="relative overflow-hidden px-4 pb-20 pt-24 sm:px-6 lg:px-8 lg:pb-28 lg:pt-28">
         <div className="absolute inset-x-0 top-0 -z-10 h-[36rem] bg-[radial-gradient(circle_at_top,rgba(34,211,238,0.22),transparent_52%),radial-gradient(circle_at_80%_20%,rgba(244,114,182,0.16),transparent_30%)]" />
 
@@ -319,7 +415,21 @@ export default function ReconAgentPage() {
         </div>
       </section>
 
-      <section className="px-4 py-16 sm:px-6 lg:px-8">
+      {/* --- PROOF STRIP --- */}
+      <section className="border-y border-white/10 bg-slate-950/50 px-4 py-12 backdrop-blur sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl">
+          <div className="grid grid-cols-2 gap-8 text-center md:grid-cols-4">
+            {proofStats.map((stat) => (
+              <div key={stat.value}>
+                <p className="font-brand text-3xl font-extrabold text-white sm:text-4xl">{stat.value}</p>
+                <p className="mt-2 text-sm leading-6 text-slate-400">{stat.label}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="how" className="px-4 py-16 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <div className="grid gap-10 lg:grid-cols-[18rem_minmax(0,1fr)]">
             <div>
@@ -347,7 +457,45 @@ export default function ReconAgentPage() {
         </div>
       </section>
 
+      {/* --- THE MATH (price anchoring) --- */}
       <section className="px-4 py-16 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl">
+          <div className="mb-12 text-center">
+            <p className="text-sm font-semibold uppercase tracking-[0.22em] text-cyan-200">The math</p>
+            <h2 className="font-brand mt-4 text-3xl font-bold text-white sm:text-4xl">Three ways to know where your money went.</h2>
+            <p className="mx-auto mt-4 max-w-2xl text-base leading-7 text-slate-300">
+              Only one of them happens every day, in plain English, for less than a lunch.
+            </p>
+          </div>
+          <div className="grid gap-6 md:grid-cols-3">
+            {comparisons.map((option) => (
+              <div
+                key={option.title}
+                className={`rounded-[2rem] border p-7 ${
+                  option.highlight
+                    ? 'border-cyan-400/40 bg-cyan-500/10 shadow-2xl shadow-cyan-500/10'
+                    : 'border-white/10 bg-slate-950/55'
+                }`}
+              >
+                <p className={`text-xs font-semibold uppercase tracking-[0.2em] ${option.highlight ? 'text-cyan-200' : 'text-slate-400'}`}>
+                  {option.title}
+                </p>
+                <p className="font-brand mt-3 text-3xl font-extrabold text-white">{option.price}</p>
+                <ul className="mt-6 space-y-3">
+                  {option.points.map((point) => (
+                    <li key={point} className="flex items-start gap-3 text-sm leading-6 text-slate-300">
+                      <CheckCircle className={`mt-0.5 h-4 w-4 shrink-0 ${option.highlight ? 'text-cyan-300' : 'text-slate-500'}`} />
+                      <span>{point}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="pricing" className="px-4 py-16 sm:px-6 lg:px-8">
         <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[minmax(0,1fr)_23rem]">
           <div className="overflow-hidden rounded-[2rem] border border-white/10 bg-slate-950/60 shadow-2xl shadow-slate-950/30">
             <div className="border-b border-white/10 px-6 py-5">
@@ -421,6 +569,24 @@ export default function ReconAgentPage() {
               </p>
             </div>
           </aside>
+        </div>
+      </section>
+
+      {/* --- FAQ --- */}
+      <section id="faq" className="px-4 py-16 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-5xl">
+          <div className="mb-12 text-center">
+            <p className="text-sm font-semibold uppercase tracking-[0.22em] text-cyan-200">Questions, answered straight</p>
+            <h2 className="font-brand mt-4 text-3xl font-bold text-white sm:text-4xl">Everything people ask before buying.</h2>
+          </div>
+          <div className="grid gap-5 md:grid-cols-2">
+            {faqs.map((item) => (
+              <div key={item.q} className="rounded-[1.75rem] border border-white/10 bg-slate-950/55 p-6 backdrop-blur">
+                <h3 className="font-brand text-lg font-bold text-white">{item.q}</h3>
+                <p className="mt-3 text-sm leading-7 text-slate-300">{item.a}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -585,6 +751,24 @@ export default function ReconAgentPage() {
           </div>
         </div>
       </section>
+
+      {/* --- FOOTER --- */}
+      <footer className="border-t border-white/10 bg-slate-950/70 px-4 py-12 sm:px-6 lg:px-8">
+        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-8 md:flex-row">
+          <div className="text-center md:text-left">
+            <p className="font-brand text-lg font-bold text-white">Recon Agent <span className="text-slate-500">by EB28</span></p>
+            <p className="mt-2 max-w-sm text-sm leading-6 text-slate-400">
+              One of the working systems EB28 builds for small businesses — private AI, lead automation, and daily money clarity.
+            </p>
+          </div>
+          <div className="flex flex-wrap items-center justify-center gap-6 text-sm text-slate-300">
+            <a href="/" className="transition-colors hover:text-white">eb28.co</a>
+            <a href="/blog/" className="transition-colors hover:text-white">Blog</a>
+            <a href="/#packages" className="transition-colors hover:text-white">$10 AI Build</a>
+            <a href="/#packages" className="transition-colors hover:text-white">White-Glove Setup</a>
+          </div>
+        </div>
+      </footer>
     </main>
   );
 }

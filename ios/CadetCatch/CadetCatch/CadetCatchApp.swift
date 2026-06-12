@@ -618,6 +618,7 @@ struct PhotoCandidate: Identifiable, Codable, Hashable {
     var cadetID: Cadet.ID
     var cadetName: String
     var imageURL: URL
+    var previewImageData: Data? = nil
     var confidence: Int
     var sourceName: String
     var sourceHost: String
@@ -807,6 +808,7 @@ enum PublicPhotoScanner {
                         cadetID: cadet.id,
                         cadetName: cadet.name,
                         imageURL: url,
+                        previewImageData: PhotoCandidatePreview.makeData(from: imageData),
                         confidence: match.confidence,
                         sourceName: source.name,
                         sourceHost: source.url.host() ?? source.url.absoluteString,
@@ -967,6 +969,36 @@ enum PublicPhotoScanner {
             seen.insert(url)
             return true
         }
+    }
+}
+
+enum PhotoCandidatePreview {
+    static func makeData(from imageData: Data) -> Data? {
+        guard let image = UIImage(data: imageData) else { return nil }
+
+        let maxDimension: CGFloat = 1_200
+        let originalSize = image.size
+        let longestSide = max(originalSize.width, originalSize.height)
+        let targetSize: CGSize
+        if longestSide > maxDimension {
+            let scale = maxDimension / longestSide
+            targetSize = CGSize(width: originalSize.width * scale, height: originalSize.height * scale)
+        } else {
+            targetSize = originalSize
+        }
+
+        let format = UIGraphicsImageRendererFormat.default()
+        format.scale = 1
+        format.opaque = true
+
+        let renderer = UIGraphicsImageRenderer(size: targetSize, format: format)
+        let preview = renderer.image { context in
+            UIColor.white.setFill()
+            context.fill(CGRect(origin: .zero, size: targetSize))
+            image.draw(in: CGRect(origin: .zero, size: targetSize))
+        }
+
+        return preview.jpegData(compressionQuality: 0.84)
     }
 }
 
@@ -2325,7 +2357,7 @@ struct CandidateCard: View {
 
         VStack(alignment: .leading, spacing: 0) {
             ZStack(alignment: .topTrailing) {
-                CandidateImage(url: candidate.imageURL, mode: .fill)
+                CandidateImage(url: candidate.imageURL, previewImageData: candidate.previewImageData, mode: .fill)
                     .frame(height: 144)
                     .blur(radius: unlocked ? 0 : 9)
                     .clipped()
@@ -2386,7 +2418,7 @@ struct CandidateDetailView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
                     ZStack {
-                        CandidateImage(url: candidate.imageURL, mode: .fit)
+                        CandidateImage(url: candidate.imageURL, previewImageData: candidate.previewImageData, mode: .fit)
                             .frame(maxWidth: .infinity, minHeight: 280)
                             .blur(radius: unlocked ? 0 : 12)
                             .background(.black, in: RoundedRectangle(cornerRadius: 22))
@@ -2535,7 +2567,7 @@ struct CandidateDetailView: View {
         saveToPhotosState = .saving
 
         do {
-            try await PhotoLibrarySaver.savePhoto(from: candidate.imageURL)
+            try await PhotoLibrarySaver.savePhoto(from: candidate.imageURL, fallbackData: candidate.previewImageData)
             saveToPhotosState = .saved
         } catch PhotoLibrarySaveError.permissionDenied {
             saveToPhotosState = .permissionDenied
@@ -2599,18 +2631,25 @@ enum PhotoLibrarySaveError: Error {
 }
 
 struct PhotoLibrarySaver {
-    static func savePhoto(from url: URL) async throws {
+    static func savePhoto(from url: URL, fallbackData: Data? = nil) async throws {
         let status = await addOnlyAuthorizationStatus()
         guard status == .authorized || status == .limited else {
             throw PhotoLibrarySaveError.permissionDenied
         }
 
-        let (data, response) = try await URLSession.shared.data(from: url)
-        guard !data.isEmpty, UIImage(data: data) != nil else {
-            throw PhotoLibrarySaveError.invalidImageData
-        }
+        do {
+            let (data, response) = try await URLSession.shared.data(from: url)
+            guard !data.isEmpty, UIImage(data: data) != nil else {
+                throw PhotoLibrarySaveError.invalidImageData
+            }
 
-        try await writePhoto(data: data, originalFilename: originalFilename(for: url, response: response))
+            try await writePhoto(data: data, originalFilename: originalFilename(for: url, response: response))
+        } catch {
+            guard let fallbackData, !fallbackData.isEmpty, UIImage(data: fallbackData) != nil else {
+                throw error
+            }
+            try await writePhoto(data: fallbackData, originalFilename: originalFallbackFilename(for: url))
+        }
     }
 
     private static func addOnlyAuthorizationStatus() async -> PHAuthorizationStatus {
@@ -2653,30 +2692,47 @@ struct PhotoLibrarySaver {
         }
         return "CadetCatch-\(Int(Date().timeIntervalSince1970)).jpg"
     }
+
+    private static func originalFallbackFilename(for url: URL) -> String {
+        let stem = url.deletingPathExtension().lastPathComponent
+            .removingPercentEncoding?
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        if let stem, !stem.isEmpty {
+            return "\(stem)-CadetCatch-preview.jpg"
+        }
+        return "CadetCatch-preview-\(Int(Date().timeIntervalSince1970)).jpg"
+    }
 }
 
 struct CandidateImage: View {
     let url: URL
+    let previewImageData: Data?
     let mode: ContentMode
 
     var body: some View {
-        AsyncImage(url: url) { phase in
-            switch phase {
-            case .success(let image):
-                image.resizable().aspectRatio(contentMode: mode)
-            case .empty:
-                ZStack {
+        if let previewImageData, let image = UIImage(data: previewImageData) {
+            Image(uiImage: image)
+                .resizable()
+                .aspectRatio(contentMode: mode)
+        } else {
+            AsyncImage(url: url) { phase in
+                switch phase {
+                case .success(let image):
+                    image.resizable().aspectRatio(contentMode: mode)
+                case .empty:
+                    ZStack {
+                        Rectangle().fill(Theme.border.opacity(0.45))
+                        ProgressView().tint(Theme.orange)
+                    }
+                case .failure:
+                    ZStack {
+                        Rectangle().fill(Theme.border.opacity(0.45))
+                        Image(systemName: "photo")
+                            .foregroundStyle(Theme.muted)
+                    }
+                @unknown default:
                     Rectangle().fill(Theme.border.opacity(0.45))
-                    ProgressView().tint(Theme.orange)
                 }
-            case .failure:
-                ZStack {
-                    Rectangle().fill(Theme.border.opacity(0.45))
-                    Image(systemName: "photo")
-                        .foregroundStyle(Theme.muted)
-                }
-            @unknown default:
-                Rectangle().fill(Theme.border.opacity(0.45))
             }
         }
     }

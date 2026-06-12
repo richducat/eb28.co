@@ -618,7 +618,6 @@ struct PhotoCandidate: Identifiable, Codable, Hashable {
     var cadetID: Cadet.ID
     var cadetName: String
     var imageURL: URL
-    var previewImageData: Data? = nil
     var confidence: Int
     var sourceName: String
     var sourceHost: String
@@ -745,6 +744,13 @@ enum PublicPhotoScanner {
     }
 
     static func scan(cadet: Cadet, sources: [PhotoSource], progress: ScannerProgress, onProgress: @escaping @Sendable (String) -> Void = { _ in }) async -> ScanResult {
+        guard FaceMatcher.isEngineAvailable else {
+            return ScanResult(
+                candidates: [],
+                checkedImageCount: 0,
+                message: "The face matching engine could not be loaded. Please reinstall the app or contact support."
+            )
+        }
         guard let descriptors = FaceMatcher.referencePrints(from: cadet.photoData) else {
             return ScanResult(
                 candidates: [],
@@ -803,12 +809,12 @@ enum PublicPhotoScanner {
                     await Task.yield()
                     guard let match = FaceMatcher.match(reference: reference.descriptors, candidateImageURL: url, candidateImageData: imageData) else { return nil }
                     guard match.confidence >= FaceMatcher.minimumAcceptedConfidence else { return nil }
-                    
+                    PhotoCandidatePreview.storePreview(from: imageData, for: url)
+
                     return PhotoCandidate(
                         cadetID: cadet.id,
                         cadetName: cadet.name,
                         imageURL: url,
-                        previewImageData: PhotoCandidatePreview.makeData(from: imageData),
                         confidence: match.confidence,
                         sourceName: source.name,
                         sourceHost: source.url.host() ?? source.url.absoluteString,
@@ -1000,6 +1006,37 @@ enum PhotoCandidatePreview {
 
         return preview.jpegData(compressionQuality: 0.84)
     }
+
+    static func storePreview(from imageData: Data, for url: URL) {
+        guard
+            let previewData = makeData(from: imageData),
+            let fileURL = previewFileURL(for: url)
+        else {
+            return
+        }
+        try? FileManager.default.createDirectory(
+            at: fileURL.deletingLastPathComponent(),
+            withIntermediateDirectories: true
+        )
+        try? previewData.write(to: fileURL, options: .atomic)
+    }
+
+    static func data(for url: URL) -> Data? {
+        guard let fileURL = previewFileURL(for: url) else { return nil }
+        return try? Data(contentsOf: fileURL)
+    }
+
+    private static func previewFileURL(for url: URL) -> URL? {
+        guard let cachesDirectory = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first else {
+            return nil
+        }
+        let digest = SHA256.hash(data: Data(url.absoluteString.utf8))
+        let key = digest.map { String(format: "%02x", $0) }.joined()
+        return cachesDirectory
+            .appendingPathComponent("CadetCatchMatchPreviews", isDirectory: true)
+            .appendingPathComponent(key)
+            .appendingPathExtension("jpg")
+    }
 }
 
 struct FaceMatch {
@@ -1026,6 +1063,8 @@ enum FaceMatcher {
     }
 
     static var minimumAcceptedConfidence: Int { Configuration.minimumAcceptedConfidence }
+
+    static var isEngineAvailable: Bool { FaceEmbeddingModel.shared.isAvailable }
 
     static func referencePrints(from imageData: Data) -> [FaceDescriptor]? {
         let descriptors = faceDescriptors(in: imageData)
@@ -1256,68 +1295,49 @@ enum FaceMatcher {
         return renderedImage.cgImage
     }
 
+    // Least-squares similarity transform (rotation + uniform scale + translation).
+    // A full affine fit can shear the face when landmarks are noisy, which degrades embeddings.
     private static func affineTransform(from sourcePoints: [CGPoint], to targetPoints: [CGPoint]) -> CGAffineTransform? {
-        guard sourcePoints.count == targetPoints.count, sourcePoints.count >= 3 else {
+        guard sourcePoints.count == targetPoints.count, sourcePoints.count >= 2 else {
             return nil
         }
 
-        var ata = Array(repeating: Array(repeating: CGFloat(0), count: 3), count: 3)
-        var atx = Array(repeating: CGFloat(0), count: 3)
-        var aty = Array(repeating: CGFloat(0), count: 3)
-
+        let count = CGFloat(sourcePoints.count)
+        var sumSourceX: CGFloat = 0, sumSourceY: CGFloat = 0
+        var sumTargetX: CGFloat = 0, sumTargetY: CGFloat = 0
         for index in sourcePoints.indices {
-            let row = [sourcePoints[index].x, sourcePoints[index].y, CGFloat(1)]
-            for outer in 0..<3 {
-                atx[outer] += row[outer] * targetPoints[index].x
-                aty[outer] += row[outer] * targetPoints[index].y
-                for inner in 0..<3 {
-                    ata[outer][inner] += row[outer] * row[inner]
-                }
-            }
+            sumSourceX += sourcePoints[index].x
+            sumSourceY += sourcePoints[index].y
+            sumTargetX += targetPoints[index].x
+            sumTargetY += targetPoints[index].y
         }
+        let meanSource = CGPoint(x: sumSourceX / count, y: sumSourceY / count)
+        let meanTarget = CGPoint(x: sumTargetX / count, y: sumTargetY / count)
 
-        guard
-            let xCoefficients = solve3x3(ata, atx),
-            let yCoefficients = solve3x3(ata, aty)
-        else {
+        var crossSum: CGFloat = 0
+        var rotationSum: CGFloat = 0
+        var sourceVariance: CGFloat = 0
+        for index in sourcePoints.indices {
+            let sx = sourcePoints[index].x - meanSource.x
+            let sy = sourcePoints[index].y - meanSource.y
+            let tx = targetPoints[index].x - meanTarget.x
+            let ty = targetPoints[index].y - meanTarget.y
+            crossSum += sx * tx + sy * ty
+            rotationSum += sx * ty - sy * tx
+            sourceVariance += sx * sx + sy * sy
+        }
+        guard sourceVariance > 0.000001 else { return nil }
+
+        let a = crossSum / sourceVariance
+        let b = rotationSum / sourceVariance
+        let translateX = meanTarget.x - a * meanSource.x + b * meanSource.y
+        let translateY = meanTarget.y - b * meanSource.x - a * meanSource.y
+
+        guard a.isFinite, b.isFinite, translateX.isFinite, translateY.isFinite, (a * a + b * b) > 0.000001 else {
             return nil
         }
 
-        return CGAffineTransform(
-            a: xCoefficients[0],
-            b: yCoefficients[0],
-            c: xCoefficients[1],
-            d: yCoefficients[1],
-            tx: xCoefficients[2],
-            ty: yCoefficients[2]
-        )
-    }
-
-    private static func solve3x3(_ matrix: [[CGFloat]], _ vector: [CGFloat]) -> [CGFloat]? {
-        let determinant =
-            matrix[0][0] * (matrix[1][1] * matrix[2][2] - matrix[1][2] * matrix[2][1]) -
-            matrix[0][1] * (matrix[1][0] * matrix[2][2] - matrix[1][2] * matrix[2][0]) +
-            matrix[0][2] * (matrix[1][0] * matrix[2][1] - matrix[1][1] * matrix[2][0])
-        guard abs(determinant) > 0.000001 else {
-            return nil
-        }
-
-        func determinantWithColumn(_ column: Int) -> CGFloat {
-            var replaced = matrix
-            for row in 0..<3 {
-                replaced[row][column] = vector[row]
-            }
-            return
-                replaced[0][0] * (replaced[1][1] * replaced[2][2] - replaced[1][2] * replaced[2][1]) -
-                replaced[0][1] * (replaced[1][0] * replaced[2][2] - replaced[1][2] * replaced[2][0]) +
-                replaced[0][2] * (replaced[1][0] * replaced[2][1] - replaced[1][1] * replaced[2][0])
-        }
-
-        return [
-            determinantWithColumn(0) / determinant,
-            determinantWithColumn(1) / determinant,
-            determinantWithColumn(2) / determinant
-        ]
+        return CGAffineTransform(a: a, b: b, c: -b, d: a, tx: translateX, ty: translateY)
     }
 
     private final class FaceEmbeddingModel: @unchecked Sendable {
@@ -1325,9 +1345,15 @@ enum FaceMatcher {
 
         private let model: MLModel?
 
+        var isAvailable: Bool { model != nil }
+
         private init() {
             let configuration = MLModelConfiguration()
+            #if targetEnvironment(simulator)
             configuration.computeUnits = .cpuOnly
+            #else
+            configuration.computeUnits = .all
+            #endif
 
             guard
                 let modelURL = Bundle.main.url(forResource: "SFaceEmbedding", withExtension: "mlmodelc") ??
@@ -2357,7 +2383,7 @@ struct CandidateCard: View {
 
         VStack(alignment: .leading, spacing: 0) {
             ZStack(alignment: .topTrailing) {
-                CandidateImage(url: candidate.imageURL, previewImageData: candidate.previewImageData, mode: .fill)
+                CandidateImage(url: candidate.imageURL, mode: .fill)
                     .frame(height: 144)
                     .blur(radius: unlocked ? 0 : 9)
                     .clipped()
@@ -2418,7 +2444,7 @@ struct CandidateDetailView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: 16) {
                     ZStack {
-                        CandidateImage(url: candidate.imageURL, previewImageData: candidate.previewImageData, mode: .fit)
+                        CandidateImage(url: candidate.imageURL, mode: .fit)
                             .frame(maxWidth: .infinity, minHeight: 280)
                             .blur(radius: unlocked ? 0 : 12)
                             .background(.black, in: RoundedRectangle(cornerRadius: 22))
@@ -2567,7 +2593,7 @@ struct CandidateDetailView: View {
         saveToPhotosState = .saving
 
         do {
-            try await PhotoLibrarySaver.savePhoto(from: candidate.imageURL, fallbackData: candidate.previewImageData)
+            try await PhotoLibrarySaver.savePhoto(from: candidate.imageURL, fallbackData: PhotoCandidatePreview.data(for: candidate.imageURL))
             saveToPhotosState = .saved
         } catch PhotoLibrarySaveError.permissionDenied {
             saveToPhotosState = .permissionDenied
@@ -2706,11 +2732,10 @@ struct PhotoLibrarySaver {
 
 struct CandidateImage: View {
     let url: URL
-    let previewImageData: Data?
     let mode: ContentMode
 
     var body: some View {
-        if let previewImageData, let image = UIImage(data: previewImageData) {
+        if let previewImageData = PhotoCandidatePreview.data(for: url), let image = UIImage(data: previewImageData) {
             Image(uiImage: image)
                 .resizable()
                 .aspectRatio(contentMode: mode)

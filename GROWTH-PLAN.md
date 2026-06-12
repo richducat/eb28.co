@@ -50,6 +50,18 @@ takes and sequences the free work that compounds toward it.
    groups with the free blog guides (not the sales page) — link the guide, let the
    site convert.
 
+## Stage 2.5 — Proof loop (testimonials, $0)
+
+- The homepage has a testimonials section that activates the moment real quotes
+  are added to `public/testimonials-config.json`. Never add invented quotes —
+  fake testimonials violate FTC rules.
+- The collection loop is built in: every paid onboarding ends with a check-in
+  ask. After each delivered $10 / $1,000 / Recon Agent setup, email the customer
+  one question ("did this work for you?") and paste good replies (with
+  permission) into the config. Three real quotes beat thirty fake-sounding ones.
+- The $1,000 White-Glove Onboarding is the natural upsell in every $10 build
+  delivery email: "want us to set up the whole thing for you?"
+
 ## Stage 3 — Compound
 
 - Watch analytics weekly: which blog cluster brings visitors that click Buy?

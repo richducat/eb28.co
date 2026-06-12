@@ -33,6 +33,47 @@ const PRODUCTS = {
             },
         ],
     },
+    'white-glove-onboarding': {
+        name: 'White-Glove Onboarding',
+        price: '$1,000 one-time',
+        icon: <ShieldCheck className="w-8 h-8 text-amber-400" />,
+        deliverySla: 'kickoff within 1 business day, live within 7 days',
+        steps: [
+            'Tell us about your business and what to set up first (form below, ~2 minutes).',
+            'We schedule your 1:1 kickoff within 1 business day and build everything for you — AI agent, knowledge base, lead capture, tool connections.',
+            'Handoff: your system is live within 7 days, with 30 days of included adjustments after delivery.',
+        ],
+        fields: [
+            {
+                id: 'business',
+                label: 'Your business — what do you sell and to whom? *',
+                placeholder: 'e.g. Residential lawn care in Brevard County, ~200 active customers...',
+                type: 'textarea',
+                required: true,
+            },
+            {
+                id: 'firstSystem',
+                label: 'What should we set up first? *',
+                placeholder: 'e.g. An AI receptionist for missed calls, a quote follow-up machine, a private AI on our SOPs...',
+                type: 'text',
+                required: true,
+            },
+            {
+                id: 'currentTools',
+                label: 'Tools you use today',
+                placeholder: 'e.g. Gmail, QuickBooks, Jobber, a WordPress site...',
+                type: 'text',
+                required: false,
+            },
+            {
+                id: 'phone',
+                label: 'Phone for your kickoff call',
+                placeholder: '(555) 000-0000',
+                type: 'text',
+                required: false,
+            },
+        ],
+    },
     'recon-agent-beta': {
         name: 'Recon Agent Founder Beta',
         price: '$17/mo',
@@ -185,7 +226,9 @@ export default function WelcomePage() {
                                 <h2 className="text-2xl font-bold text-white mb-3">Onboarding started.</h2>
                                 <p className="text-slate-400 max-w-md mx-auto">
                                     Your setup is in the build queue. Watch your inbox — delivery {product.deliverySla}.
-                                    You can reply to any email from us if something changes.
+                                    You can reply to any email from us if something changes. Once your system is
+                                    running, we&rsquo;ll check in — if it&rsquo;s working for you, we&rsquo;d love a
+                                    short testimonial.
                                 </p>
                                 <a href="/" className="inline-flex items-center mt-8 px-6 py-3 bg-slate-800 hover:bg-slate-700 text-white rounded-lg font-medium transition-colors">
                                     Back to eb28.co <ArrowRight className="w-4 h-4 ml-2" />

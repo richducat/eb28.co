@@ -10,6 +10,11 @@
       "label": "Recon Agent Founder Beta — $17/mo subscription",
       "checkoutUrl": "",
       "welcomeUrl": "https://eb28.co/welcome/?p=recon-agent-beta"
+    },
+    "white-glove-onboarding": {
+      "label": "White-Glove Onboarding — $1,000 one-time",
+      "checkoutUrl": "",
+      "welcomeUrl": "https://eb28.co/welcome/?p=white-glove-onboarding"
     }
   }
 }

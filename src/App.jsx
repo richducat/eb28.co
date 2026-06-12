@@ -46,6 +46,23 @@ const App = () => {
   // automatically when a URL is configured; otherwise CTAs fall back to the form.
   const checkoutProducts = useCheckoutConfig();
   const diyCheckoutUrl = checkoutUrlFor(checkoutProducts, 'diy-ai-foundation');
+  const whiteGloveCheckoutUrl = checkoutUrlFor(checkoutProducts, 'white-glove-onboarding');
+  // Real customer quotes from /testimonials-config.json. The section stays
+  // hidden until real testimonials exist — never ship invented ones.
+  const [testimonials, setTestimonials] = useState([]);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch('/testimonials-config.json', { cache: 'no-store' })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((payload) => {
+        if (!cancelled && Array.isArray(payload?.testimonials)) {
+          setTestimonials(payload.testimonials.filter((t) => t?.quote));
+        }
+      })
+      .catch(() => {});
+    return () => { cancelled = true; };
+  }, []);
 
   // Handle scroll effect for navbar
   useEffect(() => {
@@ -83,6 +100,18 @@ const App = () => {
       highlight: true,
       checkoutId: 'diy-ai-foundation',
       serviceValue: '10-dollar-bot'
+    },
+    {
+      id: 'white-glove-onboarding',
+      title: "White-Glove Onboarding",
+      category: "ai-agents",
+      price: "$1,000",
+      description: "Skip the learning curve — we set the whole system up for you. AI agent, knowledge base, and lead capture wired into your business and handed over working.",
+      features: ["Fully configured on your data", "Connected to your existing tools", "1:1 kickoff + 30 days of adjustments"],
+      icon: <Rocket className="w-8 h-8 text-amber-400" />,
+      highlight: false,
+      checkoutId: 'white-glove-onboarding',
+      serviceValue: 'white-glove'
     },
     {
       id: 1,
@@ -146,25 +175,29 @@ const App = () => {
       id: 'tool-reconcile',
       title: "Recon Agent",
       type: "Founder Beta",
-      url: "/reconcile/"
+      url: "/reconcile/",
+      description: "Catches Stripe payout problems before your accountant does. Daily plain-English reports for $17/mo."
     },
     {
       id: 'tool-appbuilder',
       title: "EB28 App Builder",
       type: "AI Builder",
-      url: "/appbuilder/"
+      url: "/appbuilder/",
+      description: "Turns an app idea into sharper concepts, visuals, and production-ready source. Try it free."
     },
     {
       id: 'tool-fundmanager',
       title: "Fund Manager Live",
       type: "Live Dashboard",
-      url: "/fundmanager/"
+      url: "/fundmanager/",
+      description: "A live portfolio dashboard watching real positions around the clock — proof our agents run for real."
     },
     {
       id: 'tool-deskos',
       title: "Desk OS — Trading Agents",
       type: "Agent System",
-      url: "/deskos/"
+      url: "/deskos/",
+      description: "Eight prediction-market trading agents behind a gated runner, kill switch, and capital guard."
     },
     {
       id: 0,
@@ -449,6 +482,30 @@ const App = () => {
         </div>
       </section>
 
+      {/* --- PROOF BAR --- */}
+      <section className="py-12 bg-slate-950 border-y border-slate-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+            <div>
+              <p className="text-4xl font-extrabold text-white mb-1">12</p>
+              <p className="text-slate-400 text-sm">Live products & client sites — every one clickable below, no mockups</p>
+            </div>
+            <div>
+              <p className="text-4xl font-extrabold text-white mb-1">2<span className="text-xl text-slate-400">/day</span></p>
+              <p className="text-slate-400 text-sm">Guides published by our own automation — the same systems we sell</p>
+            </div>
+            <div>
+              <p className="text-4xl font-extrabold text-white mb-1">24<span className="text-xl text-slate-400">h</span></p>
+              <p className="text-slate-400 text-sm">From $10 checkout to a working AI agent in your inbox</p>
+            </div>
+            <div>
+              <p className="text-4xl font-extrabold text-white mb-1">7<span className="text-xl text-slate-400">days</span></p>
+              <p className="text-slate-400 text-sm">From white-glove checkout to a fully installed system</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* --- SERVICES SECTION (SEO & AI INFRA RICH) --- */}
       <section id="services" className="py-20 bg-slate-900 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -632,7 +689,11 @@ const App = () => {
                   <Globe className="w-4 h-4 text-slate-500 group-hover:text-blue-400 transition-colors" />
                 </div>
                 <h3 className="text-xl font-bold text-white mb-3">{project.title}</h3>
-                <p className="text-slate-400 text-sm break-all">{project.url}</p>
+                {project.description ? (
+                  <p className="text-slate-400 text-sm leading-relaxed">{project.description}</p>
+                ) : (
+                  <p className="text-slate-400 text-sm break-all">{project.url}</p>
+                )}
                 <div className="mt-5 inline-flex items-center text-blue-400 font-semibold text-sm">
                   Open Project <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
                 </div>
@@ -724,6 +785,36 @@ const App = () => {
         </div>
       </section>
 
+      {/* --- TESTIMONIALS (renders only when real quotes exist in config) --- */}
+      {testimonials.length > 0 && (
+        <section id="testimonials" className="py-20 bg-slate-950 border-y border-slate-800/60">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-14">
+              <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">Real customers. Real words.</h2>
+              <p className="text-slate-400 max-w-2xl mx-auto">
+                Unedited feedback from people who bought, paid, and got their system delivered.
+              </p>
+            </div>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {testimonials.map((t, idx) => (
+                <figure key={idx} className="rounded-2xl border border-slate-800 bg-slate-900 p-6 flex flex-col">
+                  <blockquote className="text-slate-200 leading-relaxed flex-1">&ldquo;{t.quote}&rdquo;</blockquote>
+                  <figcaption className="mt-5 pt-4 border-t border-slate-800">
+                    <span className="block text-white font-bold">{t.name}</span>
+                    {t.role && <span className="block text-slate-400 text-sm">{t.role}</span>}
+                    {t.product && (
+                      <span className="inline-flex items-center mt-2 rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-wider bg-blue-500/10 text-blue-300 border border-blue-500/20">
+                        {t.product}
+                      </span>
+                    )}
+                  </figcaption>
+                </figure>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* --- PACKAGES SECTION (HIGH INTENT) --- */}
       <section id="packages" className="py-20 bg-slate-900 relative overflow-hidden">
         {/* Decorative blobs */}
@@ -784,28 +875,36 @@ const App = () => {
               </p>
             </div>
 
-            {/* Infrastructure Build */}
-            <div className="p-8 rounded-2xl bg-slate-800 border border-slate-700 flex flex-col lg:order-first">
-              <h3 className="text-xl font-medium text-slate-300 mb-2">Private AI Infrastructure</h3>
-              <div className="text-3xl font-bold text-white mb-6">Consultation<span className="text-lg text-slate-300 font-normal">/First</span></div>
-              <p className="text-slate-400 text-sm mb-8">For businesses ready to deploy local LLMs and secure internal AI tools.</p>
+            {/* White-Glove Onboarding */}
+            <div className="p-8 rounded-2xl bg-slate-800 border border-amber-400/40 flex flex-col lg:order-first">
+              <h3 className="text-xl font-medium text-amber-300 mb-2">White-Glove Onboarding</h3>
+              <div className="text-3xl font-bold text-white mb-6">$1,000<span className="text-lg text-slate-300 font-normal">/one-time</span></div>
+              <p className="text-slate-400 text-sm mb-8">We set the entire system up for you. Nothing to learn, nothing to configure — you get the keys to a working machine.</p>
 
               <ul className="space-y-4 mb-8 flex-1">
                 <li className="flex items-start text-slate-300 text-sm">
-                  <CheckCircle className="w-5 h-5 text-slate-500 mr-3 shrink-0" />
-                  <span>On-Prem Hardware Selection & Setup</span>
+                  <CheckCircle className="w-5 h-5 text-amber-400 mr-3 shrink-0" />
+                  <span>Full AI agent + knowledge base built on your data</span>
                 </li>
                 <li className="flex items-start text-slate-300 text-sm">
-                  <CheckCircle className="w-5 h-5 text-slate-500 mr-3 shrink-0" />
-                  <span>eb28.co Cloud Hosting Provisioning</span>
+                  <CheckCircle className="w-5 h-5 text-amber-400 mr-3 shrink-0" />
+                  <span>Lead capture wired to your site, inbox, and CRM</span>
                 </li>
                 <li className="flex items-start text-slate-300 text-sm">
-                  <CheckCircle className="w-5 h-5 text-slate-500 mr-3 shrink-0" />
-                  <span>Local RAG / Document Integration</span>
+                  <CheckCircle className="w-5 h-5 text-amber-400 mr-3 shrink-0" />
+                  <span>1:1 kickoff and handoff — live within 7 days</span>
+                </li>
+                <li className="flex items-start text-slate-300 text-sm">
+                  <CheckCircle className="w-5 h-5 text-amber-400 mr-3 shrink-0" />
+                  <span>30 days of included adjustments</span>
                 </li>
               </ul>
 
-              <button onClick={() => scrollToSection('contact')} className="w-full py-3 bg-slate-700 hover:bg-slate-600 text-white rounded-lg font-bold transition-colors">Discuss Infrastructure</button>
+              {whiteGloveCheckoutUrl ? (
+                <a href={whiteGloveCheckoutUrl} className="block w-full py-3 bg-amber-400 hover:bg-amber-300 text-slate-900 rounded-lg font-bold transition-colors text-center">Buy Now — $1,000</a>
+              ) : (
+                <button onClick={() => goToContactFor('white-glove')} className="w-full py-3 bg-amber-400 hover:bg-amber-300 text-slate-900 rounded-lg font-bold transition-colors">Get Set Up For Me</button>
+              )}
             </div>
 
             {/* The Ecosystem */}
@@ -891,6 +990,7 @@ const App = () => {
                   <select id="contact-need" name="serviceNeed" value={formData.serviceNeed} onChange={(e) => updateField('serviceNeed', e.target.value)} className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all">
                     <option value="recon-agent-founder-beta">Recon Agent Founder Beta ($17/mo)</option>
                     <option value="10-dollar-bot">🔥 Deploy $10 Proof of Concept Bot</option>
+                    <option value="white-glove">White-Glove Onboarding — Done-For-You ($1,000)</option>
                     <option value="on-prem">On-Premise Local LLM Setup</option>
                     <option value="cloud">eb28.co Cloud AI Hosting</option>
                     <option value="rag">Local RAG Knowledge Base</option>

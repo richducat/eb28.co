@@ -25,7 +25,7 @@
     "reviewSubmissionId": null,
     "appStoreState": "LOCAL_CANDIDATE_NOT_UPLOADED",
     "submittedAt": null,
-    "lastLocalPreparationAt": "2026-06-12T17:10:00Z",
+    "lastLocalPreparationAt": "2026-06-12T17:21:49Z",
     "uploadedAt": null,
     "visibleAscVerificationAt": null,
     "visibleAscStatus": "Not applicable; build 87 has not been uploaded",
@@ -125,8 +125,8 @@
   ],
   "createdAt": "2026-06-06T11:53:53.691778-04:00",
   "localVerification": {
-    "releaseGate": "pending for build 87",
-    "simulatorQA": "pending for build 87",
+    "releaseGate": "passed at source commit 1879d69fdb1b442d4abd9bfd3438a06b1aa8df3d",
+    "simulatorQA": "passed at source commit 1879d69fdb1b442d4abd9bfd3438a06b1aa8df3d with screenshot output/cadetcatch-simulator/cadetcatch-2026-06-12T17-21-36-771Z.png",
     "saveToPhotosManualSimulatorQA": {
       "status": "passed",
       "simulator": "iPhone 17 Pro Max iOS 26.5",

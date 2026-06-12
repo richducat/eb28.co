@@ -1,6 +1,13 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
-import { AGENT_ROSTER as AGENTS } from './fundmanagerMeta';
+import {
+    AGENT_ROSTER as AGENTS,
+    DESK_COMMERCE,
+    DESK_PRICE_USD,
+    BUNDLE_CHECKOUT_URL,
+    BUNDLE_PRICE_USD,
+    LANE_INDEX,
+} from './fundmanagerMeta';
 
 const PROD_REMOTE_SNAPSHOT_HOSTS = new Set(['eb28.co', 'www.eb28.co', 'fundmanager.eb28.co']);
 const STATIC_PREVIEW_HOSTS = new Set(['localhost', '127.0.0.1']);
@@ -47,6 +54,33 @@ const LANE_MODE_LABEL = {
     platform: 'Platform',
     'watch-only': 'Watch only',
     disabled: 'Disabled',
+};
+
+// Plain-English translations for the orchestrator's reason codes so a
+// first-time visitor can read the dashboard without a glossary.
+const REASON_EXPLAIN = {
+    LOW_FREE_CAPITAL: 'Waiting on funding — the sizing gate holds every order until free cash returns.',
+    WAITING_FOR_EDGE: 'Funded and scanning — no market currently clears this desk’s entry bar.',
+    SETUP_REQUIRED: 'Needs one-time configuration before it goes hunting.',
+    WATCH_ONLY: 'Observing markets and logging signals; trading intentionally disabled.',
+    PLATFORM_IDLE: 'Support lane — wakes up when the trading desks need it.',
+    LIVE_POSITION: 'Managing an open position right now.',
+    LIVE_ORDER: 'Has a working order on the book right now.',
+    CIRCUIT_BREAKER_OPEN: 'Tripped its own circuit breaker and is cooling off — a safety feature, not a crash.',
+};
+
+function explainReason(reasonCode) {
+    return REASON_EXPLAIN[reasonCode] || null;
+}
+
+const SYSTEM_HEADLINE = {
+    RUNNING: 'Desks are live and managing positions.',
+    MONITORING: 'Desks are watching markets and waiting for an edge.',
+    DEGRADED: 'Desks are healthy but blocked — usually waiting on capital.',
+    PAUSED: 'Desks are parked by the kill switch.',
+    STALE: 'Feed is catching up — last snapshot is older than two cycles.',
+    OFFLINE: 'Telemetry offline — the publisher has not reported in.',
+    CONNECTING: 'Connecting to the desk telemetry feed…',
 };
 
 function getStatusTone(status) {
@@ -251,10 +285,18 @@ function deriveAgentHealth(agent, laneMap, systemStatus) {
     const linkedLanes = agent.laneIds.map((laneId) => laneMap[laneId]).filter(Boolean);
 
     if (linkedLanes.length === 0) {
+        if (agent.laneIds.length === 0) {
+            return {
+                status: systemStatus === 'OFFLINE' ? 'OFFLINE' : 'MONITORING',
+                summary: 'Support desk — no trading lane of its own.',
+                detail: 'Works across the fleet: research, journaling, and manual overrides.',
+            };
+        }
+
         return {
             status: systemStatus === 'OFFLINE' ? 'OFFLINE' : 'MONITORING',
-            summary: 'Research-only roster; no direct live lane assignment.',
-            detail: 'Watching upstream strategy inputs and route conditions.',
+            summary: 'Lane telemetry pending',
+            detail: 'This desk’s lane is not in the current snapshot — it reports on the next publish cycle.',
         };
     }
 
@@ -267,6 +309,7 @@ function deriveAgentHealth(agent, laneMap, systemStatus) {
     return {
         status: chosenLane.status || 'DEGRADED',
         summary: laneNames,
+        reasonCode: chosenLane.lastReasonCode || null,
         detail: chosenLane.lastReasonCode
             ? `Blocker: ${humanizeToken(chosenLane.lastReasonCode)}`
             : `Next action: ${humanizeToken(chosenLane.nextAction)}`,
@@ -580,31 +623,37 @@ const FundManager = () => {
         {
             label: 'System',
             value: systemState,
+            caption: 'Worst status across live desks',
             tone: getStatusTone(systemState).dot.replace('bg-', 'text-'),
         },
         {
             label: 'Updated',
             value: snapshot?.updatedAt ? formatRelativeTimestamp(snapshot.updatedAt) : (loading ? 'Loading...' : '--'),
+            caption: 'Snapshot age — publishes every cycle',
             tone: snapshot?.stale ? 'text-orange-300' : 'text-cyan-300',
         },
         {
             label: 'Free Cash',
             value: formatCurrency(account?.balanceUsdc, loading ? 'Loading...' : '--'),
+            caption: 'Spendable USDC on live venues',
             tone: (account?.balanceUsdc || 0) >= 5 ? 'text-green-300' : 'text-amber-300',
         },
         {
             label: 'Exposure',
             value: formatCurrency(account?.totalExposure, loading ? 'Loading...' : '--'),
+            caption: 'Capital working inside open positions',
             tone: 'text-blue-300',
         },
         {
             label: 'Open Book',
             value: `${account?.activePositionCount ?? 0} pos / ${account?.openOrderCount ?? 0} ord`,
+            caption: 'Live positions and resting orders',
             tone: 'text-fuchsia-300',
         },
         {
             label: 'Desk PnL',
             value: formatSignedCurrency(account?.totalPnl, loading ? 'Loading...' : '--'),
+            caption: 'Real lifetime result — never edited',
             tone: (account?.totalPnl || 0) >= 0 ? 'text-emerald-300' : 'text-rose-300',
         },
     ];
@@ -636,10 +685,15 @@ const FundManager = () => {
                                             </span>
                                         </div>
                                         <p className="mt-2 text-[10px] uppercase tracking-[0.22em] opacity-55 sm:text-[11px]">
-                                            Autonomous Trading Matrix v3.3
+                                            The EB28 Desk OS — live telemetry
                                         </p>
                                         <p className="mt-3 max-w-2xl text-[12px] leading-relaxed text-white/65 sm:text-sm">
-                                            Simulated hedge fund bridge showing live bot activity, platform support lanes, and source-tagged Simmer exposure.
+                                            Eight autonomous trading desks scanning Polymarket and Kalshi around the clock.
+                                            Every order has to clear a kill-switch gate, a capital guard, and a trade journal
+                                            before a cent moves. This page is the real feed — wins, losses, and blockers included.
+                                        </p>
+                                        <p className="mt-3 max-w-2xl text-[12px] font-bold leading-relaxed text-cyan-200 sm:text-sm">
+                                            {SYSTEM_HEADLINE[systemState] || SYSTEM_HEADLINE.CONNECTING}
                                         </p>
                                         <div className="mt-4 flex flex-wrap gap-2 text-[10px] uppercase tracking-[0.18em] text-white/55">
                                             <span className="rounded-full border border-[#22d3ee]/10 bg-black/20 px-2.5 py-1">
@@ -651,6 +705,20 @@ const FundManager = () => {
                                             <span className="rounded-full border border-[#22d3ee]/10 bg-black/20 px-2.5 py-1">
                                                 Updated {formatTimestamp(snapshot?.updatedAt)}
                                             </span>
+                                        </div>
+                                        <div className="mt-5 flex flex-wrap items-center gap-3">
+                                            <a
+                                                href="/deskos/"
+                                                className="rounded-full bg-[#22d3ee] px-5 py-2.5 text-[12px] font-bold uppercase tracking-[0.16em] text-[#020617] transition-all hover:bg-cyan-300 hover:shadow-[0_0_28px_rgba(34,211,238,0.45)]"
+                                            >
+                                                Own this system →
+                                            </a>
+                                            <a
+                                                href="#desk-fleet"
+                                                className="rounded-full border border-[#22d3ee]/30 px-5 py-2.5 text-[12px] font-bold uppercase tracking-[0.16em] text-cyan-200 transition-colors hover:border-[#22d3ee]/60"
+                                            >
+                                                Meet the desks ↓
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
@@ -666,8 +734,11 @@ const FundManager = () => {
                                 {systemCards.map((card) => (
                                     <div key={card.label} className="rounded-2xl border border-[#22d3ee]/10 bg-black/20 p-3 sm:p-4">
                                         <div className="text-[10px] uppercase tracking-[0.22em] opacity-50">{card.label}</div>
-                                        <div className={`mt-3 text-sm font-bold sm:text-base ${card.tone}`}>
+                                        <div className={`mt-2 text-sm font-bold sm:text-base ${card.tone}`}>
                                             {card.value}
+                                        </div>
+                                        <div className="mt-2 text-[10px] leading-snug text-white/40">
+                                            {card.caption}
                                         </div>
                                     </div>
                                 ))}
@@ -676,14 +747,14 @@ const FundManager = () => {
                     </section>
                 </header>
 
-                <section className="mb-6">
+                <section id="desk-fleet" className="mb-6 scroll-mt-6">
                     <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
                         <div>
-                            <p className="text-[10px] uppercase tracking-[0.24em] opacity-45">Research agents</p>
-                            <h2 className="text-lg font-bold text-white/90 sm:text-xl">Agent roster</h2>
+                            <p className="text-[10px] uppercase tracking-[0.24em] opacity-45">The desk fleet</p>
+                            <h2 className="text-lg font-bold text-white/90 sm:text-xl">Twelve agents. Eight you can own.</h2>
                         </div>
                         <p className="text-[11px] uppercase tracking-[0.22em] text-white/50">
-                            Linked lanes inherit live orchestrator status
+                            Status pulls straight from the live orchestrator
                         </p>
                     </div>
 
@@ -691,6 +762,10 @@ const FundManager = () => {
                         {AGENTS.map((agent) => {
                             const health = deriveAgentHealth(agent, laneMap, systemState);
                             const statusTone = getStatusTone(health.status);
+                            const primaryLane = agent.laneIds.map((laneId) => LANE_INDEX[laneId]).filter(Boolean)[0] || null;
+                            const commerceLaneId = agent.laneIds.find((laneId) => DESK_COMMERCE[laneId]) || null;
+                            const commerce = commerceLaneId ? DESK_COMMERCE[commerceLaneId] : null;
+                            const plainReason = explainReason(health.reasonCode);
 
                             return (
                                 <article
@@ -713,7 +788,9 @@ const FundManager = () => {
                                             <div className="min-w-0 flex-1">
                                                 <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                                                     <div className="min-w-0">
-                                                        <p className="mb-2 text-[10px] uppercase tracking-[0.24em] opacity-40">Research agent</p>
+                                                        <p className="mb-2 text-[10px] uppercase tracking-[0.24em] opacity-40">
+                                                            {commerce ? 'Trading desk' : 'Support desk'}
+                                                        </p>
                                                         <h3
                                                             className="text-base font-bold leading-tight break-words sm:text-lg xl:text-base"
                                                             style={{ color: agent.color }}
@@ -742,19 +819,86 @@ const FundManager = () => {
                                         </div>
 
                                         <div className="rounded-2xl border border-white/5 bg-black/20 p-3">
+                                            {primaryLane ? (
+                                                <p className="mb-2 text-[11px] leading-relaxed text-white/75 sm:text-xs">
+                                                    {primaryLane.description}
+                                                </p>
+                                            ) : null}
                                             <div className="mb-2 text-[10px] uppercase tracking-[0.2em] text-white/50">Live assignment</div>
                                             <p className="text-[11px] font-bold leading-relaxed text-white/85 sm:text-xs">
                                                 {health.summary}
                                             </p>
                                             <p className="mt-2 text-[11px] leading-relaxed text-white/65 sm:text-xs">
-                                                {health.detail}
+                                                {plainReason || health.detail}
                                             </p>
                                         </div>
+
+                                        {commerce ? (
+                                            <div className="flex flex-wrap items-center gap-2">
+                                                <a
+                                                    href={commerce.checkoutUrl}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="rounded-full bg-[#22d3ee]/15 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.16em] text-cyan-200 ring-1 ring-[#22d3ee]/40 transition-all hover:bg-[#22d3ee] hover:text-[#020617]"
+                                                >
+                                                    License this agent — ${DESK_PRICE_USD}
+                                                </a>
+                                                <a
+                                                    href="/deskos/"
+                                                    className="text-[10px] uppercase tracking-[0.14em] text-white/45 underline-offset-4 transition-colors hover:text-cyan-200 hover:underline"
+                                                >
+                                                    or all 8 + the OS — ${BUNDLE_PRICE_USD}
+                                                </a>
+                                            </div>
+                                        ) : (
+                                            <div className="text-[10px] uppercase tracking-[0.16em] text-white/35">
+                                                Included with every Desk OS bundle
+                                            </div>
+                                        )}
                                     </div>
                                 </article>
                             );
                         })}
                     </main>
+                </section>
+
+                <section className="mb-6">
+                    <div className="eb28-panel rounded-[28px] border border-[#22d3ee]/10 p-4 sm:p-6">
+                        <div className="mb-4">
+                            <p className="text-[10px] uppercase tracking-[0.24em] opacity-45">How the machine works</p>
+                            <h2 className="mt-1 text-lg font-bold text-white/90 sm:text-xl">Four gates between an idea and your money</h2>
+                        </div>
+                        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
+                            {[
+                                {
+                                    step: '01 — Scan',
+                                    title: 'Desks hunt on a clock',
+                                    body: 'Each agent wakes on its own cadence (5–240 min), pulls fresh market data, and scores entries against its strategy rules.',
+                                },
+                                {
+                                    step: '02 — Gate',
+                                    title: 'Kill switch rules everything',
+                                    body: 'No order leaves the building unless the launch controller allows it. Real-money and paper modes are separate switches.',
+                                },
+                                {
+                                    step: '03 — Execute',
+                                    title: 'Sized, capped, cooled down',
+                                    body: 'Smart sizing caps each order to a % of bankroll. Failures trip per-desk circuit breakers with forced cooling-off.',
+                                },
+                                {
+                                    step: '04 — Journal',
+                                    title: 'Everything hits the tape',
+                                    body: 'Every fill, skip, and blocker is journaled and published to this dashboard. What you see is the unedited record.',
+                                },
+                            ].map((item) => (
+                                <div key={item.step} className="rounded-2xl border border-[#22d3ee]/10 bg-black/20 p-4">
+                                    <div className="text-[10px] uppercase tracking-[0.22em] text-cyan-300/70">{item.step}</div>
+                                    <div className="mt-2 text-sm font-bold text-white/90">{item.title}</div>
+                                    <p className="mt-2 text-[11px] leading-relaxed text-white/60">{item.body}</p>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
                 </section>
 
                 <section className="grid grid-cols-1 gap-4 pb-8 xl:grid-cols-4">
@@ -996,6 +1140,34 @@ const FundManager = () => {
                                 </div>
                             ) : null}
                         </div>
+                    </div>
+                </section>
+
+                <section className="pb-24">
+                    <div className="eb28-panel rounded-[28px] border border-[#22d3ee]/25 bg-gradient-to-br from-[#22d3ee]/10 to-transparent p-6 text-center sm:p-8">
+                        <p className="text-[10px] uppercase tracking-[0.24em] text-cyan-300/70">This dashboard is the demo</p>
+                        <h2 className="mx-auto mt-2 max-w-2xl text-xl font-bold leading-snug text-white sm:text-2xl">
+                            Everything you're watching — the eight agents, the kill switch, the capital guard, this telemetry — ships as one package.
+                        </h2>
+                        <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
+                            <a
+                                href="/deskos/"
+                                className="rounded-full bg-[#22d3ee] px-6 py-3 text-sm font-bold uppercase tracking-[0.14em] text-[#020617] transition-all hover:bg-cyan-300 hover:shadow-[0_0_32px_rgba(34,211,238,0.5)]"
+                            >
+                                Get the Desk OS — ${BUNDLE_PRICE_USD}
+                            </a>
+                            <a
+                                href={BUNDLE_CHECKOUT_URL}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="rounded-full border border-[#22d3ee]/35 px-6 py-3 text-sm font-bold uppercase tracking-[0.14em] text-cyan-200 transition-colors hover:border-[#22d3ee]/70"
+                            >
+                                Skip the pitch, checkout →
+                            </a>
+                        </div>
+                        <p className="mt-4 text-[11px] text-white/40">
+                            Software license, not investment advice. Markets carry risk — read the full disclosures on the Desk OS page.
+                        </p>
                     </div>
                 </section>
             </div>

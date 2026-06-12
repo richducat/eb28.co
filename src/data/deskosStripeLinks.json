@@ -1,0 +1,52 @@
+{
+  "sprinter": {
+    "product": "prod_Ugl1AqOgkwj8J3",
+    "price": "price_1ThNVfByTro6FO6kQDwhrOZN",
+    "url": "https://buy.stripe.com/6oU4gybpbbJyeHegz4bbG0J"
+  },
+  "oracle-gap": {
+    "product": "prod_Ugl1g0HaLL33oq",
+    "price": "price_1ThNVhByTro6FO6kaPTwJ2lg",
+    "url": "https://buy.stripe.com/14A00ictf8xmfLi0A6bbG0K"
+  },
+  "stormfront": {
+    "product": "prod_Ugl13vykPO5BxU",
+    "price": "price_1ThNVjByTro6FO6k3mALAx7u",
+    "url": "https://buy.stripe.com/fZueVcal78xm2Yw5UqbbG0L"
+  },
+  "barometer": {
+    "product": "prod_Ugl1Z3UwUI0kzp",
+    "price": "price_1ThNVkByTro6FO6kFROXkVBB",
+    "url": "https://buy.stripe.com/cNi14m2SFaFugPmgz4bbG0M"
+  },
+  "xpulse": {
+    "product": "prod_Ugl1gFkI3W4pdx",
+    "price": "price_1ThNVmByTro6FO6k1zsEi9eR",
+    "url": "https://buy.stripe.com/eVq7sK8cZ9BqfLi2IebbG0N"
+  },
+  "last-call": {
+    "product": "prod_Ugl1OfXAovz5Iu",
+    "price": "price_1ThNVnByTro6FO6koCXDSY0r",
+    "url": "https://buy.stripe.com/5kQ3cu2SF28Y9mU0A6bbG0O"
+  },
+  "newshound": {
+    "product": "prod_Ugl1UVYE6DwflB",
+    "price": "price_1ThNVpByTro6FO6kTnO41JwL",
+    "url": "https://buy.stripe.com/5kQ6oG1OB8xm0Qo3MibbG0P"
+  },
+  "whale-shadow": {
+    "product": "prod_Ugl18Fre0d5vJF",
+    "price": "price_1ThNVqByTro6FO6kXmjgPPJH",
+    "url": "https://buy.stripe.com/28E5kC50N00Q8iQ0A6bbG0Q"
+  },
+  "bundle": {
+    "product": "prod_Ugl1sVa4RhmWLY",
+    "price": "price_1ThNVsByTro6FO6kzfgwN6HY",
+    "url": "https://buy.stripe.com/4gMdR8gJveVK56E6YubbG0R"
+  },
+  "operator": {
+    "product": "prod_Ugl1xVhlllcv5y",
+    "price": "price_1ThNVtByTro6FO6k2XZ93WLD",
+    "url": "https://buy.stripe.com/14A6oG1OBdRGaqYaaGbbG0S"
+  }
+}

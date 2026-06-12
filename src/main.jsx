@@ -20,6 +20,9 @@ const isAppBuilderRoute = pathname === '/appbuilder';
 const isFundManagerRoute =
   pathname === '/fundmanager' ||
   hostname === 'fundmanager.eb28.co';
+const isDeskOsRoute =
+  pathname === '/deskos' ||
+  hostname === 'deskos.eb28.co';
 const isReconAgentRoute =
   pathname === '/reconcile' ||
   hostname === 'reconcile.eb28.co';
@@ -79,6 +82,11 @@ async function renderApp() {
 
   if (isFundManagerRoute) {
     await renderRoute(() => import('./FundManager'));
+    return;
+  }
+
+  if (isDeskOsRoute) {
+    await renderRoute(() => import('./DeskOS'));
     return;
   }
 

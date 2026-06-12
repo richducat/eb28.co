@@ -261,6 +261,35 @@ const ROUTE_META = {
             },
         ],
     },
+    deskos: {
+        ...BASE_ROUTE_META,
+        key: 'deskos',
+        path: '/deskos/',
+        title: 'EB28 Desk OS | 8 Prediction-Market Trading Agents + Kill-Switch Safety System',
+        description:
+            'License the EB28 Desk OS: eight autonomous Polymarket and Kalshi trading agents behind a gated runner, global kill switch, capital guard, and live dashboard. Paper mode first, real money only when you flip the gate.',
+        image: FUNDMANAGER_IMAGE,
+        includeInSitemap: true,
+        structuredData: [
+            ORGANIZATION_SCHEMA,
+            {
+                '@context': 'https://schema.org',
+                '@type': 'Product',
+                name: 'EB28 Desk OS',
+                description:
+                    'A prediction-market agent operating system: eight trading agents, a gated runner with kill switch, capital guard, trade journal, and live dashboard, licensed as software.',
+                image: FUNDMANAGER_IMAGE,
+                brand: { '@type': 'Brand', name: 'EB28' },
+                offers: {
+                    '@type': 'AggregateOffer',
+                    priceCurrency: 'USD',
+                    lowPrice: '47',
+                    highPrice: '497',
+                    offerCount: '10',
+                },
+            },
+        ],
+    },
     reconcile: {
         ...BASE_ROUTE_META,
         key: 'reconcile',
@@ -470,6 +499,7 @@ export const STATIC_ROUTE_OUTPUTS = [
     { routeKey: 'home', outputPath: 'index.html' },
     { routeKey: 'appbuilder', outputPath: 'appbuilder/index.html' },
     { routeKey: 'fundmanager', outputPath: 'fundmanager/index.html' },
+    { routeKey: 'deskos', outputPath: 'deskos/index.html' },
     { routeKey: 'reconcile', outputPath: 'reconcile/index.html' },
     { routeKey: 'creditgps', outputPath: 'limitless/index.html' },
     { routeKey: 'creditgps', outputPath: 'limitless/onboarding/index.html' },
@@ -525,6 +555,10 @@ export function detectRouteKey({ pathname = '/', hostname = '' } = {}) {
 
     if (normalizedPathname === '/fundmanager' || normalizedHostname === 'fundmanager.eb28.co') {
         return 'fundmanager';
+    }
+
+    if (normalizedPathname === '/deskos' || normalizedHostname === 'deskos.eb28.co') {
+        return 'deskos';
     }
 
     if (normalizedPathname === '/reconcile' || normalizedHostname === 'reconcile.eb28.co') {

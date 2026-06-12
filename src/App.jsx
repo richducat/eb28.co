@@ -148,6 +148,12 @@ const App = () => {
       url: "/fundmanager/"
     },
     {
+      id: 'tool-deskos',
+      title: "Desk OS — Trading Agents",
+      type: "Agent System",
+      url: "/deskos/"
+    },
+    {
       id: 0,
       title: "Tesla Helper App",
       type: "Utility App",
@@ -910,6 +916,7 @@ const App = () => {
                 <li><a href="#deployments" className="hover:text-blue-400 transition-colors">eb28.co Cloud Hosting</a></li>
                 <li><a href="/appbuilder/" className="hover:text-blue-400 transition-colors">EB28 App Builder</a></li>
                 <li><a href="/fundmanager/" className="hover:text-blue-400 transition-colors">Fund Manager Live</a></li>
+                <li><a href="/deskos/" className="hover:text-blue-400 transition-colors">Desk OS</a></li>
                 <li><a href="/blog/private-ai-infrastructure-small-business/" className="hover:text-blue-400 transition-colors">Private AI Guide</a></li>
               </ul>
             </div>

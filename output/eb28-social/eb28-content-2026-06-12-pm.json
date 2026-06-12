@@ -1,0 +1,42 @@
+{
+  "brand": "EB28",
+  "generatedAt": "2026-06-12T22:02:31.489Z",
+  "runId": "2026-06-12-pm",
+  "slot": "pm",
+  "article": {
+    "title": "Conversion-First Website Redesign Melbourne FL: Fix Lead Leaks",
+    "url": "https://eb28.co/blog/website-redesign-in-melbourne-fl-fix-the-leaks-before-you-rebuild-everything/",
+    "cluster": "conversion",
+    "primaryKeyword": "website redesign Melbourne FL"
+  },
+  "posts": {
+    "blog": {
+      "title": "Conversion-First Website Redesign Melbourne FL: Fix Lead Leaks",
+      "url": "https://eb28.co/blog/website-redesign-in-melbourne-fl-fix-the-leaks-before-you-rebuild-everything/",
+      "status": "ready_for_build_and_deploy"
+    },
+    "facebook": {
+      "caption": "Conversion-First Website Redesign Melbourne FL: Fix Lead Leaks\n\nA practical guide for local businesses that want more qualified organic leads, stronger search visibility, and a faster path from visitor to customer.\n\nRead it: https://eb28.co/blog/website-redesign-in-melbourne-fl-fix-the-leaks-before-you-rebuild-everything/",
+      "status": "draft_only_verified_eb28_owned_channel_required"
+    },
+    "instagram": {
+      "caption": "website redesign Melbourne FL: the practical version.\n\nWe broke down what to fix first, how to connect it to real lead flow, and what EB28 checks daily to keep search growth moving.\n\nRead the full guide at eb28.co/blog/",
+      "creativeBrief": "Carousel: Slide 1 problem statement, Slide 2 what to fix first, Slide 3 technical SEO checks, Slide 4 internal links, Slide 5 CTA to project brief.",
+      "status": "draft_only_verified_eb28_owned_channel_required"
+    },
+    "x": {
+      "caption": "Conversion-First Website Redesign Melbourne FL: Fix Lead Leaks\n\nThe key: connect the search intent to a page that is fast, useful, internally linked, and measured in Search Console.\n\nhttps://eb28.co/blog/website-redesign-in-melbourne-fl-fix-the-leaks-before-you-rebuild-everything/",
+      "status": "draft_only_verified_eb28_owned_channel_required"
+    },
+    "linkedin": {
+      "caption": "New EB28 growth brief: Conversion-First Website Redesign Melbourne FL: Fix Lead Leaks\n\nThis covers the practical SEO and conversion fixes that turn a business website into a more reliable organic lead path.\n\nhttps://eb28.co/blog/website-redesign-in-melbourne-fl-fix-the-leaks-before-you-rebuild-everything/",
+      "status": "draft_only_verified_eb28_owned_channel_required"
+    },
+    "shortFormVideo": {
+      "hook": "Before you pay for a full redesign, find the exact lead leak.",
+      "caption": "Website redesign in Melbourne FL should start with proof, forms, follow-up, and local SEO links, not a blank-page rebuild.",
+      "brief": "15-30 second Reel/TikTok/Short: screen record a homepage hero, point to unclear offer, missing proof, long form, and no follow-up promise; end with the Melbourne Web Studio lead leak quiz.",
+      "status": "draft_only_verified_eb28_owned_channel_required"
+    }
+  }
+}

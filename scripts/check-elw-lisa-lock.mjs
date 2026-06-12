@@ -8,12 +8,14 @@ const roots = ['docs/ELW', 'public/ELW'];
 const lockedJsName = 'index-jjAchhLg-lisa-lock.js';
 const lockedCssName = 'index-BEIthGNw-lisa-lock.css';
 const requiredAssetTokens = [
-  'Best Value',
   'Bovine Collagen Support',
   'Easy-to-Digest Protein',
   'KEEPS YOU FULL BETWEEN MEALS',
   'Protein",value:"13g",dv:"20%"',
-  'Choose your 8 pack option',
+  'Launch update list',
+  'Subscription details pending',
+  'Pricing and shipping being finalized',
+  'Join Launch List',
   'hero-thrive gold-text-shine',
   'est-badge-flat-bottom absolute bottom-0 left-8 h-[5.625rem] w-[8.5rem] overflow-hidden',
   'gold-shine flex h-28 w-28 translate-x-3 flex-col',
@@ -26,7 +28,13 @@ const requiredCssTokens = [
 ];
 const forbiddenAssetTokens = [
   'No Added Sugars',
+  'No Sugar Added',
   'Keto-Friendly Macros',
+  '$35.00',
+  '$28.00',
+  'Free shipping on $50+',
+  'Subscribe and save 15%',
+  'Best Value',
   'Best [-Value',
   'h-32 w-32 flex-col',
 ];

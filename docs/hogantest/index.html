@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hogan Yards | Brewery, BBQ, Pickleball & Events in Vero Beach</title>
+  <meta name="description" content="A nicer rebuilt concept for Hogan Yards: house-brewed beer, Central Texas BBQ, pickleball courts, private events, and community nights in Vero Beach, Florida." />
+  <meta property="og:title" content="Hogan Yards | Eat. Drink. Play. Stay awhile." />
+  <meta property="og:description" content="House-brewed beer, smoked-daily BBQ, pickleball, events, and rentals in Vero Beach." />
+  <meta property="og:image" content="https://static.wixstatic.com/media/6e44e7_519bc15f28c0443689f0258edb06b18e~mv2.jpeg/v1/fill/w_1200,h_630,al_c,q_85,enc_avif,quality_auto/DSC02382_VSCO.jpeg" />
+  <meta name="theme-color" content="#17100c" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #fff8ee;
+      --muted: #d7c3a6;
+      --soft: #a98f6d;
+      --bg: #17100c;
+      --bg-2: #221712;
+      --card: rgba(255, 248, 238, .075);
+      --card-strong: rgba(255, 248, 238, .12);
+      --line: rgba(255, 248, 238, .18);
+      --gold: #f3b24d;
+      --amber: #dd7f2a;
+      --smoke: #80766b;
+      --green: #8ecf6e;
+      --shadow: 0 30px 80px rgba(0,0,0,.38);
+      --radius: 28px;
+      --max: 1180px;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 18% 12%, rgba(243,178,77,.18), transparent 32rem),
+        radial-gradient(circle at 86% 8%, rgba(142,207,110,.10), transparent 30rem),
+        linear-gradient(180deg, #120c09 0%, #17100c 38%, #0f0a08 100%);
+      font-family: Inter, system-ui, -apple-system, Segoe UI, sans-serif;
+      overflow-x: hidden;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+    .wrap { width: min(var(--max), calc(100% - 40px)); margin-inline: auto; }
+    .grain {
+      position: fixed; inset: 0; pointer-events: none; opacity: .12; z-index: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.7' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E");
+    }
+    header {
+      position: sticky; top: 0; z-index: 10;
+      backdrop-filter: blur(18px);
+      background: rgba(18, 12, 9, .74);
+      border-bottom: 1px solid var(--line);
+    }
+    .nav { min-height: 76px; display: flex; align-items: center; justify-content: space-between; gap: 22px; }
+    .brand { display: flex; align-items: center; gap: 13px; font-weight: 900; letter-spacing: -.03em; }
+    .mark {
+      width: 46px; height: 46px; border-radius: 16px; display: grid; place-items: center;
+      background: linear-gradient(145deg, var(--gold), var(--amber)); color: #21140c;
+      box-shadow: 0 12px 35px rgba(243,178,77,.22); font-family: Playfair Display, serif; font-size: 25px;
+    }
+    nav { display: flex; align-items: center; gap: 22px; color: var(--muted); font-size: 14px; font-weight: 700; }
+    nav a:hover { color: var(--ink); }
+    .nav-cta { padding: 12px 18px; border-radius: 999px; background: var(--ink); color: #18100c; }
+    .hero { position: relative; z-index: 1; padding: clamp(56px, 7vw, 112px) 0 42px; }
+    .hero-grid { display: grid; grid-template-columns: 1.05fr .95fr; gap: clamp(28px, 5vw, 72px); align-items: center; }
+    .eyebrow { color: var(--gold); text-transform: uppercase; letter-spacing: .18em; font-weight: 900; font-size: 12px; }
+    h1 { font-family: Playfair Display, Georgia, serif; font-size: clamp(3.45rem, 8vw, 7.8rem); line-height: .86; letter-spacing: -.06em; margin: 18px 0 20px; }
+    .lead { color: #eadcc7; font-size: clamp(1.08rem, 2vw, 1.35rem); line-height: 1.65; max-width: 650px; }
+    .actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 30px; }
+    .btn {
+      min-height: 50px; display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+      border-radius: 999px; padding: 14px 22px; font-weight: 900; border: 1px solid var(--line);
+      transition: transform .18s ease, background .18s ease, border-color .18s ease;
+    }
+    .btn:hover { transform: translateY(-2px); }
+    .btn.primary { background: linear-gradient(135deg, var(--gold), var(--amber)); color: #21140c; border-color: transparent; box-shadow: 0 18px 45px rgba(221,127,42,.25); }
+    .btn.secondary { background: rgba(255,255,255,.07); color: var(--ink); }
+    .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 34px; max-width: 650px; }
+    .stat { padding: 16px; border: 1px solid var(--line); border-radius: 22px; background: rgba(255,255,255,.055); }
+    .stat b { display: block; font-size: 1.35rem; color: var(--gold); }
+    .stat span { color: var(--muted); font-size: .84rem; font-weight: 700; }
+    .hero-card { position: relative; min-height: 620px; border-radius: 42px; overflow: hidden; box-shadow: var(--shadow); border: 1px solid rgba(255,255,255,.22); }
+    .hero-card::before { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,0,0,.08), rgba(0,0,0,.78)); z-index: 1; }
+    .hero-card img { width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; filter: saturate(1.08) contrast(1.03); }
+    .floating { position: absolute; z-index: 2; left: 24px; right: 24px; bottom: 24px; display: grid; gap: 12px; }
+    .float-row { display: flex; justify-content: space-between; gap: 14px; align-items: center; padding: 16px 18px; background: rgba(20,13,9,.78); border: 1px solid rgba(255,255,255,.18); border-radius: 24px; backdrop-filter: blur(14px); }
+    .float-row strong { font-size: 1.05rem; }
+    .pill { color: #1b120c; background: var(--gold); padding: 8px 11px; border-radius: 999px; font-size: .76rem; font-weight: 900; white-space: nowrap; }
+    section { position: relative; z-index: 1; padding: clamp(58px, 7vw, 96px) 0; }
+    .section-head { display: flex; align-items: end; justify-content: space-between; gap: 24px; margin-bottom: 28px; }
+    h2 { font-family: Playfair Display, Georgia, serif; font-size: clamp(2.2rem, 4.5vw, 4rem); line-height: .95; margin: 10px 0 0; letter-spacing: -.04em; }
+    .section-head p { max-width: 520px; color: var(--muted); line-height: 1.65; margin: 0; }
+    .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .card { border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; background: var(--card); box-shadow: 0 18px 50px rgba(0,0,0,.18); }
+    .card-img { height: 230px; overflow: hidden; background: #2a1a12; }
+    .card-img img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s ease; }
+    .card:hover .card-img img { transform: scale(1.055); }
+    .card-body { padding: 24px; }
+    .tag { color: var(--green); text-transform: uppercase; letter-spacing: .14em; font-size: 11px; font-weight: 900; }
+    .card h3 { margin: 10px 0 10px; font-size: 1.45rem; letter-spacing: -.03em; }
+    .card p { margin: 0 0 18px; color: var(--muted); line-height: 1.6; }
+    .text-link { color: var(--gold); font-weight: 900; }
+    .split { display: grid; grid-template-columns: .9fr 1.1fr; gap: 22px; align-items: stretch; }
+    .panel { border: 1px solid var(--line); border-radius: 34px; padding: clamp(26px, 4vw, 42px); background: linear-gradient(145deg, rgba(255,255,255,.10), rgba(255,255,255,.045)); box-shadow: var(--shadow); }
+    .panel p { color: var(--muted); line-height: 1.7; font-size: 1.05rem; }
+    .menu-list { display: grid; gap: 13px; margin-top: 22px; }
+    .menu-item { display: flex; justify-content: space-between; gap: 18px; padding: 18px; border-radius: 22px; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12); }
+    .menu-item span { color: var(--muted); }
+    .wide-photo { min-height: 460px; border-radius: 34px; overflow: hidden; border: 1px solid var(--line); box-shadow: var(--shadow); }
+    .wide-photo img { width: 100%; height: 100%; object-fit: cover; }
+    .events { background: linear-gradient(135deg, rgba(243,178,77,.16), rgba(142,207,110,.08)); border-block: 1px solid var(--line); }
+    .event-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 28px; }
+    .event { min-height: 170px; padding: 20px; border-radius: 26px; background: rgba(18,12,9,.58); border: 1px solid rgba(255,255,255,.15); display: flex; flex-direction: column; justify-content: space-between; }
+    .event b { font-size: 1.2rem; }
+    .event span { color: var(--muted); line-height: 1.45; }
+    .contact { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .contact-card { padding: 30px; border: 1px solid var(--line); border-radius: 30px; background: var(--card); }
+    .contact-card h3 { font-size: 1.55rem; margin: 0 0 16px; }
+    .info { display: grid; gap: 14px; color: var(--muted); line-height: 1.55; }
+    .info strong { color: var(--ink); display: block; }
+    footer { position: relative; z-index: 1; padding: 32px 0; border-top: 1px solid var(--line); color: var(--soft); }
+    footer .wrap { display: flex; justify-content: space-between; gap: 18px; flex-wrap: wrap; }
+    :focus-visible { outline: 3px solid var(--gold); outline-offset: 4px; }
+    @media (max-width: 900px) {
+      nav { display: none; }
+      .hero-grid, .split, .contact { grid-template-columns: 1fr; }
+      .hero-card { min-height: 470px; }
+      .cards { grid-template-columns: 1fr; }
+      .event-grid { grid-template-columns: 1fr 1fr; }
+      .section-head { display: block; }
+      .section-head p { margin-top: 16px; }
+    }
+    @media (max-width: 560px) {
+      .wrap { width: min(var(--max), calc(100% - 28px)); }
+      .hero { padding-top: 42px; }
+      h1 { font-size: clamp(3rem, 17vw, 4.5rem); }
+      .stats, .event-grid { grid-template-columns: 1fr; }
+      .actions .btn { width: 100%; }
+      .hero-card { min-height: 390px; border-radius: 30px; }
+      .float-row { align-items: flex-start; flex-direction: column; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="grain" aria-hidden="true"></div>
+  <header>
+    <div class="wrap nav">
+      <a class="brand" href="#top" aria-label="Hogan Yards home"><span class="mark">HY</span><span>Hogan Yards</span></a>
+      <nav aria-label="Primary navigation">
+        <a href="#yard">The Yard</a>
+        <a href="#bbq">BBQ + Beer</a>
+        <a href="#events">Events</a>
+        <a href="#visit">Visit</a>
+        <a class="nav-cta" href="https://app.getopencourt.com/club/hy-pickleball">Book Pickleball</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <div class="eyebrow">Vero Beach • Brewery • BBQ • Pickleball</div>
+          <h1>Eat. Drink. Play. Stay awhile.</h1>
+          <p class="lead">Hogan Yards is the all-day backyard Vero Beach needed: house-brewed beer, Central Texas BBQ smoked daily, social pickleball courts, live events, private rentals, and a whole lot of reasons to bring your people.</p>
+          <div class="actions">
+            <a class="btn primary" href="https://www.hoganyards.com/event">See What’s Happening</a>
+            <a class="btn secondary" href="https://app.getopencourt.com/club/hy-pickleball">Reserve a Court</a>
+          </div>
+          <div class="stats" aria-label="Highlights">
+            <div class="stat"><b>12–9</b><span>Open daily</span></div>
+            <div class="stat"><b>3 ways</b><span>Beer, BBQ, courts</span></div>
+            <div class="stat"><b>2745</b><span>St Lucie Ave</span></div>
+          </div>
+        </div>
+        <aside class="hero-card" aria-label="Hogan Yards atmosphere">
+          <img src="https://static.wixstatic.com/media/6e44e7_a084bf44dcbc456c891be697aca89960f000.jpg/v1/fill/w_1280,h_900,al_c,q_88,enc_avif,quality_auto/6e44e7_a084bf44dcbc456c891be697aca89960f000.jpg" alt="Guests enjoying the open-air Hogan Yards property" />
+          <div class="floating">
+            <div class="float-row"><strong>House-brewed beer on tap</strong><span class="pill">Brewery</span></div>
+            <div class="float-row"><strong>Central Texas BBQ, smoked daily</strong><span class="pill">BBQ</span></div>
+            <div class="float-row"><strong>Social courts, day and night</strong><span class="pill">Pickleball</span></div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section id="yard">
+      <div class="wrap">
+        <div class="section-head">
+          <div><div class="eyebrow">Built for connection</div><h2>More than a brewery. More than a restaurant.</h2></div>
+          <p>A welcoming space designed to bring the community together — whether you’re rolling in for an afternoon match, dinner with the family, or a night out with friends.</p>
+        </div>
+        <div class="cards">
+          <article class="card">
+            <div class="card-img"><img src="https://static.wixstatic.com/media/6e44e7_ad0be8175ffc45c999ad3adf3ca4423f~mv2.jpeg/v1/fill/w_700,h_460,al_c,q_85,enc_avif,quality_auto/6e44e7_ad0be8175ffc45c999ad3adf3ca4423f~mv2.jpeg" alt="BBQ plate at Hogan Yards"></div>
+            <div class="card-body"><div class="tag">Smokehouse</div><h3>BBQ that carries the room.</h3><p>Central Texas style plates, smoked daily, built for sharing across picnic tables and game-day hangs.</p><a class="text-link" href="https://www.hoganyards.com/">View the Menu →</a></div>
+          </article>
+          <article class="card">
+            <div class="card-img"><img src="https://static.wixstatic.com/media/6e44e7_e41379df9fea4b99af0043d0c064bcfe~mv2.jpg/v1/fill/w_700,h_460,al_c,q_85,enc_avif,quality_auto/6e44e7_e41379df9fea4b99af0043d0c064bcfe~mv2.jpg" alt="Hogan Yards brewery interior and taps"></div>
+            <div class="card-body"><div class="tag">Brewery</div><h3>Fresh beer with a local pulse.</h3><p>On-site brewing, rotating taps, and an easygoing bar program for first rounds and last calls.</p><a class="text-link" href="https://www.hoganyards.com/">Visit the Brewery →</a></div>
+          </article>
+          <article class="card">
+            <div class="card-img"><img src="https://static.wixstatic.com/media/6e44e7_a7df6e5b09be483baea50676ccebee8c~mv2.jpeg/v1/fill/w_700,h_460,al_c,q_85,enc_avif,quality_auto/6e44e7_a7df6e5b09be483baea50676ccebee8c~mv2.jpeg" alt="Pickleball courts at Hogan Yards"></div>
+            <div class="card-body"><div class="tag">Courts</div><h3>Pickleball without the country-club attitude.</h3><p>Social courts made for day or night play. Come competitive, casual, or just ready to move.</p><a class="text-link" href="https://app.getopencourt.com/club/hy-pickleball">Book a Court →</a></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="bbq">
+      <div class="wrap split">
+        <div class="panel">
+          <div class="eyebrow">Beer + BBQ</div>
+          <h2>Big flavor. Zero stiffness.</h2>
+          <p>Hogan Yards works because the offer is simple and strong: fresh beer, smoked meat, open-air energy, and enough room for the whole crew. This rebuild puts that story upfront instead of making people hunt for it.</p>
+          <div class="menu-list">
+            <div class="menu-item"><strong>House drafts</strong><span>Rotating taps</span></div>
+            <div class="menu-item"><strong>Smoked daily</strong><span>Central Texas style</span></div>
+            <div class="menu-item"><strong>Family friendly</strong><span>Afternoon to evening</span></div>
+          </div>
+        </div>
+        <div class="wide-photo"><img src="https://static.wixstatic.com/media/6e44e7_519bc15f28c0443689f0258edb06b18e~mv2.jpeg/v1/fill/w_1000,h_720,al_c,q_88,enc_avif,quality_auto/DSC02382_VSCO.jpeg" alt="Hogan Yards guests seated in the restaurant"></div>
+      </div>
+    </section>
+
+    <section class="events" id="events">
+      <div class="wrap">
+        <div class="section-head">
+          <div><div class="eyebrow">Always something happening</div><h2>Make it a weeknight plan or a full private event.</h2></div>
+          <p>From casual games to bigger gatherings, Hogan Yards gives guests a reason to stay longer — and gives groups a venue that already has the food, drinks, and activity built in.</p>
+        </div>
+        <div class="actions">
+          <a class="btn primary" href="https://www.hoganyards.com/event">View Events</a>
+          <a class="btn secondary" href="https://www.hoganyards.com/rentals">Host an Event</a>
+        </div>
+        <div class="event-grid">
+          <div class="event"><b>Weekly Events</b><span>Community nights, specials, games, and reasons to come back.</span></div>
+          <div class="event"><b>Private Rentals</b><span>Parties, corporate hangs, reunions, and celebrations.</span></div>
+          <div class="event"><b>Court Time</b><span>Book pickleball directly through OpenCourt.</span></div>
+          <div class="event"><b>Food + Drinks</b><span>No dry venue energy — the good stuff is already here.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="visit">
+      <div class="wrap contact">
+        <div class="contact-card">
+          <div class="eyebrow">Visit the yard</div>
+          <h2>Pull up in Vero Beach.</h2>
+          <div class="info">
+            <div><strong>Address</strong>2745 St Lucie Ave<br>Vero Beach, FL 32960</div>
+            <div><strong>Hours</strong>Sun–Thurs: 12:00 pm – 9:00 pm<br>Fri–Sat: 12:00 pm – 9:00 pm</div>
+            <div><strong>Contact</strong><a href="mailto:Info@hoganyards.com">Info@hoganyards.com</a><br><a href="tel:+17724946426">(772) 494-6426</a></div>
+          </div>
+        </div>
+        <div class="contact-card">
+          <h3>Quick moves</h3>
+          <div class="actions" style="margin-top:0">
+            <a class="btn primary" href="https://app.getopencourt.com/club/hy-pickleball">Book Pickleball</a>
+            <a class="btn secondary" href="https://www.hoganyards.com/event">Events This Week</a>
+            <a class="btn secondary" href="https://www.instagram.com/hoganyards">Instagram</a>
+            <a class="btn secondary" href="https://www.facebook.com/profile.php?id=61560950420540">Facebook</a>
+          </div>
+          <p style="color:var(--muted);line-height:1.7;margin-top:22px">This is a polished rebuild concept hosted for review at eb28.co/hogantest. All CTAs point back to Hogan Yards’ live booking, events, rental, and social channels.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <span>© 2026 Hogan Yards concept rebuild.</span>
+      <span>Built for review on eb28.co/hogantest</span>
+    </div>
+  </footer>
+</body>
+</html>

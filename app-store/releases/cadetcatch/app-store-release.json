@@ -22,7 +22,7 @@
   },
   "version": {
     "marketingVersion": "1.0.1",
-    "buildNumber": "86",
+    "buildNumber": "87",
     "releaseType": "MANUAL",
     "phasedRelease": false,
     "promotionalText": "Private cadet rosters, approved photo pages, hidden previews, saved finds, family notes, and a plain-English academy terms guide.",
@@ -36,7 +36,7 @@
       "parents",
       "coast"
     ],
-    "whatsNew": "CadetCatch build 86 adds Save to Photos for unlocked matched photos while preserving stricter face-match filtering, simulator-tested search fallback behavior, private roster setup, approved public photo sources, hidden result previews, saved finds, family notes, and purchase restore controls."
+    "whatsNew": "CadetCatch build 87 improves face matching with on-device face embeddings for better matching across different clothes, hairstyles, hats, and backgrounds, while preserving Save to Photos, stricter filtering, private roster setup, approved public photo sources, hidden result previews, saved finds, family notes, and purchase restore controls."
   },
   "urls": {
     "marketingUrl": "https://eb28.co/cc/",
@@ -144,7 +144,7 @@
     "knownRisks": [
       "Public websites may change markup or block automated image access; the app surfaces empty/no-match results when a page cannot provide usable public images.",
       "Private Facebook group/media access is not included in this build; this build supports public Facebook photo pages and Facebook links that the reviewer can open in Safari.",
-      "Build 86 preserves the supplied low-resolution USCGC EAGLE photo from the owner as the native iOS launch/splash image and welcome image, with the screenshot UI badge removed and no replacement EAGLE artwork.",
+      "Build 87 preserves the supplied low-resolution USCGC EAGLE photo from the owner as the native iOS launch/splash image and welcome image, with the screenshot UI badge removed and no replacement EAGLE artwork.",
       "In-app purchase products must be active in App Store Connect before TestFlight purchase flows can return live products."
     ]
   }

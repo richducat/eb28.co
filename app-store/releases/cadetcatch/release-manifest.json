@@ -4,44 +4,44 @@
   "appStoreConnectAppId": "6769565852",
   "platform": "iOS",
   "marketingVersion": "1.0.1",
-  "buildNumber": "86",
+  "buildNumber": "87",
   "baselineCommit": "7c04c92c123c200bd73693e431f049c4fa2dec17",
   "baselineTree": "2374b7b19defa200312ac08d70381628bead8fc6",
-  "sourceIdentityType": "isolated git worktree branch descended from CadetCatch build 85 TestFlight receipt",
+  "sourceIdentityType": "isolated git worktree branch descended from CadetCatch build 86 Save to Photos candidate with Core ML face embeddings",
   "baseParentCommit": "7c04c92c123c200bd73693e431f049c4fa2dec17",
   "indexParentCommit": null,
-  "sourceRef": "refs/heads/feature/cadetcatch-save-to-photos",
-  "releaseBranch": "feature/cadetcatch-save-to-photos",
-  "worktreePath": "/Users/richardducat/GITHUB/eb28-cadetcatch-save-to-photos",
+  "sourceRef": "refs/heads/feature/cadetcatch-coreml-face-embeddings",
+  "releaseBranch": "feature/cadetcatch-coreml-face-embeddings",
+  "worktreePath": "/Users/richardducat/GITHUB/eb28-cadetcatch-coreml-face-embeddings",
   "xcodeProjectPath": "ios/CadetCatch/CadetCatch.xcodeproj",
   "xcodegenProjectSpec": "ios/CadetCatch/project.yml",
   "scheme": "CadetCatch",
   "teamId": "WN3K69XEP4",
-  "approvalLevel": "upload_build approval used for build 86 only",
-  "archivePath": "/Users/richardducat/Documents/Codex/Release-Artifacts/CadetCatch/build-86-20260610/CadetCatch-1.0.1-86-20260610.xcarchive",
+  "approvalLevel": "local build 87 candidate only; archive and upload_build approvals pending",
+  "archivePath": null,
   "appStoreConnectState": {
     "appStoreVersionId": null,
     "buildId": null,
     "reviewSubmissionId": null,
-    "appStoreState": "UPLOADED_PROCESSING_FROM_XCODE_RECEIPT",
+    "appStoreState": "LOCAL_CANDIDATE_NOT_UPLOADED",
     "submittedAt": null,
-    "lastLocalPreparationAt": "2026-06-10T19:43:02Z",
-    "uploadedAt": "2026-06-10T19:56:28Z",
+    "lastLocalPreparationAt": "2026-06-12T17:10:00Z",
+    "uploadedAt": null,
     "visibleAscVerificationAt": null,
-    "visibleAscStatus": "Not verified in visible ASC UI; Xcode upload receipt says uploaded package is processing",
+    "visibleAscStatus": "Not applicable; build 87 has not been uploaded",
     "visibleAscCreatedAt": null,
-    "distributionLogPath": "/Users/richardducat/Documents/Codex/Release-Artifacts/CadetCatch/build-86-20260610/CadetCatch-1.0.1-86-20260610.xcdistributionlogs",
+    "distributionLogPath": null,
     "verificationBlocked": null
   },
   "sourceMetadataVerification": {
     "projectYmlMarketingVersion": "1.0.1",
-    "projectYmlCurrentProjectVersion": "86",
+    "projectYmlCurrentProjectVersion": "87",
     "projectYmlBundleId": "co.eb28.cadetcatch",
     "pbxMarketingVersions": [
       "1.0.1"
     ],
     "pbxCurrentProjectVersions": [
-      "86"
+      "87"
     ],
     "pbxBundleIds": [
       "co.eb28.CadetCatchUITests",
@@ -100,7 +100,7 @@
   ],
   "releaseJsonVersionObject": {
     "marketingVersion": "1.0.1",
-    "buildNumber": "86",
+    "buildNumber": "87",
     "releaseType": "MANUAL",
     "phasedRelease": false,
     "promotionalText": "Private cadet rosters, approved photo pages, hidden previews, saved finds, family notes, and a plain-English academy terms guide.",
@@ -114,19 +114,19 @@
       "parents",
       "coast"
     ],
-    "whatsNew": "CadetCatch build 86 adds Save to Photos for unlocked matched photos while preserving stricter face-match filtering, simulator-tested search fallback behavior, private roster setup, approved public photo sources, hidden result previews, saved finds, family notes, and purchase restore controls."
+    "whatsNew": "CadetCatch build 87 improves face matching with on-device face embeddings for better matching across different clothes, hairstyles, hats, and backgrounds, while preserving Save to Photos, stricter filtering, private roster setup, approved public photo sources, hidden result previews, saved finds, family notes, and purchase restore controls."
   },
   "safetyNotes": [
     "Primary checkout /Users/richardducat/GITHUB/eb28.co is dirty and must not be used for release actions.",
     "Build 85 was uploaded to App Store Connect and visible ASC Build Uploads showed status Processing on 2026-06-09.",
-    "Build 86 is the Save to Photos candidate, descended from the build 85 receipt commit and preserving face-match changes.",
+    "Build 87 is the Core ML face embedding candidate, descended from the build 86 Save to Photos work and preserving Save to Photos changes.",
     "Do not distribute TestFlight, select for App Review, submit for review, release, expire builds, edit metadata/screenshots/previews, or edit IAP/subscriptions without a separate exact approval record.",
-    "Build 86 upload completed by xcodebuild on 2026-06-10; package is processing per Xcode upload receipt."
+    "Build 87 has not been archived or uploaded. Build 86 upload completed by xcodebuild on 2026-06-10; package is processing per Xcode upload receipt."
   ],
   "createdAt": "2026-06-06T11:53:53.691778-04:00",
   "localVerification": {
-    "releaseGate": "passed at source commit 7c2c033eeeaadf79af314f60220edd69e7db4d8d",
-    "simulatorQA": "passed at source commit 7c2c033eeeaadf79af314f60220edd69e7db4d8d",
+    "releaseGate": "pending for build 87",
+    "simulatorQA": "pending for build 87",
     "saveToPhotosManualSimulatorQA": {
       "status": "passed",
       "simulator": "iPhone 17 Pro Max iOS 26.5",

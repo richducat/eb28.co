@@ -1,4 +1,5 @@
 import CoreML
+import CoreImage
 import CryptoKit
 import Photos
 import PhotosUI
@@ -1033,7 +1034,8 @@ enum FaceMatcher {
 
         var descriptors: [FaceDescriptor] = []
         for orientation in candidateOrientations(startingWith: preferredOrientation) {
-            let found = descriptorsFromDetectedFaces(in: cgImage, orientation: orientation)
+            let observations = detectFaces(in: cgImage, orientation: orientation)
+            let found = descriptorsFromDetectedFaces(observations, in: cgImage)
             if !found.isEmpty {
                 descriptors = found
                 break
@@ -1043,26 +1045,22 @@ enum FaceMatcher {
         return descriptors
     }
 
-    private static func descriptorsFromDetectedFaces(in image: CGImage, orientation: CGImagePropertyOrientation) -> [FaceDescriptor] {
-        detectFaces(in: image, orientation: orientation).compactMap { observation in
-            guard
-                let alignedFace = alignedFaceImage(observation, from: image),
-                let embedding = FaceEmbeddingModel.shared.embedding(from: alignedFace)
-            else {
-                return nil
+    private static func descriptorsFromDetectedFaces(_ observations: [VNFaceObservation], in image: CGImage) -> [FaceDescriptor] {
+        observations.compactMap { observation in
+            for faceImage in candidateFaceImages(observation, from: image) {
+                if let embedding = FaceEmbeddingModel.shared.embedding(from: faceImage) {
+                    return FaceDescriptor(embedding: embedding)
+                }
             }
-            return FaceDescriptor(embedding: embedding)
+            return nil
         }
     }
 
     private static func detectFaces(in image: CGImage, orientation: CGImagePropertyOrientation) -> [VNFaceObservation] {
         let landmarkRequest = VNDetectFaceLandmarksRequest()
         let landmarkHandler = VNImageRequestHandler(cgImage: image, orientation: orientation, options: [:])
-        if
-            (try? landmarkHandler.perform([landmarkRequest])) != nil,
-            let results = landmarkRequest.results,
-            !results.isEmpty
-        {
+        try? landmarkHandler.perform([landmarkRequest])
+        if let results = landmarkRequest.results, !results.isEmpty {
             return Array(results
                 .sorted { area(of: $0.boundingBox) > area(of: $1.boundingBox) }
                 .prefix(Configuration.maxFacesPerImage))
@@ -1070,31 +1068,73 @@ enum FaceMatcher {
 
         let rectangleRequest = VNDetectFaceRectanglesRequest()
         let rectangleHandler = VNImageRequestHandler(cgImage: image, orientation: orientation, options: [:])
+        guard (try? rectangleHandler.perform([rectangleRequest])) != nil, let results = rectangleRequest.results else {
+            return coreImageFaceObservations(in: image, orientation: orientation)
+        }
+
+        let visionResults = Array(results
+            .sorted { area(of: $0.boundingBox) > area(of: $1.boundingBox) }
+            .prefix(Configuration.maxFacesPerImage))
+        if !visionResults.isEmpty {
+            return visionResults
+        }
+
+        return coreImageFaceObservations(in: image, orientation: orientation)
+    }
+
+    private static func coreImageFaceObservations(in image: CGImage, orientation: CGImagePropertyOrientation) -> [VNFaceObservation] {
         guard
-            (try? rectangleHandler.perform([rectangleRequest])) != nil,
-            let results = rectangleRequest.results
+            let detector = CIDetector(
+                ofType: CIDetectorTypeFace,
+                context: nil,
+                options: [CIDetectorAccuracy: CIDetectorAccuracyHigh]
+            )
         else {
             return []
         }
 
-        return Array(results
-            .sorted { area(of: $0.boundingBox) > area(of: $1.boundingBox) }
-            .prefix(Configuration.maxFacesPerImage))
+        let extent = CGRect(x: 0, y: 0, width: image.width, height: image.height)
+        let features = detector.features(
+            in: CIImage(cgImage: image),
+            options: [CIDetectorImageOrientation: Int(orientation.rawValue)]
+        )
+
+        return Array(features.compactMap { feature -> VNFaceObservation? in
+            guard let faceFeature = feature as? CIFaceFeature else {
+                return nil
+            }
+
+            let bounds = faceFeature.bounds.intersection(extent)
+            guard bounds.width > 0, bounds.height > 0 else {
+                return nil
+            }
+
+            return VNFaceObservation(boundingBox: CGRect(
+                x: bounds.minX / extent.width,
+                y: bounds.minY / extent.height,
+                width: bounds.width / extent.width,
+                height: bounds.height / extent.height
+            ))
+        }
+        .sorted { area(of: $0.boundingBox) > area(of: $1.boundingBox) }
+        .prefix(Configuration.maxFacesPerImage))
     }
 
-    private static func alignedFaceImage(_ observation: VNFaceObservation, from image: CGImage) -> CGImage? {
+    private static func candidateFaceImages(_ observation: VNFaceObservation, from image: CGImage) -> [CGImage] {
+        var images: [CGImage] = []
         if
             let sourcePoints = fiveLandmarkPoints(for: observation, in: image),
             let transform = affineTransform(from: sourcePoints, to: targetLandmarkPoints()),
             let aligned = drawAlignedImage(image, transform: transform)
         {
-            return aligned
+            images.append(aligned)
         }
 
-        guard let crop = cropFace(observation, from: image) else {
-            return nil
+        if let crop = cropFace(observation, from: image), let resized = resizeFaceImage(crop) {
+            images.append(resized)
         }
-        return resizeFaceImage(crop)
+
+        return images
     }
 
     private static func fiveLandmarkPoints(for observation: VNFaceObservation, in image: CGImage) -> [CGPoint]? {
@@ -1255,7 +1295,7 @@ enum FaceMatcher {
 
         private init() {
             let configuration = MLModelConfiguration()
-            configuration.computeUnits = .all
+            configuration.computeUnits = .cpuOnly
 
             guard
                 let modelURL = Bundle.main.url(forResource: "SFaceEmbedding", withExtension: "mlmodelc") ??

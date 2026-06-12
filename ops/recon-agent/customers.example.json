@@ -1,0 +1,14 @@
+[
+  {
+    "label": "acme-co",
+    "keyEnv": "RECON_KEY_ACME",
+    "email": "founder@acme.co",
+    "financeInbox": "receipts@acme.co"
+  },
+  {
+    "label": "second-customer",
+    "keyEnv": "RECON_KEY_SECOND",
+    "email": "owner@example.com",
+    "financeInbox": ""
+  }
+]

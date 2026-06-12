@@ -1,0 +1,59 @@
+{
+  "engine": "recon-agent",
+  "version": "0.1.0",
+  "generatedAt": "2026-06-12T14:14:06.326Z",
+  "demo": true,
+  "account": "demo",
+  "windowHours": 24,
+  "currency": "usd",
+  "totals": {
+    "payments": 148,
+    "paymentsFailed": 3,
+    "gross": 1013094,
+    "grossDisplay": "$10,130.94",
+    "fees": 33819,
+    "feesDisplay": "$338.19",
+    "refunds": 2,
+    "refundTotal": 3142,
+    "refundTotalDisplay": "$31.42",
+    "net": 976133,
+    "netDisplay": "$9,761.33"
+  },
+  "payouts": [
+    {
+      "id": "po_demo_001",
+      "arrivalDate": 1781266446,
+      "status": "paid",
+      "amount": 790585,
+      "amountDisplay": "$7,905.85",
+      "expected": 793727,
+      "expectedDisplay": "$7,937.27",
+      "delta": 3142,
+      "deltaDisplay": "$31.42",
+      "matched": false,
+      "txnCount": 120
+    }
+  ],
+  "flags": [
+    {
+      "severity": "review",
+      "title": "Payout po_demo_001 is short by $31.42",
+      "detail": "Stripe paid $7,905.85 but its 120 transactions net to $7,937.27. Usually late refunds or fee timing — the transaction list in the CSV shows which."
+    },
+    {
+      "severity": "review",
+      "title": "2 refunds hit already-settled money",
+      "detail": "$31.42 was refunded on charges that already paid out. Your next payout will be smaller by that amount — this is the #1 cause of \"why is my payout short?\""
+    },
+    {
+      "severity": "info",
+      "title": "3 payments failed",
+      "detail": "$197.00 in attempted charges did not go through. Worth a retry email if these are subscriptions."
+    }
+  ],
+  "plainEnglish": [
+    "Stripe processed 148 payments for $10,130.94 gross. Fees were $338.19, and refunds totaled $31.42.",
+    "0 of 1 payouts matched exactly. The difference on the rest is explained in the flags below — nothing here looks scary, but it deserves a one-minute look.",
+    "3 items need a quick look — listed in order of urgency. Each one says exactly what to check."
+  ]
+}

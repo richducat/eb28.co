@@ -87,6 +87,18 @@ function getStatusTone(status) {
     return STATUS_TONE[status] || STATUS_TONE.MONITORING;
 }
 
+// Fixed display order (registry order) so lane cards never reshuffle when
+// statuses change between snapshots.
+const LANE_DISPLAY_ORDER = Object.fromEntries(Object.keys(LANE_INDEX).map((id, index) => [id, index]));
+
+function stableLaneSort(lanes) {
+    return (lanes || []).slice().sort((left, right) => {
+        const leftRank = LANE_DISPLAY_ORDER[left.id] ?? 99;
+        const rightRank = LANE_DISPLAY_ORDER[right.id] ?? 99;
+        return leftRank === rightRank ? String(left.id).localeCompare(String(right.id)) : leftRank - rightRank;
+    });
+}
+
 function isApiBackedHost(hostname) {
     return hostname === 'dashboard.eb28.co' || hostname === 'command-center.eb28.co' || hostname.endsWith('.vercel.app');
 }
@@ -909,7 +921,7 @@ const FundManager = () => {
                         </div>
 
                         <div className="space-y-3">
-                            {(snapshot?.lanes || []).map((lane) => {
+                            {stableLaneSort(snapshot?.lanes).map((lane) => {
                                 const tone = getStatusTone(lane.status);
                                 return (
                                     <div key={lane.id} className="rounded-2xl border border-[#22d3ee]/10 bg-black/20 p-3">

@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		1275274C98EE724AA473D7DF /* CadetCatchWidget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B83125A9EB26970103B95C7 /* CadetCatchWidget.swift */; };
 		1803DF1673BDFACEC4E88FB8 /* CadetCatchApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B411A624FCCD2E03B314585D /* CadetCatchApp.swift */; };
+		3FCD9E777DA12D4FD6581CED /* SFace-LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = CA12411C921485E045C46690 /* SFace-LICENSE.txt */; };
+		46988387C9E418EC4496D4F7 /* SFaceEmbedding.mlpackage in Sources */ = {isa = PBXBuildFile; fileRef = DA680ACA683482F76026E452 /* SFaceEmbedding.mlpackage */; };
 		7BFB0FCC3EE0DE8F7E453EDF /* ScanActivityAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF9BDE9017D1E75C5372F90E /* ScanActivityAttributes.swift */; };
 		7E81EC141AAA2DCEF9A2DADE /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3F6D70CBCE3F2ECAD841A5DF /* GoogleService-Info.plist */; };
 		84E31476B107183B7C57B437 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = A2FED9A84D982C3CA93BB578 /* GoogleSignIn */; };
@@ -50,6 +52,8 @@
 		A6360219BE0D5477842F4D3F /* OFL.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = OFL.txt; sourceTree = "<group>"; };
 		B411A624FCCD2E03B314585D /* CadetCatchApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CadetCatchApp.swift; sourceTree = "<group>"; };
 		B8E06E933A1EE6AB69FAFA51 /* CadetCatchWidget.appex */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = "wrapper.app-extension"; path = CadetCatchWidget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		CA12411C921485E045C46690 /* SFace-LICENSE.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "SFace-LICENSE.txt"; sourceTree = "<group>"; };
+		DA680ACA683482F76026E452 /* SFaceEmbedding.mlpackage */ = {isa = PBXFileReference; path = SFaceEmbedding.mlpackage; sourceTree = "<group>"; };
 		DF9BDE9017D1E75C5372F90E /* ScanActivityAttributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanActivityAttributes.swift; sourceTree = "<group>"; };
 		E8C96B8218BAF04E6D9EBBC0 /* drive_bot.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = drive_bot.html; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -79,6 +83,7 @@
 				182C8A978B5306A2C006921E /* Info.plist */,
 				26E2C58DB4AC745A57AB0638 /* LaunchScreen.storyboard */,
 				45588628ADAEC16B03DA577A /* Fonts */,
+				B0026FA27FE470BA50276EA0 /* Models */,
 			);
 			path = CadetCatch;
 			sourceTree = "<group>";
@@ -118,6 +123,15 @@
 				A6360219BE0D5477842F4D3F /* OFL.txt */,
 			);
 			path = Fonts;
+			sourceTree = "<group>";
+		};
+		B0026FA27FE470BA50276EA0 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				CA12411C921485E045C46690 /* SFace-LICENSE.txt */,
+				DA680ACA683482F76026E452 /* SFaceEmbedding.mlpackage */,
+			);
+			path = Models;
 			sourceTree = "<group>";
 		};
 		B3E6CE07A7ADB3E94ADE7574 /* Products */ = {
@@ -259,6 +273,7 @@
 				B4A649CB80775D86DE51B59E /* LaunchScreen.storyboard in Resources */,
 				ED5C223D6C5B9BAF960F2965 /* Montserrat.ttf in Resources */,
 				D830B0E7860C1F564045057B /* OFL.txt in Resources */,
+				3FCD9E777DA12D4FD6581CED /* SFace-LICENSE.txt in Resources */,
 				B9482FFA204AF8BF0E2FCC64 /* drive_bot.html in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -289,6 +304,7 @@
 			files = (
 				1803DF1673BDFACEC4E88FB8 /* CadetCatchApp.swift in Sources */,
 				D2BE76963AFCB5FBFEEEABEA /* GoogleDriveAuthManager.swift in Sources */,
+				46988387C9E418EC4496D4F7 /* SFaceEmbedding.mlpackage in Sources */,
 				BEA40F24BB61F6836ACB21DE /* ScanActivityAttributes.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

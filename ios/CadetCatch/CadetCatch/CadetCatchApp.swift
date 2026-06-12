@@ -1,3 +1,5 @@
+import CoreML
+import CryptoKit
 import Photos
 import PhotosUI
 import StoreKit
@@ -797,7 +799,7 @@ enum PublicPhotoScanner {
                 group.addTask {
                     guard let imageData = await downloadImageData(from: url) else { return nil }
                     await Task.yield()
-                    guard let match = FaceMatcher.match(reference: reference.descriptors, candidateImageData: imageData) else { return nil }
+                    guard let match = FaceMatcher.match(reference: reference.descriptors, candidateImageURL: url, candidateImageData: imageData) else { return nil }
                     guard match.confidence >= FaceMatcher.minimumAcceptedConfidence else { return nil }
                     
                     return PhotoCandidate(
@@ -974,23 +976,20 @@ struct FaceMatch {
 
 enum FaceMatcher {
     struct FaceDescriptor: @unchecked Sendable {
-        let featurePrint: VNFeaturePrintObservation?
-        let landmarkSignature: [Float]?
-        let appearanceSignature: [Float]?
+        let embedding: [Float]
+
+        init(embedding: [Float]) {
+            self.embedding = embedding
+        }
     }
 
     private enum Configuration {
         static let minimumAcceptedConfidence = 80
         static let maxFacesPerImage = 8
-        static let missingLandmarkPenalty: Float = 0.06
-        static let noLandmarkPenalty: Float = 0.1
-        static let landmarkDistanceWeight: Float = 0.35
-        static let maximumLandmarkDistance: Float = 0.36
-        static let bestDistance: Float = 0.16
-        static let worstDistance: Float = 0.88
-        static let appearanceDistanceWeight: Float = 1.15
-        static let maximumAppearanceDistance: Float = 0.22
-        static let appearanceGridSize = 16
+        static let embeddingDimension = 128
+        static let alignedFaceSize = 112
+        static let minimumCosineSimilarity: Float = 0.42
+        static let strongCosineSimilarity: Float = 0.72
     }
 
     static var minimumAcceptedConfidence: Int { Configuration.minimumAcceptedConfidence }
@@ -1000,8 +999,16 @@ enum FaceMatcher {
         return descriptors.isEmpty ? nil : descriptors
     }
 
-    static func match(reference: [FaceDescriptor], candidateImageData: Data) -> FaceMatch? {
-        let candidateDescriptors = faceDescriptors(in: candidateImageData)
+    static func match(reference: [FaceDescriptor], candidateImageURL: URL? = nil, candidateImageData: Data) -> FaceMatch? {
+        let candidateDescriptors: [FaceDescriptor]
+        if let candidateImageURL, let cachedDescriptors = EmbeddingCache.descriptors(for: candidateImageURL) {
+            candidateDescriptors = cachedDescriptors
+        } else {
+            candidateDescriptors = faceDescriptors(in: candidateImageData)
+            if let candidateImageURL, !candidateDescriptors.isEmpty {
+                EmbeddingCache.store(candidateDescriptors, for: candidateImageURL)
+            }
+        }
         guard !candidateDescriptors.isEmpty else { return nil }
 
         var bestConfidence = 0
@@ -1033,54 +1040,18 @@ enum FaceMatcher {
             }
         }
 
-        if !descriptors.isEmpty {
-            return descriptors
-        }
-
-        return fallbackPortraitDescriptors(in: cgImage)
+        return descriptors
     }
 
     private static func descriptorsFromDetectedFaces(in image: CGImage, orientation: CGImagePropertyOrientation) -> [FaceDescriptor] {
         detectFaces(in: image, orientation: orientation).compactMap { observation in
-            guard let crop = cropFace(observation, from: image) else { return nil }
-            let featurePrint = featurePrint(from: crop)
-            let appearanceSignature = appearanceSignature(from: crop)
-            guard featurePrint != nil || appearanceSignature != nil else { return nil }
-            return FaceDescriptor(
-                featurePrint: featurePrint,
-                landmarkSignature: landmarkSignature(for: observation),
-                appearanceSignature: appearanceSignature
-            )
-        }
-    }
-
-    private static func fallbackPortraitDescriptors(in image: CGImage) -> [FaceDescriptor] {
-        guard let crop = portraitFallbackCrop(from: image) else {
-            return []
-        }
-        let featurePrint = featurePrint(from: crop)
-        let appearanceSignature = appearanceSignature(from: crop)
-        guard featurePrint != nil || appearanceSignature != nil else {
-            return []
-        }
-
-        return [
-            FaceDescriptor(
-                featurePrint: featurePrint,
-                landmarkSignature: nil,
-                appearanceSignature: appearanceSignature
-            )
-        ]
-    }
-
-    private static func featurePrint(from image: CGImage) -> VNFeaturePrintObservation? {
-        let request = VNGenerateImageFeaturePrintRequest()
-        let handler = VNImageRequestHandler(cgImage: image, options: [:])
-        do {
-            try handler.perform([request])
-            return request.results?.first as? VNFeaturePrintObservation
-        } catch {
-            return nil
+            guard
+                let alignedFace = alignedFaceImage(observation, from: image),
+                let embedding = FaceEmbeddingModel.shared.embedding(from: alignedFace)
+            else {
+                return nil
+            }
+            return FaceDescriptor(embedding: embedding)
         }
     }
 
@@ -1111,102 +1082,357 @@ enum FaceMatcher {
             .prefix(Configuration.maxFacesPerImage))
     }
 
-    private static func confidence(for reference: FaceDescriptor, comparedTo candidate: FaceDescriptor) -> Int? {
-        var combinedDistance: Float
-        if let referencePrint = reference.featurePrint, let candidatePrint = candidate.featurePrint {
-            var featureDistance = Float(0)
-            do {
-                try referencePrint.computeDistance(&featureDistance, to: candidatePrint)
-            } catch {
-                return nil
-            }
-            guard featureDistance.isFinite else { return nil }
-            combinedDistance = featureDistance
-        } else if
-            let referenceSignature = reference.appearanceSignature,
-            let candidateSignature = candidate.appearanceSignature,
-            let distance = appearanceDistance(referenceSignature, candidateSignature)
+    private static func alignedFaceImage(_ observation: VNFaceObservation, from image: CGImage) -> CGImage? {
+        if
+            let sourcePoints = fiveLandmarkPoints(for: observation, in: image),
+            let transform = affineTransform(from: sourcePoints, to: targetLandmarkPoints()),
+            let aligned = drawAlignedImage(image, transform: transform)
         {
-            guard distance <= Configuration.maximumAppearanceDistance else { return nil }
-            combinedDistance = distance * Configuration.appearanceDistanceWeight
-        } else {
+            return aligned
+        }
+
+        guard let crop = cropFace(observation, from: image) else {
             return nil
         }
-
-        if
-            let referenceSignature = reference.landmarkSignature,
-            let candidateSignature = candidate.landmarkSignature,
-            let structuralDistance = landmarkDistance(referenceSignature, candidateSignature)
-        {
-            guard structuralDistance <= Configuration.maximumLandmarkDistance else { return nil }
-            combinedDistance += structuralDistance * Configuration.landmarkDistanceWeight
-        } else if reference.landmarkSignature == nil && candidate.landmarkSignature == nil {
-            combinedDistance += Configuration.noLandmarkPenalty
-        } else {
-            combinedDistance += Configuration.missingLandmarkPenalty
-        }
-
-        return confidenceScore(for: combinedDistance)
+        return resizeFaceImage(crop)
     }
 
-    private static func confidenceScore(for distance: Float) -> Int {
-        let normalized = (Configuration.worstDistance - distance) / (Configuration.worstDistance - Configuration.bestDistance)
-        return max(0, min(99, Int((normalized * 100).rounded())))
-    }
-
-    private static func landmarkDistance(_ reference: [Float], _ candidate: [Float]) -> Float? {
-        guard reference.count == candidate.count, !reference.isEmpty else { return nil }
-
-        let squaredSum = zip(reference, candidate).reduce(Float(0)) { partial, pair in
-            let delta = pair.0 - pair.1
-            return partial + (delta * delta)
-        }
-        return sqrt(squaredSum / Float(reference.count))
-    }
-
-    private static func appearanceDistance(_ reference: [Float], _ candidate: [Float]) -> Float? {
-        guard reference.count == candidate.count, !reference.isEmpty else { return nil }
-
-        let squaredSum = zip(reference, candidate).reduce(Float(0)) { partial, pair in
-            let delta = pair.0 - pair.1
-            return partial + (delta * delta)
-        }
-        return sqrt(squaredSum / Float(reference.count))
-    }
-
-    private static func landmarkSignature(for observation: VNFaceObservation) -> [Float]? {
-        guard let landmarks = observation.landmarks else { return nil }
-
+    private static func fiveLandmarkPoints(for observation: VNFaceObservation, in image: CGImage) -> [CGPoint]? {
         guard
+            let landmarks = observation.landmarks,
             let leftEye = center(of: landmarks.leftPupil ?? landmarks.leftEye),
             let rightEye = center(of: landmarks.rightPupil ?? landmarks.rightEye),
             let nose = center(of: landmarks.nose ?? landmarks.noseCrest),
-            let mouth = center(of: landmarks.outerLips)
+            let mouthRegion = landmarks.outerLips
         else {
             return nil
         }
 
-        let interocular = hypot(rightEye.x - leftEye.x, rightEye.y - leftEye.y)
-        guard interocular > 0.05 else { return nil }
+        let mouthPoints = normalizedPoints(in: mouthRegion)
+        guard
+            let mouthLeft = mouthPoints.min(by: { $0.x < $1.x }),
+            let mouthRight = mouthPoints.max(by: { $0.x < $1.x })
+        else {
+            return nil
+        }
 
-        let eyeMidpoint = CGPoint(x: (leftEye.x + rightEye.x) / 2, y: (leftEye.y + rightEye.y) / 2)
-        let leftBrowY = leftEye.y - 0.14
-        let rightBrowY = rightEye.y - 0.14
-        let mouthWidth = width(of: landmarks.outerLips)
-        let faceBox = observation.boundingBox
+        let eyes = [
+            imagePoint(leftEye, in: observation, image: image),
+            imagePoint(rightEye, in: observation, image: image)
+        ].sorted { $0.x < $1.x }
+
+        let mouthCorners = [
+            imagePoint(mouthLeft, in: observation, image: image),
+            imagePoint(mouthRight, in: observation, image: image)
+        ].sorted { $0.x < $1.x }
 
         return [
-            Float((nose.x - eyeMidpoint.x) / interocular),
-            Float((nose.y - eyeMidpoint.y) / interocular),
-            Float((mouth.x - eyeMidpoint.x) / interocular),
-            Float((mouth.y - eyeMidpoint.y) / interocular),
-            Float(((center(of: landmarks.leftEyebrow)?.y ?? leftBrowY) - eyeMidpoint.y) / interocular),
-            Float(((center(of: landmarks.rightEyebrow)?.y ?? rightBrowY) - eyeMidpoint.y) / interocular),
-            Float((rightEye.y - leftEye.y) / interocular),
-            Float(mouthWidth / interocular),
-            Float(faceBox.width / faceBox.height),
-            Float((mouth.x - nose.x) / interocular)
+            eyes[0],
+            eyes[1],
+            imagePoint(nose, in: observation, image: image),
+            mouthCorners[0],
+            mouthCorners[1]
         ]
+    }
+
+    private static func targetLandmarkPoints() -> [CGPoint] {
+        [
+            CGPoint(x: 38.2946, y: 51.6963),
+            CGPoint(x: 73.5318, y: 51.5014),
+            CGPoint(x: 56.0252, y: 71.7366),
+            CGPoint(x: 41.5493, y: 92.3655),
+            CGPoint(x: 70.7299, y: 92.2041)
+        ]
+    }
+
+    private static func imagePoint(_ point: CGPoint, in observation: VNFaceObservation, image: CGImage) -> CGPoint {
+        let box = observation.boundingBox
+        let normalizedX = box.minX + point.x * box.width
+        let normalizedY = box.minY + point.y * box.height
+        return CGPoint(
+            x: normalizedX * CGFloat(image.width),
+            y: (1 - normalizedY) * CGFloat(image.height)
+        )
+    }
+
+    private static func drawAlignedImage(_ image: CGImage, transform: CGAffineTransform) -> CGImage? {
+        let size = CGSize(width: Configuration.alignedFaceSize, height: Configuration.alignedFaceSize)
+        let format = UIGraphicsImageRendererFormat()
+        format.scale = 1
+        format.opaque = true
+        let renderedImage = UIGraphicsImageRenderer(size: size, format: format).image { context in
+            UIColor.black.setFill()
+            context.cgContext.fill(CGRect(origin: .zero, size: size))
+            context.cgContext.interpolationQuality = .high
+            context.cgContext.concatenate(transform)
+            UIImage(cgImage: image).draw(in: CGRect(x: 0, y: 0, width: CGFloat(image.width), height: CGFloat(image.height)))
+        }
+        return renderedImage.cgImage
+    }
+
+    private static func resizeFaceImage(_ image: CGImage) -> CGImage? {
+        let size = CGSize(width: Configuration.alignedFaceSize, height: Configuration.alignedFaceSize)
+        let format = UIGraphicsImageRendererFormat()
+        format.scale = 1
+        format.opaque = true
+        let renderedImage = UIGraphicsImageRenderer(size: size, format: format).image { context in
+            UIColor.black.setFill()
+            context.cgContext.fill(CGRect(origin: .zero, size: size))
+            context.cgContext.interpolationQuality = .high
+            UIImage(cgImage: image).draw(in: CGRect(origin: .zero, size: size))
+        }
+        return renderedImage.cgImage
+    }
+
+    private static func affineTransform(from sourcePoints: [CGPoint], to targetPoints: [CGPoint]) -> CGAffineTransform? {
+        guard sourcePoints.count == targetPoints.count, sourcePoints.count >= 3 else {
+            return nil
+        }
+
+        var ata = Array(repeating: Array(repeating: CGFloat(0), count: 3), count: 3)
+        var atx = Array(repeating: CGFloat(0), count: 3)
+        var aty = Array(repeating: CGFloat(0), count: 3)
+
+        for index in sourcePoints.indices {
+            let row = [sourcePoints[index].x, sourcePoints[index].y, CGFloat(1)]
+            for outer in 0..<3 {
+                atx[outer] += row[outer] * targetPoints[index].x
+                aty[outer] += row[outer] * targetPoints[index].y
+                for inner in 0..<3 {
+                    ata[outer][inner] += row[outer] * row[inner]
+                }
+            }
+        }
+
+        guard
+            let xCoefficients = solve3x3(ata, atx),
+            let yCoefficients = solve3x3(ata, aty)
+        else {
+            return nil
+        }
+
+        return CGAffineTransform(
+            a: xCoefficients[0],
+            b: yCoefficients[0],
+            c: xCoefficients[1],
+            d: yCoefficients[1],
+            tx: xCoefficients[2],
+            ty: yCoefficients[2]
+        )
+    }
+
+    private static func solve3x3(_ matrix: [[CGFloat]], _ vector: [CGFloat]) -> [CGFloat]? {
+        let determinant =
+            matrix[0][0] * (matrix[1][1] * matrix[2][2] - matrix[1][2] * matrix[2][1]) -
+            matrix[0][1] * (matrix[1][0] * matrix[2][2] - matrix[1][2] * matrix[2][0]) +
+            matrix[0][2] * (matrix[1][0] * matrix[2][1] - matrix[1][1] * matrix[2][0])
+        guard abs(determinant) > 0.000001 else {
+            return nil
+        }
+
+        func determinantWithColumn(_ column: Int) -> CGFloat {
+            var replaced = matrix
+            for row in 0..<3 {
+                replaced[row][column] = vector[row]
+            }
+            return
+                replaced[0][0] * (replaced[1][1] * replaced[2][2] - replaced[1][2] * replaced[2][1]) -
+                replaced[0][1] * (replaced[1][0] * replaced[2][2] - replaced[1][2] * replaced[2][0]) +
+                replaced[0][2] * (replaced[1][0] * replaced[2][1] - replaced[1][1] * replaced[2][0])
+        }
+
+        return [
+            determinantWithColumn(0) / determinant,
+            determinantWithColumn(1) / determinant,
+            determinantWithColumn(2) / determinant
+        ]
+    }
+
+    private final class FaceEmbeddingModel: @unchecked Sendable {
+        static let shared = FaceEmbeddingModel()
+
+        private let model: MLModel?
+
+        private init() {
+            let configuration = MLModelConfiguration()
+            configuration.computeUnits = .all
+
+            guard
+                let modelURL = Bundle.main.url(forResource: "SFaceEmbedding", withExtension: "mlmodelc") ??
+                    Bundle.main.url(forResource: "SFaceEmbedding", withExtension: "mlpackage")
+            else {
+                model = nil
+                return
+            }
+
+            model = try? MLModel(contentsOf: modelURL, configuration: configuration)
+        }
+
+        func embedding(from image: CGImage) -> [Float]? {
+            guard
+                let model,
+                let input = Self.inputArray(from: image),
+                let provider = try? MLDictionaryFeatureProvider(dictionary: [
+                    "data": MLFeatureValue(multiArray: input)
+                ]),
+                let output = try? model.prediction(from: provider),
+                let embeddingArray = output.featureValue(for: "embedding")?.multiArrayValue
+            else {
+                return nil
+            }
+
+            return Self.normalizedEmbedding(from: embeddingArray)
+        }
+
+        private static func inputArray(from image: CGImage) -> MLMultiArray? {
+            let size = Configuration.alignedFaceSize
+            let pixelCount = size * size
+            var pixels = [UInt8](repeating: 0, count: pixelCount * 4)
+            guard
+                let colorSpace = CGColorSpace(name: CGColorSpace.sRGB),
+                let context = CGContext(
+                    data: &pixels,
+                    width: size,
+                    height: size,
+                    bitsPerComponent: 8,
+                    bytesPerRow: size * 4,
+                    space: colorSpace,
+                    bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue | CGBitmapInfo.byteOrder32Big.rawValue
+                )
+            else {
+                return nil
+            }
+
+            context.interpolationQuality = .high
+            context.draw(image, in: CGRect(x: 0, y: 0, width: CGFloat(size), height: CGFloat(size)))
+
+            guard let array = try? MLMultiArray(
+                shape: [1, 3, size, size].map { NSNumber(value: $0) },
+                dataType: .float32
+            ) else {
+                return nil
+            }
+
+            let strides = array.strides.map(\.intValue)
+            let pointer = array.dataPointer.bindMemory(to: Float.self, capacity: 3 * pixelCount)
+
+            for y in 0..<size {
+                for x in 0..<size {
+                    let pixelOffset = (y * size + x) * 4
+                    let red = Float(pixels[pixelOffset])
+                    let green = Float(pixels[pixelOffset + 1])
+                    let blue = Float(pixels[pixelOffset + 2])
+                    pointer[0 * strides[0] + 0 * strides[1] + y * strides[2] + x * strides[3]] = red
+                    pointer[0 * strides[0] + 1 * strides[1] + y * strides[2] + x * strides[3]] = green
+                    pointer[0 * strides[0] + 2 * strides[1] + y * strides[2] + x * strides[3]] = blue
+                }
+            }
+
+            return array
+        }
+
+        private static func normalizedEmbedding(from array: MLMultiArray) -> [Float]? {
+            guard array.count == Configuration.embeddingDimension else {
+                return nil
+            }
+
+            let pointer = array.dataPointer.bindMemory(to: Float.self, capacity: array.count)
+            var values = (0..<array.count).map { pointer[$0] }
+            let norm = sqrt(values.reduce(Float(0)) { $0 + ($1 * $1) })
+            guard norm > 0 else {
+                return nil
+            }
+            values = values.map { $0 / norm }
+            return values
+        }
+    }
+
+    private enum EmbeddingCache {
+        private struct Payload: Codable {
+            let modelVersion: String
+            let embeddings: [[Float]]
+        }
+
+        private static let modelVersion = "sface-2021dec-coreml-fp16-v1"
+
+        static func descriptors(for url: URL) -> [FaceDescriptor]? {
+            guard
+                let cacheURL = cacheFileURL(for: url),
+                let data = try? Data(contentsOf: cacheURL),
+                let payload = try? JSONDecoder().decode(Payload.self, from: data),
+                payload.modelVersion == modelVersion,
+                !payload.embeddings.isEmpty
+            else {
+                return nil
+            }
+
+            return payload.embeddings.map { FaceDescriptor(embedding: $0) }
+        }
+
+        static func store(_ descriptors: [FaceDescriptor], for url: URL) {
+            let embeddings = descriptors.map(\.embedding)
+            guard
+                !embeddings.isEmpty,
+                let cacheURL = cacheFileURL(for: url)
+            else {
+                return
+            }
+
+            try? FileManager.default.createDirectory(
+                at: cacheURL.deletingLastPathComponent(),
+                withIntermediateDirectories: true
+            )
+            let payload = Payload(modelVersion: modelVersion, embeddings: embeddings)
+            guard let data = try? JSONEncoder().encode(payload) else {
+                return
+            }
+            try? data.write(to: cacheURL, options: .atomic)
+        }
+
+        private static func cacheFileURL(for url: URL) -> URL? {
+            guard let cachesDirectory = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first else {
+                return nil
+            }
+            return cachesDirectory
+                .appendingPathComponent("CadetCatchFaceEmbeddings", isDirectory: true)
+                .appendingPathComponent(cacheKey(for: url))
+                .appendingPathExtension("json")
+        }
+
+        private static func cacheKey(for url: URL) -> String {
+            let digest = SHA256.hash(data: Data(url.absoluteString.utf8))
+            return digest.map { String(format: "%02x", $0) }.joined()
+        }
+    }
+
+    private static func confidence(for reference: FaceDescriptor, comparedTo candidate: FaceDescriptor) -> Int? {
+        guard
+            let similarity = cosineSimilarity(reference.embedding, candidate.embedding),
+            similarity >= Configuration.minimumCosineSimilarity
+        else {
+            return nil
+        }
+
+        return confidenceScore(forCosineSimilarity: similarity)
+    }
+
+    private static func confidenceScore(forCosineSimilarity similarity: Float) -> Int {
+        let normalized = (similarity - Configuration.minimumCosineSimilarity) / (Configuration.strongCosineSimilarity - Configuration.minimumCosineSimilarity)
+        return max(Configuration.minimumAcceptedConfidence, min(99, Configuration.minimumAcceptedConfidence + Int((normalized * 19).rounded())))
+    }
+
+    private static func cosineSimilarity(_ reference: [Float], _ candidate: [Float]) -> Float? {
+        guard reference.count == candidate.count, reference.count == Configuration.embeddingDimension else { return nil }
+        var dot = Float(0)
+        var referenceNorm = Float(0)
+        var candidateNorm = Float(0)
+        for index in reference.indices {
+            dot += reference[index] * candidate[index]
+            referenceNorm += reference[index] * reference[index]
+            candidateNorm += candidate[index] * candidate[index]
+        }
+        guard referenceNorm > 0, candidateNorm > 0 else { return nil }
+        return dot / (sqrt(referenceNorm) * sqrt(candidateNorm))
     }
 
     private static func cropFace(_ observation: VNFaceObservation, from image: CGImage) -> CGImage? {
@@ -1280,13 +1506,6 @@ enum FaceMatcher {
         return CGPoint(x: sum.x / count, y: sum.y / count)
     }
 
-    private static func width(of region: VNFaceLandmarkRegion2D?) -> CGFloat {
-        guard let region else { return 0 }
-        let points = normalizedPoints(in: region)
-        guard let minX = points.map(\.x).min(), let maxX = points.map(\.x).max() else { return 0 }
-        return maxX - minX
-    }
-
     private static func normalizedPoints(in region: VNFaceLandmarkRegion2D) -> [CGPoint] {
         let rawPoints = region.normalizedPoints
         return (0..<region.pointCount).map { index in
@@ -1303,47 +1522,6 @@ enum FaceMatcher {
         return orientations
     }
 
-    private static func portraitFallbackCrop(from image: CGImage) -> CGImage? {
-        let width = CGFloat(image.width)
-        let height = CGFloat(image.height)
-        let rect = CGRect(
-            x: width * 0.25,
-            y: height * 0.28,
-            width: width * 0.5,
-            height: height * 0.5
-        ).intersection(CGRect(x: 0, y: 0, width: width, height: height))
-        guard rect.width > 24, rect.height > 24 else { return nil }
-        return image.cropping(to: rect)
-    }
-
-    private static func appearanceSignature(from image: CGImage) -> [Float]? {
-        let gridSize = Configuration.appearanceGridSize
-        let pixelCount = gridSize * gridSize
-        var pixels = [UInt8](repeating: 0, count: pixelCount)
-        guard
-            let colorSpace = CGColorSpace(name: CGColorSpace.linearGray),
-            let context = CGContext(
-                data: &pixels,
-                width: gridSize,
-                height: gridSize,
-                bitsPerComponent: 8,
-                bytesPerRow: gridSize,
-                space: colorSpace,
-                bitmapInfo: CGImageAlphaInfo.none.rawValue
-            )
-        else {
-            return nil
-        }
-
-        context.interpolationQuality = .high
-        context.draw(image, in: CGRect(x: 0, y: 0, width: gridSize, height: gridSize))
-        let values = pixels.map { Float($0) / 255 }
-        let mean = values.reduce(Float(0), +) / Float(values.count)
-        let centered = values.map { $0 - mean }
-        let energy = sqrt(centered.reduce(Float(0)) { $0 + ($1 * $1) } / Float(centered.count))
-        guard energy > 0.001 else { return values }
-        return centered.map { $0 / energy }
-    }
 }
 
 extension CGImagePropertyOrientation {

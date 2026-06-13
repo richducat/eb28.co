@@ -1,0 +1,506 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Automated Lead Follow-Up for Contractors: Stop Losing Jobs | EB28</title>
+    <meta name="description" content="Automated lead follow-up for contractors: capture web inquiries, qualify jobs, trigger fast replies, and stop hot leads from going cold." />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <link rel="canonical" href="https://eb28.co/blog/automated-lead-follow-up-for-contractors-how-to-stop-losing-hot-enquiries/" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:site_name" content="EB28" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Automated Lead Follow-Up for Contractors: Stop Losing Jobs | EB28" />
+    <meta property="og:description" content="Automated lead follow-up for contractors: capture web inquiries, qualify jobs, trigger fast replies, and stop hot leads from going cold." />
+    <meta property="og:url" content="https://eb28.co/blog/automated-lead-follow-up-for-contractors-how-to-stop-losing-hot-enquiries/" />
+    <meta property="og:image" content="https://eb28.co/assets/execution_grid.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Automated Lead Follow-Up for Contractors: Stop Losing Jobs | EB28" />
+    <meta name="twitter:description" content="Automated lead follow-up for contractors: capture web inquiries, qualify jobs, trigger fast replies, and stop hot leads from going cold." />
+    <meta name="twitter:image" content="https://eb28.co/assets/execution_grid.png" />
+    <style>
+    :root {
+      color-scheme: light;
+      --ink: #101827;
+      --muted: #4b5563;
+      --line: #d9e2ef;
+      --soft: #f6f8fb;
+      --accent: #155eef;
+      --accent-dark: #0f3f9e;
+      --green: #087443;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: #ffffff;
+      line-height: 1.65;
+    }
+    a { color: inherit; }
+    .skip-link {
+      position: absolute;
+      left: 1rem;
+      top: -4rem;
+      z-index: 20;
+      background: var(--ink);
+      color: white;
+      padding: .75rem 1rem;
+      border-radius: .5rem;
+    }
+    .skip-link:focus { top: 1rem; }
+    .site-header {
+      border-bottom: 1px solid var(--line);
+      background: rgba(255,255,255,.94);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .nav {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 1rem 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    .brand {
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: .75rem;
+      font-weight: 850;
+      letter-spacing: 0;
+    }
+    .brand-mark {
+      width: 2.25rem;
+      height: 2.25rem;
+      border-radius: .5rem;
+      background: var(--ink);
+      color: white;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .85rem;
+    }
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .9rem;
+      align-items: center;
+      font-size: .92rem;
+      color: var(--muted);
+    }
+    .nav-links a { text-decoration: none; }
+    .nav-links a:hover { color: var(--accent); }
+    .cta-link {
+      background: var(--accent);
+      color: #fff !important;
+      padding: .7rem .95rem;
+      border-radius: .5rem;
+      font-weight: 800;
+    }
+    main { min-height: 70vh; }
+    .hero {
+      background: linear-gradient(180deg, #f8fbff 0%, #fff 100%);
+      border-bottom: 1px solid var(--line);
+    }
+    .hero-inner, .section, .article-shell {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 4.5rem 1.25rem;
+    }
+    .eyebrow {
+      margin: 0 0 .9rem;
+      color: var(--accent);
+      font-size: .76rem;
+      text-transform: uppercase;
+      letter-spacing: .14em;
+      font-weight: 850;
+    }
+    h1, h2, h3 { line-height: 1.12; letter-spacing: 0; }
+    h1 {
+      max-width: 890px;
+      margin: 0;
+      font-size: clamp(2.35rem, 6vw, 4.65rem);
+    }
+    .lead {
+      max-width: 760px;
+      margin: 1.25rem 0 0;
+      color: var(--muted);
+      font-size: clamp(1.04rem, 2vw, 1.25rem);
+    }
+    .meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .75rem;
+      margin-top: 1.5rem;
+      color: var(--muted);
+      font-size: .92rem;
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      border: 1px solid var(--line);
+      background: white;
+      border-radius: 999px;
+      padding: .38rem .7rem;
+      font-weight: 700;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1rem;
+    }
+    .card {
+      border: 1px solid var(--line);
+      border-radius: .5rem;
+      background: white;
+      padding: 1.2rem;
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      min-height: 100%;
+    }
+    .card:hover { border-color: #9db8f9; box-shadow: 0 14px 36px rgba(15, 23, 42, .08); }
+    .card .kicker {
+      color: var(--accent);
+      font-size: .72rem;
+      font-weight: 850;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      margin-bottom: .85rem;
+    }
+    .card h2, .card h3 {
+      margin: 0;
+      font-size: 1.24rem;
+    }
+    .card p {
+      color: var(--muted);
+      margin: .85rem 0 0;
+    }
+    .card .read {
+      margin-top: auto;
+      padding-top: 1rem;
+      color: var(--accent);
+      font-weight: 850;
+    }
+    .band {
+      background: var(--soft);
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+    .article-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 280px;
+      gap: 3rem;
+      align-items: start;
+    }
+    article {
+      max-width: 760px;
+    }
+    article h2 {
+      font-size: 2rem;
+      margin: 2.75rem 0 .8rem;
+    }
+    article h3 {
+      margin: 1.5rem 0 .5rem;
+    }
+    article p {
+      color: #243044;
+      font-size: 1.05rem;
+    }
+    article ul {
+      padding-left: 1.25rem;
+      color: #243044;
+    }
+    article li { margin: .45rem 0; }
+    .toc, .aside-box {
+      border: 1px solid var(--line);
+      border-radius: .5rem;
+      padding: 1rem;
+      background: #fff;
+    }
+    .toc {
+      position: sticky;
+      top: 5.5rem;
+    }
+    .toc h2, .aside-box h2 {
+      font-size: 1rem;
+      margin: 0 0 .75rem;
+    }
+    .toc a, .aside-box a {
+      display: block;
+      color: var(--muted);
+      text-decoration: none;
+      margin: .55rem 0;
+      font-size: .92rem;
+    }
+    .toc a:hover, .aside-box a:hover { color: var(--accent); }
+    .quote {
+      border-left: 4px solid var(--accent);
+      background: #f5f8ff;
+      padding: 1rem 1.25rem;
+      border-radius: .5rem;
+      margin: 2rem 0;
+      color: #1f3158;
+      font-weight: 700;
+    }
+    .next-links {
+      border: 1px solid #b8cdfd;
+      background: #f7faff;
+      border-radius: .5rem;
+      padding: 1.25rem;
+      margin: 2.5rem 0;
+    }
+    .next-links h2 {
+      margin-top: 0;
+    }
+    .next-link-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: .85rem;
+      margin-top: 1rem;
+    }
+    .next-link-card {
+      display: block;
+      border: 1px solid var(--line);
+      border-radius: .5rem;
+      background: #fff;
+      padding: 1rem;
+      text-decoration: none;
+    }
+    .next-link-card strong {
+      display: block;
+      color: var(--accent-dark);
+      line-height: 1.25;
+    }
+    .next-link-card span {
+      display: block;
+      color: var(--muted);
+      font-size: .9rem;
+      margin-top: .45rem;
+    }
+    .next-link-card:hover {
+      border-color: #86a8fb;
+      box-shadow: 0 10px 24px rgba(15, 23, 42, .07);
+    }
+    .cta {
+      margin: 3rem 0 0;
+      padding: 1.5rem;
+      background: #0f172a;
+      color: white;
+      border-radius: .5rem;
+    }
+    .cta p { color: #cbd5e1; }
+    .cta a {
+      display: inline-flex;
+      margin-top: .75rem;
+      background: #fff;
+      color: #0f172a;
+      text-decoration: none;
+      border-radius: .5rem;
+      padding: .8rem 1rem;
+      font-weight: 850;
+    }
+    .faq details {
+      border: 1px solid var(--line);
+      border-radius: .5rem;
+      padding: 1rem;
+      margin: .75rem 0;
+      background: #fff;
+    }
+    .faq summary {
+      cursor: pointer;
+      font-weight: 850;
+    }
+    .footer {
+      border-top: 1px solid var(--line);
+      padding: 2rem 1.25rem;
+      color: var(--muted);
+      font-size: .9rem;
+    }
+    .footer-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: space-between;
+    }
+    @media (max-width: 860px) {
+      .nav { align-items: flex-start; flex-direction: column; }
+      .grid { grid-template-columns: 1fr; }
+      .article-layout { grid-template-columns: 1fr; }
+      .next-link-grid { grid-template-columns: 1fr; }
+      .toc { position: static; }
+      .hero-inner, .section, .article-shell { padding: 3rem 1rem; }
+    }
+  </style>
+    <script type="application/ld+json">[{"@context":"https://schema.org","@type":"BlogPosting","headline":"Automated Lead Follow-Up for Contractors: Stop Losing Jobs","description":"Automated lead follow-up for contractors: capture web inquiries, qualify jobs, trigger fast replies, and stop hot leads from going cold.","mainEntityOfPage":"https://eb28.co/blog/automated-lead-follow-up-for-contractors-how-to-stop-losing-hot-enquiries/","url":"https://eb28.co/blog/automated-lead-follow-up-for-contractors-how-to-stop-losing-hot-enquiries/","datePublished":"2026-06-13","dateModified":"2026-06-13","author":{"@type":"Organization","name":"EB28","url":"https://eb28.co"},"publisher":{"@type":"Organization","name":"EB28","url":"https://eb28.co","logo":{"@type":"ImageObject","url":"https://eb28.co/favicon.svg"}},"image":"https://eb28.co/assets/execution_grid.png","keywords":["automated lead follow up for contractors","lead-automation"]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://eb28.co/"},{"@type":"ListItem","position":2,"name":"Blog","item":"https://eb28.co/blog/"},{"@type":"ListItem","position":3,"name":"Automated Lead Follow-Up for Contractors: Stop Losing Jobs","item":"https://eb28.co/blog/automated-lead-follow-up-for-contractors-how-to-stop-losing-hot-enquiries/"}]},{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What should automated lead follow-up for contractors include?","acceptedAnswer":{"@type":"Answer","text":"It should confirm the inquiry, qualify the job, record the source page, alert the right person, and send useful reminders without pretending the relationship is fully automated."}},{"@type":"Question","name":"How often should contractors review lead follow-up pages?","acceptedAnswer":{"@type":"Answer","text":"Review them after Search Console has enough data, then refresh titles, intros, FAQs, citations, and internal links when the page gains impressions but sits below page one."}}]}]</script>
+    <script>(function(){fetch('/analytics-config.json',{cache:'no-store'}).then(function(r){return r.ok?r.json():null;}).then(function(cfg){var id=cfg&&String(cfg.ga4MeasurementId||'').trim();if(!id)return;var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id='+encodeURIComponent(id);document.head.appendChild(s);window.dataLayer=window.dataLayer||[];function gtag(){window.dataLayer.push(arguments);}window.gtag=gtag;gtag('js',new Date());gtag('config',id);}).catch(function(){});})();</script>
+  </head>
+  <body>
+
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <header class="site-header">
+      <nav class="nav" aria-label="Primary">
+        <a class="brand" href="/">
+          <span class="brand-mark">EB</span>
+          <span>EB28 Organic Growth Library</span>
+        </a>
+        <div class="nav-links">
+          <a href="/">Home</a>
+          <a href="/melbournewebstudio/">Melbourne Web Studio</a>
+          <a href="/reconcile/">Recon Agent</a>
+          <a href="/blog/">Blog</a>
+          <a class="cta-link" href="/melbournewebstudio/#quiz">Start Project</a>
+        </div>
+      </nav>
+    </header>
+
+    <main id="main-content">
+      <section class="hero">
+        <div class="hero-inner">
+          <p class="eyebrow">Morning growth brief</p>
+          <h1>Automated Lead Follow-Up for Contractors: Stop Losing Jobs</h1>
+          <p class="lead">A plain-English AM growth brief for contractors, focused on speed-to-lead, qualification, owner-controlled automation, and the follow-up fixes most likely to create booked jobs.</p>
+          <div class="meta-row">
+            <span class="pill">automated lead follow up for contractors</span>
+            <span class="pill">June 13, 2026</span>
+            <span class="pill">3 min read</span>
+          </div>
+        </div>
+      </section>
+
+      <div class="article-shell">
+        <div class="article-layout">
+          <article>
+            <p class="quote">The goal is not more content for its own sake. The goal is a clearer path from search impression to qualified lead.</p>
+
+                  <section id="why-this-search-matters">
+                    <h2>Why this search matters</h2>
+                    <p>Someone searching for &quot;automated lead follow up for contractors&quot; is usually closer to a buying decision than a research rabbit hole. They want to know what to fix, who to trust, and whether the next step is worth their time.</p><p>The contractor does not only need more leads. They need fewer missed calls, slower competitors, and a follow-up path that turns form fills into booked estimates.</p>
+                    <ul><li>Answer the question in the first few lines</li><li>Use the same phrase a real buyer would use</li><li>Show what a serious fix includes</li><li>Give the reader a direct next step instead of a vague contact prompt</li></ul>
+                  </section>
+
+                  <section id="what-to-fix-first">
+                    <h2>What to fix first</h2>
+                    <p>Start with the handoff after the form: confirmation, qualification, routing, reminders, and a fast human reply when the lead is worth it.</p><p>Do not bury the fix inside a giant redesign. A small improvement to a page that already gets impressions can beat a bigger project that never ships.</p>
+                    <ul><li>Map what happens in the first five minutes after a lead comes in</li><li>Separate simple FAQs from high-value consult requests</li><li>Link automation articles back to the website conversion checklist</li><li>Track source page and intent so follow-up can match the buyer problem</li></ul>
+                  </section>
+
+                  <section id="how-eb28-turns-it-into-a-system">
+                    <h2>How EB28 turns it into a system</h2>
+                    <p>Automation should support the sale without pretending to be the whole relationship. The best system captures intent, follows up quickly, and keeps the owner in control.</p><p>EB28 connects the website, forms, qualifying questions, reminders, and search data so the follow-up path matches the job a buyer actually asked about.</p>
+                    <ul><li>Trigger a fast confirmation the moment the inquiry lands</li><li>Tag the source page, service type, location, urgency, and budget signal</li><li>Route high-intent jobs to a real person instead of hiding them in a shared inbox</li><li>Review Search Console and form data together so content, ads, and follow-up improve from the same evidence</li></ul>
+                  </section>
+
+
+
+                  <section class="next-links" id="recommended-next-steps">
+                    <h2>Where to go next</h2>
+                    <p>If this hit the problem you are seeing, these pages will help you find the next leak before you spend money fixing the wrong thing.</p>
+                    <div class="next-link-grid">
+
+                            <a class="next-link-card" href="/">
+                              <strong>EB28</strong>
+                              <span>Connects contractor lead automation readers back to the main EB28 service path.</span>
+                            </a>
+
+                            <a class="next-link-card" href="/melbournewebstudio/#quiz">
+                              <strong>Melbourne Web Studio lead leak quiz</strong>
+                              <span>Gives service businesses a direct conversion audit path before they rebuild pages.</span>
+                            </a>
+
+                            <a class="next-link-card" href="/blog/ai-lead-follow-up-local-service-business/">
+                              <strong>AI lead follow-up for local service businesses</strong>
+                              <span>Connects automation ideas to the buyer moments where slow replies lose work.</span>
+                            </a>
+
+                            <a class="next-link-card" href="/blog/website-conversion-checklist-melbourne-fl/">
+                              <strong>Website conversion checklist for Melbourne FL</strong>
+                              <span>Shows how the page and follow-up path need to work together.</span>
+                            </a>
+
+                            <a class="next-link-card" href="/reconcile/">
+                              <strong>Recon Agent founder beta</strong>
+                              <span>Links operational automation readers into a concrete EB28 product path.</span>
+                            </a>
+
+                            <a class="next-link-card" href="/blog/local-seo-map-pack-melbourne-fl/">
+                              <strong>Local SEO map pack checklist for Melbourne FL</strong>
+                              <span>Keeps organic-growth content tied to the strongest local-search cluster.</span>
+                            </a>
+
+                    </div>
+                  </section>
+
+
+
+                  <section class="faq" id="faq">
+                    <h2>FAQs</h2>
+
+                          <details>
+                            <summary>What should automated lead follow-up for contractors include?</summary>
+                            <p>It should confirm the inquiry, qualify the job, record the source page, alert the right person, and send useful reminders without pretending the relationship is fully automated.</p>
+                          </details>
+
+                          <details>
+                            <summary>How often should contractors review lead follow-up pages?</summary>
+                            <p>Review them after Search Console has enough data, then refresh titles, intros, FAQs, citations, and internal links when the page gains impressions but sits below page one.</p>
+                          </details>
+
+                  </section>
+
+
+
+                  <section id="sources">
+                    <h2>Sources and citations</h2>
+                    <ul>
+                      <li><a href="https://developers.google.com/search/docs/fundamentals/seo-starter-guide" rel="noopener noreferrer" target="_blank">Google Search Central: SEO Starter Guide</a></li><li><a href="https://developers.google.com/search/docs/advanced/crawling/ask-google-to-recrawl" rel="noopener noreferrer" target="_blank">Google Search Central: Ask Google to recrawl URLs</a></li>
+                    </ul>
+                  </section>
+
+
+            <section class="cta">
+              <h2>Turn this into a lead system</h2>
+              <p>EB28 builds the website, local SEO, private AI, and follow-up automation needed to turn organic traffic into customers.</p>
+              <a href="/melbournewebstudio/#quiz">Start the project brief</a>
+            </section>
+          </article>
+
+          <aside>
+            <div class="toc">
+              <h2>On this page</h2>
+              <a href="#why-this-search-matters">Why this search matters</a><a href="#what-to-fix-first">What to fix first</a><a href="#how-eb28-turns-it-into-a-system">How EB28 turns it into a system</a>
+              <a href="#recommended-next-steps">Where to go next</a>
+              <a href="#faq">FAQs</a>
+              <a href="#sources">Sources</a>
+            </div>
+
+            <div class="aside-box" style="margin-top: 1rem;">
+              <h2>Related articles</h2>
+              <a href="/blog/local-seo-map-pack-melbourne-fl/">Local SEO Map Pack Checklist for Melbourne FL Service Businesses</a><a href="/blog/website-conversion-checklist-melbourne-fl/">Website Conversion Checklist for Melbourne FL Businesses</a><a href="/blog/melbourne-fl-web-design-cost-guide-2026/">Melbourne FL Web Design Cost Guide for Lead-Driven Local Businesses</a>
+            </div>
+
+            <div class="aside-box" style="margin-top: 1rem;">
+              <h2>Internal links</h2>
+              <a href="/">EB28 private AI and app development homepage</a><a href="/melbournewebstudio/">Melbourne Web Studio local website builder page</a><a href="/reconcile/">Recon Agent founder beta</a>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        <span>© 2026 EB28. Built for organic leads, private AI infrastructure, and measurable local growth.</span>
+        <span><a href="/sitemap.xml">Sitemap</a> · <a href="/blog/">Blog</a> · <a href="/melbournewebstudio/">Melbourne Web Studio</a></span>
+      </div>
+    </footer>
+
+  </body>
+</html>

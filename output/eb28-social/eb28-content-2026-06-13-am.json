@@ -1,0 +1,44 @@
+{
+  "brand": "EB28",
+  "generatedAt": "2026-06-13T10:03:18.337Z",
+  "runId": "2026-06-13-am",
+  "slot": "am",
+  "article": {
+    "title": "Automated Lead Follow-Up for Contractors: Stop Losing Jobs",
+    "url": "https://eb28.co/blog/automated-lead-follow-up-for-contractors-how-to-stop-losing-hot-enquiries/",
+    "cluster": "lead-automation",
+    "primaryKeyword": "automated lead follow up for contractors"
+  },
+  "posts": {
+    "blog": {
+      "title": "Automated Lead Follow-Up for Contractors: Stop Losing Jobs",
+      "url": "https://eb28.co/blog/automated-lead-follow-up-for-contractors-how-to-stop-losing-hot-enquiries/",
+      "status": "ready_for_build_and_deploy"
+    },
+    "facebook": {
+      "caption": "Automated Lead Follow-Up for Contractors: Stop Losing Jobs\n\nA practical guide for contractors that want fewer missed web inquiries, faster qualification, and a cleaner path from visitor to booked estimate.\n\nRead it: https://eb28.co/blog/automated-lead-follow-up-for-contractors-how-to-stop-losing-hot-enquiries/",
+      "status": "draft_only_verified_eb28_owned_channel_required"
+    },
+    "instagram": {
+      "caption": "automated lead follow up for contractors: the practical version.\n\nWe broke down what to fix first, how to connect it to real lead flow, and what EB28 checks daily to keep search growth moving.\n\nRead the full guide at eb28.co/blog/",
+      "creativeBrief": "Carousel: Slide 1 problem statement, Slide 2 what to fix first, Slide 3 technical SEO checks, Slide 4 internal links, Slide 5 CTA to project brief.",
+      "status": "draft_only_verified_eb28_owned_channel_required"
+    },
+    "x": {
+      "caption": "Automated Lead Follow-Up for Contractors: Stop Losing Jobs\n\nThe key: connect the search intent to a page that is fast, useful, internally linked, and measured from form fill to booked estimate.\n\nhttps://eb28.co/blog/automated-lead-follow-up-for-contractors-how-to-stop-losing-hot-enquiries/",
+      "status": "draft_only_verified_eb28_owned_channel_required"
+    },
+    "linkedin": {
+      "caption": "New EB28 growth brief: Automated Lead Follow-Up for Contractors: Stop Losing Jobs\n\nThis covers the practical SEO, conversion, and speed-to-lead fixes that turn contractor websites into more reliable organic lead paths.\n\nhttps://eb28.co/blog/automated-lead-follow-up-for-contractors-how-to-stop-losing-hot-enquiries/",
+      "status": "draft_only_verified_eb28_owned_channel_required"
+    },
+    "shortFormVideo": {
+      "format": "15-30 second vertical video brief",
+      "hook": "Contractors do not just lose leads from bad traffic. They lose jobs in the first five minutes after someone asks for help.",
+      "brief": "Open on a contractor website form. Show the missed-lead problem, then the fix: instant confirmation, job qualification, urgency tags, owner alert, and follow-up reminders. End on the Melbourne Web Studio lead leak quiz and the EB28 article URL.",
+      "status": "draft_only_verified_eb28_owned_channel_required"
+    }
+  },
+  "publicationStatus": "draft_only_not_published",
+  "publishingGuard": "Do not publish externally until the exact EB28-owned account and channel are verified by a repo script or connector."
+}

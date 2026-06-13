@@ -1,5 +1,116 @@
 [
   {
+    "slug": "automated-lead-follow-up-for-contractors-how-to-stop-losing-hot-enquiries",
+    "title": "Automated Lead Follow-Up for Contractors: Stop Losing Jobs",
+    "description": "Automated lead follow-up for contractors: capture web inquiries, qualify jobs, trigger fast replies, and stop hot leads from going cold.",
+    "cluster": "lead-automation",
+    "primaryKeyword": "automated lead follow up for contractors",
+    "datePublished": "2026-06-13",
+    "dateModified": "2026-06-13",
+    "author": "EB28",
+    "heroLabel": "Morning growth brief",
+    "sourceRunId": "2026-06-13-am",
+    "summary": "A plain-English AM growth brief for contractors, focused on speed-to-lead, qualification, owner-controlled automation, and the follow-up fixes most likely to create booked jobs.",
+    "sections": [
+      {
+        "heading": "Why this search matters",
+        "body": [
+          "Someone searching for \"automated lead follow up for contractors\" is usually closer to a buying decision than a research rabbit hole. They want to know what to fix, who to trust, and whether the next step is worth their time.",
+          "The contractor does not only need more leads. They need fewer missed calls, slower competitors, and a follow-up path that turns form fills into booked estimates."
+        ],
+        "bullets": [
+          "Answer the question in the first few lines",
+          "Use the same phrase a real buyer would use",
+          "Show what a serious fix includes",
+          "Give the reader a direct next step instead of a vague contact prompt"
+        ]
+      },
+      {
+        "heading": "What to fix first",
+        "body": [
+          "Start with the handoff after the form: confirmation, qualification, routing, reminders, and a fast human reply when the lead is worth it.",
+          "Do not bury the fix inside a giant redesign. A small improvement to a page that already gets impressions can beat a bigger project that never ships."
+        ],
+        "bullets": [
+          "Map what happens in the first five minutes after a lead comes in",
+          "Separate simple FAQs from high-value consult requests",
+          "Link automation articles back to the website conversion checklist",
+          "Track source page and intent so follow-up can match the buyer problem"
+        ]
+      },
+      {
+        "heading": "How EB28 turns it into a system",
+        "body": [
+          "Automation should support the sale without pretending to be the whole relationship. The best system captures intent, follows up quickly, and keeps the owner in control.",
+          "EB28 connects the website, forms, qualifying questions, reminders, and search data so the follow-up path matches the job a buyer actually asked about."
+        ],
+        "bullets": [
+          "Trigger a fast confirmation the moment the inquiry lands",
+          "Tag the source page, service type, location, urgency, and budget signal",
+          "Route high-intent jobs to a real person instead of hiding them in a shared inbox",
+          "Review Search Console and form data together so content, ads, and follow-up improve from the same evidence"
+        ]
+      }
+    ],
+    "faqs": [
+      {
+        "question": "What should automated lead follow-up for contractors include?",
+        "answer": "It should confirm the inquiry, qualify the job, record the source page, alert the right person, and send useful reminders without pretending the relationship is fully automated."
+      },
+      {
+        "question": "How often should contractors review lead follow-up pages?",
+        "answer": "Review them after Search Console has enough data, then refresh titles, intros, FAQs, citations, and internal links when the page gains impressions but sits below page one."
+      }
+    ],
+    "citations": [
+      {
+        "label": "Google Search Central: SEO Starter Guide",
+        "url": "https://developers.google.com/search/docs/fundamentals/seo-starter-guide"
+      },
+      {
+        "label": "Google Search Central: Ask Google to recrawl URLs",
+        "url": "https://developers.google.com/search/docs/advanced/crawling/ask-google-to-recrawl"
+      }
+    ],
+    "relatedSlugs": [
+      "local-seo-map-pack-melbourne-fl",
+      "website-conversion-checklist-melbourne-fl",
+      "melbourne-fl-web-design-cost-guide-2026"
+    ],
+    "internalLinks": [
+      {
+        "label": "EB28",
+        "href": "/",
+        "reason": "Connects contractor lead automation readers back to the main EB28 service path."
+      },
+      {
+        "label": "Melbourne Web Studio lead leak quiz",
+        "href": "/melbournewebstudio/#quiz",
+        "reason": "Gives service businesses a direct conversion audit path before they rebuild pages."
+      },
+      {
+        "label": "AI lead follow-up for local service businesses",
+        "href": "/blog/ai-lead-follow-up-local-service-business/",
+        "reason": "Connects automation ideas to the buyer moments where slow replies lose work."
+      },
+      {
+        "label": "Website conversion checklist for Melbourne FL",
+        "href": "/blog/website-conversion-checklist-melbourne-fl/",
+        "reason": "Shows how the page and follow-up path need to work together."
+      },
+      {
+        "label": "Recon Agent founder beta",
+        "href": "/reconcile/",
+        "reason": "Links operational automation readers into a concrete EB28 product path."
+      },
+      {
+        "label": "Local SEO map pack checklist for Melbourne FL",
+        "href": "/blog/local-seo-map-pack-melbourne-fl/",
+        "reason": "Keeps organic-growth content tied to the strongest local-search cluster."
+      }
+    ]
+  },
+  {
     "slug": "website-redesign-in-melbourne-fl-fix-the-leaks-before-you-rebuild-everything",
     "title": "Conversion-First Website Redesign Melbourne FL: Fix Lead Leaks",
     "description": "Before a website redesign in Melbourne FL, find the lead leaks: unclear offer, weak proof, slow forms, poor follow-up, and missing local SEO links.",

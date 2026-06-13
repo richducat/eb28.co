@@ -1,8 +1,18 @@
 {
-  "generatedAt": "2026-06-12T22:06:02.260Z",
+  "generatedAt": "2026-06-13T10:05:05.602Z",
   "site": "https://eb28.co",
   "blogUrl": "https://eb28.co/blog/",
   "articles": [
+    {
+      "slug": "automated-lead-follow-up-for-contractors-how-to-stop-losing-hot-enquiries",
+      "title": "Automated Lead Follow-Up for Contractors: Stop Losing Jobs",
+      "description": "Automated lead follow-up for contractors: capture web inquiries, qualify jobs, trigger fast replies, and stop hot leads from going cold.",
+      "cluster": "lead-automation",
+      "primaryKeyword": "automated lead follow up for contractors",
+      "url": "https://eb28.co/blog/automated-lead-follow-up-for-contractors-how-to-stop-losing-hot-enquiries/",
+      "datePublished": "2026-06-13",
+      "dateModified": "2026-06-13"
+    },
     {
       "slug": "website-redesign-in-melbourne-fl-fix-the-leaks-before-you-rebuild-everything",
       "title": "Conversion-First Website Redesign Melbourne FL: Fix Lead Leaks",

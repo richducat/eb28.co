@@ -1,0 +1,43 @@
+{
+  "brand": "EB28",
+  "generatedAt": "2026-06-13T22:03:10.558Z",
+  "runId": "2026-06-13-pm",
+  "slot": "pm",
+  "article": {
+    "title": "AI Appointment Setter for Small Business: What to Automate",
+    "url": "https://eb28.co/blog/ai-appointment-setter-for-small-business-where-it-helps-and-where-it-hurts/",
+    "cluster": "lead-automation",
+    "primaryKeyword": "AI appointment setter for small business"
+  },
+  "externalPublishingGuard": "Draft-only owned-social package. Do not publish unless the EB28-owned account and channel are explicitly verified by a repo script or connector.",
+  "posts": {
+    "blog": {
+      "title": "AI Appointment Setter for Small Business: What to Automate",
+      "url": "https://eb28.co/blog/ai-appointment-setter-for-small-business-where-it-helps-and-where-it-hurts/",
+      "status": "draft_only_ready_for_build_and_deploy"
+    },
+    "facebook": {
+      "caption": "AI appointment setters help when they confirm, qualify, and route leads fast. They hurt when they delay the human reply that closes the job.\n\nNew EB28 guide: what small businesses should automate, what should stay human, and how to connect the website lead path to booked calls.\n\nRead it: https://eb28.co/blog/ai-appointment-setter-for-small-business-where-it-helps-and-where-it-hurts/",
+      "status": "draft_only_pending_verified_eb28_channel"
+    },
+    "instagram": {
+      "caption": "AI appointment setter for small business: the practical version.\n\nWe broke down what to fix first, how to connect it to real lead flow, and what EB28 checks daily to keep search growth moving.\n\nRead the full guide at eb28.co/blog/",
+      "creativeBrief": "Carousel: Slide 1 lead handoff problem, Slide 2 what AI should handle, Slide 3 what stays human, Slide 4 website/form connection, Slide 5 CTA to read the guide.",
+      "status": "draft_only_pending_verified_eb28_channel"
+    },
+    "x": {
+      "caption": "AI appointment setters help when they speed up confirmation, qualification, and routing. They hurt when they hide the human handoff.\n\nhttps://eb28.co/blog/ai-appointment-setter-for-small-business-where-it-helps-and-where-it-hurts/",
+      "status": "draft_only_pending_verified_eb28_channel"
+    },
+    "linkedin": {
+      "caption": "New EB28 growth brief: AI Appointment Setter for Small Business: What to Automate\n\nThe useful version is not \"let AI handle everything.\" It is a tighter handoff: instant confirmation, simple qualification, routing, reminders, and a fast human reply when the lead has real value.\n\nhttps://eb28.co/blog/ai-appointment-setter-for-small-business-where-it-helps-and-where-it-hurts/",
+      "status": "draft_only_pending_verified_eb28_channel"
+    },
+    "shortFormVideo": {
+      "hook": "AI appointment setters do not fix slow follow-up if they delay the human reply.",
+      "brief": "30-45 second vertical video. Open with the missed-lead problem, show three automation-safe jobs (confirm, qualify, remind), then contrast two human-only moments (pricing/trust and urgent/high-value leads). End with the EB28 blog URL.",
+      "caption": "Automate the handoff, not the relationship. Full guide at eb28.co/blog/.",
+      "status": "draft_only_pending_verified_eb28_channel"
+    }
+  }
+}

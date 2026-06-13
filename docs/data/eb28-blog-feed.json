@@ -1,8 +1,18 @@
 {
-  "generatedAt": "2026-06-13T10:05:05.602Z",
+  "generatedAt": "2026-06-13T22:05:39.044Z",
   "site": "https://eb28.co",
   "blogUrl": "https://eb28.co/blog/",
   "articles": [
+    {
+      "slug": "ai-appointment-setter-for-small-business-where-it-helps-and-where-it-hurts",
+      "title": "AI Appointment Setter for Small Business: What to Automate",
+      "description": "AI appointment setter for small business: see what to automate, where human handoff matters, and how to turn more website leads into booked jobs.",
+      "cluster": "lead-automation",
+      "primaryKeyword": "AI appointment setter for small business",
+      "url": "https://eb28.co/blog/ai-appointment-setter-for-small-business-where-it-helps-and-where-it-hurts/",
+      "datePublished": "2026-06-13",
+      "dateModified": "2026-06-13"
+    },
     {
       "slug": "automated-lead-follow-up-for-contractors-how-to-stop-losing-hot-enquiries",
       "title": "Automated Lead Follow-Up for Contractors: Stop Losing Jobs",

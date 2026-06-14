@@ -1,8 +1,18 @@
 {
-  "generatedAt": "2026-06-13T22:05:39.044Z",
+  "generatedAt": "2026-06-14T10:03:35.038Z",
   "site": "https://eb28.co",
   "blogUrl": "https://eb28.co/blog/",
   "articles": [
+    {
+      "slug": "private-ai-for-small-business-the-safe-way-to-start-without-overbuilding",
+      "title": "Private AI for Small Business: The Safe Way to Start Without Overbuilding",
+      "description": "A practical private AI guide for small businesses: pick one safe workflow, set data boundaries, avoid overbuilding, and connect the result to real leads.",
+      "cluster": "private-ai",
+      "primaryKeyword": "private AI for small business",
+      "url": "https://eb28.co/blog/private-ai-for-small-business-the-safe-way-to-start-without-overbuilding/",
+      "datePublished": "2026-06-14",
+      "dateModified": "2026-06-14"
+    },
     {
       "slug": "ai-appointment-setter-for-small-business-where-it-helps-and-where-it-hurts",
       "title": "AI Appointment Setter for Small Business: What to Automate",

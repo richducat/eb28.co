@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-14T10:03:35.038Z",
+  "generatedAt": "2026-06-14T22:05:23.833Z",
   "site": "https://eb28.co",
   "blogUrl": "https://eb28.co/blog/",
   "articles": [
@@ -10,6 +10,16 @@
       "cluster": "private-ai",
       "primaryKeyword": "private AI for small business",
       "url": "https://eb28.co/blog/private-ai-for-small-business-the-safe-way-to-start-without-overbuilding/",
+      "datePublished": "2026-06-14",
+      "dateModified": "2026-06-14"
+    },
+    {
+      "slug": "secure-business-ai-assistant-what-to-keep-private-from-day-one",
+      "title": "Secure Business AI Assistant: Keep Private Data Safe",
+      "description": "Build a secure business AI assistant without leaking client data. Learn what to keep private, where retrieval fits, and how to route leads safely.",
+      "cluster": "private-ai",
+      "primaryKeyword": "secure business AI assistant",
+      "url": "https://eb28.co/blog/secure-business-ai-assistant-what-to-keep-private-from-day-one/",
       "datePublished": "2026-06-14",
       "dateModified": "2026-06-14"
     },

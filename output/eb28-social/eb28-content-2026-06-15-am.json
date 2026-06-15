@@ -1,0 +1,43 @@
+{
+  "brand": "EB28",
+  "generatedAt": "2026-06-15T10:03:56.206Z",
+  "runId": "2026-06-15-am",
+  "slot": "am",
+  "publishStatus": "draft_only_not_published",
+  "article": {
+    "title": "Small Business Homepage Optimization: 10-Second Test",
+    "url": "https://eb28.co/blog/small-business-homepage-optimization-the-first-10-seconds-2026-06-15-am/",
+    "cluster": "conversion",
+    "primaryKeyword": "small business homepage optimization"
+  },
+  "posts": {
+    "blog": {
+      "title": "Small Business Homepage Optimization: 10-Second Test",
+      "url": "https://eb28.co/blog/small-business-homepage-optimization-the-first-10-seconds-2026-06-15-am/",
+      "status": "draft_only_ready_for_site_deploy"
+    },
+    "facebook": {
+      "caption": "Small Business Homepage Optimization: 10-Second Test\n\nA practical guide for local businesses that want more qualified organic leads, stronger search visibility, and a faster path from visitor to customer.\n\nDraft link: https://eb28.co/blog/small-business-homepage-optimization-the-first-10-seconds-2026-06-15-am/",
+      "status": "draft_only_not_published"
+    },
+    "instagram": {
+      "caption": "small business homepage optimization: the practical version.\n\nWe broke down what to fix first, how to connect it to real lead flow, and what EB28 checks daily to keep search growth moving.\n\nRead the full guide at eb28.co/blog/",
+      "creativeBrief": "Carousel: Slide 1 problem statement, Slide 2 what to fix first, Slide 3 technical SEO checks, Slide 4 internal links, Slide 5 CTA to project brief.",
+      "status": "draft_only_not_published"
+    },
+    "x": {
+      "caption": "Small Business Homepage Optimization: 10-Second Test\n\nThe key: connect the search intent to a page that is fast, useful, internally linked, and measured in Search Console.\n\nhttps://eb28.co/blog/small-business-homepage-optimization-the-first-10-seconds-2026-06-15-am/",
+      "status": "draft_only_not_published"
+    },
+    "linkedin": {
+      "caption": "New EB28 growth brief: Small Business Homepage Optimization: 10-Second Test\n\nThis covers the practical SEO and conversion fixes that turn a business website into a more reliable organic lead path.\n\nhttps://eb28.co/blog/small-business-homepage-optimization-the-first-10-seconds-2026-06-15-am/",
+      "status": "draft_only_not_published"
+    },
+    "shortFormVideo": {
+      "hook": "Your homepage has about 10 seconds to prove the visitor is in the right place.",
+      "brief": "30-second vertical video: open on a cluttered homepage, zoom into the headline/proof/form path, then show the cleaned sequence: clear offer, proof beside CTA, short form, fast follow-up promise, and internal links into service pages.",
+      "caption": "Small business homepage optimization starts above the fold: clear offer, proof, a low-friction next step, and fast follow-up.",
+      "status": "draft_only_not_published"
+    }
+  }
+}

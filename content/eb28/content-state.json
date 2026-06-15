@@ -1,6 +1,20 @@
 {
-  "updatedAt": "2026-06-14T22:03:12.277Z",
+  "updatedAt": "2026-06-15T10:03:56.206Z",
   "runs": [
+    {
+      "runId": "2026-06-15-am",
+      "date": "2026-06-15",
+      "slot": "am",
+      "createdAt": "2026-06-15T10:03:56.206Z",
+      "article": {
+        "slug": "small-business-homepage-optimization-the-first-10-seconds-2026-06-15-am",
+        "title": "Small Business Homepage Optimization: The First 10 Seconds (2026-06-15-am)",
+        "url": "https://eb28.co/blog/small-business-homepage-optimization-the-first-10-seconds-2026-06-15-am/",
+        "cluster": "conversion",
+        "primaryKeyword": "small business homepage optimization"
+      },
+      "reportPath": "/private/tmp/eb28-content-engine-20260615-100340/output/eb28-social/eb28-content-2026-06-15-am.json"
+    },
     {
       "runId": "2026-06-14-pm",
       "date": "2026-06-14",

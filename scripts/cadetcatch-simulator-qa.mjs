@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { execFileSync, spawnSync } from 'node:child_process';
-import { existsSync, mkdirSync, readdirSync } from 'node:fs';
+import { closeSync, existsSync, mkdirSync, openSync, readFileSync, readdirSync } from 'node:fs';
 import path from 'node:path';
 
 const args = parseArgs(process.argv.slice(2));
@@ -18,6 +18,7 @@ const scheme = 'CadetCatch';
 const bundleId = 'co.eb28.cadetcatch';
 const derivedDataPath = path.join(repoRoot, 'output/cadetcatch-simulator/DerivedData');
 const receiptDir = path.join(repoRoot, 'output/cadetcatch-simulator');
+const logDir = path.join(receiptDir, 'logs');
 
 if (!existsSync(developerDir)) {
   fail(`Full Xcode developer directory not found: ${developerDir}`);
@@ -105,13 +106,22 @@ function findAppBundle() {
 function run(command, commandArgs, options = {}) {
   console.log(`\n$ ${command} ${commandArgs.map(shellQuote).join(' ')}`);
   const captureOutput = Boolean(options.allowFailureContaining);
+  const logPath = options.logPath || (command === 'xcodebuild' ? path.join(logDir, `xcodebuild-${timestamp()}.log`) : null);
+  let logFd = null;
+  if (logPath) {
+    mkdirSync(path.dirname(logPath), { recursive: true });
+    logFd = openSync(logPath, 'w');
+    console.log(`Log: ${logPath}`);
+  }
+
   const result = spawnSync(commandPath(command), commandArgs, {
     cwd: options.cwd || repoRoot,
     env,
     encoding: 'utf8',
-    stdio: captureOutput ? ['ignore', 'pipe', 'pipe'] : 'inherit',
+    stdio: logFd !== null ? ['ignore', logFd, logFd] : (captureOutput ? ['ignore', 'pipe', 'pipe'] : 'inherit'),
     timeout: commandTimeoutMs,
   });
+  if (logFd !== null) closeSync(logFd);
   if (result.error) fail(`Command failed: ${command}: ${result.error.message}`);
   if (captureOutput) {
     if (result.stdout) process.stdout.write(result.stdout);
@@ -120,6 +130,7 @@ function run(command, commandArgs, options = {}) {
   if (result.status !== 0 && !options.allowFailure) {
     const combined = `${result.stdout || ''}\n${result.stderr || ''}`;
     const allowed = options.allowFailureContaining?.some((text) => combined.includes(text));
+    if (!allowed && logPath) printLogTail(logPath);
     if (!allowed) fail(`Command failed with exit ${result.status}: ${command}`);
   }
 }
@@ -151,6 +162,18 @@ function commandPath(command) {
     return '/usr/bin/xcrun';
   }
   return command;
+}
+
+function printLogTail(logPath) {
+  try {
+    const lines = readFileSync(logPath, 'utf8').trimEnd().split(/\r?\n/).slice(-80);
+    if (lines.length > 0) {
+      console.error(`\nLast ${lines.length} lines from ${logPath}:\n`);
+      for (const line of lines) console.error(line);
+    }
+  } catch {
+    console.error(`Could not read command log: ${logPath}`);
+  }
 }
 
 function parseArgs(rawArgs) {

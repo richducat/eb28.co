@@ -11,6 +11,7 @@ const repoRoot = execFileSync('git', ['rev-parse', '--show-toplevel'], {
 
 const developerDir = args['developer-dir'] || process.env.DEVELOPER_DIR || '/Applications/Xcode.app/Contents/Developer';
 const env = { ...process.env, DEVELOPER_DIR: developerDir };
+const commandTimeoutMs = Number(args['command-timeout-ms'] || process.env.CADETCATCH_QA_COMMAND_TIMEOUT_MS || 600_000);
 const simulatorName = args.simulator || 'iPhone 17 Pro Max';
 const projectPath = path.join(repoRoot, 'ios/CadetCatch/CadetCatch.xcodeproj');
 const scheme = 'CadetCatch';
@@ -103,14 +104,19 @@ function findAppBundle() {
 
 function run(command, commandArgs, options = {}) {
   console.log(`\n$ ${command} ${commandArgs.map(shellQuote).join(' ')}`);
-  const result = spawnSync(command, commandArgs, {
+  const captureOutput = Boolean(options.allowFailureContaining);
+  const result = spawnSync(commandPath(command), commandArgs, {
     cwd: options.cwd || repoRoot,
     env,
     encoding: 'utf8',
-    stdio: ['ignore', 'pipe', 'pipe'],
+    stdio: captureOutput ? ['ignore', 'pipe', 'pipe'] : 'inherit',
+    timeout: commandTimeoutMs,
   });
-  if (result.stdout) process.stdout.write(result.stdout);
-  if (result.stderr) process.stderr.write(result.stderr);
+  if (result.error) fail(`Command failed: ${command}: ${result.error.message}`);
+  if (captureOutput) {
+    if (result.stdout) process.stdout.write(result.stdout);
+    if (result.stderr) process.stderr.write(result.stderr);
+  }
   if (result.status !== 0 && !options.allowFailure) {
     const combined = `${result.stdout || ''}\n${result.stderr || ''}`;
     const allowed = options.allowFailureContaining?.some((text) => combined.includes(text));
@@ -119,18 +125,32 @@ function run(command, commandArgs, options = {}) {
 }
 
 function runCapture(command, commandArgs, options = {}) {
-  const result = spawnSync(command, commandArgs, {
+  const result = spawnSync(commandPath(command), commandArgs, {
     cwd: options.cwd || repoRoot,
     env,
     encoding: 'utf8',
     stdio: ['ignore', 'pipe', 'pipe'],
+    maxBuffer: 50 * 1024 * 1024,
+    timeout: commandTimeoutMs,
   });
+  if (result.error) fail(`Command failed: ${command}: ${result.error.message}`);
   if (result.status !== 0) {
     if (result.stdout) process.stdout.write(result.stdout);
     if (result.stderr) process.stderr.write(result.stderr);
     fail(`Command failed with exit ${result.status}: ${command}`);
   }
   return result.stdout;
+}
+
+function commandPath(command) {
+  if (command === 'xcodebuild') {
+    const xcodebuildPath = path.join(developerDir, 'usr/bin/xcodebuild');
+    return existsSync(xcodebuildPath) ? xcodebuildPath : command;
+  }
+  if (command === 'xcrun') {
+    return '/usr/bin/xcrun';
+  }
+  return command;
 }
 
 function parseArgs(rawArgs) {

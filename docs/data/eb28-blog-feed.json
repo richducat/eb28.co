@@ -1,8 +1,18 @@
 {
-  "generatedAt": "2026-06-15T22:04:37.749Z",
+  "generatedAt": "2026-06-16T10:06:44.750Z",
   "site": "https://eb28.co",
   "blogUrl": "https://eb28.co/blog/",
   "articles": [
+    {
+      "slug": "private-ai-vs-chatgpt-for-business-how-to-choose-the-right-workflow-2026-06-16-am",
+      "title": "Private AI vs ChatGPT for Business: How to Choose",
+      "description": "Compare private AI vs ChatGPT for business workflows, data privacy, cost, speed, and lead follow-up so small teams choose what to keep public or private.",
+      "cluster": "private-ai",
+      "primaryKeyword": "private AI vs ChatGPT for business",
+      "url": "https://eb28.co/blog/private-ai-vs-chatgpt-for-business-how-to-choose-the-right-workflow-2026-06-16-am/",
+      "datePublished": "2026-06-16",
+      "dateModified": "2026-06-16"
+    },
     {
       "slug": "small-business-homepage-optimization-the-first-10-seconds-2026-06-15-am",
       "title": "Small Business Homepage Optimization: 10-Second Test",

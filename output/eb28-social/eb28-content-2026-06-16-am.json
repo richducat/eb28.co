@@ -1,0 +1,42 @@
+{
+  "brand": "EB28",
+  "generatedAt": "2026-06-16T10:03:35.901Z",
+  "runId": "2026-06-16-am",
+  "slot": "am",
+  "article": {
+    "title": "Private AI vs ChatGPT for Business: How to Choose",
+    "url": "https://eb28.co/blog/private-ai-vs-chatgpt-for-business-how-to-choose-the-right-workflow-2026-06-16-am/",
+    "cluster": "private-ai",
+    "primaryKeyword": "private AI vs ChatGPT for business"
+  },
+  "posts": {
+    "blog": {
+      "title": "Private AI vs ChatGPT for Business: How to Choose",
+      "url": "https://eb28.co/blog/private-ai-vs-chatgpt-for-business-how-to-choose-the-right-workflow-2026-06-16-am/",
+      "status": "draft_only_ready_for_site_deploy"
+    },
+    "facebook": {
+      "caption": "Private AI vs ChatGPT for Business: How to Choose\n\nA practical guide for local businesses that need AI speed without handing every document, SOP, client note, or follow-up workflow to a public tool.\n\nDraft link: https://eb28.co/blog/private-ai-vs-chatgpt-for-business-how-to-choose-the-right-workflow-2026-06-16-am/",
+      "status": "draft_only_pending_verified_eb28_channel"
+    },
+    "instagram": {
+      "caption": "private AI vs ChatGPT for business: the practical version.\n\nWe broke down what to fix first, how to connect it to real lead flow, and what EB28 checks daily to keep search growth moving.\n\nRead the full guide at eb28.co/blog/",
+      "creativeBrief": "Carousel: Slide 1 problem statement, Slide 2 what to fix first, Slide 3 technical SEO checks, Slide 4 internal links, Slide 5 CTA to project brief.",
+      "status": "draft_only_pending_verified_eb28_channel"
+    },
+    "x": {
+      "caption": "Private AI vs ChatGPT for business is not a brand debate. It is a workflow decision: what can use a hosted assistant, what needs private retrieval, and what still needs human review.\n\nhttps://eb28.co/blog/private-ai-vs-chatgpt-for-business-how-to-choose-the-right-workflow-2026-06-16-am/",
+      "status": "draft_only_pending_verified_eb28_channel"
+    },
+    "linkedin": {
+      "caption": "New EB28 growth brief: Private AI vs ChatGPT for Business: How to Choose\n\nThe useful question is not whether a business should use AI. It is which workflows can safely use a hosted assistant, which need private retrieval, and where human review must stay in the loop.\n\nhttps://eb28.co/blog/private-ai-vs-chatgpt-for-business-how-to-choose-the-right-workflow-2026-06-16-am/",
+      "status": "draft_only_pending_verified_eb28_channel"
+    },
+    "shortFormVideo": {
+      "hook": "Before your team pastes another business document into AI, split workflows into public, private, and human-review lanes.",
+      "brief": "30-45 second vertical video. Open with three columns on screen: ChatGPT, Private AI, Human Review. Use quick examples: public brainstorming, private SOP/document search, lead follow-up with human approval. End card points to the EB28 guide and richducat@gmail.com.",
+      "caption": "Private AI vs ChatGPT for business starts with data boundaries, not hype.",
+      "status": "draft_only_pending_verified_eb28_channel"
+    }
+  }
+}

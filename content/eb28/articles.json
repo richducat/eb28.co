@@ -1,5 +1,133 @@
 [
   {
+    "slug": "ai-receptionist-for-local-business-what-to-automate-and-what-to-keep-human-2026-06",
+    "title": "AI Receptionist for Local Business: What to Automate",
+    "description": "Use an AI receptionist for local business without losing the human handoff. See what to automate, what to keep human, and how to capture leads.",
+    "cluster": "lead-automation",
+    "primaryKeyword": "AI receptionist for local business",
+    "datePublished": "2026-06-16",
+    "dateModified": "2026-06-16",
+    "author": "EB28",
+    "heroLabel": "Evening growth brief",
+    "sourceRunId": "2026-06-16-pm",
+    "summary": "A practical guide to using an AI receptionist for local business lead handling without replacing the human judgment that closes valuable jobs.",
+    "sections": [
+      {
+        "heading": "Why this search matters",
+        "body": [
+          "Someone searching for \"AI receptionist for local business\" is usually weighing a real operational change: missed calls, slow form replies, after-hours enquiries, or staff stretched too thin to qualify every lead quickly.",
+          "The right answer is not to automate every conversation. It is to separate repeatable front-desk work from the moments where a human reply builds trust, explains tradeoffs, or protects a high-value sale."
+        ],
+        "bullets": [
+          "Answer simple questions immediately without hiding the path to a person",
+          "Capture name, service need, urgency, location, and preferred contact method",
+          "Route qualified enquiries to the owner or sales lead with context",
+          "Keep sensitive pricing, complaints, and exceptions in a human handoff lane"
+        ]
+      },
+      {
+        "heading": "What to automate first",
+        "body": [
+          "Start with the handoff after a website form, chat, or missed call: confirmation, qualification, routing, reminders, and a clear next step. Those pieces are simple enough to systemize and important enough to affect revenue.",
+          "Avoid burying the fix inside a full redesign. A focused receptionist workflow connected to a page that already earns impressions can turn more existing traffic into booked conversations."
+        ],
+        "bullets": [
+          "Send an instant confirmation so the lead knows the request was received",
+          "Ask two or three qualifying questions before a human follows up",
+          "Tag the source page and service need so the reply matches the buyer problem",
+          "Escalate urgent or high-value enquiries instead of leaving them in a queue"
+        ]
+      },
+      {
+        "heading": "What to keep human",
+        "body": [
+          "Keep judgment-heavy conversations with the owner, manager, or sales team. The AI receptionist can prepare the context, but a person should handle negotiation, complex scope, sensitive customer history, and anything that could damage trust if answered too mechanically.",
+          "For local businesses, the best setup feels like faster follow-up, not a wall between the buyer and the business. That means the automation should make the human reply easier, more specific, and better timed."
+        ],
+        "bullets": [
+          "Final pricing, custom scope, and discount decisions",
+          "Upset customers or reputation-sensitive conversations",
+          "Requests involving private account details or unusual edge cases",
+          "Sales calls where trust, urgency, or local context matters"
+        ]
+      },
+      {
+        "heading": "How EB28 turns it into a system",
+        "body": [
+          "EB28 connects the page, intake questions, routing logic, and follow-up sequence so organic visitors do not disappear after the first click. The system is built around the lead path: what the visitor searched, which page answered them, and what should happen in the first five minutes.",
+          "That is why the receptionist workflow belongs beside local SEO, conversion-focused web design, and private automation infrastructure. Traffic matters, but the revenue lift comes from matching speed with a sensible human handoff."
+        ],
+        "bullets": [
+          "Use the EB28 homepage to understand the broader private AI and app-development offer",
+          "Use Melbourne Web Studio for local website and conversion work",
+          "Use Recon Agent when the workflow needs operational research or assistant-style follow-up",
+          "Use related blog guides to connect AI follow-up, conversion checklists, and local search visibility"
+        ]
+      }
+    ],
+    "faqs": [
+      {
+        "question": "What should an AI receptionist automate for a local business?",
+        "answer": "Automate simple intake, instant confirmations, basic FAQs, lead qualification, routing, appointment reminders, and missed-call follow-up. Keep complex pricing, complaints, custom scope, and sensitive account questions with a human."
+      },
+      {
+        "question": "Will an AI receptionist replace staff?",
+        "answer": "Usually no. The strongest use case is helping staff respond faster and with better context. The receptionist handles repeatable steps while humans keep control of trust-heavy conversations and final decisions."
+      },
+      {
+        "question": "How should a local business measure an AI receptionist?",
+        "answer": "Track response time, qualified lead rate, booked appointments, missed-call recovery, form completion, and close rate by source page. If speed improves but close quality falls, the handoff rules need tightening."
+      }
+    ],
+    "citations": [
+      {
+        "label": "Google Search Central: SEO Starter Guide",
+        "url": "https://developers.google.com/search/docs/fundamentals/seo-starter-guide"
+      },
+      {
+        "label": "Google Search Central: Ask Google to recrawl URLs",
+        "url": "https://developers.google.com/search/docs/advanced/crawling/ask-google-to-recrawl"
+      }
+    ],
+    "relatedSlugs": [
+      "local-seo-map-pack-melbourne-fl",
+      "website-conversion-checklist-melbourne-fl",
+      "melbourne-fl-web-design-cost-guide-2026"
+    ],
+    "internalLinks": [
+      {
+        "label": "EB28 private AI and app development homepage",
+        "href": "/",
+        "reason": "Connects the receptionist workflow to the broader EB28 build and automation offer."
+      },
+      {
+        "label": "Melbourne Web Studio local website builder page",
+        "href": "/melbournewebstudio/#quiz",
+        "reason": "Gives local businesses a direct project-brief path for conversion and website work."
+      },
+      {
+        "label": "Recon Agent founder beta",
+        "href": "/reconcile/",
+        "reason": "Links operational automation readers into a concrete EB28 assistant product path."
+      },
+      {
+        "label": "AI lead follow-up for local service businesses",
+        "href": "/blog/ai-lead-follow-up-local-service-business/",
+        "reason": "Connects receptionist automation to the follow-up moments where slow replies lose work."
+      },
+      {
+        "label": "Website conversion checklist for Melbourne FL",
+        "href": "/blog/website-conversion-checklist-melbourne-fl/",
+        "reason": "Shows how the page and follow-up path need to work together."
+      },
+      {
+        "label": "Local SEO map pack checklist for Melbourne FL",
+        "href": "/blog/local-seo-map-pack-melbourne-fl/",
+        "reason": "Keeps organic-growth content tied to the strongest local-search cluster."
+      }
+    ]
+  },
+  {
     "slug": "private-ai-vs-chatgpt-for-business-how-to-choose-the-right-workflow-2026-06-16-am",
     "title": "Private AI vs ChatGPT for Business: How to Choose",
     "description": "Compare private AI vs ChatGPT for business workflows, data privacy, cost, speed, and lead follow-up so small teams choose what to keep public or private.",

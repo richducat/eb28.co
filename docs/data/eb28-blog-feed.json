@@ -1,8 +1,18 @@
 {
-  "generatedAt": "2026-06-16T18:07:26.238Z",
+  "generatedAt": "2026-06-16T23:30:01.152Z",
   "site": "https://eb28.co",
   "blogUrl": "https://eb28.co/blog/",
   "articles": [
+    {
+      "slug": "ai-receptionist-for-local-business-what-to-automate-and-what-to-keep-human-2026-06",
+      "title": "AI Receptionist for Local Business: What to Automate",
+      "description": "Use an AI receptionist for local business without losing the human handoff. See what to automate, what to keep human, and how to capture leads.",
+      "cluster": "lead-automation",
+      "primaryKeyword": "AI receptionist for local business",
+      "url": "https://eb28.co/blog/ai-receptionist-for-local-business-what-to-automate-and-what-to-keep-human-2026-06/",
+      "datePublished": "2026-06-16",
+      "dateModified": "2026-06-16"
+    },
     {
       "slug": "private-ai-vs-chatgpt-for-business-how-to-choose-the-right-workflow-2026-06-16-am",
       "title": "Private AI vs ChatGPT for Business: How to Choose",

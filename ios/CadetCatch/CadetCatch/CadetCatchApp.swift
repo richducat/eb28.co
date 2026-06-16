@@ -1010,7 +1010,7 @@ enum PhotoCandidatePreview {
     static func storePreview(from imageData: Data, for url: URL) {
         guard
             let previewData = makeData(from: imageData),
-            let fileURL = previewFileURL(for: url)
+            let fileURL = durablePreviewFileURL(for: url)
         else {
             return
         }
@@ -1022,20 +1022,50 @@ enum PhotoCandidatePreview {
     }
 
     static func data(for url: URL) -> Data? {
-        guard let fileURL = previewFileURL(for: url) else { return nil }
-        return try? Data(contentsOf: fileURL)
+        if let fileURL = durablePreviewFileURL(for: url), let data = try? Data(contentsOf: fileURL) {
+            return data
+        }
+
+        guard
+            let legacyFileURL = legacyCachePreviewFileURL(for: url),
+            let legacyData = try? Data(contentsOf: legacyFileURL)
+        else {
+            return nil
+        }
+
+        if let durableFileURL = durablePreviewFileURL(for: url) {
+            try? FileManager.default.createDirectory(
+                at: durableFileURL.deletingLastPathComponent(),
+                withIntermediateDirectories: true
+            )
+            try? legacyData.write(to: durableFileURL, options: .atomic)
+        }
+        return legacyData
     }
 
-    private static func previewFileURL(for url: URL) -> URL? {
+    private static func durablePreviewFileURL(for url: URL) -> URL? {
+        guard let supportDirectory = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first else {
+            return nil
+        }
+        return supportDirectory
+            .appendingPathComponent("CadetCatchMatchPreviews", isDirectory: true)
+            .appendingPathComponent(cacheKey(for: url))
+            .appendingPathExtension("jpg")
+    }
+
+    private static func legacyCachePreviewFileURL(for url: URL) -> URL? {
         guard let cachesDirectory = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first else {
             return nil
         }
-        let digest = SHA256.hash(data: Data(url.absoluteString.utf8))
-        let key = digest.map { String(format: "%02x", $0) }.joined()
         return cachesDirectory
             .appendingPathComponent("CadetCatchMatchPreviews", isDirectory: true)
-            .appendingPathComponent(key)
+            .appendingPathComponent(cacheKey(for: url))
             .appendingPathExtension("jpg")
+    }
+
+    private static func cacheKey(for url: URL) -> String {
+        let digest = SHA256.hash(data: Data(url.absoluteString.utf8))
+        return digest.map { String(format: "%02x", $0) }.joined()
     }
 }
 

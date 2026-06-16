@@ -115,6 +115,7 @@ export const AGENT_ROSTER = [
   { id: 'journal', name: 'The Tape', roles: ['trade-journal', 'post-trade-ops'], color: '#fbbf24', gridPos: { x: 1, y: 2 }, laneIds: [] },
   { id: 'sequoia', name: 'Signal Lab', roles: ['research', 'market-discovery'], color: '#4ade80', gridPos: { x: 2, y: 2 }, laneIds: [] },
   { id: 'ackman', name: 'Catalyst', roles: ['event-driven', 'manual-override'], color: '#e879f9', gridPos: { x: 3, y: 2 }, laneIds: [] },
+  { id: 'bluechip', name: 'Bluechip', roles: ['us-equities', 'robinhood-agentic'], color: '#5eead4', gridPos: { x: 0, y: 0 }, laneIds: ['robinhood-equities'], external: 'robinhood', kind: 'trading', glyph: '$', description: 'US equities desk on Robinhood Agentic Trading (official MCP). Dip-buys small fractional positions.' },
 ];
 
 export const LANE_INDEX = Object.fromEntries(LANE_REGISTRY.map((lane) => [lane.id, lane]));

@@ -763,7 +763,7 @@ const FundManager = () => {
                     <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
                         <div>
                             <p className="text-[10px] uppercase tracking-[0.24em] opacity-45">The desk fleet</p>
-                            <h2 className="text-lg font-bold text-white/90 sm:text-xl">Twelve agents. Eight you can own.</h2>
+                            <h2 className="text-lg font-bold text-white/90 sm:text-xl">The live trading floor. Eight you can own.</h2>
                         </div>
                         <p className="text-[11px] uppercase tracking-[0.22em] text-white/50">
                             Status pulls straight from the live orchestrator
@@ -787,21 +787,30 @@ const FundManager = () => {
                                     <div className="flex flex-col gap-4">
                                         <div className="flex items-start gap-3 sm:gap-4">
                                             <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-2xl border border-[#22d3ee]/20 bg-[#0f172a] pixel-art ring-1 ring-[#22d3ee]/10 sm:h-[4.5rem] sm:w-[4.5rem]">
-                                                <div
-                                                    className="h-full w-full scale-110 bg-no-repeat transition-all duration-300"
-                                                    style={{
-                                                        backgroundImage: `url('/assets/agents_grid.png')`,
-                                                        backgroundSize: '400% 300%',
-                                                        backgroundPosition: `${(agent.gridPos.x * 100) / 3}% ${(agent.gridPos.y * 100) / 2}%`,
-                                                    }}
-                                                ></div>
+                                                {agent.external ? (
+                                                    <div
+                                                        className="flex h-full w-full items-center justify-center text-2xl font-bold"
+                                                        style={{ color: agent.color, background: `radial-gradient(circle at 30% 25%, ${agent.color}22, transparent 70%)` }}
+                                                    >
+                                                        {agent.glyph || '$'}
+                                                    </div>
+                                                ) : (
+                                                    <div
+                                                        className="h-full w-full scale-110 bg-no-repeat transition-all duration-300"
+                                                        style={{
+                                                            backgroundImage: `url('/assets/agents_grid.png')`,
+                                                            backgroundSize: '400% 300%',
+                                                            backgroundPosition: `${(agent.gridPos.x * 100) / 3}% ${(agent.gridPos.y * 100) / 2}%`,
+                                                        }}
+                                                    ></div>
+                                                )}
                                             </div>
 
                                             <div className="min-w-0 flex-1">
                                                 <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                                                     <div className="min-w-0">
                                                         <p className="mb-2 text-[10px] uppercase tracking-[0.24em] opacity-40">
-                                                            {commerce ? 'Trading desk' : 'Support desk'}
+                                                            {(commerce || agent.kind === 'trading') ? 'Trading desk' : 'Support desk'}
                                                         </p>
                                                         <h3
                                                             className="text-base font-bold leading-tight break-words sm:text-lg xl:text-base"
@@ -831,9 +840,9 @@ const FundManager = () => {
                                         </div>
 
                                         <div className="rounded-2xl border border-white/5 bg-black/20 p-3">
-                                            {primaryLane ? (
+                                            {(primaryLane?.description || agent.description) ? (
                                                 <p className="mb-2 text-[11px] leading-relaxed text-white/75 sm:text-xs">
-                                                    {primaryLane.description}
+                                                    {primaryLane?.description || agent.description}
                                                 </p>
                                             ) : null}
                                             <div className="mb-2 text-[10px] uppercase tracking-[0.2em] text-white/50">Live assignment</div>
@@ -861,6 +870,15 @@ const FundManager = () => {
                                                 >
                                                     or all 8 + the OS — ${BUNDLE_PRICE_USD}
                                                 </a>
+                                            </div>
+                                        ) : agent.external === 'robinhood' ? (
+                                            <div className="flex flex-wrap items-center gap-2">
+                                                <span className="rounded-full border border-emerald-400/30 bg-emerald-500/10 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-emerald-300">
+                                                    Robinhood Agentic · live beta
+                                                </span>
+                                                <span className="text-[10px] uppercase tracking-[0.14em] text-white/40">
+                                                    Stocks desk — not yet for sale
+                                                </span>
                                             </div>
                                         ) : (
                                             <div className="text-[10px] uppercase tracking-[0.16em] text-white/35">

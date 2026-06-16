@@ -2763,32 +2763,70 @@ struct PhotoLibrarySaver {
 struct CandidateImage: View {
     let url: URL
     let mode: ContentMode
+    @State private var loadedImage: UIImage?
+    @State private var isLoading = false
+    @State private var didFail = false
 
     var body: some View {
-        if let previewImageData = PhotoCandidatePreview.data(for: url), let image = UIImage(data: previewImageData) {
-            Image(uiImage: image)
-                .resizable()
-                .aspectRatio(contentMode: mode)
-        } else {
-            AsyncImage(url: url) { phase in
-                switch phase {
-                case .success(let image):
-                    image.resizable().aspectRatio(contentMode: mode)
-                case .empty:
-                    ZStack {
-                        Rectangle().fill(Theme.border.opacity(0.45))
-                        ProgressView().tint(Theme.orange)
-                    }
-                case .failure:
-                    ZStack {
-                        Rectangle().fill(Theme.border.opacity(0.45))
-                        Image(systemName: "photo")
-                            .foregroundStyle(Theme.muted)
-                    }
-                @unknown default:
-                    Rectangle().fill(Theme.border.opacity(0.45))
-                }
+        Group {
+            if let loadedImage {
+                Image(uiImage: loadedImage)
+                    .resizable()
+                    .aspectRatio(contentMode: mode)
+            } else if isLoading {
+                loadingPlaceholder
+            } else if didFail {
+                failurePlaceholder
+            } else {
+                loadingPlaceholder
             }
+        }
+        .task(id: url) {
+            await loadImage()
+        }
+    }
+
+    private var loadingPlaceholder: some View {
+        ZStack {
+            Rectangle().fill(Theme.border.opacity(0.45))
+            ProgressView().tint(Theme.orange)
+        }
+    }
+
+    private var failurePlaceholder: some View {
+        ZStack {
+            Rectangle().fill(Theme.border.opacity(0.45))
+            Image(systemName: "photo")
+                .foregroundStyle(Theme.muted)
+        }
+    }
+
+    @MainActor
+    private func loadImage() async {
+        loadedImage = nil
+        didFail = false
+        isLoading = true
+
+        if let previewImageData = PhotoCandidatePreview.data(for: url), let image = UIImage(data: previewImageData) {
+            loadedImage = image
+            isLoading = false
+            return
+        }
+
+        do {
+            let (data, response) = try await URLSession.shared.data(from: url)
+            if let httpResponse = response as? HTTPURLResponse, !(200...299).contains(httpResponse.statusCode) {
+                throw URLError(.badServerResponse)
+            }
+            guard let image = UIImage(data: data) else {
+                throw PhotoLibrarySaveError.invalidImageData
+            }
+            PhotoCandidatePreview.storePreview(from: data, for: url)
+            loadedImage = image
+            isLoading = false
+        } catch {
+            isLoading = false
+            didFail = true
         }
     }
 }

@@ -103,6 +103,25 @@ final class CadetCatchStore {
     @ObservationIgnored private let defaults = UserDefaults.standard
 
     init() {
+        #if DEBUG
+        if let state = CadetCatchDebugFixture.seededState() {
+            hasSeenOnboarding = state.hasSeenOnboarding
+            selectedTab = state.selectedTab
+            cadets = state.cadets
+            activeCadetID = state.activeCadetID
+            candidates = state.candidates
+            savedCandidates = state.savedCandidates
+            scanRecords = state.scanRecords
+            sources = state.sources
+            notes = state.notes
+            lastScanMessage = state.lastScanMessage
+            previewSearchUsed = state.previewSearchUsed ?? false
+            searchCredits = state.searchCredits ?? 0
+            unlockedImageURLs = state.unlockedImageURLs ?? []
+            return
+        }
+        #endif
+
         if
             let data = defaults.data(forKey: storageKey),
             let state = try? JSONDecoder.cadetCatch.decode(PersistedState.self, from: data)
@@ -424,6 +443,68 @@ private struct PersistedState: Codable {
     var searchCredits: Int?
     var unlockedImageURLs: Set<String>?
 }
+
+#if DEBUG
+private enum CadetCatchDebugFixture {
+    static let launchArgument = "--cadetcatch-ui-test-hard-match"
+    static let sourcePageURL = URL(string: "https://cadetcatch.local/qa/index.html")!
+    static let sourceImageURL = URL(string: "https://cadetcatch.local/qa/synthetic-hard-source.jpg")!
+
+    static var isEnabled: Bool {
+        ProcessInfo.processInfo.arguments.contains(launchArgument)
+    }
+
+    static func seededState() -> PersistedState? {
+        guard isEnabled, let profileData = data(fromEnvironment: "CADETCATCH_UI_TEST_PROFILE_JPEG_BASE64") else {
+            return nil
+        }
+
+        let cadet = Cadet(
+            name: "Synthetic QA Cadet",
+            unit: "Fixture Unit",
+            relation: "QA",
+            photoData: profileData
+        )
+
+        return PersistedState(
+            hasSeenOnboarding: true,
+            selectedTab: .home,
+            cadets: [cadet],
+            activeCadetID: cadet.id,
+            candidates: [],
+            savedCandidates: [],
+            scanRecords: [],
+            sources: [
+                PhotoSource(
+                    name: "Synthetic Multi-Face QA Source",
+                    url: sourcePageURL,
+                    category: .custom
+                )
+            ],
+            notes: [:],
+            lastScanMessage: nil,
+            previewSearchUsed: false,
+            searchCredits: 1,
+            unlockedImageURLs: [sourceImageURL.absoluteString]
+        )
+    }
+
+    static func imageURLs(from pageURL: URL) -> [URL]? {
+        guard isEnabled, pageURL == sourcePageURL else { return nil }
+        return [sourceImageURL]
+    }
+
+    static func imageData(for url: URL) -> Data? {
+        guard isEnabled, url == sourceImageURL else { return nil }
+        return data(fromEnvironment: "CADETCATCH_UI_TEST_SOURCE_JPEG_BASE64")
+    }
+
+    private static func data(fromEnvironment key: String) -> Data? {
+        guard let encoded = ProcessInfo.processInfo.environment[key] else { return nil }
+        return Data(base64Encoded: encoded)
+    }
+}
+#endif
 
 enum CommerceProduct: String, CaseIterable, Identifiable {
     case oneTimeSearch = "co.eb28.cadetcatch.search.once"
@@ -863,6 +944,12 @@ enum PublicPhotoScanner {
         guard pageURL.scheme == "https" else { return [] }
 
         let urlString = pageURL.absoluteString
+        #if DEBUG
+        if let fixtureURLs = CadetCatchDebugFixture.imageURLs(from: pageURL) {
+            return fixtureURLs
+        }
+        #endif
+
         if urlString.contains("drive.google.com/drive/") && urlString.contains("folders/") {
             let authManager = await MainActor.run { GoogleDriveAuthManager.shared }
             let isSignedIn = await MainActor.run { authManager.isSignedIn }
@@ -925,6 +1012,12 @@ enum PublicPhotoScanner {
 
     private static func downloadImageData(from url: URL) async -> Data? {
         guard url.scheme == "https" else { return nil }
+        #if DEBUG
+        if let fixtureData = CadetCatchDebugFixture.imageData(for: url) {
+            return fixtureData
+        }
+        #endif
+
         do {
             var request = URLRequest(url: url)
             request.timeoutInterval = 30

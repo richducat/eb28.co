@@ -231,6 +231,91 @@ async function buildFundManagerData() {
   };
 }
 
+// Build a sanitized public lane for the Robinhood equities desk from its
+// local journal. Exposes desk activity (mode, signals, reviewed/placed
+// counts) for the live dashboard — NEVER the account number, holdings, or
+// Robinhood balance.
+async function buildRobinhoodLane() {
+  const home = os.homedir();
+  const journalPath = path.join(home, '.openclaw', 'workspace-dev', 'skills', 'robinhood-equities', 'journal.jsonl');
+  const plistPath = path.join(home, 'Library', 'LaunchAgents', 'ai.openclaw.simmer.robinhood.plist');
+  const launchControlPath = path.join(home, '.openclaw', 'workspace-dev', 'runtime', 'launch_control.json');
+
+  let raw;
+  try {
+    raw = await fs.readFile(journalPath, 'utf8');
+  } catch {
+    return null; // desk not present on this machine
+  }
+
+  const entries = raw.trim().split('\n').slice(-80).map((line) => {
+    try { return JSON.parse(line); } catch { return null; }
+  }).filter(Boolean);
+  if (entries.length === 0) return null;
+
+  const plistText = await fs.readFile(plistPath, 'utf8').catch(() => '');
+  const armedLive = plistText.includes('--live');
+  const control = await readJsonSafe(launchControlPath) || {};
+  const gateOpen = control.global_kill_switch === false && control.allow_live_trading === true;
+
+  const placeEvents = entries.filter((e) => e.event === 'place');
+  const reviewEvents = entries.filter((e) => e.event === 'review');
+  const lastCycle = [...entries].reverse().find((e) => e.event === 'cycle');
+  const lastPlaceAt = placeEvents.length ? placeEvents[placeEvents.length - 1].at : null;
+
+  let status, reasonCode, nextAction;
+  if (armedLive && gateOpen) {
+    if (lastPlaceAt) { status = 'RUNNING'; reasonCode = null; nextAction = 'manage_live_orders'; }
+    else { status = 'MONITORING'; reasonCode = 'WAITING_FOR_EDGE'; nextAction = 'await_dip_signal'; }
+  } else {
+    status = 'MONITORING'; reasonCode = 'REVIEW_ONLY'; nextAction = 'observe_signals';
+  }
+
+  const recentEvents = [...reviewEvents].reverse().slice(0, 4).map((e) => ({
+    timestamp: e.at,
+    message: `Bluechip: ${(e.signal && e.signal.reason) ? `reviewed $${(e.order && e.order.dollar_amount) || '?'} ${e.symbol} buy — ${e.signal.reason}` : `reviewed ${e.symbol}`}`,
+    details: { venue: 'robinhood' },
+  }));
+
+  return {
+    id: 'robinhood-equities',
+    name: 'Bluechip',
+    mode: 'active',
+    status,
+    lastCycleAt: lastCycle ? lastCycle.at : (entries[entries.length - 1].at || null),
+    lastReasonCode: reasonCode,
+    lastErrorClass: null,
+    lastSuccessfulFillAt: lastPlaceAt,
+    nextAction,
+    consecutiveFailures: 0,
+    cadenceMinutes: 15,
+    description: 'US equities desk on Robinhood Agentic Trading (official MCP). Dip-buys small fractional positions.',
+    venue: 'robinhood',
+    metrics: {
+      filled: placeEvents.length,
+      submitted: placeEvents.length,
+      skipped: 0,
+      failed: 0,
+      watched: status === 'MONITORING' ? 1 : 0,
+    },
+    reasonMetrics: reasonCode ? { [reasonCode]: 1 } : {},
+    cooldowns: [],
+    circuitBreaker: { open: false, openUntil: null, threshold: 0, cooloffMinutes: 0 },
+    recentEvents,
+    providerActivity: {
+      positions: [],
+      openOrders: [],
+      positionCount: 0,
+      openOrderCount: 0,
+      positionValueUsd: 0,
+      positionPnlUsd: 0,
+      sourceTags: ['robinhood:equities'],
+      lastActivityAt: lastPlaceAt || (lastCycle ? lastCycle.at : null),
+    },
+    sourceTags: ['robinhood:equities'],
+  };
+}
+
 async function buildFundManagerPublicSnapshot() {
   const req = { method: 'GET' };
   let payload = null;
@@ -255,6 +340,20 @@ async function buildFundManagerPublicSnapshot() {
 
   if (!payload || payload.ok === false) {
     throw new Error(payload?.error || 'fundmanager snapshot generation failed');
+  }
+
+  // Merge in the Robinhood equities desk (lives outside the Simmer snapshot)
+  // so the public dashboard shows the full live Desk OS fleet.
+  try {
+    const robinhood = await buildRobinhoodLane();
+    if (robinhood) {
+      payload.lanes = [robinhood, ...(payload.lanes || [])];
+      if (payload.summary) {
+        payload.summary.activeLanes = (payload.summary.activeLanes || 0) + 1;
+      }
+    }
+  } catch (error) {
+    console.error('robinhood lane merge skipped:', error.message);
   }
 
   return payload;

@@ -1573,11 +1573,11 @@
     "cluster": "lead-automation",
     "primaryKeyword": "CRM automation for local service business",
     "datePublished": "2026-06-08",
-    "dateModified": "2026-06-08",
+    "dateModified": "2026-06-17",
     "author": "EB28",
     "heroLabel": "Morning growth brief",
-    "sourceRunId": "2026-06-08-am",
-    "summary": "A plain-English AM growth brief for the lead automation cluster, focused on capture, qualify, follow up, and report and the first fix most likely to create qualified leads.",
+    "sourceRunId": "2026-06-17-am",
+    "summary": "A refreshed guide for the lead automation cluster, focused on the simplest CRM handoff stack that captures, qualifies, follows up, and reports without adding sales-system bloat.",
     "sections": [
       {
         "heading": "Why this search matters",
@@ -1608,14 +1608,14 @@
       {
         "heading": "How EB28 turns it into a system",
         "body": [
-          "Automation should support the sale without pretending to be the whole relationship. The best system captures intent, follows up quickly, and keeps the owner in control.",
-          "That loop is what the EB28 automation runs daily. It keeps content production, technical SEO, internal links, Search Console checks, and reporting tied to the same ranking goal."
+          "CRM automation should support the sale without pretending to be the whole relationship. The best system captures intent, follows up quickly, and keeps the owner in control.",
+          "A useful stack records the source page, service need, urgency, and next action so the first reply sounds specific instead of automated."
         ],
         "bullets": [
-          "Publish two content updates daily at 6 AM and 6 PM Eastern",
-          "Run a daily SEO review after the evening content cycle",
-          "Inspect the newest URLs and pull actual query average position when Search Console credentials are available",
-          "Send a report to richducat@gmail.com when email credentials are configured"
+          "Capture source URL and service need from every form, chat, and missed-call flow",
+          "Send an instant confirmation with the expected response window",
+          "Route high-intent leads to a human with the context needed for a useful reply",
+          "Review search and conversion data before adding more automation"
         ]
       }
     ],

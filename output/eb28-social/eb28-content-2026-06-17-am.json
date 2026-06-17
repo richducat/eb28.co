@@ -1,0 +1,56 @@
+{
+  "brand": "EB28",
+  "generatedAt": "2026-06-17T10:02:26.232Z",
+  "runId": "2026-06-17-am",
+  "slot": "am",
+  "article": {
+    "title": "CRM Automation for Local Service Businesses: The Simple Stack That Works",
+    "url": "https://eb28.co/blog/crm-automation-for-local-service-businesses-the-simple-stack-that-works/",
+    "cluster": "lead-automation",
+    "primaryKeyword": "CRM automation for local service business"
+  },
+  "posts": {
+    "blog": {
+      "title": "CRM Automation for Local Service Businesses: The Simple Stack That Works",
+      "url": "https://eb28.co/blog/crm-automation-for-local-service-businesses-the-simple-stack-that-works/",
+      "status": "draft_only_ready_for_build_and_deploy"
+    },
+    "facebook": {
+      "caption": "CRM Automation for Local Service Businesses: The Simple Stack That Works\n\nLocal service businesses do not need a bloated sales platform first. They need a simple handoff stack: capture the source, qualify the request, confirm the next step, and route the right leads to a human fast.\n\nRead it: https://eb28.co/blog/crm-automation-for-local-service-businesses-the-simple-stack-that-works/",
+      "status": "draft_only_pending_verified_eb28_owned_channel"
+    },
+    "instagram": {
+      "caption": "CRM automation for local service business: start with the handoff after the form.\n\nCapture source page, service need, urgency, and the next action. Then route high-intent leads to a real person with context.\n\nFull guide at eb28.co/blog/",
+      "creativeBrief": "Carousel: Slide 1 missed-lead problem, Slide 2 simple CRM stack, Slide 3 instant confirmation, Slide 4 human handoff lane, Slide 5 CTA to EB28 project brief.",
+      "status": "draft_only_pending_verified_eb28_owned_channel"
+    },
+    "x": {
+      "caption": "CRM Automation for Local Service Businesses: The Simple Stack That Works\n\nCapture the source, qualify the request, confirm the next step, and route high-intent leads to a human with context.\n\nhttps://eb28.co/blog/crm-automation-for-local-service-businesses-the-simple-stack-that-works/",
+      "status": "draft_only_pending_verified_eb28_owned_channel"
+    },
+    "linkedin": {
+      "caption": "Refreshed EB28 growth brief: CRM Automation for Local Service Businesses: The Simple Stack That Works\n\nThis breaks down the practical handoff stack local service companies need before they buy a heavier CRM: source capture, qualification, instant confirmation, owner-controlled routing, and reporting that ties leads back to the page that created them.\n\nhttps://eb28.co/blog/crm-automation-for-local-service-businesses-the-simple-stack-that-works/",
+      "status": "draft_only_pending_verified_eb28_owned_channel"
+    },
+    "shortFormVideo": {
+      "platformFit": [
+        "Instagram Reels",
+        "YouTube Shorts",
+        "TikTok"
+      ],
+      "hook": "Your CRM does not need to be complicated to stop missed local leads.",
+      "script": [
+        "Show a website form, chat, and missed call landing at the same time.",
+        "Cut to four fields: source page, service need, urgency, and next action.",
+        "Show instant confirmation going to the lead and a contextual handoff going to the owner.",
+        "Close with the guide URL and EB28 project brief CTA."
+      ],
+      "caption": "Start CRM automation with the lead handoff, not a bloated sales platform. Guide: eb28.co/blog/",
+      "status": "draft_only_pending_verified_eb28_owned_channel"
+    }
+  },
+  "socialPublishGuard": {
+    "status": "draft_only",
+    "note": "Do not publish externally until the EB28-owned account and channel are explicitly verified by a repo script or connector."
+  }
+}

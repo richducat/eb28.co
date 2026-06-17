@@ -1,0 +1,46 @@
+{
+  "brand": "EB28",
+  "generatedAt": "2026-06-17T22:03:36.092Z",
+  "runId": "2026-06-17-pm",
+  "slot": "pm",
+  "article": {
+    "title": "Local RAG System for Business Documents: Plain-English Guide",
+    "url": "https://eb28.co/blog/local-rag-system-for-business-documents-a-plain-english-implementation-guide/",
+    "cluster": "private-ai",
+    "primaryKeyword": "local RAG system for business documents"
+  },
+  "posts": {
+    "blog": {
+      "title": "Local RAG System for Business Documents: Plain-English Guide",
+      "url": "https://eb28.co/blog/local-rag-system-for-business-documents-a-plain-english-implementation-guide/",
+      "status": "ready_for_build_and_deploy"
+    },
+    "facebook": {
+      "caption": "Local RAG System for Business Documents: Plain-English Guide\n\nA practical guide for businesses that want staff to search company documents with AI without handing sensitive files to uncontrolled public tools.\n\nRead it: https://eb28.co/blog/local-rag-system-for-business-documents-a-plain-english-implementation-guide/",
+      "status": "draft_only_pending_verified_eb28_owned_channel"
+    },
+    "linkedin": {
+      "caption": "New EB28 private AI guide: Local RAG System for Business Documents: Plain-English Guide\n\nThe useful first version is not a giant AI demo. It is a narrow document workflow with access rules, source citations, logging, and human review.\n\nhttps://eb28.co/blog/local-rag-system-for-business-documents-a-plain-english-implementation-guide/",
+      "status": "draft_only_pending_verified_eb28_owned_channel"
+    },
+    "instagram": {
+      "caption": "Local RAG for business documents, without the hype.\n\nStart with one document workflow. Require source citations. Keep sensitive answers under human review.\n\nFull guide at eb28.co/blog/",
+      "creativeBrief": "Carousel: Slide 1 local RAG in plain English, Slide 2 choose one document set, Slide 3 source citations, Slide 4 access rules, Slide 5 EB28 project brief CTA.",
+      "status": "draft_only_pending_verified_eb28_owned_channel"
+    },
+    "shortFormVideo": {
+      "caption": "Before you connect AI to company files, choose one workflow and prove it can cite sources safely.",
+      "brief": "30-second vertical video: 0-3s hook \"Do not dump company docs into random AI tools\"; 3-10s show one workflow such as SOP lookup; 10-20s source citations, permissions, logs, human review; 20-30s CTA to read the EB28 Local RAG guide.",
+      "platforms": [
+        "Instagram Reels",
+        "TikTok",
+        "YouTube Shorts"
+      ],
+      "status": "draft_only_pending_verified_eb28_owned_channel"
+    },
+    "x": {
+      "caption": "Local RAG System for Business Documents: Plain-English Guide\n\nStart with one private document workflow, require source citations, and keep human review in the loop.\n\nhttps://eb28.co/blog/local-rag-system-for-business-documents-a-plain-english-implementation-guide/",
+      "status": "draft_only_pending_verified_eb28_owned_channel"
+    }
+  }
+}

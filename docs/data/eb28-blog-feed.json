@@ -1,8 +1,18 @@
 {
-  "generatedAt": "2026-06-17T18:04:06.801Z",
+  "generatedAt": "2026-06-17T22:05:25.345Z",
   "site": "https://eb28.co",
   "blogUrl": "https://eb28.co/blog/",
   "articles": [
+    {
+      "slug": "ai-receptionist-for-local-business-what-to-automate-and-what-to-keep-human-2026-06",
+      "title": "AI Receptionist for Local Business: What to Automate",
+      "description": "Use an AI receptionist for local business without losing the human handoff. See what to automate, what to keep human, and how to capture leads.",
+      "cluster": "lead-automation",
+      "primaryKeyword": "AI receptionist for local business",
+      "url": "https://eb28.co/blog/ai-receptionist-for-local-business-what-to-automate-and-what-to-keep-human-2026-06/",
+      "datePublished": "2026-06-16",
+      "dateModified": "2026-06-16"
+    },
     {
       "slug": "private-ai-vs-chatgpt-for-business-how-to-choose-the-right-workflow-2026-06-16-am",
       "title": "Private AI vs ChatGPT for Business: How to Choose",
@@ -141,7 +151,7 @@
       "primaryKeyword": "CRM automation for local service business",
       "url": "https://eb28.co/blog/crm-automation-for-local-service-businesses-the-simple-stack-that-works/",
       "datePublished": "2026-06-08",
-      "dateModified": "2026-06-08"
+      "dateModified": "2026-06-17"
     },
     {
       "slug": "private-ai-vs-chatgpt-for-business-how-to-choose-the-right-workflow",
@@ -186,12 +196,12 @@
     {
       "slug": "local-rag-system-for-business-documents-a-plain-english-implementation-guide",
       "title": "Local RAG System for Business Documents: Plain-English Guide",
-      "description": "Learn what a local RAG system does, when it makes sense for business documents, and how to protect sensitive data before connecting AI to staff workflows.",
+      "description": "Learn what a local RAG system does, how to protect sensitive business documents, and when to turn private AI into a scoped EB28 build.",
       "cluster": "private-ai",
       "primaryKeyword": "local RAG system for business documents",
       "url": "https://eb28.co/blog/local-rag-system-for-business-documents-a-plain-english-implementation-guide/",
       "datePublished": "2026-06-04",
-      "dateModified": "2026-06-04"
+      "dateModified": "2026-06-17"
     },
     {
       "slug": "ai-receptionist-for-local-business-what-to-automate-and-what-to-keep-human",

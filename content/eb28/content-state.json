@@ -1,6 +1,20 @@
 {
-  "updatedAt": "2026-06-17T10:02:26.232Z",
+  "updatedAt": "2026-06-17T22:05:25.294Z",
   "runs": [
+    {
+      "runId": "2026-06-17-pm",
+      "date": "2026-06-17",
+      "slot": "pm",
+      "createdAt": "2026-06-17T22:03:36.092Z",
+      "article": {
+        "slug": "local-rag-system-for-business-documents-a-plain-english-implementation-guide",
+        "title": "Local RAG System for Business Documents: Plain-English Guide",
+        "url": "https://eb28.co/blog/local-rag-system-for-business-documents-a-plain-english-implementation-guide/",
+        "cluster": "private-ai",
+        "primaryKeyword": "local RAG system for business documents"
+      },
+      "reportPath": "/private/tmp/eb28-content-engine-20260617-220302/output/eb28-social/eb28-content-2026-06-17-pm.json"
+    },
     {
       "runId": "2026-06-17-am",
       "date": "2026-06-17",

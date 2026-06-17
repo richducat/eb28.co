@@ -290,6 +290,17 @@ const ROUTE_META = {
             },
         ],
     },
+    start: {
+        ...BASE_ROUTE_META,
+        key: 'start',
+        path: '/start/',
+        title: 'EB28 Desk OS — Start Here | Autonomous Trading Agents + Kill-Switch OS',
+        description:
+            'One link for everything EB28 Desk OS: get the software, watch the fleet trade live (losses included), and follow the build. Software license, not investment advice.',
+        image: FUNDMANAGER_IMAGE,
+        includeInSitemap: true,
+        structuredData: [ORGANIZATION_SCHEMA],
+    },
     reconcile: {
         ...BASE_ROUTE_META,
         key: 'reconcile',
@@ -511,6 +522,8 @@ export const STATIC_ROUTE_OUTPUTS = [
     { routeKey: 'appbuilder', outputPath: 'appbuilder/index.html' },
     { routeKey: 'fundmanager', outputPath: 'fundmanager/index.html' },
     { routeKey: 'deskos', outputPath: 'deskos/index.html' },
+    { routeKey: 'start', outputPath: 'start/index.html' },
+    { routeKey: 'start', outputPath: 'links/index.html' },
     { routeKey: 'reconcile', outputPath: 'reconcile/index.html' },
     { routeKey: 'creditgps', outputPath: 'limitless/index.html' },
     { routeKey: 'creditgps', outputPath: 'limitless/onboarding/index.html' },
@@ -571,6 +584,10 @@ export function detectRouteKey({ pathname = '/', hostname = '' } = {}) {
 
     if (normalizedPathname === '/deskos' || normalizedHostname === 'deskos.eb28.co') {
         return 'deskos';
+    }
+
+    if (normalizedPathname === '/start' || normalizedPathname === '/links') {
+        return 'start';
     }
 
     if (normalizedPathname === '/reconcile' || normalizedHostname === 'reconcile.eb28.co') {

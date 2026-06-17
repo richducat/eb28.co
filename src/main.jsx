@@ -58,6 +58,9 @@ const isFindMyCustomersRoute =
 const isWelcomeRoute =
   pathname === '/welcome' ||
   pathname.startsWith('/welcome/');
+const isStartRoute =
+  pathname === '/start' ||
+  pathname === '/links';
 
 function renderComponent(Component) {
   root.render(
@@ -135,6 +138,11 @@ async function renderApp() {
 
   if (isWelcomeRoute) {
     await renderRoute(() => import('./WelcomePage.jsx'));
+    return;
+  }
+
+  if (isStartRoute) {
+    await renderRoute(() => import('./StartPage.jsx'));
     return;
   }
 

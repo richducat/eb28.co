@@ -1,0 +1,31 @@
+{
+  "hooks": [
+    "The hard part was never writing a trading bot. It's writing the thing that stops one.",
+    "I ran 9 live bots, then killed the whole floor with one command.",
+    "Every trading-bot pitch shows you green. Mine shows you the live account — losses included.",
+    "Default state of every desk in my fleet: OFF.",
+    "Nobody brags about their circuit breaker. That's how you know nobody built one.",
+    "If a trading product won't show you a losing day, that tells you everything.",
+    "'How much will it make me?' is the wrong question. 'What stops it when it shouldn't be trading?' is the right one.",
+    "Real markets don't do 'passive.' Anything that runs unattended needs a guard that can shut it down.",
+    "Robinhood shipped an official Agentic Trading MCP. Now the question is whether your agent is wrapped in a kill switch. Mine is.",
+    "8 agents. One obsession each. One kill switch over all of them.",
+    "Capital guard means the agent literally cannot size past the ceiling you set.",
+    "The flex isn't a green screenshot. The flex is a live page I never have to take down.",
+    "I'd rather show you a red day and keep my credibility than fake a green one and lose it.",
+    "Connecting an unsupervised bot to your brokerage account should scare you. That fear is correct.",
+    "A backtest is a story told with hindsight. A live tape is the truth.",
+    "Local-first. Your machine, your keys, your kill switch.",
+    "One desk's logic goes sideways, its breaker trips, it goes dark alone. The other 7 keep running.",
+    "I'm not selling returns. I'm selling a safety system + 8 agents that run on your own Mac.",
+    "Start is easy. Stop is the engineering.",
+    "Buy from people who show you the tape."
+  ],
+  "templates": {
+    "x_single": ["{hook}", "{hook}\n\n{cta}"],
+    "x_thread_opener": ["{hook}\n\nThread ↓", "{hook}\n\nLet me show you why 🧵"],
+    "reddit_title": ["{hook}", "I built this and I'm showing the real (losing) tape — {short}"],
+    "linkedin_opener": ["{hook}", "{hook}\n\nHere's what I learned building it."],
+    "short_form_hook": ["{hook}", "Watch this: {hook}"]
+  }
+}

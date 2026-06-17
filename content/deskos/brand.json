@@ -1,0 +1,33 @@
+{
+  "name": "EB28 Desk OS",
+  "shortName": "Desk OS",
+  "links": {
+    "sales": "https://eb28.co/deskos",
+    "liveTape": "https://eb28.co/fundmanager",
+    "hub": "https://eb28.co/start"
+  },
+  "audience": "Indie hackers, retail algo-traders, prediction-market and Robinhood power users, build-in-public founders.",
+  "voice": "Sharp indie-hacker/quant, anti-guru, direct, technical-but-accessible, build-in-public. No hype, no emoji spam.",
+  "positioning": "A local-first fleet of autonomous trading agents behind a kill switch. The safety system is the product; radical transparency is the proof.",
+  "proofPoints": [
+    "The live tape is public and includes real losses — currently down ~$61, printed on purpose.",
+    "Founder ran 9 live bots and shut the whole floor down with one command. That kill switch is the product.",
+    "Gated runner, capital guard, per-desk circuit breakers, trade journal, live dashboard.",
+    "Runs local-first on your own Mac — your keys, your kill switch.",
+    "Works with Polymarket, Kalshi (Simmer SDK) and Robinhood's official Agentic Trading MCP.",
+    "8 agents, one obsession each. License one for $47, the full fleet + OS for $197, operator install $497."
+  ],
+  "rules": [
+    "NO income claims. NO passive-income / get-rich / money-printer / guaranteed-returns language.",
+    "NO performance promises. It is a software license, not investment advice.",
+    "Always imply real risk of loss.",
+    "Lead with the safety system and transparency, never returns.",
+    "Buy-from-people-who-show-you-the-tape is the core trust line."
+  ],
+  "ctas": [
+    "Watch it trade live (losses included): eb28.co/fundmanager",
+    "Get the Desk OS: eb28.co/deskos",
+    "Start here: eb28.co/start"
+  ],
+  "riskLine": "Software license, not investment advice. Trading carries real risk of loss — including ours."
+}

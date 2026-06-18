@@ -1,0 +1,46 @@
+{
+  "brand": "EB28",
+  "generatedAt": "2026-06-18T22:02:10.883Z",
+  "runId": "2026-06-18-pm",
+  "slot": "pm",
+  "article": {
+    "title": "Space Coast Local SEO Citations: Build Real Authority",
+    "url": "https://eb28.co/blog/space-coast-local-seo-citations-where-real-authority-comes-from-2026-06-18-pm/",
+    "cluster": "local-seo",
+    "primaryKeyword": "Space Coast local SEO citations"
+  },
+  "posts": {
+    "blog": {
+      "title": "Space Coast Local SEO Citations: Build Real Authority",
+      "url": "https://eb28.co/blog/space-coast-local-seo-citations-where-real-authority-comes-from-2026-06-18-pm/",
+      "status": "ready_for_build_and_deploy"
+    },
+    "facebook": {
+      "caption": "Space Coast local SEO citations only help when they support the same business story buyers see on Google, the website, reviews, and the contact path.\n\nEB28's new guide breaks down the practical version: accurate local mentions, map-pack trust signals, website links, and a lead path that does not lose the visitor.\n\nRead it: https://eb28.co/blog/space-coast-local-seo-citations-where-real-authority-comes-from-2026-06-18-pm/",
+      "status": "draft_only_pending_verified_eb28_owned_channel"
+    },
+    "instagram": {
+      "caption": "Space Coast local SEO citations: the practical version.\n\nWe broke down what to fix first, how to connect it to real lead flow, and what EB28 checks daily to keep search growth moving.\n\nRead the full guide at eb28.co/blog/",
+      "creativeBrief": "Carousel: Slide 1 problem statement, Slide 2 what to fix first, Slide 3 technical SEO checks, Slide 4 internal links, Slide 5 CTA to project brief.",
+      "status": "draft_only_pending_verified_eb28_owned_channel"
+    },
+    "x": {
+      "caption": "Space Coast local SEO citations work when they support the same local story across Google, the website, reviews, and the lead path.\n\nNew EB28 guide:\nhttps://eb28.co/blog/space-coast-local-seo-citations-where-real-authority-comes-from-2026-06-18-pm/",
+      "status": "draft_only_pending_verified_eb28_owned_channel"
+    },
+    "linkedin": {
+      "caption": "New EB28 growth brief: Space Coast Local SEO Citations: Build Real Authority\n\nLocal citations are useful when they reinforce the same proof buyers see on the homepage, Google Business Profile, service pages, reviews, and contact path. The guide covers what to fix first and how to turn local-search visibility into a clearer lead path.\n\nhttps://eb28.co/blog/space-coast-local-seo-citations-where-real-authority-comes-from-2026-06-18-pm/",
+      "status": "draft_only_pending_verified_eb28_owned_channel"
+    },
+    "shortFormVideo": {
+      "hook": "Your local citations are not authority if they point to a confusing website.",
+      "script": [
+        "Open with a Google map/profile screenshot-style visual and the line: local citations should prove the same business story everywhere.",
+        "Show three quick checks: business name and service area match, website page answers the buyer's question, contact path uses the site form or richducat@gmail.com.",
+        "Close with the EB28 article URL and a prompt to run the Melbourne Web Studio lead leak quiz."
+      ],
+      "shotBrief": "Vertical 20-30 second talking-head plus screen-recording brief. Use captions, cite Google Search Central/Business Profile guidance visually, and avoid public phone or cell contact.",
+      "status": "draft_only_pending_verified_eb28_owned_channel"
+    }
+  }
+}

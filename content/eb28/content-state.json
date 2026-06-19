@@ -1,6 +1,20 @@
 {
-  "updatedAt": "2026-06-18T22:02:10.883Z",
+  "updatedAt": "2026-06-19T12:31:03.853Z",
   "runs": [
+    {
+      "runId": "2026-06-19-am",
+      "date": "2026-06-19",
+      "slot": "am",
+      "createdAt": "2026-06-19T12:07:03.998Z",
+      "article": {
+        "slug": "small-business-web-design-in-melbourne-fl-what-actually-brings-leads",
+        "title": "Small Business Web Design in Melbourne FL: What Actually Brings Leads",
+        "url": "https://eb28.co/blog/small-business-web-design-in-melbourne-fl-what-actually-brings-leads/",
+        "cluster": "melbourne-web-design",
+        "primaryKeyword": "small business web design Melbourne FL"
+      },
+      "reportPath": "output/eb28-social/eb28-content-2026-06-19-am.json"
+    },
     {
       "runId": "2026-06-18-pm",
       "date": "2026-06-18",

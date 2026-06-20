@@ -1,0 +1,43 @@
+{
+  "brand": "EB28",
+  "generatedAt": "2026-06-20T22:01:53.695Z",
+  "runId": "2026-06-20-pm",
+  "slot": "pm",
+  "article": {
+    "title": "Private AI for Small Business: Start Safe Without Overbuilding",
+    "url": "https://eb28.co/blog/private-ai-for-small-business-the-safe-way-to-start-without-overbuilding/",
+    "cluster": "private-ai",
+    "primaryKeyword": "private AI for small business"
+  },
+  "posts": {
+    "blog": {
+      "title": "Private AI for Small Business: Start Safe Without Overbuilding",
+      "url": "https://eb28.co/blog/private-ai-for-small-business-the-safe-way-to-start-without-overbuilding/",
+      "status": "ready_for_build_and_deploy"
+    },
+    "facebook": {
+      "caption": "Private AI for Small Business: Start Safe Without Overbuilding\n\nPrivate AI should start with one safe workflow, clear data boundaries, and a lead path that can be measured. This EB28 refresh breaks down how small businesses can start without overbuilding.\n\nRead it: https://eb28.co/blog/private-ai-for-small-business-the-safe-way-to-start-without-overbuilding/",
+      "status": "draft_only"
+    },
+    "instagram": {
+      "caption": "Private AI works best when it starts small.\n\nPick one workflow. Keep sensitive data in a controlled path. Review output before it reaches customers. Connect the next step to a real lead path.\n\nRead the full guide at eb28.co/blog/",
+      "creativeBrief": "Carousel: Slide 1 one safe workflow, Slide 2 data boundaries, Slide 3 private retrieval, Slide 4 human review, Slide 5 CTA to the Melbourne Web Studio project brief.",
+      "status": "draft_only"
+    },
+    "x": {
+      "caption": "Private AI for Small Business: Start Safe Without Overbuilding\n\nThe practical start: one workflow, clear data boundaries, controlled retrieval, human review, and a lead path you can measure.\n\nhttps://eb28.co/blog/private-ai-for-small-business-the-safe-way-to-start-without-overbuilding/",
+      "status": "draft_only"
+    },
+    "linkedin": {
+      "caption": "New EB28 growth brief refresh: Private AI for Small Business: Start Safe Without Overbuilding\n\nThis covers how small businesses can start with private AI without turning it into an open-ended platform build: choose one workflow, set data boundaries, use controlled retrieval, and connect the outcome to a measurable lead path.\n\nhttps://eb28.co/blog/private-ai-for-small-business-the-safe-way-to-start-without-overbuilding/",
+      "status": "draft_only"
+    },
+    "shortFormVideo": {
+      "hook": "Private AI should not start as a giant platform build.",
+      "brief": "15-25 second vertical video. Open with a messy stack of internal documents, cut to three text beats: choose one workflow, protect sensitive data, review output before customers see it. End on the EB28 article title and Melbourne Web Studio project brief CTA.",
+      "caption": "Start private AI with one safe workflow, controlled data, and a lead path you can measure.",
+      "status": "draft_only"
+    }
+  },
+  "publishingGuard": "Do not publish externally until an EB28-owned social channel is verified by a repo script or connector."
+}

@@ -1,6 +1,20 @@
 {
-  "updatedAt": "2026-06-19T22:03:14.646Z",
+  "updatedAt": "2026-06-20T22:01:53.695Z",
   "runs": [
+    {
+      "runId": "2026-06-20-pm",
+      "date": "2026-06-20",
+      "slot": "pm",
+      "createdAt": "2026-06-20T22:01:53.695Z",
+      "article": {
+        "slug": "private-ai-for-small-business-the-safe-way-to-start-without-overbuilding",
+        "title": "Private AI for Small Business: Start Safe Without Overbuilding",
+        "url": "https://eb28.co/blog/private-ai-for-small-business-the-safe-way-to-start-without-overbuilding/",
+        "cluster": "private-ai",
+        "primaryKeyword": "private AI for small business"
+      },
+      "reportPath": "output/eb28-social/eb28-content-2026-06-20-pm.json"
+    },
     {
       "runId": "2026-06-19-pm",
       "date": "2026-06-19",

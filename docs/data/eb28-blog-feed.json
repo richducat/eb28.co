@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-19T22:07:00.221Z",
+  "generatedAt": "2026-06-20T22:04:16.956Z",
   "site": "https://eb28.co",
   "blogUrl": "https://eb28.co/blog/",
   "articles": [
@@ -55,13 +55,13 @@
     },
     {
       "slug": "private-ai-for-small-business-the-safe-way-to-start-without-overbuilding",
-      "title": "Private AI for Small Business: The Safe Way to Start Without Overbuilding",
+      "title": "Private AI for Small Business: Start Safe Without Overbuilding",
       "description": "A practical private AI guide for small businesses: pick one safe workflow, set data boundaries, avoid overbuilding, and connect the result to real leads.",
       "cluster": "private-ai",
       "primaryKeyword": "private AI for small business",
       "url": "https://eb28.co/blog/private-ai-for-small-business-the-safe-way-to-start-without-overbuilding/",
       "datePublished": "2026-06-14",
-      "dateModified": "2026-06-14"
+      "dateModified": "2026-06-20"
     },
     {
       "slug": "secure-business-ai-assistant-what-to-keep-private-from-day-one",

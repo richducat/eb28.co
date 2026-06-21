@@ -39,6 +39,7 @@ final class ScannerProgress {
     var isCancelled = false
     
     var progressString: String {
+        if !message.isEmpty { return message }
         guard totalPhotosFound > 0, let start = startDate else { return "Scanning..." }
         let elapsed = Date().timeIntervalSince(start)
         let percent = Int((Double(photosScanned) / Double(totalPhotosFound)) * 100)
@@ -302,7 +303,6 @@ final class CadetCatchStore {
         I found a possible photo from \(candidate.sourceName) for \(candidate.cadetName).
 
         Source: \(candidate.sourceHost)
-        Confidence: \(candidate.confidence)%
         Reviewed: \(candidate.createdAt.formatted(date: .abbreviated, time: .shortened))
         """
         notes[key] = note
@@ -316,25 +316,20 @@ final class CadetCatchStore {
             return
         }
 
-        guard !enabledSources.isEmpty else {
-            lastScanMessage = "Add at least one enabled public source."
-            return
-        }
-
-        let checkedSources = enabledSources
         scanProgress.reset()
+        scanProgress.message = "Uploading cadet photo to secure search..."
         showScanReceipt = false
         
         do {
             let attributes = ScanActivityAttributes(cadetName: cadet.name)
-            let initialState = ScanActivityAttributes.ContentState(progressString: "Starting scan...", isScanning: true)
+            let initialState = ScanActivityAttributes.ContentState(progressString: "Uploading cadet photo...", isScanning: true)
             if let activity = try? Activity.request(attributes: attributes, content: .init(state: initialState, staleDate: nil)) {
                 currentActivity = ActivityWrapper(activity)
             }
         }
         
         scanTask = Task { @MainActor in
-            let scanResult = await PublicPhotoScanner.scan(cadet: cadet, sources: checkedSources, progress: scanProgress) { [weak self] stateString in
+            let scanResult = await PublicPhotoScanner.scan(cadet: cadet, progress: scanProgress) { [weak self] stateString in
                 Task { @MainActor in
                     if let wrapper = self?.currentActivity {
                         Task {
@@ -358,15 +353,11 @@ final class CadetCatchStore {
             lastScanMessage = scanResult.message
 
             let scannedAt = Date()
-            for source in checkedSources {
-                guard let index = sources.firstIndex(where: { $0.id == source.id }) else { continue }
-                sources[index].lastCheckedAt = scannedAt
-            }
 
             scanRecords.insert(
                 ScanRecord(
                     cadetName: cadet.name,
-                    checkedSourceCount: checkedSources.count,
+                    checkedSourceCount: 1,
                     imageCount: scanResult.checkedImageCount,
                     matchCount: scanResult.candidates.count,
                     scannedAt: scannedAt
@@ -523,7 +514,7 @@ enum CommerceProduct: String, CaseIterable, Identifiable {
 
     var detail: String {
         switch self {
-        case .oneTimeSearch: "Run one additional public-source photo check."
+        case .oneTimeSearch: "Run one additional server photo check."
         case .photoUnlock: "View, save, and share one matched photo."
         case .monthly: "Continuous photo checks and unlocked matches while active."
         }
@@ -811,6 +802,191 @@ struct ScanResult {
     var message: String
 }
 
+private enum CadetCatchSearchAPI {
+    static let searchURL = URL(string: "https://api.cadetcatch.com/search")!
+
+    private static let session: URLSession = {
+        let config = URLSessionConfiguration.default
+        config.timeoutIntervalForRequest = 45
+        config.timeoutIntervalForResource = 90
+        return URLSession(configuration: config)
+    }()
+
+    enum SearchError: Error {
+        case invalidImage
+        case invalidResponse
+        case noFaceDetected
+        case multipleFacesDetected
+        case server(statusCode: Int)
+    }
+
+    struct APIErrorResponse: Decodable, Sendable {
+        let error: String?
+        let detail: String?
+
+        var message: String? {
+            error ?? detail
+        }
+    }
+
+    struct SearchResponse: Decodable, Sendable {
+        let queryFacesDetected: Int
+        let queryFaceIndexUsed: Int?
+        let matchesReturned: Int
+        let matches: [SearchMatch]
+
+        private enum CodingKeys: String, CodingKey {
+            case queryFacesDetected = "query_faces_detected"
+            case queryFaceIndexUsed = "query_face_index_used"
+            case matchesReturned = "matches_returned"
+            case matches
+        }
+
+        init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            queryFacesDetected = try container.decode(Int.self, forKey: .queryFacesDetected)
+            queryFaceIndexUsed = try container.decodeIfPresent(Int.self, forKey: .queryFaceIndexUsed)
+            matches = try container.decodeIfPresent([SearchMatch].self, forKey: .matches) ?? []
+            matchesReturned = try container.decodeIfPresent(Int.self, forKey: .matchesReturned) ?? matches.count
+        }
+    }
+
+    struct SearchMatch: Decodable, Sendable {
+        let score: Double
+        let photoFile: String?
+        let photoUrl: String?
+        let bbox: [Double]?
+        let faceIndex: Int?
+        let detScore: Double?
+
+        private enum CodingKeys: String, CodingKey {
+            case score
+            case photoFile = "photo_file"
+            case originalFilename = "original_filename"
+            case photoId = "photo_id"
+            case photoUrl = "photo_url"
+            case originalUrl = "original_url"
+            case thumbnailUrl = "thumbnail_url"
+            case bbox
+            case faceIndex = "face_index"
+            case detScore = "det_score"
+        }
+
+        init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            score = try container.decode(Double.self, forKey: .score)
+            photoFile = try container.decodeIfPresent(String.self, forKey: .photoFile)
+                ?? container.decodeIfPresent(String.self, forKey: .originalFilename)
+                ?? container.decodeIfPresent(String.self, forKey: .photoId)
+            photoUrl = try container.decodeIfPresent(String.self, forKey: .photoUrl)
+                ?? container.decodeIfPresent(String.self, forKey: .originalUrl)
+                ?? container.decodeIfPresent(String.self, forKey: .thumbnailUrl)
+            bbox = try container.decodeIfPresent([Double].self, forKey: .bbox)
+            faceIndex = try container.decodeIfPresent(Int.self, forKey: .faceIndex)
+            detScore = try container.decodeIfPresent(Double.self, forKey: .detScore)
+        }
+
+        func photoCandidate(cadet: Cadet, sourcePageURL: URL) -> PhotoCandidate? {
+            guard let url = resolvedPhotoURL else { return nil }
+            let scorePercent = max(0, min(99, Int((score * 100).rounded())))
+            return PhotoCandidate(
+                cadetID: cadet.id,
+                cadetName: cadet.name,
+                imageURL: url,
+                confidence: scorePercent,
+                sourceName: "CadetCatch Photo Index",
+                sourceHost: url.host() ?? "photos.cadetcatch.com",
+                sourcePageURL: sourcePageURL,
+                detectedFaceCount: 1
+            )
+        }
+
+        private var resolvedPhotoURL: URL? {
+            guard let photoUrl else { return nil }
+            if let absolute = URL(string: photoUrl), absolute.scheme == "https" {
+                return absolute
+            }
+            let apiBase = URL(string: "https://api.cadetcatch.com")!
+            if let relative = URL(string: photoUrl, relativeTo: apiBase)?.absoluteURL, relative.scheme == "https" {
+                return relative
+            }
+            return nil
+        }
+    }
+
+    static func search(photoData: Data, topK: Int = 50, minScore: Double = 0.80, faceIndex: Int = 0) async throws -> SearchResponse {
+        guard let uploadData = normalizedUploadData(from: photoData) else {
+            throw SearchError.invalidImage
+        }
+
+        let boundary = "Boundary-\(UUID().uuidString)"
+        var request = URLRequest(url: searchURL)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+        request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+        request.httpBody = multipartBody(
+            boundary: boundary,
+            fields: [
+                "top_k": "\(topK)",
+                "min_score": String(format: "%.2f", minScore),
+                "face_index": "\(faceIndex)"
+            ],
+            fileData: uploadData
+        )
+
+        let (data, response) = try await session.data(for: request)
+        guard let http = response as? HTTPURLResponse else {
+            throw SearchError.invalidResponse
+        }
+        let decoder = JSONDecoder()
+        guard (200..<300).contains(http.statusCode) else {
+            if let errorResponse = try? decoder.decode(APIErrorResponse.self, from: data) {
+                try throwSearchErrorIfKnown(errorResponse)
+            }
+            throw SearchError.server(statusCode: http.statusCode)
+        }
+
+        do {
+            return try decoder.decode(SearchResponse.self, from: data)
+        } catch {
+            if let errorResponse = try? decoder.decode(APIErrorResponse.self, from: data) {
+                try throwSearchErrorIfKnown(errorResponse)
+            }
+            throw error
+        }
+    }
+
+    private static func throwSearchErrorIfKnown(_ response: APIErrorResponse) throws {
+        guard let message = response.message?.lowercased() else { return }
+        if message.contains("no face") || message.contains("no faces") {
+            throw SearchError.noFaceDetected
+        }
+        if message.contains("multiple face") || message.contains("multiple faces") || message.contains("more than one face") {
+            throw SearchError.multipleFacesDetected
+        }
+    }
+
+    private static func normalizedUploadData(from photoData: Data) -> Data? {
+        guard let image = UIImage(data: photoData) else { return nil }
+        return image.jpegData(compressionQuality: 0.9) ?? photoData
+    }
+
+    private static func multipartBody(boundary: String, fields: [String: String], fileData: Data) -> Data {
+        var body = Data()
+        for (name, value) in fields {
+            body.appendUTF8("--\(boundary)\r\n")
+            body.appendUTF8("Content-Disposition: form-data; name=\"\(name)\"\r\n\r\n")
+            body.appendUTF8("\(value)\r\n")
+        }
+        body.appendUTF8("--\(boundary)\r\n")
+        body.appendUTF8("Content-Disposition: form-data; name=\"file\"; filename=\"cadet.jpg\"\r\n")
+        body.appendUTF8("Content-Type: image/jpeg\r\n\r\n")
+        body.append(fileData)
+        body.appendUTF8("\r\n--\(boundary)--\r\n")
+        return body
+    }
+}
+
 enum PublicPhotoScanner {
     static let bulkSession: URLSession = {
         let config = URLSessionConfiguration.default
@@ -820,123 +996,76 @@ enum PublicPhotoScanner {
         return URLSession(configuration: config)
     }()
 
-    struct SendableReference: @unchecked Sendable {
-        let descriptors: [FaceMatcher.FaceDescriptor]
+    static func scan(cadet: Cadet, progress: ScannerProgress, onProgress: @escaping @Sendable (String) -> Void = { _ in }) async -> ScanResult {
+        await update(progress, message: "Uploading cadet photo to secure search...", total: 1, scanned: 0, matched: 0, onProgress: onProgress)
+
+        do {
+            let response = try await CadetCatchSearchAPI.search(photoData: cadet.photoData)
+            if Task.isCancelled {
+                return ScanResult(candidates: [], checkedImageCount: 0, message: "Scan Stopped")
+            }
+
+            guard response.queryFacesDetected > 0 else {
+                await update(progress, message: "No face detected. Choose a clearer, front-facing cadet photo.", total: 1, scanned: 1, matched: 0, onProgress: onProgress)
+                return ScanResult(candidates: [], checkedImageCount: 0, message: "No face detected. Choose a clearer, front-facing cadet photo.")
+            }
+
+            guard response.queryFacesDetected == 1 else {
+                await update(progress, message: "Multiple faces detected. Choose a photo with only your cadet visible.", total: 1, scanned: 1, matched: 0, onProgress: onProgress)
+                return ScanResult(candidates: [], checkedImageCount: 0, message: "Multiple faces detected. Choose a photo with only your cadet visible.")
+            }
+
+            let candidates = response.matches.compactMap { match in
+                match.photoCandidate(cadet: cadet, sourcePageURL: CadetCatchSearchAPI.searchURL)
+            }
+
+            guard !candidates.isEmpty else {
+                await update(progress, message: "No matches found in the current server photo index.", total: 1, scanned: 1, matched: 0, onProgress: onProgress)
+                return ScanResult(candidates: [], checkedImageCount: response.matchesReturned, message: "No matches found in the current server photo index.")
+            }
+
+            await update(
+                progress,
+                message: "\(candidates.count) possible match\(candidates.count == 1 ? "" : "es") found.",
+                total: 1,
+                scanned: 1,
+                matched: candidates.count,
+                onProgress: onProgress
+            )
+            return ScanResult(
+                candidates: candidates,
+                checkedImageCount: response.matchesReturned,
+                message: "\(candidates.count) possible match\(candidates.count == 1 ? "" : "es") found."
+            )
+        } catch CadetCatchSearchAPI.SearchError.invalidImage {
+            await update(progress, message: "Could not read that cadet photo. Choose a different image.", total: 1, scanned: 1, matched: 0, onProgress: onProgress)
+            return ScanResult(candidates: [], checkedImageCount: 0, message: "Could not read that cadet photo. Choose a different image.")
+        } catch CadetCatchSearchAPI.SearchError.noFaceDetected {
+            await update(progress, message: "No face detected. Choose a clearer, front-facing cadet photo.", total: 1, scanned: 1, matched: 0, onProgress: onProgress)
+            return ScanResult(candidates: [], checkedImageCount: 0, message: "No face detected. Choose a clearer, front-facing cadet photo.")
+        } catch CadetCatchSearchAPI.SearchError.multipleFacesDetected {
+            await update(progress, message: "Multiple faces detected. Choose a photo with only your cadet visible.", total: 1, scanned: 1, matched: 0, onProgress: onProgress)
+            return ScanResult(candidates: [], checkedImageCount: 0, message: "Multiple faces detected. Choose a photo with only your cadet visible.")
+        } catch {
+            await update(progress, message: "Server error. Check your connection and try again.", total: 1, scanned: 1, matched: 0, onProgress: onProgress)
+            return ScanResult(candidates: [], checkedImageCount: 0, message: "Server error. Check your connection and try again.")
+        }
     }
 
-    static func scan(cadet: Cadet, sources: [PhotoSource], progress: ScannerProgress, onProgress: @escaping @Sendable (String) -> Void = { _ in }) async -> ScanResult {
-        guard FaceMatcher.isEngineAvailable else {
-            return ScanResult(
-                candidates: [],
-                checkedImageCount: 0,
-                message: "The face matching engine could not be loaded. Please reinstall the app or contact support."
-            )
-        }
-        guard let descriptors = FaceMatcher.referencePrints(from: cadet.photoData) else {
-            return ScanResult(
-                candidates: [],
-                checkedImageCount: 0,
-                message: "No face was detected in the cadet profile photo. Choose a clearer front-facing photo."
-            )
-        }
-        let reference = SendableReference(descriptors: descriptors)
-
-        var allImageURLs: [(PhotoSource, URL)] = []
-        for source in sources {
-            if Task.isCancelled { return ScanResult(candidates: [], checkedImageCount: 0, message: "Scan Stopped") }
-            let urls = await discoverImageURLs(from: source.url)
-            for url in urls {
-                allImageURLs.append((source, url))
-            }
-        }
-        
-        await MainActor.run {
-            progress.totalPhotosFound = allImageURLs.count
-        }
-
-        let candidates = await withTaskGroup(of: PhotoCandidate?.self) { group in
-            var results: [PhotoCandidate] = []
-            var seenImages = Set<URL>()
-            var activeTasks = 0
-            let maxConcurrency = 4
-            
-            var iterator = allImageURLs.makeIterator()
-            
-            while let (source, url) = iterator.next() {
-                if Task.isCancelled { break }
-                guard !seenImages.contains(url) else { continue }
-                seenImages.insert(url)
-                
-                if activeTasks >= maxConcurrency {
-                    if let result = await group.next() {
-                        activeTasks -= 1
-                        if Task.isCancelled {
-                            group.cancelAll()
-                            break
-                        }
-                        await MainActor.run { 
-                            progress.photosScanned += 1 
-                            onProgress(progress.progressString)
-                        }
-                        if let candidate = result {
-                            results.append(candidate)
-                            await MainActor.run { progress.photosMatched += 1 }
-                        }
-                    }
-                }
-                
-                group.addTask {
-                    guard let imageData = await downloadImageData(from: url) else { return nil }
-                    await Task.yield()
-                    guard let match = FaceMatcher.match(reference: reference.descriptors, candidateImageURL: url, candidateImageData: imageData) else { return nil }
-                    guard match.confidence >= FaceMatcher.minimumAcceptedConfidence else { return nil }
-                    PhotoCandidatePreview.storePreview(from: imageData, for: url)
-
-                    return PhotoCandidate(
-                        cadetID: cadet.id,
-                        cadetName: cadet.name,
-                        imageURL: url,
-                        confidence: match.confidence,
-                        sourceName: source.name,
-                        sourceHost: source.url.host() ?? source.url.absoluteString,
-                        sourcePageURL: source.url,
-                        detectedFaceCount: match.faceCount
-                    )
-                }
-                activeTasks += 1
-            }
-            
-            for await result in group {
-                if Task.isCancelled {
-                    group.cancelAll()
-                    break
-                }
-                await MainActor.run { 
-                    progress.photosScanned += 1 
-                    onProgress(progress.progressString)
-                }
-                if let candidate = result {
-                    results.append(candidate)
-                    await MainActor.run { progress.photosMatched += 1 }
-                }
-            }
-            
-            return results
-        }
-
-        var sortedCandidates = candidates
-        sortedCandidates.sort { $0.confidence > $1.confidence }
-        
-        let checkedImages = await MainActor.run { progress.photosScanned }
-        let message: String
-        if sortedCandidates.isEmpty {
-            message = checkedImages == 0
-                ? "No usable public images were found in the enabled sources."
-                : "Images were checked, but no face matches passed the confidence threshold."
-        } else {
-            message = "\(sortedCandidates.count) possible match\(sortedCandidates.count == 1 ? "" : "es") found from public sources."
-        }
-        return ScanResult(candidates: sortedCandidates, checkedImageCount: checkedImages, message: message)
+    @MainActor
+    private static func update(
+        _ progress: ScannerProgress,
+        message: String,
+        total: Int,
+        scanned: Int,
+        matched: Int,
+        onProgress: @escaping @Sendable (String) -> Void
+    ) {
+        progress.message = message
+        progress.totalPhotosFound = total
+        progress.photosScanned = scanned
+        progress.photosMatched = matched
+        onProgress(progress.progressString)
     }
 
     private static func discoverImageURLs(from pageURL: URL) async -> [URL] {
@@ -1777,6 +1906,12 @@ private extension JSONDecoder {
     }
 }
 
+private extension Data {
+    mutating func appendUTF8(_ string: String) {
+        append(Data(string.utf8))
+    }
+}
+
 enum Theme {
     static let navy = Color(red: 0.13, green: 0.24, blue: 0.44)
     static let navyDark = Color(red: 0.02, green: 0.07, blue: 0.14)
@@ -1836,7 +1971,7 @@ struct LaunchView: View {
                             .lineLimit(2)
                             .minimumScaleFactor(0.8)
                             
-                        Text("Welcome parents! Add a clear face photo of your cadet, choose our secure public sources, and let the app scan for matches. Everything happens privately on your own device.")
+                        Text("Welcome parents! Add a clear face photo of your cadet and CadetCatch will securely search the server photo index for matching full photos.")
                             .font(.body.weight(.medium))
                             .foregroundStyle(Theme.muted)
                             .lineSpacing(4)
@@ -2006,7 +2141,7 @@ struct HomeView: View {
                     EmptyStateView(
                         symbol: "person.crop.circle.badge.plus",
                         title: "Add a cadet",
-                        message: "A clear profile photo is required before CadetCatch can compare faces in public source images.",
+                        message: "A clear profile photo is required before CadetCatch can search the server photo index.",
                         buttonTitle: "Open Roster"
                     ) {
                         store.selectedTab = .roster
@@ -2035,10 +2170,6 @@ struct HomeView: View {
         guard !store.scanProgress.isScanning else { return }
         guard store.activeCadet != nil else {
             store.lastScanMessage = "Add a cadet profile before checking photos."
-            return
-        }
-        guard !store.enabledSources.isEmpty else {
-            store.lastScanMessage = "Add at least one enabled public source."
             return
         }
         guard store.beginSearch(hasMonthlyAccess: purchases.hasMonthlyAccess) else {
@@ -2132,11 +2263,11 @@ struct SourceSummaryCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
             HStack {
-                Text("Public sources")
+                Text("Server photo index")
                     .font(.headline.weight(.black))
                     .foregroundStyle(Theme.navyDark)
                 Spacer()
-                Button("Manage") {
+                Button("Details") {
                     store.selectedTab = .sources
                 }
                 .font(.caption.weight(.black))
@@ -2144,22 +2275,21 @@ struct SourceSummaryCard: View {
                 .tint(Theme.navy)
             }
 
-            ForEach(store.enabledSources.prefix(3)) { source in
-                HStack(spacing: 10) {
-                    Image(systemName: source.category.symbol)
-                        .foregroundStyle(Theme.orange)
-                        .frame(width: 30, height: 30)
-                        .background(Theme.orange.opacity(0.12), in: Circle())
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text(source.name)
-                            .font(.subheadline.weight(.bold))
-                            .foregroundStyle(Theme.navyDark)
-                        Text(source.url.host() ?? source.url.absoluteString)
-                            .font(.caption)
-                            .foregroundStyle(Theme.muted)
-                    }
-                    Spacer()
+            HStack(spacing: 10) {
+                Image(systemName: "server.rack")
+                    .foregroundStyle(Theme.orange)
+                    .frame(width: 34, height: 34)
+                    .background(Theme.orange.opacity(0.12), in: Circle())
+                VStack(alignment: .leading, spacing: 3) {
+                    Text("CadetCatch Search API")
+                        .font(.subheadline.weight(.bold))
+                        .foregroundStyle(Theme.navyDark)
+                    Text("The selected cadet photo is uploaded for matching; photo indexing runs on the backend.")
+                        .font(.caption)
+                        .foregroundStyle(Theme.muted)
+                        .lineSpacing(2)
                 }
+                Spacer()
             }
         }
         .appPanel()
@@ -2179,7 +2309,7 @@ struct ScanCard: View {
                     Text("Photo check")
                         .font(.headline.weight(.black))
                         .foregroundStyle(Theme.navyDark)
-                    Text("Compare the selected cadet photo against images found in enabled public sources.")
+                    Text("Upload the selected cadet photo to CadetCatch and receive matched full-photo results.")
                         .font(.caption)
                         .foregroundStyle(Theme.muted)
                         .lineSpacing(2)
@@ -2231,7 +2361,7 @@ struct ScanCard: View {
             }
 
             Button(action: onScan) {
-                Label(store.scanProgress.isScanning ? "Checking Sources" : scanButtonTitle, systemImage: scanButtonSymbol)
+                Label(store.scanProgress.isScanning ? "Searching Server" : scanButtonTitle, systemImage: scanButtonSymbol)
                     .frame(maxWidth: .infinity)
             }
             .buttonStyle(PrimaryButtonStyle())
@@ -2283,7 +2413,7 @@ struct RecentScansCard: View {
                             Text("\(record.matchCount)")
                                 .font(.title3.weight(.black))
                                 .foregroundStyle(Theme.orange)
-                            Text("\(record.imageCount) images")
+                            Text("\(record.imageCount) returned")
                                 .font(.caption)
                                 .foregroundStyle(Theme.muted)
                         }
@@ -2463,7 +2593,7 @@ struct PhotosView: View {
                 EmptyStateView(
                     symbol: scope == .new ? "photo.on.rectangle.angled" : "archivebox",
                     title: scope == .new ? "No photos ready" : "Saved is empty",
-                    message: scope == .new ? "Run a photo check from Home after adding a cadet and enabling sources." : "Save reviewed photos to keep them here.",
+                    message: scope == .new ? "Run a photo check from Home after adding a cadet." : "Save reviewed photos to keep them here.",
                     buttonTitle: scope == .new ? "Open Home" : "Show New"
                 ) {
                     if scope == .new {
@@ -2510,14 +2640,6 @@ struct CandidateCard: View {
                     .frame(height: 144)
                     .blur(radius: unlocked ? 0 : 9)
                     .clipped()
-
-                Text("\(candidate.confidence)%")
-                    .font(.caption.weight(.black))
-                    .foregroundStyle(.white)
-                    .padding(.horizontal, 9)
-                    .padding(.vertical, 6)
-                    .background(Theme.orange, in: Capsule())
-                    .padding(8)
 
                 if !unlocked {
                     LockedImageOverlay(label: "Unlock to View")
@@ -2577,11 +2699,6 @@ struct CandidateDetailView: View {
                             LockedImageOverlay(label: "Photo Covered")
                                 .clipShape(RoundedRectangle(cornerRadius: 22))
                         }
-                    }
-
-                    HStack(spacing: 10) {
-                        DetailBadge(value: "\(candidate.confidence)%", label: "Confidence")
-                        DetailBadge(value: "\(candidate.detectedFaceCount)", label: "Faces")
                     }
 
                     VStack(alignment: .leading, spacing: 8) {
@@ -3010,7 +3127,7 @@ struct RosterView: View {
                     EmptyStateView(
                         symbol: "person.crop.circle.badge.plus",
                         title: "Roster is empty",
-                        message: "Add a cadet with a clear profile photo. The photo stays local on this device and is used for public-source comparison.",
+                        message: "Add a cadet with a clear profile photo. The photo is uploaded only when you run a server photo check.",
                         buttonTitle: "Add Cadet"
                     ) {
                         showingAddCadet = true
@@ -3090,7 +3207,7 @@ struct AddCadetSheet: View {
                             }
                             .buttonStyle(.bordered)
                             .tint(Theme.orange)
-                            Text("Use a clear face photo for best results.")
+                            Text("Use a clear single-face photo for best results.")
                                 .font(.caption)
                                 .foregroundStyle(Theme.muted)
                         }
@@ -3135,94 +3252,44 @@ struct AddCadetSheet: View {
 }
 
 struct SourcesView: View {
-    @Environment(CadetCatchStore.self) private var store
-    @State private var authManager = GoogleDriveAuthManager.shared
-    @State private var sourceName = ""
-    @State private var sourceURL = ""
-    @State private var category: SourceCategory = .custom
-    @State private var validationMessage: String?
-
     var body: some View {
         List {
             Section {
                 VStack(alignment: .leading, spacing: 12) {
-                    Label("PDUDDY Dedicated Archive", systemImage: "server.rack")
+                    Label("CadetCatch Search API", systemImage: "server.rack")
                         .font(.headline.weight(.black))
                         .foregroundStyle(Theme.navyDark)
-                    Text("Welcome parents! We have permanently upgraded your app to use a dedicated, ultra-fast server for all PDUDDY photos. There are no photo limits, no Google logins required, and it scans entire folders instantly. Your cadet's privacy is fully protected, and all scanning happens securely on your own device.")
+                    Text("Photo matching now runs on the CadetCatch backend. The app uploads the selected cadet photo to the secure search endpoint and receives matched full-photo links.")
                         .font(.subheadline)
                         .foregroundStyle(Theme.muted)
+                        .lineSpacing(3)
                 }
                 .padding(.vertical, 4)
             }
 
             Section {
                 VStack(alignment: .leading, spacing: 8) {
-                    Label("Public HTTPS sources only", systemImage: "lock.shield.fill")
+                    Label("Backend-owned index", systemImage: "lock.shield.fill")
                         .font(.headline.weight(.black))
                         .foregroundStyle(Theme.navyDark)
-                    Text("CadetCatch checks public pages you approve. Private social or photo accounts require an owner-authorized connector before they can be scanned.")
+                    Text("Source discovery, face embeddings, indexing, and photo hosting are handled server-side by the admin pipeline, not on this phone.")
                         .font(.subheadline)
                         .foregroundStyle(Theme.muted)
+                        .lineSpacing(3)
                 }
                 .padding(.vertical, 4)
             }
-            
-            Section("Google Drive Access") {
-                if authManager.isSignedIn {
-                    Button(role: .destructive) {
-                        authManager.signOut()
-                    } label: {
-                        Text("Sign Out of Google")
-                    }
-                } else {
-                    Button {
-                        Task { try? await authManager.signIn() }
-                    } label: {
-                        Text("Sign In with Google")
-                    }
-                }
-            }
 
-            Section("Add Source") {
-                TextField("Source name", text: $sourceName)
-                TextField("https://example.edu/gallery", text: $sourceURL)
-                    .keyboardType(.URL)
-                    .textInputAutocapitalization(.never)
-                    .autocorrectionDisabled()
-                Picker("Type", selection: $category) {
-                    ForEach(SourceCategory.allCases) { category in
-                        Label(category.title, systemImage: category.symbol).tag(category)
-                    }
+            Section("Endpoint") {
+                Link(destination: URL(string: "https://api.cadetcatch.com/health")!) {
+                    Label("API Health", systemImage: "waveform.path.ecg")
                 }
-                Button {
-                    if store.addSource(name: sourceName, urlText: sourceURL, category: category) {
-                        sourceName = ""
-                        sourceURL = ""
-                        category = .custom
-                        validationMessage = nil
-                    } else {
-                        validationMessage = "Enter a unique HTTPS URL and a source name."
-                    }
-                } label: {
-                    Label("Add Source", systemImage: "plus.circle.fill")
+                Link(destination: URL(string: "https://api.cadetcatch.com/search")!) {
+                    Label("Search Endpoint", systemImage: "magnifyingglass")
                 }
-                if let validationMessage {
-                    Text(validationMessage)
-                        .font(.caption)
-                        .foregroundStyle(.red)
-                }
-            }
-
-            Section("Enabled Sources") {
-                ForEach(store.sources) { source in
-                    SourceRow(source: source)
-                }
-                .onDelete { offsets in
-                    for index in offsets {
-                        store.removeSource(store.sources[index])
-                    }
-                }
+                Text("Photo URLs may reflect the current backend hosting path until final R2 hosting is complete.")
+                    .font(.caption)
+                    .foregroundStyle(Theme.muted)
             }
         }
         .scrollContentBackground(.hidden)
@@ -3361,7 +3428,7 @@ struct MoreView: View {
                 store.resetLocalData()
             }
         } message: {
-            Text("This removes cadets, saved photos, source settings, and scan history from this device.")
+            Text("This removes cadets, saved photos, and scan history from this device.")
         }
     }
 }

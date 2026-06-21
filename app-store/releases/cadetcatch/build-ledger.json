@@ -28,15 +28,17 @@
     83,
     84,
     85,
-    86
+    86,
+    87
   ],
-  "nextUploadMustUseBuildNumberGreaterThan": 86,
+  "nextUploadMustUseBuildNumberGreaterThan": 87,
   "notes": [
     "Build 80 is the active App Store review recovery candidate and must not be re-uploaded.",
     "Builds 82, 83, 84 exist in App Store Connect/TestFlight evidence and must not be overwritten by stale source.",
     "Build 85 was uploaded to App Store Connect on 2026-06-09 and appeared in visible ASC Build Uploads as Processing.",
     "Build 86 was uploaded to App Store Connect on 2026-06-10; Xcode upload receipt says uploaded package is processing.",
-    "For the next CadetCatch app update, bump project.yml, pbxproj, app-store-release.json, release-manifest.json, review notes, and metadata to a new build number greater than 86."
+    "Build 87 was uploaded to App Store Connect on 2026-06-16 by Xcode receipt for the Core ML face-match candidate and must not be reused.",
+    "Build 88 is reserved for the CadetCatch server search API TestFlight candidate."
   ],
-  "lastUpdated": "2026-06-10"
+  "lastUpdated": "2026-06-21"
 }

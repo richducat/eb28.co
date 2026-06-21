@@ -4,11 +4,11 @@
   "appStoreConnectAppId": "6769565852",
   "platform": "iOS",
   "marketingVersion": "1.0.1",
-  "buildNumber": "87",
-  "baselineCommit": "7c04c92c123c200bd73693e431f049c4fa2dec17",
+  "buildNumber": "88",
+  "baselineCommit": "ac55fb81eb53e1b037dd836349a4569394edbe8b",
   "baselineTree": "2374b7b19defa200312ac08d70381628bead8fc6",
-  "sourceIdentityType": "isolated git worktree branch descended from CadetCatch build 86 Save to Photos candidate with Core ML face embeddings",
-  "baseParentCommit": "7c04c92c123c200bd73693e431f049c4fa2dec17",
+  "sourceIdentityType": "isolated git worktree branch with CadetCatch server search API integration",
+  "baseParentCommit": "ac55fb81eb53e1b037dd836349a4569394edbe8b",
   "indexParentCommit": null,
   "sourceRef": "refs/heads/feature/cadetcatch-coreml-face-embeddings",
   "releaseBranch": "feature/cadetcatch-coreml-face-embeddings",
@@ -17,7 +17,7 @@
   "xcodegenProjectSpec": "ios/CadetCatch/project.yml",
   "scheme": "CadetCatch",
   "teamId": "WN3K69XEP4",
-  "approvalLevel": "local build 87 candidate only; archive and upload_build approvals pending",
+  "approvalLevel": "local build 88 candidate only; archive, upload_build, and distribute_testflight approvals pending for final build-88 commit",
   "archivePath": null,
   "appStoreConnectState": {
     "appStoreVersionId": null,
@@ -25,23 +25,23 @@
     "reviewSubmissionId": null,
     "appStoreState": "LOCAL_CANDIDATE_NOT_UPLOADED",
     "submittedAt": null,
-    "lastLocalPreparationAt": "2026-06-12T17:21:49Z",
+    "lastLocalPreparationAt": "2026-06-21T05:21:51.814Z",
     "uploadedAt": null,
     "visibleAscVerificationAt": null,
-    "visibleAscStatus": "Not applicable; build 87 has not been uploaded",
+    "visibleAscStatus": "Not applicable; build 88 has not been uploaded",
     "visibleAscCreatedAt": null,
     "distributionLogPath": null,
     "verificationBlocked": null
   },
   "sourceMetadataVerification": {
     "projectYmlMarketingVersion": "1.0.1",
-    "projectYmlCurrentProjectVersion": "87",
+    "projectYmlCurrentProjectVersion": "88",
     "projectYmlBundleId": "co.eb28.cadetcatch",
     "pbxMarketingVersions": [
       "1.0.1"
     ],
     "pbxCurrentProjectVersions": [
-      "87"
+      "88"
     ],
     "pbxBundleIds": [
       "co.eb28.CadetCatchUITests",
@@ -100,11 +100,11 @@
   ],
   "releaseJsonVersionObject": {
     "marketingVersion": "1.0.1",
-    "buildNumber": "87",
+    "buildNumber": "88",
     "releaseType": "MANUAL",
     "phasedRelease": false,
-    "promotionalText": "Private cadet rosters, approved photo pages, hidden previews, saved finds, family notes, and a plain-English academy terms guide.",
-    "description": "CadetCatch helps Coast Guard Academy families keep up with cadet photos without digging through every gallery by hand.\n\nCreate a private roster on your iPhone, add approved photo pages, check those pages for possible face matches, review match details, view selected results, save likely finds, and keep simple notes for family follow-up.\n\nCadetCatch checks only photo pages you add or enable. Private albums stay private unless you choose to share an accessible link.\n\nPrivacy Policy: https://eb28.co/cc/privacy/\nTerms of Use (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/",
+    "promotionalText": "Private cadet rosters, secure server photo search, hidden previews, saved finds, family notes, and a plain-English academy terms guide.",
+    "description": "CadetCatch helps Coast Guard Academy families keep up with cadet photos without digging through every gallery by hand.\n\nCreate a private roster on your iPhone, add a clear cadet face photo, check the CadetCatch server photo index for possible matches, review match details, view selected results, save likely finds, and keep simple notes for family follow-up.\n\nPhoto indexing and source ingestion are handled by the CadetCatch backend. Private albums stay private unless you choose to use an accessible image source through the CadetCatch service.\n\nPrivacy Policy: https://eb28.co/cc/privacy/\nTerms of Use (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/",
     "keywords": [
       "cadet",
       "military",
@@ -114,19 +114,19 @@
       "parents",
       "coast"
     ],
-    "whatsNew": "CadetCatch build 87 improves face matching with on-device face embeddings for better matching across different clothes, hairstyles, hats, and backgrounds, while preserving Save to Photos, stricter filtering, private roster setup, approved public photo sources, hidden result previews, saved finds, family notes, and purchase restore controls."
+    "whatsNew": "CadetCatch build 88 moves photo matching to the CadetCatch server search API, uploads the selected cadet photo for matching, displays returned full-photo results, adds clearer no-face/multiple-face/no-match/server-error states, and keeps match scores and debug details hidden from normal users."
   },
   "safetyNotes": [
     "Primary checkout /Users/richardducat/GITHUB/eb28.co is dirty and must not be used for release actions.",
-    "Build 85 was uploaded to App Store Connect and visible ASC Build Uploads showed status Processing on 2026-06-09.",
-    "Build 87 is the Core ML face embedding candidate, descended from the build 86 Save to Photos work and preserving Save to Photos changes.",
-    "Do not distribute TestFlight, select for App Review, submit for review, release, expire builds, edit metadata/screenshots/previews, or edit IAP/subscriptions without a separate exact approval record.",
-    "Build 87 has not been archived or uploaded. Build 86 upload completed by xcodebuild on 2026-06-10; package is processing per Xcode upload receipt."
+    "Builds 85, 86, and 87 have prior upload or upload-processing evidence and must not be reused for the server-search candidate.",
+    "Build 88 is the CadetCatch server search API candidate, descended from build 87 and replacing the active scan path with POST https://api.cadetcatch.com/search.",
+    "Do not archive, upload, distribute TestFlight, select for App Review, submit for review, release, expire builds, edit metadata/screenshots/previews, or edit IAP/subscriptions without a separate exact approval record for the final build-88 source commit.",
+    "Build 88 has not been archived or uploaded."
   ],
   "createdAt": "2026-06-06T11:53:53.691778-04:00",
   "localVerification": {
-    "releaseGate": "passed for build 87 candidate; final source commit is recorded in the EB28 vault release-candidate record",
-    "simulatorQA": "passed for build 87 candidate with screenshot output/cadetcatch-simulator/cadetcatch-2026-06-12T17-31-44-583Z.png; final source commit is recorded in the EB28 vault release-candidate record",
+    "releaseGate": "pending for final build 88 candidate commit",
+    "simulatorQA": "pending for final build 88 candidate commit",
     "matchedPhotoPreviewQA": {
       "status": "passed",
       "receipt": "/tmp/cadetcatch-face-test/preview-cache-proof.png",
@@ -141,7 +141,13 @@
       "savedSimulatorPhotoPath": "/Users/richardducat/Library/Developer/CoreSimulator/Devices/7C85426B-CA76-4F78-9D8A-557AD2C88426/data/Media/DCIM/100APPLE/IMG_0009.JPG",
       "savedImagePixelSize": "2048x1365",
       "verifiedAt": "2026-06-10T19:43:02Z"
+    },
+    "serverSearchAPI": {
+      "status": "health_passed_and_no_face_contract_checked_before_build_bump",
+      "healthEndpoint": "https://api.cadetcatch.com/health",
+      "searchEndpoint": "https://api.cadetcatch.com/search",
+      "note": "Live blank-image search check returned HTTP 200 with {\"error\":\"No face detected in uploaded image\"}; app maps that response to the no-face user state."
     }
   },
-  "updatedAt": "2026-06-10T19:56:28Z"
+  "updatedAt": "2026-06-21T05:21:51.815Z"
 }

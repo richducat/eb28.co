@@ -22,11 +22,11 @@
   },
   "version": {
     "marketingVersion": "1.0.1",
-    "buildNumber": "87",
+    "buildNumber": "88",
     "releaseType": "MANUAL",
     "phasedRelease": false,
-    "promotionalText": "Private cadet rosters, approved photo pages, hidden previews, saved finds, family notes, and a plain-English academy terms guide.",
-    "description": "CadetCatch helps Coast Guard Academy families keep up with cadet photos without digging through every gallery by hand.\n\nCreate a private roster on your iPhone, add approved photo pages, check those pages for possible face matches, review match details, view selected results, save likely finds, and keep simple notes for family follow-up.\n\nCadetCatch checks only photo pages you add or enable. Private albums stay private unless you choose to share an accessible link.\n\nPrivacy Policy: https://eb28.co/cc/privacy/\nTerms of Use (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/",
+    "promotionalText": "Private cadet rosters, secure server photo search, hidden previews, saved finds, family notes, and a plain-English academy terms guide.",
+    "description": "CadetCatch helps Coast Guard Academy families keep up with cadet photos without digging through every gallery by hand.\n\nCreate a private roster on your iPhone, add a clear cadet face photo, check the CadetCatch server photo index for possible matches, review match details, view selected results, save likely finds, and keep simple notes for family follow-up.\n\nPhoto indexing and source ingestion are handled by the CadetCatch backend. Private albums stay private unless you choose to use an accessible image source through the CadetCatch service.\n\nPrivacy Policy: https://eb28.co/cc/privacy/\nTerms of Use (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/",
     "keywords": [
       "cadet",
       "military",
@@ -36,7 +36,7 @@
       "parents",
       "coast"
     ],
-    "whatsNew": "CadetCatch build 87 improves face matching with on-device face embeddings for better matching across different clothes, hairstyles, hats, and backgrounds, while preserving Save to Photos, stricter filtering, private roster setup, approved public photo sources, hidden result previews, saved finds, family notes, and purchase restore controls."
+    "whatsNew": "CadetCatch build 88 moves photo matching to the CadetCatch server search API, uploads the selected cadet photo for matching, displays returned full-photo results, adds clearer no-face/multiple-face/no-match/server-error states, and keeps match scores and debug details hidden from normal users."
   },
   "urls": {
     "marketingUrl": "https://eb28.co/cc/",
@@ -55,11 +55,11 @@
     "notes": [
       "No login is required.",
       "Add a cadet profile from Roster using a clear face photo selected from Photos.",
-      "Open Sources to confirm Coast Guard Academy, DVIDS, and Pduddy Pics are selected, or add another secure public photo page. Facebook photo or album links can also be added when the reviewer has permission to open the link in Safari.",
-      "Open Home and run Check Photos. The app shows the current source, discovered image count, checked image count, and possible match count while scanning. Previews stay hidden until single-photo or monthly access is active.",
+      "Open Sources to confirm that matching uses the CadetCatch Search API. Source discovery, face embeddings, indexing, and photo hosting are backend/admin work, not phone work.",
+      "Open Home and run Check Photos. The app uploads the selected cadet photo to the secure search endpoint, shows loading state, and then displays possible matches returned by the backend. Previews stay hidden until single-photo or monthly access is active.",
       "Open Photos to review possible matches, view a photo, save it, and create a family note.",
       "Open Photo Access from More or a locked photo. The monthly subscription screen shows Family Monthly, 1 month, the monthly price, auto-renewal text, Restore Purchases, Privacy Policy, and Terms of Use (EULA) before purchase.",
-      "If a page has no usable images or no likely match, the app shows that result instead of showing unrelated results."
+      "If the backend detects no face, multiple faces, no matches, or a server error, the app shows a clear state instead of showing unrelated results."
     ]
   },
   "distribution": {
@@ -131,9 +131,9 @@
     "testedFlows": [
       "fresh launch with EAGLE background",
       "add cadet with selected profile photo",
-      "secure public photo page management",
-      "Facebook photo link entry",
-      "photo check with hidden result previews and empty/no-match handling",
+      "server photo index details",
+      "server photo search upload flow",
+      "photo check with hidden result previews and no-face/multiple-face/no-match/server-error handling",
       "purchase sheet with visible Family Monthly title, 1 month duration, price per month, auto-renewal disclosure, Privacy Policy link, Terms of Use (EULA) link, and restore purchase controls",
       "daily photo check toggle in More",
       "plain-English academy terms guide",
@@ -142,9 +142,9 @@
       "Save to Photos writes an unlocked live server image to the iOS simulator Photos library"
     ],
     "knownRisks": [
-      "Public websites may change markup or block automated image access; the app surfaces empty/no-match results when a page cannot provide usable public images.",
-      "Private Facebook group/media access is not included in this build; this build supports public Facebook photo pages and Facebook links that the reviewer can open in Safari.",
-      "Build 87 preserves the supplied low-resolution USCGC EAGLE photo from the owner as the native iOS launch/splash image and welcome image, with the screenshot UI badge removed and no replacement EAGLE artwork.",
+      "Photo URLs may reflect the current backend hosting path until final R2 photo hosting is complete.",
+      "Source discovery, face embeddings, indexing, and photo hosting are handled by the CadetCatch backend/admin pipeline, not by the iPhone app.",
+      "Build 88 preserves the supplied low-resolution USCGC EAGLE photo from the owner as the native iOS launch/splash image and welcome image, with the screenshot UI badge removed and no replacement EAGLE artwork.",
       "In-app purchase products must be active in App Store Connect before TestFlight purchase flows can return live products."
     ]
   }

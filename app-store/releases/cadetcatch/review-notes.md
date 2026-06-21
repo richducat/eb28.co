@@ -6,11 +6,11 @@ Use this file as the exact reviewer-facing source for the build being submitted.
 
 - App: CadetCatch
 - Version: 1.0.1
-- Build: 87
+- Build: 88
 
 ## Summary for App Review
 
-CadetCatch is an iPhone app for cadet families to keep a private local roster, check approved photo pages for possible face matches, view selected results, save likely finds, write family notes, and read common academy terms in plain English.
+CadetCatch is an iPhone app for cadet families to keep a private local roster, check the CadetCatch server photo index for possible face matches, view selected results, save likely finds, write family notes, and read common academy terms in plain English.
 
 ## Login
 
@@ -22,9 +22,9 @@ CadetCatch is an iPhone app for cadet families to keep a private local roster, c
 ## How to test the core flow
 
 1. Launch the app and continue from the EAGLE welcome screen.
-2. Open Roster and add a cadet profile with a clear face photo from Photos.
-3. Open Sources and confirm Coast Guard Academy, DVIDS, and Pduddy Pics are enabled, or add another secure public photo page. Facebook photo or album links can also be added when the reviewer has permission to open the link in Safari.
-4. Open Home and tap Check Photos. The app shows the current source, discovered image count, checked image count, and possible match count while scanning.
+2. Open Roster and add a cadet profile with a clear single-face photo from Photos.
+3. Open Sources and confirm that matching uses the CadetCatch Search API. Source discovery, face embeddings, indexing, and photo hosting are handled by the backend/admin pipeline, not by this phone.
+4. Open Home and tap Check Photos. The app uploads the selected cadet photo to the secure search endpoint, shows loading state, and then displays possible matches returned by the backend.
 5. Open Photos to review any possible matches. Previews stay hidden until single-photo or monthly access is active.
 6. Use the Photo Access purchase sheet to test one-time photo checks, monthly access, and Restore Purchases. The monthly section shows Family Monthly, 1 month, the monthly price, auto-renewal text, Privacy Policy, and Terms of Use (EULA) before purchase.
 7. Save a viewed match to the iPhone Photos library, save it in the app, and create a family note.
@@ -32,7 +32,7 @@ CadetCatch is an iPhone app for cadet families to keep a private local roster, c
 
 ## Permissions and background behavior
 
-- Photos used: Yes. Why: selected photos are used only to create private local cadet profiles.
+- Photos used: Yes. Why: selected photos are used to create private local cadet profiles and are uploaded only when the user runs a server photo check.
 - Camera used: No.
 - Notifications used: No.
 - Location used: No.
@@ -44,7 +44,7 @@ CadetCatch is an iPhone app for cadet families to keep a private local roster, c
 - In-app purchases present: Yes
 - Subscription present: Yes
 - Purchase products:
-  - `co.eb28.cadetcatch.search.once.v1` - consumable one-time public photo check.
+  - `co.eb28.cadetcatch.search.once.v1` - consumable one-time server photo check.
   - `co.eb28.cadetcatch.photo.unlock.v1` - consumable single-photo access.
   - `co.eb28.cadetcatch.family.monthly.v1` - auto-renewable monthly subscription.
 - Restore purchases: Available in More and in the purchase sheet.
@@ -54,9 +54,9 @@ CadetCatch is an iPhone app for cadet families to keep a private local roster, c
 
 ## Additional reviewer notes
 
-- The app checks only secure public pages that are built in or added by the user.
-- Pduddy Pics is included as a selected Facebook source in Sources.
-- The app does not access private social accounts, private photo libraries, private websites, or logged-in pages in this build. Facebook links must be accessible to the reviewer in Safari.
-- If a page has no usable images, blocks image access, or has no likely match, the app shows that result instead of showing unrelated results.
+- The app sends the selected cadet photo to the CadetCatch Search API only when the user starts a photo check.
+- Source discovery, face embeddings, indexing, and photo hosting are handled by the CadetCatch backend/admin pipeline, not by this phone.
+- The app does not access private social accounts, private photo libraries, private websites, or logged-in pages in this build.
+- If the backend detects no face, multiple faces, no matches, or a server error, the app shows a clear state instead of showing unrelated results.
 - In-app purchase products must be active in App Store Connect for TestFlight purchase testing.
-- Build 87 improves face matching with on-device face embeddings for better matching across different clothes, hairstyles, hats, and backgrounds; preserves Save to Photos for unlocked matched photos, stricter face-match filtering, simulator-tested search fallback behavior, and the supplied low-resolution USCGC EAGLE photo from the owner as the native iOS launch/splash image and welcome image, with the screenshot UI badge removed and no replacement EAGLE artwork.
+- Build 88 moves photo matching to the CadetCatch server search API, uploads the selected cadet photo for matching, displays returned full-photo results, hides match score/bounding-box/debug data from normal users, and preserves Save to Photos for unlocked matched photos.

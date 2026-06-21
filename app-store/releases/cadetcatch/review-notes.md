@@ -6,7 +6,7 @@ Use this file as the exact reviewer-facing source for the build being submitted.
 
 - App: CadetCatch
 - Version: 1.0.1
-- Build: 88
+- Build: 89
 
 ## Summary for App Review
 
@@ -59,4 +59,4 @@ CadetCatch is an iPhone app for cadet families to keep a private local roster, c
 - The app does not access private social accounts, private photo libraries, private websites, or logged-in pages in this build.
 - If the backend detects no face, multiple faces, no matches, or a server error, the app shows a clear state instead of showing unrelated results.
 - In-app purchase products must be active in App Store Connect for TestFlight purchase testing.
-- Build 88 moves photo matching to the CadetCatch server search API, uploads the selected cadet photo for matching, displays returned full-photo results, hides match score/bounding-box/debug data from normal users, and preserves Save to Photos for unlocked matched photos.
+- Build 89 moves photo matching through the CadetCatch server search API and adds compatibility for the current R2 response shape. If the backend returns r2_key while photo_url is temporarily null, the app derives the public photos.cadetcatch.com image URL, hides match score/bounding-box/debug data from normal users, and preserves Save to Photos for unlocked matched photos.

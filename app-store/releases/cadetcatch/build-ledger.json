@@ -3,7 +3,7 @@
   "appName": "CadetCatch",
   "bundleId": "co.eb28.cadetcatch",
   "appStoreConnectAppId": "6769565852",
-  "highestKnownUploadedBuild": 86,
+  "highestKnownUploadedBuild": 88,
   "highestKnownAppStoreSubmittedBuild": 80,
   "activeReview": {
     "marketingVersion": "1.0.1",
@@ -29,16 +29,18 @@
     84,
     85,
     86,
-    87
+    87,
+    88
   ],
-  "nextUploadMustUseBuildNumberGreaterThan": 87,
+  "nextUploadMustUseBuildNumberGreaterThan": 88,
   "notes": [
     "Build 80 is the active App Store review recovery candidate and must not be re-uploaded.",
     "Builds 82, 83, 84 exist in App Store Connect/TestFlight evidence and must not be overwritten by stale source.",
     "Build 85 was uploaded to App Store Connect on 2026-06-09 and appeared in visible ASC Build Uploads as Processing.",
     "Build 86 was uploaded to App Store Connect on 2026-06-10; Xcode upload receipt says uploaded package is processing.",
     "Build 87 was uploaded to App Store Connect on 2026-06-16 by Xcode receipt for the Core ML face-match candidate and must not be reused.",
-    "Build 88 is reserved for the CadetCatch server search API TestFlight candidate."
+    "Build 88 was uploaded and distributed to internal TestFlight on 2026-06-21 for the CadetCatch server search API candidate and must not be reused.",
+    "Build 89 is reserved for the R2 response compatibility candidate."
   ],
   "lastUpdated": "2026-06-21"
 }

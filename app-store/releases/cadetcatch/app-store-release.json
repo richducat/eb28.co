@@ -22,7 +22,7 @@
   },
   "version": {
     "marketingVersion": "1.0.1",
-    "buildNumber": "88",
+    "buildNumber": "89",
     "releaseType": "MANUAL",
     "phasedRelease": false,
     "promotionalText": "Private cadet rosters, secure server photo search, hidden previews, saved finds, family notes, and a plain-English academy terms guide.",
@@ -36,7 +36,7 @@
       "parents",
       "coast"
     ],
-    "whatsNew": "CadetCatch build 88 moves photo matching to the CadetCatch server search API, uploads the selected cadet photo for matching, displays returned full-photo results, adds clearer no-face/multiple-face/no-match/server-error states, and keeps match scores and debug details hidden from normal users."
+    "whatsNew": "CadetCatch build 89 adds R2 search-result compatibility so server matches with r2_key and temporary null photo_url values still resolve through the public photos.cadetcatch.com path. It preserves server photo search uploads, clear no-face/multiple-face/no-match/server-error states, and hidden debug match details."
   },
   "urls": {
     "marketingUrl": "https://eb28.co/cc/",
@@ -142,7 +142,7 @@
       "Save to Photos writes an unlocked live server image to the iOS simulator Photos library"
     ],
     "knownRisks": [
-      "Photo URLs may reflect the current backend hosting path until final R2 photo hosting is complete.",
+      "Photo images require the public R2 custom domain photos.cadetcatch.com to resolve; the app derives public image URLs from r2_key while the backend photo_url field is temporarily null.",
       "Source discovery, face embeddings, indexing, and photo hosting are handled by the CadetCatch backend/admin pipeline, not by the iPhone app.",
       "Build 88 preserves the supplied low-resolution USCGC EAGLE photo from the owner as the native iOS launch/splash image and welcome image, with the screenshot UI badge removed and no replacement EAGLE artwork.",
       "In-app purchase products must be active in App Store Connect before TestFlight purchase flows can return live products."

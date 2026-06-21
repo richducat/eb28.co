@@ -1,0 +1,43 @@
+{
+  "brand": "EB28",
+  "generatedAt": "2026-06-21T22:02:12.442Z",
+  "runId": "2026-06-21-pm",
+  "slot": "pm",
+  "article": {
+    "title": "Secure Business AI Assistant: What to Keep Private",
+    "url": "https://eb28.co/blog/secure-business-ai-assistant-what-to-keep-private-from-day-one/",
+    "cluster": "private-ai",
+    "primaryKeyword": "secure business AI assistant"
+  },
+  "posts": {
+    "blog": {
+      "title": "Secure Business AI Assistant: What to Keep Private",
+      "url": "https://eb28.co/blog/secure-business-ai-assistant-what-to-keep-private-from-day-one/",
+      "status": "ready_for_build_and_deploy"
+    },
+    "facebook": {
+      "caption": "Secure Business AI Assistant: What to Keep Private\n\nA practical guide to deciding which client records, SOPs, financial details, and lead data should stay out of public AI tools before a business assistant goes live.\n\nRead it: https://eb28.co/blog/secure-business-ai-assistant-what-to-keep-private-from-day-one/",
+      "status": "draft_only"
+    },
+    "instagram": {
+      "caption": "Secure AI starts with what stays private.\n\nClient records. SOPs. Pricing. Lead data. Internal decisions. Put boundaries around the first workflow before connecting more tools.\n\nRead the full guide at eb28.co/blog/",
+      "creativeBrief": "Carousel: Slide 1 secure AI starts with private boundaries, Slide 2 data that stays out, Slide 3 one controlled workflow, Slide 4 source citations and review, Slide 5 CTA to EB28 project brief.",
+      "status": "draft_only"
+    },
+    "x": {
+      "caption": "Secure Business AI Assistant: What to Keep Private\n\nStart with one controlled workflow, approved documents, source visibility, access rules, logs, and human review before connecting private AI to lead follow-up.\n\nhttps://eb28.co/blog/secure-business-ai-assistant-what-to-keep-private-from-day-one/",
+      "status": "draft_only"
+    },
+    "linkedin": {
+      "caption": "EB28 growth brief refresh: Secure Business AI Assistant: What to Keep Private\n\nFor small businesses, the safest private-AI starting point is not every company file. It is one workflow, clear data boundaries, retrieval from approved material, logging, citations, and human review before customer-facing decisions.\n\nhttps://eb28.co/blog/secure-business-ai-assistant-what-to-keep-private-from-day-one/",
+      "status": "draft_only"
+    },
+    "shortFormVideo": {
+      "hook": "Before you build a business AI assistant, decide what it is never allowed to see.",
+      "brief": "15-25 second vertical video. Open with a prompt box over sensitive business files, then three beats: keep private data out, start with one workflow, require citations plus review. End on the EB28 article title and project brief CTA.",
+      "caption": "Secure business AI starts with private boundaries, not bigger prompts.",
+      "status": "draft_only"
+    }
+  },
+  "publishingGuard": "Do not publish externally until an EB28-owned social channel is verified by a repo script or connector."
+}

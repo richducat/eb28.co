@@ -1,0 +1,43 @@
+{
+  "brand": "EB28",
+  "generatedAt": "2026-06-21T10:02:23.825Z",
+  "runId": "2026-06-21-am",
+  "slot": "am",
+  "article": {
+    "title": "Local RAG System for Business Documents: Implementation Guide",
+    "url": "https://eb28.co/blog/local-rag-system-for-business-documents-a-plain-english-implementation-guide/",
+    "cluster": "private-ai",
+    "primaryKeyword": "local RAG system for business documents"
+  },
+  "posts": {
+    "blog": {
+      "title": "Local RAG System for Business Documents: Implementation Guide",
+      "url": "https://eb28.co/blog/local-rag-system-for-business-documents-a-plain-english-implementation-guide/",
+      "status": "ready_for_build_and_deploy"
+    },
+    "facebook": {
+      "caption": "Local RAG System for Business Documents: Implementation Guide\n\nA practical guide for using local RAG with business documents: scope the files, set access rules, require source citations, and keep sensitive answers under review.\n\nRead it: https://eb28.co/blog/local-rag-system-for-business-documents-a-plain-english-implementation-guide/",
+      "status": "draft_only"
+    },
+    "instagram": {
+      "caption": "Local RAG should start smaller than most AI demos.\n\nPick one trusted document set. Set access rules. Require source citations. Keep human review in the workflow.\n\nRead the full guide at eb28.co/blog/",
+      "creativeBrief": "Carousel: Slide 1 local RAG without data sprawl, Slide 2 choose one document set, Slide 3 require source citations, Slide 4 review sensitive answers, Slide 5 CTA to EB28 project brief.",
+      "status": "draft_only"
+    },
+    "x": {
+      "caption": "Local RAG System for Business Documents: Implementation Guide\n\nThe safe first version: one document set, clear access rules, source citations, answer review, and a scoped path before connecting more company files.\n\nhttps://eb28.co/blog/local-rag-system-for-business-documents-a-plain-english-implementation-guide/",
+      "status": "draft_only"
+    },
+    "linkedin": {
+      "caption": "New EB28 growth brief refresh: Local RAG System for Business Documents: Implementation Guide\n\nThis covers how businesses can make company documents searchable with private AI without turning the first build into an uncontrolled platform: start with a narrow workflow, protect sensitive files, cite sources, and keep review in the loop.\n\nhttps://eb28.co/blog/local-rag-system-for-business-documents-a-plain-english-implementation-guide/",
+      "status": "draft_only"
+    },
+    "shortFormVideo": {
+      "hook": "A local RAG system should not start with every company file.",
+      "brief": "15-25 second vertical video. Open with a messy folder/search scene, then three text beats: choose one document set, require source citations, review sensitive answers. End on the EB28 article title and project brief CTA.",
+      "caption": "Start local RAG with one trusted workflow, source citations, and human review.",
+      "status": "draft_only"
+    }
+  },
+  "publishingGuard": "Do not publish externally until an EB28-owned social channel is verified by a repo script or connector."
+}

@@ -40,7 +40,7 @@ final class ScannerProgress {
     
     var progressString: String {
         if !message.isEmpty { return message }
-        guard totalPhotosFound > 0, let start = startDate else { return "Scanning..." }
+        guard totalPhotosFound > 0, let start = startDate else { return "Searching secure server..." }
         let elapsed = Date().timeIntervalSince(start)
         let percent = Int((Double(photosScanned) / Double(totalPhotosFound)) * 100)
         
@@ -58,7 +58,7 @@ final class ScannerProgress {
             timeLeftString = "Calculating time left..."
         }
         
-        return "\"\(photosScanned) photos scanned\" \"\(photosMatched) Photos Matched\" \"\(percent)% complete\" \"\(timeLeftString)\""
+        return "\"Secure server search\" \"\(photosMatched) matches found\" \"\(percent)% complete\" \"\(timeLeftString)\""
     }
 
     func reset() {
@@ -312,7 +312,7 @@ final class CadetCatchStore {
 
     func scanActiveCadet() async {
         guard let cadet = activeCadet else {
-            lastScanMessage = "Add a cadet profile before scanning."
+            lastScanMessage = "Add a cadet profile before searching."
             return
         }
 
@@ -346,7 +346,7 @@ final class CadetCatchStore {
                 scanProgress.isCancelled = true
                 showScanReceipt = true
                 if let wrapper = currentActivity {
-                    Task { await wrapper.activity.end(ActivityContent(state: ScanActivityAttributes.ContentState(progressString: "Scan Stopped", isScanning: false), staleDate: nil), dismissalPolicy: .default) }
+                    Task { await wrapper.activity.end(ActivityContent(state: ScanActivityAttributes.ContentState(progressString: "Search Stopped", isScanning: false), staleDate: nil), dismissalPolicy: .default) }
                 }
                 return
             }
@@ -370,7 +370,7 @@ final class CadetCatchStore {
             showScanReceipt = true
             persist()
             if let wrapper = currentActivity {
-                Task { await wrapper.activity.end(ActivityContent(state: ScanActivityAttributes.ContentState(progressString: "Scan Complete", isScanning: false), staleDate: nil), dismissalPolicy: .default) }
+                Task { await wrapper.activity.end(ActivityContent(state: ScanActivityAttributes.ContentState(progressString: "Search Complete", isScanning: false), staleDate: nil), dismissalPolicy: .default) }
             }
         }
     }
@@ -1003,7 +1003,7 @@ enum PublicPhotoScanner {
         do {
             let response = try await CadetCatchSearchAPI.search(photoData: cadet.photoData)
             if Task.isCancelled {
-                return ScanResult(candidates: [], checkedImageCount: 0, message: "Scan Stopped")
+                return ScanResult(candidates: [], checkedImageCount: 0, message: "Search Stopped")
             }
 
             guard response.queryFacesDetected > 0 else {
@@ -2065,12 +2065,12 @@ struct ScanReceiptSheet: View {
                     .foregroundStyle(store.scanProgress.isCancelled ? Theme.orange : Theme.green)
                     .padding(.top, 24)
                 
-                Text(store.scanProgress.isCancelled ? "Scan Stopped" : "Scan Complete")
+                Text(store.scanProgress.isCancelled ? "Search Stopped" : "Search Complete")
                     .font(.title2.weight(.black))
                     .foregroundStyle(Theme.navyDark)
                 
                 if store.scanProgress.isCancelled {
-                    Text("The scan was stopped early. Here are the partial results.")
+                    Text("The search was stopped early. Here are the partial results.")
                         .font(.subheadline)
                         .foregroundStyle(Theme.muted)
                         .multilineTextAlignment(.center)
@@ -2078,7 +2078,8 @@ struct ScanReceiptSheet: View {
                 }
 
                 VStack(spacing: 16) {
-                    receiptRow("Photos Scanned", "\(store.scanProgress.photosScanned)")
+                    receiptRow("Reference Photo", store.scanProgress.photosScanned > 0 ? "Analyzed" : "Queued")
+                    receiptRow("Cloud Search", store.scanProgress.isCancelled ? "Stopped" : "Completed")
                     receiptRow("Matches Found", "\(store.scanProgress.photosMatched)")
                     
                     if let start = store.scanProgress.startDate {
@@ -2170,7 +2171,7 @@ struct HomeView: View {
     private func runScan() async {
         guard !store.scanProgress.isScanning else { return }
         guard store.activeCadet != nil else {
-            store.lastScanMessage = "Add a cadet profile before checking photos."
+            store.lastScanMessage = "Add a cadet profile before searching photos."
             return
         }
         guard store.beginSearch(hasMonthlyAccess: purchases.hasMonthlyAccess) else {
@@ -2342,7 +2343,7 @@ struct ScanCard: View {
                     Button(action: {
                         store.stopScan()
                     }) {
-                        Text("Stop Scan")
+                        Text("Stop Search")
                             .font(.caption.weight(.bold))
                             .foregroundStyle(.white)
                             .padding(.vertical, 8)
@@ -2594,7 +2595,7 @@ struct PhotosView: View {
                 EmptyStateView(
                     symbol: scope == .new ? "photo.on.rectangle.angled" : "archivebox",
                     title: scope == .new ? "No photos ready" : "Saved is empty",
-                    message: scope == .new ? "Run a photo check from Home after adding a cadet." : "Save reviewed photos to keep them here.",
+                    message: scope == .new ? "Run a server photo search from Home after adding a cadet." : "Save reviewed photos to keep them here.",
                     buttonTitle: scope == .new ? "Open Home" : "Show New"
                 ) {
                     if scope == .new {
@@ -3128,7 +3129,7 @@ struct RosterView: View {
                     EmptyStateView(
                         symbol: "person.crop.circle.badge.plus",
                         title: "Roster is empty",
-                        message: "Add a cadet with a clear profile photo. The photo is uploaded only when you run a server photo check.",
+                        message: "Add a cadet with a clear profile photo. The photo is uploaded only when you run a server photo search.",
                         buttonTitle: "Add Cadet"
                     ) {
                         showingAddCadet = true
@@ -3429,7 +3430,7 @@ struct MoreView: View {
                 store.resetLocalData()
             }
         } message: {
-            Text("This removes cadets, saved photos, and scan history from this device.")
+            Text("This removes cadets, saved photos, and search history from this device.")
         }
     }
 }

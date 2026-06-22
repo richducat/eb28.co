@@ -22,7 +22,7 @@
   },
   "version": {
     "marketingVersion": "1.0.1",
-    "buildNumber": "89",
+    "buildNumber": "90",
     "releaseType": "MANUAL",
     "phasedRelease": false,
     "promotionalText": "Private cadet rosters, secure server photo search, hidden previews, saved finds, family notes, and a plain-English academy terms guide.",
@@ -36,7 +36,7 @@
       "parents",
       "coast"
     ],
-    "whatsNew": "CadetCatch build 89 uses the populated photo_url returned by the CadetCatch Search API, including the current public R2 development URLs. It preserves server photo search uploads, clear no-face/multiple-face/no-match/server-error states, and hidden debug match details."
+    "whatsNew": "CadetCatch build 90 keeps the CadetCatch Search API photo_url flow from build 89 and clarifies the in-app cloud search status so users see that one reference photo is analyzed while the server searches the indexed photo database."
   },
   "urls": {
     "marketingUrl": "https://eb28.co/cc/",

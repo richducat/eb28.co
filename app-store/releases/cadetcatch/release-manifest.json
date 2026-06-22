@@ -4,20 +4,20 @@
   "appStoreConnectAppId": "6769565852",
   "platform": "iOS",
   "marketingVersion": "1.0.1",
-  "buildNumber": "89",
+  "buildNumber": "90",
   "baselineCommit": "ac55fb81eb53e1b037dd836349a4569394edbe8b",
   "baselineTree": "2374b7b19defa200312ac08d70381628bead8fc6",
   "sourceIdentityType": "isolated git worktree branch with CadetCatch server search API integration",
   "baseParentCommit": "ac55fb81eb53e1b037dd836349a4569394edbe8b",
   "indexParentCommit": null,
-  "sourceRef": "refs/heads/feature/cadetcatch-coreml-face-embeddings",
-  "releaseBranch": "feature/cadetcatch-coreml-face-embeddings",
-  "worktreePath": "/Users/richardducat/GITHUB/eb28-cadetcatch-coreml-face-embeddings",
+  "sourceRef": "refs/heads/codex/cadetcatch-server-search-sop-20260622",
+  "releaseBranch": "codex/cadetcatch-server-search-sop-20260622",
+  "worktreePath": "/Users/richardducat/GITHUB/eb28-cadetcatch-server-search-sop-20260622",
   "xcodeProjectPath": "ios/CadetCatch/CadetCatch.xcodeproj",
   "xcodegenProjectSpec": "ios/CadetCatch/project.yml",
   "scheme": "CadetCatch",
   "teamId": "WN3K69XEP4",
-  "approvalLevel": "local build 89 candidate only; exact archive, upload_build, and distribute_testflight approvals pending for final build-89 source commit",
+  "approvalLevel": "local build 90 candidate only; exact archive, upload_build, and distribute_testflight approvals pending for final build-90 source commit",
   "archivePath": null,
   "appStoreConnectState": {
     "appStoreVersionId": null,
@@ -28,20 +28,20 @@
     "lastLocalPreparationAt": "2026-06-22T01:34:35.000Z",
     "uploadedAt": null,
     "visibleAscVerificationAt": null,
-    "visibleAscStatus": "Not applicable; build 89 has not been uploaded",
+    "visibleAscStatus": "Not applicable; build 90 has not been uploaded",
     "visibleAscCreatedAt": null,
     "distributionLogPath": null,
     "verificationBlocked": null
   },
   "sourceMetadataVerification": {
     "projectYmlMarketingVersion": "1.0.1",
-    "projectYmlCurrentProjectVersion": "89",
+    "projectYmlCurrentProjectVersion": "90",
     "projectYmlBundleId": "co.eb28.cadetcatch",
     "pbxMarketingVersions": [
       "1.0.1"
     ],
     "pbxCurrentProjectVersions": [
-      "89"
+      "90"
     ],
     "pbxBundleIds": [
       "co.eb28.CadetCatchUITests",
@@ -100,7 +100,7 @@
   ],
   "releaseJsonVersionObject": {
     "marketingVersion": "1.0.1",
-    "buildNumber": "89",
+    "buildNumber": "90",
     "releaseType": "MANUAL",
     "phasedRelease": false,
     "promotionalText": "Private cadet rosters, secure server photo search, hidden previews, saved finds, family notes, and a plain-English academy terms guide.",
@@ -114,20 +114,21 @@
       "parents",
       "coast"
     ],
-    "whatsNew": "CadetCatch build 89 uses the populated photo_url returned by the CadetCatch Search API, including the current public R2 development URLs. It preserves server photo search uploads, clear no-face/multiple-face/no-match/server-error states, and hidden debug match details."
+    "whatsNew": "CadetCatch build 90 keeps the CadetCatch Search API photo_url flow from build 89 and clarifies the in-app cloud search status so users see that one reference photo is analyzed while the server searches the indexed photo database."
   },
   "safetyNotes": [
     "Primary checkout /Users/richardducat/GITHUB/eb28.co is dirty and must not be used for release actions.",
-    "Builds 85, 86, 87, and 88 have prior upload or upload-processing evidence and must not be reused for the R2 compatibility candidate.",
+    "Builds 85, 86, 87, 88, and 89 have prior upload or upload-processing evidence and must not be reused for the cloud-search status clarification candidate.",
     "Build 88 was uploaded and distributed to internal TestFlight from source commit eb8a5617327d68422cf952e64483db183ebe5754.",
-    "Build 89 is the R2 public photo_url candidate. It preserves POST https://api.cadetcatch.com/search and uses the backend-provided photo_url directly, including the current public R2 development URLs. It does not derive photos.cadetcatch.com URLs from r2_key.",
-    "Do not archive, upload, distribute TestFlight, select for App Review, submit for review, release, expire builds, edit metadata/screenshots/previews, or edit IAP/subscriptions without a separate exact approval record for the final build-89 source commit.",
-    "Build 89 has not been archived or uploaded."
+    "Build 89 is the uploaded/internal-TestFlight R2 public photo_url candidate. It preserves POST https://api.cadetcatch.com/search and uses the backend-provided photo_url directly, including the current public R2 development URLs. It does not derive photos.cadetcatch.com URLs from r2_key.",
+    "Build 90 preserves build 89 server-search behavior and clarifies the app-visible cloud search status so the one uploaded reference photo is not mistaken for the number of indexed photos searched.",
+    "Do not archive, upload, distribute TestFlight, select for App Review, submit for review, release, expire builds, edit metadata/screenshots/previews, or edit IAP/subscriptions without a separate exact approval record for the final build-90 source commit.",
+    "Build 90 has not been archived or uploaded."
   ],
   "createdAt": "2026-06-06T11:53:53.691778-04:00",
   "localVerification": {
-    "releaseGate": "pending for final build 89 candidate commit",
-    "simulatorQA": "pending for final build 89 candidate commit",
+    "releaseGate": "pending for final build 90 candidate commit",
+    "simulatorQA": "pending for final build 90 candidate commit",
     "matchedPhotoPreviewQA": {
       "status": "passed",
       "receipt": "/tmp/cadetcatch-face-test/preview-cache-proof.png",
@@ -150,5 +151,5 @@
       "note": "Live search returned matches with populated public R2 development photo_url values such as https://pub-2264690a142a418ab996c86d3523fa08.r2.dev/photos/1589003939891699.jpg; app uses photo_url directly and ignores r2_key for image URL construction."
     }
   },
-  "updatedAt": "2026-06-22T01:34:35.000Z"
+  "updatedAt": "2026-06-22T17:38:01Z"
 }

@@ -7,7 +7,7 @@
 - Bundle ID: co.eb28.cadetcatch
 - SKU: cadetcatch-ios
 - Version: 1.0.1
-- Build: 89
+- Build: 90
 - Primary category: Lifestyle
 - Secondary category: Photo & Video
 - Marketing URL: https://eb28.co/cc/
@@ -36,7 +36,7 @@ cadet, military, academy, photos, family, parents, coast
 
 ## What's New
 
-CadetCatch build 89 uses the populated photo_url returned by the CadetCatch Search API, including the current public R2 development URLs. It preserves server photo search uploads, clear no-face/multiple-face/no-match/server-error states, and hidden debug match details.
+CadetCatch build 90 keeps the CadetCatch Search API photo_url flow from build 89 and clarifies the in-app cloud search status so users see that one reference photo is analyzed while the server searches the indexed photo database.
 
 ## Review Notes
 
@@ -55,8 +55,8 @@ No login is required. Add a cadet profile from Roster using a clear single-face 
 
 ## Internal Launch Notes
 
-- App Store Connect version state: Build 89 local upload candidate; not uploaded.
-- Attached build ID or build number: Build 89 candidate; ASC build ID not applicable until upload completes and is verified.
+- App Store Connect version state: Build 90 local upload candidate; not uploaded.
+- Attached build ID or build number: Build 90 candidate; ASC build ID not applicable until upload completes and is verified.
 - Review submission ID: Not applicable to this TestFlight upload candidate
 - Release after approval: After approval
 - In-app purchases and subscription status: Approved

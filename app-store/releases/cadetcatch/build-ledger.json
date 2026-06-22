@@ -40,7 +40,7 @@
     "Build 86 was uploaded to App Store Connect on 2026-06-10; Xcode upload receipt says uploaded package is processing.",
     "Build 87 was uploaded to App Store Connect on 2026-06-16 by Xcode receipt for the Core ML face-match candidate and must not be reused.",
     "Build 88 was uploaded and distributed to internal TestFlight on 2026-06-21 for the CadetCatch server search API candidate and must not be reused.",
-    "Build 89 is reserved for the R2 response compatibility candidate."
+    "Build 89 is reserved for the backend-provided public R2 photo_url candidate."
   ],
   "lastUpdated": "2026-06-21"
 }

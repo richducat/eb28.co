@@ -855,7 +855,6 @@ private enum CadetCatchSearchAPI {
         let score: Double
         let photoFile: String?
         let photoUrl: String?
-        let r2Key: String?
         let bbox: [Double]?
         let faceIndex: Int?
         let detScore: Double?
@@ -868,7 +867,6 @@ private enum CadetCatchSearchAPI {
             case photoUrl = "photo_url"
             case originalUrl = "original_url"
             case thumbnailUrl = "thumbnail_url"
-            case r2Key = "r2_key"
             case bbox
             case faceIndex = "face_index"
             case detScore = "det_score"
@@ -883,7 +881,6 @@ private enum CadetCatchSearchAPI {
             photoUrl = try container.decodeIfPresent(String.self, forKey: .photoUrl)
                 ?? container.decodeIfPresent(String.self, forKey: .originalUrl)
                 ?? container.decodeIfPresent(String.self, forKey: .thumbnailUrl)
-            r2Key = try container.decodeIfPresent(String.self, forKey: .r2Key)
             bbox = try container.decodeIfPresent([Double].self, forKey: .bbox)
             faceIndex = try container.decodeIfPresent(Int.self, forKey: .faceIndex)
             detScore = try container.decodeIfPresent(Double.self, forKey: .detScore)
@@ -898,7 +895,7 @@ private enum CadetCatchSearchAPI {
                 imageURL: url,
                 confidence: scorePercent,
                 sourceName: "CadetCatch Photo Index",
-                sourceHost: url.host() ?? "photos.cadetcatch.com",
+                sourceHost: url.host() ?? "CadetCatch Search API",
                 sourcePageURL: sourcePageURL,
                 detectedFaceCount: 1
             )
@@ -914,21 +911,7 @@ private enum CadetCatchSearchAPI {
                     return relative
                 }
             }
-            if let r2Key, let publicURL = publicR2URL(from: r2Key) {
-                return publicURL
-            }
             return nil
-        }
-
-        private func publicR2URL(from key: String) -> URL? {
-            let trimmed = key.trimmingCharacters(in: .whitespacesAndNewlines)
-                .trimmingCharacters(in: CharacterSet(charactersIn: "/"))
-            guard !trimmed.isEmpty, !trimmed.contains("..") else { return nil }
-            let path = trimmed
-                .split(separator: "/", omittingEmptySubsequences: true)
-                .map { String($0).addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? String($0) }
-                .joined(separator: "/")
-            return URL(string: "https://photos.cadetcatch.com/\(path)")
         }
     }
 

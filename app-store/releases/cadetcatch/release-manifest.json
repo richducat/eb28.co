@@ -25,7 +25,7 @@
     "reviewSubmissionId": null,
     "appStoreState": "LOCAL_CANDIDATE_NOT_UPLOADED",
     "submittedAt": null,
-    "lastLocalPreparationAt": "2026-06-21T22:10:56.000Z",
+    "lastLocalPreparationAt": "2026-06-22T01:34:35.000Z",
     "uploadedAt": null,
     "visibleAscVerificationAt": null,
     "visibleAscStatus": "Not applicable; build 89 has not been uploaded",
@@ -114,13 +114,13 @@
       "parents",
       "coast"
     ],
-    "whatsNew": "CadetCatch build 89 adds R2 search-result compatibility so server matches with r2_key and temporary null photo_url values still resolve through the public photos.cadetcatch.com path. It preserves server photo search uploads, clear no-face/multiple-face/no-match/server-error states, and hidden debug match details."
+    "whatsNew": "CadetCatch build 89 uses the populated photo_url returned by the CadetCatch Search API, including the current public R2 development URLs. It preserves server photo search uploads, clear no-face/multiple-face/no-match/server-error states, and hidden debug match details."
   },
   "safetyNotes": [
     "Primary checkout /Users/richardducat/GITHUB/eb28.co is dirty and must not be used for release actions.",
     "Builds 85, 86, 87, and 88 have prior upload or upload-processing evidence and must not be reused for the R2 compatibility candidate.",
     "Build 88 was uploaded and distributed to internal TestFlight from source commit eb8a5617327d68422cf952e64483db183ebe5754.",
-    "Build 89 is the R2 response compatibility candidate. It preserves POST https://api.cadetcatch.com/search and derives public photos.cadetcatch.com URLs from r2_key while the backend photo_url field is temporarily null.",
+    "Build 89 is the R2 public photo_url candidate. It preserves POST https://api.cadetcatch.com/search and uses the backend-provided photo_url directly, including the current public R2 development URLs. It does not derive photos.cadetcatch.com URLs from r2_key.",
     "Do not archive, upload, distribute TestFlight, select for App Review, submit for review, release, expire builds, edit metadata/screenshots/previews, or edit IAP/subscriptions without a separate exact approval record for the final build-89 source commit.",
     "Build 89 has not been archived or uploaded."
   ],
@@ -144,11 +144,11 @@
       "verifiedAt": "2026-06-10T19:43:02Z"
     },
     "serverSearchAPI": {
-      "status": "health_passed_and_no_face_contract_checked_before_build_bump",
+      "status": "health_passed_and_photo_url_contract_checked_for_build_89",
       "healthEndpoint": "https://api.cadetcatch.com/health",
       "searchEndpoint": "https://api.cadetcatch.com/search",
-      "note": "Live blank-image search check returned HTTP 200 with {\"error\":\"No face detected in uploaded image\"}; app maps that response to the no-face user state."
+      "note": "Live search returned matches with populated public R2 development photo_url values such as https://pub-2264690a142a418ab996c86d3523fa08.r2.dev/photos/1589003939891699.jpg; app uses photo_url directly and ignores r2_key for image URL construction."
     }
   },
-  "updatedAt": "2026-06-21T22:10:56.000Z"
+  "updatedAt": "2026-06-22T01:34:35.000Z"
 }

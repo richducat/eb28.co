@@ -36,7 +36,7 @@ cadet, military, academy, photos, family, parents, coast
 
 ## What's New
 
-CadetCatch build 89 adds R2 search-result compatibility so server matches with r2_key and temporary null photo_url values still resolve through the public photos.cadetcatch.com path. It preserves server photo search uploads, clear no-face/multiple-face/no-match/server-error states, and hidden debug match details.
+CadetCatch build 89 uses the populated photo_url returned by the CadetCatch Search API, including the current public R2 development URLs. It preserves server photo search uploads, clear no-face/multiple-face/no-match/server-error states, and hidden debug match details.
 
 ## Review Notes
 

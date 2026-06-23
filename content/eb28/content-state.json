@@ -1,6 +1,20 @@
 {
-  "updatedAt": "2026-06-23T12:33:50.074Z",
+  "updatedAt": "2026-06-23T22:03:04.707Z",
   "runs": [
+    {
+      "runId": "2026-06-23-pm",
+      "date": "2026-06-23",
+      "slot": "pm",
+      "createdAt": "2026-06-23T22:03:04.707Z",
+      "article": {
+        "slug": "how-to-rank-in-the-melbourne-fl-map-pack-without-spammy-seo",
+        "title": "How to Rank in the Melbourne FL Map Pack Without Spammy SEO",
+        "url": "https://eb28.co/blog/how-to-rank-in-the-melbourne-fl-map-pack-without-spammy-seo/",
+        "cluster": "local-seo",
+        "primaryKeyword": "how to rank in Melbourne FL map pack"
+      },
+      "reportPath": "output/eb28-social/eb28-content-2026-06-23-pm.json"
+    },
     {
       "runId": "2026-06-23-am",
       "date": "2026-06-23",

@@ -1,0 +1,53 @@
+{
+  "brand": "EB28",
+  "generatedAt": "2026-06-23T22:03:04.707Z",
+  "runId": "2026-06-23-pm",
+  "slot": "pm",
+  "article": {
+    "title": "How to Rank in the Melbourne FL Map Pack Without Spammy SEO",
+    "url": "https://eb28.co/blog/how-to-rank-in-the-melbourne-fl-map-pack-without-spammy-seo/",
+    "cluster": "local-seo",
+    "primaryKeyword": "how to rank in Melbourne FL map pack",
+    "canonicalRefresh": true,
+    "refreshedCanonicalSlug": "how-to-rank-in-the-melbourne-fl-map-pack-without-spammy-seo"
+  },
+  "posts": {
+    "blog": {
+      "title": "How to Rank in the Melbourne FL Map Pack Without Spammy SEO",
+      "url": "https://eb28.co/blog/how-to-rank-in-the-melbourne-fl-map-pack-without-spammy-seo/",
+      "status": "ready_for_build_and_deploy"
+    },
+    "facebook": {
+      "caption": "How to Rank in the Melbourne FL Map Pack Without Spammy SEO\n\nA practical guide for Melbourne FL businesses that want stronger Google map-pack visibility, cleaner local proof, and a website path that turns searchers into qualified enquiries.\n\nRead it: https://eb28.co/blog/how-to-rank-in-the-melbourne-fl-map-pack-without-spammy-seo/",
+      "status": "draft_only"
+    },
+    "instagram": {
+      "caption": "How to rank in the Melbourne FL map pack without spammy SEO: align the Google profile, website proof, reviews, citations, and the project brief path.\n\nRead the full guide at eb28.co/blog/",
+      "creativeBrief": "Carousel: Slide 1 map-pack intent, Slide 2 Google Business Profile consistency, Slide 3 website proof and reviews, Slide 4 clean internal links, Slide 5 CTA to the Melbourne Web Studio project brief.",
+      "status": "draft_only"
+    },
+    "x": {
+      "caption": "How to Rank in the Melbourne FL Map Pack Without Spammy SEO\n\nThe key: align Google Business Profile signals, local proof, useful service content, and a page that converts.\n\nhttps://eb28.co/blog/how-to-rank-in-the-melbourne-fl-map-pack-without-spammy-seo/",
+      "status": "draft_only"
+    },
+    "linkedin": {
+      "caption": "New EB28 growth brief: How to Rank in the Melbourne FL Map Pack Without Spammy SEO\n\nThis covers the practical SEO and conversion fixes that turn local map-pack visibility into a more reliable organic lead path.\n\nhttps://eb28.co/blog/how-to-rank-in-the-melbourne-fl-map-pack-without-spammy-seo/",
+      "status": "draft_only"
+    },
+    "shortFormVideo": {
+      "concept": "Thirty-second walkthrough of the map-pack ranking loop: Google profile consistency, local proof, website speed, reviews, citations, and project brief CTA.",
+      "hook": "Most map-pack SEO fails because the profile, website, and proof do not tell the same story.",
+      "scenes": [
+        "Open on a Google map-pack search and highlight inconsistent signals.",
+        "Show the EB28 article checklist: profile, reviews, citations, service page, internal links.",
+        "End on the Melbourne Web Studio project brief CTA for qualified local leads."
+      ],
+      "caption": "Map-pack rankings need clean signals and a page that converts. Draft-only until an EB28-owned short-form channel is verified.",
+      "status": "draft_only"
+    }
+  },
+  "publishGate": {
+    "status": "draft_only",
+    "reason": "No EB28-owned external social channel was verified by a repo script or connector for this run."
+  }
+}

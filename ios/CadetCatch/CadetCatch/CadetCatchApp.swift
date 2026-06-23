@@ -72,6 +72,57 @@ final class ScannerProgress {
     }
 }
 
+enum SearchTolerance: String, CaseIterable, Codable, Identifiable {
+    case high
+    case medium
+    case low
+
+    var id: String { rawValue }
+
+    var title: String {
+        switch self {
+        case .high: "High"
+        case .medium: "Medium"
+        case .low: "Low"
+        }
+    }
+
+    var subtitle: String {
+        switch self {
+        case .high: "Strict"
+        case .medium: "Balanced"
+        case .low: "Broad"
+        }
+    }
+
+    var minimumScore: Double {
+        switch self {
+        case .high: 0.80
+        case .medium: 0.65
+        case .low: 0.55
+        }
+    }
+
+    var scoreLabel: String {
+        "\(Int((minimumScore * 100).rounded()))%+"
+    }
+
+    var helpTitle: String {
+        "\(title) threshold"
+    }
+
+    var helpText: String {
+        switch self {
+        case .high:
+            "Shows the strongest matches only. Best for clear, front-facing reference photos and fewer false matches."
+        case .medium:
+            "Includes more angled faces and lighting changes while still filtering weaker guesses."
+        case .low:
+            "Broadest search for side profiles or difficult angles. Review these results carefully because lookalikes are more likely."
+        }
+    }
+}
+
 @MainActor
 @Observable
 final class CadetCatchStore {
@@ -88,6 +139,7 @@ final class CadetCatchStore {
     var previewSearchUsed: Bool
     var searchCredits: Int
     var unlockedImageURLs: Set<String>
+    var searchTolerance: SearchTolerance
     
     final class ActivityWrapper: @unchecked Sendable {
         let activity: Activity<ScanActivityAttributes>
@@ -119,6 +171,7 @@ final class CadetCatchStore {
             previewSearchUsed = state.previewSearchUsed ?? false
             searchCredits = state.searchCredits ?? 0
             unlockedImageURLs = state.unlockedImageURLs ?? []
+            searchTolerance = state.searchTolerance ?? .high
             return
         }
         #endif
@@ -140,6 +193,7 @@ final class CadetCatchStore {
             previewSearchUsed = state.previewSearchUsed ?? false
             searchCredits = state.searchCredits ?? 0
             unlockedImageURLs = state.unlockedImageURLs ?? []
+            searchTolerance = state.searchTolerance ?? .high
         } else {
             hasSeenOnboarding = false
             selectedTab = .home
@@ -154,6 +208,7 @@ final class CadetCatchStore {
             previewSearchUsed = false
             searchCredits = 0
             unlockedImageURLs = []
+            searchTolerance = .high
         }
     }
 
@@ -213,6 +268,12 @@ final class CadetCatchStore {
 
     func addSearchCredit() {
         searchCredits += 1
+        persist()
+    }
+
+    func updateSearchTolerance(_ tolerance: SearchTolerance) {
+        guard searchTolerance != tolerance else { return }
+        searchTolerance = tolerance
         persist()
     }
 
@@ -329,7 +390,8 @@ final class CadetCatchStore {
         }
         
         scanTask = Task { @MainActor in
-            let scanResult = await PublicPhotoScanner.scan(cadet: cadet, progress: scanProgress) { [weak self] stateString in
+            let tolerance = searchTolerance
+            let scanResult = await PublicPhotoScanner.scan(cadet: cadet, searchTolerance: tolerance, progress: scanProgress) { [weak self] stateString in
                 Task { @MainActor in
                     if let wrapper = self?.currentActivity {
                         Task {
@@ -393,6 +455,7 @@ final class CadetCatchStore {
         previewSearchUsed = false
         searchCredits = 0
         unlockedImageURLs = []
+        searchTolerance = .high
         defaults.removeObject(forKey: storageKey)
     }
 
@@ -410,7 +473,8 @@ final class CadetCatchStore {
             lastScanMessage: lastScanMessage,
             previewSearchUsed: previewSearchUsed,
             searchCredits: searchCredits,
-            unlockedImageURLs: unlockedImageURLs
+            unlockedImageURLs: unlockedImageURLs,
+            searchTolerance: searchTolerance
         )
 
         if let data = try? JSONEncoder.cadetCatch.encode(state) {
@@ -433,6 +497,7 @@ private struct PersistedState: Codable {
     var previewSearchUsed: Bool?
     var searchCredits: Int?
     var unlockedImageURLs: Set<String>?
+    var searchTolerance: SearchTolerance?
 }
 
 #if DEBUG
@@ -476,7 +541,8 @@ private enum CadetCatchDebugFixture {
             lastScanMessage: nil,
             previewSearchUsed: false,
             searchCredits: 1,
-            unlockedImageURLs: [sourceImageURL.absoluteString]
+            unlockedImageURLs: [sourceImageURL.absoluteString],
+            searchTolerance: .high
         )
     }
 
@@ -997,11 +1063,19 @@ enum PublicPhotoScanner {
         return URLSession(configuration: config)
     }()
 
-    static func scan(cadet: Cadet, progress: ScannerProgress, onProgress: @escaping @Sendable (String) -> Void = { _ in }) async -> ScanResult {
+    static func scan(
+        cadet: Cadet,
+        searchTolerance: SearchTolerance,
+        progress: ScannerProgress,
+        onProgress: @escaping @Sendable (String) -> Void = { _ in }
+    ) async -> ScanResult {
         await update(progress, message: "Uploading cadet photo to secure search...", total: 1, scanned: 0, matched: 0, onProgress: onProgress)
 
         do {
-            let response = try await CadetCatchSearchAPI.search(photoData: cadet.photoData)
+            let response = try await CadetCatchSearchAPI.search(
+                photoData: cadet.photoData,
+                minScore: searchTolerance.minimumScore
+            )
             if Task.isCancelled {
                 return ScanResult(candidates: [], checkedImageCount: 0, message: "Search Stopped")
             }
@@ -2035,6 +2109,8 @@ struct MainTabView: View {
             }
         }
         .tint(Theme.orange)
+        .toolbarBackground(Theme.background, for: .tabBar)
+        .toolbarBackground(.visible, for: .tabBar)
         .sheet(isPresented: $store.showScanReceipt) {
             ScanReceiptSheet()
                 .presentationDetents([.medium])
@@ -2159,7 +2235,9 @@ struct HomeView: View {
                     RecentScansCard()
                 }
             }
-            .padding(16)
+            .padding(.horizontal, 16)
+            .padding(.top, 16)
+            .padding(.bottom, 140)
         }
         .background(Theme.background)
         .sheet(isPresented: $showingPurchaseOptions) {
@@ -2301,6 +2379,7 @@ struct SourceSummaryCard: View {
 struct ScanCard: View {
     @Environment(CadetCatchStore.self) private var store
     @Environment(PurchaseManager.self) private var purchases
+    @State private var explainedTolerance: SearchTolerance?
     let onScan: () -> Void
     let onShowPurchaseOptions: () -> Void
 
@@ -2330,6 +2409,8 @@ struct ScanCard: View {
             .padding(.horizontal, 12)
             .padding(.vertical, 10)
             .background(Theme.background, in: RoundedRectangle(cornerRadius: 14))
+
+            SearchToleranceControl(explainedTolerance: $explainedTolerance)
 
             if store.scanProgress.isScanning {
                 VStack(spacing: 12) {
@@ -2380,6 +2461,13 @@ struct ScanCard: View {
             }
         }
         .appPanel()
+        .alert(item: $explainedTolerance) { tolerance in
+            Alert(
+                title: Text(tolerance.helpTitle),
+                message: Text(tolerance.helpText),
+                dismissButton: .default(Text("OK"))
+            )
+        }
     }
 
     private var scanButtonTitle: String {
@@ -2388,6 +2476,85 @@ struct ScanCard: View {
 
     private var scanButtonSymbol: String {
         store.canStartSearch(hasMonthlyAccess: purchases.hasMonthlyAccess) ? "face.dashed" : "lock.open.fill"
+    }
+}
+
+struct SearchToleranceControl: View {
+    @Environment(CadetCatchStore.self) private var store
+    @Binding var explainedTolerance: SearchTolerance?
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            HStack(alignment: .firstTextBaseline) {
+                VStack(alignment: .leading, spacing: 3) {
+                    Text("Match threshold")
+                        .font(.caption.weight(.black))
+                        .foregroundStyle(Theme.navyDark)
+                    Text("Lower finds more possible matches; higher is stricter.")
+                        .font(.caption2.weight(.semibold))
+                        .foregroundStyle(Theme.muted)
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+                Spacer()
+            }
+
+            HStack(spacing: 8) {
+                ForEach(SearchTolerance.allCases) { tolerance in
+                    toleranceButton(tolerance)
+                }
+            }
+        }
+        .padding(12)
+        .background(Theme.background, in: RoundedRectangle(cornerRadius: 14))
+    }
+
+    private func toleranceButton(_ tolerance: SearchTolerance) -> some View {
+        let isSelected = store.searchTolerance == tolerance
+
+        return ZStack(alignment: .topTrailing) {
+            Button {
+                store.updateSearchTolerance(tolerance)
+            } label: {
+                VStack(spacing: 7) {
+                    Text(tolerance.title)
+                        .font(.caption.weight(.black))
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.82)
+
+                    Text(tolerance.subtitle)
+                        .font(.caption2.weight(.bold))
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.82)
+
+                    Text(tolerance.scoreLabel)
+                        .font(.caption2.monospacedDigit().weight(.black))
+                        .lineLimit(1)
+                }
+                .frame(maxWidth: .infinity, minHeight: 74)
+                .padding(.horizontal, 6)
+                .contentShape(RoundedRectangle(cornerRadius: 12))
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel("\(tolerance.title) threshold, \(tolerance.subtitle), \(tolerance.scoreLabel)")
+            .accessibilityAddTraits(isSelected ? .isSelected : [])
+
+            Button {
+                explainedTolerance = tolerance
+            } label: {
+                Image(systemName: "info.circle")
+                    .font(.caption.weight(.bold))
+                    .frame(width: 26, height: 26)
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel("\(tolerance.title) threshold details")
+            .padding(3)
+        }
+        .foregroundStyle(isSelected ? .white : Theme.navyDark)
+        .background(isSelected ? Theme.navy : Color.white, in: RoundedRectangle(cornerRadius: 12))
+        .overlay(
+            RoundedRectangle(cornerRadius: 12)
+                .stroke(isSelected ? Theme.navy : Theme.border, lineWidth: 1)
+        )
     }
 }
 

@@ -1,6 +1,20 @@
 {
-  "updatedAt": "2026-06-22T10:02:35.560Z",
+  "updatedAt": "2026-06-22T22:46:31.905Z",
   "runs": [
+    {
+      "runId": "2026-06-22-pm",
+      "date": "2026-06-22",
+      "slot": "pm",
+      "createdAt": "2026-06-22T22:46:31.905Z",
+      "article": {
+        "slug": "best-website-builder-in-melbourne-fl-what-local-companies-should-look-for",
+        "title": "Best Website Builder in Melbourne FL: What Local Companies Should Look For",
+        "url": "https://eb28.co/blog/best-website-builder-in-melbourne-fl-what-local-companies-should-look-for/",
+        "cluster": "melbourne-web-design",
+        "primaryKeyword": "best website builder Melbourne FL"
+      },
+      "reportPath": "/private/tmp/eb28-content-engine-20260622-224616/output/eb28-social/eb28-content-2026-06-22-pm.json"
+    },
     {
       "runId": "2026-06-22-am",
       "date": "2026-06-22",

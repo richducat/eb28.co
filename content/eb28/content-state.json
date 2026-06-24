@@ -1,6 +1,20 @@
 {
-  "updatedAt": "2026-06-23T22:03:04.707Z",
+  "updatedAt": "2026-06-24T22:02:04.493Z",
   "runs": [
+    {
+      "runId": "2026-06-24-pm",
+      "date": "2026-06-24",
+      "slot": "pm",
+      "createdAt": "2026-06-24T22:02:04.493Z",
+      "article": {
+        "slug": "website-audit-checklist-for-melbourne-fl-businesses-losing-leads",
+        "title": "Website Audit Melbourne FL: Checklist for Lost Leads",
+        "url": "https://eb28.co/blog/website-audit-checklist-for-melbourne-fl-businesses-losing-leads/",
+        "cluster": "conversion",
+        "primaryKeyword": "website audit Melbourne FL"
+      },
+      "reportPath": "output/eb28-social/eb28-content-2026-06-24-pm.json"
+    },
     {
       "runId": "2026-06-23-pm",
       "date": "2026-06-23",

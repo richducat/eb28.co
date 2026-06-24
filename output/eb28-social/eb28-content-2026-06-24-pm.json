@@ -1,0 +1,53 @@
+{
+  "brand": "EB28",
+  "generatedAt": "2026-06-24T22:02:04.493Z",
+  "runId": "2026-06-24-pm",
+  "slot": "pm",
+  "article": {
+    "title": "Website Audit Melbourne FL: Checklist for Lost Leads",
+    "url": "https://eb28.co/blog/website-audit-checklist-for-melbourne-fl-businesses-losing-leads/",
+    "cluster": "conversion",
+    "primaryKeyword": "website audit Melbourne FL",
+    "canonicalRefresh": true,
+    "refreshedCanonicalSlug": "website-audit-checklist-for-melbourne-fl-businesses-losing-leads"
+  },
+  "posts": {
+    "blog": {
+      "title": "Website Audit Melbourne FL: Checklist for Lost Leads",
+      "url": "https://eb28.co/blog/website-audit-checklist-for-melbourne-fl-businesses-losing-leads/",
+      "status": "ready_for_build_and_deploy"
+    },
+    "facebook": {
+      "caption": "Website Audit Melbourne FL: Checklist for Lost Leads\n\nA practical guide for Melbourne FL businesses that want to find offer gaps, weak proof, form friction, and follow-up leaks before spending more on traffic.\n\nRead it: https://eb28.co/blog/website-audit-checklist-for-melbourne-fl-businesses-losing-leads/",
+      "status": "draft_only"
+    },
+    "instagram": {
+      "caption": "Website audit Melbourne FL: check the offer, proof, form, speed, and follow-up path before buying more traffic.\n\nRead the full guide at eb28.co/blog/",
+      "creativeBrief": "Carousel: Slide 1 lost-lead audit promise, Slide 2 first-screen clarity, Slide 3 proof near the CTA, Slide 4 short form and fast follow-up, Slide 5 CTA to the Melbourne Web Studio lead leak quiz.",
+      "status": "draft_only"
+    },
+    "x": {
+      "caption": "Website Audit Melbourne FL: Checklist for Lost Leads\n\nThe key: find unclear offers, weak proof, form friction, and follow-up leaks before buying more traffic.\n\nhttps://eb28.co/blog/website-audit-checklist-for-melbourne-fl-businesses-losing-leads/",
+      "status": "draft_only"
+    },
+    "linkedin": {
+      "caption": "New EB28 growth brief: Website Audit Melbourne FL: Checklist for Lost Leads\n\nThis walks through the practical audit fixes that turn local search interest into a clearer website path: stronger first-screen copy, visible proof, cleaner forms, and faster follow-up.\n\nhttps://eb28.co/blog/website-audit-checklist-for-melbourne-fl-businesses-losing-leads/",
+      "status": "draft_only"
+    },
+    "shortFormVideo": {
+      "concept": "Thirty-second website audit walkthrough for Melbourne FL service businesses: headline clarity, proof placement, form friction, mobile speed, and follow-up timing.",
+      "hook": "Most lead loss is not a traffic problem. It is a page and follow-up leak.",
+      "scenes": [
+        "Open on a local service homepage and highlight the first-screen promise.",
+        "Show a quick audit checklist: offer clarity, proof, form friction, page speed, and follow-up path.",
+        "End on the Melbourne Web Studio lead leak quiz CTA for a practical next step."
+      ],
+      "caption": "Audit the lead path before buying more traffic. Draft-only until an EB28-owned short-form channel is verified.",
+      "status": "draft_only"
+    }
+  },
+  "publishGate": {
+    "status": "draft_only",
+    "reason": "No EB28-owned external social channel was verified by a repo script or connector for this run."
+  }
+}

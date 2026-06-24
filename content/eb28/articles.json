@@ -2479,16 +2479,16 @@
   },
   {
     "slug": "website-audit-checklist-for-melbourne-fl-businesses-losing-leads",
-    "title": "Website Audit Checklist for Melbourne FL Businesses Losing Leads",
-    "description": "Website Audit Checklist for Melbourne FL Businesses Losing Leads for business owners who want clearer search visibility, better buyer trust, and a website path that turns interest into real enquiries.",
+    "title": "Website Audit Melbourne FL: Checklist for Lost Leads",
+    "description": "Use this website audit Melbourne FL checklist to find unclear offers, weak proof, slow forms, and follow-up leaks before buying more traffic.",
     "cluster": "conversion",
     "primaryKeyword": "website audit Melbourne FL",
     "datePublished": "2026-06-03",
-    "dateModified": "2026-06-03",
+    "dateModified": "2026-06-24",
     "author": "EB28",
-    "heroLabel": "Morning growth brief",
-    "sourceRunId": "2026-06-03-am",
-    "summary": "A plain-English AM growth brief for the conversion cluster, focused on diagnose the fastest fixes before buying traffic and the first fix most likely to create qualified leads.",
+    "heroLabel": "Evening growth brief",
+    "sourceRunId": "2026-06-24-pm",
+    "summary": "A plain-English PM growth brief for the conversion cluster, focused on diagnosing the fastest fixes before buying traffic and the first steps most likely to create qualified leads.",
     "sections": [
       {
         "heading": "Why this search matters",
@@ -2511,7 +2511,7 @@
         ],
         "bullets": [
           "Put the strongest proof near the first CTA",
-          "Keep forms short and make phone optional when email-first follow-up is the promise",
+          "Keep forms short and make nonessential fields optional when email-first follow-up is the promise",
           "Add internal links from pages with traffic into the newest conversion pages",
           "Review Search Console positions 4-20 for pages that need better titles or FAQs"
         ]
@@ -2570,6 +2570,16 @@
         "label": "Melbourne Web Studio lead leak quiz",
         "href": "/melbournewebstudio/#quiz",
         "reason": "Converts the conversion problem into a specific next step."
+      },
+      {
+        "label": "EB28 private AI and app development homepage",
+        "href": "/",
+        "reason": "Connects website audit fixes to the broader EB28 build-and-growth offer."
+      },
+      {
+        "label": "Recon Agent founder beta",
+        "href": "/reconcile/",
+        "reason": "Shows how EB28 turns messy lead, finance, and operating data into a practical review system."
       },
       {
         "label": "Local SEO map pack checklist for Melbourne FL",

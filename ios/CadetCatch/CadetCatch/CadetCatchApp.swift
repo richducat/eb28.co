@@ -3203,7 +3203,7 @@ private enum RemotePhotoImageLoader {
         config.timeoutIntervalForRequest = 20
         config.timeoutIntervalForResource = 60
         config.waitsForConnectivity = true
-        config.requestCachePolicy = .returnCacheDataElseLoad
+        config.requestCachePolicy = .reloadIgnoringLocalCacheData
         config.urlCache = URLCache.shared
         return URLSession(configuration: config)
     }()
@@ -3211,9 +3211,10 @@ private enum RemotePhotoImageLoader {
     static func imageData(from url: URL) async throws -> Data {
         var request = URLRequest(url: url)
         request.timeoutInterval = 20
-        request.cachePolicy = .returnCacheDataElseLoad
+        request.cachePolicy = .reloadIgnoringLocalCacheData
         request.setValue("image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8", forHTTPHeaderField: "Accept")
         request.setValue("CadetCatch/1.0 photo-preview", forHTTPHeaderField: "User-Agent")
+        URLCache.shared.removeCachedResponse(for: request)
 
         let (data, response) = try await session.data(for: request)
         if let httpResponse = response as? HTTPURLResponse, !(200...299).contains(httpResponse.statusCode) {

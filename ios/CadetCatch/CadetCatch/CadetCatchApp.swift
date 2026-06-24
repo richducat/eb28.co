@@ -622,9 +622,9 @@ private enum CadetCatchDebugFixture {
 #endif
 
 enum CommerceProduct: String, CaseIterable, Identifiable {
-    case oneTimeSearch = "co.eb28.cadetcatch.search.once"
-    case photoUnlock = "co.eb28.cadetcatch.photo.unlock"
-    case monthly = "co.eb28.cadetcatch.family.monthly"
+    case oneTimeSearch = "co.eb28.cadetcatch.search.once.v1"
+    case photoUnlock = "co.eb28.cadetcatch.photo.unlock.v1"
+    case monthly = "co.eb28.cadetcatch.family.monthly.v1"
 
     var id: String { rawValue }
 
@@ -646,9 +646,9 @@ enum CommerceProduct: String, CaseIterable, Identifiable {
 
     var fallbackPrice: String {
         switch self {
-        case .oneTimeSearch: "$2.00"
-        case .photoUnlock: "$2.00"
-        case .monthly: "$12.50/mo"
+        case .oneTimeSearch: "$1.99"
+        case .photoUnlock: "$1.99"
+        case .monthly: "$19.99/mo"
         }
     }
 }
@@ -676,7 +676,7 @@ final class PurchaseManager {
     @ObservationIgnored private var updatesTask: Task<Void, Never>?
 
     var hasMonthlyAccess: Bool {
-        return true
+        entitledProductIDs.contains(CommerceProduct.monthly.rawValue)
     }
 
     func configure() async {

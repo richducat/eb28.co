@@ -6,7 +6,7 @@ Use this file as the exact reviewer-facing source for the build being submitted.
 
 - App: CadetCatch
 - Version: 1.0.1
-- Build: 92
+- Build: 93
 
 ## Summary for App Review
 
@@ -26,7 +26,7 @@ CadetCatch is an iPhone app for cadet families to keep a private local roster, s
 3. Open Info to review the parent-facing photo matching guidance.
 4. Open Home and tap Search Photos. The app sends the selected cadet photo for matching, shows loading state, and then displays possible matches returned by CadetCatch.
 5. Open Photos to review any possible matches. Previews stay hidden until single-photo or monthly access is active.
-6. Use the Photo Access purchase sheet to test one-time photo checks, monthly access, and Restore Purchases. The monthly section shows Family Monthly, 1 month, the monthly price, auto-renewal text, Privacy Policy, and Terms of Use (EULA) before purchase.
+6. Use the Photo Access purchase sheet to test one-time photo checks, monthly access, and Restore Purchases. The monthly section shows Family Monthly, 1 month, the monthly price, auto-renewal text, Privacy Policy, and Terms of Use (EULA) before purchase. If StoreKit has not loaded the live price yet, the fallback monthly price shown in the app is $19.99/month.
 7. Save a viewed match to the iPhone Photos library, save it in the app, and create a family note.
 8. Open More and use the academy terms guide.
 
@@ -58,5 +58,5 @@ CadetCatch is an iPhone app for cadet families to keep a private local roster, s
 - Event photo collection and matching are handled by CadetCatch, not by private accounts on this phone.
 - The app does not access private social accounts, private photo libraries, private websites, or logged-in pages in this build.
 - If no face, multiple faces, no matches, or a connection problem occurs, the app shows a clear state instead of showing unrelated results.
-- In-app purchase products must be active in App Store Connect for TestFlight purchase testing.
-- Build 92 keeps CadetCatch photo matching behavior from build 91 and adds a stale remote photo cache bypass so repaired photo URLs can load fresh previews in the app.
+- In-app purchase products must be active in App Store Connect for TestFlight purchase testing. Build 93 requests the approved `.v1` product IDs listed above.
+- Build 93 keeps CadetCatch photo matching behavior from build 92, removes unconditional monthly access, restores the approved StoreKit product IDs, and keeps the stale remote photo cache bypass so repaired photo URLs can load fresh previews in the app.

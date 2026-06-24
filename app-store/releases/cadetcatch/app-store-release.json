@@ -22,7 +22,7 @@
   },
   "version": {
     "marketingVersion": "1.0.1",
-    "buildNumber": "92",
+    "buildNumber": "93",
     "releaseType": "MANUAL",
     "phasedRelease": false,
     "promotionalText": "Private cadet rosters, event photo search, clearer match ranges, reliable previews, saved finds, family notes, and a plain-English academy terms guide.",
@@ -36,7 +36,7 @@
       "parents",
       "coast"
     ],
-    "whatsNew": "CadetCatch build 92 improves matched-photo loading after photo hosting repairs, keeps clearer High/Medium/Low match range guidance for parents, and preserves the build 91 parent-facing copy."
+    "whatsNew": "CadetCatch build 93 fixes the paid access gate, restores the approved StoreKit product IDs, uses the $19.99 Family Monthly fallback price, keeps clearer High/Medium/Low match range guidance, and preserves reliable matched-photo previews."
   },
   "urls": {
     "marketingUrl": "https://eb28.co/cc/",
@@ -98,7 +98,7 @@
         "productId": "co.eb28.cadetcatch.family.monthly.v1",
         "type": "AUTO_RENEWABLE_SUBSCRIPTION",
         "name": "Family Monthly",
-        "price": "12.99 USD/month"
+        "price": "19.99 USD/month"
       }
     ]
   },
@@ -145,7 +145,8 @@
       "Matched photo previews bypass stale photo URL cache entries so recovered R2 photo URLs can load after previously returning 404.",
       "Matched photos load from the photo_url returned by CadetCatch. The current service may return public R2 development URLs while photos.cadetcatch.com is finalized.",
       "Event photo collection and matching are handled by CadetCatch service infrastructure, not by private accounts on the phone.",
-      "In-app purchase products must be active in App Store Connect before TestFlight purchase flows can return live products."
+      "In-app purchase products must be active in App Store Connect before TestFlight purchase flows can return live products.",
+      "Access codes require a server-validated entitlement system before production use; hardcoded free-access codes must not be shipped in the app."
     ]
   }
 }

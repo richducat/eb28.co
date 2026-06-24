@@ -7,7 +7,7 @@
 - Bundle ID: co.eb28.cadetcatch
 - SKU: cadetcatch-ios
 - Version: 1.0.1
-- Build: 92
+- Build: 93
 - Primary category: Lifestyle
 - Secondary category: Photo & Video
 - Marketing URL: https://eb28.co/cc/
@@ -36,11 +36,11 @@ cadet, military, academy, photos, family, parents, coast
 
 ## What's New
 
-CadetCatch build 92 improves matched-photo preview loading after photo hosting repairs, keeps clearer High/Medium/Low match range guidance for parents, and preserves the build 91 family-facing copy.
+CadetCatch build 93 fixes the paid access gate, restores the approved StoreKit product IDs, uses the $19.99 Family Monthly fallback price, keeps clearer High/Medium/Low match range guidance for parents, and preserves reliable matched-photo previews.
 
 ## Review Notes
 
-No login is required. Add a cadet profile from Roster using a clear photo selected from Photos. Open Info to review the parent-facing photo matching guidance. Open Home and tap Search Photos; the app sends the selected cadet photo for matching, shows loading state, and displays possible matches returned by CadetCatch. Open Photos to review possible matches, view a photo, save it to the iPhone Photos library, save it in the app, and create a family note. Open Photo Access from More or from a locked photo to review Family Monthly title, 1 month duration, price per month, auto-renewal disclosure, Restore Purchases, Privacy Policy, and Terms of Use (EULA).
+No login is required. Add a cadet profile from Roster using a clear photo selected from Photos. Open Info to review the parent-facing photo matching guidance. Open Home and tap Search Photos; the app sends the selected cadet photo for matching, shows loading state, and displays possible matches returned by CadetCatch. Open Photos to review possible matches, view a photo, save it to the iPhone Photos library, save it in the app, and create a family note. Open Photo Access from More or from a locked photo to review Family Monthly title, 1 month duration, $19.99/month fallback price if StoreKit has not loaded the live price yet, auto-renewal disclosure, Restore Purchases, Privacy Policy, and Terms of Use (EULA).
 
 ## Submission Snapshot
 
@@ -55,8 +55,8 @@ No login is required. Add a cadet profile from Roster using a clear photo select
 
 ## Internal Launch Notes
 
-- App Store Connect version state: Build 92 local upload candidate; not uploaded.
-- Attached build ID or build number: Build 92 candidate; ASC build ID not applicable until upload completes and is verified.
+- App Store Connect version state: Build 93 local monetization gate candidate; not archived or uploaded.
+- Attached build ID or build number: Build 93 candidate; ASC build ID not applicable until upload completes and is verified.
 - Review submission ID: Not applicable to this TestFlight upload candidate
 - Release after approval: After approval
 - In-app purchases and subscription status: Approved

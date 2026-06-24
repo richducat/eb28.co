@@ -125,8 +125,18 @@
   ],
   "createdAt": "2026-06-06T11:53:53.691778-04:00",
   "localVerification": {
-    "releaseGate": "pending for final build 92 candidate commit",
-    "simulatorQA": "pending for final build 92 candidate commit",
+    "releaseGate": "passed for build 92 candidate commit 8b41787784a50f49fc2ee3baeace602fb9a4c906",
+    "simulatorQA": "passed for build 92 candidate commit 8b41787784a50f49fc2ee3baeace602fb9a4c906 using documented CadetCatch clang wrapper",
+    "simulatorQAReceipt": {
+      "status": "passed",
+      "command": "CC=/Users/richardducat/Documents/Codex/2026-06-08/cadetcatch-release-handoff/scripts/cadetcatch-clang-wrapper.sh npm run test:cadetcatch",
+      "simulator": "iPhone 17 Pro Max iOS 26.5",
+      "screenshot": "/Users/richardducat/GITHUB/eb28-cadetcatch-server-search-sop-20260622/output/cadetcatch-simulator/cadetcatch-2026-06-24T13-58-10-553Z.png",
+      "screenshotSha256": "4c9d4d4fc96d90392a02fc7c591d9957b5e3c8a6d3bd779c96b83ecb25b0628f",
+      "xcodebuildLog": "/Users/richardducat/GITHUB/eb28-cadetcatch-server-search-sop-20260622/output/cadetcatch-simulator/logs/xcodebuild-2026-06-24T13-57-55-558Z.log",
+      "xcodebuildLogSha256": "69a74874302cfdfd1d3e1274d4c5db5e90336de4844a18960c92c1aa77ad9925",
+      "verifiedAt": "2026-06-24T13:58:10Z"
+    },
     "matchedPhotoPreviewQA": {
       "status": "passed",
       "receipt": "/tmp/cadetcatch-face-test/preview-cache-proof.png",
@@ -149,11 +159,11 @@
       "note": "Live search returned matches with populated public R2 development photo_url values such as https://pub-2264690a142a418ab996c86d3523fa08.r2.dev/photos/1589003939891699.jpg; app uses photo_url directly and ignores r2_key for image URL construction."
     },
     "stalePhotoCacheFix": {
-      "status": "local_qa_passed_before_build_bump",
+      "status": "local_qa_passed_for_build_92_candidate",
       "sourceCommit": "6adf7d2392efccbc34ac5788fd7387de6df7694b",
       "exampleURL": "https://pub-2264690a142a418ab996c86d3523fa08.r2.dev/photos/1561614049297355.jpg",
       "note": "Remote matched-photo loader bypasses URLCache so previously broken R2 photo URLs can load after becoming reachable."
     }
   },
-  "updatedAt": "2026-06-24T13:27:17Z"
+  "updatedAt": "2026-06-24T13:58:10Z"
 }

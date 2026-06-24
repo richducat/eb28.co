@@ -7,7 +7,7 @@
 - Bundle ID: co.eb28.cadetcatch
 - SKU: cadetcatch-ios
 - Version: 1.0.1
-- Build: 91
+- Build: 92
 - Primary category: Lifestyle
 - Secondary category: Photo & Video
 - Marketing URL: https://eb28.co/cc/
@@ -36,7 +36,7 @@ cadet, military, academy, photos, family, parents, coast
 
 ## What's New
 
-CadetCatch build 91 improves photo preview loading, adds clearer High/Medium/Low match range guidance for parents, and updates labels so photo matching is easier for families to understand.
+CadetCatch build 92 improves matched-photo preview loading after photo hosting repairs, keeps clearer High/Medium/Low match range guidance for parents, and preserves the build 91 family-facing copy.
 
 ## Review Notes
 
@@ -55,8 +55,8 @@ No login is required. Add a cadet profile from Roster using a clear photo select
 
 ## Internal Launch Notes
 
-- App Store Connect version state: Build 91 local upload candidate; not uploaded.
-- Attached build ID or build number: Build 91 candidate; ASC build ID not applicable until upload completes and is verified.
+- App Store Connect version state: Build 92 local upload candidate; not uploaded.
+- Attached build ID or build number: Build 92 candidate; ASC build ID not applicable until upload completes and is verified.
 - Review submission ID: Not applicable to this TestFlight upload candidate
 - Release after approval: After approval
 - In-app purchases and subscription status: Approved

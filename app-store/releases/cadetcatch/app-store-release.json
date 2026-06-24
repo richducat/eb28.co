@@ -22,7 +22,7 @@
   },
   "version": {
     "marketingVersion": "1.0.1",
-    "buildNumber": "91",
+    "buildNumber": "92",
     "releaseType": "MANUAL",
     "phasedRelease": false,
     "promotionalText": "Private cadet rosters, event photo search, clearer match ranges, reliable previews, saved finds, family notes, and a plain-English academy terms guide.",
@@ -36,7 +36,7 @@
       "parents",
       "coast"
     ],
-    "whatsNew": "CadetCatch build 91 improves photo preview loading, adds clearer High/Medium/Low match range guidance for parents, and updates labels so photo matching is easier for families to understand."
+    "whatsNew": "CadetCatch build 92 improves matched-photo loading after photo hosting repairs, keeps clearer High/Medium/Low match range guidance for parents, and preserves the build 91 parent-facing copy."
   },
   "urls": {
     "marketingUrl": "https://eb28.co/cc/",
@@ -142,9 +142,9 @@
       "Save to Photos writes an unlocked matched photo to the iOS simulator Photos library"
     ],
     "knownRisks": [
+      "Matched photo previews bypass stale photo URL cache entries so recovered R2 photo URLs can load after previously returning 404.",
       "Matched photos load from the photo_url returned by CadetCatch. The current service may return public R2 development URLs while photos.cadetcatch.com is finalized.",
       "Event photo collection and matching are handled by CadetCatch service infrastructure, not by private accounts on the phone.",
-      "Build 88 preserves the supplied low-resolution USCGC EAGLE photo from the owner as the native iOS launch/splash image and welcome image, with the screenshot UI badge removed and no replacement EAGLE artwork.",
       "In-app purchase products must be active in App Store Connect before TestFlight purchase flows can return live products."
     ]
   }

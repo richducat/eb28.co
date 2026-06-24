@@ -6,7 +6,7 @@ Use this file as the exact reviewer-facing source for the build being submitted.
 
 - App: CadetCatch
 - Version: 1.0.1
-- Build: 91
+- Build: 92
 
 ## Summary for App Review
 
@@ -59,4 +59,4 @@ CadetCatch is an iPhone app for cadet families to keep a private local roster, s
 - The app does not access private social accounts, private photo libraries, private websites, or logged-in pages in this build.
 - If no face, multiple faces, no matches, or a connection problem occurs, the app shows a clear state instead of showing unrelated results.
 - In-app purchase products must be active in App Store Connect for TestFlight purchase testing.
-- Build 91 keeps CadetCatch photo matching behavior from build 90 and adds parent-facing copy, High/Medium/Low match range guidance, saved-state label cleanup, and more reliable matched-photo preview loading.
+- Build 92 keeps CadetCatch photo matching behavior from build 91 and adds a stale remote photo cache bypass so repaired photo URLs can load fresh previews in the app.

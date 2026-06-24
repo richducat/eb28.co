@@ -4,11 +4,11 @@
   "appStoreConnectAppId": "6769565852",
   "platform": "iOS",
   "marketingVersion": "1.0.1",
-  "buildNumber": "91",
-  "baselineCommit": "c0f0290edd84f393d91566faff794ca512a606f3",
+  "buildNumber": "92",
+  "baselineCommit": "6adf7d2392efccbc34ac5788fd7387de6df7694b",
   "baselineTree": "2374b7b19defa200312ac08d70381628bead8fc6",
   "sourceIdentityType": "isolated git worktree branch with CadetCatch server search API integration",
-  "baseParentCommit": "c0f0290edd84f393d91566faff794ca512a606f3",
+  "baseParentCommit": "6adf7d2392efccbc34ac5788fd7387de6df7694b",
   "indexParentCommit": null,
   "sourceRef": "refs/heads/codex/cadetcatch-server-search-sop-20260622",
   "releaseBranch": "codex/cadetcatch-server-search-sop-20260622",
@@ -17,7 +17,7 @@
   "xcodegenProjectSpec": "ios/CadetCatch/project.yml",
   "scheme": "CadetCatch",
   "teamId": "WN3K69XEP4",
-  "approvalLevel": "local build 91 candidate only; exact archive, upload_build, and distribute_testflight approvals pending for final build-91 source commit",
+  "approvalLevel": "local build 92 candidate only; exact archive, upload_build, and distribute_testflight approvals pending for final build-92 source commit",
   "archivePath": null,
   "appStoreConnectState": {
     "appStoreVersionId": null,
@@ -25,23 +25,23 @@
     "reviewSubmissionId": null,
     "appStoreState": "LOCAL_CANDIDATE_NOT_UPLOADED",
     "submittedAt": null,
-    "lastLocalPreparationAt": "2026-06-23T15:28:04Z",
+    "lastLocalPreparationAt": "2026-06-24T13:27:17Z",
     "uploadedAt": null,
     "visibleAscVerificationAt": null,
-    "visibleAscStatus": "Not applicable; build 91 has not been uploaded",
+    "visibleAscStatus": "Not applicable; build 92 has not been uploaded",
     "visibleAscCreatedAt": null,
     "distributionLogPath": null,
     "verificationBlocked": null
   },
   "sourceMetadataVerification": {
     "projectYmlMarketingVersion": "1.0.1",
-    "projectYmlCurrentProjectVersion": "91",
+    "projectYmlCurrentProjectVersion": "92",
     "projectYmlBundleId": "co.eb28.cadetcatch",
     "pbxMarketingVersions": [
       "1.0.1"
     ],
     "pbxCurrentProjectVersions": [
-      "91"
+      "92"
     ],
     "pbxBundleIds": [
       "co.eb28.CadetCatchUITests",
@@ -100,7 +100,7 @@
   ],
   "releaseJsonVersionObject": {
     "marketingVersion": "1.0.1",
-    "buildNumber": "91",
+    "buildNumber": "92",
     "releaseType": "MANUAL",
     "phasedRelease": false,
     "promotionalText": "Private cadet rosters, event photo search, clearer match ranges, reliable previews, saved finds, family notes, and a plain-English academy terms guide.",
@@ -114,21 +114,19 @@
       "parents",
       "coast"
     ],
-    "whatsNew": "CadetCatch build 91 improves photo preview loading, adds clearer High/Medium/Low match range guidance for parents, and updates labels so photo matching is easier for families to understand."
+    "whatsNew": "CadetCatch build 92 improves matched-photo loading after photo hosting repairs, keeps clearer High/Medium/Low match range guidance for parents, and preserves the build 91 parent-facing copy."
   },
   "safetyNotes": [
     "Primary checkout /Users/richardducat/GITHUB/eb28.co is dirty and must not be used for release actions.",
-    "Builds 85, 86, 87, 88, 89, and 90 have prior upload or upload-processing evidence and must not be reused for this parent-copy and thumbnail reliability candidate.",
-    "Build 89 is the uploaded/internal-TestFlight R2 public photo_url candidate. It preserves POST https://api.cadetcatch.com/search and uses the backend-provided photo_url directly.",
-    "Build 90 is the uploaded/internal-TestFlight cloud-search status clarification candidate from source commit 353c49597e992abfb12da5feab418e78b841ffe2.",
-    "Build 91 preserves build 90 server-search behavior and adds parent-facing copy, High/Medium/Low match range guidance, persisted label cleanup, and more reliable matched-photo preview loading.",
-    "Do not archive, upload, distribute TestFlight, select for App Review, submit for review, release, expire builds, edit metadata/screenshots/previews, or edit IAP/subscriptions without a separate exact approval record for the final build-91 source commit.",
-    "Build 91 has not been archived or uploaded."
+    "Builds 85, 86, 87, 88, 89, 90, and 91 have prior upload or upload-processing evidence and must not be reused.",
+    "Build 92 preserves build 91 parent-facing copy and adds the stale remote photo URL cache bypass fix from source commit 6adf7d2392efccbc34ac5788fd7387de6df7694b.",
+    "Do not archive, upload, distribute TestFlight, select for App Review, submit for review, release, expire builds, edit metadata/screenshots/previews, or edit IAP/subscriptions without a separate exact approval record for the final build-92 source commit.",
+    "Build 92 has not been archived or uploaded."
   ],
   "createdAt": "2026-06-06T11:53:53.691778-04:00",
   "localVerification": {
-    "releaseGate": "pending for final build 91 candidate commit",
-    "simulatorQA": "pending for final build 91 candidate commit",
+    "releaseGate": "pending for final build 92 candidate commit",
+    "simulatorQA": "pending for final build 92 candidate commit",
     "matchedPhotoPreviewQA": {
       "status": "passed",
       "receipt": "/tmp/cadetcatch-face-test/preview-cache-proof.png",
@@ -149,7 +147,13 @@
       "healthEndpoint": "https://api.cadetcatch.com/health",
       "searchEndpoint": "https://api.cadetcatch.com/search",
       "note": "Live search returned matches with populated public R2 development photo_url values such as https://pub-2264690a142a418ab996c86d3523fa08.r2.dev/photos/1589003939891699.jpg; app uses photo_url directly and ignores r2_key for image URL construction."
+    },
+    "stalePhotoCacheFix": {
+      "status": "local_qa_passed_before_build_bump",
+      "sourceCommit": "6adf7d2392efccbc34ac5788fd7387de6df7694b",
+      "exampleURL": "https://pub-2264690a142a418ab996c86d3523fa08.r2.dev/photos/1561614049297355.jpg",
+      "note": "Remote matched-photo loader bypasses URLCache so previously broken R2 photo URLs can load after becoming reachable."
     }
   },
-  "updatedAt": "2026-06-23T15:28:04Z"
+  "updatedAt": "2026-06-24T13:27:17Z"
 }

@@ -1,0 +1,54 @@
+{
+  "brand": "EB28",
+  "generatedAt": "2026-06-25T10:01:44.753Z",
+  "runId": "2026-06-25-am",
+  "slot": "am",
+  "article": {
+    "title": "Private AI vs ChatGPT for Business: Choose the Right Workflow",
+    "url": "https://eb28.co/blog/private-ai-vs-chatgpt-for-business-how-to-choose-the-right-workflow-2026-06-16-am/",
+    "cluster": "private-ai",
+    "primaryKeyword": "private AI vs ChatGPT for business",
+    "canonicalRefresh": true,
+    "refreshedCanonicalSlug": "private-ai-vs-chatgpt-for-business-how-to-choose-the-right-workflow-2026-06-16-am"
+  },
+  "posts": {
+    "blog": {
+      "title": "Private AI vs ChatGPT for Business: Choose the Right Workflow",
+      "url": "https://eb28.co/blog/private-ai-vs-chatgpt-for-business-how-to-choose-the-right-workflow-2026-06-16-am/",
+      "status": "ready_for_build_and_deploy"
+    },
+    "facebook": {
+      "caption": "Private AI vs ChatGPT for Business: Choose the Right Workflow\n\nA practical guide for business owners deciding which workflows can use ChatGPT and which should move into a private AI system with tighter data boundaries.\n\nRead it: https://eb28.co/blog/private-ai-vs-chatgpt-for-business-how-to-choose-the-right-workflow-2026-06-16-am/",
+      "status": "draft_only"
+    },
+    "instagram": {
+      "caption": "Private AI vs ChatGPT for business: use public tools for low-risk drafting, private systems for sensitive documents, client context, and repeatable workflows.\n\nRead the full guide at eb28.co/blog/",
+      "creativeBrief": "Carousel: Slide 1 public AI vs private AI decision, Slide 2 data sensitivity filter, Slide 3 workflow examples, Slide 4 human review and logging, Slide 5 CTA to EB28 private AI and Recon Agent paths.",
+      "status": "draft_only"
+    },
+    "x": {
+      "caption": "Private AI vs ChatGPT for Business: Choose the Right Workflow\n\nThe practical split: ChatGPT for low-risk drafting, private AI for sensitive documents, customer context, repeatable retrieval, and governed workflows.\n\nhttps://eb28.co/blog/private-ai-vs-chatgpt-for-business-how-to-choose-the-right-workflow-2026-06-16-am/",
+      "status": "draft_only"
+    },
+    "linkedin": {
+      "caption": "Refreshed EB28 growth brief: Private AI vs ChatGPT for Business: Choose the Right Workflow\n\nThis compares where general AI tools fit, where private AI infrastructure is safer, and how small teams can choose workflows without overbuilding.\n\nhttps://eb28.co/blog/private-ai-vs-chatgpt-for-business-how-to-choose-the-right-workflow-2026-06-16-am/",
+      "status": "draft_only"
+    },
+    "shortFormVideo": {
+      "concept": "Thirty-second private AI vs ChatGPT decision guide for local service and operations-heavy businesses.",
+      "hook": "Not every AI workflow needs private infrastructure, but the sensitive ones need boundaries before prompts.",
+      "scenes": [
+        "Open with two columns: quick public drafting vs sensitive business workflow.",
+        "Show examples: marketing outline, SOP search, client history, lead follow-up, finance review.",
+        "Highlight the filter: data sensitivity, repeatability, audit trail, and human review.",
+        "End with EB28 private AI and Recon Agent paths as the next step."
+      ],
+      "caption": "Choose the right AI workflow before sensitive data ends up in the wrong place. Draft-only until an EB28-owned short-form channel is verified.",
+      "status": "draft_only"
+    }
+  },
+  "publishGate": {
+    "status": "draft_only",
+    "reason": "No EB28-owned external social channel was verified by a repo script or connector for this run."
+  }
+}

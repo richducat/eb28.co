@@ -125,11 +125,11 @@
     "cluster": "lead-automation",
     "primaryKeyword": "AI receptionist for local business",
     "datePublished": "2026-06-16",
-    "dateModified": "2026-06-16",
+    "dateModified": "2026-06-25",
     "author": "EB28",
     "heroLabel": "Evening growth brief",
-    "sourceRunId": "2026-06-16-pm",
-    "summary": "A practical guide to using an AI receptionist for local business lead handling without replacing the human judgment that closes valuable jobs.",
+    "sourceRunId": "2026-06-25-pm",
+    "summary": "A refreshed guide to using an AI receptionist for local business lead handling without replacing the human judgment that closes valuable jobs.",
     "sections": [
       {
         "heading": "Why this search matters",
@@ -206,6 +206,10 @@
       {
         "label": "Google Search Central: Ask Google to recrawl URLs",
         "url": "https://developers.google.com/search/docs/advanced/crawling/ask-google-to-recrawl"
+      },
+      {
+        "label": "NIST AI Risk Management Framework",
+        "url": "https://www.nist.gov/itl/ai-risk-management-framework"
       }
     ],
     "relatedSlugs": [

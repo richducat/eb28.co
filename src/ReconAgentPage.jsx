@@ -376,7 +376,7 @@ export default function ReconAgentPage() {
                 )}
 
                 <a
-                  href="mailto:richducat@gmail.com?subject=Recon%20Agent%20Founder%20Beta"
+                  href="mailto:social@eb28.co?subject=Recon%20Agent%20Founder%20Beta"
                   className="inline-flex items-center justify-center rounded-full border border-white/15 bg-white/5 px-7 py-4 text-base font-semibold text-white transition-colors hover:bg-white/10"
                 >
                   {supportCtaLabel}

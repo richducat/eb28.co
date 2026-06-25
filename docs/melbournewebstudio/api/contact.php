@@ -113,7 +113,7 @@ if ($host === '127.0.0.1' || $host === 'localhost') {
     exit;
 }
 
-$sent = mail('richducat@gmail.com', $subject, $body, implode("\r\n", $headers));
+$sent = mail('social@eb28.co', $subject, $body, implode("\r\n", $headers));
 
 if (!$sent) {
     http_response_code(500);

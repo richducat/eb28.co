@@ -648,7 +648,7 @@ async function sendReportEmail({ subject, report }) {
         },
         body: JSON.stringify({
           from: process.env.RESEND_FROM_EMAIL,
-          to: ['richducat@gmail.com'],
+          to: ['social@eb28.co'],
           subject,
           text: report,
         }),
@@ -673,7 +673,7 @@ async function sendReportEmail({ subject, report }) {
 
   const from = process.env.GMAIL_FROM_EMAIL || 'richducat@gmail.com';
   const raw = [
-    `To: richducat@gmail.com`,
+    `To: social@eb28.co`,
     `From: ${from}`,
     `Subject: ${subject}`,
     'Content-Type: text/plain; charset="UTF-8"',
@@ -704,7 +704,7 @@ async function sendViaFormSubmit({ subject, report }) {
   }
 
   try {
-    const json = await requestJson('https://formsubmit.co/ajax/richducat@gmail.com', {
+    const json = await requestJson('https://formsubmit.co/ajax/social@eb28.co', {
       method: 'POST',
       headers: {
         accept: 'application/json',

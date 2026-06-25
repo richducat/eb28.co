@@ -390,7 +390,7 @@ const ROUTE_META = {
                 '@type': 'LocalBusiness',
                 name: 'Melbourne Web Studio',
                 url: MELBOURNE_WEB_STUDIO_CANONICAL_URL,
-                email: 'richducat@gmail.com',
+                email: 'social@eb28.co',
                 image: DEFAULT_IMAGE,
                 priceRange: '$$',
                 areaServed: ['Melbourne, Florida', 'Brevard County, Florida', 'Space Coast'],

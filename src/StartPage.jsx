@@ -121,7 +121,7 @@ const StartPage = () => {
                     <p className="mt-1">
                         <a href="/deskos/" className="underline underline-offset-2 hover:text-cyan-200">eb28.co/deskos</a>
                         {' · '}
-                        <a href="mailto:richducat@gmail.com" className="underline underline-offset-2 hover:text-cyan-200">richducat@gmail.com</a>
+                        <a href="mailto:social@eb28.co" className="underline underline-offset-2 hover:text-cyan-200">social@eb28.co</a>
                     </p>
                 </div>
             </div>

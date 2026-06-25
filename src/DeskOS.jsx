@@ -131,7 +131,7 @@ const FAQS = [
     },
     {
         q: 'What if I can’t get it running?',
-        a: '30-day guarantee: if you genuinely try and can’t get a desk running in paper mode, email richducat@gmail.com with what you attempted and you get a full refund. Operator-tier buyers: we install it together on a call, so this mostly can’t happen.',
+        a: '30-day guarantee: if you genuinely try and can’t get a desk running in paper mode, email social@eb28.co with what you attempted and you get a full refund. Operator-tier buyers: we install it together on a call, so this mostly can’t happen.',
     },
 ];
 
@@ -413,7 +413,7 @@ const DeskOS = () => {
 
                     <p id="fleet-note" className="mt-6 text-center text-[12px] leading-relaxed text-white/50">
                         30-day guarantee on every tier: genuinely try to get a desk running in paper mode and can't?
-                        Email richducat@gmail.com and you get every cent back. Keep the code.
+                        Email social@eb28.co and you get every cent back. Keep the code.
                     </p>
                 </section>
 
@@ -479,7 +479,7 @@ const DeskOS = () => {
                             restrictions — you are responsible for complying with them. Trade only money you can afford to lose.
                         </p>
                         <p>
-                            © {new Date().getFullYear()} EB28 · <a href="/fundmanager/" className="underline underline-offset-2 hover:text-cyan-200">Live dashboard</a> · Support: richducat@gmail.com
+                            © {new Date().getFullYear()} EB28 · <a href="/fundmanager/" className="underline underline-offset-2 hover:text-cyan-200">Live dashboard</a> · Support: social@eb28.co
                         </p>
                     </div>
                 </section>

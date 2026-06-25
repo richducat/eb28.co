@@ -359,7 +359,7 @@ function buildArticle(topic, { date, slot, runId }) {
           'Publish two content updates daily at 6 AM and 6 PM Eastern',
           'Run a daily SEO review after the evening content cycle',
           'Inspect the newest URLs and pull actual query average position when Search Console credentials are available',
-          'Send a report to richducat@gmail.com when email credentials are configured'
+          'Send a report to social@eb28.co when email credentials are configured'
         ],
       },
     ],

@@ -1,4 +1,4 @@
-export const LEAD_CAPTURE_EMAIL = 'richducat@gmail.com';
+export const LEAD_CAPTURE_EMAIL = 'social@eb28.co';
 export const LEAD_CAPTURE_ENDPOINT = `https://formsubmit.co/ajax/${LEAD_CAPTURE_EMAIL}`;
 
 export async function submitLeadCapture(payload, options = {}) {

@@ -1031,7 +1031,7 @@ const Team = () => {
       setTimeout(() => setIsSuccess(false), 5000);
     } catch (error) {
       console.error("Direct inquiry failed", error);
-      setSubmitError("Something went wrong. Please try again or email richducat@gmail.com.");
+      setSubmitError("Something went wrong. Please try again or email social@eb28.co.");
     } finally {
       setIsSubmitting(false);
     }
@@ -1254,7 +1254,7 @@ const Team = () => {
                 <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">
                   Direct inbox
                 </p>
-                <p className="text-sm font-bold">richducat@gmail.com</p>
+                <p className="text-sm font-bold">social@eb28.co</p>
               </div>
             </div>
           </div>
@@ -3490,7 +3490,7 @@ const Footer = () => (
       <div>
         <h4 className="font-bold mb-6">Contact Info</h4>
         <ul className="space-y-4 text-slate-400 text-sm">
-          <li>richducat@gmail.com</li>
+          <li>social@eb28.co</li>
           <li>Based in Melbourne, FL</li>
         </ul>
       </div>

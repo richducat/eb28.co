@@ -4,7 +4,7 @@
   "appStoreConnectAppId": "6769565852",
   "platform": "iOS",
   "marketingVersion": "1.0.1",
-  "buildNumber": "93",
+  "buildNumber": "94",
   "baselineCommit": "6adf7d2392efccbc34ac5788fd7387de6df7694b",
   "baselineTree": "2374b7b19defa200312ac08d70381628bead8fc6",
   "sourceIdentityType": "isolated git worktree branch with CadetCatch server search API integration",
@@ -17,7 +17,7 @@
   "xcodegenProjectSpec": "ios/CadetCatch/project.yml",
   "scheme": "CadetCatch",
   "teamId": "WN3K69XEP4",
-  "approvalLevel": "local build 93 monetization gate candidate only; exact archive, upload_build, select_build, submit_for_review, and IAP/subscription approvals pending for the final source commit",
+  "approvalLevel": "local build 94 monetization gate candidate only; exact archive, upload_build, select_build, submit_for_review, desktop add-on, access-invite backend, and IAP/subscription approvals pending for the final source commit",
   "archivePath": null,
   "appStoreConnectState": {
     "appStoreVersionId": null,
@@ -25,23 +25,23 @@
     "reviewSubmissionId": null,
     "appStoreState": "LOCAL_CANDIDATE_NOT_UPLOADED",
     "submittedAt": null,
-    "lastLocalPreparationAt": "2026-06-24T13:27:17Z",
+    "lastLocalPreparationAt": "2026-06-25T18:37:31Z",
     "uploadedAt": null,
     "visibleAscVerificationAt": null,
-    "visibleAscStatus": "Not applicable; build 93 has not been archived or uploaded",
+    "visibleAscStatus": "Not applicable; build 94 has not been archived or uploaded",
     "visibleAscCreatedAt": null,
     "distributionLogPath": null,
     "verificationBlocked": null
   },
   "sourceMetadataVerification": {
     "projectYmlMarketingVersion": "1.0.1",
-    "projectYmlCurrentProjectVersion": "93",
+    "projectYmlCurrentProjectVersion": "94",
     "projectYmlBundleId": "co.eb28.cadetcatch",
     "pbxMarketingVersions": [
       "1.0.1"
     ],
     "pbxCurrentProjectVersions": [
-      "93"
+      "94"
     ],
     "pbxBundleIds": [
       "co.eb28.CadetCatchUITests",
@@ -100,7 +100,7 @@
   ],
   "releaseJsonVersionObject": {
     "marketingVersion": "1.0.1",
-    "buildNumber": "93",
+    "buildNumber": "94",
     "releaseType": "MANUAL",
     "phasedRelease": false,
     "promotionalText": "Private cadet rosters, event photo search, clearer match ranges, reliable previews, saved finds, family notes, and a plain-English academy terms guide.",
@@ -114,29 +114,31 @@
       "parents",
       "coast"
     ],
-    "whatsNew": "CadetCatch build 93 fixes the paid access gate, restores the approved StoreKit product IDs, uses the $19.99 Family Monthly fallback price, keeps clearer High/Medium/Low match range guidance, and preserves reliable matched-photo previews."
+    "whatsNew": "CadetCatch build 94 fixes the paid access gate, restores the approved StoreKit product IDs, uses the $12.99 Family Monthly fallback price, keeps clearer High/Medium/Low match range guidance, and preserves reliable matched-photo previews."
   },
   "safetyNotes": [
     "Primary checkout /Users/richardducat/GITHUB/eb28.co is dirty and must not be used for release actions.",
     "Builds 85, 86, 87, 88, 89, 90, 91, and 92 have prior upload or upload-processing evidence and must not be reused.",
     "Build 92 preserves build 91 parent-facing copy and adds the stale remote photo URL cache bypass fix from source commit 6adf7d2392efccbc34ac5788fd7387de6df7694b.",
-    "Do not archive, upload, distribute TestFlight, select for App Review, submit for review, release, expire builds, edit metadata/screenshots/previews, or edit IAP/subscriptions without a separate exact approval record for the final build-93 source commit.",
-    "Build 93 fixes the paid access gate by removing unconditional monthly access, restoring approved .v1 StoreKit product IDs, and setting Family Monthly fallback copy to $19.99/month.",
-    "Do not ship custom free access codes unless they are server-validated or issued through Apple offer/promo code systems."
+    "Do not archive, upload, distribute TestFlight, select for App Review, submit for review, release, expire builds, edit metadata/screenshots/previews, or edit IAP/subscriptions without a separate exact approval record for the final build-94 source commit.",
+    "Build 93 is superseded before upload because its fallback copy used the wrong $19.99 monthly price.",
+    "Build 94 fixes the paid access gate by removing unconditional monthly access, restoring approved .v1 StoreKit product IDs, and setting Family Monthly fallback copy back to $12.99/month.",
+    "Do not ship custom free access codes unless they are server-validated, email-bound, role-specific, and single-use.",
+    "Desktop access is not included in this iOS build; the $7.99 desktop add-on requires a separate entitlement/product and a desktop client implementation."
   ],
   "createdAt": "2026-06-06T11:53:53.691778-04:00",
   "localVerification": {
-    "releaseGate": "passed for local build 93 candidate with --allow-dirty during implementation",
-    "simulatorQA": "passed for local build 93 candidate using documented CadetCatch clang wrapper and --skip-release-gate because the implementation tree was intentionally dirty before commit",
+    "releaseGate": "passed for clean local build 94 candidate after commit",
+    "simulatorQA": "passed for clean local build 94 candidate using documented CadetCatch test command after commit",
     "simulatorQAReceipt": {
       "status": "passed",
-      "command": "CC=/Users/richardducat/Documents/Codex/2026-06-08/cadetcatch-release-handoff/scripts/cadetcatch-clang-wrapper.sh npm run cadetcatch:sim-qa -- --simulator \"iPhone 17 Pro Max\" --skip-release-gate --command-timeout-ms 900000",
+      "command": "CC=/Users/richardducat/Documents/Codex/2026-06-08/cadetcatch-release-handoff/scripts/cadetcatch-clang-wrapper.sh npm run test:cadetcatch",
       "simulator": "iPhone 17 Pro Max iOS 26.5",
-      "screenshot": "/Users/richardducat/GITHUB/eb28-cadetcatch-server-search-sop-20260622/output/cadetcatch-simulator/cadetcatch-2026-06-24T18-43-16-837Z.png",
-      "screenshotSha256": "4934f8ce948e4d75d317286c9a8ef952f8e848462ea64cd974f9cbe24237faa5",
-      "xcodebuildLog": "/Users/richardducat/GITHUB/eb28-cadetcatch-server-search-sop-20260622/output/cadetcatch-simulator/logs/xcodebuild-2026-06-24T18-42-52-415Z.log",
-      "xcodebuildLogSha256": "6a48953945778a018d4bfb89a1f31bf0b2bdac5d8823c0e5eac75163e7c07e8d",
-      "verifiedAt": "2026-06-24T18:43:16Z"
+      "screenshot": "/Users/richardducat/GITHUB/eb28-cadetcatch-server-search-sop-20260622/output/cadetcatch-simulator/cadetcatch-2026-06-25T18-38-55-941Z.png",
+      "screenshotSha256": "b90108eec74ffe0e71db0a595385ee6b7faa065cf3a7b5f48df79208a47d4bcd",
+      "xcodebuildLog": "/Users/richardducat/GITHUB/eb28-cadetcatch-server-search-sop-20260622/output/cadetcatch-simulator/logs/xcodebuild-2026-06-25T18-38-47-577Z.log",
+      "xcodebuildLogSha256": "92144e05946d9109b4722292a896c995dcb2fa594b15438c508050464771e156",
+      "verifiedAt": "2026-06-25T18:38:55Z"
     },
     "matchedPhotoPreviewQA": {
       "status": "passed",
@@ -165,11 +167,11 @@
       "exampleURL": "https://pub-2264690a142a418ab996c86d3523fa08.r2.dev/photos/1561614049297355.jpg",
       "note": "Remote matched-photo loader bypasses URLCache so previously broken R2 photo URLs can load after becoming reachable."
     },
-    "appStorePreflight": "passed for local build 93 candidate with --skip-network",
+    "appStorePreflight": "passed for local build 94 candidate with --skip-network",
     "monetizationGate": {
       "status": "local_simulator_verified_locked",
-      "note": "Screenshot shows matched photo cards covered by Unlock to View, confirming monthly access is no longer granted unconditionally before StoreKit entitlement is active."
+      "note": "Build 94 screenshot shows matched photo cards covered by Unlock to View, confirming monthly access is not granted unconditionally before StoreKit entitlement is active."
     }
   },
-  "updatedAt": "2026-06-24T18:43:16Z"
+  "updatedAt": "2026-06-25T18:37:31Z"
 }

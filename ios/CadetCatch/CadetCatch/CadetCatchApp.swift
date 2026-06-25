@@ -648,7 +648,7 @@ enum CommerceProduct: String, CaseIterable, Identifiable {
         switch self {
         case .oneTimeSearch: "$1.99"
         case .photoUnlock: "$1.99"
-        case .monthly: "$19.99/mo"
+        case .monthly: "$12.99/mo"
         }
     }
 }

@@ -22,7 +22,7 @@
   },
   "version": {
     "marketingVersion": "1.0.1",
-    "buildNumber": "93",
+    "buildNumber": "94",
     "releaseType": "MANUAL",
     "phasedRelease": false,
     "promotionalText": "Private cadet rosters, event photo search, clearer match ranges, reliable previews, saved finds, family notes, and a plain-English academy terms guide.",
@@ -36,7 +36,7 @@
       "parents",
       "coast"
     ],
-    "whatsNew": "CadetCatch build 93 fixes the paid access gate, restores the approved StoreKit product IDs, uses the $19.99 Family Monthly fallback price, keeps clearer High/Medium/Low match range guidance, and preserves reliable matched-photo previews."
+    "whatsNew": "CadetCatch build 94 fixes the paid access gate, restores the approved StoreKit product IDs, uses the $12.99 Family Monthly fallback price, keeps clearer High/Medium/Low match range guidance, and preserves reliable matched-photo previews."
   },
   "urls": {
     "marketingUrl": "https://eb28.co/cc/",
@@ -98,7 +98,7 @@
         "productId": "co.eb28.cadetcatch.family.monthly.v1",
         "type": "AUTO_RENEWABLE_SUBSCRIPTION",
         "name": "Family Monthly",
-        "price": "19.99 USD/month"
+        "price": "12.99 USD/month"
       }
     ]
   },

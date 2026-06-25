@@ -5,6 +5,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { motion } from "motion/react";
+import { submitLeadCapture } from "./leadCapture.js";
 import {
   MessageSquare,
   Wrench,
@@ -62,7 +63,6 @@ import {
   Rocket,
 } from "lucide-react";
 
-const LEAD_CAPTURE_ENDPOINT = "https://formsubmit.co/ajax/richducat@gmail.com";
 const DISCOVERY_CALL_URL = "https://bookings.tyfys.net/#/4739587000001163002";
 
 type AuthorityAnalysis = {
@@ -75,31 +75,6 @@ type AuthorityAnalysis = {
 };
 
 const isValidEmail = (value: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
-
-const submitLeadCapture = async (payload: Record<string, unknown>) => {
-  const enhancedPayload = {
-    ...payload,
-    _subject: "[EB28 HIGH PRIORITY LEAD] Melbourne Web Studio Submission"
-  };
-
-  const response = await fetch(LEAD_CAPTURE_ENDPOINT, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-    },
-    body: JSON.stringify(enhancedPayload),
-  });
-
-  if (!response.ok) {
-    throw new Error(`Lead capture failed with status ${response.status}`);
-  }
-
-  const data = await response.json().catch(() => null);
-  if (data && typeof data === "object" && "success" in data && !data.success) {
-    throw new Error("Lead capture endpoint rejected the request");
-  }
-};
 
 const normalizeWebsiteUrl = (value: string) => {
   const trimmed = value.trim();

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ArrowLeft, ArrowRight, CheckCircle, ShieldCheck } from 'lucide-react';
+import { submitLeadCapture } from '../leadCapture.js';
 import { checkoutUrlFor } from '../useCheckoutConfig.js';
 
 // Guided onboarding quiz replacing the old blank contact form — modeled on the
@@ -190,21 +191,18 @@ export default function OnboardingQuiz({ checkoutProducts, interestedIn }) {
 
         setStatus('submitting');
         try {
-            await fetch('https://formsubmit.co/ajax/richducat@gmail.com', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-                body: JSON.stringify({
-                    ...contact,
-                    serviceNeed: recommendation.serviceNeed,
-                    recommendedPlan: `${recommendation.name} (${recommendation.price})`,
-                    quizAnswers: answers,
-                    interestedIn: interestedIn || 'none',
-                    sourcePage: 'eb28.co onboarding quiz',
-                    _subject: `[EB28 HIGH PRIORITY LEAD] Quiz: ${recommendation.name}`,
-                }),
+            await submitLeadCapture({
+                ...contact,
+                serviceNeed: recommendation.serviceNeed,
+                recommendedPlan: `${recommendation.name} (${recommendation.price})`,
+                quizAnswers: answers,
+                interestedIn: interestedIn || 'none',
+                sourcePage: 'eb28.co onboarding quiz',
+                _subject: `[EB28 HIGH PRIORITY LEAD] Quiz: ${recommendation.name}`,
             });
             setStatus('success');
-        } catch {
+        } catch (err) {
+            console.error('EB28 onboarding lead failed', err);
             setError('Something went wrong. Please try again.');
             setStatus('error');
         }

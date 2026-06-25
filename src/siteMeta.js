@@ -25,7 +25,7 @@ const WEED_AUTHORITY_IMAGE = `${SITE_ORIGIN}/weedauthority/weedauthority-hero.pn
 export const THOMAS_CUSTOM_HOMES_SITE_ORIGIN = THOMAS_PRIMARY_ORIGIN;
 const THOMAS_CUSTOM_HOMES_IMAGE = `${SITE_ORIGIN}/tch/og-image.png`;
 const THOMAS_CUSTOM_HOMES_CUSTOM_DOMAIN_IMAGE = `${THOMAS_CUSTOM_HOMES_SITE_ORIGIN}/og-image.png`;
-const MELBOURNE_WEB_STUDIO_CANONICAL_URL = 'https://melbournewebstudio.eb28.co/';
+const MELBOURNE_WEB_STUDIO_CANONICAL_URL = `${SITE_ORIGIN}/melbournewebstudio/`;
 
 const ORGANIZATION_SCHEMA = {
     '@context': 'https://schema.org',

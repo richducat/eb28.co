@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { submitLeadCapture } from './leadCapture.js';
 import {
   AlertTriangle,
   ArrowRight,
@@ -286,19 +287,13 @@ export default function ReconAgentPage() {
     setFormStatus('submitting');
 
     try {
-      await fetch('https://formsubmit.co/ajax/richducat@gmail.com', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-        },
-        body: JSON.stringify({
-          ...formData,
-          serviceNeed: 'recon-agent-founder-beta',
-          offerName: 'Recon Agent Founder Beta',
-          price: FOUNDER_PRICE,
-          sourcePage: 'reconcile.eb28.co',
-        }),
+      await submitLeadCapture({
+        ...formData,
+        serviceNeed: 'recon-agent-founder-beta',
+        offerName: 'Recon Agent Founder Beta',
+        price: FOUNDER_PRICE,
+        sourcePage: 'reconcile.eb28.co',
+        _subject: '[EB28 HIGH PRIORITY LEAD] Recon Agent Founder Beta',
       });
 
       setFormStatus('success');

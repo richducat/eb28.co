@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ArrowRight, Bot, BarChart, CheckCircle, Clock, Mail, ShieldCheck } from 'lucide-react';
+import { submitLeadCapture } from './leadCapture.js';
 
 // Post-purchase onboarding. Stripe Payment Links redirect here after payment
 // (configured per product in /public/checkout-config.json). The intake form
@@ -156,19 +157,16 @@ export default function WelcomePage() {
 
         setFormStatus('submitting');
         try {
-            await fetch('https://formsubmit.co/ajax/richducat@gmail.com', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-                body: JSON.stringify({
-                    ...formData,
-                    product: product.name,
-                    productId: productId || 'unknown',
-                    sourcePage: 'eb28.co/welcome',
-                    _subject: `[EB28 PAID ONBOARDING] ${product.name}`,
-                }),
+            await submitLeadCapture({
+                ...formData,
+                product: product.name,
+                productId: productId || 'unknown',
+                sourcePage: 'eb28.co/welcome',
+                _subject: `[EB28 PAID ONBOARDING] ${product.name}`,
             });
             setFormStatus('success');
-        } catch {
+        } catch (err) {
+            console.error('EB28 paid onboarding lead failed', err);
             setFormError('Something went wrong. Please try again.');
             setFormStatus('error');
         }

@@ -14,6 +14,7 @@ import {
   ShieldCheck,
   X,
 } from 'lucide-react';
+import { submitLeadCapture } from './leadCapture.js';
 import { cn } from './lib/utils';
 import {
   THOMAS_COMPANY_NAME,
@@ -29,8 +30,6 @@ import {
   getThomasPathForHostname,
 } from './thomasSeoPages.js';
 import ThomasCustomHomesHomepageClassic from './ThomasCustomHomesHomepageClassic.jsx';
-
-const FORM_ENDPOINT = 'https://formsubmit.co/ajax/richducat@gmail.com';
 
 const FEATURED_PROJECTS = [
   {
@@ -696,34 +695,23 @@ function Contact({ page }) {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch(FORM_ENDPOINT, {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          phone: formData.phone,
-          city: formData.city,
-          lotStatus: formData.lotStatus,
-          projectType: formData.projectType,
-          budgetRange: formData.budgetRange,
-          completionDate: formData.completionDate,
-          projectNotes: formData.projectNotes,
-          sourcePage: page.h1,
-          sourceSlug: page.slug || 'home',
-          business: THOMAS_COMPANY_NAME,
-          officePhone: THOMAS_PHONE_DISPLAY,
-          officeAddress: THOMAS_OFFICE_ADDRESS,
-          _subject: `${THOMAS_COMPANY_NAME} lead: ${page.h1}`,
-        }),
+      await submitLeadCapture({
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        city: formData.city,
+        lotStatus: formData.lotStatus,
+        projectType: formData.projectType,
+        budgetRange: formData.budgetRange,
+        completionDate: formData.completionDate,
+        projectNotes: formData.projectNotes,
+        sourcePage: page.h1,
+        sourceSlug: page.slug || 'home',
+        business: THOMAS_COMPANY_NAME,
+        officePhone: THOMAS_PHONE_DISPLAY,
+        officeAddress: THOMAS_OFFICE_ADDRESS,
+        _subject: `${THOMAS_COMPANY_NAME} lead: ${page.h1}`,
       });
-
-      if (!response.ok) {
-        throw new Error('Submission failed');
-      }
 
       setIsSuccess(true);
       setFormData({

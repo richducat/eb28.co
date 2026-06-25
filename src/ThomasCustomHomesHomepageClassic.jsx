@@ -16,14 +16,13 @@ import {
   ShieldCheck,
   X,
 } from 'lucide-react';
+import { submitLeadCapture } from './leadCapture.js';
 import { cn } from './lib/utils';
 import {
   THOMAS_OFFICE_ADDRESS,
   THOMAS_PHONE,
   THOMAS_PHONE_DISPLAY,
 } from './thomasSeoPages.js';
-
-const FORM_ENDPOINT = 'https://formsubmit.co/ajax/richducat@gmail.com';
 
 const NAV_LINKS = [
   { name: 'Services', href: '#services' },
@@ -1339,36 +1338,25 @@ function Contact() {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch(FORM_ENDPOINT, {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          projectType: formData.projectType,
-          budgetRange: formData.budgetRange,
-          completionDate: formData.completionDate,
-          message: formData.message,
-          wantsFinancing: formData.wantsFinancing ? 'Yes' : 'No',
-          financingEmploymentStatus: formData.financingData.employmentStatus || 'Not provided',
-          financingAnnualIncome: formData.financingData.annualIncome || 'Not provided',
-          financingCreditScore: formData.financingData.creditScore || 'Not provided',
-          financingDownPayment: formData.financingData.downPayment || 'Not provided',
-          financingPropertyStatus: formData.financingData.propertyStatus || 'Not provided',
-          business: 'Thomas Custom Homes Inc.',
-          officePhone: THOMAS_PHONE_DISPLAY,
-          officeAddress: THOMAS_OFFICE_ADDRESS,
-          sourcePage: typeof window !== 'undefined' ? window.location.href : 'https://thomascustom.homes/',
-          _subject: `Thomas Custom Homes lead: ${formData.projectType}`,
-        }),
+      await submitLeadCapture({
+        name: formData.name,
+        email: formData.email,
+        projectType: formData.projectType,
+        budgetRange: formData.budgetRange,
+        completionDate: formData.completionDate,
+        message: formData.message,
+        wantsFinancing: formData.wantsFinancing ? 'Yes' : 'No',
+        financingEmploymentStatus: formData.financingData.employmentStatus || 'Not provided',
+        financingAnnualIncome: formData.financingData.annualIncome || 'Not provided',
+        financingCreditScore: formData.financingData.creditScore || 'Not provided',
+        financingDownPayment: formData.financingData.downPayment || 'Not provided',
+        financingPropertyStatus: formData.financingData.propertyStatus || 'Not provided',
+        business: 'Thomas Custom Homes Inc.',
+        officePhone: THOMAS_PHONE_DISPLAY,
+        officeAddress: THOMAS_OFFICE_ADDRESS,
+        sourcePage: typeof window !== 'undefined' ? window.location.href : 'https://thomascustom.homes/',
+        _subject: `Thomas Custom Homes lead: ${formData.projectType}`,
       });
-
-      if (!response.ok) {
-        throw new Error('Form submission failed');
-      }
 
       setIsSuccess(true);
       setFormData({

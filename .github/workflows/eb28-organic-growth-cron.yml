@@ -91,6 +91,7 @@ jobs:
         run: |
           node scripts/eb28-content-engine.mjs --write --slot "${{ steps.slot.outputs.slot }}" --date "${{ steps.slot.outputs.eastern_date }}"
           node scripts/generate-eb28-blog.mjs
+          node scripts/publish-eb28-buffer.mjs --prepare --slot "${{ steps.slot.outputs.slot }}" --date "${{ steps.slot.outputs.eastern_date }}"
           node scripts/check-eb28-seo.mjs
 
       - name: Run daily SEO review after evening content
@@ -126,6 +127,7 @@ jobs:
           git add content/eb28/articles.json \
             content/eb28/content-state.json \
             content/eb28/seo-outreach-queue.md \
+            docs/social-assets/eb28 \
             docs/blog \
             docs/data/eb28-blog-feed.json \
             docs/sitemap.xml
@@ -139,5 +141,37 @@ jobs:
           fi
 
           git commit -m "Auto-update EB28 organic growth content"
+          git pull --rebase origin main
+          git push origin HEAD:main
+
+      - name: Publish EB28 social posts to Buffer
+        if: steps.slot.outputs.skip != 'true'
+        env:
+          BUFFER_API_KEY: ${{ secrets.BUFFER_API_KEY }}
+          EB28_SOCIAL_POSTING_ENABLED: ${{ secrets.EB28_SOCIAL_POSTING_ENABLED }}
+          EB28_BUFFER_EXPECTED_ACCOUNT_EMAIL: social@eb28.co
+          EB28_BUFFER_ORGANIZATION_ID: ${{ secrets.EB28_BUFFER_ORGANIZATION_ID }}
+          EB28_BUFFER_CHANNELS: ${{ secrets.EB28_BUFFER_CHANNELS }}
+          EB28_BUFFER_PLATFORM_ALLOWLIST: instagram,tiktok
+          EB28_SOCIAL_MEDIA_BASE_URL: https://raw.githubusercontent.com/${{ github.repository }}/main/docs/social-assets/eb28
+        run: |
+          node scripts/publish-eb28-buffer.mjs --publish --slot "${{ steps.slot.outputs.slot }}" --date "${{ steps.slot.outputs.eastern_date }}"
+
+      - name: Commit Buffer publish receipts
+        if: steps.slot.outputs.skip != 'true'
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add output/eb28-social/buffer-publish-state.json 2>/dev/null || true
+          git add output/eb28-social/buffer-publish-*.json 2>/dev/null || true
+
+          if git diff --cached --quiet; then
+            echo "No Buffer publish receipts to commit."
+            exit 0
+          fi
+
+          git commit -m "Record EB28 Buffer social publish"
           git pull --rebase origin main
           git push origin HEAD:main

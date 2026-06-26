@@ -362,5 +362,14 @@
     ],
     "sourceType": "public mailto link on business website",
     "notes": "Auto-discovered public email from https://supremetitlellc.com/contact-us/; verify decision maker before sending."
+  },
+  "fountain-of-you": {
+    "email": "drkimzipper@me.com",
+    "sourceUrls": [
+      "https://fountainofyou.md/contact-us/",
+      "https://fountainofyou.md/"
+    ],
+    "sourceType": "public mailto link on business website",
+    "notes": "Manually verified public mailto link from Fountain of You contact page during 2026-06-26 contact-route audit; verify decision maker before sending."
   }
 }

@@ -145,7 +145,7 @@
     "Build 95 is the local account email, spouse/family invite, cadet invite, tester-access gate, and static desktop companion implementation candidate.",
     "Do not archive, upload, distribute TestFlight, select for App Review, submit for review, release, expire builds, edit metadata/screenshots/previews, or edit IAP/subscriptions without a separate exact approval record for the final build-95 source commit.",
     "Do not ship custom free access codes unless they are server-validated, email-bound, role-specific, and single-use.",
-    "Tester full access must be configured and verified for richducat@gmail.com and the final tester list before App Review submission.",
+    "Tester full access must be configured and verified for richducat@gmail.com, karen.hallett@mac.com, and kenfish@mac.com before App Review submission.",
     "As of 2026-06-26T02:49:11Z, GET https://api.cadetcatch.com/access/status?device_id=pre-submit-access-check&email=richducat%40gmail.com returned 404 {\\\"detail\\\":\\\"Not Found\\\"}; the access API is not production-ready for tester access."
   ],
   "createdAt": "2026-06-06T11:53:53.691778-04:00",

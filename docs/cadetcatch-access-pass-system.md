@@ -17,6 +17,10 @@ Paid access must come from Apple StoreKit. Free/internal/family access must be v
 - Invitations are sent only by email. The app must not expose a reusable share code that can be copied to many people.
 - Each invitation is bound to one recipient email address, one role, one owner subscription, and one redemption.
 - Richard, Karen, and Ken can receive free access through server-generated internal comp invitations or Apple offer/promo codes.
+- Required internal tester grants before final App Review submission:
+  - `richducat@gmail.com`
+  - `karen.hallett@mac.com`
+  - `kenfish@mac.com`
 - An invitation unlock is valid only while the server says it is active.
 - The app must not contain a master code, admin code, shared secret, or code generator.
 
@@ -219,6 +223,31 @@ Request:
   "expires_at": null,
   "note": "Internal CadetCatch testing access"
 }
+```
+
+### POST /admin/access-grants
+
+Internal-only direct grant endpoint for known testers and reviewer accounts.
+
+Use this when a named tester must have full app access before App Review submission. The endpoint must require an admin token and must never be exposed in the app UI.
+
+Required pre-submission grants:
+
+```bash
+curl -X POST https://api.cadetcatch.com/admin/access-grants \
+  -H "Authorization: Bearer $CADETCATCH_ACCESS_ADMIN_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"email":"richducat@gmail.com","access_type":"comp","role":"internal","desktop_add_on_active":true,"can_invite":true}'
+
+curl -X POST https://api.cadetcatch.com/admin/access-grants \
+  -H "Authorization: Bearer $CADETCATCH_ACCESS_ADMIN_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"email":"karen.hallett@mac.com","access_type":"comp","role":"internal","desktop_add_on_active":true,"can_invite":true}'
+
+curl -X POST https://api.cadetcatch.com/admin/access-grants \
+  -H "Authorization: Bearer $CADETCATCH_ACCESS_ADMIN_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"email":"kenfish@mac.com","access_type":"comp","role":"internal","desktop_add_on_active":true,"can_invite":true}'
 ```
 
 ## Database Tables

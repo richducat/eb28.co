@@ -1,0 +1,16 @@
+[Unit]
+Description=CadetCatch Access API
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/cadetcatch-access-api
+EnvironmentFile=/etc/cadetcatch-access-api.env
+ExecStart=/opt/cadetcatch-access-api/.venv/bin/uvicorn cadetcatch_access.main:app --host 127.0.0.1 --port 8010
+Restart=always
+RestartSec=5
+User=www-data
+Group=www-data
+
+[Install]
+WantedBy=multi-user.target

@@ -9,6 +9,7 @@
     "generate:32940": "node scripts/generate-32940-growth-sites.mjs",
     "leadops:32940": "node scripts/generate-32940-lead-ops.mjs",
     "leadops:enrich-avenue:32940": "node scripts/enrich-32940-avenue-contacts.mjs",
+    "leadops:discover-emails:32940": "node scripts/discover-32940-public-emails.mjs",
     "leadops:audit:32940": "node scripts/sync-32940-booked-call-evidence.mjs",
     "publish:fundmanager": "node scripts/publish-fundmanager-live.mjs",
     "build": "node scripts/build-site.mjs",

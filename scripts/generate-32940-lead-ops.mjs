@@ -10,6 +10,7 @@ const outDir = path.join(repoRoot, 'output', 'lead-ops');
 const trackerPath = path.join(outDir, '32940-booked-call-tracker.csv');
 const replacementProspectsPath = path.join(repoRoot, 'scripts', 'data', '32940-replacement-prospects.json');
 const avenueContactOverridesPath = path.join(repoRoot, 'scripts', 'data', '32940-avenue-contact-overrides.json');
+const publicEmailOverridesPath = path.join(repoRoot, 'scripts', 'data', '32940-public-email-overrides.json');
 const today = new Date().toISOString().slice(0, 10);
 
 const conceptBaseUrl = 'https://eb28.co/32940/';
@@ -353,6 +354,49 @@ async function loadAvenueContactOverrides() {
 
 const avenueContactOverrides = await loadAvenueContactOverrides();
 
+async function loadPublicEmailOverrides() {
+  try {
+    const raw = await fs.readFile(publicEmailOverridesPath, 'utf8');
+    const parsed = JSON.parse(raw);
+
+    if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
+      throw new Error(`${path.relative(repoRoot, publicEmailOverridesPath)} must contain an object keyed by prospect slug.`);
+    }
+
+    return Object.fromEntries(
+      Object.entries(parsed)
+        .filter(([, contact]) => contact?.email)
+        .map(([slug, contact]) => {
+          const sourceUrls = Array.isArray(contact.sourceUrls) && contact.sourceUrls.length
+            ? contact.sourceUrls
+            : contact.website
+              ? [contact.website]
+              : [];
+
+          return [
+            slug,
+            {
+              email: contact.email ?? '',
+              phone: contact.phone ?? '',
+              address: contact.address ?? '',
+              website: contact.website ?? '',
+              sourceUrls,
+              sourceType: contact.sourceType ?? 'public email on business website',
+              notes: contact.notes ?? 'Auto-discovered public email; verify decision maker before sending.',
+            },
+          ];
+        }),
+    );
+  } catch (error) {
+    if (error.code === 'ENOENT') {
+      return {};
+    }
+    throw error;
+  }
+}
+
+const publicEmailOverrides = await loadPublicEmailOverrides();
+
 const avenueTenantSourceSlugs = new Set([
   'clevens-face-and-body-specialist',
   'escapology',
@@ -578,12 +622,34 @@ function extractProspects(indexHtml) {
   return prospects;
 }
 
+function mergeContactData(...contacts) {
+  const merged = {
+    sourceUrls: [],
+  };
+
+  for (const contact of contacts.filter(Boolean)) {
+    for (const field of ['email', 'phone', 'address', 'website', 'sourceType', 'notes']) {
+      if (!merged[field] && contact[field]) {
+        merged[field] = contact[field];
+      }
+    }
+
+    if (Array.isArray(contact.sourceUrls)) {
+      merged.sourceUrls.push(...contact.sourceUrls);
+    }
+  }
+
+  merged.sourceUrls = [...new Set(merged.sourceUrls)];
+  return merged;
+}
+
 function withTracking(prospect, index) {
-  const contact = verifiedContacts[prospect.slug]
-    ?? callOrFormContacts[prospect.slug]
-    ?? replacementContacts[prospect.slug]
-    ?? avenueContactOverrides[prospect.slug]
-    ?? {};
+  const contact = verifiedContacts[prospect.slug] ?? mergeContactData(
+    publicEmailOverrides[prospect.slug],
+    callOrFormContacts[prospect.slug],
+    replacementContacts[prospect.slug],
+    avenueContactOverrides[prospect.slug],
+  );
   const avenueSourceSlug = avenueSourceSlugOverrides[prospect.slug] ?? prospect.slug;
   const avenueTenantPage = avenueTenantSourceSlugs.has(prospect.slug)
     ? `https://www.avenueviera.com/tenants/${avenueSourceSlug}/`

@@ -1208,14 +1208,34 @@ function makeRecordCommand(prospect, status, source, evidence, datetime = '') {
   return parts.join(' ');
 }
 
-function makeContactedRecordCommand(prospect) {
+function makeStatePatch(prospect, status, source, evidence, datetime = '') {
+  return JSON.stringify({
+    [String(prospect.priority)]: {
+      status,
+      evidence,
+      source,
+      datetime,
+    },
+  }, null, 2);
+}
+
+function makeContactedEvidence(prospect) {
   const routeSource = inferOutreachSource(prospect);
   const routeLabel = humanOutreachSource(routeSource);
+  return `Manual ${routeLabel} outreach completed for ${prospect.business}; waiting for reply.`;
+}
+
+function makeBookedEvidenceTemplate(prospect) {
+  return `Reply or calendar evidence confirms a booked review call for ${prospect.business} at YYYY-MM-DD HH:MM ET.`;
+}
+
+function makeContactedRecordCommand(prospect) {
+  const routeSource = inferOutreachSource(prospect);
   return makeRecordCommand(
     prospect,
     'contacted',
     routeSource,
-    `Manual ${routeLabel} outreach completed for ${prospect.business}; waiting for reply.`,
+    makeContactedEvidence(prospect),
   );
 }
 
@@ -1225,7 +1245,23 @@ function makeBookedRecordCommand(prospect) {
     prospect,
     'booked',
     routeSource,
-    `Reply or calendar evidence confirms a booked review call for ${prospect.business} at YYYY-MM-DD HH:MM ET.`,
+    makeBookedEvidenceTemplate(prospect),
+    'YYYY-MM-DD HH:MM ET',
+  );
+}
+
+function makeContactedStatePatch(prospect) {
+  const routeSource = inferOutreachSource(prospect);
+  return makeStatePatch(prospect, 'contacted', routeSource, makeContactedEvidence(prospect));
+}
+
+function makeBookedStatePatchTemplate(prospect) {
+  const routeSource = inferOutreachSource(prospect);
+  return makeStatePatch(
+    prospect,
+    'booked',
+    routeSource,
+    makeBookedEvidenceTemplate(prospect),
     'YYYY-MM-DD HH:MM ET',
   );
 }
@@ -1556,6 +1592,8 @@ function renderManualOutreachCommandCenter(prospects, emailStats) {
       const body = makeBody(prospect);
       const contactedCommand = makeContactedRecordCommand(prospect);
       const bookedCommand = makeBookedRecordCommand(prospect);
+      const contactedPatch = makeContactedStatePatch(prospect);
+      const bookedPatch = makeBookedStatePatchTemplate(prospect);
       const phoneScript = makePhoneScript(prospect);
       const primaryAction = prospect.verifiedEmail
         ? `<a class="btn primary" target="_blank" rel="noopener" href="${escapeHtml(gmailComposeUrl)}">Open Gmail</a><a class="btn" href="${escapeHtml(mailto)}">Open Mail App</a>`
@@ -1564,8 +1602,8 @@ function renderManualOutreachCommandCenter(prospects, emailStats) {
       const websiteAction = prospect.website ? `<a class="btn" target="_blank" rel="noopener" href="${escapeHtml(prospect.website)}">Website/Form</a>` : '';
 
       return `
-        <article class="card" data-stage="${escapeHtml(prospect.outreachStage)}" data-business="${escapeHtml(prospect.business.toLowerCase())}">
-          <div class="topline"><span>#${prospect.priority}</span><span>${escapeHtml(prospect.outreachStage.replace(/_/g, ' '))}</span></div>
+        <article class="card" data-stage="${escapeHtml(prospect.outreachStage)}" data-priority="${escapeHtml(prospect.priority)}" data-business="${escapeHtml(prospect.business.toLowerCase())}">
+          <div class="topline"><span>#${prospect.priority}</span><span class="state-label">${escapeHtml(prospect.outreachStage.replace(/_/g, ' '))}</span></div>
           <h2>${escapeHtml(prospect.business)}</h2>
           <p class="meta">${escapeHtml(prospect.category)}</p>
           <div class="actions">
@@ -1573,6 +1611,7 @@ function renderManualOutreachCommandCenter(prospects, emailStats) {
             ${primaryAction}
             ${phoneAction}
             ${websiteAction}
+            <button class="btn mark-touched" type="button" data-priority="${escapeHtml(prospect.priority)}">Mark touched</button>
           </div>
           <dl>
             <div><dt>Email</dt><dd>${escapeHtml(prospect.verifiedEmail || 'not available')}</dd></div>
@@ -1582,8 +1621,16 @@ function renderManualOutreachCommandCenter(prospects, emailStats) {
           <label>Subject <input readonly value="${escapeHtml(subject)}"></label>
           <label>Message <textarea readonly>${escapeHtml(body)}</textarea></label>
           <label>Phone/contact-form script <textarea readonly>${escapeHtml(phoneScript)}</textarea></label>
+          <div class="actions">
+            <button class="btn" type="button" data-copy-target="contacted-patch-${escapeHtml(prospect.priority)}">Copy contacted patch</button>
+            <button class="btn" type="button" data-copy-target="contacted-command-${escapeHtml(prospect.priority)}">Copy contacted command</button>
+            <button class="btn" type="button" data-copy-target="booked-command-${escapeHtml(prospect.priority)}">Copy booked command</button>
+          </div>
+          <label>Contacted state patch <textarea id="contacted-patch-${escapeHtml(prospect.priority)}" class="command" readonly>${escapeHtml(contactedPatch)}</textarea></label>
           <label>Record contacted command <textarea class="command" readonly>${escapeHtml(contactedCommand)}</textarea></label>
-          <label>Record booked command <textarea class="command" readonly>${escapeHtml(bookedCommand)}</textarea></label>
+          <label class="sr-label">Record contacted command copy source <textarea id="contacted-command-${escapeHtml(prospect.priority)}" class="command compact" readonly>${escapeHtml(contactedCommand)}</textarea></label>
+          <label>Booked state patch template <textarea class="command" readonly>${escapeHtml(bookedPatch)}</textarea></label>
+          <label>Record booked command <textarea id="booked-command-${escapeHtml(prospect.priority)}" class="command" readonly>${escapeHtml(bookedCommand)}</textarea></label>
         </article>`;
     });
 
@@ -1613,9 +1660,12 @@ function renderManualOutreachCommandCenter(prospects, emailStats) {
     .topline { display:flex; justify-content:space-between; color:var(--muted); font-size:12px; text-transform:uppercase; font-weight:750; }
     h2 { margin:0; font-size:18px; letter-spacing:0; }
     .actions { display:flex; flex-wrap:wrap; gap:8px; }
-    .btn, .pill { min-height:34px; padding:7px 10px; border:1px solid var(--line); border-radius:7px; background:#fff; color:var(--ink); text-decoration:none; font-weight:700; display:inline-flex; align-items:center; }
+    .btn, .pill { min-height:34px; padding:7px 10px; border:1px solid var(--line); border-radius:7px; background:#fff; color:var(--ink); text-decoration:none; font-weight:700; display:inline-flex; align-items:center; cursor:pointer; }
     .btn.primary { background:var(--blue); border-color:var(--blue); color:#fff; }
+    .btn.copied { border-color:var(--green); color:var(--green); }
     .pill { color:var(--amber); background:#fff8e6; border-color:#f1d08a; }
+    .card.is-touched { border-color:#9ad0b1; background:#f7fff9; }
+    .card.is-touched .state-label::after { content:" - touched this session"; color:var(--green); }
     dl { margin:0; display:grid; gap:6px; font-size:12px; }
     dt { color:var(--muted); font-weight:800; text-transform:uppercase; }
     dd { margin:2px 0 0; overflow-wrap:anywhere; }
@@ -1623,6 +1673,8 @@ function renderManualOutreachCommandCenter(prospects, emailStats) {
     label input, textarea { width:100%; padding:8px; color:var(--ink); }
     textarea { min-height:128px; resize:vertical; font-size:12px; line-height:1.45; }
     textarea.command { min-height:74px; font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; }
+    textarea.compact { min-height:48px; }
+    .sr-label { position:absolute; left:-10000px; width:1px; height:1px; overflow:hidden; }
   </style>
 </head>
 <body>
@@ -1633,9 +1685,11 @@ function renderManualOutreachCommandCenter(prospects, emailStats) {
       <div class="metric"><strong>${direct.length}</strong><span>direct-email drafts</span></div>
       <div class="metric"><strong>${emailStats.uniqueRecipientInboxes}</strong><span>unique inboxes</span></div>
       <div class="metric"><strong>${callOrForm.length}</strong><span>call/form targets</span></div>
+      <div class="metric"><strong id="sessionTouchedCount">0</strong><span>touched this session</span></div>
     </div>
     <p class="notice">Manual fallback while Gmail/SMTP auth is unavailable. After a real outreach touch, run the contacted command. After a real reply, calendar link, or scheduled call time, replace the booked placeholders and run the booked command, then write the audit.</p>
     <label class="audit-command">Apply audit command <textarea class="command" readonly>${escapeHtml(auditCommand)}</textarea></label>
+    <label class="audit-command">Session touched priorities <textarea id="sessionTouchedOutput" class="command" readonly></textarea></label>
   </header>
   <div class="toolbar">
     <input id="search" placeholder="Search business or source">
@@ -1650,6 +1704,38 @@ function renderManualOutreachCommandCenter(prospects, emailStats) {
   </main>
   <script>
     const cards = [...document.querySelectorAll('.card')];
+    const touchedKey = 'eb28-32940-manual-command-center-touched';
+    let touched = new Set(JSON.parse(localStorage.getItem(touchedKey) || '[]'));
+
+    function saveTouched() {
+      const values = [...touched].sort((a, b) => Number(a) - Number(b));
+      localStorage.setItem(touchedKey, JSON.stringify(values));
+      document.getElementById('sessionTouchedCount').textContent = String(values.length);
+      document.getElementById('sessionTouchedOutput').value = values.join(', ');
+      for (const card of cards) {
+        card.classList.toggle('is-touched', touched.has(card.dataset.priority));
+      }
+    }
+
+    async function copyFromTarget(targetId, button) {
+      const target = document.getElementById(targetId);
+      if (!target) return;
+      target.focus();
+      target.select();
+      try {
+        await navigator.clipboard.writeText(target.value);
+      } catch {
+        document.execCommand('copy');
+      }
+      const originalText = button.textContent;
+      button.textContent = 'Copied';
+      button.classList.add('copied');
+      setTimeout(() => {
+        button.textContent = originalText;
+        button.classList.remove('copied');
+      }, 1400);
+    }
+
     function applyFilters() {
       const query = document.getElementById('search').value.toLowerCase();
       const stage = document.getElementById('stage').value;
@@ -1661,6 +1747,16 @@ function renderManualOutreachCommandCenter(prospects, emailStats) {
     }
     document.getElementById('search').addEventListener('input', applyFilters);
     document.getElementById('stage').addEventListener('input', applyFilters);
+    document.querySelectorAll('[data-copy-target]').forEach((button) => {
+      button.addEventListener('click', () => copyFromTarget(button.dataset.copyTarget, button));
+    });
+    document.querySelectorAll('.mark-touched').forEach((button) => {
+      button.addEventListener('click', () => {
+        touched.add(button.dataset.priority);
+        saveTouched();
+      });
+    });
+    saveTouched();
   </script>
 </body>
 </html>`;

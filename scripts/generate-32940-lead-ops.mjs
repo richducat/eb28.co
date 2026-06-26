@@ -834,6 +834,65 @@ function renderMarkdown(prospects) {
   ].join('\n');
 }
 
+function markdownCell(value) {
+  return String(Array.isArray(value) ? value.join('<br>') : (value ?? ''))
+    .replace(/\|/g, '\\|')
+    .replace(/\n/g, '<br>');
+}
+
+function renderCallContactQueue(prospects) {
+  const direct = prospects.filter((prospect) => prospect.verifiedEmail);
+  const callOrForm = prospects.filter((prospect) => !prospect.verifiedEmail && prospect.outreachStage === 'call_or_contact_form');
+  const research = prospects.filter((prospect) => prospect.outreachStage === 'research_needed');
+  const actionable = direct.length + callOrForm.length;
+  const callRows = callOrForm.map((prospect) => (
+    `| ${prospect.priority} | ${markdownCell(prospect.business)} | ${markdownCell(prospect.phone)} | ${markdownCell(prospect.website)} | ${markdownCell(prospect.conceptUrl)} | ${markdownCell(prospect.sourceUrls)} |`
+  ));
+  const researchRows = research.map((prospect) => (
+    `| ${prospect.priority} | ${markdownCell(prospect.business)} | ${markdownCell(prospect.website || prospect.sourceUrls)} | Research official owner or manager contact before outreach |`
+  ));
+
+  return [
+    '# 32940 EB28 Call and Contact-Form Queue',
+    '',
+    `Generated: ${today}`,
+    '',
+    `Total prospects: ${prospects.length}`,
+    `Actionable now: ${actionable}`,
+    `Direct-email ready: ${direct.length}`,
+    `Call/contact-form ready: ${callOrForm.length}`,
+    `Research needed: ${research.length}`,
+    'Confirmed booked-call leads: 0',
+    '',
+    '## Call / Contact Form Ready',
+    '',
+    '| # | Business | Phone | Website | Concept | Source |',
+    '|---:|---|---|---|---|---|',
+    ...callRows,
+    '',
+    '## Research Needed',
+    '',
+    '| # | Business | Current source | Next action |',
+    '|---:|---|---|---|',
+    ...researchRows,
+    '',
+    '## Contact Form Script',
+    '',
+    '```text',
+    'Hi, this is Rich with EB28. I built a free owner-review website concept for your business:',
+    '{{concept_url}}',
+    '',
+    'It is not public-indexed and it is not your official website. The build itself is free. If you want to use it, EB28 can host and improve it for $98/month with managed hosting, technical SEO upkeep, and one weekly local blog or Google Business content prompt.',
+    '',
+    'Who is the best person to review it?',
+    '```',
+    '',
+    '## Counting Rule',
+    '',
+    'Count a lead only after evidence includes a real booked call, calendar link, scheduled call time, or equivalent proof.',
+  ].join('\n');
+}
+
 async function main() {
   const indexHtml = await fs.readFile(indexPath, 'utf8');
   const prospects = extractProspects(indexHtml).map(withTracking);
@@ -874,6 +933,7 @@ async function main() {
   await fs.writeFile(path.join(outDir, '32940-prospect-pipeline.csv'), `${csv}\n`);
   await fs.writeFile(path.join(outDir, '32940-prospect-pipeline.json'), `${JSON.stringify({ generatedAt: today, prospects }, null, 2)}\n`);
   await fs.writeFile(path.join(outDir, '32940-outreach-drafts.md'), `${renderMarkdown(prospects)}\n`);
+  await fs.writeFile(path.join(outDir, '32940-call-contact-queue.md'), `${renderCallContactQueue(prospects)}\n`);
   await fs.writeFile(trackerPath, `${renderBookedCallTracker(prospects, existingTrackerRows)}\n`);
 
   const draftsDir = path.join(outDir, 'drafts');

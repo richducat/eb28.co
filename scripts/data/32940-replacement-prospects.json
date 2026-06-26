@@ -409,5 +409,203 @@
       "sourceType": "owned website",
       "sourceUrls": ["https://sunplumbing.com/"]
     }
+  },
+  {
+    "slug": "fuego-salt",
+    "name": "Fuego & Salt",
+    "category": "chef-led catering and culinary experience company",
+    "audience": "event hosts, offices, wedding planners, and private-dining customers comparing catering options across the Space Coast",
+    "action": "review catering services, request a quote, or book a chef-led food experience",
+    "focus": [
+      "Catering package and event-type landing pages",
+      "Quote request path for private parties and business events",
+      "Weekly local content for catering, private chef, and event searches"
+    ],
+    "contact": {
+      "email": "hello@fuegoandsalt.com",
+      "website": "http://www.fuegoandsalt.com/",
+      "sourceType": "public email on owned website plus Space Coast Chamber listing",
+      "sourceUrls": [
+        "http://www.fuegoandsalt.com/",
+        "https://members.spacecoastchamber.com/directory/Details/fuego-salt-3017481"
+      ]
+    }
+  },
+  {
+    "slug": "hell-n-blazes-brewing-company",
+    "name": "Hell 'n Blazes Brewing Company",
+    "category": "craft brewery and gastropub",
+    "audience": "craft beer customers, downtown Melbourne diners, event guests, and private-party planners",
+    "action": "view beer, food, events, private-party options, and visit details",
+    "focus": [
+      "Beer, food, and event calendar sections",
+      "Private-event and downtown visit prompts",
+      "Weekly local content for brewery, gastropub, and live-event searches"
+    ],
+    "contact": {
+      "email": "info@hellnblazesbrewing.com",
+      "phone": "(321) 821-4052",
+      "website": "http://www.hellnblazesbrewing.com/",
+      "sourceType": "public email on owned website plus Space Coast Chamber listing",
+      "sourceUrls": [
+        "http://www.hellnblazesbrewing.com/contact-us",
+        "https://members.spacecoastchamber.com/directory/Details/hell-n-blazes-brewing-company-1618929"
+      ]
+    }
+  },
+  {
+    "slug": "intracoastal-brewing-company",
+    "name": "Intracoastal Brewing Company",
+    "category": "craft brewery and taproom",
+    "audience": "craft beer fans, taproom guests, event visitors, and locals comparing breweries near Eau Gallie and Melbourne",
+    "action": "check beers, events, taproom details, and visit information",
+    "focus": [
+      "Tap list and event calendar sections",
+      "Taproom, merch, and private-event prompts",
+      "Weekly local content for brewery and Eau Gallie event searches"
+    ],
+    "contact": {
+      "email": "info@intracoastalbrewingcompany.com",
+      "phone": "(321) 872-7395",
+      "website": "http://www.intracoastalbrewingcompany.com/",
+      "sourceType": "public email on owned website plus Space Coast Chamber listing",
+      "sourceUrls": [
+        "http://www.intracoastalbrewingcompany.com/contact",
+        "https://members.spacecoastchamber.com/directory/Details/intracoastal-brewing-company-1618884"
+      ]
+    }
+  },
+  {
+    "slug": "river-rocks-restaurant",
+    "name": "River Rocks Restaurant",
+    "category": "waterfront dining and private-events restaurant",
+    "audience": "waterfront dining guests, seafood customers, private-event planners, and groups comparing Rockledge and Melbourne-area restaurants",
+    "action": "view menus, plan a visit, request private-event information, or contact management",
+    "focus": [
+      "Waterfront menu and reservation-ready sections",
+      "Private dining and event inquiry prompts",
+      "Weekly local content for waterfront dining and event searches"
+    ],
+    "contact": {
+      "email": "manager@riverrocksrestaurant.com",
+      "phone": "(321) 757-7200",
+      "website": "https://www.riverrocksrestaurant.com/",
+      "sourceType": "public email on owned website and public search result",
+      "sourceUrls": [
+        "https://www.riverrocksrestaurant.com/river-rocks",
+        "https://www.riverrocksrestaurant.com/contact",
+        "https://members.spacecoastchamber.com/directory/Details/river-rocks-restaurant-1619503"
+      ]
+    }
+  },
+  {
+    "slug": "terra-craft-sandwiches",
+    "name": "Terra Craft Sandwiches",
+    "category": "craft sandwich shop",
+    "audience": "lunch customers, office catering buyers, event hosts, and locals comparing fast-casual food near Melbourne",
+    "action": "view the menu, order sandwiches, or request catering information",
+    "focus": [
+      "Menu and lunch-ordering path",
+      "Office catering and group-order prompts",
+      "Weekly local content for sandwiches, lunch, and catering searches"
+    ],
+    "contact": {
+      "email": "info@terracraftsandwiches.com",
+      "phone": "(321) 237-2311",
+      "website": "http://www.terracraftsandwiches.com/",
+      "sourceType": "public email on owned website plus Space Coast Chamber listing",
+      "sourceUrls": [
+        "http://www.terracraftsandwiches.com/contact-us",
+        "https://members.spacecoastchamber.com/directory/Details/terra-craft-sandwiches-2777882"
+      ]
+    }
+  },
+  {
+    "slug": "the-marked-pour-co",
+    "name": "The Marked Pour Co.",
+    "category": "mobile bar, coffee, and beverage experience company",
+    "audience": "wedding clients, event hosts, corporate planners, and party organizers comparing beverage vendors",
+    "action": "review beverage services, event packages, and request availability",
+    "focus": [
+      "Event package and service-area landing pages",
+      "Availability and quote request path",
+      "Weekly local content for mobile bar, coffee cart, and event beverage searches"
+    ],
+    "contact": {
+      "email": "info@themarkedpour.com",
+      "phone": "(321) 474-9609",
+      "website": "http://www.themarkedpour.com/",
+      "sourceType": "public email on owned website plus Space Coast Chamber listing",
+      "sourceUrls": [
+        "http://www.themarkedpour.com/",
+        "https://members.spacecoastchamber.com/directory/Details/the-marked-pour-co-4329254"
+      ]
+    }
+  },
+  {
+    "slug": "yall-need-coffee",
+    "name": "Y'all Need Coffee LLC",
+    "category": "coffee shop and coffee catering business",
+    "audience": "coffee customers, office buyers, event hosts, and locals comparing coffee options near Melbourne",
+    "action": "view coffee offerings, plan a visit, or request event coffee service",
+    "focus": [
+      "Coffee menu and visit information",
+      "Event and office coffee prompts",
+      "Weekly local content for coffee, breakfast, and event beverage searches"
+    ],
+    "contact": {
+      "email": "wakeup@yallneedcoffee.com",
+      "phone": "(321) 345-3425",
+      "website": "http://www.yallneedcoffee.com/",
+      "sourceType": "public email on owned website plus Space Coast Chamber listing",
+      "sourceUrls": [
+        "http://www.yallneedcoffee.com/contact",
+        "https://members.spacecoastchamber.com/directory/Details/y-all-need-coffee-llc-4799378"
+      ]
+    }
+  },
+  {
+    "slug": "chef-stacy-maple-culinary-experiences",
+    "name": "Chef Stacy Maple Culinary Experiences",
+    "category": "private chef and culinary experience business",
+    "audience": "private-dining clients, class attendees, event hosts, and teams planning culinary experiences",
+    "action": "review culinary experiences, check availability, and request a private event",
+    "focus": [
+      "Private chef, class, and event experience pages",
+      "Inquiry path for availability and group size",
+      "Weekly local content for private dining and cooking experience searches"
+    ],
+    "contact": {
+      "email": "chefstacymaple@gmail.com",
+      "phone": "(216) 299-3891",
+      "website": "http://chefstacymaple.com/",
+      "sourceType": "public email on owned website plus Space Coast Chamber listing",
+      "sourceUrls": [
+        "http://chefstacymaple.com/contact",
+        "https://members.spacecoastchamber.com/directory/Details/chef-stacy-maple-culinary-experiences-4817401"
+      ]
+    }
+  },
+  {
+    "slug": "uncle-vitos-pizzeria",
+    "name": "Uncle Vito's Pizzeria",
+    "category": "local pizzeria and catering restaurant",
+    "audience": "pizza customers, catering buyers, families, and groups comparing takeout and event food near Melbourne",
+    "action": "view the menu, order pizza, or call about catering",
+    "focus": [
+      "Menu and direct-ordering path",
+      "Catering and party-order prompts",
+      "Weekly local content for pizza, dinner, and catering searches"
+    ],
+    "contact": {
+      "email": "UVP8@outlook.com",
+      "phone": "(321) 988-8486",
+      "website": "https://unclevitospizzeria.com/",
+      "sourceType": "public email on owned website location page plus Space Coast Chamber listing",
+      "sourceUrls": [
+        "https://unclevitospizzeria.com/tags/dinner",
+        "https://members.spacecoastchamber.com/directory/Details/uncle-vitos-pizzeria-4877640"
+      ]
+    }
   }
 ]

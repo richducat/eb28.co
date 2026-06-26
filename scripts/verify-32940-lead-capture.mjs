@@ -17,7 +17,7 @@ const expectedFormAction = `https://formsubmit.co/${expectedEmail}`;
 const expectedAjaxEndpoint = `https://formsubmit.co/ajax/${expectedEmail}`;
 const expectedNextUrl = 'https://eb28.co/32940/claim-received.html';
 const liveTestConceptUrl = 'https://eb28.co/32940/arabesque-flavors-of-the-middle-east.html';
-const expectedPageCount = 129;
+const minimumExpectedPageCount = 129;
 const supportPages = new Set(['index.html', 'claim-received.html']);
 
 function parseArgs(argv) {
@@ -26,7 +26,7 @@ function parseArgs(argv) {
     const arg = argv[index];
     if (arg === '--live') {
       args.live = true;
-      args.liveLimit = expectedPageCount;
+      args.liveLimit = Number.MAX_SAFE_INTEGER;
     } else if (arg === '--live-sample') {
       args.live = true;
       args.liveLimit = Number.parseInt(argv[++index], 10);
@@ -332,10 +332,12 @@ function renderMarkdown(report) {
     `- Expected recipient: ${report.expectedEmail}`,
     `- Expected form action: ${report.expectedFormAction}`,
     `- Expected post-submit redirect: ${report.expectedNextUrl}`,
+    `- Minimum expected concept pages: ${report.minimumExpectedPageCount}`,
     `- Public pages checked: ${report.summary.public.checked}`,
     `- Public support pages checked: ${report.summary.public.supportChecked}`,
     `- Docs pages checked: ${report.summary.docs.checked}`,
     `- Docs support pages checked: ${report.summary.docs.supportChecked}`,
+    `- Public/docs page counts match: ${report.pageCountsMatch ? 'yes' : 'no'}`,
     `- Public failures: ${report.summary.public.failedPages}`,
     `- Docs failures: ${report.summary.docs.failedPages}`,
     `- Lead capture module: ${report.leadCaptureModule.passed ? 'passed' : 'failed'}`,
@@ -403,10 +405,12 @@ async function main() {
     docs: summaryFor(docsVerification),
     live: liveVerification ? summaryFor(liveVerification) : null,
   };
+  const pageCountsMatch = publicVerification.files === docsVerification.files;
+  const pageCountMeetsMinimum = publicVerification.files >= minimumExpectedPageCount;
 
   const passed =
-    publicVerification.files === expectedPageCount &&
-    docsVerification.files === expectedPageCount &&
+    pageCountsMatch &&
+    pageCountMeetsMinimum &&
     summary.public.failedPages === 0 &&
     summary.docs.failedPages === 0 &&
     leadCaptureModule.passed &&
@@ -419,7 +423,10 @@ async function main() {
     expectedFormAction,
     expectedAjaxEndpoint,
     expectedNextUrl,
-    expectedPageCount,
+    expectedPageCount: publicVerification.files,
+    minimumExpectedPageCount,
+    pageCountsMatch,
+    pageCountMeetsMinimum,
     passed,
     summary,
     leadCaptureModule,

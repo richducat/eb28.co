@@ -381,6 +381,16 @@
     "sourceType": "public email on official business website",
     "notes": "Manually verified official Pacha Kava contact page exposes Chris@PachaKava.Com for the Rockledge lounge; verify decision maker before sending."
   },
+  "playa-bowls": {
+    "email": "info@playabowls.com",
+    "sourceUrls": [
+      "https://register.tapmango.com/merchant/vPLKxBwSmS3Eu7vUhKgJw?register=true",
+      "https://www.avenueviera.com/tenants/playa-bowls/",
+      "https://www.playabowls.com/"
+    ],
+    "sourceType": "public loyalty/register listing for Viera location",
+    "notes": "Manually verified public Playa Bowls Viera listing exposes info@playabowls.com alongside the local Avenue Viera address; verify decision maker before sending."
+  },
   "poke-fin-viera": {
     "email": "vi@pokefin.com",
     "sourceUrls": [
@@ -400,6 +410,16 @@
     "sourceType": "public mailto link on business website",
     "notes": "Auto-discovered public email from https://premiervet.org/contact/; verify decision maker before sending."
   },
+  "nothing-bundt-cakes": {
+    "email": "melbourne@nothingbundtcakes.com",
+    "sourceUrls": [
+      "https://nextdoor.com/pages/nothing-bundt-cakes-melbourne-fl/",
+      "https://www.facebook.com/NBCMelbourneFL/",
+      "https://www.nothingbundtcakes.com/"
+    ],
+    "sourceType": "public business profile and public social listing",
+    "notes": "Manually verified public Nothing Bundt Cakes Melbourne/Viera listings expose melbourne@nothingbundtcakes.com; verify decision maker before sending."
+  },
   "suntree-chiropractic": {
     "email": "info@suntreechiropractic.com",
     "sourceUrls": [
@@ -407,6 +427,16 @@
     ],
     "sourceType": "public email on business website",
     "notes": "Auto-discovered public email from https://www.suntreechiropractic.com/; verify decision maker before sending."
+  },
+  "sport-clips": {
+    "email": "chairman@weventure.fit",
+    "sourceUrls": [
+      "https://weventure.fit/partner-directory/Details/sport-clips-viera-4042819",
+      "https://sportclips.com/us-fl-melbourne-fl208",
+      "https://www.avenueviera.com/tenants/sport-clips/"
+    ],
+    "sourceType": "public partner-directory contact listing for Viera location",
+    "notes": "Manually verified public partner directory listing exposes chairman@weventure.fit for Sport Clips Viera; verify decision maker before sending."
   },
   "skin-laundry": {
     "email": "melbourne@skinlaundry.com",

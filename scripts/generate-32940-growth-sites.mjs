@@ -180,12 +180,12 @@ const baseProspects = [
     focus: ['Pizza menu structure', 'Family and catering prompts', 'Local search coverage'],
   },
   {
-    slug: 'poke-boba',
-    name: 'Poke Boba',
+    slug: 'poke-fin-viera',
+    name: 'Poke Fin Viera',
     category: 'poke and boba shop',
-    audience: 'customers looking for poke bowls, boba drinks, and quick meals',
-    action: 'view bowls, drinks, and visit details',
-    focus: ['Visual menu sections', 'Order and visit CTAs', 'Weekly posts for poke and boba searches'],
+    audience: 'customers looking for fresh poke bowls, boba drinks, and quick meals near Viera',
+    action: 'view bowls, drinks, and ordering details',
+    focus: ['Visual menu sections', 'Order and visit CTAs', 'Weekly posts for poke, boba, and healthy lunch searches'],
   },
   {
     slug: 'pristine-spa',
@@ -1410,6 +1410,7 @@ function renderIndex() {
 `;
 }
 
+await fs.rm(outDir, { recursive: true, force: true });
 await fs.mkdir(outDir, { recursive: true });
 
 for (const [index, prospect] of prospects.entries()) {

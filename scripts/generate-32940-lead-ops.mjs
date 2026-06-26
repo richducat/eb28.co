@@ -82,6 +82,14 @@ const verifiedContacts = {
     sourceUrls: ['https://fairwaycigarlounge.com/', 'https://fairwaycigarlounge.com/pages/privacy-policy'],
     sourceType: 'owned website',
   },
+  'flying-burro': {
+    email: 'flyingburroviera@gmail.com',
+    phone: '(321) 208-8970',
+    address: '2348 Citadel Way #105, Melbourne, FL 32940',
+    website: 'https://flyingburrofl.com/page/contact-us',
+    sourceUrls: ['https://flyingburrofl.com/page/contact-us', 'https://flyingburrofl.com/flyingburroviera-bu407w'],
+    sourceType: 'owned website',
+  },
   'genna-pizza-express': {
     email: 'admin@gennapizzaexpress.com',
     phone: '(321) 462-4020',
@@ -91,6 +99,14 @@ const verifiedContacts = {
     sourceType: 'owned website',
     notes: 'Contact page also exposes the store phone and a contact form.',
   },
+  'harbor-city-animal-hospital': {
+    email: 'info@harborcityanimal.com',
+    phone: '(321) 757-7381',
+    address: '7670 N Wickham Road, Suite B, Melbourne, FL 32940',
+    website: 'https://harborcityanimal.com/',
+    sourceUrls: ['https://harborcityanimal.com/', 'https://harborcityanimal.com/services/'],
+    sourceType: 'owned website',
+  },
   'olive-tree-greek-grill': {
     email: 'customerservice@olivetreegreekgrill.com',
     phone: '(321) 631-0188',
@@ -99,6 +115,14 @@ const verifiedContacts = {
     sourceUrls: ['https://olivetreegreekgrill.com/contact-us/', 'https://www.instagram.com/olivetreegreekgrill/'],
     sourceType: 'owned website plus Instagram profile',
     notes: 'Owned website confirms location and phone; Instagram profile publishes the email.',
+  },
+  'the-salty-bagel': {
+    email: 'saltybagelandgrill@gmail.com',
+    phone: '',
+    address: 'Suntree, Melbourne, FL 32940',
+    website: 'https://www.saltybagel.co/contact',
+    sourceUrls: ['https://www.saltybagel.co/contact', 'https://www.saltybagel.co/menu'],
+    sourceType: 'owned website',
   },
   'urban-prime': {
     email: 'Info@UrbanPrimeFoods.com',
@@ -153,6 +177,13 @@ const callOrFormContacts = {
     sourceUrls: ['https://fujiyamamelbourne.com/about-us'],
     sourceType: 'owned website',
   },
+  'gatto-s-tire-and-auto-services': {
+    phone: '(321) 308-2468',
+    address: '7205 Dolina Ct, Viera, FL 32940',
+    website: 'https://www.gattos.com/Locations/Mode/3/7205-Dolina-Ct-Viera-FL-32940/details',
+    sourceUrls: ['https://www.gattos.com/Locations/Mode/3/7205-Dolina-Ct-Viera-FL-32940/details', 'https://www.gattos.com/Locations/Contact'],
+    sourceType: 'owned website',
+  },
   'luxy-nail-spa': {
     phone: '(321) 423-3873',
     address: 'Melbourne, FL 32940',
@@ -166,6 +197,13 @@ const callOrFormContacts = {
     website: 'https://olivetreegreekgrill.com/contact-us/',
     sourceUrls: ['https://olivetreegreekgrill.com/contact-us/'],
     sourceType: 'owned website',
+  },
+  'poke-fin-viera': {
+    phone: '(321) 241-4742',
+    address: '7500 Lake Andrew Dr, Viera, FL 32940',
+    website: 'https://pokefin.com/',
+    sourceUrls: ['https://pokefin.com/', 'https://ma-restaurant-dba-poke-fin-viera.square.site/'],
+    sourceType: 'owned website plus ordering profile',
   },
   'pristine-spa': {
     phone: '(407) 577-6796',
@@ -194,6 +232,13 @@ const callOrFormContacts = {
     website: 'https://www.suntreefloristmelbourne.com/contact_us.php',
     sourceUrls: ['https://www.suntreefloristmelbourne.com/contact_us.php'],
     sourceType: 'owned website',
+  },
+  'suntree-flower-shop': {
+    phone: '(321) 425-6111',
+    address: '7720 N Wickham Rd Suite 104, Melbourne, FL 32940',
+    website: 'https://suntreeflowershop.com/',
+    sourceUrls: ['https://www.flowershopnetwork.com/floristProfile/656516', 'https://verovine.com/business/suntree-flower-shop/'],
+    sourceType: 'florist network profile plus local directory',
   },
   'urban-prime': {
     phone: '(321) 499-1188',

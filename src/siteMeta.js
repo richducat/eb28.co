@@ -26,6 +26,7 @@ export const THOMAS_CUSTOM_HOMES_SITE_ORIGIN = THOMAS_PRIMARY_ORIGIN;
 const THOMAS_CUSTOM_HOMES_IMAGE = `${SITE_ORIGIN}/tch/og-image.png`;
 const THOMAS_CUSTOM_HOMES_CUSTOM_DOMAIN_IMAGE = `${THOMAS_CUSTOM_HOMES_SITE_ORIGIN}/og-image.png`;
 const MELBOURNE_WEB_STUDIO_CANONICAL_URL = `${SITE_ORIGIN}/melbournewebstudio/`;
+const FREE_WEBSITE_BUILD_CANONICAL_URL = `${SITE_ORIGIN}/free-website-build/`;
 
 const ORGANIZATION_SCHEMA = {
     '@context': 'https://schema.org',
@@ -415,6 +416,67 @@ const ROUTE_META = {
             },
         ],
     },
+    freewebsitebuild: {
+        ...BASE_ROUTE_META,
+        key: 'freewebsitebuild',
+        path: '/free-website-build/',
+        canonicalUrlOverride: FREE_WEBSITE_BUILD_CANONICAL_URL,
+        title: 'Free Website Build for Local Businesses | $98/mo Growth Hosting | EB28',
+        description:
+            'EB28 builds a free local business website concept before you pay. Approved sites can launch on $98/month Growth Hosting with managed hosting, SEO, weekly content, and lead routing to social@eb28.co.',
+        image: DEFAULT_IMAGE,
+        siteName: 'EB28 Growth Hosting',
+        themeColor: '#fafaf9',
+        colorScheme: 'light',
+        includeInSitemap: true,
+        structuredData: [
+            ORGANIZATION_SCHEMA,
+            {
+                '@context': 'https://schema.org',
+                '@type': 'Service',
+                name: 'Free Website Build + EB28 Growth Hosting',
+                serviceType: 'Local business website design, hosting, SEO, and weekly content',
+                url: FREE_WEBSITE_BUILD_CANONICAL_URL,
+                areaServed: ['Melbourne, Florida', 'Brevard County, Florida', 'Florida', 'United States'],
+                provider: {
+                    '@id': ORGANIZATION_ID,
+                },
+                offers: {
+                    '@type': 'Offer',
+                    price: '98',
+                    priceCurrency: 'USD',
+                    description:
+                        'Free website concept build before approval; Growth Hosting is $98/month after owner approval.',
+                    availability: 'https://schema.org/InStock',
+                    url: FREE_WEBSITE_BUILD_CANONICAL_URL,
+                },
+            },
+            {
+                '@context': 'https://schema.org',
+                '@type': 'FAQPage',
+                mainEntity: [
+                    {
+                        '@type': 'Question',
+                        name: 'Is the website build really free?',
+                        acceptedAnswer: {
+                            '@type': 'Answer',
+                            text:
+                                'EB28 prepares the first working website concept at no upfront cost. Hosting starts only if the owner approves the site for launch.',
+                        },
+                    },
+                    {
+                        '@type': 'Question',
+                        name: 'What is included in Growth Hosting?',
+                        acceptedAnswer: {
+                            '@type': 'Answer',
+                            text:
+                                'Growth Hosting includes managed hosting, SSL, technical upkeep, local SEO structure, performance checks, and one weekly local blog post or Google Business content prompt.',
+                        },
+                    },
+                ],
+            },
+        ],
+    },
     weedauthority: {
         ...BASE_ROUTE_META,
         key: 'weedauthority',
@@ -547,6 +609,8 @@ export const STATIC_ROUTE_OUTPUTS = [
         outputPath: page.slug === '' ? 'tch/index.html' : `tch/${page.slug}/index.html`,
     })),
     { routeKey: 'melbournewebstudio', outputPath: 'melbournewebstudio/index.html' },
+    { routeKey: 'freewebsitebuild', outputPath: 'free-website-build/index.html' },
+    { routeKey: 'freewebsitebuild', outputPath: 'free-local-business-website/index.html' },
     { routeKey: 'weedauthority', outputPath: 'weedauthority/index.html' },
     { routeKey: 'cc', outputPath: 'cc/index.html' },
     { routeKey: 'dash', outputPath: 'dash/index.html' },
@@ -636,6 +700,13 @@ export function detectRouteKey({ pathname = '/', hostname = '' } = {}) {
         normalizedHostname === 'melbournewebstudio.eb28.co'
     ) {
         return 'melbournewebstudio';
+    }
+
+    if (
+        normalizedPathname === '/free-website-build' ||
+        normalizedPathname === '/free-local-business-website'
+    ) {
+        return 'freewebsitebuild';
     }
 
     if (

@@ -324,7 +324,8 @@ const App = () => {
               <button onClick={() => scrollToSection('portfolio')} className="text-slate-300 hover:text-white transition-colors text-sm font-medium uppercase tracking-wide">Portfolio</button>
               <button onClick={() => scrollToSection('deployments')} className="text-slate-300 hover:text-white transition-colors text-sm font-medium uppercase tracking-wide">Deployments</button>
               <a href="/blog/" className="text-slate-300 hover:text-white transition-colors text-sm font-medium uppercase tracking-wide">Blog</a>
-              <a href="/melbournewebstudio/#quiz" className="text-slate-300 hover:text-white transition-colors text-sm font-medium uppercase tracking-wide">Melbourne Studio</a>
+              <a href="/free-website-build/" className="text-slate-300 hover:text-white transition-colors text-sm font-medium uppercase tracking-wide">Free Website Build</a>
+              <a href="/melbournewebstudio/" className="text-slate-300 hover:text-white transition-colors text-sm font-medium uppercase tracking-wide">Melbourne Studio</a>
               <a href="/reconcile/" className="text-cyan-300 hover:text-cyan-200 transition-colors text-sm font-medium uppercase tracking-wide">Recon Agent</a>
               <button onClick={() => scrollToSection('packages')} className="text-slate-300 hover:text-white transition-colors text-sm font-medium uppercase tracking-wide text-blue-400">$10 AI Offer</button>
               <button onClick={() => scrollToSection('contact')} className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-full font-bold text-sm transition-all transform hover:scale-105 shadow-lg shadow-blue-600/30">
@@ -355,7 +356,8 @@ const App = () => {
               <button onClick={() => scrollToSection('portfolio')} className="block w-full text-left px-3 py-3 text-slate-300 hover:bg-slate-700 rounded-md font-medium">Portfolio</button>
               <button onClick={() => scrollToSection('deployments')} className="block w-full text-left px-3 py-3 text-slate-300 hover:bg-slate-700 rounded-md font-medium">Deployments</button>
               <a href="/blog/" className="block w-full text-left px-3 py-3 text-slate-300 hover:bg-slate-700 rounded-md font-medium">Blog</a>
-              <a href="/melbournewebstudio/#quiz" className="block w-full text-left px-3 py-3 text-slate-300 hover:bg-slate-700 rounded-md font-medium">Melbourne Studio</a>
+              <a href="/free-website-build/" className="block w-full text-left px-3 py-3 text-slate-300 hover:bg-slate-700 rounded-md font-medium">Free Website Build</a>
+              <a href="/melbournewebstudio/" className="block w-full text-left px-3 py-3 text-slate-300 hover:bg-slate-700 rounded-md font-medium">Melbourne Studio</a>
               <a href="/reconcile/" className="block w-full text-left px-3 py-3 text-cyan-300 hover:bg-slate-700 rounded-md font-bold">Recon Agent Founder Beta</a>
               <button onClick={() => scrollToSection('packages')} className="block w-full text-left px-3 py-3 text-blue-400 hover:bg-slate-700 rounded-md font-bold">$10 AI Offer</button>
               <button onClick={() => scrollToSection('contact')} className="block w-full text-left px-3 py-3 bg-blue-600 text-white hover:bg-blue-700 rounded-md font-bold mt-4">Architect Your System</button>
@@ -391,7 +393,7 @@ const App = () => {
           </div>
 
           <div className="mb-6 flex flex-col sm:flex-row items-center justify-center gap-3">
-            <a href="/melbournewebstudio/#quiz" className="inline-flex items-center gap-2 rounded-full border border-emerald-300/30 bg-emerald-400/10 px-5 py-2 text-sm font-semibold text-emerald-100 transition-colors hover:bg-emerald-400/15">
+            <a href="/free-website-build/" className="inline-flex items-center gap-2 rounded-full border border-emerald-300/30 bg-emerald-400/10 px-5 py-2 text-sm font-semibold text-emerald-100 transition-colors hover:bg-emerald-400/15">
               Free website build + $98/mo Growth Hosting <ArrowRight className="w-4 h-4" />
             </a>
             <a href="/reconcile/" className="inline-flex items-center gap-2 rounded-full border border-cyan-400/20 bg-cyan-500/10 px-5 py-2 text-sm font-semibold text-cyan-100 transition-colors hover:bg-cyan-500/15">
@@ -411,7 +413,7 @@ const App = () => {
           </p>
 
           <div className="mt-10 flex flex-col sm:flex-row sm:flex-wrap justify-center gap-4">
-            <a href="/melbournewebstudio/#quiz" className="group px-8 py-4 bg-white hover:bg-blue-50 text-slate-950 rounded-lg font-bold text-lg transition-all shadow-lg shadow-blue-500/20 flex items-center justify-center transform hover:-translate-y-1">
+            <a href="/free-website-build/" className="group px-8 py-4 bg-white hover:bg-blue-50 text-slate-950 rounded-lg font-bold text-lg transition-all shadow-lg shadow-blue-500/20 flex items-center justify-center transform hover:-translate-y-1">
               Claim Free Website Build <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </a>
             {diyCheckoutUrl ? (

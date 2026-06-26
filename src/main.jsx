@@ -42,6 +42,9 @@ const isThomasCustomHomesRoute =
 const isMelbourneWebStudioRoute =
   pathname === '/melbournewebstudio' ||
   hostname === 'melbournewebstudio.eb28.co';
+const isFreeWebsiteBuildRoute =
+  pathname === '/free-website-build' ||
+  pathname === '/free-local-business-website';
 const isWeedAuthorityRoute =
   pathname === '/weedauthority' ||
   pathname.startsWith('/weedauthority/') ||
@@ -113,6 +116,11 @@ async function renderApp() {
 
   if (isMelbourneWebStudioRoute) {
     await renderRoute(() => import('./MelbourneWebStudioPage.tsx'));
+    return;
+  }
+
+  if (isFreeWebsiteBuildRoute) {
+    await renderRoute(() => import('./FreeWebsiteBuildPage.jsx'));
     return;
   }
 

@@ -1,0 +1,49 @@
+{
+  "brand": "EB28",
+  "generatedAt": "2026-06-26T22:04:47.535Z",
+  "runId": "2026-06-26-pm",
+  "slot": "pm",
+  "article": {
+    "title": "Local RAG System for Business Documents: Implementation Guide",
+    "url": "https://eb28.co/blog/local-rag-system-for-business-documents-a-plain-english-implementation-guide/",
+    "localPath": "/blog/local-rag-system-for-business-documents-a-plain-english-implementation-guide/",
+    "cluster": "private-ai",
+    "primaryKeyword": "local RAG system for business documents"
+  },
+  "posts": {
+    "facebook": {
+      "caption": "Local RAG System for Business Documents: Implementation Guide\n\nA local RAG system is useful only when document scope, access rules, source citations, logging, and human review are clear before the first prompt is written. This refreshed guide shows the safer first step for businesses that want private document search without dumping sensitive files into public tools.\n\nRead it: https://eb28.co/blog/local-rag-system-for-business-documents-a-plain-english-implementation-guide/",
+      "status": "draft_only"
+    },
+    "linkedin": {
+      "caption": "Refreshed EB28 private AI guide: Local RAG System for Business Documents: Implementation Guide\n\nThe strongest local RAG builds start narrow: one trusted document set, clear staff permissions, cited answers, refusal outside scope, and a review path for sensitive workflows. That is the difference between a demo and a business system people can trust.\n\nhttps://eb28.co/blog/local-rag-system-for-business-documents-a-plain-english-implementation-guide/",
+      "status": "draft_only"
+    },
+    "instagram": {
+      "caption": "Local RAG for business documents: start with the data boundary.\n\nPick one document set. Define who can see it. Require source citations. Keep human review for sensitive answers. Then connect the workflow to real lead or staff outcomes.\n\nFull guide: eb28.co/blog/",
+      "creativeBrief": "Carousel: Slide 1 private document search without public chatbot risk, Slide 2 narrow document scope, Slide 3 access rules and source citations, Slide 4 human review path, Slide 5 CTA to EB28 project brief.",
+      "status": "draft_only"
+    },
+    "shortFormVideo": {
+      "hook": "A local RAG build should start with access rules, not model choice.",
+      "script": "Open on a messy folder of SOPs, client notes, policies, and finance files. Show the first safe move: choose one document set, classify access, require source citations, log answers, and keep human review for sensitive decisions. Close on the EB28 Local RAG guide and the Melbourne Web Studio project brief.",
+      "shotList": [
+        "Screen of mixed business documents being sorted into access groups",
+        "Simple retrieval flow: question, source document, cited answer, review flag",
+        "Checklist of what stays private and what can be automated",
+        "EB28 Local RAG guide URL with Melbourne Web Studio CTA"
+      ],
+      "caption": "Start with document scope and source citations before choosing the model.",
+      "status": "draft_only"
+    }
+  },
+  "publishGate": {
+    "status": "draft_only",
+    "reason": "No EB28-owned social channel was verified by repo script or connector during this run.",
+    "verifiedChannels": []
+  },
+  "socialPublishGuard": {
+    "status": "buffer_ready_pending_verified_channels",
+    "note": "No external social publishing was attempted. Publishing stays blocked until the API account, organization, exact channel IDs, and EB28-owned channels verify successfully."
+  }
+}

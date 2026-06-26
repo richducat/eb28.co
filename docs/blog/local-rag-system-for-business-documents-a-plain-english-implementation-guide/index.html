@@ -4,19 +4,19 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Local RAG System for Business Documents: Implementation Guide | EB28</title>
-    <meta name="description" content="A plain-English implementation guide for secure local RAG: document scope, access rules, source citations, review paths, and when to turn it into an EB28 build." />
+    <meta name="description" content="A plain-English implementation guide for secure local RAG: document scope, access rules, source citations, review paths, and how to turn private document search into a scoped EB28 build." />
     <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
     <link rel="canonical" href="https://eb28.co/blog/local-rag-system-for-business-documents-a-plain-english-implementation-guide/" />
     <meta property="og:locale" content="en_US" />
     <meta property="og:site_name" content="EB28" />
     <meta property="og:type" content="article" />
     <meta property="og:title" content="Local RAG System for Business Documents: Implementation Guide | EB28" />
-    <meta property="og:description" content="A plain-English implementation guide for secure local RAG: document scope, access rules, source citations, review paths, and when to turn it into an EB28 build." />
+    <meta property="og:description" content="A plain-English implementation guide for secure local RAG: document scope, access rules, source citations, review paths, and how to turn private document search into a scoped EB28 build." />
     <meta property="og:url" content="https://eb28.co/blog/local-rag-system-for-business-documents-a-plain-english-implementation-guide/" />
     <meta property="og:image" content="https://eb28.co/assets/execution_grid.png" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Local RAG System for Business Documents: Implementation Guide | EB28" />
-    <meta name="twitter:description" content="A plain-English implementation guide for secure local RAG: document scope, access rules, source citations, review paths, and when to turn it into an EB28 build." />
+    <meta name="twitter:description" content="A plain-English implementation guide for secure local RAG: document scope, access rules, source citations, review paths, and how to turn private document search into a scoped EB28 build." />
     <meta name="twitter:image" content="https://eb28.co/assets/execution_grid.png" />
     <style>
     :root {
@@ -339,7 +339,7 @@
       .hero-inner, .section, .article-shell { padding: 3rem 1rem; }
     }
   </style>
-    <script type="application/ld+json">[{"@context":"https://schema.org","@type":"BlogPosting","headline":"Local RAG System for Business Documents: Implementation Guide","description":"A plain-English implementation guide for secure local RAG: document scope, access rules, source citations, review paths, and when to turn it into an EB28 build.","mainEntityOfPage":"https://eb28.co/blog/local-rag-system-for-business-documents-a-plain-english-implementation-guide/","url":"https://eb28.co/blog/local-rag-system-for-business-documents-a-plain-english-implementation-guide/","datePublished":"2026-06-04","dateModified":"2026-06-21","author":{"@type":"Organization","name":"EB28","url":"https://eb28.co"},"publisher":{"@type":"Organization","name":"EB28","url":"https://eb28.co","logo":{"@type":"ImageObject","url":"https://eb28.co/favicon.svg"}},"image":"https://eb28.co/assets/execution_grid.png","keywords":["local RAG system for business documents","private-ai"]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://eb28.co/"},{"@type":"ListItem","position":2,"name":"Blog","item":"https://eb28.co/blog/"},{"@type":"ListItem","position":3,"name":"Local RAG System for Business Documents: Implementation Guide","item":"https://eb28.co/blog/local-rag-system-for-business-documents-a-plain-english-implementation-guide/"}]},{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is a local RAG system for business documents?","acceptedAnswer":{"@type":"Answer","text":"It is a private document search and answer system that retrieves relevant company files first, then uses AI to draft an answer from those sources. The goal is faster staff access to trusted knowledge without exposing sensitive documents to uncontrolled public tools."}},{"@type":"Question","name":"What should a business prepare before building one?","acceptedAnswer":{"@type":"Answer","text":"Start with a narrow document set, clear access rules, source-citation requirements, logging expectations, and a human review path for sensitive answers. That scope makes the first build easier to test and safer to expand."}}]}]</script>
+    <script type="application/ld+json">[{"@context":"https://schema.org","@type":"BlogPosting","headline":"Local RAG System for Business Documents: Implementation Guide","description":"A plain-English implementation guide for secure local RAG: document scope, access rules, source citations, review paths, and how to turn private document search into a scoped EB28 build.","mainEntityOfPage":"https://eb28.co/blog/local-rag-system-for-business-documents-a-plain-english-implementation-guide/","url":"https://eb28.co/blog/local-rag-system-for-business-documents-a-plain-english-implementation-guide/","datePublished":"2026-06-04","dateModified":"2026-06-26","author":{"@type":"Organization","name":"EB28","url":"https://eb28.co"},"publisher":{"@type":"Organization","name":"EB28","url":"https://eb28.co","logo":{"@type":"ImageObject","url":"https://eb28.co/favicon.svg"}},"image":"https://eb28.co/assets/execution_grid.png","keywords":["local RAG system for business documents","private-ai"]},{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://eb28.co/"},{"@type":"ListItem","position":2,"name":"Blog","item":"https://eb28.co/blog/"},{"@type":"ListItem","position":3,"name":"Local RAG System for Business Documents: Implementation Guide","item":"https://eb28.co/blog/local-rag-system-for-business-documents-a-plain-english-implementation-guide/"}]},{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What is a local RAG system for business documents?","acceptedAnswer":{"@type":"Answer","text":"It is a private document search and answer system that retrieves relevant company files first, then uses AI to draft an answer from those sources. The goal is faster staff access to trusted knowledge without exposing sensitive documents to uncontrolled public tools."}},{"@type":"Question","name":"What should a business prepare before building one?","acceptedAnswer":{"@type":"Answer","text":"Start with a narrow document set, clear access rules, source-citation requirements, logging expectations, and a human review path for sensitive answers. That scope makes the first build easier to test and safer to expand."}}]}]</script>
     <script>(function(){fetch('/analytics-config.json',{cache:'no-store'}).then(function(r){return r.ok?r.json():null;}).then(function(cfg){var id=cfg&&String(cfg.ga4MeasurementId||'').trim();if(!id)return;var s=document.createElement('script');s.async=true;s.src='https://www.googletagmanager.com/gtag/js?id='+encodeURIComponent(id);document.head.appendChild(s);window.dataLayer=window.dataLayer||[];function gtag(){window.dataLayer.push(arguments);}window.gtag=gtag;gtag('js',new Date());gtag('config',id);}).catch(function(){});})();</script>
   </head>
   <body>
@@ -364,9 +364,9 @@
     <main id="main-content">
       <section class="hero">
         <div class="hero-inner">
-          <p class="eyebrow">Morning growth brief</p>
+          <p class="eyebrow">Evening growth brief</p>
           <h1>Local RAG System for Business Documents: Implementation Guide</h1>
-          <p class="lead">Refreshed private AI guide for owners who want secure document search, source citations, safer staff workflows, and a scoped first step before connecting company files to AI.</p>
+          <p class="lead">Refreshed private AI guide for owners who want secure document search, source citations, staff access rules, and a scoped first step before connecting company files to AI.</p>
           <div class="meta-row">
             <span class="pill">local RAG system for business documents</span>
             <span class="pill">June 4, 2026</span>

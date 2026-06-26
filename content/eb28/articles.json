@@ -2267,15 +2267,15 @@
   {
     "slug": "local-rag-system-for-business-documents-a-plain-english-implementation-guide",
     "title": "Local RAG System for Business Documents: Implementation Guide",
-    "description": "A plain-English implementation guide for secure local RAG: document scope, access rules, source citations, review paths, and when to turn it into an EB28 build.",
+    "description": "A plain-English implementation guide for secure local RAG: document scope, access rules, source citations, review paths, and how to turn private document search into a scoped EB28 build.",
     "cluster": "private-ai",
     "primaryKeyword": "local RAG system for business documents",
     "datePublished": "2026-06-04",
-    "dateModified": "2026-06-21",
+    "dateModified": "2026-06-26",
     "author": "EB28",
-    "heroLabel": "Morning growth brief",
-    "sourceRunId": "2026-06-21-am",
-    "summary": "Refreshed private AI guide for owners who want secure document search, source citations, safer staff workflows, and a scoped first step before connecting company files to AI.",
+    "heroLabel": "Evening growth brief",
+    "sourceRunId": "2026-06-26-pm",
+    "summary": "Refreshed private AI guide for owners who want secure document search, source citations, staff access rules, and a scoped first step before connecting company files to AI.",
     "sections": [
       {
         "heading": "Why this search matters",

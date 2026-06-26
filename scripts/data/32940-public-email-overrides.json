@@ -614,6 +614,16 @@
     "sourceType": "public official corporate customer-service email",
     "notes": "Manually verified official Soma contact page exposes customerservice@soma.com; Avenue Viera verifies the local store listing. Corporate route; ask to forward to the local store or district manager."
   },
+  "j-crew-factory": {
+    "email": "help@jcrew.com",
+    "sourceUrls": [
+      "https://factory.jcrew.com/help/contact-us",
+      "https://factory.jcrew.com/r/feature/pages/reopening-stores",
+      "https://www.avenueviera.com/tenants/j-crew-factory/"
+    ],
+    "sourceType": "public official corporate customer-service email",
+    "notes": "Manually verified official J.Crew Factory support pages expose the Email Us support path and official J.Crew support email help@jcrew.com; Avenue Viera verifies the local J.Crew Factory store listing. Corporate route; ask to forward to the local store or district manager."
+  },
   "j-mclaughlin": {
     "email": "customerservice@jmclaughlin.com",
     "sourceUrls": [
@@ -752,6 +762,46 @@
     ],
     "sourceType": "public official corporate customer-service email",
     "notes": "Manually verified official Kay contact page exposes kayccs@kay.com for customer-care follow-up; Avenue Viera verifies the local jewelry store listing. Corporate route; ask to forward to the local store or district manager."
+  },
+  "massage-envy": {
+    "email": "guestrelations@massageenvy.com",
+    "sourceUrls": [
+      "https://www.massageenvy.com/legal/terms-and-conditions",
+      "https://www.massageenvy.com/",
+      "https://www.avenueviera.com/tenants/massage-envy/"
+    ],
+    "sourceType": "public official corporate customer-care email",
+    "notes": "Manually verified official Massage Envy terms page exposes guestrelations@massageenvy.com for customer-care support; Avenue Viera verifies the local franchised location listing. Corporate/franchise route; ask to forward to the local franchise owner, operator, or district manager."
+  },
+  "european-wax-center": {
+    "email": "guestservices@waxcenter.com",
+    "sourceUrls": [
+      "https://waxcenter.com/policies/refund-policy",
+      "https://waxcenter.com/pages/contact-us",
+      "https://www.avenueviera.com/tenants/european-wax-center/"
+    ],
+    "sourceType": "public official corporate guest-services email",
+    "notes": "Manually verified official European Wax Center policy/contact pages expose guestservices@waxcenter.com; Avenue Viera verifies the local center listing. Corporate/franchise route; ask to forward to the local franchise owner, operator, or district manager."
+  },
+  "gifts-more-at-the-paper-store": {
+    "email": "customerservice@thepaperstore.com",
+    "sourceUrls": [
+      "https://www.thepaperstore.com/contact-us",
+      "https://www.thepaperstore.com/register",
+      "https://www.avenueviera.com/tenants/gifts-more-at-the-paper-store/"
+    ],
+    "sourceType": "public official corporate customer-service email",
+    "notes": "Manually verified official The Paper Store contact/account pages expose customerservice@thepaperstore.com; Avenue Viera verifies the local Gifts & More at The Paper Store listing. Corporate route; ask to forward to the local store or district manager."
+  },
+  "belk": {
+    "email": "Belk_Customer_Care@belk.com",
+    "sourceUrls": [
+      "https://www.belk.com/customer-service/policies-guidelines/text-terms-of-use/",
+      "https://www.belk.com/customer-service/",
+      "https://www.avenueviera.com/tenants/belk/"
+    ],
+    "sourceType": "public official corporate customer-service email",
+    "notes": "Manually verified official Belk customer-service/legal pages expose Belk_Customer_Care@belk.com; Avenue Viera verifies the local department store listing. Corporate route; ask to forward to the local store or district manager."
   },
   "viera-dental": {
     "email": "vieradental@heartlanddentalcare.com",

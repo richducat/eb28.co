@@ -733,6 +733,11 @@ function renderBookedCallTracker(prospects, existingRows = []) {
     const status = existing.status || 'not_started';
     const bookedCallStatus = existing.booked_call_status || prospect.bookedCallStatus || 'not_booked';
     const newlyActionable = existing.stage === 'research_needed' && prospect.outreachStage !== 'research_needed' && status === 'not_started';
+    const routeChangedToVerifiedEmail = Boolean(prospect.verifiedEmail && existing.email !== prospect.verifiedEmail);
+    const hasStaleGenericRouteNote = String(existing.notes || '').startsWith('Avenue tenant page is the first verified contact route');
+    const routeNote = routeChangedToVerifiedEmail || hasStaleGenericRouteNote
+      ? prospect.notes || existing.notes || ''
+      : existing.notes || prospect.notes || '';
     const nextTouch = bookedCallStatus === 'booked' || status === 'not_interested'
       ? ''
       : newlyActionable
@@ -758,7 +763,7 @@ function renderBookedCallTracker(prospects, existingRows = []) {
       booked_call_source: existing.booked_call_source || '',
       booked_call_evidence: existing.booked_call_evidence || '',
       owner_contact_name: existing.owner_contact_name || '',
-      notes: existing.notes || prospect.notes || '',
+      notes: routeNote,
       mailto: makeMailto(prospect),
     };
   });

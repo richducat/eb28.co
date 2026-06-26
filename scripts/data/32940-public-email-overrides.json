@@ -605,6 +605,65 @@
     "sourceType": "public official store directory email",
     "notes": "Manually verified official Kendra Scott store directory exposes theavenueviera@kendrascott.com for the Melbourne The Avenue Viera store; verify decision maker before sending."
   },
+  "soma": {
+    "email": "customerservice@soma.com",
+    "sourceUrls": [
+      "https://www.soma.com/store/page/contact-us",
+      "https://www.avenueviera.com/tenants/soma/"
+    ],
+    "sourceType": "public official corporate customer-service email",
+    "notes": "Manually verified official Soma contact page exposes customerservice@soma.com; Avenue Viera verifies the local store listing. Corporate route; ask to forward to the local store or district manager."
+  },
+  "j-mclaughlin": {
+    "email": "customerservice@jmclaughlin.com",
+    "sourceUrls": [
+      "https://www.jmclaughlin.com/pages/accessibility",
+      "https://www.jmclaughlin.com/pages/return-policy",
+      "https://www.avenueviera.com/tenants/j-mclaughlin/"
+    ],
+    "sourceType": "public official corporate customer-service email",
+    "notes": "Manually verified official J.McLaughlin pages expose customerservice@jmclaughlin.com; Avenue Viera verifies the local store listing. Corporate route; ask to forward to the local store or district manager."
+  },
+  "the-good-feet-store": {
+    "email": "support@goodfeet.com",
+    "sourceUrls": [
+      "https://www.goodfeet.com/contact-us",
+      "https://www.goodfeet.com/locations/fl/melbourne",
+      "https://www.avenueviera.com/tenants/the-good-feet-store/"
+    ],
+    "sourceType": "public official corporate support email",
+    "notes": "Manually verified official Good Feet contact page exposes support@goodfeet.com and official location page verifies the Melbourne store. Corporate route; ask to forward to the local store or district manager."
+  },
+  "chicos": {
+    "email": "customerservice@chicos.com",
+    "sourceUrls": [
+      "https://www.chicos.com/store/page/contact-us",
+      "https://www.chicos.com/store/page/returns-info",
+      "https://www.avenueviera.com/tenants/chicos/"
+    ],
+    "sourceType": "public official corporate customer-service email",
+    "notes": "Manually verified official Chico's contact and returns pages expose customerservice@chicos.com; Avenue Viera verifies the local boutique listing. Corporate route; ask to forward to the local store or district manager."
+  },
+  "sephora": {
+    "email": "customerservice@sephora.com",
+    "sourceUrls": [
+      "https://www.sephora.com/beauty/email-subscriptions",
+      "https://www.sephora.com/beauty/terms-conditions-beauty-insider",
+      "https://www.avenueviera.com/tenants/sephora/"
+    ],
+    "sourceType": "public official corporate customer-service email",
+    "notes": "Manually verified official Sephora pages expose customerservice@sephora.com; Avenue Viera verifies the local store listing. Corporate route; ask to forward to the local store or district manager."
+  },
+  "ethan-allen": {
+    "email": "customerservice@ethanallen.com",
+    "sourceUrls": [
+      "https://www.ethanallen.com/en_US/contact.html",
+      "https://www.ethanallen.com/",
+      "https://www.avenueviera.com/tenants/ethan-allen/"
+    ],
+    "sourceType": "public official corporate customer-service email",
+    "notes": "Manually verified official Ethan Allen contact pages expose customerservice@ethanallen.com; Avenue Viera verifies the local design center listing. Corporate route; ask to forward to the local design center or district manager."
+  },
   "viera-dental": {
     "email": "vieradental@heartlanddentalcare.com",
     "sourceUrls": [

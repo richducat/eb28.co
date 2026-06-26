@@ -46,6 +46,16 @@
     "sourceType": "public mailto link on business website",
     "notes": "Auto-discovered public email from https://www.eatz-eatery.com/contact/; verify decision maker before sending."
   },
+  "escapology": {
+    "email": "viera@escapology.com",
+    "sourceUrls": [
+      "https://www.escapology.com/en/viera-fl/contact",
+      "https://www.escapology.com/en/viera-fl/news/tech-or-no-tech",
+      "https://www.avenueviera.com/tenants/escapology/"
+    ],
+    "sourceType": "public email on official Viera contact page",
+    "notes": "Manually verified official Escapology Viera contact page exposes viera@escapology.com for the Avenue Viera location; verify decision maker before sending."
+  },
   "fairway-cigar-lounge": {
     "email": "tbaruti@fairwaycigarlounge.com",
     "sourceUrls": [
@@ -365,6 +375,16 @@
     ],
     "sourceType": "public email on business website",
     "notes": "Auto-discovered public email from https://budsandbowsfloraldesign.com/; verify decision maker before sending."
+  },
+  "burn-boot-camp": {
+    "email": "viera@burnbootcamp.com",
+    "sourceUrls": [
+      "https://www.facebook.com/burnbootcampvierafl/",
+      "https://locations.burnbootcamp.com/locations/viera-fl/",
+      "https://www.avenueviera.com/tenants/burn-boot-camp/"
+    ],
+    "sourceType": "public social contact listing for Viera location",
+    "notes": "Manually verified public Burn Boot Camp Viera profile exposes viera@burnbootcamp.com for the location; verify decision maker before sending."
   },
   "suntree-florist-gifts": {
     "email": "suntreefloristandgifts@gmail.com",

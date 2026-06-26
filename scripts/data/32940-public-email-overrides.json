@@ -764,14 +764,15 @@
     "notes": "Manually verified official Kay contact page exposes kayccs@kay.com for customer-care follow-up; Avenue Viera verifies the local jewelry store listing. Corporate route; ask to forward to the local store or district manager."
   },
   "massage-envy": {
-    "email": "guestrelations@massageenvy.com",
+    "email": "clinic0968@massageenvy.com",
     "sourceUrls": [
-      "https://www.massageenvy.com/legal/terms-and-conditions",
-      "https://www.massageenvy.com/",
+      "https://www.facebook.com/MassageEnvySpaViera/",
+      "https://nextdoor.com/pages/massage-envy-melbourne-fl/",
+      "https://locations.massageenvy.com/florida/melbourne/2261-town-center-ave.html",
       "https://www.avenueviera.com/tenants/massage-envy/"
     ],
-    "sourceType": "public official corporate customer-care email",
-    "notes": "Manually verified official Massage Envy terms page exposes guestrelations@massageenvy.com for customer-care support; Avenue Viera verifies the local franchised location listing. Corporate/franchise route; ask to forward to the local franchise owner, operator, or district manager."
+    "sourceType": "public social and local business profile contact listing",
+    "notes": "Manually verified public Massage Envy Viera social and business profiles expose clinic0968@massageenvy.com for the local franchised location; official location and Avenue Viera pages verify the matching Town Center Avenue address. Ask to forward to the franchise owner, operator, or manager."
   },
   "european-wax-center": {
     "email": "guestservices@waxcenter.com",
@@ -802,6 +803,86 @@
     ],
     "sourceType": "public official corporate customer-service email",
     "notes": "Manually verified official Belk customer-service/legal pages expose Belk_Customer_Care@belk.com; Avenue Viera verifies the local department store listing. Corporate route; ask to forward to the local store or district manager."
+  },
+  "bonefish-grill": {
+    "email": "customerservice@bonefishgrill.com",
+    "sourceUrls": [
+      "https://www.facebook.com/bonefishgrill/",
+      "https://www.bonefishgrill.com/",
+      "https://www.avenueviera.com/tenants/bonefish-grill/"
+    ],
+    "sourceType": "public official brand social customer-service email",
+    "notes": "Manually verified official Bonefish Grill social profile and public brand replies expose customerservice@bonefishgrill.com; official website and Avenue Viera verify the brand and local restaurant listing. Corporate route; ask to forward to the local restaurant operator or district manager."
+  },
+  "loft": {
+    "email": "clientservices@loft.com",
+    "sourceUrls": [
+      "https://www.loft.com/customer-service",
+      "https://www.loft.com/stylerewardsterms/",
+      "https://www.avenueviera.com/tenants/loft/"
+    ],
+    "sourceType": "public official corporate customer-service email",
+    "notes": "Manually verified official LOFT customer-service and styleRewards pages expose clientservices@loft.com; Avenue Viera verifies the local store listing. Corporate route; ask to forward to the local store or district manager."
+  },
+  "lane-bryant": {
+    "email": "clientservices@lanebryant.com",
+    "sourceUrls": [
+      "https://www.facebook.com/LaneBryant/",
+      "https://stores.lanebryant.com/fl/melbourne/6729-colonnade-ave",
+      "https://www.avenueviera.com/tenants/lane-bryant/"
+    ],
+    "sourceType": "public official brand social customer-service email",
+    "notes": "Manually verified official Lane Bryant social profile exposes clientservices@lanebryant.com; official store locator and Avenue Viera verify the local store listing. Corporate route; ask to forward to the local store or district manager."
+  },
+  "lilly-pulitzer": {
+    "email": "service@lillypulitzer.com",
+    "sourceUrls": [
+      "https://www.lillypulitzer.com/cart-checkout/cs-contact-number.html",
+      "https://www.lillypulitzer.com/help/faq.html",
+      "https://www.avenueviera.com/tenants/lilly-pulitzer/"
+    ],
+    "sourceType": "public official corporate customer-service email",
+    "notes": "Manually verified official Lilly Pulitzer contact and FAQ pages expose service@lillypulitzer.com; Avenue Viera verifies the local store listing. Corporate route; ask to forward to the local store or district manager."
+  },
+  "lululemon": {
+    "email": "gec@lululemon.com",
+    "sourceUrls": [
+      "https://shop.lululemon.com/about/sweat-collective-faq",
+      "https://shop.lululemon.com/about/sweat-collective",
+      "https://www.avenueviera.com/tenants/lululemon/"
+    ],
+    "sourceType": "public official corporate guest-education email",
+    "notes": "Manually verified official lululemon Sweat Collective support pages expose gec@lululemon.com for the Guest Education Centre; Avenue Viera verifies the local store listing. Corporate route; ask to forward to the local store, community lead, or district manager."
+  },
+  "kirklands": {
+    "email": "customerservice@kirklands.com",
+    "sourceUrls": [
+      "https://nextdoor.com/pages/kirklands-brick-nj/",
+      "https://www.kirklands.com/",
+      "https://www.avenueviera.com/tenants/kirklands/"
+    ],
+    "sourceType": "public local business profile corporate customer-service email",
+    "notes": "Manually verified public Kirkland's business profile exposes customerservice@kirklands.com and official brand site verifies the retailer; Avenue Viera verifies the local store listing. Corporate route; ask to forward to the local store or district manager."
+  },
+  "cold-stone-creamery": {
+    "email": "info@kahalamgmt.com",
+    "sourceUrls": [
+      "https://www.kahalamgmt.com/about/contactus/",
+      "https://coldstonecreameryfranchise.com/",
+      "https://www.avenueviera.com/tenants/cold-stone-creamery/"
+    ],
+    "sourceType": "public official franchisor corporate email",
+    "notes": "Manually verified official Kahala Brands contact page exposes info@kahalamgmt.com for general corporate questions and official Cold Stone franchising pages verify the brand/franchisor relationship. Corporate/franchise route; ask to forward to the local franchise owner, operator, or district manager."
+  },
+  "sunglass-hut": {
+    "email": "onlinesupport@sghcares.com",
+    "sourceUrls": [
+      "https://www.sunglasshut.com/DeliveryView?catalogId=20602&storeId=10154&urlRequestType=Base",
+      "https://www.sunglasshut.com/CheckoutBillingView?catalogId=20602&langId=-1&storeId=10152",
+      "https://www.avenueviera.com/tenants/sunglass-hut/"
+    ],
+    "sourceType": "public official corporate online-support email",
+    "notes": "Manually verified official Sunglass Hut customer-care/checkout pages expose onlinesupport@sghcares.com; Avenue Viera verifies the local store listing. Corporate route; ask to forward to the local store or district manager."
   },
   "viera-dental": {
     "email": "vieradental@heartlanddentalcare.com",

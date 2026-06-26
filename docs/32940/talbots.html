@@ -245,6 +245,16 @@
         border-radius: 8px;
         background: rgb(255 255 255 / 7%);
       }
+      .form-intro {
+        margin: 0 0 4px;
+        color: #e5e7eb;
+        font-size: 15px;
+      }
+      .field-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+      }
       label {
         display: grid;
         gap: 7px;
@@ -262,7 +272,7 @@
         font: inherit;
       }
       input::placeholder, textarea::placeholder { color: #9ca3af; }
-      textarea { min-height: 118px; resize: vertical; }
+      textarea { min-height: 96px; resize: vertical; }
       .fine {
         color: #9ca3af;
         font-size: 12px;
@@ -288,7 +298,7 @@
         text-align: center;
       }
       @media (max-width: 860px) {
-        .hero-grid, .offer .wrap, .cards, .index-list {
+        .hero-grid, .offer .wrap, .cards, .index-list, .field-grid {
           grid-template-columns: 1fr;
         }
         .wrap { padding: 46px 18px; }
@@ -323,7 +333,7 @@
             </p>
             <div class="hero-actions">
               <a class="btn accent" href="#claim">Claim this free site</a>
-              <a class="btn" href="mailto:social@eb28.co?subject=Claim%20the%20free%20EB28%20website%20for%20Talbots&amp;body=I%20want%20to%20claim%20the%20free%20website%20concept%20for%20Talbots.%0A%0AName%3A%0APhone%3A%0ABest%20time%20to%20talk%3A%0ACurrent%20website%20or%20Google%20listing%3A%0A">Email EB28</a>
+              <a class="btn" href="mailto:social@eb28.co?subject=Book%20the%20free%20EB28%20website%20review%20for%20Talbots&amp;body=I%20want%20to%20claim%20the%20free%20website%20concept%20for%20Talbots%20and%20book%20a%2010-minute%20review%20call.%0A%0AName%3A%0APhone%3A%0ABest%20time%20for%20a%2010-minute%20review%3A%0ACurrent%20website%20or%20Google%20listing%3A%0A">Email EB28</a>
             </div>
           </div>
           <aside class="preview" aria-label="Website concept preview">
@@ -401,28 +411,42 @@
             </ul>
           </div>
           <form action="https://formsubmit.co/social@eb28.co" method="POST" accept-charset="UTF-8">
-            <input type="hidden" name="_subject" value="Claim request: Talbots free EB28 website" />
+            <p class="form-intro">Tell EB28 when to review this free site with you. The request goes straight to social@eb28.co.</p>
+            <input type="hidden" name="_subject" value="Booked review request: Talbots free EB28 website" />
             <input type="hidden" name="_captcha" value="false" />
+            <input type="hidden" name="_template" value="table" />
             <input type="hidden" name="source" value="eb28-32940-talbots" />
             <input type="hidden" name="business" value="Talbots" />
+            <input type="hidden" name="category" value="apparel and fashion retailer" />
+            <input type="hidden" name="concept_url" value="https://eb28.co/32940/talbots.html" />
+            <input type="hidden" name="offer" value="Free website build plus EB28 Growth Hosting at $98/month with SEO and weekly blog posts" />
+            <input type="hidden" name="requested_next_step" value="Claim free website concept and book a 10-minute review call" />
+            <div class="field-grid">
+              <label>
+                Your name
+                <input name="name" autocomplete="name" required placeholder="Name" />
+              </label>
+              <label>
+                Work email
+                <input name="email" type="email" autocomplete="email" required placeholder="you@example.com" />
+              </label>
+            </div>
+            <div class="field-grid">
+              <label>
+                Phone
+                <input name="phone" type="tel" autocomplete="tel" placeholder="Best number" />
+              </label>
+              <label>
+                Best 10-minute review time
+                <input name="preferred_review_time" required placeholder="Today after 3, weekday mornings..." />
+              </label>
+            </div>
             <label>
-              Your name
-              <input name="name" autocomplete="name" required placeholder="Name" />
+              What should EB28 check first?
+              <textarea name="message" placeholder="Optional: current website, Google listing, photos, menu, booking link, or anything that needs to be corrected before launch."></textarea>
             </label>
-            <label>
-              Email
-              <input name="email" type="email" autocomplete="email" required placeholder="you@example.com" />
-            </label>
-            <label>
-              Phone
-              <input name="phone" type="tel" autocomplete="tel" placeholder="Best number" />
-            </label>
-            <label>
-              Message
-              <textarea name="message" required placeholder="I want to claim or discuss this free website concept."></textarea>
-            </label>
-            <button class="btn accent" type="submit">Send claim to social@eb28.co</button>
-            <p class="fine">Prefer email? Send a note to <a href="mailto:social@eb28.co?subject=Claim%20the%20free%20EB28%20website%20for%20Talbots&amp;body=I%20want%20to%20claim%20the%20free%20website%20concept%20for%20Talbots.%0A%0AName%3A%0APhone%3A%0ABest%20time%20to%20talk%3A%0ACurrent%20website%20or%20Google%20listing%3A%0A">social@eb28.co</a>. This concept remains noindex until the business owner approves public use.</p>
+            <button class="btn accent" type="submit">Book my free website review</button>
+            <p class="fine">No obligation. Prefer email? Send a note to <a href="mailto:social@eb28.co?subject=Book%20the%20free%20EB28%20website%20review%20for%20Talbots&amp;body=I%20want%20to%20claim%20the%20free%20website%20concept%20for%20Talbots%20and%20book%20a%2010-minute%20review%20call.%0A%0AName%3A%0APhone%3A%0ABest%20time%20for%20a%2010-minute%20review%3A%0ACurrent%20website%20or%20Google%20listing%3A%0A">social@eb28.co</a>. Reply "no thanks" any time and EB28 will stop following up.</p>
           </form>
         </div>
       </section>

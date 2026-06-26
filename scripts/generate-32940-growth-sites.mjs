@@ -909,9 +909,9 @@ const escapeHtml = (value = '') =>
 const attr = escapeHtml;
 
 function buildMailto(prospect) {
-  const subject = encodeURIComponent(`Claim the free EB28 website for ${prospect.name}`);
+  const subject = encodeURIComponent(`Book the free EB28 website review for ${prospect.name}`);
   const body = encodeURIComponent(
-    `I want to claim the free website concept for ${prospect.name}.\n\nName:\nPhone:\nBest time to talk:\nCurrent website or Google listing:\n`,
+    `I want to claim the free website concept for ${prospect.name} and book a 10-minute review call.\n\nName:\nPhone:\nBest time for a 10-minute review:\nCurrent website or Google listing:\n`,
   );
   return `mailto:${claimEmail}?subject=${subject}&body=${body}`;
 }
@@ -1173,6 +1173,16 @@ function renderProspectPage(prospect, index) {
         border-radius: 8px;
         background: rgb(255 255 255 / 7%);
       }
+      .form-intro {
+        margin: 0 0 4px;
+        color: #e5e7eb;
+        font-size: 15px;
+      }
+      .field-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+      }
       label {
         display: grid;
         gap: 7px;
@@ -1190,7 +1200,7 @@ function renderProspectPage(prospect, index) {
         font: inherit;
       }
       input::placeholder, textarea::placeholder { color: #9ca3af; }
-      textarea { min-height: 118px; resize: vertical; }
+      textarea { min-height: 96px; resize: vertical; }
       .fine {
         color: #9ca3af;
         font-size: 12px;
@@ -1216,7 +1226,7 @@ function renderProspectPage(prospect, index) {
         text-align: center;
       }
       @media (max-width: 860px) {
-        .hero-grid, .offer .wrap, .cards, .index-list {
+        .hero-grid, .offer .wrap, .cards, .index-list, .field-grid {
           grid-template-columns: 1fr;
         }
         .wrap { padding: 46px 18px; }
@@ -1327,28 +1337,42 @@ function renderProspectPage(prospect, index) {
             </ul>
           </div>
           <form action="https://formsubmit.co/${claimEmail}" method="POST" accept-charset="UTF-8">
-            <input type="hidden" name="_subject" value="Claim request: ${attr(prospect.name)} free EB28 website" />
+            <p class="form-intro">Tell EB28 when to review this free site with you. The request goes straight to ${claimEmail}.</p>
+            <input type="hidden" name="_subject" value="Booked review request: ${attr(prospect.name)} free EB28 website" />
             <input type="hidden" name="_captcha" value="false" />
+            <input type="hidden" name="_template" value="table" />
             <input type="hidden" name="source" value="eb28-32940-${attr(prospect.slug)}" />
             <input type="hidden" name="business" value="${attr(prospect.name)}" />
+            <input type="hidden" name="category" value="${attr(prospect.category)}" />
+            <input type="hidden" name="concept_url" value="https://eb28.co/32940/${attr(prospect.slug)}.html" />
+            <input type="hidden" name="offer" value="Free website build plus EB28 Growth Hosting at $98/month with SEO and weekly blog posts" />
+            <input type="hidden" name="requested_next_step" value="Claim free website concept and book a 10-minute review call" />
+            <div class="field-grid">
+              <label>
+                Your name
+                <input name="name" autocomplete="name" required placeholder="Name" />
+              </label>
+              <label>
+                Work email
+                <input name="email" type="email" autocomplete="email" required placeholder="you@example.com" />
+              </label>
+            </div>
+            <div class="field-grid">
+              <label>
+                Phone
+                <input name="phone" type="tel" autocomplete="tel" placeholder="Best number" />
+              </label>
+              <label>
+                Best 10-minute review time
+                <input name="preferred_review_time" required placeholder="Today after 3, weekday mornings..." />
+              </label>
+            </div>
             <label>
-              Your name
-              <input name="name" autocomplete="name" required placeholder="Name" />
+              What should EB28 check first?
+              <textarea name="message" placeholder="Optional: current website, Google listing, photos, menu, booking link, or anything that needs to be corrected before launch."></textarea>
             </label>
-            <label>
-              Email
-              <input name="email" type="email" autocomplete="email" required placeholder="you@example.com" />
-            </label>
-            <label>
-              Phone
-              <input name="phone" type="tel" autocomplete="tel" placeholder="Best number" />
-            </label>
-            <label>
-              Message
-              <textarea name="message" required placeholder="I want to claim or discuss this free website concept."></textarea>
-            </label>
-            <button class="btn accent" type="submit">Send claim to ${claimEmail}</button>
-            <p class="fine">Prefer email? Send a note to <a href="${attr(mailto)}">${claimEmail}</a>. This concept remains noindex until the business owner approves public use.</p>
+            <button class="btn accent" type="submit">Book my free website review</button>
+            <p class="fine">No obligation. Prefer email? Send a note to <a href="${attr(mailto)}">${claimEmail}</a>. Reply "no thanks" any time and EB28 will stop following up.</p>
           </form>
         </div>
       </section>

@@ -390,7 +390,10 @@ const App = () => {
             <span className="text-slate-300 text-xs font-bold uppercase tracking-widest">eb28.co | Private AI Infrastructure</span>
           </div>
 
-          <div className="mb-6">
+          <div className="mb-6 flex flex-col sm:flex-row items-center justify-center gap-3">
+            <a href="/melbournewebstudio/#quiz" className="inline-flex items-center gap-2 rounded-full border border-emerald-300/30 bg-emerald-400/10 px-5 py-2 text-sm font-semibold text-emerald-100 transition-colors hover:bg-emerald-400/15">
+              Free website build + $98/mo Growth Hosting <ArrowRight className="w-4 h-4" />
+            </a>
             <a href="/reconcile/" className="inline-flex items-center gap-2 rounded-full border border-cyan-400/20 bg-cyan-500/10 px-5 py-2 text-sm font-semibold text-cyan-100 transition-colors hover:bg-cyan-500/15">
               New founder beta: Recon Agent at $17/mo <ArrowRight className="w-4 h-4" />
             </a>
@@ -407,7 +410,10 @@ const App = () => {
             EB 28 is the premier app development and website builder near me in Melbourne, FL. We engineer secure, high-performance apps and automated platforms to scale your local operations and drive targeted client generation.
           </p>
 
-          <div className="mt-10 flex flex-col sm:flex-row justify-center gap-4">
+          <div className="mt-10 flex flex-col sm:flex-row sm:flex-wrap justify-center gap-4">
+            <a href="/melbournewebstudio/#quiz" className="group px-8 py-4 bg-white hover:bg-blue-50 text-slate-950 rounded-lg font-bold text-lg transition-all shadow-lg shadow-blue-500/20 flex items-center justify-center transform hover:-translate-y-1">
+              Claim Free Website Build <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            </a>
             {diyCheckoutUrl ? (
               <a href={diyCheckoutUrl} className="group px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white rounded-lg font-bold text-lg transition-all shadow-lg shadow-blue-500/25 flex items-center justify-center transform hover:-translate-y-1">
                 Start Your AI Core for $10 <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />

@@ -173,9 +173,9 @@ const ROUTE_META = {
         ...BASE_ROUTE_META,
         key: 'home',
         path: '/',
-        title: 'EB28 | Premier App Development & Private AI Infrastructure Near Me',
+        title: 'EB28 | Free Website Build, Growth Hosting & Private AI Near Me',
         description:
-            'EB28 is a top-rated local app developer and private AI infrastructure builder. We design high-conversion websites, local LLM deployments, RAG systems, and automated lead generation engines for businesses.',
+            'EB28 builds free local business website concepts, hosts approved sites for $98/month with SEO and weekly content, and engineers private AI, apps, RAG systems, and lead generation engines.',
         image: DEFAULT_IMAGE,
         includeInSitemap: true,
         structuredData: [
@@ -196,6 +196,9 @@ const ROUTE_META = {
                 serviceType: [
                     'App Development',
                     'Website Builder',
+                    'Free website build',
+                    'Growth Hosting',
+                    'Weekly local blog posts',
                     'Private AI infrastructure',
                     'Local LLM deployment',
                     'RAG implementation',

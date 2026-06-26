@@ -26,6 +26,7 @@ const today = new Date().toISOString().slice(0, 10);
 
 const allowedStatuses = new Set(['not_started', 'contacted', 'follow_up', 'booked', 'not_interested']);
 const bookedEvidenceHints = /(calendar|calendly|google\.com\/calendar|meet\.google|zoom\.us|teams\.microsoft|\b\d{1,2}:\d{2}\b|\b(am|pm)\b|\bmon(day)?\b|\btue(sday)?\b|\bwed(nesday)?\b|\bthu(rsday)?\b|\bfri(day)?\b|\bsat(urday)?\b|\bsun(day)?\b|\bbook(ed|ing)?\b|\bscheduled\b|\bappointment\b|\bcall\b)/i;
+const bookedEvidencePlaceholders = /(YYYY-MM-DD|HH:MM|Contact\/attendee:\s*NAME|Evidence:\s*calendar link|call note URL|REPLACE_WITH_REAL_BOOKING_EVIDENCE)/i;
 
 function csvEscape(value = '') {
   const text = String(value ?? '');
@@ -135,6 +136,9 @@ function nextTouchFor(row) {
 
 function validBookedEvidence(evidence = '') {
   const text = String(evidence).trim();
+  if (bookedEvidencePlaceholders.test(text)) {
+    return false;
+  }
   return text.length >= 12 && bookedEvidenceHints.test(text);
 }
 
@@ -870,11 +874,22 @@ async function writeBookingSprint(rows) {
           ${websiteAction}
           ${sourceAction}
           <button type="button" data-copy="ask-${escapeHtml(row.priority)}">Copy Ask</button>
+          <button type="button" data-copy="form-${escapeHtml(row.priority)}">Copy Form</button>
           <button type="button" data-copy="booked-${escapeHtml(row.priority)}">Copy Booked Patch</button>
+        </div>
+        <div class="statusbar" data-statusbar>
+          <button type="button" data-quick-status="contacted" data-quick-source="${escapeHtml(row.email ? 'email' : row.phone ? 'phone' : 'contact_form')}" data-quick-evidence="${escapeHtml(`${row.email ? 'Email' : row.phone ? 'Phone' : 'Contact form'} outreach sent; waiting for owner or manager response.`)}">Outreach Sent</button>
+          <button type="button" data-quick-status="follow_up" data-quick-source="voicemail" data-quick-evidence="${escapeHtml('Voicemail or front-desk message left; needs follow-up with owner or manager.')}">Left Message</button>
+          <button type="button" data-quick-status="follow_up" data-quick-source="contact_form" data-quick-evidence="${escapeHtml('Public website contact form submitted; waiting for owner or manager response.')}">Form Sent</button>
+          <button type="button" data-quick-status="booked" data-quick-source="${escapeHtml(row.email ? 'email_reply' : row.phone ? 'phone' : 'contact_form')}" data-quick-evidence="${escapeHtml(`${row.business}: REPLACE_WITH_REAL_BOOKING_EVIDENCE. Add actual scheduled date/time, attendee, and calendar/reply/call-note proof before exporting.`)}">Booked</button>
+          <button type="button" data-quick-status="not_interested" data-quick-source="${escapeHtml(row.email ? 'email_reply' : row.phone ? 'phone' : 'contact_form')}" data-quick-evidence="${escapeHtml('Prospect said no or asked not to follow up.')}">No</button>
         </div>
         <div class="contact">${escapeHtml(row.email || 'no email')} · ${escapeHtml(row.phone || 'no phone')}</div>
         <label>Booking ask
           <textarea readonly id="ask-${escapeHtml(row.priority)}">${escapeHtml(bookingAskMessage)}</textarea>
+        </label>
+        <label>Contact form message
+          <textarea readonly id="form-${escapeHtml(row.priority)}">${escapeHtml(makeContactFormMessage(row))}</textarea>
         </label>
         <label>Phone script
           <textarea readonly>${escapeHtml(makePhoneScript(row))}</textarea>
@@ -882,6 +897,26 @@ async function writeBookingSprint(rows) {
         <label>Booked patch template
           <textarea readonly id="booked-${escapeHtml(row.priority)}">${escapeHtml(makeBookedPatchTemplate(row))}</textarea>
         </label>
+        <div class="log">
+          <label>Status
+            <select data-field="status">
+              <option value="">Unlogged</option>
+              <option value="contacted">Contacted</option>
+              <option value="follow_up">Follow up</option>
+              <option value="booked">Booked</option>
+              <option value="not_interested">Not interested</option>
+            </select>
+          </label>
+          <label>Source
+            <input data-field="source" placeholder="email, phone, contact_form, calendar">
+          </label>
+          <label>Booked datetime
+            <input data-field="datetime" placeholder="YYYY-MM-DD HH:MM ET">
+          </label>
+          <label>Evidence or call note
+            <textarea data-field="evidence" placeholder="Calendar link, reply with time, call note, form confirmation, or no-thanks note"></textarea>
+          </label>
+        </div>
         <p class="notes">${escapeHtml(row.notes || row.call_priority_tier || '')}</p>
       </article>`;
   }).join('\n');
@@ -900,17 +935,29 @@ async function writeBookingSprint(rows) {
     h1 { margin:0; font-size:22px; letter-spacing:0; }
     .summary { display:flex; flex-wrap:wrap; gap:10px; margin-top:12px; }
     .pill { border:1px solid var(--line); border-radius:999px; padding:6px 10px; background:#fff; color:var(--muted); font-size:13px; font-weight:750; }
+    .toolbar { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; align-items:center; }
     main { display:grid; grid-template-columns:repeat(auto-fit, minmax(360px, 1fr)); gap:14px; padding:16px; }
     .lead { border:1px solid var(--line); border-radius:8px; background:var(--panel); padding:14px; display:flex; flex-direction:column; gap:10px; }
+    .lead[data-status="booked"] { border-color:rgba(8,114,78,.55); box-shadow:0 0 0 2px rgba(8,114,78,.08); }
+    .lead[data-status="not_interested"] { opacity:.72; }
     .rank { display:flex; justify-content:space-between; color:var(--muted); font-size:12px; font-weight:800; text-transform:uppercase; }
     h2 { margin:0; font-size:18px; letter-spacing:0; }
     .meta, .contact, .notes { margin:0; color:var(--muted); font-size:13px; line-height:1.45; }
-    .actions { display:flex; flex-wrap:wrap; gap:8px; }
+    .actions, .statusbar { display:flex; flex-wrap:wrap; gap:8px; }
     .btn, button { min-height:34px; border:1px solid var(--line); border-radius:7px; padding:7px 10px; background:#fff; color:var(--ink); text-decoration:none; font:inherit; font-weight:750; cursor:pointer; }
     .btn.primary { background:var(--blue); border-color:var(--blue); color:#fff; }
+    button.primary { background:var(--blue); border-color:var(--blue); color:#fff; }
+    button.active { background:var(--green); border-color:var(--green); color:#fff; }
     label { display:flex; flex-direction:column; gap:5px; color:var(--muted); font-size:12px; font-weight:800; }
-    textarea { width:100%; min-height:124px; border:1px solid var(--line); border-radius:7px; padding:8px; resize:vertical; color:var(--ink); background:#fbfcff; font:12px/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    input, select, textarea { width:100%; border:1px solid var(--line); border-radius:7px; padding:8px; color:var(--ink); background:#fbfcff; font:inherit; }
+    textarea { min-height:124px; resize:vertical; font:12px/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    textarea[data-field="evidence"] { min-height:82px; font-family:inherit; font-size:13px; }
+    .log { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+    .log label:last-child { grid-column:1 / -1; }
+    .hidden { display:none; }
+    .warn { color:#8a4b00; }
     @media (max-width: 520px) { main { grid-template-columns:1fr; padding:10px; } header { padding:14px; } }
+    @media (max-width: 720px) { .log { grid-template-columns:1fr; } .log label:last-child { grid-column:auto; } }
   </style>
 </head>
 <body>
@@ -923,11 +970,109 @@ async function writeBookingSprint(rows) {
       <span class="pill">${routeCounts['phone to owner/manager'] || 0} phone first</span>
       <span class="pill">Generated ${today}</span>
     </div>
+    <div class="toolbar">
+      <button type="button" class="primary" id="export">Export outreach state JSON</button>
+      <button type="button" id="clear">Clear local sprint state</button>
+      <button type="button" class="active" data-filter="all">All</button>
+      <button type="button" data-filter="unlogged">Unlogged</button>
+      <button type="button" data-filter="contacted">Contacted</button>
+      <button type="button" data-filter="follow_up">Follow up</button>
+      <button type="button" data-filter="booked">Booked</button>
+      <button type="button" data-filter="not_interested">No</button>
+      <span class="pill" id="state-counts">0 logged · 0 booked</span>
+    </div>
   </header>
   <main>
     ${cards}
   </main>
   <script>
+    const key = "eb28-32940-booking-sprint-state-v1";
+    const saved = JSON.parse(localStorage.getItem(key) || "{}");
+    const persist = () => localStorage.setItem(key, JSON.stringify(saved));
+    const fields = ["status", "source", "datetime", "evidence"];
+    const meaningful = (value) => String(value || "").trim().length > 0;
+    const currentState = (card) => saved[card.dataset.priority] || {};
+    const updateCardStatus = (card) => {
+      const state = currentState(card);
+      card.dataset.status = state.status || "unlogged";
+      for (const button of card.querySelectorAll("[data-quick-status]")) {
+        button.classList.toggle("active", state.status === button.dataset.quickStatus);
+      }
+    };
+    const updateCounts = () => {
+      const values = Object.values(saved).filter((entry) => entry && fields.some((field) => meaningful(entry[field])));
+      const booked = values.filter((entry) => entry.status === "booked").length;
+      const no = values.filter((entry) => entry.status === "not_interested").length;
+      const followUp = values.filter((entry) => entry.status === "follow_up").length;
+      document.getElementById("state-counts").textContent = values.length + " logged · " + booked + " booked · " + followUp + " follow-up · " + no + " no";
+    };
+    const cleanedExport = () => Object.fromEntries(Object.entries(saved)
+      .map(([priority, entry]) => {
+        const clean = {};
+        for (const field of fields) {
+          if (meaningful(entry[field])) clean[field] = String(entry[field]).trim();
+        }
+        return [priority, clean];
+      })
+      .filter(([, entry]) => Object.keys(entry).length));
+    for (const card of document.querySelectorAll(".lead")) {
+      const id = card.dataset.priority;
+      saved[id] = saved[id] || {};
+      for (const input of card.querySelectorAll("[data-field]")) {
+        const field = input.dataset.field;
+        if (saved[id][field]) input.value = saved[id][field];
+        input.addEventListener("input", () => {
+          saved[id][field] = input.value;
+          persist();
+          updateCardStatus(card);
+          updateCounts();
+        });
+      }
+      for (const button of card.querySelectorAll("[data-quick-status]")) {
+        button.addEventListener("click", () => {
+          saved[id].status = button.dataset.quickStatus;
+          saved[id].source = button.dataset.quickSource || saved[id].source || "";
+          if (!meaningful(saved[id].evidence) || button.dataset.quickStatus === "booked" || button.dataset.quickStatus === "not_interested") {
+            saved[id].evidence = button.dataset.quickEvidence || "";
+          }
+          for (const input of card.querySelectorAll("[data-field]")) {
+            input.value = saved[id][input.dataset.field] || "";
+          }
+          persist();
+          updateCardStatus(card);
+          updateCounts();
+        });
+      }
+      updateCardStatus(card);
+    }
+    updateCounts();
+    document.getElementById("export").addEventListener("click", () => {
+      const exportState = cleanedExport();
+      const weakBooked = Object.values(exportState).filter((entry) => entry.status === "booked" && !meaningful(entry.datetime)).length;
+      if (weakBooked > 0) {
+        document.getElementById("state-counts").classList.add("warn");
+      }
+      const blob = new Blob([JSON.stringify(exportState, null, 2) + "\\n"], {type:"application/json"});
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = "eb28-32940-outreach-state.json";
+      a.click();
+      URL.revokeObjectURL(a.href);
+    });
+    document.getElementById("clear").addEventListener("click", () => {
+      localStorage.removeItem(key);
+      window.location.reload();
+    });
+    for (const button of document.querySelectorAll("[data-filter]")) {
+      button.addEventListener("click", () => {
+        for (const other of document.querySelectorAll("[data-filter]")) other.classList.remove("active");
+        button.classList.add("active");
+        const filter = button.dataset.filter;
+        for (const card of document.querySelectorAll(".lead")) {
+          card.classList.toggle("hidden", filter !== "all" && card.dataset.status !== filter);
+        }
+      });
+    }
     for (const button of document.querySelectorAll("[data-copy]")) {
       button.addEventListener("click", async () => {
         const target = document.getElementById(button.dataset.copy);

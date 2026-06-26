@@ -175,11 +175,12 @@ const callOrFormContacts = {
     sourceType: 'booking directory',
   },
   'el-tesoro-cocina-mexicana': {
-    phone: '(321) 428-3575',
-    address: '7720 N Wickham Rd #120, Melbourne, FL 32940',
-    website: 'https://www.eltesoromelbourne.com/location',
-    sourceUrls: ['https://www.eltesoromelbourne.com/location'],
-    sourceType: 'owned website',
+    phone: '(321) 429-0833',
+    address: '8260 N Wickham Rd, Melbourne, FL 32940',
+    website: 'https://eltesoromexrestaurant.com/',
+    sourceUrls: ['https://eltesoromexrestaurant.com/', 'https://eltesoromexrestaurant.com/order', 'https://eltesoromexrestaurant.com/menu'],
+    sourceType: 'owned website and owned online-ordering page',
+    notes: 'Updated to current official El Tesoro Cocina Mexicana website, phone, and address during 2026-06-26 contact-route audit.',
   },
   'elegant-nail-spa': {
     phone: '(321) 428-5335',

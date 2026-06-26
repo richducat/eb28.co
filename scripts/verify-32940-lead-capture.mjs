@@ -15,7 +15,9 @@ const leadCapturePath = path.join(repoRoot, 'src', 'leadCapture.js');
 const expectedEmail = 'social@eb28.co';
 const expectedFormAction = `https://formsubmit.co/${expectedEmail}`;
 const expectedAjaxEndpoint = `https://formsubmit.co/ajax/${expectedEmail}`;
+const expectedNextUrl = 'https://eb28.co/32940/claim-received.html';
 const expectedPageCount = 129;
+const supportPages = new Set(['index.html', 'claim-received.html']);
 
 function parseArgs(argv) {
   const args = { live: false, liveLimit: 0 };
@@ -90,6 +92,7 @@ function checkPage(html, slug, sourceLabel) {
     if (!hiddenInputValue(claimForm, '_subject').startsWith('Booked review request: ')) failures.push('missing booked-review subject');
     if (hiddenInputValue(claimForm, '_captcha') !== 'false') failures.push('captcha is not disabled');
     if (hiddenInputValue(claimForm, '_template') !== 'table') failures.push('template is not table');
+    if (hiddenInputValue(claimForm, '_next') !== expectedNextUrl) failures.push('missing branded claim-received redirect');
     if (hiddenInputValue(claimForm, 'source') !== `eb28-32940-${slug}`) failures.push('source hidden field does not match slug');
     if (hiddenInputValue(claimForm, 'concept_url') !== `https://eb28.co/32940/${slug}.html`) failures.push('concept_url hidden field does not match public URL');
     if (!hiddenInputValue(claimForm, 'offer').includes('$98/month')) failures.push('offer hidden field is missing $98/month');
@@ -108,9 +111,29 @@ function checkPage(html, slug, sourceLabel) {
   return { sourceLabel, slug, passed: failures.length === 0, failures };
 }
 
+function checkClaimReceivedHtml(html, sourceLabel) {
+  const normalized = normalizeHtml(html);
+  const failures = [];
+  if (!normalized.includes('EB28 has your free website review request.')) failures.push('missing confirmation headline');
+  if (!normalized.includes(`sent to <strong>${expectedEmail}</strong>`)) failures.push('missing social@eb28.co receipt copy');
+  if (!normalized.includes('$98/month')) failures.push('missing $98/month offer copy');
+  if (!normalized.includes('weekly local blog or Google Business content prompts')) failures.push('missing weekly content copy');
+  if (!normalized.includes(`mailto:${expectedEmail}?subject=`)) failures.push('missing social@eb28.co follow-up mailto');
+  if (!normalized.includes('<meta name="robots" content="noindex,follow"')) failures.push('missing noindex robots meta');
+  return { sourceLabel, slug: 'claim-received', passed: failures.length === 0, failures };
+}
+
+async function verifyClaimReceivedPage(dir, sourceLabel) {
+  try {
+    return checkClaimReceivedHtml(await fs.readFile(path.join(dir, 'claim-received.html'), 'utf8'), sourceLabel);
+  } catch (error) {
+    return { sourceLabel, slug: 'claim-received', passed: false, failures: [error.message] };
+  }
+}
+
 async function htmlFiles(dir) {
   const entries = await fs.readdir(dir);
-  return entries.filter((entry) => entry.endsWith('.html') && entry !== 'index.html').sort();
+  return entries.filter((entry) => entry.endsWith('.html') && !supportPages.has(entry)).sort();
 }
 
 async function verifyDirectory(dir, sourceLabel) {
@@ -121,7 +144,8 @@ async function verifyDirectory(dir, sourceLabel) {
     const html = await fs.readFile(path.join(dir, file), 'utf8');
     results.push(checkPage(html, slug, sourceLabel));
   }
-  return { sourceLabel, dir, files: files.length, results };
+  const supportResults = [await verifyClaimReceivedPage(dir, sourceLabel)];
+  return { sourceLabel, dir, files: files.length, results, supportResults };
 }
 
 async function verifyLeadCaptureModule() {
@@ -170,13 +194,24 @@ async function verifyLive(slugs, limit) {
   return { sourceLabel: 'live', files: selected.length, results };
 }
 
+async function verifyLiveClaimReceived() {
+  try {
+    return checkClaimReceivedHtml(await fetchText(expectedNextUrl), 'live');
+  } catch (error) {
+    return { sourceLabel: 'live', slug: 'claim-received', passed: false, failures: [error.message] };
+  }
+}
+
 function summaryFor(section) {
-  const failures = section.results.flatMap((result) => result.failures.map((failure) => ({ slug: result.slug, failure })));
+  const allResults = [...section.results, ...(section.supportResults || [])];
+  const failedResults = allResults.filter((result) => !result.passed);
+  const failures = allResults.flatMap((result) => result.failures.map((failure) => ({ slug: result.slug, failure })));
   return {
     sourceLabel: section.sourceLabel,
     checked: section.files,
-    passed: section.results.length - failures.length,
-    failedPages: section.results.filter((result) => !result.passed).length,
+    supportChecked: section.supportResults?.length || 0,
+    passed: allResults.length - failedResults.length,
+    failedPages: failedResults.length,
     failures,
   };
 }
@@ -191,8 +226,11 @@ function renderMarkdown(report) {
     '',
     `- Expected recipient: ${report.expectedEmail}`,
     `- Expected form action: ${report.expectedFormAction}`,
+    `- Expected post-submit redirect: ${report.expectedNextUrl}`,
     `- Public pages checked: ${report.summary.public.checked}`,
+    `- Public support pages checked: ${report.summary.public.supportChecked}`,
     `- Docs pages checked: ${report.summary.docs.checked}`,
+    `- Docs support pages checked: ${report.summary.docs.supportChecked}`,
     `- Public failures: ${report.summary.public.failedPages}`,
     `- Docs failures: ${report.summary.docs.failedPages}`,
     `- Lead capture module: ${report.leadCaptureModule.passed ? 'passed' : 'failed'}`,
@@ -234,6 +272,9 @@ async function main() {
   const leadCaptureModule = await verifyLeadCaptureModule();
   const slugs = publicVerification.results.map((result) => result.slug);
   const liveVerification = args.live ? await verifyLive(slugs, args.liveLimit) : null;
+  if (liveVerification) {
+    liveVerification.supportResults = [await verifyLiveClaimReceived()];
+  }
 
   const summary = {
     public: summaryFor(publicVerification),
@@ -254,6 +295,7 @@ async function main() {
     expectedEmail,
     expectedFormAction,
     expectedAjaxEndpoint,
+    expectedNextUrl,
     expectedPageCount,
     passed,
     summary,
@@ -268,10 +310,13 @@ async function main() {
     passed,
     publicPages: publicVerification.files,
     docsPages: docsVerification.files,
+    publicSupportPages: summary.public.supportChecked,
+    docsSupportPages: summary.docs.supportChecked,
     publicFailures: summary.public.failedPages,
     docsFailures: summary.docs.failedPages,
     modulePassed: leadCaptureModule.passed,
     livePages: summary.live?.checked || 0,
+    liveSupportPages: summary.live?.supportChecked || 0,
     liveFailures: summary.live?.failedPages || 0,
   }, null, 2));
 

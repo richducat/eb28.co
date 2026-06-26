@@ -9,6 +9,7 @@ const outDir = path.join(repoRoot, 'public', '32940');
 const replacementProspectsPath = path.join(repoRoot, 'scripts', 'data', '32940-replacement-prospects.json');
 const claimEmail = 'social@eb28.co';
 const studioUrl = 'https://eb28.co/melbournewebstudio/';
+const claimReceivedUrl = 'https://eb28.co/32940/claim-received.html';
 
 const baseProspects = [
   {
@@ -1341,6 +1342,7 @@ function renderProspectPage(prospect, index) {
             <input type="hidden" name="_subject" value="Booked review request: ${attr(prospect.name)} free EB28 website" />
             <input type="hidden" name="_captcha" value="false" />
             <input type="hidden" name="_template" value="table" />
+            <input type="hidden" name="_next" value="${attr(claimReceivedUrl)}" />
             <input type="hidden" name="source" value="eb28-32940-${attr(prospect.slug)}" />
             <input type="hidden" name="business" value="${attr(prospect.name)}" />
             <input type="hidden" name="category" value="${attr(prospect.category)}" />
@@ -1381,6 +1383,132 @@ function renderProspectPage(prospect, index) {
     <footer>
       Prepared by <a href="https://eb28.co">EB28</a>. Unofficial concept for owner review only. Contact <a href="mailto:${claimEmail}">${claimEmail}</a>.
     </footer>
+  </body>
+</html>
+`;
+}
+
+function renderClaimReceivedPage() {
+  return `<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex,follow" />
+    <title>Website review request received | EB28</title>
+    <meta name="description" content="EB28 received your free website review request and will reply from social@eb28.co." />
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #111827;
+        --muted: #5b6472;
+        --line: #e5e7eb;
+        --accent: #0f766e;
+        --wash: #f6f7f9;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        color: var(--ink);
+        background:
+          radial-gradient(circle at 80% 16%, rgb(15 118 110 / 13%), transparent 30%),
+          linear-gradient(180deg, #fff 0%, var(--wash) 100%);
+      }
+      main {
+        width: min(760px, calc(100vw - 32px));
+        padding: 54px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: rgb(255 255 255 / 92%);
+        box-shadow: 0 24px 70px rgb(15 23 42 / 10%);
+      }
+      .eyebrow {
+        display: inline-flex;
+        margin: 0 0 18px;
+        padding: 7px 10px;
+        border-radius: 999px;
+        background: rgb(15 118 110 / 10%);
+        color: var(--accent);
+        font-size: 12px;
+        font-weight: 900;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+      }
+      h1 {
+        margin: 0;
+        max-width: 640px;
+        font-size: clamp(38px, 8vw, 68px);
+        line-height: .96;
+        letter-spacing: 0;
+      }
+      p {
+        margin: 20px 0 0;
+        color: var(--muted);
+        font-size: 18px;
+        line-height: 1.55;
+      }
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 30px;
+      }
+      a { color: inherit; }
+      .button {
+        display: inline-flex;
+        min-height: 44px;
+        align-items: center;
+        justify-content: center;
+        padding: 12px 16px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #fff;
+        color: var(--ink);
+        font-weight: 900;
+        text-decoration: none;
+      }
+      .button.primary {
+        background: var(--ink);
+        border-color: var(--ink);
+        color: #fff;
+      }
+      .details {
+        display: grid;
+        gap: 10px;
+        margin-top: 30px;
+        padding: 18px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #fff;
+        color: var(--muted);
+        font-size: 14px;
+      }
+      .details strong { color: var(--ink); }
+      @media (max-width: 640px) {
+        main { padding: 34px 22px; }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p class="eyebrow">Request received</p>
+      <h1>EB28 has your free website review request.</h1>
+      <p>The request was sent to <strong>${claimEmail}</strong>. EB28 will reply from that inbox to confirm the best 10-minute review time and any details needed before launch.</p>
+      <div class="actions">
+        <a class="button primary" href="${studioUrl}">View EB28 Growth Hosting</a>
+        <a class="button" href="mailto:${claimEmail}?subject=Free%20website%20review%20request%20follow-up">Email ${claimEmail}</a>
+        <a class="button" href="/32940/">Back to concepts</a>
+      </div>
+      <div class="details">
+        <span><strong>Offer:</strong> free website build; Growth Hosting is $98/month after owner approval.</span>
+        <span><strong>Includes:</strong> managed hosting, technical SEO upkeep, and weekly local blog or Google Business content prompts.</span>
+        <span><strong>Routing:</strong> all owner-review requests go to ${claimEmail}.</span>
+      </div>
+    </main>
   </body>
 </html>
 `;
@@ -1442,5 +1570,6 @@ for (const [index, prospect] of prospects.entries()) {
 }
 
 await fs.writeFile(path.join(outDir, 'index.html'), renderIndex());
+await fs.writeFile(path.join(outDir, 'claim-received.html'), renderClaimReceivedPage());
 
 console.log(`Generated ${prospects.length} 32940 growth site concepts in ${path.relative(repoRoot, outDir)}`);

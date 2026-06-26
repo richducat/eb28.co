@@ -150,7 +150,8 @@
       "Event photo collection and matching are handled by CadetCatch service infrastructure, not by private accounts on the phone.",
       "In-app purchase products must be active in App Store Connect before TestFlight purchase flows can return live products.",
       "Access codes require a server-validated entitlement system before production use; hardcoded free-access codes must not be shipped in the app.",
-      "The current production access API endpoints for desktop and invite status must be deployed and verified before App Review submission."
+      "The current production access API endpoints for desktop and invite status must be deployed and verified before App Review submission.",
+      "The access API source now includes Apple App Store Server API verification for Family Monthly subscription links, but it has not been deployed to api.cadetcatch.com yet."
     ]
   }
 }

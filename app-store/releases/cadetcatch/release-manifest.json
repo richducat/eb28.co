@@ -17,7 +17,7 @@
   "xcodegenProjectSpec": "ios/CadetCatch/project.yml",
   "scheme": "CadetCatch",
   "teamId": "WN3K69XEP4",
-  "approvalLevel": "local build 95 account email, tester-access gate, desktop companion, and access-invite candidate only; exact archive, upload_build, distribute_testflight, select_build, submit_for_review, desktop add-on product, access-invite backend deployment, and IAP/subscription approvals pending for the final source commit",
+  "approvalLevel": "local build 95 account email, tester-access gate, desktop companion, access-invite, and StoreKit-verified access API candidate only; exact production_deploy, archive, upload_build, distribute_testflight, select_build, submit_for_review, desktop add-on product, and IAP/subscription approvals pending for the final source commit",
   "archivePath": null,
   "appStoreConnectState": {
     "appStoreVersionId": null,
@@ -25,7 +25,7 @@
     "reviewSubmissionId": null,
     "appStoreState": "LOCAL_CANDIDATE_NOT_UPLOADED",
     "submittedAt": null,
-    "lastLocalPreparationAt": "2026-06-26T02:49:11Z",
+    "lastLocalPreparationAt": "2026-06-26T11:30:26Z",
     "uploadedAt": null,
     "visibleAscVerificationAt": null,
     "visibleAscStatus": "Not applicable; build 95 has not been archived or uploaded",
@@ -67,7 +67,7 @@
   "changedFilesFromBaseParent": [
     {
       "status": "M",
-      "path": "pp-store/releases/cadetcatch/app-store-metadata.md"
+      "path": "app-store/releases/cadetcatch/app-store-metadata.md"
     },
     {
       "status": "M",
@@ -143,14 +143,18 @@
     "Build 93 is superseded before upload because its fallback copy used the wrong $19.99 monthly price.",
     "Build 94 is reserved for the corrected $12.99 Family Monthly price fallback and desktop add-on/access-invite planning pass.",
     "Build 95 is the local account email, spouse/family invite, cadet invite, tester-access gate, and static desktop companion implementation candidate.",
+    "Build 95 access API source now includes Apple App Store Server API verification for StoreKit subscription links.",
     "Do not archive, upload, distribute TestFlight, select for App Review, submit for review, release, expire builds, edit metadata/screenshots/previews, or edit IAP/subscriptions without a separate exact approval record for the final build-95 source commit.",
+    "Do not production deploy the access API without a separate exact approval record for the final clean source commit being deployed.",
     "Do not ship custom free access codes unless they are server-validated, email-bound, role-specific, and single-use.",
     "Tester full access must be configured and verified for richducat@gmail.com, karen.hallett@mac.com, and kenfish@mac.com before App Review submission.",
-    "As of 2026-06-26T02:49:11Z, GET https://api.cadetcatch.com/access/status?device_id=pre-submit-access-check&email=richducat%40gmail.com returned 404 {\\\"detail\\\":\\\"Not Found\\\"}; the access API is not production-ready for tester access."
+    "As of 2026-06-26T11:30:26Z, GET https://api.cadetcatch.com/access/status returned 404 {\\\"detail\\\":\\\"Not Found\\\"} for richducat@gmail.com, karen.hallett@mac.com, and kenfish@mac.com; the access API is not production-ready for tester access."
   ],
   "createdAt": "2026-06-06T11:53:53.691778-04:00",
   "localVerification": {
-    "releaseGate": "passed for clean local build 95 candidate at commit f4ad60745a5cd6695896eacd11295fd61f17c3a8 before manifest receipt amend",
+    "releaseGate": "must be rerun from a clean tree after release-record reconciliation and before production deploy, archive, upload, build selection, or App Review submission",
+    "accessAPITests": "passed in temp venv with service dependencies installed using /tmp/cadetcatch-access-api-venv/bin/python -m unittest discover tests -v; 9 tests passed including StoreKit validation rejection cases",
+    "accessAPIImportSmoke": "passed in temp venv; imported cadetcatch_access.main.app and AppleStoreKitVerifier",
     "simulatorQA": "passed for clean local build 95 candidate using documented CadetCatch test command",
     "simulatorQAReceipt": {
       "status": "passed",
@@ -196,8 +200,12 @@
     },
     "accessAPI": {
       "status": "blocked_404",
-      "checkedAt": "2026-06-26T02:49:11Z",
-      "checkedEmail": "richducat@gmail.com",
+      "checkedAt": "2026-06-26T11:30:26Z",
+      "checkedEmails": [
+        "richducat@gmail.com",
+        "karen.hallett@mac.com",
+        "kenfish@mac.com"
+      ],
       "statusEndpoint": "https://api.cadetcatch.com/access/status",
       "httpStatus": 404,
       "response": "{\\\"detail\\\":\\\"Not Found\\\"}",
@@ -214,7 +222,12 @@
     "accessEntitlementGate": {
       "status": "implemented_and_fail_closed",
       "note": "iOS full app access now resolves from active StoreKit Family Monthly or production API /access/status active:true. Current production /access/status returns 404, so server-backed tester access stays locked until backend setup is complete."
+    },
+    "storeKitServerVerification": {
+      "status": "source_ready_not_deployed",
+      "introducedAtCommit": "480f3b1e2221869796e9a97ea044d9667a26f051",
+      "note": "Access API verifies Apple signedTransactionInfo, requires bundle co.eb28.cadetcatch and product co.eb28.cadetcatch.family.monthly.v1, and rejects wrong transaction IDs, expired subscriptions, and revoked subscriptions."
     }
   },
-  "updatedAt": "2026-06-26T02:58:30Z"
+  "updatedAt": "2026-06-26T11:30:26Z"
 }

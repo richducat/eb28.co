@@ -539,11 +539,14 @@ function extractProspects(indexHtml) {
 function withTracking(prospect, index) {
   const contact = verifiedContacts[prospect.slug] ?? callOrFormContacts[prospect.slug] ?? replacementContacts[prospect.slug] ?? {};
   const avenueSourceSlug = avenueSourceSlugOverrides[prospect.slug] ?? prospect.slug;
-  const sourceUrls = contact.sourceUrls ?? (
-    avenueTenantSourceSlugs.has(prospect.slug) ? [`https://www.avenueviera.com/tenants/${avenueSourceSlug}/`] : []
-  );
+  const avenueTenantPage = avenueTenantSourceSlugs.has(prospect.slug)
+    ? `https://www.avenueviera.com/tenants/${avenueSourceSlug}/`
+    : '';
+  const sourceUrls = contact.sourceUrls ?? (avenueTenantPage ? [avenueTenantPage] : []);
+  const website = contact.website ?? avenueTenantPage;
   const hasDirectEmail = Boolean(contact.email);
-  const hasContactPath = Boolean(contact.website || contact.phone);
+  const hasContactPath = Boolean(website || contact.phone);
+  const hasAvenueTenantFallback = Boolean(avenueTenantPage && !contact.email && !contact.phone && !contact.website);
 
   return {
     priority: index + 1,
@@ -554,20 +557,22 @@ function withTracking(prospect, index) {
     verifiedEmail: contact.email ?? '',
     phone: contact.phone ?? '',
     address: contact.address ?? '',
-    website: contact.website ?? '',
+    website,
     sourceType: contact.sourceType ?? (sourceUrls.length ? 'Avenue Viera tenant page' : ''),
     sourceUrls,
     outreachStage: hasDirectEmail ? 'draft_ready' : hasContactPath ? 'call_or_contact_form' : 'research_needed',
     nextAction: hasDirectEmail
       ? 'Create Gmail draft, then send after review'
       : hasContactPath
-        ? 'Call or use official contact form with the same concept link'
+        ? hasAvenueTenantFallback
+          ? 'Use the Avenue tenant page to find the tenant website, call path, or location contact before outreach'
+          : 'Call or use official contact form with the same concept link'
         : 'Research official owner contact before outreach',
     lastTouch: '',
     nextTouch: today,
     bookedCallStatus: 'not_booked',
     bookedCallUrl: '',
-    notes: contact.notes ?? '',
+    notes: contact.notes ?? (hasAvenueTenantFallback ? 'Avenue tenant page is the first verified contact route; confirm local decision maker before outreach.' : ''),
   };
 }
 
@@ -614,9 +619,12 @@ function renderBookedCallTracker(prospects, existingRows = []) {
     const existing = existingByConcept.get(prospect.conceptUrl) ?? existingByBusiness.get(slugify(prospect.business)) ?? {};
     const status = existing.status || 'not_started';
     const bookedCallStatus = existing.booked_call_status || prospect.bookedCallStatus || 'not_booked';
+    const newlyActionable = existing.stage === 'research_needed' && prospect.outreachStage !== 'research_needed' && status === 'not_started';
     const nextTouch = bookedCallStatus === 'booked' || status === 'not_interested'
       ? ''
-      : existing.next_touch || prospect.nextTouch || today;
+      : newlyActionable
+        ? today
+        : existing.next_touch || prospect.nextTouch || today;
 
     return {
       priority: prospect.priority,

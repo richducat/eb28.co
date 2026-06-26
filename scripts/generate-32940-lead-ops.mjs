@@ -588,6 +588,21 @@ function makeMailto(prospect) {
   return `mailto:${prospect.verifiedEmail}?${params.toString()}`;
 }
 
+function makePhoneScript(prospect) {
+  const claimUrl = `${prospect.conceptUrl}#claim`;
+  return [
+    `Hi, this is Rich with EB28. Is this the right number for ${prospect.business}?`,
+    '',
+    `I built a free owner-review website concept for ${prospect.business}: ${prospect.conceptUrl}`,
+    '',
+    'It is not public-indexed and it is not their official site. I wanted to get it to the owner or manager who handles the website.',
+    '',
+    'The build is free. If they want to use it, EB28 can host and improve it for $98/month with managed hosting, technical SEO upkeep, and one weekly local blog or Google Business content prompt.',
+    '',
+    `Who is the best person to send it to, or is there a better time for a quick review call? They can also use the review form here: ${claimUrl}`,
+  ].join('\n');
+}
+
 function makeEml(prospect) {
   const subject = `Free website concept for ${prospect.business}`;
   const lines = [
@@ -807,6 +822,241 @@ function renderBookedCallTracker(prospects, existingRows = []) {
   ].join('\n');
 }
 
+function firstAction(prospect) {
+  if (prospect.verifiedEmail) {
+    return 'email';
+  }
+  if (prospect.phone) {
+    return 'call_then_contact_form';
+  }
+  return 'contact_form';
+}
+
+function day0Rows(prospects) {
+  return prospects
+    .filter((prospect) => prospect.outreachStage !== 'research_needed')
+    .map((prospect) => {
+      const source = inferOutreachSource(prospect);
+      return {
+        priority: prospect.priority,
+        business: prospect.business,
+        first_action: firstAction(prospect),
+        stage: prospect.outreachStage,
+        email: prospect.verifiedEmail,
+        phone: prospect.phone,
+        website: prospect.website,
+        concept_url: prospect.conceptUrl,
+        claim_url: `${prospect.conceptUrl}#claim`,
+        subject: `Free website concept for ${prospect.business}`,
+        message: makeBody(prospect),
+        phone_script: makePhoneScript(prospect),
+        mailto: makeMailto(prospect),
+        record_contacted_command: makeContactedRecordCommand(prospect),
+        record_booked_command: makeBookedRecordCommand(prospect),
+        source,
+      };
+    });
+}
+
+function renderDay0ExportCsv(prospects) {
+  const fields = [
+    'priority',
+    'business',
+    'first_action',
+    'stage',
+    'email',
+    'phone',
+    'website',
+    'concept_url',
+    'claim_url',
+    'subject',
+    'message',
+    'phone_script',
+    'mailto',
+    'record_contacted_command',
+    'record_booked_command',
+  ];
+  const rows = day0Rows(prospects);
+
+  return [
+    fields.join(','),
+    ...rows.map((row) => fields.map((field) => csvEscape(row[field])).join(',')),
+  ].join('\n');
+}
+
+function renderDay0MessageBank(prospects) {
+  const rows = day0Rows(prospects);
+  const direct = rows.filter((row) => row.stage === 'draft_ready');
+  const callOrForm = rows.filter((row) => row.stage === 'call_or_contact_form');
+  const directBlocks = direct.flatMap((row) => [
+    `### ${row.priority}. ${row.business}`,
+    '',
+    `- To: \`${row.email}\``,
+    `- Subject: \`${row.subject}\``,
+    `- Concept: ${row.concept_url}`,
+    `- Claim form: ${row.claim_url}`,
+    `- Mailto: ${row.mailto}`,
+    '',
+    'Message:',
+    '',
+    '```text',
+    row.message,
+    '```',
+    '',
+    'Record contacted command:',
+    '',
+    '```bash',
+    row.record_contacted_command,
+    '```',
+    '',
+    'Record booked command, after replacing placeholders with real scheduling evidence:',
+    '',
+    '```bash',
+    row.record_booked_command,
+    '```',
+    '',
+  ]);
+  const callBlocks = callOrForm.flatMap((row) => [
+    `### ${row.priority}. ${row.business}`,
+    '',
+    `- Phone: \`${row.phone || 'not found'}\``,
+    `- Website/contact form: ${row.website || 'not found'}`,
+    `- Concept: ${row.concept_url}`,
+    `- Claim form: ${row.claim_url}`,
+    '',
+    'Phone script:',
+    '',
+    '```text',
+    row.phone_script,
+    '```',
+    '',
+    'Contact-form message:',
+    '',
+    '```text',
+    row.message,
+    '```',
+    '',
+    'Record contacted command:',
+    '',
+    '```bash',
+    row.record_contacted_command,
+    '```',
+    '',
+    'Record booked command, after replacing placeholders with real scheduling evidence:',
+    '',
+    '```bash',
+    row.record_booked_command,
+    '```',
+    '',
+  ]);
+
+  return [
+    '# 32940 Day-0 Outreach Message Bank',
+    '',
+    `Generated: ${today}`,
+    '',
+    'Use this file to execute day-0 outreach without inventing copy mid-call or mid-form. Every message points to the prospect-specific claim form on the free concept page, and a lead counts only after a specific call time is booked and logged with evidence.',
+    '',
+    '## Direct Email Queue',
+    '',
+    ...directBlocks,
+    '## Call / Contact Form Queue',
+    '',
+    ...callBlocks,
+  ].join('\n');
+}
+
+function renderDay0Workbench(prospects) {
+  const rows = day0Rows(prospects);
+  const cards = rows.map((row) => {
+    const mail = row.mailto ? `<a class="btn primary" href="${escapeHtml(row.mailto)}">Open Email</a>` : '';
+    const call = row.phone ? `<a class="btn" href="tel:${escapeHtml(row.phone)}">Call</a>` : '';
+    const site = row.website ? `<a class="btn" target="_blank" rel="noopener" href="${escapeHtml(row.website)}">Contact Form</a>` : '';
+
+    return `
+      <article class="card" data-stage="${escapeHtml(row.stage)}" data-business="${escapeHtml(row.business.toLowerCase())}">
+        <div class="topline"><span>#${escapeHtml(row.priority)}</span><span>${escapeHtml(row.first_action.replace(/_/g, ' '))}</span></div>
+        <h2>${escapeHtml(row.business)}</h2>
+        <p class="meta">${escapeHtml(row.stage.replace(/_/g, ' '))}</p>
+        <div class="actions">
+          <a class="btn" target="_blank" rel="noopener" href="${escapeHtml(row.concept_url)}">Concept</a>
+          <a class="btn" target="_blank" rel="noopener" href="${escapeHtml(row.claim_url)}">Claim Form</a>
+          ${mail}
+          ${call}
+          ${site}
+        </div>
+        <label>Subject <input readonly value="${escapeHtml(row.subject)}"></label>
+        <label>Message <textarea readonly>${escapeHtml(row.message)}</textarea></label>
+        <label>Phone Script <textarea readonly>${escapeHtml(row.phone_script)}</textarea></label>
+        <label>Record contacted command <textarea class="command" readonly>${escapeHtml(row.record_contacted_command)}</textarea></label>
+        <label>Record booked command <textarea class="command" readonly>${escapeHtml(row.record_booked_command)}</textarea></label>
+        <p class="meta">Email: ${escapeHtml(row.email || 'not found')} · Phone: ${escapeHtml(row.phone || 'not found')}</p>
+      </article>`;
+  }).join('\n');
+
+  return `<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>EB28 32940 Day-0 Outreach Workbench</title>
+  <style>
+    :root { color-scheme: light; --ink:#172033; --muted:#5d6678; --line:#d7dce7; --panel:#fff; --bg:#f6f7f9; --blue:#1957d2; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background:var(--bg); color:var(--ink); }
+    header { position:sticky; top:0; z-index:2; padding:16px 20px; border-bottom:1px solid var(--line); background:rgba(255,255,255,.97); }
+    h1 { margin:0; font-size:21px; letter-spacing:0; }
+    .meta { color:var(--muted); font-size:13px; line-height:1.4; }
+    .toolbar { display:flex; flex-wrap:wrap; gap:10px; padding:14px 18px 0; }
+    .toolbar input, .toolbar select { min-height:38px; padding:8px 10px; border:1px solid var(--line); border-radius:7px; background:#fff; color:var(--ink); font:inherit; }
+    main { display:grid; grid-template-columns:repeat(auto-fit, minmax(340px, 1fr)); gap:14px; padding:16px; }
+    .card { background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:14px; display:flex; flex-direction:column; gap:10px; }
+    .topline { display:flex; justify-content:space-between; color:var(--muted); font-size:12px; text-transform:uppercase; font-weight:750; }
+    h2 { margin:0; font-size:18px; letter-spacing:0; }
+    .actions { display:flex; flex-wrap:wrap; gap:8px; }
+    .btn { min-height:34px; padding:7px 10px; border:1px solid var(--line); border-radius:7px; background:#fff; color:var(--ink); text-decoration:none; font-weight:700; display:inline-flex; align-items:center; }
+    .btn.primary { background:var(--blue); border-color:var(--blue); color:#fff; }
+    label { display:flex; flex-direction:column; gap:5px; font-size:12px; color:var(--muted); font-weight:700; }
+    input, textarea { width:100%; border:1px solid var(--line); border-radius:7px; padding:8px; color:var(--ink); background:#fbfcff; font:inherit; }
+    textarea { min-height:150px; resize:vertical; font-size:12px; line-height:1.45; }
+    textarea.command { min-height:74px; font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>EB28 32940 Day-0 Outreach Workbench</h1>
+    <div class="meta">${rows.length} actionable prospects · ${rows.filter((row) => row.stage === 'draft_ready').length} direct email · ${rows.filter((row) => row.stage === 'call_or_contact_form').length} call/contact form · generated ${today}</div>
+    <div class="meta">Every message points to the prospect-specific claim form. Count a lead only after real booked-call evidence is logged.</div>
+  </header>
+  <div class="toolbar">
+    <input id="search" placeholder="Search business or message">
+    <select id="stage">
+      <option value="">All routes</option>
+      <option value="draft_ready">Direct email</option>
+      <option value="call_or_contact_form">Call/form</option>
+    </select>
+  </div>
+  <main>
+    ${cards}
+  </main>
+  <script>
+    const cards = [...document.querySelectorAll('.card')];
+    function applyFilters() {
+      const query = document.getElementById('search').value.toLowerCase();
+      const stage = document.getElementById('stage').value;
+      for (const card of cards) {
+        const matchesQuery = !query || card.textContent.toLowerCase().includes(query);
+        const matchesStage = !stage || card.dataset.stage === stage;
+        card.style.display = matchesQuery && matchesStage ? '' : 'none';
+      }
+    }
+    document.getElementById('search').addEventListener('input', applyFilters);
+    document.getElementById('stage').addEventListener('input', applyFilters);
+  </script>
+</body>
+</html>`;
+}
+
 function renderMarkdown(prospects) {
   const direct = prospects.filter((prospect) => prospect.verifiedEmail);
   const callOrForm = prospects.filter((prospect) => !prospect.verifiedEmail && prospect.outreachStage === 'call_or_contact_form');
@@ -927,6 +1177,28 @@ function makeRecordCommand(prospect, status, source, evidence, datetime = '') {
   return parts.join(' ');
 }
 
+function makeContactedRecordCommand(prospect) {
+  const routeSource = inferOutreachSource(prospect);
+  const routeLabel = humanOutreachSource(routeSource);
+  return makeRecordCommand(
+    prospect,
+    'contacted',
+    routeSource,
+    `Manual ${routeLabel} outreach completed for ${prospect.business}; waiting for reply.`,
+  );
+}
+
+function makeBookedRecordCommand(prospect) {
+  const routeSource = inferOutreachSource(prospect);
+  return makeRecordCommand(
+    prospect,
+    'booked',
+    routeSource,
+    `Reply or calendar evidence confirms a booked review call for ${prospect.business} at YYYY-MM-DD HH:MM ET.`,
+    'YYYY-MM-DD HH:MM ET',
+  );
+}
+
 function renderManualOutreachCommandCenter(prospects, emailStats) {
   const direct = prospects.filter((prospect) => prospect.verifiedEmail);
   const callOrForm = prospects.filter((prospect) => !prospect.verifiedEmail && prospect.outreachStage === 'call_or_contact_form');
@@ -937,28 +1209,9 @@ function renderManualOutreachCommandCenter(prospects, emailStats) {
       const mailto = makeMailto(prospect);
       const subject = `Free website concept for ${prospect.business}`;
       const body = makeBody(prospect);
-      const routeSource = inferOutreachSource(prospect);
-      const routeLabel = humanOutreachSource(routeSource);
-      const contactedCommand = makeRecordCommand(
-        prospect,
-        'contacted',
-        routeSource,
-        `Manual ${routeLabel} outreach completed for ${prospect.business}; waiting for reply.`,
-      );
-      const bookedCommand = makeRecordCommand(
-        prospect,
-        'booked',
-        routeSource,
-        `Reply or calendar evidence confirms a booked review call for ${prospect.business} at YYYY-MM-DD HH:MM ET.`,
-        'YYYY-MM-DD HH:MM ET',
-      );
-      const phoneScript = [
-        `Hi, this is Rich with EB28. I built a free owner-review website concept for ${prospect.business}.`,
-        'It is not your official site and it is not indexed publicly.',
-        `The link is ${prospect.conceptUrl}.`,
-        'The build is free. Growth Hosting is $98/month and includes hosting, SEO upkeep, and weekly local content prompts.',
-        'Who is the best person to review it, and what email should I send it to?',
-      ].join(' ');
+      const contactedCommand = makeContactedRecordCommand(prospect);
+      const bookedCommand = makeBookedRecordCommand(prospect);
+      const phoneScript = makePhoneScript(prospect);
       const primaryAction = prospect.verifiedEmail
         ? `<a class="btn primary" href="${escapeHtml(mailto)}">Open Email</a>`
         : '<span class="pill">Call/Form</span>';
@@ -1263,6 +1516,18 @@ async function main() {
   await fs.writeFile(
     path.join(outDir, '32940-dispatch-readiness.md'),
     `${renderDispatchReadinessMarkdown(prospects, draftManifest, emailStats)}\n`,
+  );
+  await fs.writeFile(
+    path.join(outDir, '32940-day0-outreach-export.csv'),
+    `${renderDay0ExportCsv(prospects)}\n`,
+  );
+  await fs.writeFile(
+    path.join(outDir, '32940-day0-message-bank.md'),
+    `${renderDay0MessageBank(prospects)}\n`,
+  );
+  await fs.writeFile(
+    path.join(outDir, '32940-day0-outreach-workbench.html'),
+    renderDay0Workbench(prospects),
   );
   await fs.writeFile(
     path.join(outDir, '32940-manual-outreach-command-center.html'),

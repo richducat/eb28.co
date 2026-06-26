@@ -17,6 +17,9 @@ const dueWorkbenchPath = path.join(outDir, '32940-due-now-workbench.html');
 const stateTemplatePath = path.join(outDir, '32940-outreach-state-template.json');
 const callFormSprintCsvPath = path.join(outDir, '32940-call-form-sprint.csv');
 const callFormSprintMdPath = path.join(outDir, '32940-call-form-sprint.md');
+const bookingSprintCsvPath = path.join(outDir, '32940-booking-sprint.csv');
+const bookingSprintMdPath = path.join(outDir, '32940-booking-sprint.md');
+const bookingSprintHtmlPath = path.join(outDir, '32940-booking-sprint.html');
 const finalActionQueuePath = path.join(outDir, '32940-final-action-queue.md');
 const callSheetsDir = path.join(outDir, 'call-sheets');
 const today = new Date().toISOString().slice(0, 10);
@@ -387,6 +390,137 @@ function makeContactedPatch(row, source = 'phone') {
   });
 }
 
+function makeBookingSubject(row) {
+  return `10-minute review for ${row.business} website concept`;
+}
+
+function makeBookingAskMessage(row) {
+  const claimUrl = `${row.concept_url}#claim`;
+  const routeLine = row.email
+    ? 'I am sending it here because this looked like the best public contact route.'
+    : 'I am looking for the right owner or manager contact.';
+  return [
+    `Hi ${row.business} team,`,
+    '',
+    `I built a free owner-review website concept for ${row.business}:`,
+    row.concept_url,
+    '',
+    routeLine,
+    '',
+    'The build is free. If you want to use it, EB28 can host, maintain, improve SEO, and add one weekly local blog or Google Business content prompt for $98/month.',
+    '',
+    'Would the owner or manager be open to a 10-minute review today or tomorrow? No prep is needed; I can show what is already built and what I would change before putting it live.',
+    '',
+    `They can reply here, email social@eb28.co, or use the review form: ${claimUrl}`,
+    '',
+    'If this is not useful, reply "no thanks" and I will not follow up.',
+    '',
+    'Rich',
+    'EB28',
+    'social@eb28.co',
+  ].join('\n');
+}
+
+function buildMailto(to, subject, body) {
+  if (!to) {
+    return '';
+  }
+  return `mailto:${to}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+}
+
+function buildGmailComposeUrl(to, subject, body) {
+  if (!to) {
+    return '';
+  }
+  const params = new URLSearchParams({
+    view: 'cm',
+    fs: '1',
+    to,
+    su: subject,
+    body,
+  });
+  return `https://mail.google.com/mail/?${params.toString()}`;
+}
+
+function bookingEvidenceTemplate(row) {
+  return [
+    `${row.business}: booked 10-minute review for YYYY-MM-DD HH:MM ET.`,
+    'Contact/attendee: NAME.',
+    'Evidence: calendar link, reply with time, or call note URL.',
+  ].join(' ');
+}
+
+function makeBookedPatchTemplate(row) {
+  return JSON.stringify({
+    [row.priority]: {
+      status: 'booked',
+      evidence: bookingEvidenceTemplate(row),
+      source: row.email ? 'email_reply' : row.phone ? 'phone' : 'contact_form',
+      datetime: 'YYYY-MM-DD HH:MM ET',
+    },
+  }, null, 2);
+}
+
+function bookingRoute(row) {
+  if (row.email) {
+    return 'direct email';
+  }
+  if (row.phone) {
+    return 'phone to owner/manager';
+  }
+  if (row.website) {
+    return 'contact form';
+  }
+  return 'research hold';
+}
+
+function bookingScore(row) {
+  let score = Number.parseInt(row.call_score || '0', 10);
+  if (Number.isNaN(score)) {
+    score = 0;
+  }
+
+  if (row.email) score += 35;
+  if (row.gmail_compose_url) score += 8;
+  if (row.phone) score += 15;
+  if (row.website) score += 10;
+  if (row.stage === 'draft_ready') score += 24;
+  if (row.stage === 'call_or_contact_form') score += 12;
+  if (row.status === 'not_started') score += 6;
+  if (row.status === 'follow_up') score += 4;
+  if (hasHighIntentCategory(row)) score += 20;
+  if (row.call_priority_tier === 'A local owner likely') score += 18;
+  if (/manually verified|official site|owned site/i.test(row.notes || '')) score += 8;
+  if (/Wave 1 replacement prospect/i.test(row.notes || '')) score += 5;
+  if (hasCorporateSignal(row)) score -= 80;
+  if (row.stage === 'research_needed') score -= 60;
+  if (!row.email && !row.phone && !row.website) score -= 50;
+  return score;
+}
+
+function getBookingSprintRows(rows, limit = 40) {
+  return rows
+    .filter((row) => (
+      row.booked_call_status !== 'booked'
+      && row.status !== 'not_interested'
+      && row.stage !== 'research_needed'
+      && row.call_priority_tier !== 'C corporate or franchise route'
+      && row.next_touch
+      && row.next_touch <= today
+      && (row.email || row.phone || row.website)
+    ))
+    .map((row) => ({
+      ...row,
+      numericBookingScore: bookingScore(row),
+    }))
+    .filter((row) => row.numericBookingScore >= 65)
+    .sort((a, b) => (
+      b.numericBookingScore - a.numericBookingScore
+      || Number.parseInt(a.priority, 10) - Number.parseInt(b.priority, 10)
+    ))
+    .slice(0, limit);
+}
+
 function enrichRows(rows, prospectDetails) {
   return rows.map((row) => {
     const prospect = prospectDetails.get(row.concept_url) ?? {};
@@ -578,6 +712,237 @@ async function writeCallFormSprint(callRows) {
     ...blocks,
   ];
   await fs.writeFile(callFormSprintMdPath, `${lines.join('\n')}\n`, 'utf8');
+}
+
+async function writeBookingSprint(rows) {
+  const bookingRows = getBookingSprintRows(rows);
+  const bookedCount = rows.filter((row) => row.booked_call_status === 'booked').length;
+  const csvRows = bookingRows.map((row, index) => {
+    const subject = makeBookingSubject(row);
+    const bookingAskMessage = makeBookingAskMessage(row);
+    const mailto = buildMailto(row.email, subject, bookingAskMessage);
+    const gmailComposeUrl = buildGmailComposeUrl(row.email, subject, bookingAskMessage);
+    return {
+      sprint_rank: index + 1,
+      sprint_block: Math.floor(index / 10) + 1,
+      priority: row.priority,
+      business: row.business,
+      category: row.category,
+      stage: row.stage,
+      booking_route: bookingRoute(row),
+      booking_score: row.numericBookingScore,
+      call_priority_tier: row.call_priority_tier,
+      recommended_channel: row.recommended_channel,
+      email: row.email,
+      phone: row.phone,
+      website: row.website,
+      concept_url: row.concept_url,
+      claim_url: `${row.concept_url}#claim`,
+      source_urls: row.source_urls,
+      notes: row.notes,
+      mailto,
+      gmail_compose_url: gmailComposeUrl,
+      booking_ask_message: bookingAskMessage,
+      phone_script: makePhoneScript(row),
+      contact_form_message: makeContactFormMessage(row),
+      evidence_template: bookingEvidenceTemplate(row),
+      state_patch_contacted: makeContactedPatch(row, row.email ? 'email' : row.phone ? 'phone' : 'contact_form'),
+      state_patch_booked_template: makeBookedPatchTemplate(row),
+    };
+  });
+
+  const fields = [
+    'sprint_rank',
+    'sprint_block',
+    'priority',
+    'business',
+    'category',
+    'stage',
+    'booking_route',
+    'booking_score',
+    'call_priority_tier',
+    'recommended_channel',
+    'email',
+    'phone',
+    'website',
+    'concept_url',
+    'claim_url',
+    'source_urls',
+    'notes',
+    'mailto',
+    'gmail_compose_url',
+    'booking_ask_message',
+    'phone_script',
+    'contact_form_message',
+    'evidence_template',
+    'state_patch_contacted',
+    'state_patch_booked_template',
+  ];
+  await fs.writeFile(bookingSprintCsvPath, renderCsv(csvRows, fields), 'utf8');
+
+  const routeCounts = bookingRows.reduce((acc, row) => {
+    const route = bookingRoute(row);
+    acc[route] = (acc[route] || 0) + 1;
+    return acc;
+  }, {});
+  const tableRows = bookingRows.map((row, index) => (
+    `| ${index + 1} | ${row.priority} | ${markdownCell(row.business)} | ${markdownCell(row.category)} | ${markdownCell(bookingRoute(row))} | ${row.numericBookingScore} | ${markdownCell(row.email || row.phone || row.website)} | ${markdownCell(row.concept_url)} |`
+  ));
+  const scriptBlocks = bookingRows.slice(0, 15).flatMap((row, index) => {
+    const subject = makeBookingSubject(row);
+    const bookingAskMessage = makeBookingAskMessage(row);
+    return [
+      `### ${index + 1}. ${row.business}`,
+      '',
+      `- Priority: ${row.priority}`,
+      `- Route: ${bookingRoute(row)}`,
+      `- Score: ${row.numericBookingScore}`,
+      `- Subject: ${subject}`,
+      `- Concept: ${row.concept_url}`,
+      `- Claim form: ${row.concept_url}#claim`,
+      '',
+      'Booking ask:',
+      '',
+      '```text',
+      bookingAskMessage,
+      '```',
+      '',
+      'Booked-call evidence template:',
+      '',
+      '```text',
+      bookingEvidenceTemplate(row),
+      '```',
+      '',
+      'Booked state patch template:',
+      '',
+      '```json',
+      makeBookedPatchTemplate(row),
+      '```',
+      '',
+    ];
+  });
+  const mdLines = [
+    '# 32940 Booking Sprint',
+    '',
+    `Generated: ${today}`,
+    'Target: 100 confirmed booked-call leads',
+    `Current confirmed booked-call leads: ${bookedCount}`,
+    `Sprint rows: ${bookingRows.length}`,
+    `Direct email: ${routeCounts['direct email'] || 0}`,
+    `Phone to owner/manager: ${routeCounts['phone to owner/manager'] || 0}`,
+    `Contact form: ${routeCounts['contact form'] || 0}`,
+    '',
+    'Count a lead only after evidence includes a real booked call, calendar link, scheduled call time, or equivalent proof.',
+    '',
+    '## Sprint Queue',
+    '',
+    '| Rank | # | Business | Category | Route | Score | Contact | Concept |',
+    '|---:|---:|---|---|---|---:|---|---|',
+    ...tableRows,
+    '',
+    '## First 15 Booking Scripts',
+    '',
+    ...scriptBlocks,
+  ];
+  await fs.writeFile(bookingSprintMdPath, `${mdLines.join('\n')}\n`, 'utf8');
+
+  const cards = bookingRows.map((row, index) => {
+    const subject = makeBookingSubject(row);
+    const bookingAskMessage = makeBookingAskMessage(row);
+    const mailto = buildMailto(row.email, subject, bookingAskMessage);
+    const gmailComposeUrl = buildGmailComposeUrl(row.email, subject, bookingAskMessage);
+    const emailAction = row.email ? `<a class="btn primary" href="${escapeHtml(mailto)}">Email</a>` : '';
+    const gmailAction = row.email ? `<a class="btn" target="_blank" rel="noopener" href="${escapeHtml(gmailComposeUrl)}">Gmail</a>` : '';
+    const callAction = row.phone ? `<a class="btn primary" href="tel:${escapeHtml(row.phone)}">Call</a>` : '';
+    const websiteAction = row.website ? `<a class="btn" target="_blank" rel="noopener" href="${escapeHtml(row.website)}">Contact</a>` : '';
+    const sourceAction = row.source_urls ? `<a class="btn" target="_blank" rel="noopener" href="${escapeHtml(row.source_urls.split(' | ')[0])}">Source</a>` : '';
+    return `
+      <article class="lead" data-priority="${escapeHtml(row.priority)}" data-route="${escapeHtml(bookingRoute(row))}">
+        <div class="rank">#${index + 1}<span>score ${escapeHtml(row.numericBookingScore)}</span></div>
+        <h2>${escapeHtml(row.business)}</h2>
+        <p class="meta">${escapeHtml(row.category || 'local business')} · ${escapeHtml(bookingRoute(row))} · priority ${escapeHtml(row.priority)}</p>
+        <div class="actions">
+          <a class="btn" target="_blank" rel="noopener" href="${escapeHtml(row.concept_url)}">Concept</a>
+          <a class="btn" target="_blank" rel="noopener" href="${escapeHtml(`${row.concept_url}#claim`)}">Claim</a>
+          ${emailAction}
+          ${gmailAction}
+          ${callAction}
+          ${websiteAction}
+          ${sourceAction}
+          <button type="button" data-copy="ask-${escapeHtml(row.priority)}">Copy Ask</button>
+          <button type="button" data-copy="booked-${escapeHtml(row.priority)}">Copy Booked Patch</button>
+        </div>
+        <div class="contact">${escapeHtml(row.email || 'no email')} · ${escapeHtml(row.phone || 'no phone')}</div>
+        <label>Booking ask
+          <textarea readonly id="ask-${escapeHtml(row.priority)}">${escapeHtml(bookingAskMessage)}</textarea>
+        </label>
+        <label>Phone script
+          <textarea readonly>${escapeHtml(makePhoneScript(row))}</textarea>
+        </label>
+        <label>Booked patch template
+          <textarea readonly id="booked-${escapeHtml(row.priority)}">${escapeHtml(makeBookedPatchTemplate(row))}</textarea>
+        </label>
+        <p class="notes">${escapeHtml(row.notes || row.call_priority_tier || '')}</p>
+      </article>`;
+  }).join('\n');
+
+  const html = `<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>EB28 32940 Booking Sprint</title>
+  <style>
+    :root { --ink:#172033; --muted:#596276; --line:#d8dfeb; --bg:#f6f8fb; --panel:#fff; --blue:#1456d9; --green:#08724e; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background:var(--bg); color:var(--ink); }
+    header { position:sticky; top:0; z-index:2; padding:16px 20px; border-bottom:1px solid var(--line); background:rgba(255,255,255,.96); }
+    h1 { margin:0; font-size:22px; letter-spacing:0; }
+    .summary { display:flex; flex-wrap:wrap; gap:10px; margin-top:12px; }
+    .pill { border:1px solid var(--line); border-radius:999px; padding:6px 10px; background:#fff; color:var(--muted); font-size:13px; font-weight:750; }
+    main { display:grid; grid-template-columns:repeat(auto-fit, minmax(360px, 1fr)); gap:14px; padding:16px; }
+    .lead { border:1px solid var(--line); border-radius:8px; background:var(--panel); padding:14px; display:flex; flex-direction:column; gap:10px; }
+    .rank { display:flex; justify-content:space-between; color:var(--muted); font-size:12px; font-weight:800; text-transform:uppercase; }
+    h2 { margin:0; font-size:18px; letter-spacing:0; }
+    .meta, .contact, .notes { margin:0; color:var(--muted); font-size:13px; line-height:1.45; }
+    .actions { display:flex; flex-wrap:wrap; gap:8px; }
+    .btn, button { min-height:34px; border:1px solid var(--line); border-radius:7px; padding:7px 10px; background:#fff; color:var(--ink); text-decoration:none; font:inherit; font-weight:750; cursor:pointer; }
+    .btn.primary { background:var(--blue); border-color:var(--blue); color:#fff; }
+    label { display:flex; flex-direction:column; gap:5px; color:var(--muted); font-size:12px; font-weight:800; }
+    textarea { width:100%; min-height:124px; border:1px solid var(--line); border-radius:7px; padding:8px; resize:vertical; color:var(--ink); background:#fbfcff; font:12px/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+    @media (max-width: 520px) { main { grid-template-columns:1fr; padding:10px; } header { padding:14px; } }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>EB28 32940 Booking Sprint</h1>
+    <div class="summary">
+      <span class="pill">Target 100 confirmed calls</span>
+      <span class="pill">${bookingRows.length} sprint prospects</span>
+      <span class="pill">${routeCounts['direct email'] || 0} direct email</span>
+      <span class="pill">${routeCounts['phone to owner/manager'] || 0} phone first</span>
+      <span class="pill">Generated ${today}</span>
+    </div>
+  </header>
+  <main>
+    ${cards}
+  </main>
+  <script>
+    for (const button of document.querySelectorAll("[data-copy]")) {
+      button.addEventListener("click", async () => {
+        const target = document.getElementById(button.dataset.copy);
+        if (!target) return;
+        await navigator.clipboard.writeText(target.value);
+        const original = button.textContent;
+        button.textContent = "Copied";
+        setTimeout(() => { button.textContent = original; }, 1200);
+      });
+    }
+  </script>
+</body>
+</html>
+`;
+  await fs.writeFile(bookingSprintHtmlPath, html, 'utf8');
 }
 
 async function writeCallSheets(callRows) {
@@ -934,6 +1299,7 @@ async function main() {
 
   await writeNextTouch(dueRows);
   await writeCallFormSprint(callRows);
+  await writeBookingSprint(enrichedRows);
   await writeCallSheets(callRows);
   await writeFinalActionQueue(enrichedRows);
   await writeWorkbench(dueRows);

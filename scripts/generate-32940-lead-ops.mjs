@@ -7,6 +7,7 @@ import { fileURLToPath } from 'node:url';
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const indexPath = path.join(repoRoot, 'public', '32940', 'index.html');
 const outDir = path.join(repoRoot, 'output', 'lead-ops');
+const trackerPath = path.join(outDir, '32940-booked-call-tracker.csv');
 const replacementProspectsPath = path.join(repoRoot, 'scripts', 'data', '32940-replacement-prospects.json');
 const today = new Date().toISOString().slice(0, 10);
 
@@ -336,6 +337,54 @@ function csvEscape(value = '') {
   return /[",\n]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;
 }
 
+function parseCsv(text) {
+  const rows = [];
+  let field = '';
+  let row = [];
+  let inQuotes = false;
+
+  for (let index = 0; index < text.length; index += 1) {
+    const char = text[index];
+    const next = text[index + 1];
+
+    if (char === '"') {
+      if (inQuotes && next === '"') {
+        field += '"';
+        index += 1;
+      } else {
+        inQuotes = !inQuotes;
+      }
+    } else if (char === ',' && !inQuotes) {
+      row.push(field);
+      field = '';
+    } else if ((char === '\n' || char === '\r') && !inQuotes) {
+      if (char === '\r' && next === '\n') {
+        index += 1;
+      }
+      row.push(field);
+      if (row.some((value) => value !== '')) {
+        rows.push(row);
+      }
+      field = '';
+      row = [];
+    } else {
+      field += char;
+    }
+  }
+
+  if (field || row.length) {
+    row.push(field);
+    rows.push(row);
+  }
+
+  if (!rows.length) {
+    return [];
+  }
+
+  const [headers, ...bodyRows] = rows;
+  return bodyRows.map((values) => Object.fromEntries(headers.map((header, index) => [header, values[index] ?? ''])));
+}
+
 function slugify(value = '') {
   return String(value)
     .toLowerCase()
@@ -367,6 +416,19 @@ function makeBody(prospect) {
     'EB28',
     ownerEmail,
   ].join('\n');
+}
+
+function makeMailto(prospect) {
+  if (!prospect.verifiedEmail) {
+    return '';
+  }
+
+  const params = new URLSearchParams({
+    subject: `Free website concept for ${prospect.business}`,
+    body: makeBody(prospect),
+  });
+
+  return `mailto:${prospect.verifiedEmail}?${params.toString()}`;
 }
 
 function makeEml(prospect) {
@@ -439,6 +501,83 @@ function withTracking(prospect, index) {
   };
 }
 
+async function loadExistingTrackerRows() {
+  try {
+    const trackerCsv = await fs.readFile(trackerPath, 'utf8');
+    return parseCsv(trackerCsv);
+  } catch (error) {
+    if (error.code === 'ENOENT') {
+      return [];
+    }
+    throw error;
+  }
+}
+
+function renderBookedCallTracker(prospects, existingRows = []) {
+  const trackerHeaders = [
+    'priority',
+    'business',
+    'stage',
+    'status',
+    'concept_url',
+    'email',
+    'phone',
+    'website',
+    'source_urls',
+    'next_touch',
+    'last_touch',
+    'touch_count',
+    'response_status',
+    'booked_call_status',
+    'booked_call_datetime',
+    'booked_call_source',
+    'booked_call_evidence',
+    'owner_contact_name',
+    'notes',
+    'mailto',
+  ];
+
+  const existingByConcept = new Map(existingRows.map((row) => [row.concept_url, row]));
+  const existingByBusiness = new Map(existingRows.map((row) => [slugify(row.business), row]));
+
+  const rows = prospects.map((prospect) => {
+    const existing = existingByConcept.get(prospect.conceptUrl) ?? existingByBusiness.get(slugify(prospect.business)) ?? {};
+    const status = existing.status || 'not_started';
+    const bookedCallStatus = existing.booked_call_status || prospect.bookedCallStatus || 'not_booked';
+    const nextTouch = bookedCallStatus === 'booked' || status === 'not_interested'
+      ? ''
+      : existing.next_touch || prospect.nextTouch || today;
+
+    return {
+      priority: prospect.priority,
+      business: prospect.business,
+      stage: prospect.outreachStage,
+      status,
+      concept_url: prospect.conceptUrl,
+      email: prospect.verifiedEmail,
+      phone: prospect.phone,
+      website: prospect.website,
+      source_urls: prospect.sourceUrls,
+      next_touch: nextTouch,
+      last_touch: existing.last_touch || prospect.lastTouch || '',
+      touch_count: existing.touch_count || '0',
+      response_status: existing.response_status || '',
+      booked_call_status: bookedCallStatus,
+      booked_call_datetime: existing.booked_call_datetime || '',
+      booked_call_source: existing.booked_call_source || '',
+      booked_call_evidence: existing.booked_call_evidence || '',
+      owner_contact_name: existing.owner_contact_name || '',
+      notes: existing.notes || prospect.notes || '',
+      mailto: makeMailto(prospect),
+    };
+  });
+
+  return [
+    trackerHeaders.join(','),
+    ...rows.map((row) => trackerHeaders.map((header) => csvEscape(row[header])).join(',')),
+  ].join('\n');
+}
+
 function renderMarkdown(prospects) {
   const direct = prospects.filter((prospect) => prospect.verifiedEmail);
   const callOrForm = prospects.filter((prospect) => !prospect.verifiedEmail && prospect.outreachStage === 'call_or_contact_form');
@@ -508,6 +647,7 @@ function renderMarkdown(prospects) {
 async function main() {
   const indexHtml = await fs.readFile(indexPath, 'utf8');
   const prospects = extractProspects(indexHtml).map(withTracking);
+  const existingTrackerRows = await loadExistingTrackerRows();
 
   if (prospects.length < minimumProspectCount) {
     throw new Error(`Expected at least ${minimumProspectCount} prospect pages from ${indexPath}, found ${prospects.length}.`);
@@ -544,6 +684,7 @@ async function main() {
   await fs.writeFile(path.join(outDir, '32940-prospect-pipeline.csv'), `${csv}\n`);
   await fs.writeFile(path.join(outDir, '32940-prospect-pipeline.json'), `${JSON.stringify({ generatedAt: today, prospects }, null, 2)}\n`);
   await fs.writeFile(path.join(outDir, '32940-outreach-drafts.md'), `${renderMarkdown(prospects)}\n`);
+  await fs.writeFile(trackerPath, `${renderBookedCallTracker(prospects, existingTrackerRows)}\n`);
 
   const draftsDir = path.join(outDir, 'drafts');
   const directEmailProspects = prospects.filter((prospect) => prospect.verifiedEmail);

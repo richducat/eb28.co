@@ -558,6 +558,16 @@
     "sourceType": "public social contact listing and business website",
     "notes": "Manually verified public Nourish profile/search listing exposes contact@nourishsavannah.com for the business; confirm the Viera decision maker before sending."
   },
+  "thai-hana": {
+    "email": "thaihana@live.com",
+    "sourceUrls": [
+      "https://www.facebook.com/ThaiHanaRestaurant/",
+      "https://nextdoor.com/pages/thai-hana-melbourne-fl/",
+      "https://thaihana.com/"
+    ],
+    "sourceType": "public social and local business profile contact listing",
+    "notes": "Manually verified public Thai Hana profiles expose thaihana@live.com for the Viera restaurant; verify decision maker before sending."
+  },
   "viera-dental": {
     "email": "vieradental@heartlanddentalcare.com",
     "sourceUrls": [

@@ -6,6 +6,7 @@ import { fileURLToPath } from 'node:url';
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const outDir = path.join(repoRoot, 'public', '32940');
+const replacementProspectsPath = path.join(repoRoot, 'scripts', 'data', '32940-replacement-prospects.json');
 const claimEmail = 'social@eb28.co';
 const studioUrl = 'https://eb28.co/melbournewebstudio/';
 
@@ -855,7 +856,47 @@ const avenueProspects = [
   },
 ];
 
-const prospects = [...baseProspects, ...avenueProspects];
+async function loadReplacementProspects() {
+  const raw = await fs.readFile(replacementProspectsPath, 'utf8');
+  const parsed = JSON.parse(raw);
+
+  if (!Array.isArray(parsed)) {
+    throw new Error(`${path.relative(repoRoot, replacementProspectsPath)} must contain an array.`);
+  }
+
+  return parsed.map((prospect, index) => {
+    const requiredFields = ['slug', 'name', 'category', 'audience', 'action', 'focus'];
+    for (const field of requiredFields) {
+      if (!prospect[field] || (field === 'focus' && !Array.isArray(prospect[field]))) {
+        throw new Error(`Replacement prospect ${index + 1} is missing ${field}.`);
+      }
+    }
+
+    return {
+      slug: prospect.slug,
+      name: prospect.name,
+      category: prospect.category,
+      audience: prospect.audience,
+      action: prospect.action,
+      focus: prospect.focus,
+    };
+  });
+}
+
+function dedupeProspects(items) {
+  const seen = new Set();
+
+  return items.filter((prospect) => {
+    if (seen.has(prospect.slug)) {
+      return false;
+    }
+    seen.add(prospect.slug);
+    return true;
+  });
+}
+
+const replacementProspects = await loadReplacementProspects();
+const prospects = dedupeProspects([...baseProspects, ...avenueProspects, ...replacementProspects]);
 
 const escapeHtml = (value = '') =>
   String(value)

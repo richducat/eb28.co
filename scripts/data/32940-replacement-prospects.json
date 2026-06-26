@@ -1,0 +1,413 @@
+[
+  {
+    "slug": "beachfly-brewing-company",
+    "name": "BeachFly Brewing Company",
+    "category": "local brewery",
+    "audience": "taproom guests, craft beer fans, event visitors, and locals comparing nearby breweries",
+    "action": "check the tap list, food options, events, and visit details",
+    "focus": [
+      "Tap list and event calendar sections",
+      "Food, merch, and private-event prompts",
+      "Weekly local content for brewery and event searches"
+    ],
+    "contact": {
+      "website": "https://www.beachflybrewing.com/",
+      "sourceType": "owned website",
+      "sourceUrls": ["https://www.beachflybrewing.com/"]
+    }
+  },
+  {
+    "slug": "grecian-garden-cafe",
+    "name": "Grecian Garden Cafe",
+    "category": "family-owned cafe and Mediterranean restaurant",
+    "audience": "breakfast, lunch, catering, and Mediterranean food customers near Suntree",
+    "action": "view menu options, catering details, hours, and visit information",
+    "focus": [
+      "Menu-first mobile layout",
+      "Breakfast, lunch, and catering prompts",
+      "Local search pages for Greek and Mediterranean food"
+    ],
+    "contact": {
+      "website": "https://www.visitspacecoast.com/profile/melbourne/mediterranean-cuisine/grecian-garden-cafe/",
+      "sourceType": "Visit Space Coast profile",
+      "sourceUrls": ["https://www.visitspacecoast.com/profile/melbourne/mediterranean-cuisine/grecian-garden-cafe/"]
+    }
+  },
+  {
+    "slug": "jacqueline-s-bakery",
+    "name": "Jacqueline's Bakery",
+    "category": "French bakery and cafe",
+    "audience": "bakery customers, cake buyers, breakfast visitors, and catering customers near Suntree",
+    "action": "browse bakery items, cake options, cafe details, and ordering paths",
+    "focus": [
+      "Bakery, cake, and cafe menu sections",
+      "Catering and custom-order prompts",
+      "Weekly local content for cakes, pastries, and breakfast searches"
+    ],
+    "contact": {
+      "website": "https://www.jacquelinebakery.com/",
+      "sourceType": "owned website",
+      "sourceUrls": ["https://www.jacquelinebakery.com/"]
+    }
+  },
+  {
+    "slug": "pacha-kava-lounge",
+    "name": "Pacha Kava Lounge",
+    "category": "kava lounge and social hub",
+    "audience": "kava customers, event guests, remote workers, and locals looking for alcohol-free social spaces",
+    "action": "check the menu, event schedule, atmosphere, and visit details",
+    "focus": [
+      "Menu and first-visit education",
+      "Event calendar and community prompts",
+      "Local search content for kava, mocktail, and lounge queries"
+    ],
+    "contact": {
+      "website": "https://www.visitspacecoast.com/profile/rockledge/explore/pacha-kava-lounge/",
+      "sourceType": "Visit Space Coast profile",
+      "sourceUrls": ["https://www.visitspacecoast.com/profile/rockledge/explore/pacha-kava-lounge/"]
+    }
+  },
+  {
+    "slug": "urban-prime-marketplace-restaurant",
+    "name": "Urban Prime Marketplace & Restaurant",
+    "category": "restaurant and specialty food marketplace",
+    "audience": "dining guests, market shoppers, bakery customers, wine buyers, and private-event customers",
+    "action": "reserve, shop, order, plan an event, or compare marketplace offerings",
+    "focus": [
+      "Restaurant, market, bakery, and event navigation",
+      "Private dining and catering prompts",
+      "Weekly local content for food, wine, events, and specialty shopping"
+    ],
+    "contact": {
+      "website": "https://www.urbanprimefoods.com/",
+      "sourceType": "owned website",
+      "sourceUrls": [
+        "https://www.urbanprimefoods.com/",
+        "https://www.visitspacecoast.com/profile/viera/category/urban-prime-marketplace-restaurant-2/"
+      ]
+    }
+  },
+  {
+    "slug": "bodyscapes-med-spa",
+    "name": "Bodyscapes Med Spa",
+    "category": "med spa and wellness services",
+    "audience": "clients comparing aesthetic treatments, wellness services, and consultation options near Suntree",
+    "action": "review treatments, request a consultation, and understand next steps",
+    "focus": [
+      "Treatment menu and consultation path",
+      "Before-and-after gallery structure",
+      "Weekly local content for med spa and wellness searches"
+    ],
+    "contact": {
+      "website": "https://www.bodyscapesmedspafl.com/",
+      "sourceType": "owned website",
+      "sourceUrls": ["https://www.bodyscapesmedspafl.com/"]
+    }
+  },
+  {
+    "slug": "essentials-medispa-salon",
+    "name": "Essentials Medispa & Salon",
+    "category": "medical spa and salon",
+    "audience": "clients comparing salon, spa, med spa, and gift-card options in Melbourne",
+    "action": "choose a service, request an appointment, and contact the right team",
+    "focus": [
+      "Service menu and booking flow",
+      "Gift card, membership, and package prompts",
+      "Weekly local content for beauty, spa, and med spa searches"
+    ],
+    "contact": {
+      "website": "https://www.essentialsmedispaandsalon.com/",
+      "sourceType": "owned website",
+      "sourceUrls": ["https://www.essentialsmedispaandsalon.com/"]
+    }
+  },
+  {
+    "slug": "euphoria-day-spa-salon",
+    "name": "Euphoria Day Spa & Salon",
+    "category": "day spa, hair salon, and med spa",
+    "audience": "clients comparing spa, salon, massage, skincare, and med spa appointments near Suntree",
+    "action": "choose a service, book, buy a gift card, or call the spa",
+    "focus": [
+      "Service menu with booking-ready paths",
+      "Gift-card and package sections",
+      "Weekly content for salon, spa, and self-care searches"
+    ],
+    "contact": {
+      "website": "https://euphoriadayspasalon.com/",
+      "sourceType": "owned website",
+      "sourceUrls": ["https://euphoriadayspasalon.com/"]
+    }
+  },
+  {
+    "slug": "fountain-of-you",
+    "name": "Fountain of You",
+    "category": "boutique medical spa",
+    "audience": "clients comparing injectables, skincare, body treatments, and consultation options",
+    "action": "review treatments and request a consultation",
+    "focus": [
+      "Consultation-first treatment pages",
+      "Trust, credential, and education sections",
+      "Weekly local content for aesthetic treatment searches"
+    ],
+    "contact": {
+      "website": "https://fountainofyou.md/",
+      "sourceType": "owned website",
+      "sourceUrls": ["https://fountainofyou.md/"]
+    }
+  },
+  {
+    "slug": "imperial-salon-spa-suntree",
+    "name": "Imperial Salon & Spa Suntree",
+    "category": "full-service salon and spa",
+    "audience": "hair, nail, spa, and beauty clients comparing appointment options near Suntree",
+    "action": "choose a service, book an appointment, or contact the salon",
+    "focus": [
+      "Salon and spa service navigation",
+      "Packages, specials, and gallery prompts",
+      "Weekly local content for hair, spa, and nail searches"
+    ],
+    "contact": {
+      "website": "https://www.imperialsalonandspa.com/",
+      "sourceType": "owned website",
+      "sourceUrls": ["https://www.imperialsalonandspa.com/"]
+    }
+  },
+  {
+    "slug": "the-refinery-medspa-wellness",
+    "name": "The Refinery Medspa & Wellness",
+    "category": "med spa and wellness clinic",
+    "audience": "clients comparing injectables, skincare, wellness, and consultation options near Suntree",
+    "action": "request a consultation and compare treatment options",
+    "focus": [
+      "Consultation request flow",
+      "Treatment education and trust sections",
+      "Weekly local content for med spa, skincare, and wellness searches"
+    ],
+    "contact": {
+      "website": "https://refinerymedspa.com/med-spa-suntree-fl/",
+      "sourceType": "owned website",
+      "sourceUrls": ["https://refinerymedspa.com/med-spa-suntree-fl/"]
+    }
+  },
+  {
+    "slug": "family-practice-of-suntree-and-viera",
+    "name": "Family Practice of Suntree and Viera",
+    "category": "family medicine, concierge medicine, and aesthetics",
+    "audience": "patients comparing primary care, concierge care, aesthetics, and local appointment options",
+    "action": "review services, contact the office, and request the right appointment path",
+    "focus": [
+      "New-patient and service navigation",
+      "Concierge, primary care, and aesthetics landing pages",
+      "Conservative local content for patient education searches"
+    ],
+    "contact": {
+      "website": "https://www.familypracticesuntreeviera.com/contactus",
+      "sourceType": "owned website contact page",
+      "sourceUrls": ["https://www.familypracticesuntreeviera.com/contactus"]
+    }
+  },
+  {
+    "slug": "kehoe-animal-clinic-of-viera",
+    "name": "Kehoe Animal Clinic of Viera",
+    "category": "veterinary clinic",
+    "audience": "pet owners comparing veterinary appointments, wellness care, dental care, and surgery options near Viera",
+    "action": "request an appointment, understand services, and contact the clinic",
+    "focus": [
+      "Appointment request and new-client path",
+      "Pet wellness, dentistry, and surgery pages",
+      "Weekly local content for pet care searches"
+    ],
+    "contact": {
+      "website": "https://kehoeanimalclinic.com/",
+      "sourceType": "owned website",
+      "sourceUrls": ["https://kehoeanimalclinic.com/"]
+    }
+  },
+  {
+    "slug": "periu-family-dentistry",
+    "name": "Periu Family Dentistry",
+    "category": "family dental practice",
+    "audience": "families and patients comparing dental appointments, emergency care, and cosmetic dentistry near Suntree",
+    "action": "request an appointment and choose the right dental service",
+    "focus": [
+      "New-patient and appointment request path",
+      "Dental service and emergency pages",
+      "Weekly local content for dental care searches"
+    ],
+    "contact": {
+      "website": "https://www.periudental.com/",
+      "sourceType": "owned website",
+      "sourceUrls": ["https://www.periudental.com/"]
+    }
+  },
+  {
+    "slug": "premier-veterinary-care",
+    "name": "Premier Veterinary Care",
+    "category": "veterinary clinic",
+    "audience": "pet owners comparing veterinary wellness, diagnostics, surgery, and new-client options near Viera",
+    "action": "request an appointment and understand available pet-care services",
+    "focus": [
+      "New-client appointment path",
+      "Veterinary service and surgery pages",
+      "Weekly local content for pet health searches"
+    ],
+    "contact": {
+      "website": "https://premiervet.org/",
+      "sourceType": "owned website",
+      "sourceUrls": ["https://premiervet.org/"]
+    }
+  },
+  {
+    "slug": "suntree-chiropractic",
+    "name": "Suntree Chiropractic",
+    "category": "chiropractic clinic",
+    "audience": "patients comparing chiropractic care, pain relief, injury support, and appointment options near Suntree",
+    "action": "request an appointment and understand care options",
+    "focus": [
+      "New-patient appointment path",
+      "Condition and service education pages",
+      "Weekly local content for chiropractic and pain searches"
+    ],
+    "contact": {
+      "website": "https://www.suntreechiropractic.com/",
+      "sourceType": "owned website",
+      "sourceUrls": ["https://www.suntreechiropractic.com/"]
+    }
+  },
+  {
+    "slug": "valderrama-orthodontics",
+    "name": "Valderrama Orthodontics",
+    "category": "orthodontic practice",
+    "audience": "families and patients comparing braces, Invisalign, and orthodontic consultations near Suntree and Viera",
+    "action": "request a consultation and compare treatment options",
+    "focus": [
+      "Consultation booking path",
+      "Braces, Invisalign, and patient education pages",
+      "Weekly local content for orthodontic searches"
+    ],
+    "contact": {
+      "website": "https://valderramaortho.com/",
+      "sourceType": "owned website",
+      "sourceUrls": ["https://valderramaortho.com/"]
+    }
+  },
+  {
+    "slug": "viera-dental-arts",
+    "name": "Viera Dental Arts",
+    "category": "cosmetic, restorative, and emergency dentistry",
+    "audience": "patients comparing emergency, cosmetic, restorative, and family dental appointments near Viera",
+    "action": "request an appointment and choose the right dental service",
+    "focus": [
+      "Emergency and new-patient appointment path",
+      "Cosmetic and restorative service pages",
+      "Weekly local content for dental treatment searches"
+    ],
+    "contact": {
+      "website": "https://vieradentalarts.com/",
+      "sourceType": "owned website",
+      "sourceUrls": ["https://vieradentalarts.com/"]
+    }
+  },
+  {
+    "slug": "buds-bows-floral-design",
+    "name": "Buds & Bows Floral Design",
+    "category": "floral design and wedding/event florist",
+    "audience": "wedding clients, event planners, gift buyers, and local flower customers",
+    "action": "request an event quote, browse floral work, or contact the florist",
+    "focus": [
+      "Wedding and event gallery sections",
+      "Quote request and consultation prompts",
+      "Weekly local content for wedding and flower searches"
+    ],
+    "contact": {
+      "website": "https://budsandbowsfloraldesign.com/",
+      "sourceType": "owned website",
+      "sourceUrls": ["https://budsandbowsfloraldesign.com/"]
+    }
+  },
+  {
+    "slug": "suntree-florist-gifts",
+    "name": "Suntree Florist & Gifts",
+    "category": "local florist and gift shop",
+    "audience": "gift buyers, sympathy flower customers, wedding clients, and local delivery customers near Suntree",
+    "action": "order flowers, choose an occasion, or request a custom arrangement",
+    "focus": [
+      "Occasion and delivery landing pages",
+      "Wedding, sympathy, and custom-order prompts",
+      "Weekly seasonal flower and gift content"
+    ],
+    "contact": {
+      "website": "https://www.suntreefloristmelbourne.com/",
+      "sourceType": "owned website",
+      "sourceUrls": ["https://www.suntreefloristmelbourne.com/"]
+    }
+  },
+  {
+    "slug": "barbara-j-braley-cpa",
+    "name": "Barbara J Braley, CPA",
+    "category": "CPA, tax, accounting, and bookkeeping office",
+    "audience": "local business owners, taxpayers, and bookkeeping clients comparing accounting help near Suntree",
+    "action": "review services, contact the office, and request accounting support",
+    "focus": [
+      "Tax, bookkeeping, and business consulting service pages",
+      "Trust-first contact and consultation path",
+      "Seasonal local content for tax and accounting searches"
+    ],
+    "contact": {
+      "website": "https://melbourneflcpa.com/",
+      "sourceType": "owned website",
+      "sourceUrls": ["https://melbourneflcpa.com/"]
+    }
+  },
+  {
+    "slug": "supreme-title-closings",
+    "name": "Supreme Title Closings",
+    "category": "title agency",
+    "audience": "real estate agents, buyers, sellers, lenders, and referral partners comparing title companies",
+    "action": "request closing help, contact the office, or send a referral",
+    "focus": [
+      "Agent, buyer, seller, and lender landing pages",
+      "Referral and closing inquiry prompts",
+      "Weekly local real estate closing content"
+    ],
+    "contact": {
+      "website": "https://supremetitlellc.com/",
+      "sourceType": "owned website",
+      "sourceUrls": ["https://supremetitlellc.com/"]
+    }
+  },
+  {
+    "slug": "durham-sons",
+    "name": "Durham & Sons",
+    "category": "HVAC company",
+    "audience": "homeowners, property managers, and commercial customers comparing HVAC repair, replacement, and maintenance options",
+    "action": "request service, call for help, or compare HVAC solutions",
+    "focus": [
+      "Emergency and commercial HVAC service pages",
+      "Quote and service request path",
+      "Weekly local content for heating, cooling, and maintenance searches"
+    ],
+    "contact": {
+      "website": "https://www.durhamandsons.com/commercial-hvac",
+      "sourceType": "owned website",
+      "sourceUrls": ["https://www.durhamandsons.com/commercial-hvac"]
+    }
+  },
+  {
+    "slug": "sun-plumbing",
+    "name": "Sun Plumbing",
+    "category": "plumbing company",
+    "audience": "homeowners, businesses, and property managers comparing plumbing repairs, emergency help, and service appointments",
+    "action": "request plumbing service, call for help, or compare repair options",
+    "focus": [
+      "Emergency plumbing and service-area pages",
+      "Quote and call-first conversion path",
+      "Weekly local content for plumbing repair searches"
+    ],
+    "contact": {
+      "website": "https://sunplumbing.com/",
+      "sourceType": "owned website",
+      "sourceUrls": ["https://sunplumbing.com/"]
+    }
+  }
+]

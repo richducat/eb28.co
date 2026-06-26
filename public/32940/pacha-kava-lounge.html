@@ -1,0 +1,435 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex,follow" />
+    <title>Pacha Kava Lounge free website concept | EB28 Growth Hosting</title>
+    <meta name="description" content="A free local website concept for Pacha Kava Lounge. EB28 can host, optimize, and publish weekly local content for $98/month after owner approval." />
+    <style>
+      :root {
+        color-scheme: light;
+        --ink: #111827;
+        --muted: #5b6472;
+        --line: #e5e7eb;
+        --wash: #f6f7f9;
+        --accent: #0f766e;
+        --accent-soft: color-mix(in srgb, var(--accent) 11%, white);
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        color: var(--ink);
+        background: #fff;
+        line-height: 1.5;
+      }
+      a { color: inherit; }
+      .notice {
+        background: #111827;
+        color: #fff;
+        padding: 10px 20px;
+        text-align: center;
+        font-size: 13px;
+      }
+      .nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 18px 22px;
+      }
+      .brand {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        font-weight: 900;
+        letter-spacing: 0;
+      }
+      .brand small {
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 700;
+      }
+      .nav-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: flex-end;
+      }
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 44px;
+        padding: 12px 16px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        text-decoration: none;
+        font-weight: 800;
+        font-size: 14px;
+        background: #fff;
+      }
+      .btn.primary {
+        background: var(--ink);
+        color: #fff;
+        border-color: var(--ink);
+      }
+      .btn.accent {
+        background: var(--accent);
+        color: #fff;
+        border-color: var(--accent);
+      }
+      .hero {
+        border-top: 1px solid var(--line);
+        background:
+          radial-gradient(circle at 82% 20%, var(--accent-soft), transparent 31%),
+          linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+      }
+      .wrap {
+        max-width: 1180px;
+        margin: 0 auto;
+        padding: 70px 22px;
+      }
+      .hero-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.08fr) minmax(300px, 0.92fr);
+        gap: 48px;
+        align-items: center;
+      }
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin: 0 0 18px;
+        padding: 7px 10px;
+        border-radius: 999px;
+        background: var(--accent-soft);
+        color: var(--accent);
+        font-size: 12px;
+        font-weight: 900;
+        text-transform: uppercase;
+        letter-spacing: .08em;
+      }
+      h1 {
+        margin: 0;
+        max-width: 840px;
+        font-size: clamp(38px, 7vw, 72px);
+        line-height: .95;
+        letter-spacing: 0;
+      }
+      .lead {
+        margin: 24px 0 0;
+        max-width: 680px;
+        color: var(--muted);
+        font-size: clamp(17px, 2vw, 21px);
+      }
+      .hero-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 30px;
+      }
+      .preview {
+        background: #fff;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        box-shadow: 0 24px 70px rgb(15 23 42 / 12%);
+        overflow: hidden;
+      }
+      .preview-top {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 14px;
+        border-bottom: 1px solid var(--line);
+        background: #f8fafc;
+      }
+      .dot { width: 10px; height: 10px; border-radius: 999px; background: #cbd5e1; }
+      .preview-body { padding: 26px; }
+      .mock-title {
+        margin: 0 0 8px;
+        font-size: 27px;
+        line-height: 1.05;
+        letter-spacing: 0;
+      }
+      .mock-strip {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        margin: 22px 0;
+      }
+      .mock-strip span {
+        min-height: 86px;
+        border-radius: 7px;
+        background: var(--accent-soft);
+        border: 1px solid color-mix(in srgb, var(--accent) 20%, white);
+      }
+      .mock-panel {
+        display: grid;
+        gap: 10px;
+        margin-top: 18px;
+      }
+      .mock-panel div {
+        height: 12px;
+        border-radius: 999px;
+        background: #e5e7eb;
+      }
+      .band { border-top: 1px solid var(--line); }
+      .section-title {
+        max-width: 760px;
+        margin: 0 0 26px;
+        font-size: clamp(29px, 4vw, 46px);
+        line-height: 1;
+        letter-spacing: 0;
+      }
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+      }
+      .card {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        padding: 24px;
+        background: #fff;
+      }
+      .card h3 {
+        margin: 0 0 10px;
+        font-size: 18px;
+      }
+      .card p, .card li { color: var(--muted); }
+      .card ul {
+        margin: 0;
+        padding-left: 20px;
+      }
+      .offer {
+        background: var(--ink);
+        color: #fff;
+      }
+      .offer .wrap {
+        display: grid;
+        grid-template-columns: minmax(0, .95fr) minmax(300px, 1.05fr);
+        gap: 36px;
+        align-items: start;
+      }
+      .offer .section-title, .offer .lead { color: #fff; }
+      .offer-list {
+        display: grid;
+        gap: 12px;
+        margin: 26px 0 0;
+        padding: 0;
+        list-style: none;
+      }
+      .offer-list li {
+        display: flex;
+        gap: 10px;
+        color: #d1d5db;
+      }
+      .offer-list li::before {
+        content: "";
+        width: 9px;
+        height: 9px;
+        margin-top: 8px;
+        border-radius: 999px;
+        background: var(--accent);
+        flex: 0 0 auto;
+      }
+      form {
+        display: grid;
+        gap: 12px;
+        padding: 24px;
+        border: 1px solid rgb(255 255 255 / 14%);
+        border-radius: 8px;
+        background: rgb(255 255 255 / 7%);
+      }
+      label {
+        display: grid;
+        gap: 7px;
+        color: #e5e7eb;
+        font-size: 13px;
+        font-weight: 800;
+      }
+      input, textarea {
+        width: 100%;
+        border: 1px solid rgb(255 255 255 / 18%);
+        border-radius: 7px;
+        background: rgb(255 255 255 / 10%);
+        color: #fff;
+        padding: 13px 14px;
+        font: inherit;
+      }
+      input::placeholder, textarea::placeholder { color: #9ca3af; }
+      textarea { min-height: 118px; resize: vertical; }
+      .fine {
+        color: #9ca3af;
+        font-size: 12px;
+      }
+      .index-list {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+      }
+      .index-list a {
+        display: block;
+        padding: 15px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        text-decoration: none;
+        background: #fff;
+        font-weight: 800;
+      }
+      footer {
+        border-top: 1px solid var(--line);
+        padding: 28px 22px;
+        color: var(--muted);
+        text-align: center;
+      }
+      @media (max-width: 860px) {
+        .hero-grid, .offer .wrap, .cards, .index-list {
+          grid-template-columns: 1fr;
+        }
+        .wrap { padding: 46px 18px; }
+        .nav { align-items: flex-start; flex-direction: column; }
+        .nav-actions { justify-content: flex-start; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="notice">
+      Unofficial free website concept prepared by EB28 for owner review. This is not the business's current official website.
+    </div>
+    <header class="nav" aria-label="Page header">
+      <div class="brand">
+        <span>Pacha Kava Lounge</span>
+        <small>kava lounge and social hub growth concept by EB28</small>
+      </div>
+      <div class="nav-actions">
+        <a class="btn" href="https://eb28.co/melbournewebstudio/">About EB28</a>
+        <a class="btn primary" href="#claim">Claim this free site</a>
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="wrap hero-grid">
+          <div>
+            <p class="eyebrow">Free website build + $98/mo Growth Hosting</p>
+            <h1>A sharper website concept for Pacha Kava Lounge.</h1>
+            <p class="lead">
+              Built to help kava customers, event guests, remote workers, and locals looking for alcohol-free social spaces check the menu, event schedule, atmosphere, and visit details without hunting through clutter, slow pages, or unclear next steps.
+            </p>
+            <div class="hero-actions">
+              <a class="btn accent" href="#claim">Claim this free site</a>
+              <a class="btn" href="mailto:social@eb28.co?subject=Claim%20the%20free%20EB28%20website%20for%20Pacha%20Kava%20Lounge&amp;body=I%20want%20to%20claim%20the%20free%20website%20concept%20for%20Pacha%20Kava%20Lounge.%0A%0AName%3A%0APhone%3A%0ABest%20time%20to%20talk%3A%0ACurrent%20website%20or%20Google%20listing%3A%0A">Email EB28</a>
+            </div>
+          </div>
+          <aside class="preview" aria-label="Website concept preview">
+            <div class="preview-top"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+            <div class="preview-body">
+              <p class="eyebrow">kava lounge and social hub</p>
+              <h2 class="mock-title">Pacha Kava Lounge</h2>
+              <p>Clear service or menu highlights, fast contact paths, and local search content structured for customers nearby.</p>
+              <div class="mock-strip"><span></span><span></span><span></span></div>
+              <a class="btn primary" href="#claim">Owner approval needed</a>
+              <div class="mock-panel"><div style="width: 92%"></div><div style="width: 74%"></div><div style="width: 58%"></div></div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="band">
+        <div class="wrap">
+          <h2 class="section-title">What this site would help customers do.</h2>
+          <div class="cards">
+            <article class="card">
+              <h3>Act faster</h3>
+              <p>Put the highest-intent action near the top of every mobile screen: call, book, order, request service, or plan a visit.</p>
+            </article>
+            <article class="card">
+              <h3>Trust the business</h3>
+              <p>Use owner-approved photos, service details, hours, location cues, and proof where a customer naturally needs confidence.</p>
+            </article>
+            <article class="card">
+              <h3>Find it on Google</h3>
+              <p>Publish search-friendly pages and weekly local content so more nearby customers can discover the business before choosing a competitor.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="band">
+        <div class="wrap">
+          <h2 class="section-title">Launch focus for Pacha Kava Lounge.</h2>
+          <div class="cards">
+            <article class="card">
+              <h3>Priority fixes</h3>
+              <ul>
+                <li>Menu and first-visit education</li>
+<li>Event calendar and community prompts</li>
+<li>Local search content for kava, mocktail, and lounge queries</li>
+              </ul>
+            </article>
+            <article class="card">
+              <h3>Owner approval needed</h3>
+              <p>Before public launch, EB28 confirms correct hours, phone number, domain access, photos, menu or service details, and any required legal or brand language.</p>
+            </article>
+            <article class="card">
+              <h3>Lead routing</h3>
+              <p>Every claim form on this concept sends to <strong>social@eb28.co</strong>. EB28 can route approved site leads to the business's preferred inbox at launch.</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="offer" id="claim">
+        <div class="wrap">
+          <div>
+            <p class="eyebrow">EB28 Growth Hosting</p>
+            <h2 class="section-title">The website build is free. Hosting, SEO, and weekly content are $98/month.</h2>
+            <p class="lead">
+              EB28 builds the first version at no upfront cost. If the owner wants to use it, EB28 hosts and improves it for $98/month with local SEO upkeep and weekly blog posts.
+            </p>
+            <ul class="offer-list">
+              <li>Managed website hosting, SSL, technical upkeep, and launch support.</li>
+              <li>Local SEO structure, page titles, descriptions, sitemap, and performance checks.</li>
+              <li>One weekly local blog post or Google Business Profile content prompt.</li>
+              <li>One monthly website update request included after launch.</li>
+              <li>No ownership confusion: the owner keeps the business, domain, content rights, and customer relationships.</li>
+            </ul>
+          </div>
+          <form action="https://formsubmit.co/social@eb28.co" method="POST" accept-charset="UTF-8">
+            <input type="hidden" name="_subject" value="Claim request: Pacha Kava Lounge free EB28 website" />
+            <input type="hidden" name="_captcha" value="false" />
+            <input type="hidden" name="source" value="eb28-32940-pacha-kava-lounge" />
+            <input type="hidden" name="business" value="Pacha Kava Lounge" />
+            <label>
+              Your name
+              <input name="name" autocomplete="name" required placeholder="Name" />
+            </label>
+            <label>
+              Email
+              <input name="email" type="email" autocomplete="email" required placeholder="you@example.com" />
+            </label>
+            <label>
+              Phone
+              <input name="phone" type="tel" autocomplete="tel" placeholder="Best number" />
+            </label>
+            <label>
+              Message
+              <textarea name="message" required placeholder="I want to claim or discuss this free website concept."></textarea>
+            </label>
+            <button class="btn accent" type="submit">Send claim to social@eb28.co</button>
+            <p class="fine">Prefer email? Send a note to <a href="mailto:social@eb28.co?subject=Claim%20the%20free%20EB28%20website%20for%20Pacha%20Kava%20Lounge&amp;body=I%20want%20to%20claim%20the%20free%20website%20concept%20for%20Pacha%20Kava%20Lounge.%0A%0AName%3A%0APhone%3A%0ABest%20time%20to%20talk%3A%0ACurrent%20website%20or%20Google%20listing%3A%0A">social@eb28.co</a>. This concept remains noindex until the business owner approves public use.</p>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      Prepared by <a href="https://eb28.co">EB28</a>. Unofficial concept for owner review only. Contact <a href="mailto:social@eb28.co">social@eb28.co</a>.
+    </footer>
+  </body>
+</html>

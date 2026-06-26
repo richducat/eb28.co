@@ -7,6 +7,7 @@ import { fileURLToPath } from 'node:url';
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const indexPath = path.join(repoRoot, 'public', '32940', 'index.html');
 const outDir = path.join(repoRoot, 'output', 'lead-ops');
+const replacementProspectsPath = path.join(repoRoot, 'scripts', 'data', '32940-replacement-prospects.json');
 const today = new Date().toISOString().slice(0, 10);
 
 const conceptBaseUrl = 'https://eb28.co/32940/';
@@ -202,6 +203,43 @@ const callOrFormContacts = {
   },
 };
 
+async function loadReplacementContacts() {
+  const raw = await fs.readFile(replacementProspectsPath, 'utf8');
+  const parsed = JSON.parse(raw);
+
+  if (!Array.isArray(parsed)) {
+    throw new Error(`${path.relative(repoRoot, replacementProspectsPath)} must contain an array.`);
+  }
+
+  return Object.fromEntries(
+    parsed
+      .filter((prospect) => prospect.slug && prospect.contact)
+      .map((prospect) => {
+        const contact = prospect.contact;
+        const sourceUrls = Array.isArray(contact.sourceUrls) && contact.sourceUrls.length
+          ? contact.sourceUrls
+          : contact.website
+            ? [contact.website]
+            : [];
+
+        return [
+          prospect.slug,
+          {
+            email: contact.email ?? '',
+            phone: contact.phone ?? '',
+            address: contact.address ?? '',
+            website: contact.website ?? '',
+            sourceUrls,
+            sourceType: contact.sourceType ?? 'replacement prospect source',
+            notes: contact.notes ?? 'Wave 1 replacement prospect; confirm local decision maker before outreach.',
+          },
+        ];
+      }),
+  );
+}
+
+const replacementContacts = await loadReplacementContacts();
+
 const avenueTenantSourceSlugs = new Set([
   'clevens-face-and-body-specialist',
   'escapology',
@@ -367,7 +405,7 @@ function extractProspects(indexHtml) {
 }
 
 function withTracking(prospect, index) {
-  const contact = verifiedContacts[prospect.slug] ?? callOrFormContacts[prospect.slug] ?? {};
+  const contact = verifiedContacts[prospect.slug] ?? callOrFormContacts[prospect.slug] ?? replacementContacts[prospect.slug] ?? {};
   const avenueSourceSlug = avenueSourceSlugOverrides[prospect.slug] ?? prospect.slug;
   const sourceUrls = contact.sourceUrls ?? (
     avenueTenantSourceSlugs.has(prospect.slug) ? [`https://www.avenueviera.com/tenants/${avenueSourceSlug}/`] : []

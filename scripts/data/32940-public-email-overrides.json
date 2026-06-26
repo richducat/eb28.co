@@ -321,6 +321,26 @@
     "sourceType": "public email on business website",
     "notes": "Auto-discovered public email from https://www.periudental.com/; verify decision maker before sending."
   },
+  "pizza-gallery-grill": {
+    "email": "j.meagher@pggfl.com",
+    "sourceUrls": [
+      "https://pizzagalleryandgrill.com/tags/breakfast",
+      "https://www.facebook.com/PGGViera/",
+      "https://destinationbrevard.com/local-supporters/business-category/eat/"
+    ],
+    "sourceType": "public email on business listing and public social profile",
+    "notes": "Manually verified public Pizza Gallery & Grill listings expose j.meagher@pggfl.com for the Viera restaurant; verify decision maker before sending."
+  },
+  "poke-fin-viera": {
+    "email": "vi@pokefin.com",
+    "sourceUrls": [
+      "https://www.instagram.com/p/C8rurRkidlK/",
+      "https://pokefin.com/",
+      "https://ma-restaurant-dba-poke-fin-viera.square.site/"
+    ],
+    "sourceType": "public social contact route for Viera location",
+    "notes": "Manually verified public Poke Fin Viera social post exposes vi@pokefin.com for the Viera location; verify decision maker before sending."
+  },
   "premier-veterinary-care": {
     "email": "staff@premiervet.org",
     "sourceUrls": [

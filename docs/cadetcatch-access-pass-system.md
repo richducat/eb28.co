@@ -183,9 +183,39 @@ Response:
 }
 ```
 
+### GET /access/redeem
+
+Browser activation page opened from the emailed invite link.
+
+Request query:
+
+```text
+token=opaque-one-time-token
+```
+
+The page asks the recipient to enter the same email address that received the invite. It posts the token, email, and browser device ID to `POST /access/redeem`.
+
+### POST /access/redeem
+
+Browser form endpoint for email invite activation.
+
+Request:
+
+```text
+invite_token=opaque-one-time-token
+recipient_email=family@example.com
+device_id=generated-browser-device-id
+```
+
+Response:
+
+```text
+HTML success or error page
+```
+
 ### POST /access/redeem-invite
 
-Redeems an email invitation token from an email link or QR link.
+Redeems an email invitation token from the iPhone app or another JSON client.
 
 Request:
 

@@ -154,7 +154,7 @@
   "createdAt": "2026-06-06T11:53:53.691778-04:00",
   "localVerification": {
     "releaseGate": "must be rerun from a clean tree after release-record reconciliation and before production deploy, archive, upload, build selection, or App Review submission",
-    "accessAPITests": "passed in temp venv with service dependencies installed using /tmp/cadetcatch-access-api-venv/bin/python -m unittest discover tests -v; 11 tests passed including StoreKit validation rejection cases and email-only invite delivery contract tests",
+    "accessAPITests": "passed in temp venv with service dependencies installed using /tmp/cadetcatch-access-api-venv/bin/python -m unittest discover tests -v; 14 tests passed including StoreKit validation rejection cases, email-only invite delivery contract tests, and browser invite redemption page/form tests",
     "accessAPIImportSmoke": "passed in temp venv; imported cadetcatch_access.main.app and AppleStoreKitVerifier",
     "simulatorQA": "passed for clean local build 95 candidate using documented CadetCatch test command",
     "simulatorQAReceipt": {
@@ -231,8 +231,8 @@
     },
     "inviteEmailDelivery": {
       "status": "source_ready_not_deployed",
-      "note": "POST /access/invitations sends invite links by email, does not return invite_url to the iPhone app, fails closed with HTTP 503 when email delivery is disabled, and marks failed attempts delivery_failed for honest retry state."
+      "note": "POST /access/invitations sends invite links by email, does not return invite_url to the iPhone app, fails closed with HTTP 503 when email delivery is disabled, marks failed attempts delivery_failed, and the emailed /access/redeem link now has a tested browser activation page."
     }
   },
-  "updatedAt": "2026-06-26T11:45:00Z"
+  "updatedAt": "2026-06-26T16:02:01Z"
 }

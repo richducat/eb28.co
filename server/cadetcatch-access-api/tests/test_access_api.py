@@ -6,7 +6,12 @@ from unittest.mock import patch
 from fastapi import HTTPException
 
 from cadetcatch_access.mailer import InviteMailer
-from cadetcatch_access.main import InvitationRequest, create_invitation
+from cadetcatch_access.main import (
+    InvitationRequest,
+    create_invitation,
+    redeem_invite_form,
+    redeem_invite_page,
+)
 from cadetcatch_access.store import AccessStore
 
 
@@ -91,6 +96,58 @@ class AccessAPITests(unittest.TestCase):
         self.assertEqual(caught.exception.status_code, 503)
         invitations = self.store.list_invitations(owner_email="owner@example.com")
         self.assertEqual(invitations[0]["status"], "delivery_failed")
+
+    def test_redeem_invite_page_renders_email_bound_form(self) -> None:
+        response = redeem_invite_page(token="a" * 32)
+        html = response.body.decode("utf-8")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('action="/access/redeem"', html)
+        self.assertIn('name="invite_token"', html)
+        self.assertIn("a" * 32, html)
+        self.assertIn("Email address", html)
+
+    def test_redeem_invite_form_activates_access(self) -> None:
+        self.grant_owner()
+        invitation = self.store.create_invitation(
+            owner_email="owner@example.com",
+            role="spouse_or_family",
+            recipient_email="family@example.com",
+            public_base_url="https://api.cadetcatch.com",
+        )
+
+        response = redeem_invite_form(
+            invite_token=invitation.token,
+            recipient_email="family@example.com",
+            device_id="web-device-a",
+            access_store=self.store,
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("Access Activated", response.body.decode("utf-8"))
+        status = self.store.status(email="family@example.com")
+        self.assertTrue(status["active"])
+        self.assertEqual(status["access_type"], "family_invite")
+        self.assertEqual(status["role"], "spouse_or_family")
+
+    def test_redeem_invite_form_rejects_wrong_email(self) -> None:
+        self.grant_owner()
+        invitation = self.store.create_invitation(
+            owner_email="owner@example.com",
+            role="cadet",
+            recipient_email="cadet@example.com",
+            public_base_url="https://api.cadetcatch.com",
+        )
+
+        response = redeem_invite_form(
+            invite_token=invitation.token,
+            recipient_email="wrong@example.com",
+            device_id="web-device-a",
+            access_store=self.store,
+        )
+
+        self.assertEqual(response.status_code, 403)
+        self.assertIn("Invite Could Not Be Activated", response.body.decode("utf-8"))
 
 
 if __name__ == "__main__":

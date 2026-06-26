@@ -1,10 +1,13 @@
 from __future__ import annotations
 
 import os
+import secrets
 from pathlib import Path
+from html import escape
 
-from fastapi import Depends, FastAPI, Header, HTTPException, Query, Request, status
+from fastapi import Depends, FastAPI, Form, Header, HTTPException, Query, Request, status
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import HTMLResponse
 from pydantic import BaseModel, EmailStr, Field
 
 from .mailer import InviteDeliveryError, InviteMailer
@@ -113,6 +116,159 @@ def require_admin(
         token = authorization[7:].strip()
     if not token or token != expected:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Forbidden")
+
+
+def redeem_page_html(
+    *,
+    token: str,
+    title: str = "Activate CadetCatch Access",
+    message: str = "Enter the email address that received this invite.",
+    status_text: str = "",
+    error: str = "",
+    email: str = "",
+) -> str:
+    escaped_token = escape(token)
+    escaped_title = escape(title)
+    escaped_message = escape(message)
+    escaped_status = escape(status_text)
+    escaped_error = escape(error)
+    escaped_email = escape(email)
+    device_seed = secrets.token_urlsafe(16)
+    return f"""<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{escaped_title}</title>
+  <style>
+    :root {{
+      color-scheme: light;
+      --bg: #eef4fb;
+      --card: #ffffff;
+      --ink: #06152b;
+      --muted: #66748a;
+      --border: #d8e1ee;
+      --accent: #ff4f18;
+      --accent-dark: #d83c0c;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif;
+    }}
+    * {{ box-sizing: border-box; }}
+    body {{
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      background: radial-gradient(circle at top, #ffffff 0, var(--bg) 52%, #e6edf7 100%);
+      color: var(--ink);
+    }}
+    main {{
+      width: min(100%, 440px);
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      box-shadow: 0 18px 45px rgba(6, 21, 43, 0.12);
+      padding: 28px;
+    }}
+    .brand {{
+      margin: 0 0 8px;
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }}
+    h1 {{
+      margin: 0;
+      font-size: clamp(28px, 9vw, 38px);
+      line-height: 1.02;
+      letter-spacing: 0;
+    }}
+    p {{
+      margin: 14px 0 0;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.45;
+    }}
+    form {{ margin-top: 22px; }}
+    label {{
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 800;
+      font-size: 14px;
+    }}
+    input {{
+      width: 100%;
+      min-height: 52px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 0 14px;
+      color: var(--ink);
+      font: inherit;
+      background: #f9fbfe;
+    }}
+    button {{
+      width: 100%;
+      min-height: 54px;
+      margin-top: 16px;
+      border: 0;
+      border-radius: 16px;
+      background: var(--accent);
+      color: white;
+      font: inherit;
+      font-weight: 900;
+      cursor: pointer;
+    }}
+    button:active {{ background: var(--accent-dark); }}
+    .status {{
+      margin-top: 18px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: #ecfff5;
+      color: #0d6b3f;
+      font-weight: 800;
+    }}
+    .error {{
+      margin-top: 18px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: #fff1ed;
+      color: #a33112;
+      font-weight: 800;
+    }}
+    .fine {{
+      margin-top: 18px;
+      font-size: 13px;
+    }}
+  </style>
+</head>
+<body>
+  <main>
+    <p class="brand">CadetCatch</p>
+    <h1>{escaped_title}</h1>
+    <p>{escaped_message}</p>
+    {f'<div class="status">{escaped_status}</div>' if escaped_status else ''}
+    {f'<div class="error">{escaped_error}</div>' if escaped_error else ''}
+    <form method="post" action="/access/redeem">
+      <input type="hidden" name="invite_token" value="{escaped_token}">
+      <input type="hidden" name="device_id" id="device_id" value="web-redeem-{device_seed}">
+      <label for="recipient_email">Email address</label>
+      <input id="recipient_email" name="recipient_email" type="email" autocomplete="email" value="{escaped_email}" required>
+      <button type="submit">Activate Access</button>
+    </form>
+    <p class="fine">This invite works only for the email address it was sent to and can be used once.</p>
+  </main>
+  <script>
+    const key = "cadetcatchRedeemDeviceId";
+    let id = localStorage.getItem(key);
+    if (!id) {{
+      id = "web-redeem-" + crypto.randomUUID();
+      localStorage.setItem(key, id);
+    }}
+    document.getElementById("device_id").value = id;
+  </script>
+</body>
+</html>"""
 
 
 @app.get("/health")
@@ -246,6 +402,68 @@ def redeem_invite(
     except PermissionError as error:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(error)) from error
     return {**status_response, "message": "Family access active."}
+
+
+@app.get("/access/redeem", response_class=HTMLResponse)
+def redeem_invite_page(token: str = Query(min_length=16, max_length=240)) -> HTMLResponse:
+    return HTMLResponse(redeem_page_html(token=token))
+
+
+@app.post("/access/redeem", response_class=HTMLResponse)
+def redeem_invite_form(
+    invite_token: str = Form(min_length=16, max_length=240),
+    recipient_email: str = Form(min_length=3, max_length=320),
+    device_id: str = Form(min_length=1, max_length=160),
+    access_store: AccessStore = Depends(store),
+) -> HTMLResponse:
+    try:
+        access_store.redeem_invitation(
+            invite_token=invite_token,
+            recipient_email=recipient_email,
+            device_id=device_id,
+        )
+    except LookupError:
+        return HTMLResponse(
+            redeem_page_html(
+                token=invite_token,
+                title="Invite Not Found",
+                message="Check that you opened the newest CadetCatch invite email.",
+                error="This invite link was not found.",
+                email=recipient_email,
+            ),
+            status_code=status.HTTP_404_NOT_FOUND,
+        )
+    except PermissionError as error:
+        return HTMLResponse(
+            redeem_page_html(
+                token=invite_token,
+                title="Invite Could Not Be Activated",
+                message="Make sure you are using the same email address that received the invite.",
+                error=str(error),
+                email=recipient_email,
+            ),
+            status_code=status.HTTP_403_FORBIDDEN,
+        )
+    except ValueError as error:
+        return HTMLResponse(
+            redeem_page_html(
+                token=invite_token,
+                title="Check Your Email Address",
+                message="Enter the email address that received this CadetCatch invite.",
+                error=str(error),
+                email=recipient_email,
+            ),
+            status_code=status.HTTP_400_BAD_REQUEST,
+        )
+    return HTMLResponse(
+        redeem_page_html(
+            token=invite_token,
+            title="Access Activated",
+            message="You can now use CadetCatch with this email address.",
+            status_text="Your family access is active.",
+            email=recipient_email,
+        )
+    )
 
 
 @app.post("/admin/access-grants")

@@ -12,6 +12,8 @@ The iPhone app and desktop companion already call:
 - `POST /access/subscription/link`
 - `GET /access/invitations`
 - `POST /access/invitations`
+- `GET /access/redeem`
+- `POST /access/redeem`
 - `POST /access/redeem-invite`
 
 This service implements those endpoints and adds admin-only tester grants so Richard, Karen, Ken, and reviewer accounts can be verified before App Review submission.
@@ -55,6 +57,8 @@ Apple root certificate files must be installed under `CADETCATCH_APPLE_ROOT_CERT
 ## Invitation Email Delivery
 
 `POST /access/invitations` sends spouse/family and cadet invite links by email. It does not return the raw invite URL to the iPhone app. Production must use `CADETCATCH_INVITE_EMAIL_MODE=smtp`; `console` is local/staging only and `disabled` fails closed with HTTP 503.
+
+Invite emails link to `GET /access/redeem?token=...`, which shows a simple browser activation page. The recipient must enter the same email address that received the invite. The browser form posts to `POST /access/redeem`; the iPhone app can still redeem directly with the JSON `POST /access/redeem-invite` endpoint.
 
 ## StoreKit Linking
 

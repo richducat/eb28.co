@@ -16,6 +16,7 @@
     "leadops:command-center:32940": "npm run leadops:32940 && open output/lead-ops/32940-manual-outreach-command-center.html",
     "leadops:followups:32940": "npm run leadops:32940 && open output/lead-ops/32940-follow-up-workbench.html",
     "leadops:verify-capture:32940": "node scripts/verify-32940-lead-capture.mjs",
+    "leadops:test-capture:32940": "EB28_ALLOW_LIVE_FORM_TEST=1 node scripts/verify-32940-lead-capture.mjs --live-sample 10 --submit-test",
     "publish:fundmanager": "node scripts/publish-fundmanager-live.mjs",
     "build": "node scripts/build-site.mjs",
     "preview": "vite preview",

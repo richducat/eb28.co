@@ -16,11 +16,12 @@ const expectedEmail = 'social@eb28.co';
 const expectedFormAction = `https://formsubmit.co/${expectedEmail}`;
 const expectedAjaxEndpoint = `https://formsubmit.co/ajax/${expectedEmail}`;
 const expectedNextUrl = 'https://eb28.co/32940/claim-received.html';
+const liveTestConceptUrl = 'https://eb28.co/32940/arabesque-flavors-of-the-middle-east.html';
 const expectedPageCount = 129;
 const supportPages = new Set(['index.html', 'claim-received.html']);
 
 function parseArgs(argv) {
-  const args = { live: false, liveLimit: 0 };
+  const args = { live: false, liveLimit: 0, submitTest: false };
   for (let index = 0; index < argv.length; index += 1) {
     const arg = argv[index];
     if (arg === '--live') {
@@ -29,6 +30,8 @@ function parseArgs(argv) {
     } else if (arg === '--live-sample') {
       args.live = true;
       args.liveLimit = Number.parseInt(argv[++index], 10);
+    } else if (arg === '--submit-test') {
+      args.submitTest = true;
     } else if (arg === '--help' || arg === '-h') {
       args.help = true;
     } else {
@@ -45,7 +48,8 @@ function usage() {
   return `Usage:
   npm run leadops:verify-capture:32940
   npm run leadops:verify-capture:32940 -- --live-sample 10
-  npm run leadops:verify-capture:32940 -- --live`;
+  npm run leadops:verify-capture:32940 -- --live
+  EB28_ALLOW_LIVE_FORM_TEST=1 npm run leadops:verify-capture:32940 -- --live-sample 10 --submit-test`;
 }
 
 function normalizeHtml(value = '') {
@@ -180,6 +184,98 @@ function fetchText(url) {
   });
 }
 
+function postJson(url, payload) {
+  return new Promise((resolve, reject) => {
+    const body = JSON.stringify(payload);
+    const request = https.request(
+      new URL(url),
+      {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          'Content-Length': Buffer.byteLength(body),
+          'User-Agent': 'EB28 lead capture verifier',
+          Origin: 'https://eb28.co',
+          Referer: liveTestConceptUrl,
+        },
+      },
+      (response) => {
+        let responseBody = '';
+        response.setEncoding('utf8');
+        response.on('data', (chunk) => {
+          responseBody += chunk;
+        });
+        response.on('end', () => {
+          const json = (() => {
+            try {
+              return JSON.parse(responseBody);
+            } catch {
+              return null;
+            }
+          })();
+          resolve({ statusCode: response.statusCode, headers: response.headers, body: responseBody, json });
+        });
+      },
+    );
+    request.on('error', reject);
+    request.setTimeout(15000, function onTimeout() {
+      this.destroy(new Error(`${url} timed out`));
+    });
+    request.write(body);
+    request.end();
+  });
+}
+
+async function submitLiveTestLead() {
+  if (process.env.EB28_ALLOW_LIVE_FORM_TEST !== '1') {
+    throw new Error('Refusing live FormSubmit test without EB28_ALLOW_LIVE_FORM_TEST=1.');
+  }
+
+  const submittedAt = new Date().toISOString();
+  const payload = {
+    _subject: `[EB28 TEST] Live lead capture verification ${submittedAt}`,
+    _captcha: 'false',
+    _template: 'table',
+    source: 'eb28-32940-live-formsubmit-test',
+    business: 'EB28 lead capture test - do not count',
+    category: 'test',
+    concept_url: liveTestConceptUrl,
+    offer: 'Free website build plus EB28 Growth Hosting at $98/month with SEO and weekly blog posts',
+    requested_next_step: 'Live FormSubmit acceptance test only - do not count as a booked call',
+    name: 'EB28 live form test',
+    email: expectedEmail,
+    phone: 'do-not-call-test',
+    preferred_review_time: 'TEST ONLY - do not count',
+    message:
+      'Automated EB28 lead capture verification. This is not a customer lead and must not count toward the 100 booked-call goal.',
+  };
+
+  const response = await postJson(expectedAjaxEndpoint, payload);
+  const successValue = response.json && typeof response.json === 'object' ? response.json.success : undefined;
+  const accepted =
+    response.statusCode >= 200 &&
+    response.statusCode < 300 &&
+    successValue !== false &&
+    String(successValue).toLowerCase() !== 'false';
+
+  return {
+    status: accepted ? 'accepted' : 'failed',
+    submittedAt,
+    endpoint: expectedAjaxEndpoint,
+    recipient: expectedEmail,
+    subject: payload._subject,
+    source: payload.source,
+    httpStatus: response.statusCode,
+    success: successValue ?? null,
+    message:
+      response.json && typeof response.json === 'object' && typeof response.json.message === 'string'
+        ? response.json.message
+        : '',
+    responseBodyPreview: response.body.slice(0, 500),
+  };
+}
+
 async function verifyLive(slugs, limit) {
   const selected = slugs.slice(0, limit);
   const results = [];
@@ -236,11 +332,27 @@ function renderMarkdown(report) {
     `- Lead capture module: ${report.leadCaptureModule.passed ? 'passed' : 'failed'}`,
     `- Live pages checked: ${report.summary.live ? report.summary.live.checked : 0}`,
     `- Live failures: ${report.summary.live ? report.summary.live.failedPages : 0}`,
+    `- Live FormSubmit acceptance test: ${report.liveSubmission ? report.liveSubmission.status : 'not run'}`,
     '',
     '## Gate',
     '',
     report.passed ? 'PASS: all checked lead-capture routes point to social@eb28.co.' : 'FAIL: one or more lead-capture checks failed.',
   ];
+
+  if (report.liveSubmission) {
+    lines.push(
+      '',
+      '## Live FormSubmit Acceptance Test',
+      '',
+      `- Status: ${report.liveSubmission.status}`,
+      `- Endpoint: ${report.liveSubmission.endpoint}`,
+      `- Recipient: ${report.liveSubmission.recipient}`,
+      `- Subject: ${report.liveSubmission.subject}`,
+      `- HTTP status: ${report.liveSubmission.httpStatus}`,
+      `- Response message: ${report.liveSubmission.message || '(none)'}`,
+      '- Counting rule: this test payload is not a customer lead and must not count toward booked-call totals.',
+    );
+  }
 
   for (const [label, section] of Object.entries(report.summary)) {
     if (!section || !section.failures.length) continue;
@@ -275,6 +387,7 @@ async function main() {
   if (liveVerification) {
     liveVerification.supportResults = [await verifyLiveClaimReceived()];
   }
+  const liveSubmission = args.submitTest ? await submitLiveTestLead() : null;
 
   const summary = {
     public: summaryFor(publicVerification),
@@ -288,7 +401,8 @@ async function main() {
     summary.public.failedPages === 0 &&
     summary.docs.failedPages === 0 &&
     leadCaptureModule.passed &&
-    (!summary.live || summary.live.failedPages === 0);
+    (!summary.live || summary.live.failedPages === 0) &&
+    (!liveSubmission || liveSubmission.status === 'accepted');
 
   const report = {
     generatedAt: new Date().toISOString(),
@@ -300,6 +414,7 @@ async function main() {
     passed,
     summary,
     leadCaptureModule,
+    liveSubmission,
   };
 
   await fs.mkdir(outDir, { recursive: true });
@@ -318,6 +433,8 @@ async function main() {
     livePages: summary.live?.checked || 0,
     liveSupportPages: summary.live?.supportChecked || 0,
     liveFailures: summary.live?.failedPages || 0,
+    liveSubmissionStatus: liveSubmission?.status || 'not_run',
+    liveSubmissionHttpStatus: liveSubmission?.httpStatus || null,
   }, null, 2));
 
   if (!passed) {

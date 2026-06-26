@@ -218,6 +218,7 @@ function mergeState(rows, state) {
 
 function makeOutreachMessage(row) {
   const contactLine = row.email ? 'I wanted to send it to the right person for review.' : 'I am looking for the right person to review it.';
+  const claimUrl = `${row.concept_url}#claim`;
   return [
     `Hi ${row.business} team,`,
     '',
@@ -228,7 +229,7 @@ function makeOutreachMessage(row) {
     '',
     'The build is free. If you want to use it, EB28 can host and improve it for $98/month, including managed hosting, technical SEO upkeep, and one weekly local blog or Google Business content prompt.',
     '',
-    `${contactLine} If this is useful, reply with the best person to talk to or book through: https://eb28.co/melbournewebstudio/#contact`,
+    `${contactLine} If this is useful, reply with the best person to talk to or book a 10-minute review through: ${claimUrl}`,
     '',
     'If this is not useful, reply "no thanks" and I will not follow up.',
     '',
@@ -315,6 +316,7 @@ function recommendedChannel(row) {
 }
 
 function makePhoneScript(row) {
+  const claimUrl = `${row.concept_url}#claim`;
   return [
     `Hi, this is Rich with EB28. Is this the right number for ${row.business}?`,
     '',
@@ -324,21 +326,23 @@ function makePhoneScript(row) {
     '',
     'The build itself is free. If they want to use it, EB28 can host and improve it for $98/month with managed hosting, technical SEO upkeep, and one weekly local blog or Google Business content prompt.',
     '',
-    'Who is the best person to send it to, or is there a better time for a quick review call?',
+    `Who is the best person to send it to, or is there a better time for a quick review call? They can also use the review form here: ${claimUrl}`,
   ].join('\n');
 }
 
 function makeVoicemailScript(row) {
+  const claimUrl = `${row.concept_url}#claim`;
   return [
     `Hi, this is Rich with EB28. I built a free website concept for ${row.business}.`,
     `The link is ${row.concept_url}.`,
     'It is a private owner-review concept, not your official website.',
     'If you want it tailored and hosted, EB28 Growth Hosting is $98/month.',
-    'You can reach me at social@eb28.co or through eb28.co/melbournewebstudio.',
+    `You can reach me at social@eb28.co or use the review form at ${claimUrl}.`,
   ].join(' ');
 }
 
 function makeContactFormMessage(row) {
+  const claimUrl = `${row.concept_url}#claim`;
   return [
     `Hi ${row.business} team,`,
     '',
@@ -349,7 +353,7 @@ function makeContactFormMessage(row) {
     '',
     'The build itself is free. If you want to use it, EB28 can host and improve it for $98/month, including managed hosting, technical SEO upkeep, and one weekly local blog or Google Business content prompt.',
     '',
-    'Who is the best owner or manager to review it?',
+    `Who is the best owner or manager to review it? They can reply here or book a 10-minute review through ${claimUrl}.`,
     '',
     'Rich',
     'EB28',

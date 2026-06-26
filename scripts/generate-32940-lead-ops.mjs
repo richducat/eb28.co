@@ -14,7 +14,6 @@ const publicEmailOverridesPath = path.join(repoRoot, 'scripts', 'data', '32940-p
 const today = new Date().toISOString().slice(0, 10);
 
 const conceptBaseUrl = 'https://eb28.co/32940/';
-const contactUrl = 'https://eb28.co/melbournewebstudio/#contact';
 const ownerEmail = 'social@eb28.co';
 const minimumProspectCount = 100;
 
@@ -553,6 +552,7 @@ function headerSafe(value = '') {
 }
 
 function makeBody(prospect) {
+  const claimUrl = `${prospect.conceptUrl}#claim`;
   return [
     `Hi ${prospect.business} team,`,
     '',
@@ -563,8 +563,8 @@ function makeBody(prospect) {
     '',
     'The build itself is free. If you want to use it, EB28 can host and improve it for $98/month, including managed hosting, technical SEO upkeep, and one weekly local blog or Google Business content prompt.',
     '',
-    `If you want me to tailor it with your real photos, menu/services, hours, and preferred contact path, reply with the best person to talk to or grab a time here:`,
-    contactUrl,
+    'If you want me to tailor it with your real photos, menu/services, hours, and preferred contact path, reply with the best person to talk to or book a 10-minute review through the form here:',
+    claimUrl,
     '',
     'If this is not useful, reply "no thanks" and I will not follow up.',
     '',

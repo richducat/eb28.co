@@ -1,6 +1,8 @@
 node_modules/
 .DS_Store
 .vercel
+__pycache__/
+*.pyc
 # Do not publish generated/private dashboard data to GitHub Pages.
 docs/data/
 docs/api/fundmanager-data

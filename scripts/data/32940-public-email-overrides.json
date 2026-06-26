@@ -664,6 +664,95 @@
     "sourceType": "public official corporate customer-service email",
     "notes": "Manually verified official Ethan Allen contact pages expose customerservice@ethanallen.com; Avenue Viera verifies the local design center listing. Corporate route; ask to forward to the local design center or district manager."
   },
+  "world-market": {
+    "email": "customercare@worldmarket.com",
+    "sourceUrls": [
+      "https://www.worldmarket.com/customer-service/contact-us.html",
+      "https://www.worldmarket.com/customer-service/privacy-policy.html",
+      "https://www.avenueviera.com/tenants/world-market/"
+    ],
+    "sourceType": "public official corporate customer-service email",
+    "notes": "Manually verified official World Market contact and privacy pages expose customercare@worldmarket.com; Avenue Viera verifies the local store listing. Corporate route; ask to forward to the local store or district manager."
+  },
+  "talbots": {
+    "email": "customer.service@talbots.com",
+    "sourceUrls": [
+      "https://www.talbots.com/cs-ontario-accessibility/cs-ontario-accessibility.html",
+      "https://www.talbots.com/contactus",
+      "https://www.avenueviera.com/tenants/talbots/"
+    ],
+    "sourceType": "public official corporate customer-service email",
+    "notes": "Manually verified official Talbots accessibility/customer-feedback page exposes customer.service@talbots.com; Avenue Viera verifies the local store listing. Corporate route; ask to forward to the local store or district manager."
+  },
+  "sur-la-table": {
+    "email": "customerservice@surlatable.com",
+    "sourceUrls": [
+      "https://www.surlatable.com/privacy-policy.html",
+      "https://www.surlatable.com/faqs.html",
+      "https://www.avenueviera.com/tenants/sur-la-table/"
+    ],
+    "sourceType": "public official corporate customer-service email",
+    "notes": "Manually verified official Sur La Table privacy and FAQ pages expose customerservice@surlatable.com for customer-service inquiries; Avenue Viera verifies the local store listing. Corporate route; ask to forward to the local store or district manager."
+  },
+  "books-a-million": {
+    "email": "support@booksamillion.com",
+    "sourceUrls": [
+      "https://support.booksamillion.com/hc/en-us/articles/6083876175899-How-do-I-Contact-Customer-Service-for-Books-A-Million",
+      "https://www.booksamillion.com/help/contact.html",
+      "https://www.avenueviera.com/tenants/books-a-million/"
+    ],
+    "sourceType": "public official corporate customer-service email",
+    "notes": "Manually verified official Books-A-Million support article exposes support@booksamillion.com; Avenue Viera verifies the local bookstore listing. Corporate route; ask to forward to the local store or district manager."
+  },
+  "sally-beauty-supply": {
+    "email": "sbcs@sallybeauty.com",
+    "sourceUrls": [
+      "https://www.sallybeautyholdings.com/contact-us",
+      "https://www.sallybeauty.com/help/",
+      "https://www.avenueviera.com/tenants/sally-beauty-supply/"
+    ],
+    "sourceType": "public official corporate customer-service email",
+    "notes": "Manually verified official Sally Beauty Holdings contact page exposes sbcs@sallybeauty.com for Sally Beauty Supply USA customer service; Avenue Viera verifies the local store listing. Corporate route; ask to forward to the local store or district manager."
+  },
+  "warby-parker": {
+    "email": "help@warbyparker.com",
+    "sourceUrls": [
+      "https://www.warbyparker.com/terms-of-use",
+      "https://stores.warbyparker.com/fl/melbourne/2271-town-center-ave",
+      "https://www.avenueviera.com/tenants/warby-parker/"
+    ],
+    "sourceType": "public official corporate customer-service email",
+    "notes": "Manually verified official Warby Parker terms page exposes help@warbyparker.com and official store page verifies the Melbourne location. Corporate route; ask to forward to the local store or district manager."
+  },
+  "southern-tide": {
+    "email": "theskipjack@southerntide.com",
+    "sourceUrls": [
+      "https://southerntide.com/pages/contact-us",
+      "https://www.avenueviera.com/tenants/southern-tide/"
+    ],
+    "sourceType": "public official corporate customer-service email",
+    "notes": "Manually verified official Southern Tide contact page exposes theskipjack@southerntide.com; Avenue Viera verifies the local store listing. Corporate route; ask to forward to the local store or district manager."
+  },
+  "moes-southwest-grill": {
+    "email": "lsm@moes.com",
+    "sourceUrls": [
+      "https://www.moes.com/media",
+      "https://www.moes.com/",
+      "https://www.avenueviera.com/tenants/moes-southwest-grill/"
+    ],
+    "sourceType": "public official corporate local-advertising email",
+    "notes": "Manually verified official Moe's media page exposes lsm@moes.com for local advertising; Avenue Viera verifies the local restaurant listing. Corporate/local-marketing route; ask to forward to the franchisee, local operator, or district manager."
+  },
+  "kay-jewelers": {
+    "email": "kayccs@kay.com",
+    "sourceUrls": [
+      "https://www.kay.com/contactUsSuccess",
+      "https://www.kay.com/customer-care",
+      "https://www.avenueviera.com/tenants/kay-jewelers/"
+    ],
+    "sourceType": "public official corporate customer-service email",
+    "notes": "Manually verified official Kay contact page exposes kayccs@kay.com for customer-care follow-up; Avenue Viera verifies the local jewelry store listing. Corporate route; ask to forward to the local store or district manager."
+  },
   "viera-dental": {
     "email": "vieradental@heartlanddentalcare.com",
     "sourceUrls": [

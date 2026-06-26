@@ -27,7 +27,13 @@
     "instagram": {
       "caption": "AI receptionist for local business: automate the repeatable steps, keep the trust moments human.\n\nFull guide: eb28.co/blog/",
       "creativeBrief": "Carousel: missed lead problem, automate-first checklist, keep-human checklist, first-five-minute handoff, CTA to EB28 project brief.",
-      "status": "draft_only"
+      "status": "draft_only",
+      "media": {
+        "type": "image",
+        "localPath": "docs/social-assets/eb28/2026-06-25-pm.png",
+        "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/codex/eb28-buffer-social-automation/docs/social-assets/eb28/2026-06-25-pm.png",
+        "alt": "EB28 growth brief card for AI Receptionist for Local Business: What to Automate"
+      }
     },
     "shortFormVideo": {
       "hook": "Your AI receptionist should not replace your best sales judgment.",
@@ -39,7 +45,23 @@
         "EB28 article URL and project-brief CTA"
       ],
       "caption": "Automate speed. Keep judgment human. EB28 refreshed the AI receptionist guide for local businesses.",
-      "status": "draft_only"
+      "status": "draft_only",
+      "media": {
+        "type": "image",
+        "localPath": "docs/social-assets/eb28/2026-06-25-pm.png",
+        "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/codex/eb28-buffer-social-automation/docs/social-assets/eb28/2026-06-25-pm.png",
+        "alt": "EB28 growth brief card for AI Receptionist for Local Business: What to Automate"
+      }
     }
+  },
+  "bufferAsset": {
+    "type": "image",
+    "localPath": "docs/social-assets/eb28/2026-06-25-pm.png",
+    "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/codex/eb28-buffer-social-automation/docs/social-assets/eb28/2026-06-25-pm.png",
+    "alt": "EB28 growth brief card for AI Receptionist for Local Business: What to Automate"
+  },
+  "socialPublishGuard": {
+    "status": "buffer_ready_pending_verified_channels",
+    "note": "Buffer publishing is enabled only when the API account, organization, exact channel IDs, and EB28-owned channels verify successfully."
   }
 }

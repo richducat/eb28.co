@@ -152,7 +152,7 @@ jobs:
           EB28_BUFFER_EXPECTED_ACCOUNT_EMAIL: social@eb28.co
           EB28_BUFFER_ORGANIZATION_ID: ${{ secrets.EB28_BUFFER_ORGANIZATION_ID }}
           EB28_BUFFER_CHANNELS: ${{ secrets.EB28_BUFFER_CHANNELS }}
-          EB28_BUFFER_PLATFORM_ALLOWLIST: instagram,tiktok
+          EB28_BUFFER_PLATFORM_ALLOWLIST: ${{ secrets.EB28_BUFFER_PLATFORM_ALLOWLIST }}
           EB28_SOCIAL_MEDIA_BASE_URL: https://raw.githubusercontent.com/${{ github.repository }}/main/docs/social-assets/eb28
         run: |
           node scripts/publish-eb28-buffer.mjs --publish --slot "${{ steps.slot.outputs.slot }}" --date "${{ steps.slot.outputs.eastern_date }}"

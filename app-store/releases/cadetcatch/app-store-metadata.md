@@ -7,7 +7,7 @@
 - Bundle ID: co.eb28.cadetcatch
 - SKU: cadetcatch-ios
 - Version: 1.0.1
-- Build: 94
+- Build: 95
 - Primary category: Lifestyle
 - Secondary category: Photo & Video
 - Marketing URL: https://eb28.co/cc/
@@ -36,18 +36,18 @@ cadet, military, academy, photos, family, parents, coast
 
 ## What's New
 
-CadetCatch build 94 fixes the paid access gate, restores the approved StoreKit product IDs, uses the $12.99 Family Monthly fallback price, keeps clearer High/Medium/Low match range guidance for parents, and preserves reliable matched-photo previews.
+CadetCatch build 95 keeps the paid access gate, adds account email controls for future desktop and family sharing access, keeps the approved $12.99 Family Monthly subscription path, and preserves the server photo search and reliable matched-photo previews.
 
 ## Review Notes
 
-No login is required. Add a cadet profile from Roster using a clear photo selected from Photos. Open Info to review the parent-facing photo matching guidance. Open Home and tap Search Photos; the app sends the selected cadet photo for matching, shows loading state, and displays possible matches returned by CadetCatch. Open Photos to review possible matches, view a photo, save it to the iPhone Photos library, save it in the app, and create a family note. Open Photo Access from More or from a locked photo to review Family Monthly title, 1 month duration, $12.99/month fallback price if StoreKit has not loaded the live price yet, auto-renewal disclosure, Restore Purchases, Privacy Policy, and Terms of Use (EULA).
+No login is required for the core iPhone photo search flow. Add a cadet profile from Roster using a clear photo selected from Photos. Open Info to review the parent-facing photo matching guidance. Open Home and tap Search Photos; the app sends the selected cadet photo for matching, shows loading state, and displays possible matches returned by CadetCatch. Open Photos to review possible matches, view a photo, save it to the iPhone Photos library, save it in the app, and create a family note. Open Photo Access from More or from a locked photo to review Family Monthly title, 1 month duration, $12.99/month fallback price if StoreKit has not loaded the live price yet, auto-renewal disclosure, Restore Purchases, Privacy Policy, and Terms of Use (EULA). Open More > Account & Desktop to see the account email field, desktop status, and spouse/family plus cadet invite slots; these require the CadetCatch access API before production use.
 
 ## Submission Snapshot
 
 - Release type: Manual
 - iPhone screenshots attached: Yes
 - iPad screenshots attached: Not required; target is iPhone only
-- Login required: No
+- Login required: No for the core iPhone photo search flow
 - Subscriptions present: Yes
 - Ads present: No
 - App Privacy updated for this build: Yes
@@ -55,8 +55,8 @@ No login is required. Add a cadet profile from Roster using a clear photo select
 
 ## Internal Launch Notes
 
-- App Store Connect version state: Build 94 local monetization gate candidate; not archived or uploaded.
-- Attached build ID or build number: Build 94 candidate; ASC build ID not applicable until upload completes and is verified.
+- App Store Connect version state: Build 95 local account/desktop access candidate; not archived or uploaded.
+- Attached build ID or build number: Build 95 candidate; ASC build ID not applicable until upload completes and is verified.
 - Review submission ID: Not applicable to this TestFlight upload candidate
 - Release after approval: After approval
 - In-app purchases and subscription status: Approved

@@ -13,15 +13,20 @@ import ActivityKit
 struct CadetCatchApp: App {
     @State private var store = CadetCatchStore()
     @State private var purchases = PurchaseManager()
+    @State private var access = AccessManager()
 
     var body: some Scene {
         WindowGroup {
             AppFlowView()
                 .environment(store)
                 .environment(purchases)
+                .environment(access)
                 .preferredColorScheme(.light)
                 .task {
                     await purchases.configure()
+                    if access.isConfigured {
+                        await access.refreshStatus()
+                    }
                 }
         }
     }
@@ -665,6 +670,18 @@ enum PurchaseOutcome: Equatable {
     }
 }
 
+struct SubscriptionLinkPayload: Codable, Equatable {
+    var productID: String
+    var transactionID: String
+    var originalTransactionID: String
+
+    private enum CodingKeys: String, CodingKey {
+        case productID = "product_id"
+        case transactionID = "transaction_id"
+        case originalTransactionID = "original_transaction_id"
+    }
+}
+
 @MainActor
 @Observable
 final class PurchaseManager {
@@ -672,6 +689,7 @@ final class PurchaseManager {
     var entitledProductIDs: Set<String> = []
     var isLoadingProducts = false
     var lastMessage: String?
+    var monthlySubscriptionLink: SubscriptionLinkPayload?
 
     @ObservationIgnored private var updatesTask: Task<Void, Never>?
 
@@ -737,6 +755,7 @@ final class PurchaseManager {
                 let transaction = try checkVerified(verification)
                 if commerceProduct == .monthly {
                     entitledProductIDs.insert(transaction.productID)
+                    monthlySubscriptionLink = Self.subscriptionLinkPayload(from: transaction)
                 }
                 await transaction.finish()
                 lastMessage = "\(commerceProduct.title) is active."
@@ -771,11 +790,16 @@ final class PurchaseManager {
 
     func refreshEntitlements() async {
         var activeIDs = Set<String>()
+        var activeMonthlyLink: SubscriptionLinkPayload?
         for await result in StoreKit.Transaction.currentEntitlements {
             guard let transaction = try? checkVerified(result) else { continue }
             activeIDs.insert(transaction.productID)
+            if transaction.productID == CommerceProduct.monthly.rawValue {
+                activeMonthlyLink = Self.subscriptionLinkPayload(from: transaction)
+            }
         }
         entitledProductIDs = activeIDs
+        monthlySubscriptionLink = activeMonthlyLink
     }
 
     private func handle(transactionResult: VerificationResult<StoreKit.Transaction>) async {
@@ -785,6 +809,7 @@ final class PurchaseManager {
         }
 
         if transaction.productID == CommerceProduct.monthly.rawValue {
+            monthlySubscriptionLink = Self.subscriptionLinkPayload(from: transaction)
             await refreshEntitlements()
         }
         await transaction.finish()
@@ -798,6 +823,324 @@ final class PurchaseManager {
             throw StoreKitError.notAvailableInStorefront
         }
     }
+
+    private static func subscriptionLinkPayload(from transaction: StoreKit.Transaction) -> SubscriptionLinkPayload {
+        SubscriptionLinkPayload(
+            productID: transaction.productID,
+            transactionID: String(transaction.id),
+            originalTransactionID: String(transaction.originalID)
+        )
+    }
+}
+
+enum AccessInviteRole: String, CaseIterable, Codable, Identifiable {
+    case spouseOrFamily = "spouse_or_family"
+    case cadet
+
+    var id: String { rawValue }
+
+    var title: String {
+        switch self {
+        case .spouseOrFamily: "Spouse or family"
+        case .cadet: "Cadet"
+        }
+    }
+
+    var helperText: String {
+        switch self {
+        case .spouseOrFamily:
+            "Included for one spouse or immediate family member."
+        case .cadet:
+            "Included for your cadet."
+        }
+    }
+}
+
+struct AccessStatus: Codable, Equatable {
+    var active: Bool
+    var accessType: String?
+    var role: String?
+    var desktopAddOnActive: Bool
+    var expiresAt: String?
+
+    private enum CodingKeys: String, CodingKey {
+        case active
+        case accessType = "access_type"
+        case role
+        case desktopAddOnActive = "desktop_add_on_active"
+        case expiresAt = "expires_at"
+    }
+}
+
+struct AccessInvitation: Codable, Equatable, Identifiable {
+    var id: String { role.rawValue }
+    var role: AccessInviteRole
+    var recipientEmail: String
+    var status: String
+    var redeemedAt: String?
+
+    private enum CodingKeys: String, CodingKey {
+        case role
+        case recipientEmail = "recipient_email"
+        case status
+        case redeemedAt = "redeemed_at"
+    }
+}
+
+@MainActor
+@Observable
+final class AccessManager {
+    var accountEmail: String
+    var status: AccessStatus?
+    var invitations: [AccessInvitation] = []
+    var isLoading = false
+    var lastMessage: String?
+
+    @ObservationIgnored private let defaults = UserDefaults.standard
+    @ObservationIgnored private let accountEmailKey = "cadetcatch.access.accountEmail"
+    @ObservationIgnored private let deviceIDKey = "cadetcatch.access.deviceID"
+
+    init() {
+        accountEmail = defaults.string(forKey: accountEmailKey) ?? ""
+    }
+
+    var isConfigured: Bool {
+        normalizedEmail != nil
+    }
+
+    var hasActiveAppAccess: Bool {
+        status?.active == true
+    }
+
+    var desktopAccessActive: Bool {
+        status?.desktopAddOnActive == true
+    }
+
+    var deviceID: String {
+        if let existing = defaults.string(forKey: deviceIDKey), !existing.isEmpty {
+            return existing
+        }
+        let generated = UUID().uuidString
+        defaults.set(generated, forKey: deviceIDKey)
+        return generated
+    }
+
+    func saveAccountEmail() {
+        guard let normalizedEmail else {
+            lastMessage = "Enter the email you use for CadetCatch access."
+            return
+        }
+        accountEmail = normalizedEmail
+        defaults.set(normalizedEmail, forKey: accountEmailKey)
+        lastMessage = "Account email saved."
+    }
+
+    func refreshStatus() async {
+        guard let normalizedEmail else {
+            lastMessage = "Enter your account email first."
+            return
+        }
+
+        isLoading = true
+        defer { isLoading = false }
+
+        do {
+            var components = URLComponents(url: AccessAPI.statusURL, resolvingAgainstBaseURL: false)!
+            components.queryItems = [
+                URLQueryItem(name: "device_id", value: deviceID),
+                URLQueryItem(name: "email", value: normalizedEmail)
+            ]
+            guard let url = components.url else { throw AccessAPI.AccessError.invalidRequest }
+            let status: AccessStatus = try await AccessAPI.get(url)
+            self.status = status
+            lastMessage = status.active ? "CadetCatch access is active." : "No active account access was found."
+            await refreshInvitations()
+        } catch {
+            status = nil
+            lastMessage = "Account access could not be verified yet."
+        }
+    }
+
+    func linkMonthlySubscription(_ payload: SubscriptionLinkPayload?) async {
+        guard let payload else {
+            lastMessage = "Start or restore Family Monthly before linking access."
+            return
+        }
+        guard let normalizedEmail else {
+            lastMessage = "Enter your account email before linking monthly access."
+            return
+        }
+
+        isLoading = true
+        defer { isLoading = false }
+
+        do {
+            let request = SubscriptionLinkRequest(
+                deviceID: deviceID,
+                email: normalizedEmail,
+                productID: payload.productID,
+                transactionID: payload.transactionID,
+                originalTransactionID: payload.originalTransactionID
+            )
+            let status: AccessStatus = try await AccessAPI.post(request, to: AccessAPI.subscriptionLinkURL)
+            self.status = status
+            lastMessage = "Monthly access linked to \(normalizedEmail)."
+            await refreshInvitations()
+        } catch {
+            lastMessage = "Monthly access could not be linked yet."
+        }
+    }
+
+    func refreshInvitations() async {
+        guard let normalizedEmail else { return }
+
+        do {
+            var components = URLComponents(url: AccessAPI.invitationsURL, resolvingAgainstBaseURL: false)!
+            components.queryItems = [
+                URLQueryItem(name: "device_id", value: deviceID),
+                URLQueryItem(name: "email", value: normalizedEmail)
+            ]
+            guard let url = components.url else { throw AccessAPI.AccessError.invalidRequest }
+            let response: InvitationsResponse = try await AccessAPI.get(url)
+            invitations = response.invitations
+        } catch {
+            invitations = []
+        }
+    }
+
+    func sendInvitation(role: AccessInviteRole, recipientEmail: String, monthlyLink: SubscriptionLinkPayload?) async {
+        guard let normalizedOwnerEmail = normalizedEmail else {
+            lastMessage = "Enter your account email before sending invites."
+            return
+        }
+        guard let recipient = Self.normalizeEmail(recipientEmail) else {
+            lastMessage = "Enter a valid email for \(role.title.lowercased())."
+            return
+        }
+        let originalTransactionID = monthlyLink?.originalTransactionID
+        guard originalTransactionID != nil || hasActiveAppAccess else {
+            lastMessage = "Link Family Monthly or verify full account access before sending invites."
+            return
+        }
+
+        isLoading = true
+        defer { isLoading = false }
+
+        do {
+            let request = InvitationRequest(
+                deviceID: deviceID,
+                ownerEmail: normalizedOwnerEmail,
+                originalTransactionID: originalTransactionID,
+                role: role.rawValue,
+                recipientEmail: recipient
+            )
+            let response: InvitationSendResponse = try await AccessAPI.post(request, to: AccessAPI.invitationsURL)
+            lastMessage = response.sent ? "\(role.title) invite sent to \(recipient)." : "Invite was not sent."
+            await refreshInvitations()
+        } catch {
+            lastMessage = "\(role.title) invite could not be sent yet."
+        }
+    }
+
+    private var normalizedEmail: String? {
+        Self.normalizeEmail(accountEmail)
+    }
+
+    private static func normalizeEmail(_ email: String) -> String? {
+        let cleaned = email.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        guard cleaned.contains("@"), cleaned.contains(".") else { return nil }
+        return cleaned
+    }
+}
+
+private enum AccessAPI {
+    static let baseURL = URL(string: "https://api.cadetcatch.com")!
+    static let statusURL = baseURL.appending(path: "access/status")
+    static let subscriptionLinkURL = baseURL.appending(path: "access/subscription/link")
+    static let invitationsURL = baseURL.appending(path: "access/invitations")
+
+    private static let session: URLSession = {
+        let config = URLSessionConfiguration.default
+        config.timeoutIntervalForRequest = 25
+        config.timeoutIntervalForResource = 45
+        return URLSession(configuration: config)
+    }()
+
+    enum AccessError: Error {
+        case invalidRequest
+        case invalidResponse
+        case server(statusCode: Int)
+    }
+
+    static func get<T: Decodable>(_ url: URL) async throws -> T {
+        var request = URLRequest(url: url)
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+        let (data, response) = try await session.data(for: request)
+        guard let http = response as? HTTPURLResponse else { throw AccessError.invalidResponse }
+        guard (200..<300).contains(http.statusCode) else { throw AccessError.server(statusCode: http.statusCode) }
+        return try JSONDecoder().decode(T.self, from: data)
+    }
+
+    static func post<Body: Encodable, Response: Decodable>(_ body: Body, to url: URL) async throws -> Response {
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Accept")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpBody = try JSONEncoder().encode(body)
+        let (data, response) = try await session.data(for: request)
+        guard let http = response as? HTTPURLResponse else { throw AccessError.invalidResponse }
+        guard (200..<300).contains(http.statusCode) else { throw AccessError.server(statusCode: http.statusCode) }
+        return try JSONDecoder().decode(Response.self, from: data)
+    }
+}
+
+private struct SubscriptionLinkRequest: Encodable {
+    var deviceID: String
+    var email: String
+    var productID: String
+    var transactionID: String
+    var originalTransactionID: String
+
+    private enum CodingKeys: String, CodingKey {
+        case deviceID = "device_id"
+        case email
+        case productID = "product_id"
+        case transactionID = "transaction_id"
+        case originalTransactionID = "original_transaction_id"
+    }
+}
+
+private struct InvitationRequest: Encodable {
+    var deviceID: String
+    var ownerEmail: String
+    var originalTransactionID: String?
+    var role: String
+    var recipientEmail: String
+
+    private enum CodingKeys: String, CodingKey {
+        case deviceID = "device_id"
+        case ownerEmail = "owner_email"
+        case originalTransactionID = "original_transaction_id"
+        case role
+        case recipientEmail = "recipient_email"
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(deviceID, forKey: .deviceID)
+        try container.encode(ownerEmail, forKey: .ownerEmail)
+        try container.encodeIfPresent(originalTransactionID, forKey: .originalTransactionID)
+        try container.encode(role, forKey: .role)
+        try container.encode(recipientEmail, forKey: .recipientEmail)
+    }
+}
+
+private struct InvitationsResponse: Decodable {
+    var invitations: [AccessInvitation]
+}
+
+private struct InvitationSendResponse: Decodable {
+    var sent: Bool
 }
 
 struct Cadet: Identifiable, Codable, Hashable {
@@ -2266,6 +2609,7 @@ struct ScanReceiptSheet: View {
 struct HomeView: View {
     @Environment(CadetCatchStore.self) private var store
     @Environment(PurchaseManager.self) private var purchases
+    @Environment(AccessManager.self) private var access
     @State private var showingPurchaseOptions = false
 
     var body: some View {
@@ -2310,11 +2654,15 @@ struct HomeView: View {
             store.lastScanMessage = "Add a cadet profile before searching photos."
             return
         }
-        guard store.beginSearch(hasMonthlyAccess: purchases.hasMonthlyAccess) else {
+        guard store.beginSearch(hasMonthlyAccess: hasFullAccess) else {
             showingPurchaseOptions = true
             return
         }
         await store.scanActiveCadet()
+    }
+
+    private var hasFullAccess: Bool {
+        purchases.hasMonthlyAccess || access.hasActiveAppAccess
     }
 }
 
@@ -2437,6 +2785,7 @@ struct SourceSummaryCard: View {
 struct ScanCard: View {
     @Environment(CadetCatchStore.self) private var store
     @Environment(PurchaseManager.self) private var purchases
+    @Environment(AccessManager.self) private var access
     @State private var explainedTolerance: SearchTolerance?
     let onScan: () -> Void
     let onShowPurchaseOptions: () -> Void
@@ -2457,9 +2806,9 @@ struct ScanCard: View {
             }
 
             HStack(spacing: 8) {
-                Image(systemName: purchases.hasMonthlyAccess ? "checkmark.seal.fill" : "creditcard.fill")
-                    .foregroundStyle(purchases.hasMonthlyAccess ? Theme.green : Theme.orange)
-                Text(store.searchAccessLabel(hasMonthlyAccess: purchases.hasMonthlyAccess))
+                Image(systemName: hasFullAccess ? "checkmark.seal.fill" : "creditcard.fill")
+                    .foregroundStyle(hasFullAccess ? Theme.green : Theme.orange)
+                Text(store.searchAccessLabel(hasMonthlyAccess: hasFullAccess))
                     .font(.caption.weight(.bold))
                     .foregroundStyle(Theme.navyDark)
                 Spacer()
@@ -2508,7 +2857,7 @@ struct ScanCard: View {
             .buttonStyle(PrimaryButtonStyle())
             .disabled(store.scanProgress.isScanning)
 
-            if !purchases.hasMonthlyAccess {
+            if !hasFullAccess {
                 Button(action: onShowPurchaseOptions) {
                     Text("View Purchase Options")
                         .font(.subheadline.weight(.bold))
@@ -2529,11 +2878,15 @@ struct ScanCard: View {
     }
 
     private var scanButtonTitle: String {
-        store.canStartSearch(hasMonthlyAccess: purchases.hasMonthlyAccess) ? "Search Photos" : "Buy Photo Search"
+        store.canStartSearch(hasMonthlyAccess: hasFullAccess) ? "Search Photos" : "Buy Photo Search"
     }
 
     private var scanButtonSymbol: String {
-        store.canStartSearch(hasMonthlyAccess: purchases.hasMonthlyAccess) ? "face.dashed" : "lock.open.fill"
+        store.canStartSearch(hasMonthlyAccess: hasFullAccess) ? "face.dashed" : "lock.open.fill"
+    }
+
+    private var hasFullAccess: Bool {
+        purchases.hasMonthlyAccess || access.hasActiveAppAccess
     }
 }
 
@@ -2856,10 +3209,11 @@ struct PhotosView: View {
 struct CandidateCard: View {
     @Environment(CadetCatchStore.self) private var store
     @Environment(PurchaseManager.self) private var purchases
+    @Environment(AccessManager.self) private var access
     let candidate: PhotoCandidate
 
     var body: some View {
-        let unlocked = store.isUnlocked(candidate, hasMonthlyAccess: purchases.hasMonthlyAccess)
+        let unlocked = store.isUnlocked(candidate, hasMonthlyAccess: hasFullAccess)
 
         VStack(alignment: .leading, spacing: 0) {
             ZStack(alignment: .topTrailing) {
@@ -2898,11 +3252,16 @@ struct CandidateCard: View {
         .overlay(RoundedRectangle(cornerRadius: 18).stroke(Theme.border, lineWidth: 1))
         .clipShape(RoundedRectangle(cornerRadius: 18))
     }
+
+    private var hasFullAccess: Bool {
+        purchases.hasMonthlyAccess || access.hasActiveAppAccess
+    }
 }
 
 struct CandidateDetailView: View {
     @Environment(CadetCatchStore.self) private var store
     @Environment(PurchaseManager.self) private var purchases
+    @Environment(AccessManager.self) private var access
     let candidate: PhotoCandidate
     @State private var draft: String?
     @State private var isUnlocking = false
@@ -2910,7 +3269,7 @@ struct CandidateDetailView: View {
     @State private var saveToPhotosState: SaveToPhotosState = .idle
 
     var body: some View {
-        let unlocked = store.isUnlocked(candidate, hasMonthlyAccess: purchases.hasMonthlyAccess)
+        let unlocked = store.isUnlocked(candidate, hasMonthlyAccess: hasFullAccess)
 
         NavigationStack {
             ScrollView {
@@ -3074,6 +3433,10 @@ struct CandidateDetailView: View {
     private func openPhotoSettings() {
         guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
         UIApplication.shared.open(url)
+    }
+
+    private var hasFullAccess: Bool {
+        purchases.hasMonthlyAccess || access.hasActiveAppAccess
     }
 }
 
@@ -3612,10 +3975,13 @@ struct SourceRow: View {
 struct MoreView: View {
     @Environment(CadetCatchStore.self) private var store
     @Environment(PurchaseManager.self) private var purchases
+    @Environment(AccessManager.self) private var access
     @State private var query = ""
     @State private var showingResetAlert = false
     @State private var showingPurchaseOptions = false
     @State private var isRestoring = false
+    @State private var spouseOrFamilyEmail = ""
+    @State private var cadetInviteEmail = ""
 
     var filteredEntries: [JargonEntry] {
         guard !query.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
@@ -3628,14 +3994,64 @@ struct MoreView: View {
     }
 
     var body: some View {
+        @Bindable var access = access
+
         List {
+            Section("Account & Desktop") {
+                VStack(alignment: .leading, spacing: 10) {
+                    Text("Use the same email for CadetCatch on iPhone and desktop.")
+                        .font(.caption)
+                        .foregroundStyle(Theme.muted)
+                    TextField("email@example.com", text: $access.accountEmail)
+                        .keyboardType(.emailAddress)
+                        .textContentType(.emailAddress)
+                        .textInputAutocapitalization(.never)
+                        .autocorrectionDisabled()
+                    HStack {
+                        Button {
+                            access.saveAccountEmail()
+                            Task { await access.refreshStatus() }
+                        } label: {
+                            Label("Save & Check", systemImage: "person.crop.circle.badge.checkmark")
+                        }
+                        .disabled(access.isLoading)
+
+                        if purchases.hasMonthlyAccess {
+                            Button {
+                                Task { await access.linkMonthlySubscription(purchases.monthlySubscriptionLink) }
+                            } label: {
+                                Label("Link Monthly", systemImage: "link")
+                            }
+                            .disabled(access.isLoading)
+                        }
+                    }
+                }
+
+                HStack {
+                    Label("Desktop Access", systemImage: access.desktopAccessActive ? "desktopcomputer" : "lock.fill")
+                    Spacer()
+                    Text(access.desktopAccessActive ? "Active" : "Not Active")
+                        .font(.caption.weight(.black))
+                        .foregroundStyle(access.desktopAccessActive ? Theme.green : Theme.muted)
+                }
+
+                Text("Desktop access unlocks only after the $7.99 add-on is verified on your CadetCatch account.")
+                    .font(.caption)
+                    .foregroundStyle(Theme.muted)
+            }
+
             Section("Photo Access") {
                 HStack {
-                    Label("Monthly Access", systemImage: purchases.hasMonthlyAccess ? "checkmark.seal.fill" : "lock.fill")
+                    Label("Full App Access", systemImage: hasFullAccess ? "checkmark.seal.fill" : "lock.fill")
                     Spacer()
-                    Text(purchases.hasMonthlyAccess ? "Active" : "Not Active")
+                    Text(hasFullAccess ? "Active" : "Not Active")
                         .font(.caption.weight(.black))
-                        .foregroundStyle(purchases.hasMonthlyAccess ? Theme.green : Theme.muted)
+                        .foregroundStyle(hasFullAccess ? Theme.green : Theme.muted)
+                }
+                if access.hasActiveAppAccess && !purchases.hasMonthlyAccess {
+                    Text("Access is active for this account email.")
+                        .font(.caption)
+                        .foregroundStyle(Theme.green)
                 }
                 Button {
                     showingPurchaseOptions = true
@@ -3653,6 +4069,54 @@ struct MoreView: View {
                 }
                 .disabled(isRestoring)
                 if let message = purchases.lastMessage {
+                    Text(message)
+                        .font(.caption)
+                        .foregroundStyle(Theme.muted)
+                }
+            }
+
+            Section("Share Access") {
+                Text("Family Monthly includes one spouse or family login and one cadet login. Invites are sent by email and must be redeemed with that same email.")
+                    .font(.caption)
+                    .foregroundStyle(Theme.muted)
+
+                AccessInviteRow(
+                    role: .spouseOrFamily,
+                    email: $spouseOrFamilyEmail,
+                    invitation: access.invitations.first { $0.role == .spouseOrFamily },
+                    isEnabled: canManageInvites
+                ) {
+                    Task {
+                        await access.sendInvitation(
+                            role: .spouseOrFamily,
+                            recipientEmail: spouseOrFamilyEmail,
+                            monthlyLink: purchases.monthlySubscriptionLink
+                        )
+                    }
+                }
+
+                AccessInviteRow(
+                    role: .cadet,
+                    email: $cadetInviteEmail,
+                    invitation: access.invitations.first { $0.role == .cadet },
+                    isEnabled: canManageInvites
+                ) {
+                    Task {
+                        await access.sendInvitation(
+                            role: .cadet,
+                            recipientEmail: cadetInviteEmail,
+                            monthlyLink: purchases.monthlySubscriptionLink
+                        )
+                    }
+                }
+
+                if !canManageInvites {
+                    Text("Start Family Monthly or verify full account access before sending spouse or cadet invites.")
+                        .font(.caption)
+                        .foregroundStyle(Theme.orange)
+                }
+
+                if let message = access.lastMessage {
                     Text(message)
                         .font(.caption)
                         .foregroundStyle(Theme.muted)
@@ -3708,6 +4172,69 @@ struct MoreView: View {
         } message: {
             Text("This removes cadets, saved photos, and search history from this device.")
         }
+        .task {
+            await access.refreshStatus()
+        }
+    }
+
+    private var hasFullAccess: Bool {
+        purchases.hasMonthlyAccess || access.hasActiveAppAccess
+    }
+
+    private var canManageInvites: Bool {
+        hasFullAccess && access.isConfigured && !access.isLoading
+    }
+}
+
+struct AccessInviteRow: View {
+    let role: AccessInviteRole
+    @Binding var email: String
+    let invitation: AccessInvitation?
+    let isEnabled: Bool
+    let onSend: () -> Void
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            HStack {
+                VStack(alignment: .leading, spacing: 3) {
+                    Text(role.title)
+                        .font(.headline.weight(.bold))
+                    Text(role.helperText)
+                        .font(.caption)
+                        .foregroundStyle(Theme.muted)
+                }
+                Spacer()
+                Text(statusText)
+                    .font(.caption.weight(.black))
+                    .foregroundStyle(statusColor)
+            }
+
+            TextField("email@example.com", text: $email)
+                .keyboardType(.emailAddress)
+                .textContentType(.emailAddress)
+                .textInputAutocapitalization(.never)
+                .autocorrectionDisabled()
+
+            Button(action: onSend) {
+                Label(invitation == nil ? "Send Invite" : "Resend Invite", systemImage: "envelope.fill")
+            }
+            .disabled(!isEnabled)
+        }
+        .padding(.vertical, 4)
+    }
+
+    private var statusText: String {
+        guard let invitation else { return "Available" }
+        if invitation.status == "redeemed" { return "Redeemed" }
+        if invitation.status == "sent" { return "Sent" }
+        return invitation.status.capitalized
+    }
+
+    private var statusColor: Color {
+        guard let invitation else { return Theme.muted }
+        if invitation.status == "redeemed" { return Theme.green }
+        if invitation.status == "sent" { return Theme.navy }
+        return Theme.muted
     }
 }
 

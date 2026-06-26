@@ -35,9 +35,10 @@
     90,
     91,
     92,
-    93
+    93,
+    94
   ],
-  "nextUploadMustUseBuildNumberGreaterThan": 93,
+  "nextUploadMustUseBuildNumberGreaterThan": 94,
   "notes": [
     "Build 80 is the active App Store review recovery candidate and must not be re-uploaded.",
     "Builds 82, 83, 84 exist in App Store Connect/TestFlight evidence and must not be overwritten by stale source.",
@@ -51,7 +52,8 @@
     "Build 92 is reserved for the stale remote photo URL cache bypass candidate.",
     "Build 92 was uploaded to App Store Connect on 2026-06-24 and verified visible in TestFlight; it must not be reused.",
     "Build 93 is reserved for the monetization gate fix that removes unconditional monthly access and restores .v1 StoreKit product IDs.",
-    "Build 94 is reserved for the corrected $12.99 Family Monthly price fallback and desktop add-on/access-invite planning pass."
+    "Build 94 is reserved for the corrected $12.99 Family Monthly price fallback and desktop add-on/access-invite planning pass.",
+    "Build 95 is reserved for the local account email, spouse/family invite, cadet invite, tester-access gate, and static desktop companion implementation candidate."
   ],
-  "lastUpdated": "2026-06-25"
+  "lastUpdated": "2026-06-26"
 }

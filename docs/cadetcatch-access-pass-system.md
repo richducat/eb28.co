@@ -65,6 +65,7 @@ Request:
 ```json
 {
   "device_id": "generated-app-install-id",
+  "email": "subscriber@example.com",
   "product_id": "co.eb28.cadetcatch.family.monthly.v1",
   "transaction_id": "apple-transaction-id",
   "original_transaction_id": "apple-original-transaction-id"
@@ -85,6 +86,7 @@ Request query:
 
 ```text
 device_id=generated-app-install-id
+email=subscriber-or-invited-user@example.com
 ```
 
 Response:
@@ -108,6 +110,7 @@ Request:
 ```json
 {
   "device_id": "generated-app-install-id",
+  "owner_email": "subscriber@example.com",
   "original_transaction_id": "apple-original-transaction-id",
   "role": "spouse_or_family",
   "recipient_email": "family@example.com"
@@ -139,6 +142,13 @@ Response:
 ### GET /access/invitations
 
 Returns invitation status for the active subscriber without exposing reusable raw codes.
+
+Request query:
+
+```text
+device_id=generated-app-install-id
+email=subscriber@example.com
+```
 
 Response:
 
@@ -245,14 +255,15 @@ access_invitations
 ## iOS App Behavior
 
 - Monthly access is active if StoreKit reports `co.eb28.cadetcatch.family.monthly.v1` as an active entitlement.
+- Full app access is also active when the production API returns `active: true` from `/access/status` for the saved account email. This covers internal testers, comp access, spouse/family access, and cadet access.
 - Desktop access is active only if the desktop add-on entitlement is active.
 - Invite access is active only if `/access/status` or `/access/redeem-invite` returns `active: true`.
-- The `Share Access` section is shown only after monthly access is active and the access API is reachable.
+- The `Share Access` section is enabled after monthly access is active or the server verifies full account access.
 - The app should show two clear invite slots:
   - Spouse or family member
   - Cadet
 - Each slot accepts one email address and shows sent/redeemed/revoked status.
-- If the access API is unavailable, the app must fail closed and keep paid features locked.
+- If the access API is unavailable, server-backed access must fail closed and keep paid features locked unless StoreKit monthly access is active.
 
 ## Desktop App Behavior
 

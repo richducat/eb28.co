@@ -6,6 +6,21 @@ CadetCatch desktop access should be a separate client and entitlement, not a loc
 
 The iPhone app remains the current release candidate. The desktop app is the next implementation track.
 
+## Current Local Companion
+
+A static desktop companion shell exists at:
+
+- `public/cc/desktop/index.html`
+- `docs/cc/desktop/index.html`
+
+It uses:
+
+- `GET https://api.cadetcatch.com/access/status` to verify the same account email and desktop add-on entitlement.
+- `POST https://api.cadetcatch.com/search` with multipart field `file`, `top_k`, `min_score`, and `face_index`.
+- Returned `match.photo_url` directly for previews and "Open full photo" links.
+
+The page intentionally blocks search until `desktop_add_on_active` is true. As of local build 95 preparation, `https://api.cadetcatch.com/access/status` returns `404`, so this companion is a source-level implementation only and is not production-ready.
+
 ## Pricing
 
 - iPhone Family Monthly remains `$12.99/month`.
@@ -14,20 +29,21 @@ The iPhone app remains the current release candidate. The desktop app is the nex
 
 ## Safest Desktop Path
 
-Use the existing SwiftUI app as the shared product surface, but create a separate desktop target after the access API is ready.
+Use the static desktop companion for the first browser-based desktop workflow. A Mac Catalyst or native macOS target can come later if Apple distribution is required.
 
 Recommended order:
 
 1. Create a shared account/access layer in the CadetCatch API.
 2. Add iOS UI for email-only spouse/family and cadet invitations.
-3. Add the desktop add-on StoreKit product in App Store Connect only after exact SOP approval.
-4. Add a Mac Catalyst or native macOS target that reuses:
+3. Deploy and verify the browser desktop companion behind the same account/access API.
+4. Add the desktop add-on StoreKit product in App Store Connect only after exact SOP approval.
+5. If needed later, add a Mac Catalyst or native macOS target that reuses:
    - Cadet roster model
    - CadetCatch search API client
    - matched-photo viewer
    - saved photo/note model
    - access-status API client
-5. Replace iOS-only capabilities with desktop-safe equivalents:
+6. Replace iOS-only capabilities with desktop-safe equivalents:
    - ActivityKit: iOS only, omit on desktop
    - Photos save flow: use desktop file save/export behavior
    - BackgroundTasks: iOS only, omit or replace with desktop refresh

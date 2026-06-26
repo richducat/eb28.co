@@ -577,6 +577,15 @@
     "sourceType": "public local business profile contact listing",
     "notes": "Manually verified public Asian Wok profile exposes info@asia-wok.org for the Melbourne/Viera restaurant; official site verifies the matching N Wickham Rd location; verify decision maker before sending."
   },
+  "fujiyama-japanese": {
+    "email": "jimmy-weng@hotmail.com",
+    "sourceUrls": [
+      "https://nextdoor.com/pages/fujiyama-seafood-steak-melbourne-fl/",
+      "https://fujiyamamelbourne.com/"
+    ],
+    "sourceType": "public local business profile contact listing",
+    "notes": "Manually verified public Fujiyama Seafood & Steak profile exposes jimmy-weng@hotmail.com for the Melbourne/Viera restaurant; official site verifies the matching N Wickham Rd location and phone; verify decision maker before sending."
+  },
   "viera-dental": {
     "email": "vieradental@heartlanddentalcare.com",
     "sourceUrls": [

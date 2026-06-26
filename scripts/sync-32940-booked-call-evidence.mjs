@@ -22,6 +22,7 @@ const bookingSprintMdPath = path.join(outDir, '32940-booking-sprint.md');
 const bookingSprintHtmlPath = path.join(outDir, '32940-booking-sprint.html');
 const finalActionQueuePath = path.join(outDir, '32940-final-action-queue.md');
 const callSheetsDir = path.join(outDir, 'call-sheets');
+const ownerEmail = 'social@eb28.co';
 const today = new Date().toISOString().slice(0, 10);
 
 const allowedStatuses = new Set(['not_started', 'contacted', 'follow_up', 'booked', 'not_interested']);
@@ -251,13 +252,13 @@ function makeOutreachMessage(row) {
     '',
     'The build is free. If you want to use it, EB28 can host and improve it for $98/month, including managed hosting, technical SEO upkeep, and one weekly local blog or Google Business content prompt.',
     '',
-    `${contactLine} If this is useful, email social@eb28.co with the best person to talk to or book a 10-minute review through: ${claimUrl}`,
+    `${contactLine} If this is useful, email ${ownerEmail} with the best person to talk to or book a 10-minute review through: ${claimUrl}`,
     '',
     'If this is not useful, reply "no thanks" and I will not follow up.',
     '',
     'Rich',
     'EB28',
-    'social@eb28.co',
+    ownerEmail,
   ].join('\n');
 }
 
@@ -359,7 +360,7 @@ function makeVoicemailScript(row) {
     `The link is ${row.concept_url}.`,
     'It is a private owner-review concept, not your official website.',
     'If you want it tailored and hosted, EB28 Growth Hosting is $98/month.',
-    `You can reach me at social@eb28.co or use the review form at ${claimUrl}.`,
+    `You can reach me at ${ownerEmail} or use the review form at ${claimUrl}.`,
   ].join(' ');
 }
 
@@ -375,11 +376,11 @@ function makeContactFormMessage(row) {
     '',
     'The build itself is free. If you want to use it, EB28 can host and improve it for $98/month, including managed hosting, technical SEO upkeep, and one weekly local blog or Google Business content prompt.',
     '',
-    `Who is the best owner or manager to review it? They can email social@eb28.co or book a 10-minute review through ${claimUrl}.`,
+    `Who is the best owner or manager to review it? They can email ${ownerEmail} or book a 10-minute review through ${claimUrl}.`,
     '',
     'Rich',
     'EB28',
-    'social@eb28.co',
+    ownerEmail,
   ].join('\n');
 }
 
@@ -415,13 +416,13 @@ function makeBookingAskMessage(row) {
     '',
     'Would the owner or manager be open to a 10-minute review today or tomorrow? No prep is needed; I can show what is already built and what I would change before putting it live.',
     '',
-    `They can reply here, email social@eb28.co, or use the review form: ${claimUrl}`,
+    `Please reply to ${ownerEmail} with the best owner or manager to review it, or use the review form: ${claimUrl}`,
     '',
     'If this is not useful, reply "no thanks" and I will not follow up.',
     '',
     'Rich',
     'EB28',
-    'social@eb28.co',
+    ownerEmail,
   ].join('\n');
 }
 
@@ -429,7 +430,12 @@ function buildMailto(to, subject, body) {
   if (!to) {
     return '';
   }
-  return `mailto:${to}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  const params = new URLSearchParams({
+    subject,
+    body,
+    bcc: ownerEmail,
+  });
+  return `mailto:${to}?${params.toString()}`;
 }
 
 function buildGmailComposeUrl(to, subject, body) {
@@ -440,6 +446,7 @@ function buildGmailComposeUrl(to, subject, body) {
     view: 'cm',
     fs: '1',
     to,
+    bcc: ownerEmail,
     su: subject,
     body,
   });

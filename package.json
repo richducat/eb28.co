@@ -14,6 +14,7 @@
     "leadops:record:32940": "node scripts/record-32940-outreach-state.mjs",
     "leadops:send-drafts:32940": "node scripts/send-32940-drafts.mjs",
     "leadops:command-center:32940": "npm run leadops:32940 && open output/lead-ops/32940-manual-outreach-command-center.html",
+    "leadops:followups:32940": "npm run leadops:32940 && open output/lead-ops/32940-follow-up-workbench.html",
     "leadops:verify-capture:32940": "node scripts/verify-32940-lead-capture.mjs",
     "publish:fundmanager": "node scripts/publish-fundmanager-live.mjs",
     "build": "node scripts/build-site.mjs",

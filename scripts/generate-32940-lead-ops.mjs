@@ -990,7 +990,7 @@ function renderDay0Workbench(prospects) {
         <label>Phone Script <textarea readonly>${escapeHtml(row.phone_script)}</textarea></label>
         <label>Record contacted command <textarea class="command" readonly>${escapeHtml(row.record_contacted_command)}</textarea></label>
         <label>Record booked command <textarea class="command" readonly>${escapeHtml(row.record_booked_command)}</textarea></label>
-        <p class="meta">Email: ${escapeHtml(row.email || 'not found')} · Phone: ${escapeHtml(row.phone || 'not found')}</p>
+        <p class="meta">Email: ${escapeHtml(row.email || 'not found')} - Phone: ${escapeHtml(row.phone || 'not found')}</p>
       </article>`;
   }).join('\n');
 
@@ -1025,7 +1025,7 @@ function renderDay0Workbench(prospects) {
 <body>
   <header>
     <h1>EB28 32940 Day-0 Outreach Workbench</h1>
-    <div class="meta">${rows.length} actionable prospects · ${rows.filter((row) => row.stage === 'draft_ready').length} direct email · ${rows.filter((row) => row.stage === 'call_or_contact_form').length} call/contact form · generated ${today}</div>
+    <div class="meta">${rows.length} actionable prospects - ${rows.filter((row) => row.stage === 'draft_ready').length} direct email - ${rows.filter((row) => row.stage === 'call_or_contact_form').length} call/contact form - generated ${today}</div>
     <div class="meta">Every message points to the prospect-specific claim form. Count a lead only after real booked-call evidence is logged.</div>
   </header>
   <div class="toolbar">
@@ -1197,6 +1197,306 @@ function makeBookedRecordCommand(prospect) {
     `Reply or calendar evidence confirms a booked review call for ${prospect.business} at YYYY-MM-DD HH:MM ET.`,
     'YYYY-MM-DD HH:MM ET',
   );
+}
+
+function makeFollowUpRecordCommand(prospect, day) {
+  const routeSource = inferOutreachSource(prospect);
+  const routeLabel = humanOutreachSource(routeSource);
+  return makeRecordCommand(
+    prospect,
+    'follow_up',
+    routeSource,
+    `Manual Day ${day} ${routeLabel} follow-up completed for ${prospect.business}; waiting for reply.`,
+  );
+}
+
+const followUpSteps = [
+  {
+    day: 2,
+    label: 'Right reviewer',
+    subjectPrefix: 'Quick follow-up',
+    body(prospect) {
+      const claimUrl = `${prospect.conceptUrl}#claim`;
+      return [
+        `Hi ${prospect.business} team,`,
+        '',
+        `Quick follow-up on the free owner-review website concept I built for ${prospect.business}:`,
+        prospect.conceptUrl,
+        '',
+        'I am mainly trying to get it to the right person so they can decide whether it is useful. It is not public-indexed and it is not your official site.',
+        '',
+        'If someone wants me to tailor it with real photos, services, hours, or the preferred contact path, they can reply here or use the review form:',
+        claimUrl,
+        '',
+        'If this is not useful, reply "no thanks" and I will close the loop.',
+        '',
+        'Rich',
+        'EB28',
+        ownerEmail,
+      ].join('\n');
+    },
+  },
+  {
+    day: 5,
+    label: 'Proof and offer',
+    subjectPrefix: 'Website concept plus hosting',
+    body(prospect) {
+      const claimUrl = `${prospect.conceptUrl}#claim`;
+      return [
+        `Hi ${prospect.business} team,`,
+        '',
+        `I wanted to resend the free concept link for ${prospect.business}:`,
+        prospect.conceptUrl,
+        '',
+        'The build is free. If you want to use it, EB28 can host and improve it for $98/month. That includes managed hosting, technical SEO upkeep, and one weekly local blog or Google Business content prompt.',
+        '',
+        `The page is meant to show what a clearer mobile-first local site could look like for ${prospect.category} customers.`,
+        '',
+        'If you want it adjusted or want to talk through whether it is worth using, reply here or use the 10-minute review form:',
+        claimUrl,
+        '',
+        'Rich',
+        'EB28',
+        ownerEmail,
+      ].join('\n');
+    },
+  },
+  {
+    day: 10,
+    label: 'Close loop',
+    subjectPrefix: 'Closing the loop',
+    body(prospect) {
+      const claimUrl = `${prospect.conceptUrl}#claim`;
+      return [
+        `Hi ${prospect.business} team,`,
+        '',
+        `Last note from me on the free website concept for ${prospect.business}:`,
+        prospect.conceptUrl,
+        '',
+        'I will leave it alone unless the owner or manager wants it adjusted, removed, or hosted.',
+        '',
+        'If you do want to use it, Growth Hosting is $98/month and includes hosting, technical SEO upkeep, and one weekly local blog or Google Business content prompt.',
+        '',
+        'The review form is here:',
+        claimUrl,
+        '',
+        'If this is not useful, reply "no thanks" and I will not follow up again.',
+        '',
+        'Rich',
+        'EB28',
+        ownerEmail,
+      ].join('\n');
+    },
+  },
+];
+
+function makeFollowUpMailto(prospect, step) {
+  if (!prospect.verifiedEmail) {
+    return '';
+  }
+
+  const params = new URLSearchParams({
+    subject: `${step.subjectPrefix}: ${prospect.business}`,
+    body: step.body(prospect),
+  });
+
+  return `mailto:${prospect.verifiedEmail}?${params.toString()}`;
+}
+
+function followUpRows(prospects) {
+  return prospects
+    .filter((prospect) => prospect.outreachStage !== 'research_needed')
+    .flatMap((prospect) => followUpSteps.map((step) => ({
+      priority: prospect.priority,
+      business: prospect.business,
+      day: step.day,
+      sequence_label: step.label,
+      route: prospect.outreachStage,
+      email: prospect.verifiedEmail,
+      phone: prospect.phone,
+      website: prospect.website,
+      concept_url: prospect.conceptUrl,
+      claim_url: `${prospect.conceptUrl}#claim`,
+      subject: `${step.subjectPrefix}: ${prospect.business}`,
+      message: step.body(prospect),
+      mailto: makeFollowUpMailto(prospect, step),
+      record_follow_up_command: makeFollowUpRecordCommand(prospect, step.day),
+      record_booked_command: makeBookedRecordCommand(prospect),
+    })));
+}
+
+function renderFollowUpSequenceCsv(prospects) {
+  const fields = [
+    'priority',
+    'business',
+    'day',
+    'sequence_label',
+    'route',
+    'email',
+    'phone',
+    'website',
+    'concept_url',
+    'claim_url',
+    'subject',
+    'message',
+    'mailto',
+    'record_follow_up_command',
+    'record_booked_command',
+  ];
+  const rows = followUpRows(prospects);
+
+  return [
+    fields.join(','),
+    ...rows.map((row) => fields.map((field) => csvEscape(row[field])).join(',')),
+  ].join('\n');
+}
+
+function renderFollowUpSequenceMarkdown(prospects) {
+  const rows = followUpRows(prospects);
+  const byDay = new Map(followUpSteps.map((step) => [step.day, rows.filter((row) => row.day === step.day)]));
+  const blocks = [];
+
+  for (const step of followUpSteps) {
+    blocks.push(`## Day ${step.day}: ${step.label}`, '');
+    for (const row of byDay.get(step.day)) {
+      blocks.push(
+        `### ${row.priority}. ${row.business}`,
+        '',
+        `- Route: ${row.route.replace(/_/g, ' ')}`,
+        `- To: \`${row.email || 'call/contact form'}\``,
+        `- Subject: \`${row.subject}\``,
+        `- Concept: ${row.concept_url}`,
+        `- Claim form: ${row.claim_url}`,
+        row.mailto ? `- Mailto: ${row.mailto}` : '- Mailto: not available',
+        '',
+        'Message:',
+        '',
+        '```text',
+        row.message,
+        '```',
+        '',
+        'Record follow-up command:',
+        '',
+        '```bash',
+        row.record_follow_up_command,
+        '```',
+        '',
+        'Record booked command, after replacing placeholders with real scheduling evidence:',
+        '',
+        '```bash',
+        row.record_booked_command,
+        '```',
+        '',
+      );
+    }
+  }
+
+  return [
+    '# 32940 Follow-Up Sequence',
+    '',
+    `Generated: ${today}`,
+    '',
+    'Use this after day-0 outreach. These are templates only: run a follow-up command after an actual follow-up touch, and run a booked command only after a real scheduled call time, calendar link, or equivalent evidence exists.',
+    '',
+    ...blocks,
+  ].join('\n');
+}
+
+function renderFollowUpWorkbench(prospects) {
+  const rows = followUpRows(prospects);
+  const cards = rows.map((row) => {
+    const mail = row.mailto ? `<a class="btn primary" href="${escapeHtml(row.mailto)}">Open Email</a>` : '';
+    const call = row.phone ? `<a class="btn" href="tel:${escapeHtml(row.phone)}">Call</a>` : '';
+    const site = row.website ? `<a class="btn" target="_blank" rel="noopener" href="${escapeHtml(row.website)}">Contact Form</a>` : '';
+
+    return `
+      <article class="card" data-day="${escapeHtml(row.day)}" data-route="${escapeHtml(row.route)}" data-business="${escapeHtml(row.business.toLowerCase())}">
+        <div class="topline"><span>#${escapeHtml(row.priority)}</span><span>Day ${escapeHtml(row.day)} - ${escapeHtml(row.sequence_label)}</span></div>
+        <h2>${escapeHtml(row.business)}</h2>
+        <p class="meta">${escapeHtml(row.route.replace(/_/g, ' '))}</p>
+        <div class="actions">
+          <a class="btn" target="_blank" rel="noopener" href="${escapeHtml(row.concept_url)}">Concept</a>
+          <a class="btn" target="_blank" rel="noopener" href="${escapeHtml(row.claim_url)}">Claim Form</a>
+          ${mail}
+          ${call}
+          ${site}
+        </div>
+        <label>Subject <input readonly value="${escapeHtml(row.subject)}"></label>
+        <label>Message <textarea readonly>${escapeHtml(row.message)}</textarea></label>
+        <label>Record follow-up command <textarea class="command" readonly>${escapeHtml(row.record_follow_up_command)}</textarea></label>
+        <label>Record booked command <textarea class="command" readonly>${escapeHtml(row.record_booked_command)}</textarea></label>
+        <p class="meta">Email: ${escapeHtml(row.email || 'not found')} - Phone: ${escapeHtml(row.phone || 'not found')}</p>
+      </article>`;
+  }).join('\n');
+
+  return `<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>EB28 32940 Follow-Up Workbench</title>
+  <style>
+    :root { color-scheme: light; --ink:#172033; --muted:#5d6678; --line:#d7dce7; --panel:#fff; --bg:#f6f7f9; --blue:#1957d2; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background:var(--bg); color:var(--ink); }
+    header { position:sticky; top:0; z-index:2; padding:16px 20px; border-bottom:1px solid var(--line); background:rgba(255,255,255,.97); }
+    h1 { margin:0; font-size:21px; letter-spacing:0; }
+    .meta { color:var(--muted); font-size:13px; line-height:1.4; }
+    .toolbar { display:flex; flex-wrap:wrap; gap:10px; padding:14px 18px 0; }
+    .toolbar input, .toolbar select { min-height:38px; padding:8px 10px; border:1px solid var(--line); border-radius:7px; background:#fff; color:var(--ink); font:inherit; }
+    main { display:grid; grid-template-columns:repeat(auto-fit, minmax(340px, 1fr)); gap:14px; padding:16px; }
+    .card { background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:14px; display:flex; flex-direction:column; gap:10px; }
+    .topline { display:flex; justify-content:space-between; color:var(--muted); font-size:12px; text-transform:uppercase; font-weight:750; }
+    h2 { margin:0; font-size:18px; letter-spacing:0; }
+    .actions { display:flex; flex-wrap:wrap; gap:8px; }
+    .btn { min-height:34px; padding:7px 10px; border:1px solid var(--line); border-radius:7px; background:#fff; color:var(--ink); text-decoration:none; font-weight:700; display:inline-flex; align-items:center; }
+    .btn.primary { background:var(--blue); border-color:var(--blue); color:#fff; }
+    label { display:flex; flex-direction:column; gap:5px; font-size:12px; color:var(--muted); font-weight:700; }
+    input, textarea { width:100%; border:1px solid var(--line); border-radius:7px; padding:8px; color:var(--ink); background:#fbfcff; font:inherit; }
+    textarea { min-height:150px; resize:vertical; font-size:12px; line-height:1.45; }
+    textarea.command { min-height:74px; font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>EB28 32940 Follow-Up Workbench</h1>
+    <div class="meta">${rows.length} follow-up templates - ${followUpSteps.map((step) => `Day ${step.day}`).join(', ')} - generated ${today}</div>
+    <div class="meta">Run follow-up commands only after real follow-up touches. Booked commands require real scheduling evidence.</div>
+  </header>
+  <div class="toolbar">
+    <input id="search" placeholder="Search business or message">
+    <select id="day">
+      <option value="">All days</option>
+      ${followUpSteps.map((step) => `<option value="${step.day}">Day ${step.day}</option>`).join('')}
+    </select>
+    <select id="route">
+      <option value="">All routes</option>
+      <option value="draft_ready">Direct email</option>
+      <option value="call_or_contact_form">Call/form</option>
+    </select>
+  </div>
+  <main>
+    ${cards}
+  </main>
+  <script>
+    const cards = [...document.querySelectorAll('.card')];
+    function applyFilters() {
+      const query = document.getElementById('search').value.toLowerCase();
+      const day = document.getElementById('day').value;
+      const route = document.getElementById('route').value;
+      for (const card of cards) {
+        const matchesQuery = !query || card.textContent.toLowerCase().includes(query);
+        const matchesDay = !day || card.dataset.day === day;
+        const matchesRoute = !route || card.dataset.route === route;
+        card.style.display = matchesQuery && matchesDay && matchesRoute ? '' : 'none';
+      }
+    }
+    document.getElementById('search').addEventListener('input', applyFilters);
+    document.getElementById('day').addEventListener('input', applyFilters);
+    document.getElementById('route').addEventListener('input', applyFilters);
+  </script>
+</body>
+</html>`;
 }
 
 function renderManualOutreachCommandCenter(prospects, emailStats) {
@@ -1528,6 +1828,18 @@ async function main() {
   await fs.writeFile(
     path.join(outDir, '32940-day0-outreach-workbench.html'),
     renderDay0Workbench(prospects),
+  );
+  await fs.writeFile(
+    path.join(outDir, '32940-follow-up-sequence.csv'),
+    `${renderFollowUpSequenceCsv(prospects)}\n`,
+  );
+  await fs.writeFile(
+    path.join(outDir, '32940-follow-up-sequence.md'),
+    `${renderFollowUpSequenceMarkdown(prospects)}\n`,
+  );
+  await fs.writeFile(
+    path.join(outDir, '32940-follow-up-workbench.html'),
+    renderFollowUpWorkbench(prospects),
   );
   await fs.writeFile(
     path.join(outDir, '32940-manual-outreach-command-center.html'),

@@ -8,6 +8,7 @@
     "generate:data": "node scripts/generate-static-data.mjs",
     "generate:32940": "node scripts/generate-32940-growth-sites.mjs",
     "leadops:32940": "node scripts/generate-32940-lead-ops.mjs",
+    "leadops:audit:32940": "node scripts/sync-32940-booked-call-evidence.mjs",
     "publish:fundmanager": "node scripts/publish-fundmanager-live.mjs",
     "build": "node scripts/build-site.mjs",
     "preview": "vite preview",

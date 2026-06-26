@@ -588,6 +588,30 @@ function makeMailto(prospect) {
   return `mailto:${prospect.verifiedEmail}?${params.toString()}`;
 }
 
+function makeGmailComposeUrl({ to, subject, body }) {
+  if (!to) {
+    return '';
+  }
+
+  const params = new URLSearchParams({
+    view: 'cm',
+    fs: '1',
+    to,
+    su: subject,
+    body,
+  });
+
+  return `https://mail.google.com/mail/?${params.toString()}`;
+}
+
+function makeProspectGmailComposeUrl(prospect) {
+  return makeGmailComposeUrl({
+    to: prospect.verifiedEmail,
+    subject: `Free website concept for ${prospect.business}`,
+    body: makeBody(prospect),
+  });
+}
+
 function makePhoneScript(prospect) {
   const claimUrl = `${prospect.conceptUrl}#claim`;
   return [
@@ -771,6 +795,7 @@ function renderBookedCallTracker(prospects, existingRows = []) {
     'owner_contact_name',
     'notes',
     'mailto',
+    'gmail_compose_url',
   ];
 
   const existingByConcept = new Map(existingRows.map((row) => [row.concept_url, row]));
@@ -813,6 +838,7 @@ function renderBookedCallTracker(prospects, existingRows = []) {
       owner_contact_name: existing.owner_contact_name || '',
       notes: routeNote,
       mailto: makeMailto(prospect),
+      gmail_compose_url: makeProspectGmailComposeUrl(prospect),
     };
   });
 
@@ -851,6 +877,7 @@ function day0Rows(prospects) {
         message: makeBody(prospect),
         phone_script: makePhoneScript(prospect),
         mailto: makeMailto(prospect),
+        gmail_compose_url: makeProspectGmailComposeUrl(prospect),
         record_contacted_command: makeContactedRecordCommand(prospect),
         record_booked_command: makeBookedRecordCommand(prospect),
         source,
@@ -873,6 +900,7 @@ function renderDay0ExportCsv(prospects) {
     'message',
     'phone_script',
     'mailto',
+    'gmail_compose_url',
     'record_contacted_command',
     'record_booked_command',
   ];
@@ -896,6 +924,7 @@ function renderDay0MessageBank(prospects) {
     `- Concept: ${row.concept_url}`,
     `- Claim form: ${row.claim_url}`,
     `- Mailto: ${row.mailto}`,
+    `- Gmail compose: ${row.gmail_compose_url}`,
     '',
     'Message:',
     '',
@@ -970,6 +999,7 @@ function renderDay0Workbench(prospects) {
   const rows = day0Rows(prospects);
   const cards = rows.map((row) => {
     const mail = row.mailto ? `<a class="btn primary" href="${escapeHtml(row.mailto)}">Open Email</a>` : '';
+    const gmail = row.gmail_compose_url ? `<a class="btn primary" target="_blank" rel="noopener" href="${escapeHtml(row.gmail_compose_url)}">Open Gmail</a>` : '';
     const call = row.phone ? `<a class="btn" href="tel:${escapeHtml(row.phone)}">Call</a>` : '';
     const site = row.website ? `<a class="btn" target="_blank" rel="noopener" href="${escapeHtml(row.website)}">Contact Form</a>` : '';
 
@@ -981,6 +1011,7 @@ function renderDay0Workbench(prospects) {
         <div class="actions">
           <a class="btn" target="_blank" rel="noopener" href="${escapeHtml(row.concept_url)}">Concept</a>
           <a class="btn" target="_blank" rel="noopener" href="${escapeHtml(row.claim_url)}">Claim Form</a>
+          ${gmail}
           ${mail}
           ${call}
           ${site}
@@ -1303,6 +1334,14 @@ function makeFollowUpMailto(prospect, step) {
   return `mailto:${prospect.verifiedEmail}?${params.toString()}`;
 }
 
+function makeFollowUpGmailComposeUrl(prospect, step) {
+  return makeGmailComposeUrl({
+    to: prospect.verifiedEmail,
+    subject: `${step.subjectPrefix}: ${prospect.business}`,
+    body: step.body(prospect),
+  });
+}
+
 function followUpRows(prospects) {
   return prospects
     .filter((prospect) => prospect.outreachStage !== 'research_needed')
@@ -1320,6 +1359,7 @@ function followUpRows(prospects) {
       subject: `${step.subjectPrefix}: ${prospect.business}`,
       message: step.body(prospect),
       mailto: makeFollowUpMailto(prospect, step),
+      gmail_compose_url: makeFollowUpGmailComposeUrl(prospect, step),
       record_follow_up_command: makeFollowUpRecordCommand(prospect, step.day),
       record_booked_command: makeBookedRecordCommand(prospect),
     })));
@@ -1340,6 +1380,7 @@ function renderFollowUpSequenceCsv(prospects) {
     'subject',
     'message',
     'mailto',
+    'gmail_compose_url',
     'record_follow_up_command',
     'record_booked_command',
   ];
@@ -1368,6 +1409,7 @@ function renderFollowUpSequenceMarkdown(prospects) {
         `- Concept: ${row.concept_url}`,
         `- Claim form: ${row.claim_url}`,
         row.mailto ? `- Mailto: ${row.mailto}` : '- Mailto: not available',
+        row.gmail_compose_url ? `- Gmail compose: ${row.gmail_compose_url}` : '- Gmail compose: not available',
         '',
         'Message:',
         '',
@@ -1406,6 +1448,7 @@ function renderFollowUpWorkbench(prospects) {
   const rows = followUpRows(prospects);
   const cards = rows.map((row) => {
     const mail = row.mailto ? `<a class="btn primary" href="${escapeHtml(row.mailto)}">Open Email</a>` : '';
+    const gmail = row.gmail_compose_url ? `<a class="btn primary" target="_blank" rel="noopener" href="${escapeHtml(row.gmail_compose_url)}">Open Gmail</a>` : '';
     const call = row.phone ? `<a class="btn" href="tel:${escapeHtml(row.phone)}">Call</a>` : '';
     const site = row.website ? `<a class="btn" target="_blank" rel="noopener" href="${escapeHtml(row.website)}">Contact Form</a>` : '';
 
@@ -1417,6 +1460,7 @@ function renderFollowUpWorkbench(prospects) {
         <div class="actions">
           <a class="btn" target="_blank" rel="noopener" href="${escapeHtml(row.concept_url)}">Concept</a>
           <a class="btn" target="_blank" rel="noopener" href="${escapeHtml(row.claim_url)}">Claim Form</a>
+          ${gmail}
           ${mail}
           ${call}
           ${site}
@@ -1507,13 +1551,14 @@ function renderManualOutreachCommandCenter(prospects, emailStats) {
     .filter((prospect) => prospect.outreachStage !== 'research_needed')
     .map((prospect) => {
       const mailto = makeMailto(prospect);
+      const gmailComposeUrl = makeProspectGmailComposeUrl(prospect);
       const subject = `Free website concept for ${prospect.business}`;
       const body = makeBody(prospect);
       const contactedCommand = makeContactedRecordCommand(prospect);
       const bookedCommand = makeBookedRecordCommand(prospect);
       const phoneScript = makePhoneScript(prospect);
       const primaryAction = prospect.verifiedEmail
-        ? `<a class="btn primary" href="${escapeHtml(mailto)}">Open Email</a>`
+        ? `<a class="btn primary" target="_blank" rel="noopener" href="${escapeHtml(gmailComposeUrl)}">Open Gmail</a><a class="btn" href="${escapeHtml(mailto)}">Open Mail App</a>`
         : '<span class="pill">Call/Form</span>';
       const phoneAction = prospect.phone ? `<a class="btn" href="tel:${escapeHtml(prospect.phone)}">Call</a>` : '';
       const websiteAction = prospect.website ? `<a class="btn" target="_blank" rel="noopener" href="${escapeHtml(prospect.website)}">Website/Form</a>` : '';

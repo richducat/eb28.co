@@ -7,6 +7,7 @@ import { fileURLToPath } from 'node:url';
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const outDir = path.join(repoRoot, 'output', 'lead-ops');
 const trackerPath = path.join(outDir, '32940-booked-call-tracker.csv');
+const pipelineJsonPath = path.join(outDir, '32940-prospect-pipeline.json');
 const defaultStatePath = path.join(outDir, 'eb28-32940-outreach-state.json');
 const auditJsonPath = path.join(outDir, '32940-booked-call-audit.json');
 const auditMdPath = path.join(outDir, '32940-booked-call-audit.md');
@@ -14,6 +15,8 @@ const nextTouchCsvPath = path.join(outDir, '32940-next-touch-queue.csv');
 const nextTouchMdPath = path.join(outDir, '32940-next-touch-queue.md');
 const dueWorkbenchPath = path.join(outDir, '32940-due-now-workbench.html');
 const stateTemplatePath = path.join(outDir, '32940-outreach-state-template.json');
+const callFormSprintCsvPath = path.join(outDir, '32940-call-form-sprint.csv');
+const callFormSprintMdPath = path.join(outDir, '32940-call-form-sprint.md');
 const today = new Date().toISOString().slice(0, 10);
 
 const allowedStatuses = new Set(['not_started', 'contacted', 'follow_up', 'booked', 'not_interested']);
@@ -122,6 +125,22 @@ async function readTracker() {
   return parseCsv(csv);
 }
 
+async function readProspectDetails() {
+  try {
+    const raw = await fs.readFile(pipelineJsonPath, 'utf8');
+    const parsed = JSON.parse(raw);
+    if (!parsed || !Array.isArray(parsed.prospects)) {
+      return new Map();
+    }
+    return new Map(parsed.prospects.map((prospect) => [prospect.conceptUrl, prospect]));
+  } catch (error) {
+    if (error.code === 'ENOENT') {
+      return new Map();
+    }
+    throw error;
+  }
+}
+
 async function readState(statePath) {
   try {
     const raw = await fs.readFile(statePath, 'utf8');
@@ -219,6 +238,153 @@ function makeOutreachMessage(row) {
   ].join('\n');
 }
 
+const corporateSignals = [
+  'aerie', 'amc', 'american-eagle', 'att', 'bath-body-works', 'belk', 'books-a-million',
+  'bonefish', 'burn-boot-camp', 'chicos', 'chilis', 'cold-stone', 'crumbl',
+  'ethan-allen', 'european-wax', 'five-guys', 'good-feet', 'j-crew', 'j-mclaughlin',
+  'kay-jewelers', 'kirklands',
+  'kohls', 'lane-bryant', 'lilly-pulitzer', 'loft', 'longhorn', 'lululemon',
+  'massage-envy', 'melting-pot', 'mens-wearhouse', 'moes', 'nordstrom',
+  'nothing-bundt', 'office-depot', 'old-navy', 'panera', 'paper-store',
+  'pearle-vision', 'playa-bowls', 'sally-beauty', 'sephora', 'skin-laundry',
+  'sleep-number', 'sola-salons', 'soma', 'southern-tide', 'spectrum', 'sport-clips',
+  'steak-n-shake', 'sunglass-hut', 'sur-la-table', 'talbots', 'tommy-bahama',
+  'trader-joes', 'urban-air', 'verizon', 'warby-parker', 'world-market',
+];
+
+const highIntentCategoryHints = [
+  'bakery', 'bar', 'cafe', 'cigar', 'chiropractic', 'coffee', 'cpa', 'dental', 'dentistry',
+  'florist', 'food', 'hvac', 'kava', 'med spa', 'medical', 'nail', 'orthodontics',
+  'pizza', 'plumbing', 'restaurant', 'salon', 'spa', 'title', 'veterinary',
+];
+
+function slugFromConceptUrl(conceptUrl = '') {
+  return String(conceptUrl).split('/').pop()?.replace(/\.html$/, '') ?? '';
+}
+
+function sourceHost(url = '') {
+  try {
+    return new URL(url).hostname.replace(/^www\./, '');
+  } catch {
+    return '';
+  }
+}
+
+function hasCorporateSignal(row) {
+  const slug = row.slug || slugFromConceptUrl(row.concept_url);
+  const text = `${slug} ${row.business} ${row.website} ${row.source_urls}`.toLowerCase();
+  return corporateSignals.some((signal) => text.includes(signal));
+}
+
+function hasHighIntentCategory(row) {
+  const text = `${row.category || ''} ${row.business || ''}`.toLowerCase();
+  return highIntentCategoryHints.some((hint) => text.includes(hint));
+}
+
+function callFormScore(row) {
+  let score = 0;
+  if (row.phone) score += 35;
+  if (row.website) score += 20;
+  if (sourceHost(row.website) && !sourceHost(row.website).includes('avenueviera.com')) score += 10;
+  if (hasHighIntentCategory(row)) score += 25;
+  if (/321|407/.test(row.phone)) score += 10;
+  if (hasCorporateSignal(row)) score -= 35;
+  if (/Wave 1 replacement prospect/i.test(row.notes)) score += 8;
+  if (/Avenue tenant page is the first verified contact route/i.test(row.notes)) score -= 4;
+  return score;
+}
+
+function callPriorityTier(row) {
+  if (hasCorporateSignal(row)) {
+    return 'C corporate or franchise route';
+  }
+  if (callFormScore(row) >= 70) {
+    return 'A local owner likely';
+  }
+  return 'B reachable, verify owner';
+}
+
+function recommendedChannel(row) {
+  if (row.phone) {
+    return 'phone first';
+  }
+  if (row.website) {
+    return 'contact form first';
+  }
+  return 'research first';
+}
+
+function makePhoneScript(row) {
+  return [
+    `Hi, this is Rich with EB28. Is this the right number for ${row.business}?`,
+    '',
+    `I built a free owner-review website concept for ${row.business}: ${row.concept_url}`,
+    '',
+    'It is not public-indexed and it is not their official site. I wanted to get it to the owner or manager who handles the website.',
+    '',
+    'The build itself is free. If they want to use it, EB28 can host and improve it for $98/month with managed hosting, technical SEO upkeep, and one weekly local blog or Google Business content prompt.',
+    '',
+    'Who is the best person to send it to, or is there a better time for a quick review call?',
+  ].join('\n');
+}
+
+function makeVoicemailScript(row) {
+  return [
+    `Hi, this is Rich with EB28. I built a free website concept for ${row.business}.`,
+    `The link is ${row.concept_url}.`,
+    'It is a private owner-review concept, not your official website.',
+    'If you want it tailored and hosted, EB28 Growth Hosting is $98/month.',
+    'You can reach me at social@eb28.co or through eb28.co/melbournewebstudio.',
+  ].join(' ');
+}
+
+function makeContactFormMessage(row) {
+  return [
+    `Hi ${row.business} team,`,
+    '',
+    `I built a free owner-review website concept for ${row.business}:`,
+    row.concept_url,
+    '',
+    'It is not public-indexed and it is not your official website. It is a draft concept to show what a clearer mobile-first local site could look like.',
+    '',
+    'The build itself is free. If you want to use it, EB28 can host and improve it for $98/month, including managed hosting, technical SEO upkeep, and one weekly local blog or Google Business content prompt.',
+    '',
+    'Who is the best owner or manager to review it?',
+    '',
+    'Rich',
+    'EB28',
+    'social@eb28.co',
+  ].join('\n');
+}
+
+function makeContactedPatch(row, source = 'phone') {
+  return JSON.stringify({
+    [row.priority]: {
+      status: 'contacted',
+      evidence: `${source} outreach attempted; update with call note, form confirmation, or booked time.`,
+      source,
+      datetime: '',
+    },
+  });
+}
+
+function enrichRows(rows, prospectDetails) {
+  return rows.map((row) => {
+    const prospect = prospectDetails.get(row.concept_url) ?? {};
+    const enriched = {
+      ...row,
+      slug: prospect.slug ?? slugFromConceptUrl(row.concept_url),
+      category: prospect.category ?? '',
+      address: prospect.address ?? '',
+      source_type: prospect.sourceType ?? '',
+    };
+    enriched.call_score = String(callFormScore(enriched));
+    enriched.call_priority_tier = callPriorityTier(enriched);
+    enriched.recommended_channel = recommendedChannel(enriched);
+    return enriched;
+  });
+}
+
 function getDueRows(rows) {
   return rows.filter((row) => (
     row.booked_call_status !== 'booked'
@@ -237,10 +403,14 @@ async function writeNextTouch(dueRows) {
   const rows = dueRows.map((row) => ({
     priority: row.priority,
     business: row.business,
+    category: row.category,
     stage: row.stage,
     status: row.status,
     next_touch: row.next_touch,
     touch_count: row.touch_count,
+    recommended_channel: row.recommended_channel,
+    call_priority_tier: row.call_priority_tier,
+    call_score: row.call_score,
     email: row.email,
     phone: row.phone,
     website: row.website,
@@ -254,10 +424,14 @@ async function writeNextTouch(dueRows) {
   const fields = [
     'priority',
     'business',
+    'category',
     'stage',
     'status',
     'next_touch',
     'touch_count',
+    'recommended_channel',
+    'call_priority_tier',
+    'call_score',
     'email',
     'phone',
     'website',
@@ -284,11 +458,105 @@ async function writeNextTouch(dueRows) {
     '| # | Business | Stage | Status | Phone | Website | Concept | Notes |',
     '|---:|---|---|---|---|---|---|---|',
     ...dueRows.map((row) => (
-      `| ${row.priority} | ${row.business} | ${row.stage} | ${row.status} | ${row.phone} | ${row.website} | ${row.concept_url} | ${row.notes || ''} |`
+      `| ${row.priority} | ${row.business} | ${row.stage} | ${row.status} | ${row.phone} | ${row.website} | ${row.concept_url} | ${row.notes || row.call_priority_tier || ''} |`
     )),
     '',
   ];
   await fs.writeFile(nextTouchMdPath, lines.join('\n'), 'utf8');
+}
+
+async function writeCallFormSprint(dueRows) {
+  const callRows = dueRows
+    .filter((row) => row.stage === 'call_or_contact_form')
+    .map((row) => ({
+      ...row,
+      numericScore: Number.parseInt(row.call_score || '0', 10),
+    }))
+    .sort((a, b) => (
+      b.numericScore - a.numericScore
+      || a.call_priority_tier.localeCompare(b.call_priority_tier)
+      || Number.parseInt(a.priority, 10) - Number.parseInt(b.priority, 10)
+    ));
+
+  const csvRows = callRows.map((row, index) => ({
+    sprint_rank: index + 1,
+    call_block: Math.floor(index / 15) + 1,
+    priority: row.priority,
+    business: row.business,
+    category: row.category,
+    tier: row.call_priority_tier,
+    score: row.call_score,
+    recommended_channel: row.recommended_channel,
+    phone: row.phone,
+    website: row.website,
+    source_urls: row.source_urls,
+    concept_url: row.concept_url,
+    notes: row.notes,
+    phone_script: makePhoneScript(row),
+    voicemail_script: makeVoicemailScript(row),
+    contact_form_message: makeContactFormMessage(row),
+    state_patch_contacted: makeContactedPatch(row, row.phone ? 'phone' : 'contact_form'),
+  }));
+
+  const fields = [
+    'sprint_rank',
+    'call_block',
+    'priority',
+    'business',
+    'category',
+    'tier',
+    'score',
+    'recommended_channel',
+    'phone',
+    'website',
+    'source_urls',
+    'concept_url',
+    'notes',
+    'phone_script',
+    'voicemail_script',
+    'contact_form_message',
+    'state_patch_contacted',
+  ];
+  await fs.writeFile(callFormSprintCsvPath, renderCsv(csvRows, fields), 'utf8');
+
+  const counts = callRows.reduce((acc, row) => {
+    acc[row.call_priority_tier] = (acc[row.call_priority_tier] || 0) + 1;
+    return acc;
+  }, {});
+  const blocks = [];
+  for (let index = 0; index < callRows.length; index += 15) {
+    const blockRows = callRows.slice(index, index + 15);
+    blocks.push(`## Call Block ${Math.floor(index / 15) + 1}`);
+    blocks.push('');
+    blocks.push('| Rank | Business | Tier | Channel | Phone | Contact path | Concept |');
+    blocks.push('|---:|---|---|---|---|---|---|');
+    for (let offset = 0; offset < blockRows.length; offset += 1) {
+      const row = blockRows[offset];
+      blocks.push(`| ${index + offset + 1} | ${row.business} | ${row.call_priority_tier} | ${row.recommended_channel} | ${row.phone || ''} | ${row.website || ''} | ${row.concept_url} |`);
+    }
+    blocks.push('');
+  }
+
+  const lines = [
+    '# 32940 Call / Contact Form Sprint',
+    '',
+    `Generated: ${today}`,
+    `Rows: ${callRows.length}`,
+    `A local owner likely: ${counts['A local owner likely'] || 0}`,
+    `B reachable, verify owner: ${counts['B reachable, verify owner'] || 0}`,
+    `C corporate or franchise route: ${counts['C corporate or franchise route'] || 0}`,
+    '',
+    'Use this as the day-0 execution list while Gmail is unavailable. Count a lead only after a real booked call is logged with evidence in the state JSON.',
+    '',
+    '## Default Phone Script',
+    '',
+    '```text',
+    'Hi, this is Rich with EB28. I built a free owner-review website concept for your business. It is not public-indexed and it is not your official website. I wanted to get it to the owner or manager who handles the website. The build is free; hosting and ongoing improvements are $98/month. Who is the best person to review it?',
+    '```',
+    '',
+    ...blocks,
+  ];
+  await fs.writeFile(callFormSprintMdPath, `${lines.join('\n')}\n`, 'utf8');
 }
 
 async function writeStateTemplate(rows) {
@@ -519,12 +787,15 @@ async function main() {
   const statePath = stateIndex >= 0 && args[stateIndex + 1] ? path.resolve(args[stateIndex + 1]) : defaultStatePath;
 
   const rows = await readTracker();
+  const prospectDetails = await readProspectDetails();
   const state = await readState(statePath);
   const stateLoaded = Object.keys(state).length > 0;
   const warnings = stateLoaded ? mergeState(rows, state) : [];
-  const dueRows = getDueRows(rows);
+  const enrichedRows = enrichRows(rows, prospectDetails);
+  const dueRows = getDueRows(enrichedRows);
 
   await writeNextTouch(dueRows);
+  await writeCallFormSprint(dueRows);
   await writeWorkbench(dueRows);
   await writeStateTemplate(rows);
   const summary = await writeAudit(rows, warnings, statePath, stateLoaded, dueRows);

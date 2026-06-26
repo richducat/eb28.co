@@ -13,6 +13,8 @@
     "eb28:content": "node scripts/eb28-content-engine.mjs --write",
     "eb28:blog": "node scripts/generate-eb28-blog.mjs",
     "eb28:seo": "node scripts/eb28-seo-daily-review.mjs --safe-updates --submit-sitemap --inspect-urls --send-email",
+    "eb28:social:prepare": "node scripts/publish-eb28-buffer.mjs --prepare",
+    "eb28:social:publish": "node scripts/publish-eb28-buffer.mjs --publish",
     "check:eb28-seo": "node scripts/check-eb28-seo.mjs"
   },
   "dependencies": {
@@ -38,6 +40,7 @@
     "@vitejs/plugin-react": "^4.3.3",
     "autoprefixer": "^10.4.20",
     "postcss": "^8.4.49",
+    "sharp": "^0.33.5",
     "tailwindcss": "^3.4.17",
     "vite": "^5.4.11"
   }

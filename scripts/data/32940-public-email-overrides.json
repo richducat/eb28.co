@@ -36,6 +36,16 @@
     "sourceType": "public email on business website",
     "notes": "Auto-discovered public email from https://www.cedarscafe.com/contact/; verify decision maker before sending."
   },
+  "durham-sons": {
+    "email": "darla@durhamandsons.com",
+    "sourceUrls": [
+      "https://www.nextdoor.com/pages/durham-sons-inc-melbourne-fl/",
+      "https://apps.fldfs.com/LSOPReports/Reports/Report.aspx?type=csv&segment=ActiveLicensedAgencyWithActiveLicensedReps&wcagt=Agency",
+      "https://www.durhamandsons.com/commercial-hvac"
+    ],
+    "sourceType": "public business profile and public state license export",
+    "notes": "Manually verified public business/profile records expose darla@durhamandsons.com for Durham & Sons; verify decision maker before sending."
+  },
   "eatz": {
     "email": "eatzsuntree@gmail.com",
     "sourceUrls": [
@@ -367,6 +377,33 @@
     ],
     "sourceType": "public email on business website",
     "notes": "Auto-discovered public email from https://www.suntreechiropractic.com/; verify decision maker before sending."
+  },
+  "skin-laundry": {
+    "email": "melbourne@skinlaundry.com",
+    "sourceUrls": [
+      "https://www.skinlaundry.com/locations/melbourne",
+      "https://www.avenueviera.com/tenants/skin-laundry/"
+    ],
+    "sourceType": "public email on official location page",
+    "notes": "Manually verified official Skin Laundry Melbourne location page exposes melbourne@skinlaundry.com; verify decision maker before sending."
+  },
+  "sola-salons": {
+    "email": "tcallinan@solasalons.com",
+    "sourceUrls": [
+      "https://www.avenueviera.com/tenants/sola-salons/",
+      "https://www.solasalonstudios.com/locations/avenue-viera"
+    ],
+    "sourceType": "public email on official location and Avenue tenant pages",
+    "notes": "Manually verified Sola Salons Avenue Viera pages expose tcallinan@solasalons.com for the local studio location; verify decision maker before sending."
+  },
+  "sun-plumbing": {
+    "email": "contact@sunplumbing.com",
+    "sourceUrls": [
+      "https://www.nextdoor.com/pages/sun-plumbing-melbourne-fl/",
+      "https://sunplumbing.com/"
+    ],
+    "sourceType": "public business profile contact route",
+    "notes": "Manually verified public Sun Plumbing business profile exposes contact@sunplumbing.com; verify decision maker before sending."
   },
   "buds-bows-floral-design": {
     "email": "flowers@budsdbows.com",

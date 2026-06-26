@@ -372,6 +372,26 @@
     "sourceType": "public mailto link on business website",
     "notes": "Auto-discovered public email from https://supremetitlellc.com/contact-us/; verify decision maker before sending."
   },
+  "valderrama-orthodontics": {
+    "email": "info@valderramaortho.com",
+    "sourceUrls": [
+      "https://fun4spacecoastkids.com/Health-Resources/Orthodontists/Valderrama-Orthodontics/View-details.html",
+      "https://www.facebook.com/ValderramaOrtho/",
+      "https://valderramaortho.com/"
+    ],
+    "sourceType": "public directory and public social contact listing",
+    "notes": "Manually verified public Valderrama Orthodontics listings expose info@valderramaortho.com for the Melbourne/Suntree orthodontic practice; verify decision maker before sending."
+  },
+  "viera-dental-arts": {
+    "email": "info@vieradentalarts.com",
+    "sourceUrls": [
+      "https://www.vieradentalarts.com/patients/your-first-visit/",
+      "https://vieradentalarts.com/cookie-policy/",
+      "https://fun4spacecoastkids.com/Health-Resources/Family-Dental-Practices/Viera-Dental-Arts/View-details.html"
+    ],
+    "sourceType": "public email on business website and public directory",
+    "notes": "Manually verified Viera Dental Arts website and public directory listings expose info@vieradentalarts.com for the Melbourne practice; verify decision maker before sending."
+  },
   "fountain-of-you": {
     "email": "drkimzipper@me.com",
     "sourceUrls": [

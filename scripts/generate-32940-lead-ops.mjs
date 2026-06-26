@@ -1,0 +1,543 @@
+#!/usr/bin/env node
+
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const indexPath = path.join(repoRoot, 'public', '32940', 'index.html');
+const outDir = path.join(repoRoot, 'output', 'lead-ops');
+const today = new Date().toISOString().slice(0, 10);
+
+const conceptBaseUrl = 'https://eb28.co/32940/';
+const contactUrl = 'https://eb28.co/melbournewebstudio/#contact';
+const ownerEmail = 'social@eb28.co';
+const minimumProspectCount = 100;
+
+const verifiedContacts = {
+  'arabesque-flavors-of-the-middle-east': {
+    email: 'arabesqueflavors@gmail.com',
+    phone: '(321) 414-0000',
+    address: '7640 North Wickham Road, Ste 105, Melbourne, FL 32940',
+    website: 'https://arabesqueflavors.com/',
+    sourceUrls: ['https://arabesqueflavors.com/'],
+    sourceType: 'owned website',
+  },
+  'bean-sprout-asian-cuisine-sushi-bar': {
+    email: 'beansproutviera@gmail.com',
+    phone: '(321) 632-8999',
+    address: '2221 Town Center Ave Ste. 115, Viera, FL 32940',
+    website: 'https://www.beansproutviera.com/',
+    sourceUrls: ['https://www.beansproutviera.com/', 'https://www.facebook.com/beansproutviera2026/'],
+    sourceType: 'owned website plus Facebook contact profile',
+    notes: 'Owned site publishes the phone/address and uses email protection; Facebook profile exposes the same business email.',
+  },
+  'bella-title-escrow': {
+    email: 'Lee@bellatitle.com',
+    phone: '(321) 610-7806',
+    address: '6450 N. Wickham Rd Suite 106, Melbourne, FL 32940',
+    website: 'https://www.bellatitle.com/',
+    sourceUrls: ['https://www.bellatitle.com/766/5/Contacts', 'https://www.bellatitle.com/766/1/Our%2BBella%2BTitle%2BFamily'],
+    sourceType: 'owned website',
+  },
+  'bold-cup-coffee': {
+    email: 'boldcup@gmail.com',
+    phone: '(321) 313-0830',
+    address: '2261 Town Center Ave #139, Melbourne, FL 32940',
+    website: 'https://www.boldcupcoffee.com/s/order',
+    sourceUrls: ['https://www.boldcupcoffee.com/s/order'],
+    sourceType: 'owned ordering website',
+  },
+  'cedar-s-cafe': {
+    email: 'cedars@cedarscafe.com',
+    phone: '(321) 751-0000',
+    address: '4100 N. Wickham Rd, Suite 137, Melbourne, FL 32935',
+    website: 'https://www.cedarscafe.com/contact',
+    sourceUrls: ['https://www.cedarscafe.com/contact'],
+    sourceType: 'owned website',
+  },
+  'dynasty-nail-spa': {
+    email: 'hangle52000@gmail.com',
+    phone: '(321) 757-3370',
+    address: '7720 N Wickham Rd #108, Melbourne, FL 32940',
+    website: 'https://dynastynailspamelbourne.com/contact',
+    sourceUrls: ['https://dynastynailspamelbourne.com/contact', 'https://dynastynailspamelbourne.com/'],
+    sourceType: 'owned website',
+  },
+  'eatz': {
+    email: 'eatzsuntree@gmail.com',
+    phone: '(321) 426-7575',
+    address: '7965 N Wickham Rd, Suntree/Viera, FL 32940',
+    website: 'https://www.eatz-eatery.com/',
+    sourceUrls: ['https://www.eatz-eatery.com/', 'https://www.facebook.com/eatzsuntree/'],
+    sourceType: 'owned website plus Facebook contact profile',
+  },
+  'fairway-cigar-lounge': {
+    email: 'tbaruti@fairwaycigarlounge.com',
+    phone: '(321) 338-7270',
+    address: '6729 Colonnade Ave Unit 108, Melbourne, FL 32940',
+    website: 'https://fairwaycigarlounge.com/',
+    sourceUrls: ['https://fairwaycigarlounge.com/', 'https://fairwaycigarlounge.com/pages/privacy-policy'],
+    sourceType: 'owned website',
+  },
+  'genna-pizza-express': {
+    email: 'admin@gennapizzaexpress.com',
+    phone: '(321) 462-4020',
+    address: '7954 N Wickham Road, Melbourne, FL 32940',
+    website: 'https://gennapizzaexpress.com/contact-us/',
+    sourceUrls: ['https://gennapizzaexpress.com/contact-us/', 'https://gennapizzaexpress.com/terms-of-service/'],
+    sourceType: 'owned website',
+    notes: 'Contact page also exposes the store phone and a contact form.',
+  },
+  'olive-tree-greek-grill': {
+    email: 'customerservice@olivetreegreekgrill.com',
+    phone: '(321) 631-0188',
+    address: '5481 Lake Andrew Drive, Melbourne, FL 32940',
+    website: 'https://olivetreegreekgrill.com/contact-us/',
+    sourceUrls: ['https://olivetreegreekgrill.com/contact-us/', 'https://www.instagram.com/olivetreegreekgrill/'],
+    sourceType: 'owned website plus Instagram profile',
+    notes: 'Owned website confirms location and phone; Instagram profile publishes the email.',
+  },
+  'urban-prime': {
+    email: 'Info@UrbanPrimeFoods.com',
+    phone: '(321) 499-1188',
+    address: '2435 Metfield Dr, Melbourne, FL 32940',
+    website: 'https://www.urbanprimefoods.com/contact/',
+    sourceUrls: ['https://www.urbanprimefoods.com/contact/', 'https://www.urbanprimefoods.com/location/urban-prime/'],
+    sourceType: 'owned website',
+  },
+};
+
+const callOrFormContacts = {
+  'asian-wok': {
+    phone: '(321) 253-8859',
+    address: '8530 N Wickham Rd #110, Melbourne, FL 32940',
+    website: 'https://www.asianwokviera.com/contact-us',
+    sourceUrls: ['https://www.asianwokviera.com/contact-us'],
+    sourceType: 'owned website',
+  },
+  'bizzarro-s-pizza': {
+    phone: '(321) 242-5966',
+    address: '7777 N Wickham Rd Suite 12, Melbourne, FL 32940',
+    website: 'https://www.bizzarrospizzasuntree.com/contact_us.html',
+    sourceUrls: ['https://www.bizzarrospizzasuntree.com/contact_us.html'],
+    sourceType: 'owned website',
+  },
+  'diane-s-nails': {
+    phone: '(321) 242-0060',
+    address: '4100 N Wickham Rd #106, Melbourne, FL 32935',
+    website: '',
+    sourceUrls: ['https://www.fresha.com/lp/en/bt/nail-salons/in/us-palm-bay/melbourne'],
+    sourceType: 'booking directory',
+  },
+  'el-tesoro-cocina-mexicana': {
+    phone: '(321) 428-3575',
+    address: '7720 N Wickham Rd #120, Melbourne, FL 32940',
+    website: 'https://www.eltesoromelbourne.com/location',
+    sourceUrls: ['https://www.eltesoromelbourne.com/location'],
+    sourceType: 'owned website',
+  },
+  'elegant-nail-spa': {
+    phone: '(321) 428-5335',
+    address: '8020 N Wickham Rd #107, Melbourne, FL 32940',
+    website: 'https://www.elegantnailspaviera.com/location/elegant-nail-spa/',
+    sourceUrls: ['https://www.elegantnailspaviera.com/location/elegant-nail-spa/'],
+    sourceType: 'owned website',
+  },
+  'fujiyama-japanese': {
+    phone: '(321) 255-6633',
+    address: '5000 N Wickham Rd #111, Melbourne, FL 32940',
+    website: 'https://fujiyamamelbourne.com/about-us',
+    sourceUrls: ['https://fujiyamamelbourne.com/about-us'],
+    sourceType: 'owned website',
+  },
+  'luxy-nail-spa': {
+    phone: '(321) 423-3873',
+    address: 'Melbourne, FL 32940',
+    website: 'https://luxynailspaviera.com/',
+    sourceUrls: ['https://luxynailspaviera.com/'],
+    sourceType: 'owned website',
+  },
+  'olive-tree-greek-grill': {
+    phone: '(321) 631-0188',
+    address: '5481 Lake Andrew Drive, Melbourne, FL 32940',
+    website: 'https://olivetreegreekgrill.com/contact-us/',
+    sourceUrls: ['https://olivetreegreekgrill.com/contact-us/'],
+    sourceType: 'owned website',
+  },
+  'pristine-spa': {
+    phone: '(407) 577-6796',
+    address: '7645 Stadium Parkway Suite 103-104, Melbourne, FL 32940',
+    website: 'https://www.pristinespas.com/',
+    sourceUrls: ['https://www.pristinespas.com/', 'https://www.vagaro.com/pristinespaviera'],
+    sourceType: 'owned website plus booking profile',
+  },
+  'realm-nails-spa': {
+    phone: '(321) 877-0018',
+    address: '2348 Citadel Way #102, Melbourne, FL 32940',
+    website: 'https://realmnailsspa.com/booking/',
+    sourceUrls: ['https://realmnailsspa.com/booking/'],
+    sourceType: 'owned website',
+  },
+  'revolutions-cyclery': {
+    phone: '(321) 751-5457',
+    address: '6300 N. Wickham Road Suite 135, Melbourne, FL 32940',
+    website: 'https://www.revolutionscyclery.com/about/contact-us-pg1316.htm',
+    sourceUrls: ['https://www.revolutionscyclery.com/about/contact-us-pg1316.htm'],
+    sourceType: 'owned website',
+  },
+  'suntree-florist': {
+    phone: '(321) 253-5511',
+    address: '6450 North Wickham Road Suite 104, Melbourne, FL 32940',
+    website: 'https://www.suntreefloristmelbourne.com/contact_us.php',
+    sourceUrls: ['https://www.suntreefloristmelbourne.com/contact_us.php'],
+    sourceType: 'owned website',
+  },
+  'urban-prime': {
+    phone: '(321) 499-1188',
+    address: '2435 Metfield Dr, Melbourne, FL 32940',
+    website: 'https://www.urbanprimefoods.com/contact/',
+    sourceUrls: ['https://www.urbanprimefoods.com/contact/', 'https://www.urbanprimefoods.com/location/urban-prime/'],
+    sourceType: 'owned website',
+  },
+};
+
+const avenueTenantSourceSlugs = new Set([
+  'clevens-face-and-body-specialist',
+  'escapology',
+  'sirocco-station',
+  'viera-discovery-center',
+  'nourish',
+  'trader-joes',
+  'j-crew-factory',
+  'lets-plant-it',
+  'tommy-bahama',
+  'kendra-scott',
+  'crumbl',
+  'southern-tide',
+  'air-anchor',
+  'american-eagle',
+  'aerie',
+  'nordstrom-rack',
+  'warby-parker',
+  'viera-dental',
+  'verizon-wireless',
+  'urban-air-adventure-park',
+  'tuscany-grill',
+  'thai-hana',
+  'talbots',
+  'sur-la-table',
+  'sunglass-hut',
+  'steak-n-shake',
+  'sport-clips',
+  'spectrum',
+  'soma',
+  'sola-salons',
+  'sleep-number-by-select-comfort',
+  'skin-laundry',
+  'sephora',
+  'sally-beauty-supply',
+  'playa-bowls',
+  'pizza-gallery-grill',
+  'pearle-vision',
+  'paris-banh-mi',
+  'panera-bread',
+  'old-navy',
+  'office-depot',
+  'nothing-bundt-cakes',
+  'moes-southwest-grill',
+  'mens-wearhouse',
+  'the-melting-pot',
+  'massage-envy',
+  'lululemon',
+  'longhorn-steakhouse',
+  'loft',
+  'lilly-pulitzer',
+  'lane-bryant',
+  'kohls',
+  'kirklands',
+  'kay-jewelers',
+  'j-mclaughlin',
+  'the-good-feet-store',
+  'gifts-more-at-the-paper-store',
+  'five-guys-burgers-and-fries',
+  'european-wax-center',
+  'ethan-allen',
+  'world-market',
+  'cold-stone-creamery',
+  'club-pilates',
+  'chilis',
+  'chicos',
+  'burn-boot-camp',
+  'books-a-million',
+  'bonefish-grill',
+  'belk',
+  'bath-body-works',
+  'att-wireless',
+  'amc-theatres',
+  'addy-rose-hair-studio',
+  '7-senses-kids',
+  '28-north-gastropub',
+]);
+
+const avenueSourceSlugOverrides = {
+  'clevens-face-and-body-specialist': 'clevens-face-and-body-specialist-coming-soon',
+};
+
+function decodeHtml(value = '') {
+  return String(value)
+    .replace(/&amp;/g, '&')
+    .replace(/&#39;/g, "'")
+    .replace(/&quot;/g, '"')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>');
+}
+
+function csvEscape(value = '') {
+  const text = Array.isArray(value) ? value.join(' | ') : String(value ?? '');
+  return /[",\n]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;
+}
+
+function slugify(value = '') {
+  return String(value)
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
+function headerSafe(value = '') {
+  return String(value).replace(/[\r\n]+/g, ' ').trim();
+}
+
+function makeBody(prospect) {
+  return [
+    `Hi ${prospect.business} team,`,
+    '',
+    `I built a free owner-review website concept for ${prospect.business} here:`,
+    prospect.conceptUrl,
+    '',
+    `It is not public-indexed and it is not your official site. I made it to show what a clearer mobile-first local site could look like for ${prospect.category} customers.`,
+    '',
+    'The build itself is free. If you want to use it, EB28 can host and improve it for $98/month, including managed hosting, technical SEO upkeep, and one weekly local blog or Google Business content prompt.',
+    '',
+    `If you want me to tailor it with your real photos, menu/services, hours, and preferred contact path, reply with the best person to talk to or grab a time here:`,
+    contactUrl,
+    '',
+    'If this is not useful, reply "no thanks" and I will not follow up.',
+    '',
+    'Rich',
+    'EB28',
+    ownerEmail,
+  ].join('\n');
+}
+
+function makeEml(prospect) {
+  const subject = `Free website concept for ${prospect.business}`;
+  const lines = [
+    `To: ${headerSafe(prospect.verifiedEmail)}`,
+    `From: EB28 <${ownerEmail}>`,
+    `Reply-To: ${ownerEmail}`,
+    `Subject: ${headerSafe(subject)}`,
+    `Date: ${new Date().toUTCString()}`,
+    'MIME-Version: 1.0',
+    'Content-Type: text/plain; charset=UTF-8',
+    'Content-Transfer-Encoding: 8bit',
+    `X-EB28-Concept: ${prospect.conceptUrl}`,
+    '',
+    makeBody(prospect),
+    '',
+  ];
+
+  return `${lines.join('\r\n')}`;
+}
+
+function extractProspects(indexHtml) {
+  const linkPattern = /<a href="\/32940\/([^"]+)\.html">([\s\S]*?)<br><small>([\s\S]*?)<\/small><\/a>/g;
+  const prospects = [];
+  let match;
+
+  while ((match = linkPattern.exec(indexHtml)) !== null) {
+    const [, slug, rawName, rawCategory] = match;
+    const name = decodeHtml(rawName.trim());
+    const category = decodeHtml(rawCategory.trim());
+    prospects.push({ slug, name, category });
+  }
+
+  return prospects;
+}
+
+function withTracking(prospect, index) {
+  const contact = verifiedContacts[prospect.slug] ?? callOrFormContacts[prospect.slug] ?? {};
+  const avenueSourceSlug = avenueSourceSlugOverrides[prospect.slug] ?? prospect.slug;
+  const sourceUrls = contact.sourceUrls ?? (
+    avenueTenantSourceSlugs.has(prospect.slug) ? [`https://www.avenueviera.com/tenants/${avenueSourceSlug}/`] : []
+  );
+  const hasDirectEmail = Boolean(contact.email);
+  const hasContactPath = Boolean(contact.website || contact.phone);
+
+  return {
+    priority: index + 1,
+    slug: prospect.slug,
+    business: prospect.name,
+    category: prospect.category,
+    conceptUrl: `${conceptBaseUrl}${prospect.slug}.html`,
+    verifiedEmail: contact.email ?? '',
+    phone: contact.phone ?? '',
+    address: contact.address ?? '',
+    website: contact.website ?? '',
+    sourceType: contact.sourceType ?? (sourceUrls.length ? 'Avenue Viera tenant page' : ''),
+    sourceUrls,
+    outreachStage: hasDirectEmail ? 'draft_ready' : hasContactPath ? 'call_or_contact_form' : 'research_needed',
+    nextAction: hasDirectEmail
+      ? 'Create Gmail draft, then send after review'
+      : hasContactPath
+        ? 'Call or use official contact form with the same concept link'
+        : 'Research official owner contact before outreach',
+    lastTouch: '',
+    nextTouch: today,
+    bookedCallStatus: 'not_booked',
+    bookedCallUrl: '',
+    notes: contact.notes ?? '',
+  };
+}
+
+function renderMarkdown(prospects) {
+  const direct = prospects.filter((prospect) => prospect.verifiedEmail);
+  const callOrForm = prospects.filter((prospect) => !prospect.verifiedEmail && prospect.outreachStage === 'call_or_contact_form');
+  const research = prospects.filter((prospect) => prospect.outreachStage === 'research_needed');
+
+  const rows = prospects.map((prospect) => (
+    `| ${prospect.priority} | ${prospect.business} | ${prospect.outreachStage} | ${prospect.verifiedEmail || prospect.phone || 'research'} | ${prospect.nextAction} | ${prospect.conceptUrl} |`
+  ));
+
+  const draftBlocks = direct.map((prospect) => (
+    [
+      `### ${prospect.business}`,
+      `To: ${prospect.verifiedEmail}`,
+      `Subject: Free website concept for ${prospect.business}`,
+      '',
+      '```text',
+      makeBody(prospect),
+      '```',
+      '',
+      `Sources: ${prospect.sourceUrls.join(', ')}`,
+    ].join('\n')
+  ));
+
+  return [
+    '# 32940 EB28 Lead Pipeline',
+    '',
+    `Generated: ${today}`,
+    `Goal: 100 confirmed booked-call leads. Current confirmed booked-call leads from this file: 0.`,
+    '',
+    '## Status',
+    '',
+    `- Total deployed concepts: ${prospects.length}`,
+    `- Direct-email outreach ready: ${direct.length}`,
+    `- Call/contact-form ready: ${callOrForm.length}`,
+    `- Research needed: ${research.length}`,
+    '',
+    '## Pipeline',
+    '',
+    '| # | Business | Stage | Contact | Next action | Concept |',
+    '|---:|---|---|---|---|---|',
+    ...rows,
+    '',
+    '## Direct Email Drafts',
+    '',
+    ...draftBlocks,
+    '',
+    '## Call / Contact Form Script',
+    '',
+    '```text',
+    'Hi, this is Rich with EB28. I built a free owner-review website concept for your business. It is not your official site and it is not indexed publicly. I wanted to send it to the right person so they can decide whether it is useful.',
+    '',
+    'The concept link is: {{concept_url}}',
+    '',
+    'The build is free. If you want EB28 to host and improve it, Growth Hosting is $98/month and includes managed hosting, technical SEO upkeep, and one weekly local blog or Google Business content prompt.',
+    '',
+    'Who is the best person to review it?',
+    '```',
+    '',
+    '## Notes',
+    '',
+    '- Do not send to unverified guessed addresses.',
+    '- Treat a reply, booked calendar call, or completed form submission as a lead event.',
+    '- Count only confirmed booked calls toward the 100-lead goal.',
+  ].join('\n');
+}
+
+async function main() {
+  const indexHtml = await fs.readFile(indexPath, 'utf8');
+  const prospects = extractProspects(indexHtml).map(withTracking);
+
+  if (prospects.length < minimumProspectCount) {
+    throw new Error(`Expected at least ${minimumProspectCount} prospect pages from ${indexPath}, found ${prospects.length}.`);
+  }
+
+  await fs.mkdir(outDir, { recursive: true });
+
+  const csvHeaders = [
+    'priority',
+    'slug',
+    'business',
+    'category',
+    'conceptUrl',
+    'verifiedEmail',
+    'phone',
+    'address',
+    'website',
+    'sourceType',
+    'sourceUrls',
+    'outreachStage',
+    'nextAction',
+    'lastTouch',
+    'nextTouch',
+    'bookedCallStatus',
+    'bookedCallUrl',
+    'notes',
+  ];
+
+  const csv = [
+    csvHeaders.join(','),
+    ...prospects.map((prospect) => csvHeaders.map((header) => csvEscape(prospect[header])).join(',')),
+  ].join('\n');
+
+  await fs.writeFile(path.join(outDir, '32940-prospect-pipeline.csv'), `${csv}\n`);
+  await fs.writeFile(path.join(outDir, '32940-prospect-pipeline.json'), `${JSON.stringify({ generatedAt: today, prospects }, null, 2)}\n`);
+  await fs.writeFile(path.join(outDir, '32940-outreach-drafts.md'), `${renderMarkdown(prospects)}\n`);
+
+  const draftsDir = path.join(outDir, 'drafts');
+  const directEmailProspects = prospects.filter((prospect) => prospect.verifiedEmail);
+  await fs.rm(draftsDir, { recursive: true, force: true });
+  await fs.mkdir(draftsDir, { recursive: true });
+
+  const draftManifest = [];
+  for (const prospect of directEmailProspects) {
+    const filename = `${String(prospect.priority).padStart(2, '0')}-${slugify(prospect.business)}.eml`;
+    const filePath = path.join(draftsDir, filename);
+    await fs.writeFile(filePath, makeEml(prospect));
+    draftManifest.push({
+      business: prospect.business,
+      to: prospect.verifiedEmail,
+      subject: `Free website concept for ${prospect.business}`,
+      file: path.relative(repoRoot, filePath),
+      conceptUrl: prospect.conceptUrl,
+      sourceUrls: prospect.sourceUrls,
+    });
+  }
+
+  await fs.writeFile(
+    path.join(outDir, '32940-local-draft-manifest.json'),
+    `${JSON.stringify({ generatedAt: today, drafts: draftManifest }, null, 2)}\n`,
+  );
+
+  console.log(`Wrote ${prospects.length} prospects to ${path.relative(repoRoot, outDir)}`);
+  console.log(`${directEmailProspects.length} direct-email drafts ready`);
+  console.log(`Wrote ${draftManifest.length} local .eml drafts to ${path.relative(repoRoot, draftsDir)}`);
+}
+
+main().catch((error) => {
+  console.error(error);
+  process.exit(1);
+});

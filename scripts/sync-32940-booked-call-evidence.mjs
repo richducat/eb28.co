@@ -17,6 +17,8 @@ const dueWorkbenchPath = path.join(outDir, '32940-due-now-workbench.html');
 const stateTemplatePath = path.join(outDir, '32940-outreach-state-template.json');
 const callFormSprintCsvPath = path.join(outDir, '32940-call-form-sprint.csv');
 const callFormSprintMdPath = path.join(outDir, '32940-call-form-sprint.md');
+const finalActionQueuePath = path.join(outDir, '32940-final-action-queue.md');
+const callSheetsDir = path.join(outDir, 'call-sheets');
 const today = new Date().toISOString().slice(0, 10);
 
 const allowedStatuses = new Set(['not_started', 'contacted', 'follow_up', 'booked', 'not_interested']);
@@ -89,6 +91,19 @@ function escapeHtml(value = '') {
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;');
+}
+
+function markdownCell(value = '') {
+  return String(value ?? '')
+    .replace(/\|/g, '\\|')
+    .replace(/\n/g, '<br>');
+}
+
+function joinedSources(row) {
+  return String(row.source_urls || '')
+    .split(' | ')
+    .filter(Boolean)
+    .join('<br>');
 }
 
 function datePlusDays(isoDate, days) {
@@ -469,8 +484,8 @@ async function writeNextTouch(dueRows) {
   await fs.writeFile(nextTouchMdPath, lines.join('\n'), 'utf8');
 }
 
-async function writeCallFormSprint(dueRows) {
-  const callRows = dueRows
+function getSortedCallRows(rows) {
+  return rows
     .filter((row) => row.stage === 'call_or_contact_form')
     .map((row) => ({
       ...row,
@@ -481,7 +496,9 @@ async function writeCallFormSprint(dueRows) {
       || a.call_priority_tier.localeCompare(b.call_priority_tier)
       || Number.parseInt(a.priority, 10) - Number.parseInt(b.priority, 10)
     ));
+}
 
+async function writeCallFormSprint(callRows) {
   const csvRows = callRows.map((row, index) => ({
     sprint_rank: index + 1,
     call_block: Math.floor(index / 15) + 1,
@@ -561,6 +578,122 @@ async function writeCallFormSprint(dueRows) {
     ...blocks,
   ];
   await fs.writeFile(callFormSprintMdPath, `${lines.join('\n')}\n`, 'utf8');
+}
+
+async function writeCallSheets(callRows) {
+  await fs.rm(callSheetsDir, { recursive: true, force: true });
+  await fs.mkdir(callSheetsDir, { recursive: true });
+
+  for (let index = 0; index < callRows.length; index += 15) {
+    const blockRows = callRows.slice(index, index + 15);
+    const blockNumber = Math.floor(index / 15) + 1;
+    const targetStart = index + 1;
+    const targetEnd = index + blockRows.length;
+    const tableRows = blockRows.map((row, offset) => (
+      `| ${targetStart + offset} | ${row.priority} | ${markdownCell(row.business)} | ${markdownCell(row.call_priority_tier)} | ${markdownCell(row.recommended_channel)} | ${markdownCell(row.phone)} | ${markdownCell(row.website)} | ${markdownCell(row.concept_url)} |  |`
+    ));
+    const scriptBlocks = blockRows.flatMap((row, offset) => [
+      `### ${targetStart + offset}. ${row.business}`,
+      '',
+      `- Priority: ${row.priority}`,
+      `- Tier: ${row.call_priority_tier}`,
+      `- Phone: ${row.phone || 'not found'}`,
+      `- Contact path: ${row.website || 'not found'}`,
+      `- Concept: ${row.concept_url}`,
+      `- Notes: ${row.notes || 'No notes'}`,
+      '',
+      'Phone script:',
+      '',
+      '```text',
+      makePhoneScript(row),
+      '```',
+      '',
+      'Contact form message:',
+      '',
+      '```text',
+      makeContactFormMessage(row),
+      '```',
+      '',
+      'State patch after attempted contact:',
+      '',
+      '```json',
+      makeContactedPatch(row, row.phone ? 'phone' : 'contact_form'),
+      '```',
+      '',
+    ]);
+    const lines = [
+      `# 32940 Call Sheet Block ${blockNumber}`,
+      '',
+      `Generated: ${today}`,
+      `Targets ${targetStart}-${targetEnd} of ${callRows.length} current call/contact-form prospects.`,
+      '',
+      'Count a lead only after evidence includes a real booked call, calendar link, scheduled call time, or equivalent proof.',
+      '',
+      '| Rank | # | Business | Tier | Channel | Phone | Contact path | Concept | Result |',
+      '|---:|---:|---|---|---|---|---|---|---|',
+      ...tableRows,
+      '',
+      '## Scripts And Logging',
+      '',
+      ...scriptBlocks,
+    ];
+
+    await fs.writeFile(path.join(callSheetsDir, `block-${String(blockNumber).padStart(2, '0')}.md`), `${lines.join('\n')}\n`, 'utf8');
+  }
+}
+
+async function writeFinalActionQueue(rows) {
+  const booked = rows.filter((row) => row.booked_call_status === 'booked');
+  const activeRows = rows.filter((row) => row.booked_call_status !== 'booked' && row.status !== 'not_interested');
+  const directRows = activeRows.filter((row) => row.stage === 'draft_ready');
+  const callRows = getSortedCallRows(activeRows);
+  const researchRows = activeRows.filter((row) => row.stage === 'research_needed');
+
+  const directTable = directRows.map((row) => (
+    `| ${row.priority} | ${markdownCell(row.business)} | ${markdownCell(row.email)} | ${markdownCell(row.concept_url)} | ${markdownCell(joinedSources(row))} | ${markdownCell(row.notes)} |`
+  ));
+  const callTable = callRows.map((row, index) => (
+    `| ${index + 1} | ${row.priority} | ${markdownCell(row.business)} | ${markdownCell(row.call_priority_tier)} | ${markdownCell(row.recommended_channel)} | ${markdownCell(row.phone)} | ${markdownCell(row.website)} | ${markdownCell(row.concept_url)} |`
+  ));
+  const researchTable = researchRows.map((row) => (
+    `| ${row.priority} | ${markdownCell(row.business)} | ${markdownCell(row.website || joinedSources(row))} | Research official owner or manager contact before outreach |`
+  ));
+
+  const lines = [
+    '# 32940 EB28 Final Action Queue',
+    '',
+    `Generated: ${today}`,
+    `Total prospects: ${rows.length}`,
+    `Actionable now: ${directRows.length + callRows.length}`,
+    `Direct-email ready: ${directRows.length}`,
+    `Call/contact-form ready: ${callRows.length}`,
+    `Research needed: ${researchRows.length}`,
+    `Confirmed booked-call leads: ${booked.length}`,
+    '',
+    '## Direct Email Drafts Ready',
+    '',
+    '| # | Business | Email | Concept | Sources | Notes |',
+    '|---:|---|---|---|---|---|',
+    ...directTable,
+    '',
+    '## Call / Contact Form Ready',
+    '',
+    '| Sprint rank | # | Business | Tier | Channel | Phone | Contact path | Concept |',
+    '|---:|---:|---|---|---|---|---|---|',
+    ...callTable,
+    '',
+    '## Research Needed',
+    '',
+    '| # | Business | Current source | Next action |',
+    '|---:|---|---|---|',
+    ...researchTable,
+    '',
+    '## Counting Rule',
+    '',
+    'Count a lead only after evidence includes a real booked call, calendar link, scheduled call time, or equivalent proof.',
+  ];
+
+  await fs.writeFile(finalActionQueuePath, `${lines.join('\n')}\n`, 'utf8');
 }
 
 async function writeStateTemplate(rows) {
@@ -797,9 +930,12 @@ async function main() {
   const warnings = stateLoaded ? mergeState(rows, state) : [];
   const enrichedRows = enrichRows(rows, prospectDetails);
   const dueRows = getDueRows(enrichedRows);
+  const callRows = getSortedCallRows(dueRows);
 
   await writeNextTouch(dueRows);
-  await writeCallFormSprint(dueRows);
+  await writeCallFormSprint(callRows);
+  await writeCallSheets(callRows);
+  await writeFinalActionQueue(enrichedRows);
   await writeWorkbench(dueRows);
   await writeStateTemplate(rows);
   const summary = await writeAudit(rows, warnings, statePath, stateLoaded, dueRows);

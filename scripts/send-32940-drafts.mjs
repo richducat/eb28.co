@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import fs from 'node:fs/promises';
+import { execFileSync } from 'node:child_process';
 import net from 'node:net';
 import path from 'node:path';
 import tls from 'node:tls';
@@ -19,6 +20,7 @@ function parseArgs(argv) {
     sendLogPath: defaultSendLogPath,
     dryRun: true,
     send: false,
+    preflightSmtp: false,
     limit: Number.POSITIVE_INFINITY,
     offset: 0,
     updateState: true,
@@ -31,6 +33,8 @@ function parseArgs(argv) {
     if (arg === '--send') {
       args.send = true;
       args.dryRun = false;
+    } else if (arg === '--preflight-smtp') {
+      args.preflightSmtp = true;
     } else if (arg === '--dry-run') {
       args.dryRun = true;
       args.send = false;
@@ -66,15 +70,18 @@ function parseArgs(argv) {
 function usage() {
   return `Usage:
   npm run leadops:send-drafts:32940 -- --dry-run --limit 5
+  SMTP_HOST=mail.privateemail.com SMTP_PORT=465 SMTP_SECURE=true SMTP_USER=social@eb28.co SMTP_PASS_KEYCHAIN_SERVICE='EB28 social@eb28.co SMTP' npm run leadops:preflight-sender:32940
   SMTP_HOST=smtp.example.com SMTP_PORT=587 SMTP_USER=... SMTP_PASS=... npm run leadops:send-drafts:32940 -- --send --limit 10
 
 Environment:
-  SMTP_HOST       Required for --send.
-  SMTP_PORT       Defaults to 587, or 465 when SMTP_SECURE=true.
-  SMTP_SECURE     Set true for implicit TLS on port 465.
-  SMTP_USER       Optional SMTP auth username.
-  SMTP_PASS       Optional SMTP auth password.
-  SMTP_EHLO_NAME  Optional EHLO name, defaults to eb28.co.
+  SMTP_HOST                  Required for --send and --preflight-smtp.
+  SMTP_PORT                  Defaults to 587, or 465 when SMTP_SECURE=true.
+  SMTP_SECURE                Set true for implicit TLS on port 465.
+  SMTP_USER                  Optional SMTP auth username.
+  SMTP_PASS                  Optional SMTP auth password.
+  SMTP_PASS_KEYCHAIN_SERVICE Optional macOS Keychain generic password service.
+  SMTP_PASS_KEYCHAIN_ACCOUNT Optional Keychain account, defaults to SMTP_USER.
+  SMTP_EHLO_NAME             Optional EHLO name, defaults to eb28.co.
 
 The runner refuses drafts unless From and Reply-To are both social@eb28.co.`;
 }
@@ -163,22 +170,49 @@ async function loadDrafts(draftDir, offset, limit) {
   return Promise.all(files.map(async (filePath) => parseDraft(filePath, await fs.readFile(filePath, 'utf8'))));
 }
 
+function readKeychainPassword(service, account) {
+  try {
+    return execFileSync(
+      'security',
+      ['find-generic-password', '-s', service, '-a', account, '-w'],
+      { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] },
+    ).trim();
+  } catch {
+    throw new Error(`Unable to read SMTP password from macOS Keychain service "${service}" account "${account}"`);
+  }
+}
+
 function smtpConfigFromEnv() {
   const secure = /^true|1|yes$/i.test(process.env.SMTP_SECURE || '');
   const port = Number.parseInt(process.env.SMTP_PORT || (secure ? '465' : '587'), 10);
+  const user = process.env.SMTP_USER;
+  const keychainService = process.env.SMTP_PASS_KEYCHAIN_SERVICE;
+  const keychainAccount = process.env.SMTP_PASS_KEYCHAIN_ACCOUNT || user;
+  let pass = process.env.SMTP_PASS;
+  let passSource = pass ? 'env:SMTP_PASS' : '';
+
+  if (!pass && keychainService) {
+    if (!keychainAccount) {
+      throw new Error('SMTP_PASS_KEYCHAIN_ACCOUNT or SMTP_USER is required when SMTP_PASS_KEYCHAIN_SERVICE is set');
+    }
+    pass = readKeychainPassword(keychainService, keychainAccount);
+    passSource = `keychain:${keychainService}`;
+  }
+
   return {
     host: process.env.SMTP_HOST,
     port,
     secure,
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
+    user,
+    pass,
+    passSource,
     ehloName: process.env.SMTP_EHLO_NAME || 'eb28.co',
   };
 }
 
-function requireSmtpConfig(config) {
+function requireSmtpConfig(config, action = '--send') {
   if (!config.host) {
-    throw new Error('SMTP_HOST is required for --send');
+    throw new Error(`SMTP_HOST is required for ${action}`);
   }
   if (!Number.isFinite(config.port) || config.port < 1) {
     throw new Error('SMTP_PORT must be a valid port');
@@ -186,6 +220,14 @@ function requireSmtpConfig(config) {
   if ((config.user && !config.pass) || (!config.user && config.pass)) {
     throw new Error('SMTP_USER and SMTP_PASS must be provided together');
   }
+}
+
+function redactSmtpError(message, config) {
+  let redacted = String(message || '');
+  if (config.pass) {
+    redacted = redacted.replaceAll(config.pass, '[redacted-password]');
+  }
+  return redacted.replace(/[A-Za-z0-9+/=]{24,}/g, '[redacted-token]');
 }
 
 function normalizeForSmtp(raw) {
@@ -334,7 +376,7 @@ async function main() {
   const duplicateRecipients = drafts.length - uniqueRecipients.size;
 
   console.log(JSON.stringify({
-    mode: args.send ? 'send' : 'dry-run',
+    mode: args.preflightSmtp ? 'smtp-preflight' : args.send ? 'send' : 'dry-run',
     draftDir: args.draftDir,
     drafts: drafts.length,
     uniqueRecipients: uniqueRecipients.size,
@@ -345,12 +387,44 @@ async function main() {
     replyTo: requiredSender,
   }, null, 2));
 
+  if (args.preflightSmtp) {
+    const smtpConfig = smtpConfigFromEnv();
+    requireSmtpConfig(smtpConfig, '--preflight-smtp');
+    const client = new SmtpClient(smtpConfig);
+
+    try {
+      await client.connect();
+      console.log(JSON.stringify({
+        smtpPreflight: 'passed',
+        host: smtpConfig.host,
+        port: smtpConfig.port,
+        secure: smtpConfig.secure,
+        user: smtpConfig.user || null,
+        passwordSource: smtpConfig.passSource || null,
+      }, null, 2));
+    } catch (error) {
+      console.log(JSON.stringify({
+        smtpPreflight: 'failed',
+        host: smtpConfig.host,
+        port: smtpConfig.port,
+        secure: smtpConfig.secure,
+        user: smtpConfig.user || null,
+        passwordSource: smtpConfig.passSource || null,
+        error: redactSmtpError(error.message, smtpConfig),
+      }, null, 2));
+      process.exitCode = 1;
+    } finally {
+      await client.quit();
+    }
+    return;
+  }
+
   if (!args.send) {
     return;
   }
 
   const smtpConfig = smtpConfigFromEnv();
-  requireSmtpConfig(smtpConfig);
+  requireSmtpConfig(smtpConfig, '--send');
 
   const client = new SmtpClient(smtpConfig);
   const sent = [];

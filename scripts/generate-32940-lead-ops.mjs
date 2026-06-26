@@ -1849,6 +1849,8 @@ function renderDispatchReadinessMarkdown(prospects, draftManifest, emailStats) {
     '## Send Gate',
     '',
     '- Send only through an authenticated mailbox authorized to send as `social@eb28.co`.',
+    '- Before live sending, run `npm run leadops:preflight-sender:32940` with `SMTP_HOST`, `SMTP_USER`, and either `SMTP_PASS` or `SMTP_PASS_KEYCHAIN_SERVICE` set.',
+    '- Forwarding confirms inbound routing only; it does not authorize outbound SMTP as `social@eb28.co`.',
     '- Do not count a sent draft as a booked-call lead.',
     '- Count a prospect only after a real booked call, calendar link, scheduled call time, or equivalent evidence is logged.',
     '',
@@ -1941,6 +1943,8 @@ async function main() {
     researchNeededTargets: research.length,
     sendPrerequisites: [
       'Use an authenticated mailbox authorized to send as social@eb28.co.',
+      'Run npm run leadops:preflight-sender:32940 with SMTP credentials before live sending.',
+      'Do not treat forwarding-only aliases as outbound SMTP authorization.',
       'Do not count a sent draft as a booked-call lead.',
       'Log real booked-call evidence before counting a prospect toward the 100-lead goal.',
     ],

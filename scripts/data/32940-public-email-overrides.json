@@ -904,6 +904,37 @@
     "sourceType": "public official corporate customer-service email",
     "notes": "Manually verified official Men's Wearhouse public support/rental content exposes MWListens@menswearhouse.com; Avenue Viera verifies the local Men's Wearhouse listing. Corporate route; ask to forward to the local store or district manager."
   },
+  "aerie": {
+    "email": "CustomerCare@ae.com",
+    "sourceUrls": [
+      "https://www.ae.com/us/en/content/help/emails",
+      "https://www.ae.com/us/en/content/help/contact-us",
+      "https://www.avenueviera.com/tenants/aerie/"
+    ],
+    "sourceType": "public official AEO corporate customer-care email",
+    "notes": "Manually verified official AEO email preferences/help page exposes CustomerCare@ae.com; Avenue Viera verifies the local Aerie listing. Shared AEO corporate route; ask to forward to the local Aerie store or district manager."
+  },
+  "crumbl": {
+    "email": "businessorders@crumbl.com",
+    "sourceUrls": [
+      "https://crumblcookies.com/b2b",
+      "https://crumblcookies.com/contact",
+      "https://www.avenueviera.com/tenants/crumbl/"
+    ],
+    "sourceType": "public official business-order email",
+    "notes": "Manually verified official Crumbl business-to-business page exposes businessorders@crumbl.com for business-related requests; official contact page and Avenue Viera verify the brand and local listing. Corporate route; ask to forward to the local franchise owner, operator, or district manager."
+  },
+  "old-navy": {
+    "email": "custserv@oldnavy.com",
+    "sourceUrls": [
+      "https://oldnavy.gap.com/customerService/info.do?cid=83044",
+      "https://www.cpsc.gov/Recalls/2007/old-navy-recalls-boys-jackets-drawstring-at-waist-poses-entrapment-hazard",
+      "https://oldnavy.gap.com/stores/fl/viera/oldnavy-3364.html",
+      "https://www.avenueviera.com/tenants/old-navy/"
+    ],
+    "sourceType": "public customer-service email cited by official recall record",
+    "notes": "Manually verified Old Navy contact page for customer-service context and CPSC recall record exposing custserv@oldnavy.com as Old Navy's customer-service email; official store locator and Avenue Viera verify the local store listing. Corporate route; ask to forward to the local store or district manager."
+  },
   "viera-dental": {
     "email": "vieradental@heartlanddentalcare.com",
     "sourceUrls": [

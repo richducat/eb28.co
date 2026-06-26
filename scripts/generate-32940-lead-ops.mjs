@@ -881,6 +881,135 @@ function markdownCell(value) {
     .replace(/\n/g, '<br>');
 }
 
+function escapeHtml(value = '') {
+  return String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function renderManualOutreachCommandCenter(prospects, emailStats) {
+  const direct = prospects.filter((prospect) => prospect.verifiedEmail);
+  const callOrForm = prospects.filter((prospect) => !prospect.verifiedEmail && prospect.outreachStage === 'call_or_contact_form');
+  const rows = prospects
+    .filter((prospect) => prospect.outreachStage !== 'research_needed')
+    .map((prospect) => {
+      const mailto = makeMailto(prospect);
+      const subject = `Free website concept for ${prospect.business}`;
+      const body = makeBody(prospect);
+      const phoneScript = [
+        `Hi, this is Rich with EB28. I built a free owner-review website concept for ${prospect.business}.`,
+        'It is not your official site and it is not indexed publicly.',
+        `The link is ${prospect.conceptUrl}.`,
+        'The build is free. Growth Hosting is $98/month and includes hosting, SEO upkeep, and weekly local content prompts.',
+        'Who is the best person to review it, and what email should I send it to?',
+      ].join(' ');
+      const primaryAction = prospect.verifiedEmail
+        ? `<a class="btn primary" href="${escapeHtml(mailto)}">Open Email</a>`
+        : '<span class="pill">Call/Form</span>';
+      const phoneAction = prospect.phone ? `<a class="btn" href="tel:${escapeHtml(prospect.phone)}">Call</a>` : '';
+      const websiteAction = prospect.website ? `<a class="btn" target="_blank" rel="noopener" href="${escapeHtml(prospect.website)}">Website/Form</a>` : '';
+
+      return `
+        <article class="card" data-stage="${escapeHtml(prospect.outreachStage)}" data-business="${escapeHtml(prospect.business.toLowerCase())}">
+          <div class="topline"><span>#${prospect.priority}</span><span>${escapeHtml(prospect.outreachStage.replace(/_/g, ' '))}</span></div>
+          <h2>${escapeHtml(prospect.business)}</h2>
+          <p class="meta">${escapeHtml(prospect.category)}</p>
+          <div class="actions">
+            <a class="btn" target="_blank" rel="noopener" href="${escapeHtml(prospect.conceptUrl)}">Concept</a>
+            ${primaryAction}
+            ${phoneAction}
+            ${websiteAction}
+          </div>
+          <dl>
+            <div><dt>Email</dt><dd>${escapeHtml(prospect.verifiedEmail || 'not available')}</dd></div>
+            <div><dt>Phone</dt><dd>${escapeHtml(prospect.phone || 'not available')}</dd></div>
+            <div><dt>Source</dt><dd>${escapeHtml(prospect.sourceUrls.join(' | ') || prospect.sourceType || 'n/a')}</dd></div>
+          </dl>
+          <label>Subject <input readonly value="${escapeHtml(subject)}"></label>
+          <label>Message <textarea readonly>${escapeHtml(body)}</textarea></label>
+          <label>Phone/contact-form script <textarea readonly>${escapeHtml(phoneScript)}</textarea></label>
+        </article>`;
+    });
+
+  return `<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>EB28 32940 Manual Outreach Command Center</title>
+  <style>
+    :root { color-scheme: light; --bg:#f6f7f9; --panel:#fff; --ink:#172033; --muted:#5d6678; --line:#d7dce7; --blue:#1957d2; --green:#137a45; --amber:#9a5b00; }
+    * { box-sizing:border-box; }
+    body { margin:0; font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background:var(--bg); color:var(--ink); }
+    header { position:sticky; top:0; z-index:2; padding:16px 18px; border-bottom:1px solid var(--line); background:rgba(255,255,255,.97); }
+    h1 { margin:0; font-size:21px; letter-spacing:0; }
+    .summary { display:flex; flex-wrap:wrap; gap:10px; margin-top:12px; }
+    .metric { min-width:130px; padding:9px 11px; border:1px solid #cfdbff; border-radius:8px; background:#eef3ff; }
+    .metric strong { display:block; font-size:22px; }
+    .metric span, .meta { color:var(--muted); font-size:12px; line-height:1.35; }
+    .notice { margin-top:10px; color:#344054; font-size:13px; }
+    .toolbar { display:flex; flex-wrap:wrap; gap:10px; padding:14px 18px 0; }
+    input, select, textarea { border:1px solid var(--line); border-radius:7px; background:#fff; color:var(--ink); font:inherit; }
+    .toolbar input, .toolbar select { min-height:38px; padding:8px 10px; }
+    main { display:grid; grid-template-columns:repeat(auto-fit, minmax(340px, 1fr)); gap:14px; padding:14px 18px 18px; }
+    .card { background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:14px; display:flex; flex-direction:column; gap:10px; }
+    .topline { display:flex; justify-content:space-between; color:var(--muted); font-size:12px; text-transform:uppercase; font-weight:750; }
+    h2 { margin:0; font-size:18px; letter-spacing:0; }
+    .actions { display:flex; flex-wrap:wrap; gap:8px; }
+    .btn, .pill { min-height:34px; padding:7px 10px; border:1px solid var(--line); border-radius:7px; background:#fff; color:var(--ink); text-decoration:none; font-weight:700; display:inline-flex; align-items:center; }
+    .btn.primary { background:var(--blue); border-color:var(--blue); color:#fff; }
+    .pill { color:var(--amber); background:#fff8e6; border-color:#f1d08a; }
+    dl { margin:0; display:grid; gap:6px; font-size:12px; }
+    dt { color:var(--muted); font-weight:800; text-transform:uppercase; }
+    dd { margin:2px 0 0; overflow-wrap:anywhere; }
+    label { display:flex; flex-direction:column; gap:5px; font-size:12px; color:var(--muted); font-weight:800; }
+    label input, textarea { width:100%; padding:8px; color:var(--ink); }
+    textarea { min-height:128px; resize:vertical; font-size:12px; line-height:1.45; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>EB28 32940 Manual Outreach Command Center</h1>
+    <div class="summary">
+      <div class="metric"><strong>${prospects.length}</strong><span>total prospects</span></div>
+      <div class="metric"><strong>${direct.length}</strong><span>direct-email drafts</span></div>
+      <div class="metric"><strong>${emailStats.uniqueRecipientInboxes}</strong><span>unique inboxes</span></div>
+      <div class="metric"><strong>${callOrForm.length}</strong><span>call/form targets</span></div>
+    </div>
+    <p class="notice">Manual fallback while Gmail/SMTP auth is unavailable. Do not count outreach as a booked lead until a real booked-call reply, calendar link, scheduled call time, or equivalent evidence is logged.</p>
+  </header>
+  <div class="toolbar">
+    <input id="search" placeholder="Search business or source">
+    <select id="stage">
+      <option value="">All routes</option>
+      <option value="draft_ready">Direct email</option>
+      <option value="call_or_contact_form">Call/form</option>
+    </select>
+  </div>
+  <main id="cards">
+    ${rows.join('\n')}
+  </main>
+  <script>
+    const cards = [...document.querySelectorAll('.card')];
+    function applyFilters() {
+      const query = document.getElementById('search').value.toLowerCase();
+      const stage = document.getElementById('stage').value;
+      for (const card of cards) {
+        const matchesQuery = !query || card.textContent.toLowerCase().includes(query);
+        const matchesStage = !stage || card.dataset.stage === stage;
+        card.style.display = matchesQuery && matchesStage ? '' : 'none';
+      }
+    }
+    document.getElementById('search').addEventListener('input', applyFilters);
+    document.getElementById('stage').addEventListener('input', applyFilters);
+  </script>
+</body>
+</html>`;
+}
+
 function renderCallContactQueue(prospects) {
   const direct = prospects.filter((prospect) => prospect.verifiedEmail);
   const callOrForm = prospects.filter((prospect) => !prospect.verifiedEmail && prospect.outreachStage === 'call_or_contact_form');
@@ -1076,6 +1205,10 @@ async function main() {
   await fs.writeFile(
     path.join(outDir, '32940-dispatch-readiness.md'),
     `${renderDispatchReadinessMarkdown(prospects, draftManifest, emailStats)}\n`,
+  );
+  await fs.writeFile(
+    path.join(outDir, '32940-manual-outreach-command-center.html'),
+    renderManualOutreachCommandCenter(prospects, emailStats),
   );
 
   console.log(`Wrote ${prospects.length} prospects to ${path.relative(repoRoot, outDir)}`);

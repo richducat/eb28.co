@@ -890,15 +890,68 @@ function escapeHtml(value = '') {
     .replace(/'/g, '&#39;');
 }
 
+function shellQuote(value = '') {
+  return `'${String(value).replace(/'/g, `'\\''`)}'`;
+}
+
+function inferOutreachSource(prospect) {
+  if (prospect.verifiedEmail) {
+    return 'email';
+  }
+  if (prospect.phone) {
+    return 'phone';
+  }
+  return 'contact_form';
+}
+
+function humanOutreachSource(source) {
+  return source.replace(/_/g, ' ');
+}
+
+function makeRecordCommand(prospect, status, source, evidence, datetime = '') {
+  const parts = [
+    'npm run leadops:record:32940 --',
+    '--priority',
+    shellQuote(prospect.priority),
+    '--status',
+    shellQuote(status),
+    '--source',
+    shellQuote(source),
+  ];
+
+  if (datetime) {
+    parts.push('--datetime', shellQuote(datetime));
+  }
+
+  parts.push('--evidence', shellQuote(evidence));
+  return parts.join(' ');
+}
+
 function renderManualOutreachCommandCenter(prospects, emailStats) {
   const direct = prospects.filter((prospect) => prospect.verifiedEmail);
   const callOrForm = prospects.filter((prospect) => !prospect.verifiedEmail && prospect.outreachStage === 'call_or_contact_form');
+  const auditCommand = 'npm run leadops:audit:32940 -- --write';
   const rows = prospects
     .filter((prospect) => prospect.outreachStage !== 'research_needed')
     .map((prospect) => {
       const mailto = makeMailto(prospect);
       const subject = `Free website concept for ${prospect.business}`;
       const body = makeBody(prospect);
+      const routeSource = inferOutreachSource(prospect);
+      const routeLabel = humanOutreachSource(routeSource);
+      const contactedCommand = makeRecordCommand(
+        prospect,
+        'contacted',
+        routeSource,
+        `Manual ${routeLabel} outreach completed for ${prospect.business}; waiting for reply.`,
+      );
+      const bookedCommand = makeRecordCommand(
+        prospect,
+        'booked',
+        routeSource,
+        `Reply or calendar evidence confirms a booked review call for ${prospect.business} at YYYY-MM-DD HH:MM ET.`,
+        'YYYY-MM-DD HH:MM ET',
+      );
       const phoneScript = [
         `Hi, this is Rich with EB28. I built a free owner-review website concept for ${prospect.business}.`,
         'It is not your official site and it is not indexed publicly.',
@@ -931,6 +984,8 @@ function renderManualOutreachCommandCenter(prospects, emailStats) {
           <label>Subject <input readonly value="${escapeHtml(subject)}"></label>
           <label>Message <textarea readonly>${escapeHtml(body)}</textarea></label>
           <label>Phone/contact-form script <textarea readonly>${escapeHtml(phoneScript)}</textarea></label>
+          <label>Record contacted command <textarea class="command" readonly>${escapeHtml(contactedCommand)}</textarea></label>
+          <label>Record booked command <textarea class="command" readonly>${escapeHtml(bookedCommand)}</textarea></label>
         </article>`;
     });
 
@@ -951,6 +1006,7 @@ function renderManualOutreachCommandCenter(prospects, emailStats) {
     .metric strong { display:block; font-size:22px; }
     .metric span, .meta { color:var(--muted); font-size:12px; line-height:1.35; }
     .notice { margin-top:10px; color:#344054; font-size:13px; }
+    .audit-command { margin-top:10px; max-width:760px; }
     .toolbar { display:flex; flex-wrap:wrap; gap:10px; padding:14px 18px 0; }
     input, select, textarea { border:1px solid var(--line); border-radius:7px; background:#fff; color:var(--ink); font:inherit; }
     .toolbar input, .toolbar select { min-height:38px; padding:8px 10px; }
@@ -968,6 +1024,7 @@ function renderManualOutreachCommandCenter(prospects, emailStats) {
     label { display:flex; flex-direction:column; gap:5px; font-size:12px; color:var(--muted); font-weight:800; }
     label input, textarea { width:100%; padding:8px; color:var(--ink); }
     textarea { min-height:128px; resize:vertical; font-size:12px; line-height:1.45; }
+    textarea.command { min-height:74px; font-family:ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; }
   </style>
 </head>
 <body>
@@ -979,7 +1036,8 @@ function renderManualOutreachCommandCenter(prospects, emailStats) {
       <div class="metric"><strong>${emailStats.uniqueRecipientInboxes}</strong><span>unique inboxes</span></div>
       <div class="metric"><strong>${callOrForm.length}</strong><span>call/form targets</span></div>
     </div>
-    <p class="notice">Manual fallback while Gmail/SMTP auth is unavailable. Do not count outreach as a booked lead until a real booked-call reply, calendar link, scheduled call time, or equivalent evidence is logged.</p>
+    <p class="notice">Manual fallback while Gmail/SMTP auth is unavailable. After a real outreach touch, run the contacted command. After a real reply, calendar link, or scheduled call time, replace the booked placeholders and run the booked command, then write the audit.</p>
+    <label class="audit-command">Apply audit command <textarea class="command" readonly>${escapeHtml(auditCommand)}</textarea></label>
   </header>
   <div class="toolbar">
     <input id="search" placeholder="Search business or source">

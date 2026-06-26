@@ -10,6 +10,7 @@ const trackerPath = path.join(outDir, '32940-booked-call-tracker.csv');
 const defaultStatePath = path.join(outDir, 'eb28-32940-outreach-state.json');
 const allowedStatuses = new Set(['not_started', 'contacted', 'follow_up', 'booked', 'not_interested']);
 const bookedEvidenceHints = /(calendar|calendly|google\.com\/calendar|meet\.google|zoom\.us|teams\.microsoft|\b\d{1,2}:\d{2}\b|\b(am|pm)\b|\bmon(day)?\b|\btue(sday)?\b|\bwed(nesday)?\b|\bthu(rsday)?\b|\bfri(day)?\b|\bsat(urday)?\b|\bsun(day)?\b|\bbook(ed|ing)?\b|\bscheduled\b|\bappointment\b|\bcall\b)/i;
+const placeholderEvidenceHints = /(yyyy-mm-dd|hh:mm|replace|placeholder|example|\btbd\b|<[^>]+>|\[[^\]]+\])/i;
 
 function usage() {
   return `Usage:
@@ -125,9 +126,10 @@ async function readState(statePath) {
   }
 }
 
-function validBookedEvidence(evidence = '') {
+function validBookedEvidence(evidence = '', datetime = '') {
   const text = String(evidence).trim();
-  return text.length >= 12 && bookedEvidenceHints.test(text);
+  const combined = `${text} ${String(datetime || '').trim()}`.trim();
+  return text.length >= 12 && bookedEvidenceHints.test(combined) && !placeholderEvidenceHints.test(combined);
 }
 
 function validateArgs(args, trackerRows) {
@@ -145,8 +147,8 @@ function validateArgs(args, trackerRows) {
     throw new Error('--evidence is required for non-not_started statuses');
   }
 
-  if (args.status === 'booked' && !validBookedEvidence(evidence)) {
-    throw new Error('Booked status requires concrete scheduling evidence, such as a calendar link, scheduled call time, or reply confirming the call.');
+  if (args.status === 'booked' && !validBookedEvidence(evidence, args.datetime)) {
+    throw new Error('Booked status requires concrete scheduling evidence, such as a calendar link, scheduled call time, or reply confirming the call. Replace any template placeholders before recording booked status.');
   }
 
   return row;

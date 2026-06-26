@@ -586,6 +586,25 @@
     "sourceType": "public local business profile contact listing",
     "notes": "Manually verified public Fujiyama Seafood & Steak profile exposes jimmy-weng@hotmail.com for the Melbourne/Viera restaurant; official site verifies the matching N Wickham Rd location and phone; verify decision maker before sending."
   },
+  "the-refinery-medspa-wellness": {
+    "email": "info@refinerymedspa.com",
+    "sourceUrls": [
+      "https://www.facebook.com/therefinerymedspa/",
+      "https://refinerymedspa.com/blog/florida-medspa-sounds-alarm-over-rising-diy-trend-in-glp-1-weight-loss-solutions/",
+      "https://refinerymedspa.com/med-spa-suntree-fl/"
+    ],
+    "sourceType": "public social profile and official website email listing",
+    "notes": "Manually verified public Refinery Medspa listings expose info@refinerymedspa.com; official site verifies the Suntree service-area page used for the concept; verify decision maker before sending."
+  },
+  "kendra-scott": {
+    "email": "theavenueviera@kendrascott.com",
+    "sourceUrls": [
+      "https://www.kendrascott.com/stores/directory",
+      "https://www.avenueviera.com/tenants/kendra-scott/"
+    ],
+    "sourceType": "public official store directory email",
+    "notes": "Manually verified official Kendra Scott store directory exposes theavenueviera@kendrascott.com for the Melbourne The Avenue Viera store; verify decision maker before sending."
+  },
   "viera-dental": {
     "email": "vieradental@heartlanddentalcare.com",
     "sourceUrls": [

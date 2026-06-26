@@ -539,6 +539,35 @@
     "sourceType": "public email on official Viera pages and public social profile",
     "notes": "Manually verified official Viera pages and Viera Discovery Center public profile expose info@viera.com for general community information; verify decision maker before sending."
   },
+  "elegant-nail-spa": {
+    "email": "elegantnailsviera@gmail.com",
+    "sourceUrls": [
+      "https://bookelegantnail.setmore.com/",
+      "https://www.elegantnailspaviera.com/location/elegant-nail-spa/"
+    ],
+    "sourceType": "public booking contact listing",
+    "notes": "Manually verified Elegant Nail Spa public booking profile exposes elegantnailsviera@gmail.com for the Viera nail spa; verify decision maker before sending."
+  },
+  "nourish": {
+    "email": "contact@nourishsavannah.com",
+    "sourceUrls": [
+      "https://www.facebook.com/NourishDowntownMelbourne/",
+      "https://nourishsavannah.com/",
+      "https://www.avenueviera.com/tenants/nourish/"
+    ],
+    "sourceType": "public social contact listing and business website",
+    "notes": "Manually verified public Nourish profile/search listing exposes contact@nourishsavannah.com for the business; confirm the Viera decision maker before sending."
+  },
+  "viera-dental": {
+    "email": "vieradental@heartlanddentalcare.com",
+    "sourceUrls": [
+      "https://www.facebook.com/VieraDentist/",
+      "https://vieradental.com/",
+      "https://www.avenueviera.com/tenants/viera-dental/"
+    ],
+    "sourceType": "public social contact listing for Viera dental office",
+    "notes": "Manually verified Viera Dental public profile exposes vieradental@heartlanddentalcare.com for the Melbourne/Viera office; verify decision maker before sending."
+  },
   "fountain-of-you": {
     "email": "drkimzipper@me.com",
     "sourceUrls": [

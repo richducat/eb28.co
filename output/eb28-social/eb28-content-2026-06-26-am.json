@@ -1,0 +1,49 @@
+{
+  "brand": "EB28",
+  "generatedAt": "2026-06-26T10:02:29.357Z",
+  "runId": "2026-06-26-am",
+  "slot": "am",
+  "article": {
+    "title": "CRM Automation for Local Service Businesses: The Simple Stack That Works",
+    "url": "https://eb28.co/blog/crm-automation-for-local-service-businesses-the-simple-stack-that-works/",
+    "localPath": "/blog/crm-automation-for-local-service-businesses-the-simple-stack-that-works/",
+    "cluster": "lead-automation",
+    "primaryKeyword": "CRM automation for local service business"
+  },
+  "posts": {
+    "facebook": {
+      "caption": "CRM Automation for Local Service Businesses: The Simple Stack That Works\n\nLocal service leads usually leak after the form, not before it. This guide breaks down the simple CRM handoff stack: capture the source, qualify the request, confirm fast, route the right work to a human, and report on what actually converts.\n\nRead it: https://eb28.co/blog/crm-automation-for-local-service-businesses-the-simple-stack-that-works/",
+      "status": "draft_only"
+    },
+    "linkedin": {
+      "caption": "Refreshed EB28 growth guide: CRM Automation for Local Service Businesses: The Simple Stack That Works\n\nThe useful CRM stack for local service businesses is not a bloated sales platform. It is a clean first-five-minute handoff: source tracking, qualification, confirmation, owner routing, reminders, and reporting that ties back to organic search intent.\n\nhttps://eb28.co/blog/crm-automation-for-local-service-businesses-the-simple-stack-that-works/",
+      "status": "draft_only"
+    },
+    "instagram": {
+      "caption": "CRM automation for local service businesses: fix the first five minutes after someone asks for help.\n\nCapture the source. Qualify the request. Confirm fast. Route the right work to a human. Report what converted.\n\nFull guide: eb28.co/blog/",
+      "creativeBrief": "Carousel: Slide 1 first-five-minute lead leak, Slide 2 capture source and service need, Slide 3 qualify and route, Slide 4 confirm and remind, Slide 5 CTA to Melbourne Web Studio project brief.",
+      "status": "draft_only"
+    },
+    "shortFormVideo": {
+      "hook": "Your CRM automation should fix the first five minutes after a lead comes in.",
+      "script": "Open on a form submission sitting without context. Show the simple stack: source URL, service need, urgency, confirmation, owner routing, reminders, and reporting. Cut to the warning: do not automate pricing judgment or trust-heavy exceptions. Close with the EB28 CRM automation guide and the Melbourne Web Studio project brief.",
+      "shotList": [
+        "Website form submission with source page highlighted",
+        "Simple CRM pipeline columns: New, Qualified, Routed, Followed Up, Won/Lost",
+        "Checklist of what to automate versus what stays human",
+        "EB28 article URL and Melbourne Web Studio project-brief CTA"
+      ],
+      "caption": "Fix the first-five-minute handoff before adding more CRM automation.",
+      "status": "draft_only"
+    }
+  },
+  "publishGate": {
+    "status": "draft_only",
+    "reason": "No EB28-owned social channel was verified by repo script or connector during this run.",
+    "verifiedChannels": []
+  },
+  "socialPublishGuard": {
+    "status": "buffer_ready_pending_verified_channels",
+    "note": "No external social publishing was attempted. Publishing stays blocked until the API account, organization, exact channel IDs, and EB28-owned channels verify successfully."
+  }
+}

@@ -1737,10 +1737,10 @@
     "cluster": "lead-automation",
     "primaryKeyword": "CRM automation for local service business",
     "datePublished": "2026-06-08",
-    "dateModified": "2026-06-17",
+    "dateModified": "2026-06-26",
     "author": "EB28",
     "heroLabel": "Morning growth brief",
-    "sourceRunId": "2026-06-17-am",
+    "sourceRunId": "2026-06-26-am",
     "summary": "A refreshed guide for the lead automation cluster, focused on the simplest CRM handoff stack that captures, qualifies, follows up, and reports without adding sales-system bloat.",
     "sections": [
       {
@@ -1773,7 +1773,7 @@
         "heading": "How EB28 turns it into a system",
         "body": [
           "CRM automation should support the sale without pretending to be the whole relationship. The best system captures intent, follows up quickly, and keeps the owner in control.",
-          "A useful stack records the source page, service need, urgency, and next action so the first reply sounds specific instead of automated."
+          "A useful stack records the source page, service need, urgency, owner, and next action so the first reply can be specific without hiding that a human is still accountable."
         ],
         "bullets": [
           "Capture source URL and service need from every form, chat, and missed-call flow",
@@ -1815,8 +1815,8 @@
         "reason": "Connects CRM automation readers to the broader EB28 build and automation offering."
       },
       {
-        "label": "Melbourne Web Studio",
-        "href": "/melbournewebstudio/",
+        "label": "Melbourne Web Studio project brief",
+        "href": "/melbournewebstudio/#quiz",
         "reason": "Routes local-service readers into the lead-focused website path."
       },
       {

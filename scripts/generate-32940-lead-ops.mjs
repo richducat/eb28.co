@@ -9,6 +9,7 @@ const indexPath = path.join(repoRoot, 'public', '32940', 'index.html');
 const outDir = path.join(repoRoot, 'output', 'lead-ops');
 const trackerPath = path.join(outDir, '32940-booked-call-tracker.csv');
 const replacementProspectsPath = path.join(repoRoot, 'scripts', 'data', '32940-replacement-prospects.json');
+const avenueContactOverridesPath = path.join(repoRoot, 'scripts', 'data', '32940-avenue-contact-overrides.json');
 const today = new Date().toISOString().slice(0, 10);
 
 const conceptBaseUrl = 'https://eb28.co/32940/';
@@ -311,6 +312,47 @@ async function loadReplacementContacts() {
 
 const replacementContacts = await loadReplacementContacts();
 
+async function loadAvenueContactOverrides() {
+  try {
+    const raw = await fs.readFile(avenueContactOverridesPath, 'utf8');
+    const parsed = JSON.parse(raw);
+
+    if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) {
+      throw new Error(`${path.relative(repoRoot, avenueContactOverridesPath)} must contain an object keyed by prospect slug.`);
+    }
+
+    return Object.fromEntries(
+      Object.entries(parsed).map(([slug, contact]) => {
+        const sourceUrls = Array.isArray(contact.sourceUrls) && contact.sourceUrls.length
+          ? contact.sourceUrls
+          : contact.website
+            ? [contact.website]
+            : [];
+
+        return [
+          slug,
+          {
+            email: contact.email ?? '',
+            phone: contact.phone ?? '',
+            address: contact.address ?? '',
+            website: contact.website ?? '',
+            sourceUrls,
+            sourceType: contact.sourceType ?? 'Avenue Viera tenant page',
+            notes: contact.notes ?? 'Avenue tenant page is the first verified contact route; confirm local decision maker before outreach.',
+          },
+        ];
+      }),
+    );
+  } catch (error) {
+    if (error.code === 'ENOENT') {
+      return {};
+    }
+    throw error;
+  }
+}
+
+const avenueContactOverrides = await loadAvenueContactOverrides();
+
 const avenueTenantSourceSlugs = new Set([
   'clevens-face-and-body-specialist',
   'escapology',
@@ -537,7 +579,11 @@ function extractProspects(indexHtml) {
 }
 
 function withTracking(prospect, index) {
-  const contact = verifiedContacts[prospect.slug] ?? callOrFormContacts[prospect.slug] ?? replacementContacts[prospect.slug] ?? {};
+  const contact = verifiedContacts[prospect.slug]
+    ?? callOrFormContacts[prospect.slug]
+    ?? replacementContacts[prospect.slug]
+    ?? avenueContactOverrides[prospect.slug]
+    ?? {};
   const avenueSourceSlug = avenueSourceSlugOverrides[prospect.slug] ?? prospect.slug;
   const avenueTenantPage = avenueTenantSourceSlugs.has(prospect.slug)
     ? `https://www.avenueviera.com/tenants/${avenueSourceSlug}/`

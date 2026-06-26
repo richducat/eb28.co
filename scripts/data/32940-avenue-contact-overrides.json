@@ -1,0 +1,826 @@
+{
+  "clevens-face-and-body-specialist": {
+    "phone": "(321) 727-3223",
+    "address": "2221 Town Center Ave #121",
+    "website": "https://www.drclevens.com/",
+    "sourceUrls": [
+      "https://www.avenueviera.com/tenants/clevens-face-and-body-specialist/",
+      "https://www.drclevens.com/"
+    ],
+    "sourceType": "Avenue Viera tenant page plus extracted tenant website",
+    "notes": "Extracted from Avenue Viera tenant page; confirm local decision maker before outreach."
+  },
+  "escapology": {
+    "phone": "",
+    "address": "6729 Colonnade Avenue, Suite 113",
+    "website": "https://www.escapology.com/en",
+    "sourceUrls": [
+      "https://www.avenueviera.com/tenants/escapology/",
+      "https://www.escapology.com/en"
+    ],
+    "sourceType": "Avenue Viera tenant page plus extracted tenant website",
+    "notes": "Extracted from Avenue Viera tenant page; confirm local decision maker before outreach."
+  },
+  "sirocco-station": {
+    "phone": "",
+    "address": "2270 Town Center Avenue, Suite 113, Melbourne, FL 32040,",
+    "website": "https://www.avenueviera.com/tenants/sirocco-station/",
+    "sourceUrls": [
+      "https://www.avenueviera.com/tenants/sirocco-station/"
+    ],
+    "sourceType": "Avenue Viera tenant page",
+    "notes": "Extracted from Avenue Viera tenant page; confirm local decision maker before outreach."
+  },
+  "viera-discovery-center": {
+    "phone": "(321) 253-2800",
+    "address": "2261 Town Center Avenue, Suite 112, Melbourne, FL 32940",
+    "website": "https://viera.com/Discovery",
+    "sourceUrls": [
+      "https://www.avenueviera.com/tenants/viera-discovery-center/",
+      "https://viera.com/Discovery"
+    ],
+    "sourceType": "Avenue Viera tenant page plus extracted tenant website",
+    "notes": "Extracted from Avenue Viera tenant page; confirm local decision maker before outreach."
+  },
+  "nourish": {
+    "phone": "(321) 723-6464",
+    "address": "",
+    "website": "https://nourishsavannah.com/",
+    "sourceUrls": [
+      "https://www.avenueviera.com/tenants/nourish/",
+      "https://nourishsavannah.com/"
+    ],
+    "sourceType": "Avenue Viera tenant page plus extracted tenant website",
+    "notes": "Extracted from Avenue Viera tenant page; confirm local decision maker before outreach."
+  },
+  "trader-joes": {
+    "phone": "321-338-3418",
+    "address": "2221 Town Center Ave. Suite 101, Melbourne, FL 32940",
+    "website": "https://www.traderjoes.com/home",
+    "sourceUrls": [
+      "https://www.avenueviera.com/tenants/trader-joes/",
+      "https://www.traderjoes.com/home"
+    ],
+    "sourceType": "Avenue Viera tenant page plus extracted tenant website",
+    "notes": "Extracted from Avenue Viera tenant page; confirm local decision maker before outreach."
+  },
+  "j-crew-factory": {
+    "phone": "(321) 355-4309",
+    "address": "2291 Town Center Avenue, Suite 111, Melbourne, FL 32940",
+    "website": "https://factory.jcrew.com/store-locator/store/factory/4140?fromSearch={%22lat%22:28.0701,%22lng%22:-80.6211,%22location%22:%22MELBOURNE,%20FL%22}",
+    "sourceUrls": [
+      "https://www.avenueviera.com/tenants/j-crew-factory/",
+      "https://factory.jcrew.com/store-locator/store/factory/4140?fromSearch={%22lat%22:28.0701,%22lng%22:-80.6211,%22location%22:%22MELBOURNE,%20FL%22}"
+    ],
+    "sourceType": "Avenue Viera tenant page plus extracted tenant website",
+    "notes": "Extracted from Avenue Viera tenant page; confirm local decision maker before outreach."
+  },
+  "lets-plant-it": {
+    "phone": "321-507-4063",
+    "address": "2271 Town Center Avenue, Suite 119, Melbourne, FL 32940",
+    "website": "https://www.letsplantitmelbourne.com/",
+    "sourceUrls": [
+      "https://www.avenueviera.com/tenants/lets-plant-it/",
+      "https://www.letsplantitmelbourne.com/"
+    ],
+    "sourceType": "Avenue Viera tenant page plus extracted tenant website",
+    "notes": "Extracted from Avenue Viera tenant page; confirm local decision maker before outreach."
+  },
+  "tommy-bahama": {
+    "phone": "321-522-5797",
+    "address": "2271 Town Center Avenue, Suite 115, Melbourne, FL 32940",
+    "website": "https://www.tommybahama.com/",
+    "sourceUrls": [
+      "https://www.avenueviera.com/tenants/tommy-bahama/",
+      "https://www.tommybahama.com/"
+    ],
+    "sourceType": "Avenue Viera tenant page plus extracted tenant website",
+    "notes": "Extracted from Avenue Viera tenant page; confirm local decision maker before outreach."
+  },
+  "kendra-scott": {
+    "phone": "",
+    "address": "2270 Town Center Avenue, Suite 101, Melbourne, FL 32940",
+    "website": "https://www.kendrascott.com/",
+    "sourceUrls": [
+      "https://www.avenueviera.com/tenants/kendra-scott/",
+      "https://www.kendrascott.com/"
+    ],
+    "sourceType": "Avenue Viera tenant page plus extracted tenant website",
+    "notes": "Extracted from Avenue Viera tenant page; confirm local decision maker before outreach."
+  },
+  "crumbl": {
+    "phone": "(321) 328-0296",
+    "address": "2270 Town Center Ave, Ste 111",
+    "website": "https://crumblcookies.com/flviera",
+    "sourceUrls": [
+      "https://www.avenueviera.com/tenants/crumbl/",
+      "https://crumblcookies.com/flviera"
+    ],
+    "sourceType": "Avenue Viera tenant page plus extracted tenant website",
+    "notes": "Extracted from Avenue Viera tenant page; confirm local decision maker before outreach."
+  },
+  "southern-tide": {
+    "phone": "(321) 212-7011",
+    "address": "2261 Town Center Avenue, Suite 105, Melbourne, FL 32940",
+    "website": "https://southerntide.com/",
+    "sourceUrls": [
+      "https://www.avenueviera.com/tenants/southern-tide/",
+      "https://southerntide.com/"
+    ],
+    "sourceType": "Avenue Viera tenant page plus extracted tenant website",
+    "notes": "Extracted from Avenue Viera tenant page; confirm local decision maker before outreach."
+  },
+  "air-anchor": {
+    "phone": "305-686-3397",
+    "address": "2270 Town Center Ave. Suite 109, Melbourne, FL 32904",
+    "website": "https://airandanchor.com/",
+    "sourceUrls": [
+      "https://www.avenueviera.com/tenants/air-anchor/",
+      "https://airandanchor.com/"
+    ],
+    "sourceType": "Avenue Viera tenant page plus extracted tenant website",
+    "notes": "Extracted from Avenue Viera tenant page; confirm local decision maker before outreach."
+  },
+  "american-eagle": {
+    "phone": "(321) 447-2977",
+    "address": "2281 Town Center Avenue, Suite 109, Melbourne, FL 32940",
+    "website": "https://www.ae.com/us/en",
+    "sourceUrls": [
+      "https://www.avenueviera.com/tenants/american-eagle/",
+      "https://www.ae.com/us/en"
+    ],
+    "sourceType": "Avenue Viera tenant page plus extracted tenant website",
+    "notes": "Extracted from Avenue Viera tenant page; confirm local decision maker before outreach."
+  },
+  "aerie": {
+    "phone": "(321) 447-2977",
+    "address": "2281 Town Center Avenue, Suite 109, Melbourne, FL 32940",
+    "website": "https://www.ae.com/us/en/c/aerie/cat4840006?pagetype=clp",
+    "sourceUrls": [
+      "https://www.avenueviera.com/tenants/aerie/",
+      "https://www.ae.com/us/en/c/aerie/cat4840006?pagetype=clp"
+    ],
+    "sourceType": "Avenue Viera tenant page plus extracted tenant website",
+    "notes": "Extracted from Avenue Viera tenant page; confirm local decision maker before outreach."
+  },
+  "nordstrom-rack": {
+    "phone": "(321) 745-6841",
+    "address": "2291 Town Center Avenue, Suite 101",
+    "website": "https://www.nordstromrack.com/",
+    "sourceUrls": [
+      "https://www.avenueviera.com/tenants/nordstrom-rack/",
+      "https://www.nordstromrack.com/"
+    ],
+    "sourceType": "Avenue Viera tenant page plus extracted tenant website",
+    "notes": "Extracted from Avenue Viera tenant page; confirm local decision maker before outreach."
+  },
+  "warby-parker": {
+    "phone": "(321) 207-9698",
+    "address": "2271 Town Center Avenue, Suite 113, Melbourne, FL 32940",
+    "website": "https://stores.warbyparker.com/fl/melbourne/2271-town-center-ave",
+    "sourceUrls": [
+      "https://www.avenueviera.com/tenants/warby-parker/",
+      "https://stores.warbyparker.com/fl/melbourne/2271-town-center-ave"
+    ],
+    "sourceType": "Avenue Viera tenant page plus extracted tenant website",
+    "notes": "Extracted from Avenue Viera tenant page; confirm local decision maker before outreach."
+  },
+  "viera-dental": {
+    "phone": "(321) 433-1022",
+    "address": "6709 Colonnade Avenue, Suite 101, Melbourne, FL 32940",
+    "website": "https://vieradental.com/",
+    "sourceUrls": [
+      "https://www.avenueviera.com/tenants/viera-dental/",
+      "https://vieradental.com/"
+    ],
+    "sourceType": "Avenue Viera tenant page plus extracted tenant website",
+    "notes": "Extracted from Avenue Viera tenant page; confirm local decision maker before outreach."
+  },
+  "verizon-wireless": {
+    "phone": "(321) 473-4568",
+    "address": "6670 Colonnade Ave, Suite 102, Melbourne, FL 32940",
+    "website": "https://www.verizon.com/",
+    "sourceUrls": [
+      "https://www.avenueviera.com/tenants/verizon-wireless/",
+      "https://www.verizon.com/"
+    ],
+    "sourceType": "Avenue Viera tenant page plus extracted tenant website",
+    "notes": "Extracted from Avenue Viera tenant page; confirm local decision maker before outreach."
+  },
+  "urban-air-adventure-park": {
+    "phone": "(321) 473-7290",
+    "address": "6729 Colonnade Avenue, Suite 130, Melbourne, FL 32940",
+    "website": "https://www.urbanair.com/",
+    "sourceUrls": [
+      "https://www.avenueviera.com/tenants/urban-air-adventure-park/",
+      "https://www.urbanair.com/"
+    ],
+    "sourceType": "Avenue Viera tenant page plus extracted tenant website",
+    "notes": "Extracted from Avenue Viera tenant page; confirm local decision maker before outreach."
+  },
+  "tuscany-grill": {
+    "phone": "(321) 757-7220",
+    "address": "6630 Colonnade Avenue, Melbourne, FL 32940",
+    "website": "https://tuscanygrill.net/",
+    "sourceUrls": [
+      "https://www.avenueviera.com/tenants/tuscany-grill/",
+      "https://tuscanygrill.net/"
+    ],
+    "sourceType": "Avenue Viera tenant page plus extracted tenant website",
+    "notes": "Extracted from Avenue Viera tenant page; confirm local decision maker before outreach."
+  },
+  "thai-hana": {
+    "phone": "(321) 636-3363",
+    "address": "6729 Colonnade Avenue, Suite 105, Melbourne, FL 32940",
+    "website": "https://thaihana.com/",
+    "sourceUrls": [
+      "https://www.avenueviera.com/tenants/thai-hana/",
+      "https://thaihana.com/"
+    ],
+    "sourceType": "Avenue Viera tenant page plus extracted tenant website",
+    "notes": "Extracted from Avenue Viera tenant page; confirm local decision maker before outreach."
+  },
+  "talbots": {
+    "phone": "(321) 637-1290",
+    "address": "2251 Town Center Avenue, Suite 125, Melbourne, FL 32940",
+    "website": "https://www.talbots.com/",
+    "sourceUrls": [
+      "https://www.avenueviera.com/tenants/talbots/",
+      "https://www.talbots.com/"
+    ],
+    "sourceType": "Avenue Viera tenant page plus extracted tenant website",
+    "notes": "Extracted from Avenue Viera tenant page; confirm local decision maker before outreach."
+  },
+  "sur-la-table": {
+    "phone": "(321) 358-4077",
+    "address": "2261 Town Center Avenue, Suite 103, Melbourne, FL 32940",
+    "website": "https://www.surlatable.com/",
+    "sourceUrls": [
+      "https://www.avenueviera.com/tenants/sur-la-table/",
+      "https://www.surlatable.com/"
+    ],
+    "sourceType": "Avenue Viera tenant page plus extracted tenant website",
+    "notes": "Extracted from Avenue Viera tenant page; confirm local decision maker before outreach."
+  },
+  "sunglass-hut": {
+    "phone": "(321) 639-5673",
+    "address": "2270 Town Center Avenue, Suite 105, Melbourne, FL 32940",
+    "website": "https://www.sunglasshut.com/",
+    "sourceUrls": [
+      "https://www.avenueviera.com/tenants/sunglass-hut/",
+      "https://www.sunglasshut.com/"
+    ],
+    "sourceType": "Avenue Viera tenant page plus extracted tenant website",
+    "notes": "Extracted from Avenue Viera tenant page; confirm local decision maker before outreach."
+  },
+  "steak-n-shake": {
+    "phone": "(321) 637-9445",
+    "address": "6728 Colonnade Avenue, Melbourne, FL 32940",
+    "website": "https://www.steaknshake.com/",
+    "sourceUrls": [
+      "https://www.avenueviera.com/tenants/steak-n-shake/",
+      "https://www.steaknshake.com/"
+    ],
+    "sourceType": "Avenue Viera tenant page plus extracted tenant website",
+    "notes": "Extracted from Avenue Viera tenant page; confirm local decision maker before outreach."
+  },
+  "sport-clips": {
+    "phone": "(321) 637-1553",
+    "address": "6729 Colonnade Ave Ste. 116, Melbourne, FL 32940",
+    "website": "https://sportclips.com/us-fl-melbourne-fl208",
+    "sourceUrls": [
+      "https://www.avenueviera.com/tenants/sport-clips/",
+      "https://sportclips.com/us-fl-melbourne-fl208"
+    ],
+    "sourceType": "Avenue Viera tenant page plus extracted tenant website",
+    "notes": "Extracted from Avenue Viera tenant page; confirm local decision maker before outreach."
+  },
+  "spectrum": {
+    "phone": "(866) 874-2389",
+    "address": "2251 Town Center Avenue, Suite 117, Melbourne, FL 32940",
+    "website": "https://www.spectrum.com/",
+    "sourceUrls": [
+      "https://www.avenueviera.com/tenants/spectrum/",
+      "https://www.spectrum.com/"
+    ],
+    "sourceType": "Avenue Viera tenant page plus extracted tenant website",
+    "notes": "Extracted from Avenue Viera tenant page; confirm local decision maker before outreach."
+  },
+  "soma": {
+    "phone": "(321) 745-2169",
+    "address": "2271 Town Center Avenue, Suite 117, Melbourne, FL 32940",
+    "website": "https://www.soma.com/store/",
+    "sourceUrls": [
+      "https://www.avenueviera.com/tenants/soma/",
+      "https://www.soma.com/store/"
+    ],
+    "sourceType": "Avenue Viera tenant page plus extracted tenant website",
+    "notes": "Extracted from Avenue Viera tenant page; confirm local decision maker before outreach."
+  },
+  "sola-salons": {
+    "phone": "(321) 462-9055",
+    "address": "2251 Town Center Avenue, Suite 101, Melbourne, FL 32940",
+    "website": "https://www.solasalonstudios.com/locations/avenue-viera",
+    "sourceUrls": [
+      "https://www.avenueviera.com/tenants/sola-salons/",
+      "https://www.solasalonstudios.com/locations/avenue-viera"
+    ],
+    "sourceType": "Avenue Viera tenant page plus extracted tenant website",
+    "notes": "Extracted from Avenue Viera tenant page; confirm local decision maker before outreach."
+  },
+  "sleep-number-by-select-comfort": {
+    "phone": "(321) 639-1969",
+    "address": "6511 Lake Andrew Drive, Melbourne, FL 32940",
+    "website": "https://www.sleepnumber.com/",
+    "sourceUrls": [
+      "https://www.avenueviera.com/tenants/sleep-number-by-select-comfort/",
+      "https://www.sleepnumber.com/"
+    ],
+    "sourceType": "Avenue Viera tenant page plus extracted tenant website",
+    "notes": "Extracted from Avenue Viera tenant page; confirm local decision maker before outreach."
+  },
+  "skin-laundry": {
+    "phone": "(321) 616-8253",
+    "address": "2261 Town Center Avenue, Suite 143, Melbourne, FL 32940",
+    "website": "https://www.skinlaundry.com/",
+    "sourceUrls": [
+      "https://www.avenueviera.com/tenants/skin-laundry/",
+      "https://www.skinlaundry.com/"
+    ],
+    "sourceType": "Avenue Viera tenant page plus extracted tenant website",
+    "notes": "Extracted from Avenue Viera tenant page; confirm local decision maker before outreach."
+  },
+  "sephora": {
+    "phone": "(321) 622-9675",
+    "address": "2271 Town Center Avenue, Suite 105, Melbourne, FL 32940",
+    "website": "https://www.sephora.com/",
+    "sourceUrls": [
+      "https://www.avenueviera.com/tenants/sephora/",
+      "https://www.sephora.com/"
+    ],
+    "sourceType": "Avenue Viera tenant page plus extracted tenant website",
+    "notes": "Extracted from Avenue Viera tenant page; confirm local decision maker before outreach."
+  },
+  "sally-beauty-supply": {
+    "phone": "(321) 433-1867",
+    "address": "6729 Colonnade Avenue, Suite 110, Melbourne, FL 32940",
+    "website": "https://www.sallybeauty.com/",
+    "sourceUrls": [
+      "https://www.avenueviera.com/tenants/sally-beauty-supply/",
+      "https://www.sallybeauty.com/"
+    ],
+    "sourceType": "Avenue Viera tenant page plus extracted tenant website",
+    "notes": "Extracted from Avenue Viera tenant page; confirm local decision maker before outreach."
+  },
+  "playa-bowls": {
+    "phone": "(321) 305-6416",
+    "address": "2261 Town Center Avenue, Suite 141, Melbourne, FL 32940",
+    "website": "https://www.playabowls.com/",
+    "sourceUrls": [
+      "https://www.avenueviera.com/tenants/playa-bowls/",
+      "https://www.playabowls.com/"
+    ],
+    "sourceType": "Avenue Viera tenant page plus extracted tenant website",
+    "notes": "Extracted from Avenue Viera tenant page; confirm local decision maker before outreach."
+  },
+  "pizza-gallery-grill": {
+    "phone": "(321) 633-0397",
+    "address": "2250 Town Center Avenue, Suite 113, Melbourne, FL 32940",
+    "website": "https://pizzagalleryandgrill.com/",
+    "sourceUrls": [
+      "https://www.avenueviera.com/tenants/pizza-gallery-grill/",
+      "https://pizzagalleryandgrill.com/"
+    ],
+    "sourceType": "Avenue Viera tenant page plus extracted tenant website",
+    "notes": "Extracted from Avenue Viera tenant page; confirm local decision maker before outreach."
+  },
+  "pearle-vision": {
+    "phone": "(321) 639-8021",
+    "address": "6729 Colonnade Avenue, Ste 109, Melbourne, FL 32940",
+    "website": "https://www.pearlevision.com/",
+    "sourceUrls": [
+      "https://www.avenueviera.com/tenants/pearle-vision/",
+      "https://www.pearlevision.com/"
+    ],
+    "sourceType": "Avenue Viera tenant page plus extracted tenant website",
+    "notes": "Extracted from Avenue Viera tenant page; confirm local decision maker before outreach."
+  },
+  "paris-banh-mi": {
+    "phone": "(321) 210-5788",
+    "address": "2270 Town Center Ave, Suite 115, Melbourne, FL 32940",
+    "website": "https://www.parisbanhmi.com/",
+    "sourceUrls": [
+      "https://www.avenueviera.com/tenants/paris-banh-mi/",
+      "https://www.parisbanhmi.com/"
+    ],
+    "sourceType": "Avenue Viera tenant page plus extracted tenant website",
+    "notes": "Extracted from Avenue Viera tenant page; confirm local decision maker before outreach."
+  },
+  "panera-bread": {
+    "phone": "(321) 504-7250",
+    "address": "6531 Lake Andrew Drive, Melbourne, FL 32940",
+    "website": "https://www.panerabread.com/en-us/home.html",
+    "sourceUrls": [
+      "https://www.avenueviera.com/tenants/panera-bread/",
+      "https://www.panerabread.com/en-us/home.html"
+    ],
+    "sourceType": "Avenue Viera tenant page plus extracted tenant website",
+    "notes": "Extracted from Avenue Viera tenant page; confirm local decision maker before outreach."
+  },
+  "old-navy": {
+    "phone": "(321) 639-9284",
+    "address": "2281 Town Center Avenue, Suite 113, Melbourne, FL 32940",
+    "website": "https://oldnavy.gap.com/stores/fl/viera/oldnavy-3364.html",
+    "sourceUrls": [
+      "https://www.avenueviera.com/tenants/old-navy/",
+      "https://oldnavy.gap.com/stores/fl/viera/oldnavy-3364.html"
+    ],
+    "sourceType": "Avenue Viera tenant page plus extracted tenant website",
+    "notes": "Extracted from Avenue Viera tenant page; confirm local decision maker before outreach."
+  },
+  "office-depot": {
+    "phone": "(321) 631-4424",
+    "address": "6729 Colonnade Avenue, Suite 121, Melbourne, FL 32940",
+    "website": "https://www.officedepot.com/",
+    "sourceUrls": [
+      "https://www.avenueviera.com/tenants/office-depot/",
+      "https://www.officedepot.com/"
+    ],
+    "sourceType": "Avenue Viera tenant page plus extracted tenant website",
+    "notes": "Extracted from Avenue Viera tenant page; confirm local decision maker before outreach."
+  },
+  "nothing-bundt-cakes": {
+    "phone": "(321) 329-1441",
+    "address": "2261 Town Center Ave. Suite 117, Melbourne, FL 32940",
+    "website": "https://www.nothingbundtcakes.com/",
+    "sourceUrls": [
+      "https://www.avenueviera.com/tenants/nothing-bundt-cakes/",
+      "https://www.nothingbundtcakes.com/"
+    ],
+    "sourceType": "Avenue Viera tenant page plus extracted tenant website",
+    "notes": "Extracted from Avenue Viera tenant page; confirm local decision maker before outreach."
+  },
+  "moes-southwest-grill": {
+    "phone": "(321) 433-3540",
+    "address": "2230 Town Center Avenue, Suite 111, Melbourne, FL 32940",
+    "website": "https://www.moes.com/",
+    "sourceUrls": [
+      "https://www.avenueviera.com/tenants/moes-southwest-grill/",
+      "https://www.moes.com/"
+    ],
+    "sourceType": "Avenue Viera tenant page plus extracted tenant website",
+    "notes": "Extracted from Avenue Viera tenant page; confirm local decision maker before outreach."
+  },
+  "mens-wearhouse": {
+    "phone": "(321) 632-5382",
+    "address": "6670 Colonnade Avenue, Suite 101, Melbourne, FL 32940",
+    "website": "https://www.menswearhouse.com/",
+    "sourceUrls": [
+      "https://www.avenueviera.com/tenants/mens-wearhouse/",
+      "https://www.menswearhouse.com/"
+    ],
+    "sourceType": "Avenue Viera tenant page plus extracted tenant website",
+    "notes": "Extracted from Avenue Viera tenant page; confirm local decision maker before outreach."
+  },
+  "the-melting-pot": {
+    "phone": "(321) 433-3040",
+    "address": "2230 Town center Avenue, Suite 101, Melbourne, FL 32940",
+    "website": "https://www.meltingpot.com/melbourne-fl/",
+    "sourceUrls": [
+      "https://www.avenueviera.com/tenants/the-melting-pot/",
+      "https://www.meltingpot.com/melbourne-fl/"
+    ],
+    "sourceType": "Avenue Viera tenant page plus extracted tenant website",
+    "notes": "Extracted from Avenue Viera tenant page; confirm local decision maker before outreach."
+  },
+  "massage-envy": {
+    "phone": "(321) 433-3689",
+    "address": "2261 Town Center Avenue, Suite 115, Melbourne, FL 32940",
+    "website": "https://www.massageenvy.com/",
+    "sourceUrls": [
+      "https://www.avenueviera.com/tenants/massage-envy/",
+      "https://www.massageenvy.com/"
+    ],
+    "sourceType": "Avenue Viera tenant page plus extracted tenant website",
+    "notes": "Extracted from Avenue Viera tenant page; confirm local decision maker before outreach."
+  },
+  "lululemon": {
+    "phone": "(321) 631-8964",
+    "address": "2271 Town Center Ave, Suite 107, Melbourne, FL 32940",
+    "website": "https://shop.lululemon.com/",
+    "sourceUrls": [
+      "https://www.avenueviera.com/tenants/lululemon/",
+      "https://shop.lululemon.com/"
+    ],
+    "sourceType": "Avenue Viera tenant page plus extracted tenant website",
+    "notes": "Extracted from Avenue Viera tenant page; confirm local decision maker before outreach."
+  },
+  "longhorn-steakhouse": {
+    "phone": "(321) 632-9990",
+    "address": "6691 Lake Andrew Dr, Melbourne, FL 32940",
+    "website": "https://www.longhornsteakhouse.com/home",
+    "sourceUrls": [
+      "https://www.avenueviera.com/tenants/longhorn-steakhouse/",
+      "https://www.longhornsteakhouse.com/home"
+    ],
+    "sourceType": "Avenue Viera tenant page plus extracted tenant website",
+    "notes": "Extracted from Avenue Viera tenant page; confirm local decision maker before outreach."
+  },
+  "loft": {
+    "phone": "(321) 639-8126",
+    "address": "2261 Town Center Avenue, Suite 101, Melbourne, FL 32940",
+    "website": "https://www.loft.com/",
+    "sourceUrls": [
+      "https://www.avenueviera.com/tenants/loft/",
+      "https://www.loft.com/"
+    ],
+    "sourceType": "Avenue Viera tenant page plus extracted tenant website",
+    "notes": "Extracted from Avenue Viera tenant page; confirm local decision maker before outreach."
+  },
+  "lilly-pulitzer": {
+    "phone": "(321) 212-7010",
+    "address": "2261 Town Center Avenue, Suite 121, Melbourne, FL 32940",
+    "website": "https://www.lillypulitzer.com/",
+    "sourceUrls": [
+      "https://www.avenueviera.com/tenants/lilly-pulitzer/",
+      "https://www.lillypulitzer.com/"
+    ],
+    "sourceType": "Avenue Viera tenant page plus extracted tenant website",
+    "notes": "Extracted from Avenue Viera tenant page; confirm local decision maker before outreach."
+  },
+  "lane-bryant": {
+    "phone": "(321) 482-5861",
+    "address": "6729 Colonnade Avenue, Suite 119, Melbourne, FL 32940",
+    "website": "https://stores.lanebryant.com/fl/melbourne/6729-colonnade-ave",
+    "sourceUrls": [
+      "https://www.avenueviera.com/tenants/lane-bryant/",
+      "https://stores.lanebryant.com/fl/melbourne/6729-colonnade-ave"
+    ],
+    "sourceType": "Avenue Viera tenant page plus extracted tenant website",
+    "notes": "Extracted from Avenue Viera tenant page; confirm local decision maker before outreach."
+  },
+  "kohls": {
+    "phone": "(321) 631-3973",
+    "address": "6729 Colonnade Avenue, Suite 101, Melbourne, FL 32940",
+    "website": "https://www.kohls.com/",
+    "sourceUrls": [
+      "https://www.avenueviera.com/tenants/kohls/",
+      "https://www.kohls.com/"
+    ],
+    "sourceType": "Avenue Viera tenant page plus extracted tenant website",
+    "notes": "Extracted from Avenue Viera tenant page; confirm local decision maker before outreach."
+  },
+  "kirklands": {
+    "phone": "(321) 639-1409",
+    "address": "2271 Town Center Avenue, Suite 111, Melbourne, FL 32940",
+    "website": "https://www.kirklands.com/",
+    "sourceUrls": [
+      "https://www.avenueviera.com/tenants/kirklands/",
+      "https://www.kirklands.com/"
+    ],
+    "sourceType": "Avenue Viera tenant page plus extracted tenant website",
+    "notes": "Extracted from Avenue Viera tenant page; confirm local decision maker before outreach."
+  },
+  "kay-jewelers": {
+    "phone": "(321) 631-4207",
+    "address": "2261 Town Center Avenue, Suite 125, Melbourne, FL 32940",
+    "website": "https://www.kay.com/",
+    "sourceUrls": [
+      "https://www.avenueviera.com/tenants/kay-jewelers/",
+      "https://www.kay.com/"
+    ],
+    "sourceType": "Avenue Viera tenant page plus extracted tenant website",
+    "notes": "Extracted from Avenue Viera tenant page; confirm local decision maker before outreach."
+  },
+  "j-mclaughlin": {
+    "phone": "(321) 294-4658",
+    "address": "2261 Town Center Ave Suite 123, Melbourne, FL 32940",
+    "website": "https://www.jmclaughlin.com/",
+    "sourceUrls": [
+      "https://www.avenueviera.com/tenants/j-mclaughlin/",
+      "https://www.jmclaughlin.com/"
+    ],
+    "sourceType": "Avenue Viera tenant page plus extracted tenant website",
+    "notes": "Extracted from Avenue Viera tenant page; confirm local decision maker before outreach."
+  },
+  "the-good-feet-store": {
+    "phone": "(321) 768-3338",
+    "address": "6729 Colonnade Avenue, Ste 107, Melbourne, FL 32940",
+    "website": "https://www.goodfeet.com/locations/fl/melbourne",
+    "sourceUrls": [
+      "https://www.avenueviera.com/tenants/the-good-feet-store/",
+      "https://www.goodfeet.com/locations/fl/melbourne"
+    ],
+    "sourceType": "Avenue Viera tenant page plus extracted tenant website",
+    "notes": "Extracted from Avenue Viera tenant page; confirm local decision maker before outreach."
+  },
+  "gifts-more-at-the-paper-store": {
+    "phone": "(321) 504-3625",
+    "address": "2281 Town Center Avenue, Suite 101, Melbourne, FL 32940",
+    "website": "https://www.thepaperstore.com/",
+    "sourceUrls": [
+      "https://www.avenueviera.com/tenants/gifts-more-at-the-paper-store/",
+      "https://www.thepaperstore.com/"
+    ],
+    "sourceType": "Avenue Viera tenant page plus extracted tenant website",
+    "notes": "Extracted from Avenue Viera tenant page; confirm local decision maker before outreach."
+  },
+  "five-guys-burgers-and-fries": {
+    "phone": "(321) 633-0033",
+    "address": "2230 Town center Avenue, Suite 107, Melbourne, FL 32940",
+    "website": "https://www.fiveguys.com/",
+    "sourceUrls": [
+      "https://www.avenueviera.com/tenants/five-guys-burgers-and-fries/",
+      "https://www.fiveguys.com/"
+    ],
+    "sourceType": "Avenue Viera tenant page plus extracted tenant website",
+    "notes": "Extracted from Avenue Viera tenant page; confirm local decision maker before outreach."
+  },
+  "european-wax-center": {
+    "phone": "321-722-7330",
+    "address": "2261 Town Center Avenue, Suite 145, Melbourne, FL 32940",
+    "website": "https://waxcenter.com/",
+    "sourceUrls": [
+      "https://www.avenueviera.com/tenants/european-wax-center/",
+      "https://waxcenter.com/"
+    ],
+    "sourceType": "Avenue Viera tenant page plus extracted tenant website",
+    "notes": "Extracted from Avenue Viera tenant page; confirm local decision maker before outreach."
+  },
+  "ethan-allen": {
+    "phone": "(321) 504-9635",
+    "address": "2439 Citadel Way, Melbourne, FL 32940",
+    "website": "https://www.ethanallen.com/",
+    "sourceUrls": [
+      "https://www.avenueviera.com/tenants/ethan-allen/",
+      "https://www.ethanallen.com/"
+    ],
+    "sourceType": "Avenue Viera tenant page plus extracted tenant website",
+    "notes": "Extracted from Avenue Viera tenant page; confirm local decision maker before outreach."
+  },
+  "world-market": {
+    "phone": "(321) 504-7223",
+    "address": "2221 Town Center Ave Suite 135, Melbourne, FL 32940",
+    "website": "https://www.worldmarket.com/",
+    "sourceUrls": [
+      "https://www.avenueviera.com/tenants/world-market/",
+      "https://www.worldmarket.com/"
+    ],
+    "sourceType": "Avenue Viera tenant page plus extracted tenant website",
+    "notes": "Extracted from Avenue Viera tenant page; confirm local decision maker before outreach."
+  },
+  "cold-stone-creamery": {
+    "phone": "(321) 637-1450",
+    "address": "2250 Town Center Ave #125, Melbourne, FL 32940",
+    "website": "https://www.coldstonecreamery.com/index.php",
+    "sourceUrls": [
+      "https://www.avenueviera.com/tenants/cold-stone-creamery/",
+      "https://www.coldstonecreamery.com/index.php"
+    ],
+    "sourceType": "Avenue Viera tenant page plus extracted tenant website",
+    "notes": "Extracted from Avenue Viera tenant page; confirm local decision maker before outreach."
+  },
+  "club-pilates": {
+    "phone": "(321) 419-0798",
+    "address": "2221 Town Center Avenue Suite 129, Melbourne, FL 32940",
+    "website": "https://www.clubpilates.com/location/viera",
+    "sourceUrls": [
+      "https://www.avenueviera.com/tenants/club-pilates/",
+      "https://www.clubpilates.com/location/viera"
+    ],
+    "sourceType": "Avenue Viera tenant page plus extracted tenant website",
+    "notes": "Extracted from Avenue Viera tenant page; confirm local decision maker before outreach."
+  },
+  "chilis": {
+    "phone": "(321) 639-6881",
+    "address": "6550 Colonnade Ave, Melbourne, FL 32940",
+    "website": "https://www.chilis.com/",
+    "sourceUrls": [
+      "https://www.avenueviera.com/tenants/chilis/",
+      "https://www.chilis.com/"
+    ],
+    "sourceType": "Avenue Viera tenant page plus extracted tenant website",
+    "notes": "Extracted from Avenue Viera tenant page; confirm local decision maker before outreach."
+  },
+  "chicos": {
+    "phone": "(321) 637-0494",
+    "address": "2251 Town Center Avenue, Ste 121, Melbourne, FL, 32940",
+    "website": "https://www.chicos.com/store/",
+    "sourceUrls": [
+      "https://www.avenueviera.com/tenants/chicos/",
+      "https://www.chicos.com/store/"
+    ],
+    "sourceType": "Avenue Viera tenant page plus extracted tenant website",
+    "notes": "Extracted from Avenue Viera tenant page; confirm local decision maker before outreach."
+  },
+  "burn-boot-camp": {
+    "phone": "(321) 405-4104",
+    "address": "6709 Colonnade Ave. Suite #103, Melbourne, FL 32940",
+    "website": "https://burnbootcamp.com/locations/viera-fl/",
+    "sourceUrls": [
+      "https://www.avenueviera.com/tenants/burn-boot-camp/",
+      "https://burnbootcamp.com/locations/viera-fl/"
+    ],
+    "sourceType": "Avenue Viera tenant page plus extracted tenant website",
+    "notes": "Extracted from Avenue Viera tenant page; confirm local decision maker before outreach."
+  },
+  "books-a-million": {
+    "phone": "(321) 504-6236",
+    "address": "2251 Town Center Avenue, Suite 109, Melbourne, FL 32940",
+    "website": "https://www.booksamillion.com/",
+    "sourceUrls": [
+      "https://www.avenueviera.com/tenants/books-a-million/",
+      "https://www.booksamillion.com/"
+    ],
+    "sourceType": "Avenue Viera tenant page plus extracted tenant website",
+    "notes": "Extracted from Avenue Viera tenant page; confirm local decision maker before outreach."
+  },
+  "bonefish-grill": {
+    "phone": "(321) 636-1619",
+    "address": "2251 Town Center Avenue, Ste 129, Melbourne, FL 32940",
+    "website": "https://www.bonefishgrill.com/",
+    "sourceUrls": [
+      "https://www.avenueviera.com/tenants/bonefish-grill/",
+      "https://www.bonefishgrill.com/"
+    ],
+    "sourceType": "Avenue Viera tenant page plus extracted tenant website",
+    "notes": "Extracted from Avenue Viera tenant page; confirm local decision maker before outreach."
+  },
+  "belk": {
+    "phone": "(321) 636-1033",
+    "address": "2261 Town Center Avenue, Suite 131, Melbourne, FL 32940",
+    "website": "https://www.belk.com/",
+    "sourceUrls": [
+      "https://www.avenueviera.com/tenants/belk/",
+      "https://www.belk.com/"
+    ],
+    "sourceType": "Avenue Viera tenant page plus extracted tenant website",
+    "notes": "Extracted from Avenue Viera tenant page; confirm local decision maker before outreach."
+  },
+  "bath-body-works": {
+    "phone": "(321) 213-6754",
+    "address": "2271 Town Center Avenue,Suite 101, Melbourne, FL 32940",
+    "website": "https://www.bathandbodyworks.com/",
+    "sourceUrls": [
+      "https://www.avenueviera.com/tenants/bath-body-works/",
+      "https://www.bathandbodyworks.com/"
+    ],
+    "sourceType": "Avenue Viera tenant page plus extracted tenant website",
+    "notes": "Extracted from Avenue Viera tenant page; confirm local decision maker before outreach."
+  },
+  "att-wireless": {
+    "phone": "(321) 433-0121",
+    "address": "2250 Town Center Avenue, Suite 123, Melbourne, FL 32940",
+    "website": "https://www.att.com/wireless/",
+    "sourceUrls": [
+      "https://www.avenueviera.com/tenants/att-wireless/",
+      "https://www.att.com/wireless/"
+    ],
+    "sourceType": "Avenue Viera tenant page plus extracted tenant website",
+    "notes": "Extracted from Avenue Viera tenant page; confirm local decision maker before outreach."
+  },
+  "amc-theatres": {
+    "phone": "(321) 775-1210",
+    "address": "2241 Town Center Avenue, Melbourne, FL 32940",
+    "website": "https://www.amctheatres.com/movie-theatres/orlando-daytona-beach/amc-avenue-16",
+    "sourceUrls": [
+      "https://www.avenueviera.com/tenants/amc-theatres/",
+      "https://www.amctheatres.com/movie-theatres/orlando-daytona-beach/amc-avenue-16"
+    ],
+    "sourceType": "Avenue Viera tenant page plus extracted tenant website",
+    "notes": "Extracted from Avenue Viera tenant page; confirm local decision maker before outreach."
+  },
+  "addy-rose-hair-studio": {
+    "phone": "(321) 631-0908",
+    "address": "6729 Colonnade Avenue, Suite 106, Melbourne, FL 32940",
+    "website": "https://addyrosehair.com/",
+    "sourceUrls": [
+      "https://www.avenueviera.com/tenants/addy-rose-hair-studio/",
+      "https://addyrosehair.com/"
+    ],
+    "sourceType": "Avenue Viera tenant page plus extracted tenant website",
+    "notes": "Extracted from Avenue Viera tenant page; confirm local decision maker before outreach."
+  },
+  "7-senses-kids": {
+    "phone": "(321) 255-7779",
+    "address": "2261 Town Center Ave #109, Melbourne, FL 32940",
+    "website": "https://www.7sensestherapy.com/?fbclid=IwAR2zd9bducgQCvmiGThx5B65QdSke9_FqiyLehTJAfaKCWpGnrJnj-ar9AQ",
+    "sourceUrls": [
+      "https://www.avenueviera.com/tenants/7-senses-kids/",
+      "https://www.7sensestherapy.com/?fbclid=IwAR2zd9bducgQCvmiGThx5B65QdSke9_FqiyLehTJAfaKCWpGnrJnj-ar9AQ"
+    ],
+    "sourceType": "Avenue Viera tenant page plus extracted tenant website",
+    "notes": "Extracted from Avenue Viera tenant page; confirm local decision maker before outreach."
+  },
+  "28-north-gastropub": {
+    "phone": "(321) 241-1159",
+    "address": "2250 Town Center Ave. Suite 101 Melbourne, FL 32940",
+    "website": "https://28northgastropub.com/",
+    "sourceUrls": [
+      "https://www.avenueviera.com/tenants/28-north-gastropub/",
+      "https://28northgastropub.com/"
+    ],
+    "sourceType": "Avenue Viera tenant page plus extracted tenant website",
+    "notes": "Extracted from Avenue Viera tenant page; confirm local decision maker before outreach."
+  }
+}

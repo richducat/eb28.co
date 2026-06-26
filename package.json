@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "generate:data": "node scripts/generate-static-data.mjs",
+    "generate:32940": "node scripts/generate-32940-growth-sites.mjs",
     "publish:fundmanager": "node scripts/publish-fundmanager-live.mjs",
     "build": "node scripts/build-site.mjs",
     "preview": "vite preview",

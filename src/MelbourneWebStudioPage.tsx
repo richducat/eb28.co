@@ -63,7 +63,11 @@ import {
   Rocket,
 } from "lucide-react";
 
-const DISCOVERY_CALL_URL = "https://bookings.tyfys.net/#/4739587000001163002";
+const DISCOVERY_CALL_URL = "/melbournewebstudio/#quiz";
+const CLAIM_EMAIL = "social@eb28.co";
+const FREE_BUILD_PACKAGE = "Free Website Build";
+const GROWTH_HOSTING_PACKAGE = "EB28 Growth Hosting";
+const AI_SUITE_PACKAGE = "AI Business Suite";
 
 type AuthorityAnalysis = {
   rating: number;
@@ -167,7 +171,7 @@ const buildBlueprint = ({
   aiAnalysis: AuthorityAnalysis | null;
 }) => {
   const businessName = leadData.businessName || "Your Business";
-  const packageName = selectedPackage?.name || "Custom Web Growth Plan";
+  const packageName = selectedPackage?.name || `Free Website Build + ${GROWTH_HOSTING_PACKAGE}`;
   const audience = onboardingData.targetAudience || "local customers ready to buy";
   const brandVoice = onboardingData.brandVoice || "clear, credible, modern, and local-first";
   const currentSite = websiteUrl ? getDomainLabel(websiteUrl) : "a new launch";
@@ -176,7 +180,12 @@ const buildBlueprint = ({
         .split(",")
         .map((item) => item.trim())
         .filter(Boolean)
-    : ["high-converting homepage", "clear enquiry path", "mobile-first layout"];
+    : [
+        "free custom website build",
+        "$98/month hosting, SEO, and weekly blog support",
+        "clear enquiry path",
+        "mobile-first layout",
+      ];
 
   return [
     `${businessName.toUpperCase()} | PROJECT BLUEPRINT`,
@@ -192,10 +201,10 @@ const buildBlueprint = ({
     "2. HERO DIRECTION",
     `Headline angle: Lead with the clearest promise ${businessName} can own in the local market.`,
     `Support line: Explain why prospects should trust the team quickly, with a direct CTA above the fold.`,
-    `Primary CTA: Book a call / Request a quote / Start the project brief.`,
+    `Primary CTA: Claim the free website build / Request the $98 Growth Hosting plan.`,
     "",
     "3. TRUST ARCHITECTURE",
-    "Use local proof early: testimonials, recognitions, Google Business signals, and real team credibility.",
+    "Use owner-approved proof early: real photos, clear services, Google Business signals, and practical local credibility.",
     aiAnalysis
       ? `Audit focus: ${aiAnalysis.killerInsight}`
       : "Audit focus: tighten speed, clarity, and local authority signals.",
@@ -203,8 +212,8 @@ const buildBlueprint = ({
     "4. SITE STRUCTURE",
     "Homepage",
     "Service / offer pages",
-    "Proof / case studies",
-    "Team / credibility",
+    "Owner-approved proof",
+    "Local blog / SEO content",
     "Contact and conversion section",
     "",
     "5. MUST-HAVE FEATURES",
@@ -220,19 +229,24 @@ const buildBlueprint = ({
     "Clarify the offer",
     "Design the conversion-focused homepage",
     "Build trust modules and lead capture",
-    "Prepare local SEO foundations and launch copy",
+    "Prepare local SEO foundations, weekly blog topics, and launch copy",
   ].join("\n");
 };
 
 const inferPackageName = (message: string) => {
   if (message.includes("ai suite") || message.includes("automation") || message.includes("media buyer")) {
-    return "AI Business Suite";
+    return AI_SUITE_PACKAGE;
   }
-  if (message.includes("seo") || message.includes("hosting") || message.includes("google business")) {
-    return "The Power Foundation";
+  if (
+    message.includes("seo") ||
+    message.includes("hosting") ||
+    message.includes("google business") ||
+    message.includes("blog")
+  ) {
+    return GROWTH_HOSTING_PACKAGE;
   }
   if (message.includes("website") || message.includes("build") || message.includes("redesign")) {
-    return "The Professional Build";
+    return `${FREE_BUILD_PACKAGE} + ${GROWTH_HOSTING_PACKAGE}`;
   }
   if (message.includes("openclaw") || message.includes("fund")) {
     return "OpenClaw Fund Manager";
@@ -275,7 +289,7 @@ const buildChatReply = (userMessage: string) => {
 
   if (selectedPackage) {
     return {
-      text: `${selectedPackage} sounds like the closest fit based on what you described. Start the project brief and we’ll follow up with the right scope, timeline, and secure checkout steps.`,
+      text: `${selectedPackage} sounds like the closest fit based on what you described. Start the project brief and we will follow up with the right scope, launch details, and $98/month Growth Hosting next step.`,
       type: "onboarding" as const,
       data: { selectedPackage },
     };
@@ -303,19 +317,19 @@ const buildChatReply = (userMessage: string) => {
 
   if (lower.includes("seo") || lower.includes("google") || lower.includes("rank")) {
     return {
-      text: "If local SEO is the bottleneck, the Power Foundation is usually the right place to start. The SEO article in Resources is a solid primer, and the project brief helps us see where rankings are leaking.",
+      text: "If local SEO is the bottleneck, EB28 Growth Hosting is the right starting point. It includes managed hosting, technical SEO upkeep, and weekly local content for $98/month after the free website build is approved.",
     };
   }
 
   if (lower.includes("website") || lower.includes("design") || lower.includes("redesign")) {
     return {
-      text: "That usually starts with the Professional Build. The web design article in Resources will feel relevant, and the lead leak quiz is the quickest way to see what is stopping more visitors from contacting you.",
+      text: "That starts with the free website build. The lead leak quiz is the quickest way to see what should be rebuilt first, then Growth Hosting keeps the site live, optimized, and updated for $98/month.",
     };
   }
 
   if (lower.includes("ads") || lower.includes("marketing") || lower.includes("lead")) {
     return {
-      text: "That points toward the AI Business Suite, especially if leads are coming in after hours or follow-up is inconsistent. The marketing article in Resources is worth a quick read before you fill out the project brief.",
+      text: "If you need more leads, start with the free website build and $98 Growth Hosting foundation. We can add AI or paid traffic later after the site has a clear offer, clean capture path, and weekly local content.",
     };
   }
 
@@ -369,7 +383,7 @@ const Navbar = () => {
           </a>
         </div>
         <div className="hidden md:flex items-center gap-8">
-          {["How It Works", "Case Studies", "Pricing", "Resources", "Our Team", "Contact"].map(
+          {["How It Works", "Case Studies", "Pricing", "Resources", "Contact"].map(
             (item) => (
               <a
                 key={item}
@@ -385,7 +399,7 @@ const Navbar = () => {
             className="text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors flex items-center gap-2"
           >
             <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
-            Live Chat
+            Ask EB28
           </button>
           <button
             onClick={() => document.getElementById("quiz")?.scrollIntoView({ behavior: "smooth" })}
@@ -418,23 +432,23 @@ const Hero = () => {
               ))}
             </div>
             <span className="text-xs font-bold text-slate-500 uppercase tracking-widest">
-              50+ Local Businesses Served
+              Free build, $98/mo Growth Hosting
             </span>
           </div>
           <h2 className="text-5xl md:text-6xl font-bold text-slate-900 leading-[1.1] mb-6">
-            Get a Website That <span className="text-blue-600">Actually Works</span> for Your
-            Business.
+            We Build the Website <span className="text-blue-600">Free</span>. You Host Growth for
+            $98/mo.
           </h2>
           <p className="text-lg text-slate-600 mb-8 max-w-md leading-relaxed">
-            No tech-speak, no hidden fees. Just a fast, professional site that helps locals find
-            you.
+            EB28 creates a custom local business website at no upfront cost. If you want to use it,
+            Growth Hosting keeps it live, optimized, and supported with weekly local content.
           </p>
           <div className="flex flex-wrap gap-4">
             <button
               onClick={() => document.getElementById("quiz")?.scrollIntoView({ behavior: "smooth" })}
               className="bg-slate-900 text-white px-8 py-4 rounded-lg font-bold hover:bg-slate-800 transition-all shadow-lg shadow-slate-200"
             >
-              Start Your Project
+              Claim a Free Build
             </button>
             <button
               onClick={() =>
@@ -470,49 +484,41 @@ const Hero = () => {
 const TrustSignals = () => (
   <section className="px-6 py-12 border-y border-slate-100 bg-white">
     <div className="max-w-7xl mx-auto">
-      <div className="flex flex-col md:flex-row items-center justify-between gap-12">
-        <div className="flex-1">
-          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-8 text-center md:text-left">
-            Trusted by Melbourne&apos;s Local Favorites
-          </p>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 items-center opacity-40 grayscale hover:grayscale-0 transition-all duration-500">
-            {["The Daily Grind", "Melbourne Legal", "FitLife Studio", "Coastal Eats"].map(
-              (name) => (
-                <div key={name} className="flex items-center justify-center">
-                  <span className="font-black text-xl tracking-tighter text-slate-900">
-                    {name.toUpperCase()}
-                  </span>
-                </div>
-              ),
-            )}
-          </div>
+      <div className="grid md:grid-cols-4 gap-4">
+        {[
+          {
+            icon: Layout,
+            title: "Free custom build",
+            text: "EB28 builds the first website concept with no upfront design fee.",
+          },
+          {
+            icon: ShieldCheck,
+            title: "$98/mo Growth Hosting",
+            text: "Hosting, SSL, technical upkeep, local SEO basics, and performance checks.",
+          },
+          {
+            icon: BookOpen,
+            title: "Weekly local content",
+            text: "One weekly blog or Google Business Profile content prompt for fresh search coverage.",
+          },
+          {
+            icon: Mail,
+            title: "Lead routing checked",
+            text: `Website and claim forms route to ${CLAIM_EMAIL}.`,
+          },
+        ].map((item) => {
+          const Icon = item.icon;
+          return (
+            <div key={item.title} className="border border-slate-100 rounded-lg p-5 bg-white">
+              <div className="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center mb-4">
+                <Icon className="w-5 h-5 text-blue-600" />
+              </div>
+              <p className="font-bold text-slate-900">{item.title}</p>
+              <p className="text-sm text-slate-500 mt-2 leading-relaxed">{item.text}</p>
+            </div>
+          );
+        })}
         </div>
-
-        <div className="flex flex-wrap justify-center md:justify-end gap-6 border-t md:border-t-0 md:border-l border-slate-100 pt-8 md:pt-0 md:pl-12">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-amber-50 rounded-full flex items-center justify-center">
-              <Trophy className="w-5 h-5 text-amber-500" />
-            </div>
-            <div>
-              <p className="text-xs font-bold text-slate-900">Top Web Studio 2025</p>
-              <p className="text-[10px] text-slate-500 uppercase tracking-widest">
-                Melbourne Business Awards
-              </p>
-            </div>
-          </div>
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-blue-50 rounded-full flex items-center justify-center">
-              <Award className="w-5 h-5 text-blue-500" />
-            </div>
-            <div>
-              <p className="text-xs font-bold text-slate-900">5-Star Rated</p>
-              <p className="text-[10px] text-slate-500 uppercase tracking-widest">
-                Google Business Profile
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   </section>
 );
@@ -600,20 +606,18 @@ const Pricing = () => (
           <div className="w-px h-full bg-slate-100 mt-4 hidden md:block"></div>
         </div>
         <div className="md:col-span-7">
-          <h3 className="text-2xl font-bold text-slate-900 mb-4">
-            Step 1: The Professional Build
-          </h3>
+          <h3 className="text-2xl font-bold text-slate-900 mb-4">Step 1: Free Website Build</h3>
           <p className="text-slate-600 mb-6 leading-relaxed">
-            Your website is your digital storefront. We build you a high-performance, mobile-first
-            site that doesn&apos;t just look pretty, it&apos;s engineered to turn visitors into
-            loyal customers. You own every pixel.
+            EB28 builds the first version of your local business website with no upfront design
+            fee. If it fits, you can launch it on Growth Hosting. If it does not, you do not owe a
+            build fee.
           </p>
           <div className="grid sm:grid-cols-2 gap-3">
             {[
-              "Custom, Non-Template Design",
+              "Custom, Non-Template Concept",
               "Conversion-Optimized Layout",
-              "Lightning Fast Load Times",
-              "Full Ownership & Control",
+              "Lead Capture Included",
+              "Owner-Approved Copy and Photos",
               "Mobile-First Engineering",
             ].map((item) => (
               <div key={item} className="flex items-center gap-2 text-sm text-slate-600">
@@ -626,15 +630,15 @@ const Pricing = () => (
         <div className="md:col-span-4 text-center md:text-right">
           <div className="inline-block bg-slate-50 px-8 py-6 rounded-3xl border border-slate-100 mb-4">
             <p className="text-sm font-bold text-slate-400 uppercase tracking-widest mb-1">
-              One-Time Investment
+              Upfront Build Fee
             </p>
-            <p className="text-5xl font-black text-slate-900">$800</p>
+            <p className="text-5xl font-black text-slate-900">$0</p>
           </div>
           <button
             onClick={() => document.getElementById("quiz")?.scrollIntoView({ behavior: "smooth" })}
             className="w-full bg-slate-900 text-white font-bold py-4 rounded-2xl hover:bg-slate-800 transition-all shadow-lg shadow-slate-200 flex items-center justify-center gap-2"
           >
-            Start Your Project <ArrowRight className="w-4 h-4" />
+            Claim a Free Build <ArrowRight className="w-4 h-4" />
           </button>
         </div>
       </motion.div>
@@ -653,21 +657,21 @@ const Pricing = () => (
         </div>
         <div className="md:col-span-7">
           <h3 className="text-2xl font-bold text-slate-900 mb-4">
-            Step 2: The Power Foundation
+            Step 2: EB28 Growth Hosting
           </h3>
           <p className="text-slate-600 mb-6 leading-relaxed">
-            A great site needs a strong foundation. This isn&apos;t just &quot;hosting&quot;, it&apos;s
-            active growth management. We handle your SEO, Google Business listings, and search
-            placement so you stay at the top of the map.
+            Growth Hosting keeps the site fast, secure, indexed, and active after launch. It
+            includes technical SEO upkeep and weekly local content so the website keeps working
+            after the first day.
           </p>
           <div className="grid sm:grid-cols-2 gap-3">
             {[
               "Premium Managed Hosting",
-              "Active SEO Management",
-              "Google Business Optimization",
-              "Search Engine Placement",
-              "99.9% Uptime & Security",
-              "Unlimited Content Updates",
+              "Technical SEO Upkeep",
+              "Weekly Blog Post",
+              "Google Business Content Prompt",
+              "Security and Uptime Monitoring",
+              "One Monthly Update Request",
             ].map((item) => (
               <div key={item} className="flex items-center gap-2 text-sm text-slate-600">
                 <CheckCircle2 className="w-4 h-4 text-blue-500 flex-shrink-0" />
@@ -679,10 +683,10 @@ const Pricing = () => (
         <div className="md:col-span-4 text-center md:text-right">
           <div className="inline-block bg-white px-8 py-6 rounded-3xl border border-blue-100 shadow-sm mb-4">
             <p className="text-sm font-bold text-blue-400 uppercase tracking-widest mb-1">
-              Monthly Foundation
+              Monthly Growth Plan
             </p>
             <p className="text-5xl font-black text-slate-900">
-              $80<span className="text-xl font-bold text-slate-400">/mo</span>
+              $98<span className="text-xl font-bold text-slate-400">/mo</span>
             </p>
           </div>
           <button
@@ -904,25 +908,28 @@ const Pricing = () => (
         <div className="md:col-span-7">
           <h3 className="text-2xl font-bold text-slate-900 mb-4">Unsure? Let&apos;s Chat First.</h3>
           <p className="text-slate-600 mb-4 leading-relaxed">
-            Not sure which path is right for you? Book a 30-minute Discovery Call. We&apos;ll
-            dive into your business, look at your goals, and figure out exactly what you need to
-            move forward with confidence.
+            Not sure whether the free build is right for your business? Send the project brief and
+            we will review the current site, the local search opportunity, and the cleanest launch
+            path.
           </p>
           <div className="bg-white/60 backdrop-blur-sm p-4 rounded-2xl border border-orange-200 inline-flex items-center gap-3">
             <Sparkles className="w-5 h-5 text-orange-500" />
             <p className="text-sm font-bold text-orange-700">
-              Bonus: Get 12.5% OFF your website build after our call!
+              The build stays free. Growth Hosting is $98/month only if you approve launch.
             </p>
           </div>
         </div>
         <div className="md:col-span-4 text-center md:text-right">
           <div className="inline-block bg-white px-8 py-6 rounded-3xl border border-orange-200 shadow-sm">
             <p className="text-sm font-bold text-orange-400 uppercase tracking-widest mb-1">
-              30-Min Strategy Call
+              Project Review
             </p>
-            <p className="text-5xl font-black text-slate-900">$53</p>
-            <button className="mt-4 w-full bg-orange-500 text-white font-bold py-3 rounded-xl hover:bg-orange-600 transition-all text-sm">
-              Book Your Call
+            <p className="text-5xl font-black text-slate-900">$0</p>
+            <button
+              onClick={() => document.getElementById("quiz")?.scrollIntoView({ behavior: "smooth" })}
+              className="mt-4 w-full bg-orange-500 text-white font-bold py-3 rounded-xl hover:bg-orange-600 transition-all text-sm"
+            >
+              Send Brief
             </button>
           </div>
         </div>
@@ -950,12 +957,12 @@ const Team = () => {
       img: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=400",
     },
     {
-      name: "Alex",
-      role: "Head of AI Operations",
+      name: "EB28 Automation",
+      role: "AI Operations Support",
       degree: "Ph.D. in Neural Networks",
       exp: "Specialized in autonomous agent orchestration and natural language processing. 8 years at the forefront of AI integration.",
       achievement:
-        "Developed the 'Front of House' AI agent that currently manages lead intake for 50+ Melbourne businesses.",
+        "Supports practical intake workflows for approved EB28 website and automation projects.",
       highlight: "Achieved Google Cloud Professional Machine Learning Engineer certification",
       img: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&q=80&w=400",
     },
@@ -1328,21 +1335,21 @@ const OnboardingFunnel = () => {
           value: "local-leads",
           helper: "The kind who need the work done, not people just browsing.",
           score: 2,
-          package: "The Power Foundation",
+          package: GROWTH_HOSTING_PACKAGE,
         },
         {
           label: "Look like the obvious choice before they call",
           value: "new-site",
           helper: "So a good prospect feels, yes, this is the right place.",
           score: 1,
-          package: "The Professional Build",
+          package: `${FREE_BUILD_PACKAGE} + ${GROWTH_HOSTING_PACKAGE}`,
         },
         {
           label: "Stop losing people after they reach out",
           value: "automation",
           helper: "Because a hot lead gets cold fast when the reply is slow.",
           score: 2,
-          package: "AI Business Suite",
+          package: AI_SUITE_PACKAGE,
         },
       ],
     },
@@ -1357,21 +1364,21 @@ const OnboardingFunnel = () => {
           value: "search-visibility",
           helper: "The demand exists. Someone else is getting the click.",
           score: 2,
-          package: "The Power Foundation",
+          package: GROWTH_HOSTING_PACKAGE,
         },
         {
           label: "They visit, but they do not feel sure",
           value: "conversion",
           helper: "They look around, hesitate, and leave without calling.",
           score: 2,
-          package: "The Professional Build",
+          package: `${FREE_BUILD_PACKAGE} + ${GROWTH_HOSTING_PACKAGE}`,
         },
         {
           label: "They ask a question, then disappear",
           value: "follow-up",
           helper: "They were interested. Then another company made it easier.",
           score: 1,
-          package: "AI Business Suite",
+          package: AI_SUITE_PACKAGE,
         },
       ],
     },
@@ -1386,21 +1393,21 @@ const OnboardingFunnel = () => {
           value: "this-week",
           helper: "You want the fastest honest fix, not more guessing.",
           score: 2,
-          package: "The Power Foundation",
+          package: GROWTH_HOSTING_PACKAGE,
         },
         {
           label: "This month. It is time",
           value: "thirty-days",
           helper: "You want a clean plan and a clear next step.",
           score: 1,
-          package: "The Professional Build",
+          package: `${FREE_BUILD_PACKAGE} + ${GROWTH_HOSTING_PACKAGE}`,
         },
         {
           label: "I am not sure yet. Show me what is broken",
           value: "researching",
           helper: "You want the truth before you put money behind it.",
           score: 0,
-          package: "The Professional Build",
+          package: `${FREE_BUILD_PACKAGE} + ${GROWTH_HOSTING_PACKAGE}`,
         },
       ],
     },
@@ -1415,21 +1422,21 @@ const OnboardingFunnel = () => {
           value: "audit-plan",
           helper: "A useful answer before you decide anything else.",
           score: 0,
-          package: "The Power Foundation",
+          package: GROWTH_HOSTING_PACKAGE,
         },
         {
           label: "Build the page that makes people choose us",
           value: "done-for-me",
           helper: "Offer, proof, trust, and the next step handled for you.",
           score: 1,
-          package: "The Professional Build",
+          package: `${FREE_BUILD_PACKAGE} + ${GROWTH_HOSTING_PACKAGE}`,
         },
         {
           label: "Build the whole customer-getting machine",
           value: "full-system",
           helper: "Site, Google, intake, follow-up, and reporting working together.",
           score: 2,
-          package: "AI Business Suite",
+          package: AI_SUITE_PACKAGE,
         },
       ],
     },
@@ -1450,7 +1457,7 @@ const OnboardingFunnel = () => {
 
     return (
       Object.entries(packageCounts).sort((a, b) => b[1] - a[1])[0]?.[0] ||
-      "The Power Foundation"
+      GROWTH_HOSTING_PACKAGE
     );
   };
 
@@ -1506,7 +1513,7 @@ const OnboardingFunnel = () => {
   const getFixPackage = (fix: string) => {
     const f = fix.toLowerCase();
     if (f.includes("ai") || f.includes("automation") || f.includes("agent") || f.includes("bot")) {
-      return "AI Business Suite";
+      return AI_SUITE_PACKAGE;
     }
     if (
       f.includes("seo") ||
@@ -1515,9 +1522,9 @@ const OnboardingFunnel = () => {
       f.includes("google") ||
       f.includes("search")
     ) {
-      return "The Power Foundation";
+      return GROWTH_HOSTING_PACKAGE;
     }
-    return "The Professional Build";
+    return `${FREE_BUILD_PACKAGE} + ${GROWTH_HOSTING_PACKAGE}`;
   };
 
   const handlePackageSelection = async (pkg: any) => {
@@ -2278,26 +2285,26 @@ const OnboardingFunnel = () => {
       <div className="grid md:grid-cols-3 gap-8">
         {[
           {
-            name: "The Professional Build",
-            price: 800,
+            name: FREE_BUILD_PACKAGE,
+            price: 0,
             type: "One-Time",
-            features: ["Custom Design", "Mobile-First", "SEO Ready", "Fast Load Times"],
+            features: ["Custom Concept", "Mobile-First", "Lead Capture", "Owner Approval"],
             color: "slate",
           },
           {
-            name: "The Power Foundation",
-            price: 80,
+            name: GROWTH_HOSTING_PACKAGE,
+            price: 98,
             type: "Monthly",
             features: [
               "Managed Hosting",
-              "Active SEO",
-              "GBP Optimization",
-              "Unlimited Updates",
+              "Technical SEO",
+              "Weekly Blog Post",
+              "Monthly Update",
             ],
             color: "blue",
           },
           {
-            name: "AI Business Suite",
+            name: AI_SUITE_PACKAGE,
             price: 170,
             type: "Monthly",
             features: [
@@ -2317,26 +2324,26 @@ const OnboardingFunnel = () => {
             viewport={{ once: true }}
             transition={{ delay: i * 0.1 }}
             className={`p-8 rounded-[2.5rem] border-2 transition-all duration-500 flex flex-col relative overflow-hidden group ${
-              pkg.name === "AI Business Suite"
+              pkg.name === AI_SUITE_PACKAGE
                 ? "bg-slate-900 text-white border-blue-500/30 shadow-2xl shadow-blue-900/20"
                 : pkg.name === targetPackage ||
-                    (pkg.name === "The Power Foundation" && !targetPackage)
+                    (pkg.name === GROWTH_HOSTING_PACKAGE && !targetPackage)
                   ? "bg-white border-blue-600 shadow-2xl z-10"
                   : "bg-white border-slate-100 shadow-sm"
             }`}
           >
-            {pkg.name === "AI Business Suite" && (
+            {pkg.name === AI_SUITE_PACKAGE && (
               <div className="absolute -top-24 -right-24 w-48 h-48 bg-blue-500/10 rounded-full blur-3xl group-hover:bg-blue-500/20 transition-all duration-700"></div>
             )}
 
             {(pkg.name === targetPackage ||
-              (pkg.name === "The Power Foundation" && !targetPackage)) && (
+              (pkg.name === GROWTH_HOSTING_PACKAGE && !targetPackage)) && (
               <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-blue-600 text-white text-[10px] font-black uppercase tracking-widest px-4 py-1.5 rounded-full shadow-lg z-20">
                 Likely Best Fit
               </div>
             )}
 
-            {pkg.name === "AI Business Suite" && (
+            {pkg.name === AI_SUITE_PACKAGE && (
               <div className="absolute top-6 right-6">
                 <Sparkles className="w-6 h-6 text-blue-400 animate-pulse" />
               </div>
@@ -2345,7 +2352,7 @@ const OnboardingFunnel = () => {
             <div className="mb-8 relative z-10">
               <h4
                 className={`text-xl font-bold mb-2 ${
-                  pkg.name === "AI Business Suite" ? "text-white" : "text-slate-900"
+                  pkg.name === AI_SUITE_PACKAGE ? "text-white" : "text-slate-900"
                 }`}
               >
                 {pkg.name}
@@ -2353,14 +2360,14 @@ const OnboardingFunnel = () => {
               <div className="flex items-baseline gap-1">
                 <span
                   className={`text-4xl font-black ${
-                    pkg.name === "AI Business Suite" ? "text-white" : "text-slate-900"
+                    pkg.name === AI_SUITE_PACKAGE ? "text-white" : "text-slate-900"
                   }`}
                 >
                   ${pkg.price}
                 </span>
                 <span
                   className={`${
-                    pkg.name === "AI Business Suite" ? "text-slate-400" : "text-slate-400"
+                    pkg.name === AI_SUITE_PACKAGE ? "text-slate-400" : "text-slate-400"
                   } font-bold text-sm`}
                 >
                   {pkg.type === "Monthly" ? "/mo" : "one-time"}
@@ -2372,12 +2379,12 @@ const OnboardingFunnel = () => {
                 <div
                   key={f}
                   className={`flex items-center gap-3 text-sm ${
-                    pkg.name === "AI Business Suite" ? "text-slate-300" : "text-slate-600"
+                    pkg.name === AI_SUITE_PACKAGE ? "text-slate-300" : "text-slate-600"
                   }`}
                 >
                   <CheckCircle2
                     className={`w-4 h-4 ${
-                      pkg.name === "AI Business Suite" ? "text-blue-400" : "text-blue-500"
+                      pkg.name === AI_SUITE_PACKAGE ? "text-blue-400" : "text-blue-500"
                     }`}
                   />{" "}
                   {f}
@@ -2388,9 +2395,9 @@ const OnboardingFunnel = () => {
               onClick={() => handlePackageSelection(pkg)}
               disabled={isSubmitting}
               className={`w-full py-4 rounded-2xl font-bold transition-all flex items-center justify-center gap-2 relative z-10 ${
-                pkg.name === "AI Business Suite"
+                pkg.name === AI_SUITE_PACKAGE
                   ? "bg-blue-600 text-white hover:bg-blue-500 shadow-lg shadow-blue-900/40"
-                  : pkg.name === "The Power Foundation" || pkg.name === targetPackage
+                  : pkg.name === GROWTH_HOSTING_PACKAGE || pkg.name === targetPackage
                     ? "bg-blue-600 text-white hover:bg-blue-500"
                     : "bg-slate-900 text-white hover:bg-slate-800"
               }`}
@@ -2812,14 +2819,14 @@ const Newsletter = () => {
                     <Loader2 className="w-4 h-4 animate-spin" />
                   ) : (
                     <>
-                      Join 500+ Local Owners
+                      Send Me the Local Growth Checklist
                       <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                     </>
                   )}
                 </button>
                 {subscribeError && <p className="text-center text-sm text-red-100">{subscribeError}</p>}
                 <p className="text-center text-[10px] font-bold text-blue-200 uppercase tracking-widest">
-                  Join the Space Coast&apos;s most exclusive business community.
+                  Practical website, SEO, and local content ideas from EB28.
                 </p>
               </form>
             )}
@@ -2979,11 +2986,11 @@ const Resources = () => {
         { q: "Do you use AI for any marketing tasks?", desc: "" },
       ],
       content: `
-        <p class="lead">The marketing landscape is shifting rapidly, and AI is at the forefront. For local business owners, AI isn't about replacing people—it's about augmenting your team and ensuring you never miss a lead again.</p>
+        <p class="lead">The marketing landscape is shifting rapidly, and AI can help local business owners answer common questions, organize follow-up, and reduce manual busywork after a lead reaches out.</p>
 
         <blockquote class="border-l-8 border-blue-600 pl-8 my-12 py-4 bg-slate-50 rounded-r-3xl">
-          <p class="text-3xl font-bold text-slate-900 leading-tight tracking-tight">"AI is the great equalizer for small businesses. It gives you the bandwidth of a Fortune 500 company at a fraction of the cost."</p>
-          <cite class="text-blue-600 font-black uppercase tracking-widest text-sm mt-4 block">— Alex, Head of AI Operations</cite>
+          <p class="text-3xl font-bold text-slate-900 leading-tight tracking-tight">A useful AI system should make the next customer step clearer, faster, and easier to track.</p>
+          <cite class="text-blue-600 font-black uppercase tracking-widest text-sm mt-4 block">EB28 note</cite>
         </blockquote>
 
         <h2>1. 24/7 Autonomous Lead Qualification</h2>
@@ -3001,7 +3008,7 @@ const Resources = () => {
         <p>Creating consistent blog posts and social media updates is time-consuming. AI tools can help you brainstorm ideas, draft outlines, and even generate initial drafts that your team can then refine and polish.</p>
 
         <h2>5. Seamless CRM Integration</h2>
-        <p>Our AI Business Suite integrates directly with your CRM, ensuring that every interaction is logged and every follow-up is automated. It's the ultimate tool for maintaining a high-touch feel without the manual labor.</p>
+        <p>Optional AI and CRM work can be scoped after the website foundation is clear, so intake, follow-up, and reporting fit how the business actually operates.</p>
       `,
       category: "Marketing",
       date: "Mar 15, 2026",
@@ -3239,7 +3246,7 @@ const Resources = () => {
                     onClick={() => window.dispatchEvent(new CustomEvent("open-chat"))}
                     className="bg-white/10 backdrop-blur-md text-white font-bold px-8 py-4 rounded-2xl hover:bg-white/20 transition-all border border-white/10"
                   >
-                    Chat with Alex
+                    Ask EB28
                   </button>
                 </div>
               </div>
@@ -3406,6 +3413,144 @@ const Resources = () => {
   );
 };
 
+const GrowthContact = () => {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    message: "",
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [submitError, setSubmitError] = useState("");
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = event.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    setSubmitError("");
+
+    if (!formData.name.trim() || !isValidEmail(formData.email) || formData.message.trim().length < 8) {
+      setSubmitError("Please include your name, a valid email, and a short note about the site.");
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      await submitLeadCapture({
+        ...formData,
+        serviceNeed: "free-website-build-growth-hosting",
+        sourcePage: "melbournewebstudio.eb28.co#contact",
+        _subject: `Free website build / Growth Hosting inquiry from ${formData.name}`,
+      });
+      setIsSuccess(true);
+      setFormData({ name: "", email: "", phone: "", message: "" });
+      window.setTimeout(() => setIsSuccess(false), 6000);
+    } catch (error) {
+      console.error("Growth Hosting inquiry failed", error);
+      setSubmitError(`Something went wrong. Please email ${CLAIM_EMAIL}.`);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <section id="contact" className="px-6 py-24 bg-white">
+      <div className="max-w-7xl mx-auto grid lg:grid-cols-12 gap-12 items-start">
+        <div className="lg:col-span-5">
+          <p className="text-sm font-black text-blue-600 uppercase tracking-[0.25em] mb-4">
+            Claim a Free Build
+          </p>
+          <h2 className="text-4xl md:text-5xl font-bold text-slate-900 tracking-tight mb-6">
+            Send one note and we will map the free website build.
+          </h2>
+          <p className="text-slate-600 text-lg leading-relaxed mb-8">
+            Use this form for the EB28 Growth Hosting offer. The build is free; approved hosting,
+            SEO upkeep, and weekly local content are $98/month.
+          </p>
+          <div className="grid gap-4">
+            {[
+              "No upfront website build fee",
+              "$98/month managed hosting and local SEO upkeep",
+              "Weekly local blog or Google Business content prompt",
+              `Inquiry routing checked to ${CLAIM_EMAIL}`,
+            ].map((item) => (
+              <div key={item} className="flex items-center gap-3 text-slate-700">
+                <CheckCircle2 className="w-5 h-5 text-blue-600 flex-shrink-0" />
+                <span className="font-medium">{item}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        <form
+          onSubmit={handleSubmit}
+          className="lg:col-span-7 bg-slate-900 text-white rounded-2xl p-6 md:p-8 shadow-2xl shadow-slate-200"
+        >
+          <div className="grid md:grid-cols-2 gap-4">
+            <label className="block">
+              <span className="text-xs font-bold text-slate-300 uppercase tracking-widest">Name</span>
+              <input
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                autoComplete="name"
+                className="mt-2 w-full rounded-lg border border-white/10 bg-white/10 px-4 py-3 text-white outline-none focus:border-blue-400"
+                placeholder="Your name"
+              />
+            </label>
+            <label className="block">
+              <span className="text-xs font-bold text-slate-300 uppercase tracking-widest">Email</span>
+              <input
+                name="email"
+                type="email"
+                value={formData.email}
+                onChange={handleChange}
+                autoComplete="email"
+                className="mt-2 w-full rounded-lg border border-white/10 bg-white/10 px-4 py-3 text-white outline-none focus:border-blue-400"
+                placeholder="you@example.com"
+              />
+            </label>
+          </div>
+          <label className="block mt-4">
+            <span className="text-xs font-bold text-slate-300 uppercase tracking-widest">Phone</span>
+            <input
+              name="phone"
+              value={formData.phone}
+              onChange={handleChange}
+              autoComplete="tel"
+              className="mt-2 w-full rounded-lg border border-white/10 bg-white/10 px-4 py-3 text-white outline-none focus:border-blue-400"
+              placeholder="Best number"
+            />
+          </label>
+          <label className="block mt-4">
+            <span className="text-xs font-bold text-slate-300 uppercase tracking-widest">What should we build?</span>
+            <textarea
+              name="message"
+              value={formData.message}
+              onChange={handleChange}
+              className="mt-2 min-h-36 w-full rounded-lg border border-white/10 bg-white/10 px-4 py-3 text-white outline-none focus:border-blue-400"
+              placeholder="Tell us the business, current website, and what a useful free build should help customers do."
+            />
+          </label>
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className="mt-5 w-full bg-blue-600 text-white font-bold py-4 rounded-lg hover:bg-blue-500 transition-all flex items-center justify-center gap-2 disabled:opacity-70"
+          >
+            {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : <>Send to {CLAIM_EMAIL} <ArrowRight className="w-4 h-4" /></>}
+          </button>
+          {submitError && <p className="mt-4 text-sm text-red-200">{submitError}</p>}
+          {isSuccess && <p className="mt-4 text-sm text-emerald-200">Sent. We will reply from {CLAIM_EMAIL}.</p>}
+        </form>
+      </div>
+    </section>
+  );
+};
+
 const Footer = () => (
   <footer className="bg-slate-900 text-white px-6 py-16">
     <div className="max-w-7xl mx-auto grid md:grid-cols-4 gap-12">
@@ -3425,8 +3570,8 @@ const Footer = () => (
           </a>
         </div>
         <p className="text-slate-400 max-w-xs mb-6">
-          Helping local businesses thrive in the digital world with professional, high-converting
-          websites.
+          Free custom website builds with $98/month Growth Hosting, SEO upkeep, and weekly local
+          content.
         </p>
         <div className="flex gap-4">
           <Mail className="w-5 h-5 text-slate-400 cursor-pointer hover:text-white transition-colors" />
@@ -3465,11 +3610,6 @@ const Footer = () => (
           <li>
             <a href="/blog/local-seo-map-pack-melbourne-fl/" className="hover:text-white transition-colors">
               Local SEO Checklist
-            </a>
-          </li>
-          <li>
-            <a href="#our-team" className="hover:text-white transition-colors">
-              Our Team
             </a>
           </li>
           <li>
@@ -3853,25 +3993,25 @@ const Testimonials = () => {
   const testimonials = [
     {
       quote:
-        "Alex and the team didn't just build a website; they built a growth engine. Our foot traffic has never been higher, and the mobile menu is a game-changer for our morning rush.",
-      author: "James Miller",
-      business: "Owner, The Daily Grind",
+        "The free website build is reviewed with the business owner before public launch, so copy, photos, hours, and calls-to-action can be corrected first.",
+      author: "EB28 Growth Hosting",
+      business: "Owner approval required",
       image:
         "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=150",
     },
     {
       quote:
-        "The professional authority our new site projects is night and day compared to our old one. The lead capture system is actually pre-qualifying our clients before we even pick up the phone.",
-      author: "Sarah Jenkins",
-      business: "Partner, Melbourne Legal",
+        "Growth Hosting is $98/month after approval and includes managed hosting, technical SEO upkeep, weekly local content, and one monthly update request.",
+      author: "EB28 Growth Hosting",
+      business: "$98/month service plan",
       image:
         "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80&w=150",
     },
     {
       quote:
-        "I used to spend 15 hours a week managing bookings. Now, the AI handles everything. It's like having a full-time assistant that never sleeps. Best investment I've made for my gym.",
-      author: "Marcus Chen",
-      business: "Founder, FitLife Studio",
+        `All claim and inquiry forms are configured to send to ${CLAIM_EMAIL}, with launch-time routing available for each approved business site.`,
+      author: "EB28 Lead Routing",
+      business: CLAIM_EMAIL,
       image:
         "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=150",
     },
@@ -3887,11 +4027,11 @@ const Testimonials = () => {
       <div className="max-w-7xl mx-auto relative z-10">
         <div className="text-center mb-20">
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 tracking-tight">
-            What Our Clients Say
+            What the Offer Includes
           </h2>
           <p className="text-slate-400 max-w-2xl mx-auto text-lg">
-            Real results for real Melbourne businesses. Here&apos;s why local owners trust us with
-            their digital growth.
+            The live offer is intentionally simple: a free owner-reviewed build, then a $98/month
+            hosting and growth plan if the business approves launch.
           </p>
         </div>
 
@@ -3949,7 +4089,7 @@ const Chatbot = () => {
   >([
     {
       role: "model",
-      text: "Hi there! I'm Alex. I know running a local business in Melbourne can be a lot to juggle. What kind of business are you growing, and what's been the biggest challenge with your online presence lately?",
+      text: "Hi, this is EB28. What kind of business are you growing, and what should a free website build help customers do first?",
     },
   ]);
   const [input, setInput] = useState("");
@@ -4010,12 +4150,12 @@ const Chatbot = () => {
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <p className="text-white font-bold text-sm">Alex</p>
+                  <p className="text-white font-bold text-sm">EB28</p>
                   <span className="text-[10px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded font-bold uppercase tracking-tighter">
-                    Live
+                    Online
                   </span>
                 </div>
-                <p className="text-slate-400 text-[10px]">Typically replies in minutes</p>
+                <p className="text-slate-400 text-[10px]">Website and Growth Hosting help</p>
               </div>
             </div>
             <button
@@ -4143,7 +4283,7 @@ const Chatbot = () => {
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleSend()}
-                placeholder="Ask Alex anything..."
+                placeholder="Ask EB28 anything..."
                 className="w-full pl-4 pr-12 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
               />
               <button
@@ -4164,7 +4304,7 @@ const Chatbot = () => {
           <div className="absolute -top-1 -right-1 w-4 h-4 bg-emerald-500 border-2 border-white rounded-full animate-pulse z-10"></div>
           <MessageCircle className="w-8 h-8" />
           <div className="absolute -top-12 right-0 bg-slate-900 text-white px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-lg">
-            Live Chat Online
+            EB28 Chat Online
           </div>
         </button>
       )}
@@ -4183,11 +4323,10 @@ export default function App() {
         <Process />
         <ProblemSolution />
         <CaseStudies />
-        <Testimonials />
         <Pricing />
         <Newsletter />
         <Resources />
-        <Team />
+        <GrowthContact />
       </main>
       <Footer />
       <Chatbot />

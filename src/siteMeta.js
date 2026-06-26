@@ -368,9 +368,9 @@ const ROUTE_META = {
         key: 'melbournewebstudio',
         path: '/melbournewebstudio/',
         canonicalUrlOverride: MELBOURNE_WEB_STUDIO_CANONICAL_URL,
-        title: 'Melbourne Web Studio | Top Website Builder & Web Design Near Me',
+        title: 'Melbourne Web Studio | Free Website Build + $98/mo Growth Hosting',
         description:
-            'Melbourne Web Studio is the premier local web designer in Melbourne, FL. We build fast, professional websites with top-tier local SEO, transparent pricing, and AI-powered growth systems to drive leads.',
+            'EB28 builds custom local business websites for free, then hosts and improves approved sites for $98/month with SEO upkeep, weekly blog posts, and lead routing to social@eb28.co.',
         image: DEFAULT_IMAGE,
         siteName: 'Melbourne Web Studio',
         themeColor: '#ffffff',
@@ -383,7 +383,7 @@ const ROUTE_META = {
                 name: 'Melbourne Web Studio',
                 url: MELBOURNE_WEB_STUDIO_CANONICAL_URL,
                 description:
-                    'Melbourne Web Studio offers expert website design, top-tier local SEO support, and AI-powered lead generation systems for local businesses.',
+                    'Melbourne Web Studio offers free custom website builds with $98/month Growth Hosting, local SEO upkeep, weekly content, and lead capture for local businesses.',
             },
             {
                 '@context': 'https://schema.org',
@@ -395,7 +395,7 @@ const ROUTE_META = {
                 priceRange: '$$',
                 areaServed: ['Melbourne, Florida', 'Brevard County, Florida', 'Space Coast'],
                 description:
-                    'Melbourne Web Studio helps local businesses launch high-converting websites, dominate local SEO, and implement AI business automation.',
+                    'Melbourne Web Studio helps local businesses launch owner-approved websites, managed hosting, local SEO foundations, weekly blog content, and lead capture.',
                 provider: {
                     '@id': ORGANIZATION_ID,
                 },
@@ -403,6 +403,8 @@ const ROUTE_META = {
                     'Website design',
                     'Local SEO optimization',
                     'Managed website hosting',
+                    'Weekly local blog posts',
+                    'Growth Hosting',
                     'AI business automation',
                     'App development',
                     'Lead generation'

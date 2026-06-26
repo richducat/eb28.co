@@ -780,5 +780,175 @@
         "https://new.greaterpalmbaychamber.com/list/member/climate-experts-air-plumbing-electric-25186"
       ]
     }
+  },
+  {
+    "slug": "physical-therapy-professionals-viera",
+    "name": "Physical Therapy Professionals Viera",
+    "category": "physical therapy clinic",
+    "audience": "patients comparing physical therapy, post-surgery rehab, sports injury recovery, balance care, and appointment options near Viera and Suntree",
+    "action": "request an appointment, call the clinic, or review therapy services",
+    "focus": [
+      "Appointment request and clinic-location path",
+      "Service pages for rehab, pain relief, sports injury, and balance therapy",
+      "Weekly local content for physical therapy and recovery searches"
+    ],
+    "contact": {
+      "email": "info@ptprofessionals.net",
+      "phone": "(321) 757-5515",
+      "website": "https://ptprofessionals.net/contact-locations",
+      "sourceType": "public email and phone on official Viera contact page",
+      "sourceUrls": [
+        "https://ptprofessionals.net/contact-locations"
+      ]
+    }
+  },
+  {
+    "slug": "top-tier-sports-medicine-viera",
+    "name": "Top Tier Sports Medicine Viera",
+    "category": "sports medicine and physical therapy clinic",
+    "audience": "athletes, active adults, and patients comparing physical therapy, sports medicine, and evaluation appointments near Viera",
+    "action": "request an evaluation, call the Viera office, or email the care team",
+    "focus": [
+      "Evaluation request flow",
+      "Sports rehab, injury recovery, and performance care service pages",
+      "Weekly local content for athlete recovery and physical therapy searches"
+    ],
+    "contact": {
+      "email": "viera@toptiersportsmed.com",
+      "phone": "(321) 622-4286",
+      "website": "https://www.toptiersportsmed.com/contact/",
+      "sourceType": "public email and phone on official Viera contact page",
+      "sourceUrls": [
+        "https://www.toptiersportsmed.com/contact/"
+      ]
+    }
+  },
+  {
+    "slug": "321-performance-pt-suntree",
+    "name": "321 Performance PT Suntree",
+    "category": "physical therapy and sports rehab clinic",
+    "audience": "patients and athletes comparing physical therapy, sports rehab, and one-on-one recovery support near Suntree",
+    "action": "email the clinic, call for availability, or review treatment options",
+    "focus": [
+      "Email-first appointment inquiry path",
+      "Sports rehab and pain-relief service sections",
+      "Weekly local content for injury recovery and performance therapy searches"
+    ],
+    "contact": {
+      "email": "Brian@321Performance.com",
+      "phone": "",
+      "website": "https://www.321performance.com/contact/",
+      "sourceType": "public email on official contact page",
+      "sourceUrls": [
+        "https://www.321performance.com/contact/"
+      ]
+    }
+  },
+  {
+    "slug": "365-pool-service-suntree",
+    "name": "365 Pool Service Suntree",
+    "category": "pool cleaning and repair company",
+    "audience": "homeowners comparing weekly pool cleaning, pool repair, pump service, inspections, and quick estimates near Suntree and Viera",
+    "action": "request a quick estimate, call for service, or email the pool team",
+    "focus": [
+      "Quick estimate and service-area landing pages",
+      "Pool cleaning, repair, pump, inspection, and automation sections",
+      "Weekly local content for pool care and equipment repair searches"
+    ],
+    "contact": {
+      "email": "info@365pools.com",
+      "phone": "(321) 576-8250",
+      "website": "https://www.365pools.com/service-areas/suntree-pool-services/",
+      "sourceType": "public email and phone on official service-area page",
+      "sourceUrls": [
+        "https://www.365pools.com/service-areas/suntree-pool-services/",
+        "https://www.365pools.com/service-areas/viera-pool-services/"
+      ]
+    }
+  },
+  {
+    "slug": "beachside-termite-pest-control-viera",
+    "name": "Beachside Termite & Pest Control Viera",
+    "category": "termite and pest control company",
+    "audience": "homeowners and business owners comparing pest control, termite service, rodent exclusion, wildlife trapping, and WDO inspection help near Viera",
+    "action": "call or email for pest control service, termite help, or a site survey",
+    "focus": [
+      "Free estimate and urgent pest-control path",
+      "Termite, rodent, wildlife, WDO, and recurring-service pages",
+      "Weekly local content for pest prevention and seasonal termite searches"
+    ],
+    "contact": {
+      "email": "paul@getbeachside.com",
+      "phone": "(321) 750-4100",
+      "website": "https://www.getbeachside.com/viera.html",
+      "sourceType": "public email and phone on official Viera service-area page",
+      "sourceUrls": [
+        "https://www.getbeachside.com/viera.html",
+        "https://www.getbeachside.com/suntree.html"
+      ]
+    }
+  },
+  {
+    "slug": "martin-pest-control-brevard",
+    "name": "Martin Pest Control Brevard",
+    "category": "pest, termite, rodent, and bed bug control company",
+    "audience": "homeowners comparing termite control, pest extermination, rodent control, bed bug service, and WDO inspection options across Brevard",
+    "action": "call, email, or request a pest-control appointment",
+    "focus": [
+      "Termite and pest-control request path",
+      "Rodent, bed bug, WDO, and termite landing pages",
+      "Weekly local content for prevention, inspection, and seasonal pest searches"
+    ],
+    "contact": {
+      "email": "smartinpestcontrol@gmail.com",
+      "phone": "(321) 507-3089",
+      "website": "https://smartinpestcontrol.com/termite-control",
+      "sourceType": "public email and phone on official service page",
+      "sourceUrls": [
+        "https://smartinpestcontrol.com/termite-control"
+      ]
+    }
+  },
+  {
+    "slug": "tru-blue-pool-luxury-service",
+    "name": "Tru-Blue Pool Luxury Service",
+    "category": "pool service and pool repair company",
+    "audience": "homeowners comparing weekly pool service, pool repair, and reliable maintenance across Melbourne, Suntree, Rockledge, and Viera",
+    "action": "call, email, or request weekly pool service",
+    "focus": [
+      "Weekly service and repair inquiry path",
+      "Pool maintenance, service area, and repair pages",
+      "Weekly local content for pool upkeep and seasonal equipment needs"
+    ],
+    "contact": {
+      "email": "management@trubluepoolservice.com",
+      "phone": "(321) 291-4295",
+      "website": "https://trubluepoolservice.com/contact-us/",
+      "sourceType": "public email and phone on official contact page",
+      "sourceUrls": [
+        "https://trubluepoolservice.com/contact-us/"
+      ]
+    }
+  },
+  {
+    "slug": "happy-pool-and-spa-viera",
+    "name": "Happy Pool and Spa Viera",
+    "category": "pool cleaning and pool service company",
+    "audience": "homeowners comparing pool cleaning, green pool recovery, pool maintenance, and fast quotes near Viera and Suntree",
+    "action": "request a quote, call for service, or email the pool cleaning team",
+    "focus": [
+      "Fast quote and service-area landing pages",
+      "Pool cleaning, green pool cleanup, and maintenance service sections",
+      "Weekly local content for pool cleaning, repairs, and seasonal pool-care searches"
+    ],
+    "contact": {
+      "email": "service@happypoolandspa.com",
+      "phone": "(321) 341-2566",
+      "website": "https://happypoolandspa.com/pool-cleaning/pool-cleaning-viera/",
+      "sourceType": "public email and phone on official Viera service-area page",
+      "sourceUrls": [
+        "https://happypoolandspa.com/pool-cleaning/pool-cleaning-viera/"
+      ]
+    }
   }
 ]

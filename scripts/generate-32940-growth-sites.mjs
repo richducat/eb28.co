@@ -912,7 +912,7 @@ const attr = escapeHtml;
 function buildMailto(prospect) {
   const subject = encodeURIComponent(`Book the free EB28 website review for ${prospect.name}`);
   const body = encodeURIComponent(
-    `I want to claim the free website concept for ${prospect.name} and book a 10-minute review call.\n\nName:\nPhone:\nBest time for a 10-minute review:\nCurrent website or Google listing:\n`,
+    `I want to claim the free website concept for ${prospect.name} and book a 10-minute review call.\n\nName:\nRole with the business:\nPhone:\nPreferred 10-minute review window:\nBackup review window:\nCurrent website or Google listing:\n`,
   );
   return `mailto:${claimEmail}?subject=${subject}&body=${body}`;
 }
@@ -1202,6 +1202,25 @@ function renderProspectPage(prospect, index) {
       }
       input::placeholder, textarea::placeholder { color: #9ca3af; }
       textarea { min-height: 96px; resize: vertical; }
+      .checkbox-field {
+        display: flex;
+        grid-column: 1 / -1;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 12px;
+        border: 1px solid rgb(255 255 255 / 14%);
+        border-radius: 7px;
+        background: rgb(255 255 255 / 6%);
+        font-weight: 700;
+        line-height: 1.35;
+      }
+      .checkbox-field input {
+        width: 18px;
+        min-width: 18px;
+        height: 18px;
+        margin-top: 2px;
+        padding: 0;
+      }
       .fine {
         color: #9ca3af;
         font-size: 12px;
@@ -1348,7 +1367,7 @@ function renderProspectPage(prospect, index) {
             <input type="hidden" name="category" value="${attr(prospect.category)}" />
             <input type="hidden" name="concept_url" value="https://eb28.co/32940/${attr(prospect.slug)}.html" />
             <input type="hidden" name="offer" value="Free website build plus EB28 Growth Hosting at $98/month with SEO and weekly blog posts" />
-            <input type="hidden" name="requested_next_step" value="Claim free website concept and book a 10-minute review call" />
+            <input type="hidden" name="requested_next_step" value="Claim free website concept and confirm a 10-minute owner review call" />
             <div class="field-grid">
               <label>
                 Your name
@@ -1361,14 +1380,28 @@ function renderProspectPage(prospect, index) {
             </div>
             <div class="field-grid">
               <label>
-                Phone
-                <input name="phone" type="tel" autocomplete="tel" placeholder="Best number" />
+                Role with the business
+                <input name="reviewer_role" required placeholder="Owner, manager, marketing..." />
               </label>
               <label>
-                Best 10-minute review time
-                <input name="preferred_review_time" required placeholder="Today after 3, weekday mornings..." />
+                Phone for confirmation
+                <input name="phone" type="tel" autocomplete="tel" required placeholder="Best number" />
               </label>
             </div>
+            <div class="field-grid">
+              <label>
+                Preferred 10-minute review window
+                <input name="preferred_review_time" required placeholder="Today 3:00 PM ET, Friday morning..." />
+              </label>
+              <label>
+                Backup review window
+                <input name="backup_review_time" required placeholder="Another specific day/time that works" />
+              </label>
+            </div>
+            <label class="checkbox-field">
+              <input name="confirm_review_intent" type="checkbox" required value="Yes, confirm one of these review windows" />
+              I want EB28 to confirm one of these 10-minute review windows for this free website concept.
+            </label>
             <label>
               What should EB28 check first?
               <textarea name="message" placeholder="Optional: current website, Google listing, photos, menu, booking link, or anything that needs to be corrected before launch."></textarea>

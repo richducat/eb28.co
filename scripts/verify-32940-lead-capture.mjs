@@ -101,10 +101,14 @@ function checkPage(html, slug, sourceLabel) {
     if (hiddenInputValue(claimForm, 'concept_url') !== `https://eb28.co/32940/${slug}.html`) failures.push('concept_url hidden field does not match public URL');
     if (!hiddenInputValue(claimForm, 'offer').includes('$98/month')) failures.push('offer hidden field is missing $98/month');
     if (!hiddenInputValue(claimForm, 'offer').includes('weekly blog posts')) failures.push('offer hidden field is missing weekly blog posts');
-    if (!hiddenInputValue(claimForm, 'requested_next_step').includes('book a 10-minute review call')) failures.push('requested_next_step is missing booking intent');
+    if (!hiddenInputValue(claimForm, 'requested_next_step').includes('confirm a 10-minute owner review call')) failures.push('requested_next_step is missing confirmed booking intent');
     if (!hasRequiredInput(claimForm, 'name')) failures.push('name field is not required');
     if (!hasRequiredInput(claimForm, 'email')) failures.push('email field is not required');
+    if (!hasRequiredInput(claimForm, 'reviewer_role')) failures.push('reviewer_role field is not required');
+    if (!hasRequiredInput(claimForm, 'phone')) failures.push('phone field is not required');
     if (!hasRequiredInput(claimForm, 'preferred_review_time')) failures.push('preferred_review_time field is not required');
+    if (!hasRequiredInput(claimForm, 'backup_review_time')) failures.push('backup_review_time field is not required');
+    if (!hasRequiredInput(claimForm, 'confirm_review_intent')) failures.push('confirm_review_intent field is not required');
   }
 
   if (!normalized.includes(`mailto:${expectedEmail}?subject=`)) failures.push('missing social@eb28.co mailto fallback');
@@ -245,8 +249,11 @@ async function submitLiveTestLead() {
     requested_next_step: 'Live FormSubmit acceptance test only - do not count as a booked call',
     name: 'EB28 live form test',
     email: expectedEmail,
+    reviewer_role: 'test verifier',
     phone: 'do-not-call-test',
     preferred_review_time: 'TEST ONLY - do not count',
+    backup_review_time: 'TEST ONLY - do not count',
+    confirm_review_intent: 'TEST ONLY - do not count',
     message:
       'Automated EB28 lead capture verification. This is not a customer lead and must not count toward the 100 booked-call goal.',
   };

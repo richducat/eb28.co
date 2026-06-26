@@ -1,5 +1,6 @@
 import tempfile
 import unittest
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 from cadetcatch_access.store import AccessStore
@@ -88,6 +89,26 @@ class AccessStoreTests(unittest.TestCase):
                 recipient_email="cadet@example.com",
                 public_base_url="https://api.cadetcatch.com",
             )
+
+    def test_expired_subscription_status_is_inactive(self) -> None:
+        store = self.make_store()
+        expired_at = (
+            datetime.now(timezone.utc) - timedelta(days=1)
+        ).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+        store.grant_access(
+            email="owner@example.com",
+            access_type="subscriber",
+            role="owner",
+            desktop_add_on_active=True,
+            can_invite=True,
+            expires_at=expired_at,
+        )
+
+        status = store.status(email="owner@example.com")
+
+        self.assertFalse(status["active"])
+        self.assertFalse(status["desktop_add_on_active"])
+        self.assertEqual(status["access_type"], "subscriber")
 
 
 if __name__ == "__main__":

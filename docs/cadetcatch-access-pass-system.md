@@ -81,6 +81,12 @@ Server requirements:
 - Verify the transaction with Apple server-side APIs.
 - Store the original transaction ID.
 - Treat invitations as active only while this subscription remains active.
+- Production must configure:
+  - `CADETCATCH_APPLE_ISSUER_ID`
+  - `CADETCATCH_APPLE_KEY_ID`
+  - `CADETCATCH_APPLE_PRIVATE_KEY_PATH` or `CADETCATCH_APPLE_PRIVATE_KEY_P8`
+  - `CADETCATCH_APPLE_ROOT_CERT_DIR` or `CADETCATCH_APPLE_ROOT_CERT_PATHS`
+- The access API must reject the wrong bundle ID, wrong product ID, wrong transaction IDs, expired subscriptions, and revoked subscriptions.
 
 ### GET /access/status
 

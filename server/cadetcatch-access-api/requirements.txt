@@ -3,3 +3,4 @@ uvicorn[standard]
 pydantic
 email-validator
 python-multipart
+app-store-server-library

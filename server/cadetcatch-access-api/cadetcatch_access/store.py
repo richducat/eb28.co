@@ -16,6 +16,16 @@ def now_iso() -> str:
     return datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
 
 
+def is_expired(expires_at: str | None) -> bool:
+    if not expires_at:
+        return False
+    try:
+        normalized = expires_at.replace("Z", "+00:00")
+        return datetime.fromisoformat(normalized) <= datetime.now(timezone.utc)
+    except ValueError:
+        return True
+
+
 def normalize_email(email: str) -> str:
     normalized = (email or "").strip().lower()
     if "@" not in normalized or normalized.startswith("@") or normalized.endswith("@"):
@@ -184,11 +194,12 @@ class AccessStore:
                 "desktop_add_on_active": False,
                 "expires_at": None,
             }
+        active = bool(row["active"]) and not is_expired(row["expires_at"])
         return {
-            "active": bool(row["active"]),
+            "active": active,
             "access_type": row["access_type"],
             "role": row["role"],
-            "desktop_add_on_active": bool(row["desktop_add_on_active"]),
+            "desktop_add_on_active": bool(row["desktop_add_on_active"]) and active,
             "expires_at": row["expires_at"],
             "email": account_email,
         }

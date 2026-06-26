@@ -8,6 +8,12 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, EmailStr, Field
 
 from .store import AccessStore
+from .storekit import (
+    AppleStoreKitVerifier,
+    StoreKitConfigurationError,
+    StoreKitLinkRequest,
+    StoreKitVerificationError,
+)
 
 
 def env_bool(name: str) -> bool:
@@ -82,6 +88,10 @@ def store() -> AccessStore:
     return build_store()
 
 
+def storekit_verifier() -> AppleStoreKitVerifier:
+    return AppleStoreKitVerifier.from_env()
+
+
 def require_admin(
     request: Request,
     authorization: str | None = Header(default=None),
@@ -121,20 +131,46 @@ def link_subscription(
     payload: SubscriptionLinkRequest,
     access_store: AccessStore = Depends(store),
 ) -> dict[str, object]:
-    if not env_bool("CADETCATCH_ALLOW_UNVERIFIED_STOREKIT"):
-        raise HTTPException(
-            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail="Server-side Apple subscription verification is not configured.",
-        )
+    link_request = StoreKitLinkRequest(
+        product_id=payload.product_id,
+        transaction_id=payload.transaction_id,
+        original_transaction_id=payload.original_transaction_id,
+    )
+    if env_bool("CADETCATCH_ALLOW_UNVERIFIED_STOREKIT"):
+        verified = None
+    else:
+        try:
+            verified = storekit_verifier().verify(link_request)
+        except StoreKitConfigurationError as error:
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail=str(error),
+            ) from error
+        except StoreKitVerificationError as error:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail=str(error),
+            ) from error
+        except Exception as error:
+            raise HTTPException(
+                status_code=status.HTTP_502_BAD_GATEWAY,
+                detail="Apple subscription verification failed.",
+            ) from error
+    expires_at = verified.expires_at if verified else None
     return access_store.grant_access(
         email=str(payload.email),
         access_type="subscriber",
         role="owner",
         desktop_add_on_active=False,
         can_invite=True,
+        expires_at=expires_at,
         original_transaction_id=payload.original_transaction_id,
         product_id=payload.product_id,
-        note=f"Linked from device {payload.device_id}; transaction {payload.transaction_id}",
+        note=(
+            f"Apple-verified transaction {payload.transaction_id}; device {payload.device_id}"
+            if verified
+            else f"Unverified staging link from device {payload.device_id}; transaction {payload.transaction_id}"
+        )
     )
 
 

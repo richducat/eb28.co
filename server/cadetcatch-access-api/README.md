@@ -23,6 +23,14 @@ CADETCATCH_ACCESS_DB=/var/lib/cadetcatch/access.sqlite3
 CADETCATCH_ACCESS_ADMIN_TOKEN=replace-with-long-random-token
 CADETCATCH_PUBLIC_BASE_URL=https://api.cadetcatch.com
 CADETCATCH_ACCESS_ALLOWED_ORIGINS=https://eb28.co,https://www.eb28.co
+CADETCATCH_APPLE_ENVIRONMENT=production
+CADETCATCH_APPLE_BUNDLE_ID=co.eb28.cadetcatch
+CADETCATCH_APPLE_APP_APPLE_ID=6769565852
+CADETCATCH_APPLE_ISSUER_ID=replace-with-app-store-connect-issuer-id
+CADETCATCH_APPLE_KEY_ID=replace-with-app-store-connect-key-id
+CADETCATCH_APPLE_PRIVATE_KEY_PATH=/etc/cadetcatch/AuthKey_REPLACE.p8
+CADETCATCH_APPLE_ROOT_CERT_DIR=/etc/cadetcatch/apple-root-certs
+CADETCATCH_VALID_SUBSCRIPTION_PRODUCT_IDS=co.eb28.cadetcatch.family.monthly.v1
 ```
 
 Optional staging-only setting:
@@ -31,7 +39,34 @@ Optional staging-only setting:
 CADETCATCH_ALLOW_UNVERIFIED_STOREKIT=1
 ```
 
-Do not enable `CADETCATCH_ALLOW_UNVERIFIED_STOREKIT` for production App Review. Production should verify StoreKit transactions server-side before treating subscription-link requests as active.
+Do not enable `CADETCATCH_ALLOW_UNVERIFIED_STOREKIT` for production App Review. Production verifies StoreKit transactions through Apple's App Store Server API before treating subscription-link requests as active.
+
+Apple root certificate files must be installed under `CADETCATCH_APPLE_ROOT_CERT_DIR` or listed in `CADETCATCH_APPLE_ROOT_CERT_PATHS`. The verifier uses Apple's signed transaction JWS, rejects the wrong bundle/product/transaction IDs, and rejects expired or revoked subscriptions.
+
+## StoreKit Linking
+
+`POST /access/subscription/link` accepts the iPhone app's StoreKit payload:
+
+```json
+{
+  "device_id": "generated-app-install-id",
+  "email": "subscriber@example.com",
+  "product_id": "co.eb28.cadetcatch.family.monthly.v1",
+  "transaction_id": "1000000000000001",
+  "original_transaction_id": "1000000000000000"
+}
+```
+
+Production behavior:
+
+- Calls Apple's App Store Server API `get_transaction_info(transaction_id)`.
+- Verifies Apple's returned `signedTransactionInfo`.
+- Requires bundle ID `co.eb28.cadetcatch`.
+- Requires product ID `co.eb28.cadetcatch.family.monthly.v1`.
+- Requires matching transaction and original transaction IDs.
+- Requires auto-renewable subscription type.
+- Rejects revoked or expired subscriptions.
+- Grants owner access with invite permission when verification passes.
 
 ## Local Run
 

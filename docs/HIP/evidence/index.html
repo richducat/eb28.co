@@ -69,26 +69,53 @@
         margin: 0 0 12px;
         font-size: 18px;
       }
+
+      .note {
+        padding: 12px 14px;
+        border: 1px solid #bfe3de;
+        border-radius: 8px;
+        background: #e1f4f1;
+        color: #0b5f59;
+        font-size: 14px;
+        font-weight: 700;
+      }
     </style>
   </head>
   <body>
     <main>
       <h1>HIP Beth Review Evidence</h1>
-      <p>Live walkthrough recorded from https://eb28.co/HIP/ after the Beth review workflow deploy.</p>
+      <p>Live walkthrough recorded from https://eb28.co/HIP/ after the image scan workflow deploy.</p>
+      <div class="note">
+        This video demonstrates the uploaded-photo scan: the app reads the electrical image, flags an open electrical components safety issue, creates the AI review card, approves it, and carries the scan evidence into the final report.
+      </div>
       <div class="links">
         <a href="../">Open HIP App</a>
-        <a href="./hip-beth-end-to-end.webm">Download Walkthrough Video</a>
-        <a href="./beth-live-final-report.png">Download Final Screenshot</a>
-        <a href="./beth-live-report.html">Open Generated Report</a>
-        <a href="./beth-live-record.json">Download JSON Record</a>
+        <a href="./hip-scan-end-to-end.webm">Download Image Scan Video</a>
+        <a href="./hip-scan-after-scan.png">Download Scan Screenshot</a>
+        <a href="./hip-scan-final-report.png">Download Final Report Screenshot</a>
+        <a href="./hip-scan-report.html">Open Scan Report</a>
+        <a href="./hip-scan-record.json">Download Scan JSON</a>
       </div>
       <section>
-        <h2>End-to-End Video</h2>
-        <video controls preload="metadata" src="./hip-beth-end-to-end.webm"></video>
+        <h2>Image Scan End-to-End Video</h2>
+        <video controls preload="metadata" src="./hip-scan-end-to-end.webm"></video>
       </section>
       <section>
-        <h2>Final Report Screenshot</h2>
-        <img src="./beth-live-final-report.png" alt="Final Home Inspection Assistant report screenshot" />
+        <h2>Photo Scan Result</h2>
+        <img src="./hip-scan-after-scan.png" alt="Home Inspection Assistant image scan detection screenshot" />
+      </section>
+      <section>
+        <h2>Final Report With Image Scan Evidence</h2>
+        <img src="./hip-scan-final-report.png" alt="Final Home Inspection Assistant report with image scan evidence" />
+      </section>
+      <section>
+        <h2>Previous Beth Workflow Evidence</h2>
+        <div class="links">
+          <a href="./hip-beth-end-to-end.webm">Original Walkthrough Video</a>
+          <a href="./beth-live-final-report.png">Original Final Screenshot</a>
+          <a href="./beth-live-report.html">Original Generated Report</a>
+          <a href="./beth-live-record.json">Original JSON Record</a>
+        </div>
       </section>
     </main>
   </body>

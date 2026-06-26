@@ -607,5 +607,178 @@
         "https://members.spacecoastchamber.com/directory/Details/uncle-vitos-pizzeria-4877640"
       ]
     }
+  },
+  {
+    "slug": "for-your-best-self",
+    "name": "For Your Best Self",
+    "category": "dermatology, plastic surgery, and medical spa practice",
+    "audience": "clients comparing injectables, skin treatments, dermatology, plastic surgery, and consultation options near Melbourne and Viera",
+    "action": "review treatments, request an appointment, and contact the right care team",
+    "focus": [
+      "Consultation and treatment-category landing pages",
+      "Trust, credentials, and before-and-after proof structure",
+      "Weekly local content for med spa, dermatology, and plastic surgery searches"
+    ],
+    "contact": {
+      "email": "info@foryourbestself.com",
+      "phone": "(321) 395-3298",
+      "website": "https://www.foryourbestself.com/",
+      "sourceType": "public email on official contact page",
+      "sourceUrls": [
+        "https://www.foryourbestself.com/contact-us/",
+        "https://www.foryourbestself.com/medical-spa/"
+      ]
+    }
+  },
+  {
+    "slug": "dental-excellence-melbourne",
+    "name": "Dental Excellence Melbourne",
+    "category": "dental practice",
+    "audience": "patients comparing general dental care, emergency dental help, and new-patient options in Melbourne",
+    "action": "request an appointment, call the office, or review patient information",
+    "focus": [
+      "New-patient and emergency dental landing pages",
+      "Appointment and phone-first conversion path",
+      "Weekly local content for dental care and patient education searches"
+    ],
+    "contact": {
+      "email": "contact@melbournedentalcare.com",
+      "phone": "(321) 255-0199",
+      "website": "https://www.dentalexcellencemelbourne.com/",
+      "sourceType": "public email on official contact page",
+      "sourceUrls": [
+        "https://www.dentalexcellencemelbourne.com/contact-us.html",
+        "https://www.dentalexcellencemelbourne.com/"
+      ]
+    }
+  },
+  {
+    "slug": "suntree-animal-clinic",
+    "name": "Suntree Animal Clinic",
+    "category": "veterinary clinic",
+    "audience": "pet owners comparing wellness care, surgery, dental care, and appointment options near Suntree and Viera",
+    "action": "call for an appointment, understand veterinary services, or contact the clinic",
+    "focus": [
+      "New-client and appointment-request path",
+      "Pet wellness, dental, surgery, and technician service sections",
+      "Weekly local content for veterinary and pet-care searches"
+    ],
+    "contact": {
+      "email": "asimsskb@gmail.com",
+      "phone": "(321) 259-0904",
+      "website": "https://www.suntreeanimalclinic.com/",
+      "sourceType": "public business profile email plus official website",
+      "sourceUrls": [
+        "https://www.suntreeanimalclinic.com/",
+        "https://nextdoor.com/pages/suntree-animal-clinic-melbourne-fl/"
+      ]
+    }
+  },
+  {
+    "slug": "rubio-pet-hospital",
+    "name": "Rubio Pet Hospital",
+    "category": "veterinary hospital",
+    "audience": "pet owners comparing veterinary appointments, urgent pet care, wellness visits, and nearby animal hospitals",
+    "action": "call the hospital, find the location, and review veterinary services",
+    "focus": [
+      "Appointment and call-first conversion path",
+      "New-patient, wellness, and emergency guidance sections",
+      "Weekly local content for pet health and veterinary searches"
+    ],
+    "contact": {
+      "phone": "(321) 422-6900",
+      "website": "https://rubiopethospital.com/",
+      "sourceType": "official website contact page and public business profile",
+      "sourceUrls": [
+        "https://rubiopethospital.com/contact",
+        "https://rubiopethospital.com/"
+      ]
+    }
+  },
+  {
+    "slug": "island-animal-hospital-viera",
+    "name": "Island Animal Hospital Viera",
+    "category": "veterinary hospital",
+    "audience": "pet owners comparing veterinary care, boarding, grooming, dentistry, and surgery options near Viera",
+    "action": "contact the Viera office, call for an appointment, or review hospital services",
+    "focus": [
+      "Viera location and appointment sections",
+      "Service pages for wellness, dentistry, surgery, boarding, and grooming",
+      "Weekly local content for Viera pet care searches"
+    ],
+    "contact": {
+      "email": "vstaff@islandanimal.com",
+      "phone": "(321) 633-8387",
+      "website": "https://islandanimal.com/locations/viera/",
+      "sourceType": "public email on official Viera location page",
+      "sourceUrls": [
+        "https://islandanimal.com/locations/viera/",
+        "https://islandanimal.com/contact-us/"
+      ]
+    }
+  },
+  {
+    "slug": "viera-east-veterinary-center",
+    "name": "Viera East Veterinary Center",
+    "category": "veterinary center",
+    "audience": "pet owners comparing veterinary appointments, drop-off visits, wellness care, and pet pharmacy options near Rockledge and Viera",
+    "action": "book an appointment, call the clinic, or email the care team",
+    "focus": [
+      "Appointment and drop-off visit explanation",
+      "Services, pharmacy, and patient-resource navigation",
+      "Weekly local content for pet wellness and veterinary searches"
+    ],
+    "contact": {
+      "email": "info@vieravet.com",
+      "phone": "(321) 639-9888",
+      "website": "https://www.vieravet.com/",
+      "sourceType": "public email on business profile plus official contact page",
+      "sourceUrls": [
+        "https://www.vieravet.com/contact/",
+        "https://www.facebook.com/vieraeastvetctr/"
+      ]
+    }
+  },
+  {
+    "slug": "new-image-dentistry-suntree",
+    "name": "New Image Dentistry Suntree",
+    "category": "dental practice",
+    "audience": "patients comparing general dentistry, emergency treatment, cleanings, crowns, and same-day appointments in Suntree",
+    "action": "call the Suntree office, request an appointment, or review available dental services",
+    "focus": [
+      "Same-day and emergency appointment prompts",
+      "General dentistry service pages and new-patient path",
+      "Weekly local content for dental care near Suntree"
+    ],
+    "contact": {
+      "phone": "(321) 434-4444",
+      "website": "https://www.newimagedentistry.net/suntree",
+      "sourceType": "official location page and public practice profile",
+      "sourceUrls": [
+        "https://www.newimagedentistry.net/suntree",
+        "https://doctor.webmd.com/practice/new-image-dentistry-suntree-ca289b82-b1b8-42bb-8c37-c669e18deac0"
+      ]
+    }
+  },
+  {
+    "slug": "climate-experts-air-plumbing-electrical",
+    "name": "Climate Experts Air, Plumbing & Electrical",
+    "category": "HVAC, plumbing, and electrical services company",
+    "audience": "homeowners and businesses comparing HVAC repair, plumbing, electrical work, and emergency service across Melbourne and Brevard",
+    "action": "call for service, book online, or request an estimate",
+    "focus": [
+      "Emergency service and estimate request path",
+      "HVAC, plumbing, electrical, and service-area landing pages",
+      "Weekly local content for repair, replacement, and maintenance searches"
+    ],
+    "contact": {
+      "phone": "(321) 345-3415",
+      "website": "https://www.climateexpertsac.com/",
+      "sourceType": "official contact page and chamber profile",
+      "sourceUrls": [
+        "https://www.climateexpertsac.com/contact/",
+        "https://new.greaterpalmbaychamber.com/list/member/climate-experts-air-plumbing-electric-25186"
+      ]
+    }
   }
 ]

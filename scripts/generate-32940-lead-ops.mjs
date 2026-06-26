@@ -608,6 +608,39 @@ function makeEml(prospect) {
   return `${lines.join('\r\n')}`;
 }
 
+function getEmailStats(directEmailProspects) {
+  const groups = new Map();
+
+  for (const prospect of directEmailProspects) {
+    const key = prospect.verifiedEmail.trim().toLowerCase();
+    if (!key) {
+      continue;
+    }
+    const existing = groups.get(key) ?? {
+      email: prospect.verifiedEmail,
+      businesses: [],
+      conceptUrls: [],
+    };
+    existing.businesses.push(prospect.business);
+    existing.conceptUrls.push(prospect.conceptUrl);
+    groups.set(key, existing);
+  }
+
+  const duplicateRecipientInboxes = [...groups.values()]
+    .filter((group) => group.businesses.length > 1)
+    .map((group) => ({
+      email: group.email,
+      businesses: group.businesses,
+      conceptUrls: group.conceptUrls,
+    }));
+
+  return {
+    draftCount: directEmailProspects.length,
+    uniqueRecipientInboxes: groups.size,
+    duplicateRecipientInboxes,
+  };
+}
+
 function extractProspects(indexHtml) {
   const linkPattern = /<a href="\/32940\/([^"]+)\.html">([\s\S]*?)<br><small>([\s\S]*?)<\/small><\/a>/g;
   const prospects = [];
@@ -778,6 +811,7 @@ function renderMarkdown(prospects) {
   const direct = prospects.filter((prospect) => prospect.verifiedEmail);
   const callOrForm = prospects.filter((prospect) => !prospect.verifiedEmail && prospect.outreachStage === 'call_or_contact_form');
   const research = prospects.filter((prospect) => prospect.outreachStage === 'research_needed');
+  const emailStats = getEmailStats(direct);
 
   const rows = prospects.map((prospect) => (
     `| ${prospect.priority} | ${prospect.business} | ${prospect.outreachStage} | ${prospect.verifiedEmail || prospect.phone || 'research'} | ${prospect.nextAction} | ${prospect.conceptUrl} |`
@@ -806,7 +840,8 @@ function renderMarkdown(prospects) {
     '## Status',
     '',
     `- Total deployed concepts: ${prospects.length}`,
-    `- Direct-email outreach ready: ${direct.length}`,
+    `- Direct-email outreach ready: ${emailStats.draftCount}`,
+    `- Unique recipient inboxes: ${emailStats.uniqueRecipientInboxes}`,
     `- Call/contact-form ready: ${callOrForm.length}`,
     `- Research needed: ${research.length}`,
     '',
@@ -850,6 +885,7 @@ function renderCallContactQueue(prospects) {
   const direct = prospects.filter((prospect) => prospect.verifiedEmail);
   const callOrForm = prospects.filter((prospect) => !prospect.verifiedEmail && prospect.outreachStage === 'call_or_contact_form');
   const research = prospects.filter((prospect) => prospect.outreachStage === 'research_needed');
+  const emailStats = getEmailStats(direct);
   const actionable = direct.length + callOrForm.length;
   const callRows = callOrForm.map((prospect) => (
     `| ${prospect.priority} | ${markdownCell(prospect.business)} | ${markdownCell(prospect.phone)} | ${markdownCell(prospect.website)} | ${markdownCell(prospect.conceptUrl)} | ${markdownCell(prospect.sourceUrls)} |`
@@ -865,7 +901,8 @@ function renderCallContactQueue(prospects) {
     '',
     `Total prospects: ${prospects.length}`,
     `Actionable now: ${actionable}`,
-    `Direct-email ready: ${direct.length}`,
+    `Direct-email ready: ${emailStats.draftCount}`,
+    `Unique recipient inboxes: ${emailStats.uniqueRecipientInboxes}`,
     `Call/contact-form ready: ${callOrForm.length}`,
     `Research needed: ${research.length}`,
     'Confirmed booked-call leads: 0',
@@ -896,6 +933,53 @@ function renderCallContactQueue(prospects) {
     '## Counting Rule',
     '',
     'Count a lead only after evidence includes a real booked call, calendar link, scheduled call time, or equivalent proof.',
+  ].join('\n');
+}
+
+function renderDispatchReadinessMarkdown(prospects, draftManifest, emailStats) {
+  const callOrForm = prospects.filter((prospect) => !prospect.verifiedEmail && prospect.outreachStage === 'call_or_contact_form');
+  const research = prospects.filter((prospect) => prospect.outreachStage === 'research_needed');
+  const duplicateRows = emailStats.duplicateRecipientInboxes.map((group) => (
+    `| ${markdownCell(group.email)} | ${markdownCell(group.businesses)} | ${markdownCell(group.conceptUrls)} |`
+  ));
+  const topDraftRows = draftManifest.slice(0, 25).map((draft, index) => (
+    `| ${index + 1} | ${markdownCell(draft.business)} | ${markdownCell(draft.to)} | ${markdownCell(draft.file)} | ${markdownCell(draft.conceptUrl)} |`
+  ));
+  const duplicateSection = duplicateRows.length
+    ? ['| Inbox | Businesses | Concepts |', '|---|---|---|', ...duplicateRows]
+    : ['None.'];
+
+  return [
+    '# 32940 Dispatch Readiness',
+    '',
+    `Generated: ${today}`,
+    '',
+    '## Summary',
+    '',
+    `- Total prospects: ${prospects.length}`,
+    `- Local .eml draft files: ${draftManifest.length}`,
+    `- Unique recipient inboxes: ${emailStats.uniqueRecipientInboxes}`,
+    `- Duplicate recipient inbox groups: ${emailStats.duplicateRecipientInboxes.length}`,
+    `- Call/contact-form targets remaining: ${callOrForm.length}`,
+    `- Research-needed targets remaining: ${research.length}`,
+    `- Sender header: EB28 <${ownerEmail}>`,
+    `- Reply-To header: ${ownerEmail}`,
+    '',
+    '## Send Gate',
+    '',
+    '- Send only through an authenticated mailbox authorized to send as `social@eb28.co`.',
+    '- Do not count a sent draft as a booked-call lead.',
+    '- Count a prospect only after a real booked call, calendar link, scheduled call time, or equivalent evidence is logged.',
+    '',
+    '## Duplicate Recipient Groups',
+    '',
+    ...duplicateSection,
+    '',
+    '## First 25 Draft Files',
+    '',
+    '| # | Business | To | File | Concept |',
+    '|---:|---|---|---|---|',
+    ...topDraftRows,
   ].join('\n');
 }
 
@@ -944,6 +1028,7 @@ async function main() {
 
   const draftsDir = path.join(outDir, 'drafts');
   const directEmailProspects = prospects.filter((prospect) => prospect.verifiedEmail);
+  const emailStats = getEmailStats(directEmailProspects);
   await fs.rm(draftsDir, { recursive: true, force: true });
   await fs.mkdir(draftsDir, { recursive: true });
 
@@ -962,13 +1047,40 @@ async function main() {
     });
   }
 
+  const callOrForm = prospects.filter((prospect) => !prospect.verifiedEmail && prospect.outreachStage === 'call_or_contact_form');
+  const research = prospects.filter((prospect) => prospect.outreachStage === 'research_needed');
+  const dispatchReadiness = {
+    generatedAt: today,
+    ownerEmail,
+    totalProspects: prospects.length,
+    localDraftFiles: draftManifest.length,
+    uniqueRecipientInboxes: emailStats.uniqueRecipientInboxes,
+    duplicateRecipientInboxes: emailStats.duplicateRecipientInboxes,
+    callContactFormTargets: callOrForm.length,
+    researchNeededTargets: research.length,
+    sendPrerequisites: [
+      'Use an authenticated mailbox authorized to send as social@eb28.co.',
+      'Do not count a sent draft as a booked-call lead.',
+      'Log real booked-call evidence before counting a prospect toward the 100-lead goal.',
+    ],
+  };
+
   await fs.writeFile(
     path.join(outDir, '32940-local-draft-manifest.json'),
     `${JSON.stringify({ generatedAt: today, drafts: draftManifest }, null, 2)}\n`,
   );
+  await fs.writeFile(
+    path.join(outDir, '32940-dispatch-readiness.json'),
+    `${JSON.stringify(dispatchReadiness, null, 2)}\n`,
+  );
+  await fs.writeFile(
+    path.join(outDir, '32940-dispatch-readiness.md'),
+    `${renderDispatchReadinessMarkdown(prospects, draftManifest, emailStats)}\n`,
+  );
 
   console.log(`Wrote ${prospects.length} prospects to ${path.relative(repoRoot, outDir)}`);
   console.log(`${directEmailProspects.length} direct-email drafts ready`);
+  console.log(`${emailStats.uniqueRecipientInboxes} unique recipient inboxes ready`);
   console.log(`Wrote ${draftManifest.length} local .eml drafts to ${path.relative(repoRoot, draftsDir)}`);
 }
 

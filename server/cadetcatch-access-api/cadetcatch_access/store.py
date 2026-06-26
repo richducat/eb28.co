@@ -277,6 +277,18 @@ class AccessStore:
             invite_url=f"{base_url}/access/redeem?token={raw_token}",
         )
 
+    def mark_invitation_delivery_failed(self, *, invitation_id: str) -> None:
+        timestamp = now_iso()
+        with self.connect() as conn:
+            conn.execute(
+                """
+                UPDATE access_invitations
+                SET status = 'delivery_failed', updated_at = ?
+                WHERE id = ? AND status = 'sent'
+                """,
+                (timestamp, invitation_id),
+            )
+
     def list_invitations(self, *, owner_email: str) -> list[dict[str, Any]]:
         owner = normalize_email(owner_email)
         with self.connect() as conn:

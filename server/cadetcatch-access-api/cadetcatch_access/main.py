@@ -7,6 +7,7 @@ from fastapi import Depends, FastAPI, Header, HTTPException, Query, Request, sta
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, EmailStr, Field
 
+from .mailer import InviteDeliveryError, InviteMailer
 from .store import AccessStore
 from .storekit import (
     AppleStoreKitVerifier,
@@ -90,6 +91,10 @@ def store() -> AccessStore:
 
 def storekit_verifier() -> AppleStoreKitVerifier:
     return AppleStoreKitVerifier.from_env()
+
+
+def invite_mailer() -> InviteMailer:
+    return InviteMailer.from_env()
 
 
 def require_admin(
@@ -193,7 +198,9 @@ def list_invitations(
 def create_invitation(
     payload: InvitationRequest,
     access_store: AccessStore = Depends(store),
+    mailer: InviteMailer = Depends(invite_mailer),
 ) -> dict[str, object]:
+    invitation = None
     try:
         invitation = access_store.create_invitation(
             owner_email=str(payload.owner_email),
@@ -201,16 +208,21 @@ def create_invitation(
             recipient_email=str(payload.recipient_email),
             public_base_url=public_base_url(),
         )
+        mailer.send_invitation(invitation)
     except PermissionError as error:
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(error)) from error
     except ValueError as error:
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(error)) from error
+    except InviteDeliveryError as error:
+        if invitation is not None:
+            access_store.mark_invitation_delivery_failed(invitation_id=invitation.id)
+        raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail=str(error)) from error
     return {
         "sent": True,
+        "delivery": "email",
         "role": invitation.role,
         "recipient_email": invitation.recipient_email,
         "invite_status": invitation.status,
-        "invite_url": invitation.invite_url,
         "remaining_invites": {
             "spouse_or_family": 0 if invitation.role == "spouse_or_family" else 1,
             "cadet": 0 if invitation.role == "cadet" else 1,

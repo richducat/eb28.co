@@ -144,6 +144,7 @@
     "Build 94 is reserved for the corrected $12.99 Family Monthly price fallback and desktop add-on/access-invite planning pass.",
     "Build 95 is the local account email, spouse/family invite, cadet invite, tester-access gate, and static desktop companion implementation candidate.",
     "Build 95 access API source now includes Apple App Store Server API verification for StoreKit subscription links.",
+    "Build 95 access API source now includes SMTP-backed email-only spouse/family and cadet invite delivery.",
     "Do not archive, upload, distribute TestFlight, select for App Review, submit for review, release, expire builds, edit metadata/screenshots/previews, or edit IAP/subscriptions without a separate exact approval record for the final build-95 source commit.",
     "Do not production deploy the access API without a separate exact approval record for the final clean source commit being deployed.",
     "Do not ship custom free access codes unless they are server-validated, email-bound, role-specific, and single-use.",
@@ -153,7 +154,7 @@
   "createdAt": "2026-06-06T11:53:53.691778-04:00",
   "localVerification": {
     "releaseGate": "must be rerun from a clean tree after release-record reconciliation and before production deploy, archive, upload, build selection, or App Review submission",
-    "accessAPITests": "passed in temp venv with service dependencies installed using /tmp/cadetcatch-access-api-venv/bin/python -m unittest discover tests -v; 9 tests passed including StoreKit validation rejection cases",
+    "accessAPITests": "passed in temp venv with service dependencies installed using /tmp/cadetcatch-access-api-venv/bin/python -m unittest discover tests -v; 11 tests passed including StoreKit validation rejection cases and email-only invite delivery contract tests",
     "accessAPIImportSmoke": "passed in temp venv; imported cadetcatch_access.main.app and AppleStoreKitVerifier",
     "simulatorQA": "passed for clean local build 95 candidate using documented CadetCatch test command",
     "simulatorQAReceipt": {
@@ -227,7 +228,11 @@
       "status": "source_ready_not_deployed",
       "introducedAtCommit": "480f3b1e2221869796e9a97ea044d9667a26f051",
       "note": "Access API verifies Apple signedTransactionInfo, requires bundle co.eb28.cadetcatch and product co.eb28.cadetcatch.family.monthly.v1, and rejects wrong transaction IDs, expired subscriptions, and revoked subscriptions."
+    },
+    "inviteEmailDelivery": {
+      "status": "source_ready_not_deployed",
+      "note": "POST /access/invitations sends invite links by email, does not return invite_url to the iPhone app, fails closed with HTTP 503 when email delivery is disabled, and marks failed attempts delivery_failed for honest retry state."
     }
   },
-  "updatedAt": "2026-06-26T11:30:26Z"
+  "updatedAt": "2026-06-26T11:45:00Z"
 }

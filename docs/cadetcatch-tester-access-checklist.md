@@ -68,4 +68,5 @@ Before final App Review submission:
 - The iPhone app must show the saved account email as active.
 - The desktop companion must unlock search only for active desktop access.
 - Spouse/family and cadet invite slots must send or show a clear not-yet-available state.
+- Production SMTP invite delivery must be configured; the app response must not expose raw invite URLs.
 - A release ledger receipt must record the verification evidence.

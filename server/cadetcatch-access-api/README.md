@@ -23,6 +23,15 @@ CADETCATCH_ACCESS_DB=/var/lib/cadetcatch/access.sqlite3
 CADETCATCH_ACCESS_ADMIN_TOKEN=replace-with-long-random-token
 CADETCATCH_PUBLIC_BASE_URL=https://api.cadetcatch.com
 CADETCATCH_ACCESS_ALLOWED_ORIGINS=https://eb28.co,https://www.eb28.co
+CADETCATCH_INVITE_EMAIL_MODE=smtp
+CADETCATCH_INVITE_FROM_EMAIL=support@eb28.co
+CADETCATCH_INVITE_FROM_NAME=CadetCatch
+CADETCATCH_SMTP_HOST=smtp.example.com
+CADETCATCH_SMTP_PORT=587
+CADETCATCH_SMTP_USERNAME=replace-with-smtp-username
+CADETCATCH_SMTP_PASSWORD=replace-with-smtp-password
+CADETCATCH_SMTP_USE_TLS=1
+CADETCATCH_SMTP_USE_SSL=0
 CADETCATCH_APPLE_ENVIRONMENT=production
 CADETCATCH_APPLE_BUNDLE_ID=co.eb28.cadetcatch
 CADETCATCH_APPLE_APP_APPLE_ID=6769565852
@@ -42,6 +51,10 @@ CADETCATCH_ALLOW_UNVERIFIED_STOREKIT=1
 Do not enable `CADETCATCH_ALLOW_UNVERIFIED_STOREKIT` for production App Review. Production verifies StoreKit transactions through Apple's App Store Server API before treating subscription-link requests as active.
 
 Apple root certificate files must be installed under `CADETCATCH_APPLE_ROOT_CERT_DIR` or listed in `CADETCATCH_APPLE_ROOT_CERT_PATHS`. The verifier uses Apple's signed transaction JWS, rejects the wrong bundle/product/transaction IDs, and rejects expired or revoked subscriptions.
+
+## Invitation Email Delivery
+
+`POST /access/invitations` sends spouse/family and cadet invite links by email. It does not return the raw invite URL to the iPhone app. Production must use `CADETCATCH_INVITE_EMAIL_MODE=smtp`; `console` is local/staging only and `disabled` fails closed with HTTP 503.
 
 ## StoreKit Linking
 

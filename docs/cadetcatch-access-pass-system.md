@@ -15,6 +15,7 @@ Paid access must come from Apple StoreKit. Free/internal/family access must be v
   - one `spouse_or_family` invitation
   - one `cadet` invitation
 - Invitations are sent only by email. The app must not expose a reusable share code that can be copied to many people.
+- The public app response must not include the raw invite URL; only the email message should contain the one-time link.
 - Each invitation is bound to one recipient email address, one role, one owner subscription, and one redemption.
 - Richard, Karen, and Ken can receive free access through server-generated internal comp invitations or Apple offer/promo codes.
 - Required internal tester grants before final App Review submission:
@@ -139,6 +140,7 @@ Response:
 ```json
 {
   "sent": true,
+  "delivery": "email",
   "role": "spouse_or_family",
   "recipient_email": "family@example.com",
   "invite_status": "sent",

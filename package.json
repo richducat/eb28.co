@@ -11,6 +11,7 @@
     "leadops:enrich-avenue:32940": "node scripts/enrich-32940-avenue-contacts.mjs",
     "leadops:discover-emails:32940": "node scripts/discover-32940-public-emails.mjs",
     "leadops:audit:32940": "node scripts/sync-32940-booked-call-evidence.mjs",
+    "leadops:record:32940": "node scripts/record-32940-outreach-state.mjs",
     "leadops:send-drafts:32940": "node scripts/send-32940-drafts.mjs",
     "leadops:command-center:32940": "npm run leadops:32940 && open output/lead-ops/32940-manual-outreach-command-center.html",
     "leadops:verify-capture:32940": "node scripts/verify-32940-lead-capture.mjs",

@@ -884,6 +884,26 @@
     "sourceType": "public official corporate online-support email",
     "notes": "Manually verified official Sunglass Hut customer-care/checkout pages expose onlinesupport@sghcares.com; Avenue Viera verifies the local store listing. Corporate route; ask to forward to the local store or district manager."
   },
+  "american-eagle": {
+    "email": "CustomerCare@ae.com",
+    "sourceUrls": [
+      "https://www.ae.com/us/en/content/help/emails",
+      "https://www.ae.com/us/en/content/help/contact-us",
+      "https://www.avenueviera.com/tenants/american-eagle/"
+    ],
+    "sourceType": "public official corporate customer-care email",
+    "notes": "Manually verified official American Eagle email preferences/help page exposes CustomerCare@ae.com; Avenue Viera verifies the local American Eagle listing. Corporate route; ask to forward to the local store or district manager."
+  },
+  "mens-wearhouse": {
+    "email": "MWListens@menswearhouse.com",
+    "sourceUrls": [
+      "https://tuxedo.menswearhouse.com/charcoal-gray-performance-wool-suit-calvin-klein-id-5346?bvstate=pg%3A6%2Fct%3Ar&coat=1180&lookId=5238",
+      "https://www.menswearhouse.com/slc/contact-us",
+      "https://www.avenueviera.com/tenants/mens-wearhouse/"
+    ],
+    "sourceType": "public official corporate customer-service email",
+    "notes": "Manually verified official Men's Wearhouse public support/rental content exposes MWListens@menswearhouse.com; Avenue Viera verifies the local Men's Wearhouse listing. Corporate route; ask to forward to the local store or district manager."
+  },
   "viera-dental": {
     "email": "vieradental@heartlanddentalcare.com",
     "sourceUrls": [

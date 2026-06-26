@@ -124,6 +124,15 @@ const verifiedContacts = {
     sourceUrls: ['https://www.saltybagel.co/contact', 'https://www.saltybagel.co/menu'],
     sourceType: 'owned website',
   },
+  'the-shabby-loft': {
+    email: 'info@theshabbyloft.com',
+    phone: '(321) 455-8050',
+    address: 'Cocoa Village, FL',
+    website: 'https://www.theshabbyloft.com/',
+    sourceUrls: ['https://www.theshabbyloft.com/'],
+    sourceType: 'owned website',
+    notes: 'Current public site points to Cocoa Village; tailor outreach to the current store location.',
+  },
   'urban-prime': {
     email: 'Info@UrbanPrimeFoods.com',
     phone: '(321) 499-1188',
@@ -148,6 +157,14 @@ const callOrFormContacts = {
     website: 'https://www.bizzarrospizzasuntree.com/contact_us.html',
     sourceUrls: ['https://www.bizzarrospizzasuntree.com/contact_us.html'],
     sourceType: 'owned website',
+  },
+  'botta-pizzeria-bakery': {
+    phone: '(321) 421-7722',
+    address: '5410 Murrell Rd #205, Rockledge, FL 32955',
+    website: 'https://www.bottapizzeria.com/',
+    sourceUrls: ['https://www.bottapizzeria.com/'],
+    sourceType: 'owned website',
+    notes: 'Replacement for the stale Paws On Pizzeria row; official site verifies phone and ordering path.',
   },
   'diane-s-nails': {
     phone: '(321) 242-0060',
@@ -239,6 +256,14 @@ const callOrFormContacts = {
     website: 'https://suntreeflowershop.com/',
     sourceUrls: ['https://www.flowershopnetwork.com/floristProfile/656516', 'https://verovine.com/business/suntree-flower-shop/'],
     sourceType: 'florist network profile plus local directory',
+  },
+  'sirocco-station': {
+    phone: '',
+    address: '2261 Town Center Ave, Viera, FL 32940',
+    website: 'https://www.avenueviera.com/tenants/sirocco-station/',
+    sourceUrls: ['https://www.avenueviera.com/tenants/sirocco-station/', 'https://siroccomediterranean.com/'],
+    sourceType: 'Avenue Viera tenant page plus brand website',
+    notes: 'Coming-soon tenant; use contact form or brand route to find the opening decision maker.',
   },
   'urban-prime': {
     phone: '(321) 499-1188',

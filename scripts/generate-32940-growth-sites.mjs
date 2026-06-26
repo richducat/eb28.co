@@ -172,12 +172,12 @@ const baseProspects = [
     focus: ['Greek menu highlights', 'Lunch and catering sections', 'Weekly content for Mediterranean searches'],
   },
   {
-    slug: 'paws-on-pizzeria',
-    name: 'Paws On Pizzeria',
-    category: 'pizza restaurant',
-    audience: 'local pizza customers, families, and takeout buyers',
-    action: 'order or call for pickup',
-    focus: ['Pizza menu structure', 'Family and catering prompts', 'Local search coverage'],
+    slug: 'botta-pizzeria-bakery',
+    name: 'Botta Pizzeria & Bakery',
+    category: 'Neapolitan pizza and bakery',
+    audience: 'families, takeout buyers, and diners looking for fresh pizza, pastries, and Italian food near Viera',
+    action: 'view the menu, order, or plan a visit',
+    focus: ['Menu and ordering path', 'Bakery and pizza sections', 'Local content for pizza, pastry, and catering searches'],
   },
   {
     slug: 'poke-fin-viera',

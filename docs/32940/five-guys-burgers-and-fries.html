@@ -255,6 +255,54 @@
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 12px;
       }
+      .slot-panel {
+        display: grid;
+        gap: 9px;
+        padding: 12px;
+        border: 1px solid rgb(255 255 255 / 14%);
+        border-radius: 7px;
+        background: rgb(255 255 255 / 6%);
+      }
+      .slot-label {
+        color: #fff;
+        font-size: 13px;
+        font-weight: 900;
+      }
+      .slot-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+      }
+      .slot-button {
+        min-height: 41px;
+        border: 1px solid rgb(255 255 255 / 18%);
+        border-radius: 7px;
+        padding: 9px 10px;
+        background: rgb(255 255 255 / 10%);
+        color: #fff;
+        text-align: left;
+        font: inherit;
+        font-size: 13px;
+        font-weight: 800;
+        cursor: pointer;
+      }
+      .slot-button span {
+        display: block;
+        margin-top: 2px;
+        color: #cbd5e1;
+        font-size: 11px;
+        font-weight: 800;
+      }
+      .slot-button.selected {
+        border-color: var(--accent);
+        background: color-mix(in srgb, var(--accent) 30%, transparent);
+      }
+      .slot-help {
+        margin: 0;
+        color: #cbd5e1;
+        font-size: 12px;
+        line-height: 1.45;
+      }
       label {
         display: grid;
         gap: 7px;
@@ -441,6 +489,7 @@
             <input type="hidden" name="concept_url" value="https://eb28.co/32940/five-guys-burgers-and-fries.html" />
             <input type="hidden" name="offer" value="Free website build plus EB28 Growth Hosting at $98/month with SEO and weekly blog posts" />
             <input type="hidden" name="requested_next_step" value="Claim free website concept and confirm a 10-minute owner review call" />
+            <input type="hidden" name="review_timezone" value="America/New_York" />
             <div class="field-grid">
               <label>
                 Your name
@@ -460,6 +509,14 @@
                 Phone for confirmation
                 <input name="phone" type="tel" autocomplete="tel" required placeholder="Best number" />
               </label>
+            </div>
+            <div class="slot-panel">
+              <div class="slot-label">Fast 10-minute review windows</div>
+              <div class="slot-grid" data-review-slot-grid>
+                <button type="button" class="slot-button" data-slot="Next business morning ET">Next business morning ET</button>
+                <button type="button" class="slot-button" data-slot="Next business afternoon ET">Next business afternoon ET</button>
+              </div>
+              <p class="slot-help">Pick a slot to fill the review fields, or type a different time. Times are interpreted in Eastern time.</p>
             </div>
             <div class="field-grid">
               <label>
@@ -489,5 +546,73 @@
     <footer>
       Prepared by <a href="https://eb28.co">EB28</a>. Unofficial concept for owner review only. Contact <a href="mailto:social@eb28.co">social@eb28.co</a>.
     </footer>
+    <script>
+      (() => {
+        const timezone = 'America/New_York';
+        const grid = document.querySelector('[data-review-slot-grid]');
+        const preferred = document.querySelector('[name="preferred_review_time"]');
+        const backup = document.querySelector('[name="backup_review_time"]');
+        if (!grid || !preferred) return;
+
+        const dateFormatter = new Intl.DateTimeFormat('en-US', {
+          timeZone: timezone,
+          weekday: 'short',
+          month: 'short',
+          day: 'numeric',
+        });
+        const weekdayFormatter = new Intl.DateTimeFormat('en-US', {
+          timeZone: timezone,
+          weekday: 'short',
+        });
+        const hourPart = new Intl.DateTimeFormat('en-US', {
+          timeZone: timezone,
+          hour: '2-digit',
+          hourCycle: 'h23',
+        }).formatToParts(new Date()).find((part) => part.type === 'hour');
+        const currentHour = Number.parseInt((hourPart && hourPart.value) || '0', 10);
+        const slotTimes = [
+          { label: '9:30 AM ET', cutoffHour: 9 },
+          { label: '12:30 PM ET', cutoffHour: 12 },
+          { label: '3:30 PM ET', cutoffHour: 15 },
+        ];
+        const slots = [];
+
+        for (let dayOffset = 0; slots.length < 5 && dayOffset < 10; dayOffset += 1) {
+          const candidate = new Date(Date.now() + dayOffset * 24 * 60 * 60 * 1000);
+          const weekday = weekdayFormatter.format(candidate);
+          if (weekday === 'Sat' || weekday === 'Sun') continue;
+
+          for (const slotTime of slotTimes) {
+            if (dayOffset === 0 && currentHour >= slotTime.cutoffHour) continue;
+            slots.push(dateFormatter.format(candidate) + ' at ' + slotTime.label);
+            if (slots.length >= 5) break;
+          }
+        }
+
+        const safeSlots = slots.length ? slots : ['Next business morning ET', 'Next business afternoon ET'];
+        grid.innerHTML = safeSlots.map((slot, index) => (
+          '<button type="button" class="slot-button" data-slot="' + slot.replace(/"/g, '&quot;') + '">' +
+            slot +
+            (index === 0 ? '<span>Fastest</span>' : '') +
+          '</button>'
+        )).join('');
+
+        grid.addEventListener('click', (event) => {
+          const button = event.target.closest('[data-slot]');
+          if (!button) return;
+          const slot = button.getAttribute('data-slot');
+          if (!preferred.value) {
+            preferred.value = slot;
+          } else if (backup && !backup.value && preferred.value !== slot) {
+            backup.value = slot;
+          } else {
+            preferred.value = slot;
+          }
+          for (const other of grid.querySelectorAll('.slot-button')) other.classList.remove('selected');
+          button.classList.add('selected');
+          preferred.dispatchEvent(new Event('input', { bubbles: true }));
+        });
+      })();
+    </script>
   </body>
 </html>

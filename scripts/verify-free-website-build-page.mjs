@@ -61,6 +61,14 @@ assertCheck(
   'src/FreeWebsiteBuildPage.jsx',
 );
 assertCheck(
+  'page offers preset Eastern review slots',
+  contains(pageSource, "REVIEW_TIMEZONE = 'America/New_York'") &&
+    contains(pageSource, 'getReviewWindowOptions') &&
+    contains(pageSource, 'Fast 10-minute review windows') &&
+    contains(pageSource, 'backupTime'),
+  'src/FreeWebsiteBuildPage.jsx',
+);
+assertCheck(
   'route bootstrap handles canonical path',
   contains(mainSource, "pathname === '/free-website-build'"),
   'src/main.jsx',

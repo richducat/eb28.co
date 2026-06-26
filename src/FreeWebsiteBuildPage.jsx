@@ -15,6 +15,56 @@ import {
 import { submitLeadCapture } from './leadCapture.js';
 
 const CLAIM_EMAIL = 'social@eb28.co';
+const REVIEW_TIMEZONE = 'America/New_York';
+
+function getEasternHour(date = new Date()) {
+  const hourPart = new Intl.DateTimeFormat('en-US', {
+    timeZone: REVIEW_TIMEZONE,
+    hour: '2-digit',
+    hourCycle: 'h23',
+  }).formatToParts(date).find((part) => part.type === 'hour');
+  return Number.parseInt(hourPart?.value || '0', 10);
+}
+
+function getReviewWindowOptions(date = new Date()) {
+  const dateFormatter = new Intl.DateTimeFormat('en-US', {
+    timeZone: REVIEW_TIMEZONE,
+    weekday: 'short',
+    month: 'short',
+    day: 'numeric',
+  });
+  const weekdayFormatter = new Intl.DateTimeFormat('en-US', {
+    timeZone: REVIEW_TIMEZONE,
+    weekday: 'short',
+  });
+  const currentHour = getEasternHour(date);
+  const slotTimes = [
+    { label: '9:30 AM ET', cutoffHour: 9 },
+    { label: '12:30 PM ET', cutoffHour: 12 },
+    { label: '3:30 PM ET', cutoffHour: 15 },
+  ];
+  const slots = [];
+
+  for (let dayOffset = 0; slots.length < 5 && dayOffset < 10; dayOffset += 1) {
+    const candidate = new Date(date.getTime() + dayOffset * 24 * 60 * 60 * 1000);
+    const weekday = weekdayFormatter.format(candidate);
+    if (weekday === 'Sat' || weekday === 'Sun') {
+      continue;
+    }
+
+    for (const slotTime of slotTimes) {
+      if (dayOffset === 0 && currentHour >= slotTime.cutoffHour) {
+        continue;
+      }
+      slots.push(`${dateFormatter.format(candidate)} at ${slotTime.label}`);
+      if (slots.length >= 5) {
+        break;
+      }
+    }
+  }
+
+  return slots.length ? slots : ['Next business morning ET', 'Next business afternoon ET'];
+}
 
 const examples = [
   {
@@ -59,6 +109,7 @@ const inputClass =
   'w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-slate-950 outline-none transition focus:border-slate-950 focus:ring-4 focus:ring-emerald-200';
 
 export default function FreeWebsiteBuildPage() {
+  const reviewWindowOptions = getReviewWindowOptions();
   const [formData, setFormData] = useState({
     name: '',
     role: '',
@@ -68,6 +119,7 @@ export default function FreeWebsiteBuildPage() {
     websiteUrl: '',
     businessType: '',
     bestTime: '',
+    backupTime: '',
     message: '',
   });
   const [status, setStatus] = useState('idle');
@@ -100,6 +152,7 @@ export default function FreeWebsiteBuildPage() {
         sourcePage: 'https://eb28.co/free-website-build/',
         offer: 'Free website build plus EB28 Growth Hosting at $98/month with SEO and weekly blog posts',
         requestedNextStep: 'Confirm a 10-minute owner review call for the free website concept',
+        reviewTimezone: REVIEW_TIMEZONE,
         _subject: `Free website build request: ${formData.businessName || formData.name}`,
       });
       setStatus('sent');
@@ -112,6 +165,7 @@ export default function FreeWebsiteBuildPage() {
         websiteUrl: '',
         businessType: '',
         bestTime: '',
+        backupTime: '',
         message: '',
       });
     } catch (submissionError) {
@@ -232,6 +286,28 @@ export default function FreeWebsiteBuildPage() {
                 Business type
                 <input className={inputClass} name="businessType" value={formData.businessType} onChange={handleChange} placeholder="Restaurant, contractor, salon..." />
               </label>
+              <div className="sm:col-span-2">
+                <p className="text-sm font-black text-slate-950">Fast 10-minute review windows</p>
+                <div className="mt-2 grid gap-2 sm:grid-cols-2">
+                  {reviewWindowOptions.map((slot) => (
+                    <button
+                      key={slot}
+                      type="button"
+                      onClick={() => setFormData((previous) => ({ ...previous, bestTime: slot }))}
+                      className={`min-h-11 rounded-lg border px-3 py-2 text-left text-sm font-black transition ${
+                        formData.bestTime === slot
+                          ? 'border-emerald-700 bg-emerald-50 text-emerald-800'
+                          : 'border-slate-300 bg-white text-slate-700 hover:border-slate-950'
+                      }`}
+                    >
+                      {slot}
+                    </button>
+                  ))}
+                </div>
+                <p className="mt-2 text-xs font-semibold leading-5 text-slate-500">
+                  Pick one to prefill the field below, or type a different time. Times are interpreted in Eastern time.
+                </p>
+              </div>
               <label className="text-sm font-bold sm:col-span-2">
                 Best 10-minute review window
                 <input
@@ -241,6 +317,16 @@ export default function FreeWebsiteBuildPage() {
                   onChange={handleChange}
                   required
                   placeholder="Today 3:00 PM ET, Friday morning, or two options"
+                />
+              </label>
+              <label className="text-sm font-bold sm:col-span-2">
+                Backup review window
+                <input
+                  className={inputClass}
+                  name="backupTime"
+                  value={formData.backupTime}
+                  onChange={handleChange}
+                  placeholder="Optional backup time in case the first window is taken"
                 />
               </label>
               <label className="text-sm font-bold sm:col-span-2">

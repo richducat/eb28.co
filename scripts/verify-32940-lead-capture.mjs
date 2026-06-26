@@ -102,6 +102,8 @@ function checkPage(html, slug, sourceLabel) {
     if (!hiddenInputValue(claimForm, 'offer').includes('$98/month')) failures.push('offer hidden field is missing $98/month');
     if (!hiddenInputValue(claimForm, 'offer').includes('weekly blog posts')) failures.push('offer hidden field is missing weekly blog posts');
     if (!hiddenInputValue(claimForm, 'requested_next_step').includes('confirm a 10-minute owner review call')) failures.push('requested_next_step is missing confirmed booking intent');
+    if (hiddenInputValue(claimForm, 'review_timezone') !== 'America/New_York') failures.push('review_timezone hidden field is missing America/New_York');
+    if (!claimForm.includes('data-review-slot-grid')) failures.push('missing quick review slot picker');
     if (!hasRequiredInput(claimForm, 'name')) failures.push('name field is not required');
     if (!hasRequiredInput(claimForm, 'email')) failures.push('email field is not required');
     if (!hasRequiredInput(claimForm, 'reviewer_role')) failures.push('reviewer_role field is not required');

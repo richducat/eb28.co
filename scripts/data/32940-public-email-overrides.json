@@ -36,6 +36,16 @@
     "sourceType": "public email on business website",
     "notes": "Auto-discovered public email from https://www.cedarscafe.com/contact/; verify decision maker before sending."
   },
+  "clevens-face-and-body-specialist": {
+    "email": "info@drclevens.com",
+    "sourceUrls": [
+      "https://www.drclevens.com/blog/plastic-surgery-cosmetic-procedures-on-rise-for-men/",
+      "https://shop.drclevens.com/policies/privacy-policy",
+      "https://www.drclevens.com/"
+    ],
+    "sourceType": "public email on official business website",
+    "notes": "Manually verified official Clevens pages expose info@drclevens.com for consultation/contact; verify decision maker before sending."
+  },
   "durham-sons": {
     "email": "darla@durhamandsons.com",
     "sourceUrls": [
@@ -93,6 +103,16 @@
     ],
     "sourceType": "public email on business website",
     "notes": "Auto-discovered public email from https://gennapizzaexpress.com/about; verify decision maker before sending."
+  },
+  "grecian-garden-cafe": {
+    "email": "greciangardencafe@gmail.com",
+    "sourceUrls": [
+      "https://nextdoor.com/pages/grecian-garden-cafe-melbourne-fl/",
+      "https://www.facebook.com/story.php/?id=100063490754440&story_fbid=854721113320906",
+      "https://greciangardencafe.net/"
+    ],
+    "sourceType": "public business profile and public social listing",
+    "notes": "Manually verified public Grecian Garden Cafe listings expose greciangardencafe@gmail.com for the Melbourne restaurant; verify decision maker before sending."
   },
   "harbor-city-animal-hospital": {
     "email": "info@harborcityanimal.com",
@@ -351,6 +371,16 @@
     "sourceType": "public email on business listing and public social profile",
     "notes": "Manually verified public Pizza Gallery & Grill listings expose j.meagher@pggfl.com for the Viera restaurant; verify decision maker before sending."
   },
+  "pacha-kava-lounge": {
+    "email": "chris@pachakava.com",
+    "sourceUrls": [
+      "https://pachakava.com/contact/",
+      "https://pachakava.com/team/",
+      "https://pachakava.com/about/"
+    ],
+    "sourceType": "public email on official business website",
+    "notes": "Manually verified official Pacha Kava contact page exposes Chris@PachaKava.Com for the Rockledge lounge; verify decision maker before sending."
+  },
   "poke-fin-viera": {
     "email": "vi@pokefin.com",
     "sourceUrls": [
@@ -468,6 +498,16 @@
     ],
     "sourceType": "public email on business website and public directory",
     "notes": "Manually verified Viera Dental Arts website and public directory listings expose info@vieradentalarts.com for the Melbourne practice; verify decision maker before sending."
+  },
+  "viera-discovery-center": {
+    "email": "info@viera.com",
+    "sourceUrls": [
+      "https://viera.com/residents/",
+      "https://vieracommercialproperties.com/contact-us/",
+      "https://m.facebook.com/vieraflorida/about/"
+    ],
+    "sourceType": "public email on official Viera pages and public social profile",
+    "notes": "Manually verified official Viera pages and Viera Discovery Center public profile expose info@viera.com for general community information; verify decision maker before sending."
   },
   "fountain-of-you": {
     "email": "drkimzipper@me.com",

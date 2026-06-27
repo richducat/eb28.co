@@ -1,0 +1,49 @@
+{
+  "brand": "EB28",
+  "generatedAt": "2026-06-27T10:01:52.793Z",
+  "runId": "2026-06-27-am",
+  "slot": "am",
+  "article": {
+    "title": "Website Designer Near Me Melbourne FL: Vet Before You Hire",
+    "url": "https://eb28.co/blog/website-designer-near-me-in-melbourne-fl-how-to-choose-without-getting-burned/",
+    "localPath": "/blog/website-designer-near-me-in-melbourne-fl-how-to-choose-without-getting-burned/",
+    "cluster": "melbourne-web-design",
+    "primaryKeyword": "website designer near me Melbourne FL"
+  },
+  "posts": {
+    "facebook": {
+      "caption": "Website Designer Near Me Melbourne FL: Vet Before You Hire\n\nThe useful question is not who can make the site prettier. It is who will protect ownership, prove the local offer, keep the mobile path fast, and connect search intent to a lead path you can measure.\n\nRead it: https://eb28.co/blog/website-designer-near-me-in-melbourne-fl-how-to-choose-without-getting-burned/",
+      "status": "draft_only"
+    },
+    "linkedin": {
+      "caption": "Refreshed EB28 Melbourne Web Studio guide: Website Designer Near Me Melbourne FL: Vet Before You Hire\n\nFor local business owners, the best website designer conversation starts with ownership, offer clarity, mobile speed, form routing, analytics, Search Console visibility, and follow-up after the lead submits. Visual polish matters only after that path is reliable.\n\nhttps://eb28.co/blog/website-designer-near-me-in-melbourne-fl-how-to-choose-without-getting-burned/",
+      "status": "draft_only"
+    },
+    "instagram": {
+      "caption": "Website designer near me in Melbourne FL: ask better questions before you hire.\n\nWho owns the domain? Is the first screen clear? Does the form route correctly? Is mobile fast? Can you see what search terms brought the lead in?\n\nFull guide: eb28.co/blog/",
+      "creativeBrief": "Carousel: Slide 1 hiring question, Slide 2 ownership and access, Slide 3 first-screen offer clarity, Slide 4 mobile speed and form routing, Slide 5 CTA to the Melbourne Web Studio quiz.",
+      "status": "draft_only"
+    },
+    "shortFormVideo": {
+      "hook": "Before hiring a website designer near you, ask who owns the system after launch.",
+      "script": "Open on a local business owner comparing website redesign proposals. Show the checklist: ownership, first-screen offer, local proof, mobile speed, form routing, analytics, Search Console, and follow-up. Close with the EB28 hiring guide and Melbourne Web Studio lead leak quiz.",
+      "shotList": [
+        "Proposal comparison with ownership and analytics rows highlighted",
+        "Mobile homepage first screen with one clear project step",
+        "Form submission routed into a tracked lead path",
+        "EB28 guide URL and Melbourne Web Studio quiz CTA"
+      ],
+      "caption": "Vet ownership, proof, speed, routing, and measurement before redesign scope.",
+      "status": "draft_only"
+    }
+  },
+  "publishGate": {
+    "status": "draft_only",
+    "reason": "No EB28-owned social channel was verified by repo script or connector during this run.",
+    "verifiedChannels": []
+  },
+  "socialPublishGuard": {
+    "status": "buffer_ready_pending_verified_channels",
+    "note": "No external social publishing was attempted. Publishing stays blocked until the API account, organization, exact channel IDs, and EB28-owned channels verify successfully."
+  }
+}

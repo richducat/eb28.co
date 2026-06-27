@@ -6,16 +6,16 @@
     "cluster": "local-seo",
     "primaryKeyword": "Space Coast local SEO citations",
     "datePublished": "2026-06-18",
-    "dateModified": "2026-06-22",
+    "dateModified": "2026-06-27",
     "author": "EB28",
-    "heroLabel": "Morning growth refresh",
-    "sourceRunId": "2026-06-22-am",
-    "summary": "A refreshed plain-English growth brief for the local SEO cluster, focused on quality local mentions, Google profile consistency, and the website fixes most likely to create qualified leads.",
+    "heroLabel": "Evening growth refresh",
+    "sourceRunId": "2026-06-27-pm",
+    "summary": "A refreshed plain-English growth brief for the local SEO cluster, focused on quality local mentions over directory spam, Google profile consistency, and the website fixes most likely to create qualified leads.",
     "sections": [
       {
         "heading": "Why citation quality matters",
         "body": [
-          "Someone searching for \"Space Coast local SEO citations\" is usually close to a buying decision. They want to know which mentions matter, what to avoid, and whether the business they found looks safe enough to contact.",
+          "Someone searching for \"Space Coast local SEO citations\" is usually closer to a buying decision than a research detour. They want to know which mentions matter, what to avoid, and whether the business they found looks safe enough to contact.",
           "Citation work only helps when the public business name, service area, website, reviews, Google Business Profile, and contact path agree across the places buyers and Google can inspect. Random directory volume does not create authority if the core story is inconsistent."
         ],
         "bullets": [
@@ -28,7 +28,7 @@
       {
         "heading": "What to fix first",
         "body": [
-          "Start by lining up the Google Business Profile, EB28 homepage promise, service content, reviews, citations, and contact path so they all tell the same local story.",
+          "Start by lining up the Google Business Profile, EB28 homepage promise, service content, reviews, citations, and contact path so they all tell the same local story before chasing more directory volume.",
           "Do not bury citation cleanup inside a giant redesign. A small improvement to a page that already gets impressions can beat a bigger project that never ships."
         ],
         "bullets": [
@@ -42,7 +42,7 @@
         "heading": "How EB28 turns citations into leads",
         "body": [
           "The compounding loop is simple: publish the useful page, submit it, inspect it, watch query movement, then strengthen the page that is already earning impressions.",
-          "That loop is what EB28 runs for its own site. Content production, technical SEO, internal links, Search Console checks, and lead-focused calls to action stay tied to the same ranking goal."
+          "That loop is what EB28 runs for its own site. Content production, technical SEO, internal links, Search Console checks, owned-social drafts, and lead-focused calls to action stay tied to the same ranking goal."
         ],
         "bullets": [
           "Publish two content updates daily at 6 AM and 6 PM Eastern",
@@ -59,7 +59,7 @@
       },
       {
         "question": "How often should this page be reviewed?",
-        "answer": "Review it after Search Console has enough data, then refresh titles, intros, FAQs, citations, and internal links when the page is gaining impressions but sitting below page one."
+        "answer": "Review it after Search Console has enough data, then refresh titles, intros, FAQs, citations, internal links, and CTA copy when the page is gaining impressions but sitting below page one."
       },
       {
         "question": "Should a business submit to every directory it can find?",

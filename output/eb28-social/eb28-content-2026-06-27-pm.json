@@ -1,0 +1,43 @@
+{
+  "brand": "EB28",
+  "generatedAt": "2026-06-27T22:03:08.155Z",
+  "runId": "2026-06-27-pm",
+  "slot": "pm",
+  "article": {
+    "title": "Space Coast Local SEO Citations: Build Real Authority",
+    "url": "https://eb28.co/blog/space-coast-local-seo-citations-where-real-authority-comes-from-2026-06-18-pm/",
+    "path": "/blog/space-coast-local-seo-citations-where-real-authority-comes-from-2026-06-18-pm/",
+    "cluster": "local-seo",
+    "primaryKeyword": "Space Coast local SEO citations"
+  },
+  "publishGate": {
+    "status": "draft_only",
+    "reason": "Do not publish externally until the correct EB28-owned account and channel are verified by repo script or connector."
+  },
+  "posts": {
+    "blog": {
+      "title": "Space Coast Local SEO Citations: Build Real Authority",
+      "url": "https://eb28.co/blog/space-coast-local-seo-citations-where-real-authority-comes-from-2026-06-18-pm/",
+      "status": "ready_for_build_and_deploy"
+    },
+    "facebook": {
+      "caption": "Space Coast local SEO citations should build trust, not just add directory volume. EB28 refreshed the guide around profile consistency, credible local mentions, internal links, and the website path that turns local visibility into qualified leads.\n\nRead it: https://eb28.co/blog/space-coast-local-seo-citations-where-real-authority-comes-from-2026-06-18-pm/",
+      "status": "draft_only"
+    },
+    "linkedin": {
+      "caption": "Refreshed EB28 growth guide: Space Coast Local SEO Citations: Build Real Authority.\n\nThe practical takeaway: citations only help when the Google Business Profile, homepage promise, reviews, service content, and lead path tell the same local story. The update keeps the focus on credible mentions, internal links, and conversion follow-up instead of directory volume.\n\nhttps://eb28.co/blog/space-coast-local-seo-citations-where-real-authority-comes-from-2026-06-18-pm/",
+      "status": "draft_only"
+    },
+    "instagram": {
+      "caption": "Local citations are not a numbers game.\n\nStart with the business identity buyers actually see: Google profile, website promise, reviews, service pages, and the path to ask for help.\n\nGuide: eb28.co/blog/",
+      "creativeBrief": "Carousel: 1) citation volume vs trust, 2) Google profile consistency, 3) homepage and service-page proof, 4) internal links that support local intent, 5) CTA to the Melbourne Web Studio lead leak quiz.",
+      "status": "draft_only"
+    },
+    "shortFormVideo": {
+      "hook": "Local SEO citations do not work if your website tells a different story.",
+      "brief": "30-second vertical video. Show three quick checks: Google Business Profile name/service area, homepage promise, and citation/review consistency. End with a prompt to run the Melbourne Web Studio lead leak quiz.",
+      "caption": "Before chasing more directories, make sure the local proof buyers see is consistent. Full guide at eb28.co/blog/.",
+      "status": "draft_only"
+    }
+  }
+}

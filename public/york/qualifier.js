@@ -65,7 +65,22 @@
 
   function validateStep() {
     let ok = true;
-    visibleRequiredFields().forEach((field) => {
+    const activeStep = steps[step];
+    const requiredRadios = Array.from(activeStep.querySelectorAll('input[type="radio"][required]'));
+    const requiredRadioNames = [...new Set(requiredRadios.map((field) => field.name).filter(Boolean))];
+
+    requiredRadioNames.forEach((name) => {
+      const group = requiredRadios.filter((field) => field.name === name);
+      if (!group.some((field) => field.checked)) {
+        status.textContent = 'Choose one answer to continue.';
+        group[0]?.closest('.choice')?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+        ok = false;
+      }
+    });
+
+    if (!ok) return false;
+
+    visibleRequiredFields().filter((field) => field.type !== 'radio').forEach((field) => {
       if (!field.checkValidity()) {
         field.reportValidity();
         ok = false;

@@ -59,16 +59,16 @@
     if (verifiedAddress.length > 7) score += 12;
     if (area.length > 2) score += 4;
     if (data.get('property_type')) score += 10;
-    if (access === 'Yes, access is confirmed') score += 14;
-    else if (access === 'Yes, but needs coordination') score += 8;
-    if (decision === 'I am the decision maker' || decision === 'I am coordinating for the owner / buyer') score += 12;
+    if (access === 'Access is already arranged') score += 14;
+    else if (access === 'Access needs coordination') score += 8;
+    if (['Owner / buyer / seller', 'Real estate agent or transaction coordinator', 'Insurance agent or lender contact'].includes(decision)) score += 12;
     if (String(data.get('deadline_or_concerns') || '').trim().length > 12) score += 5;
     if (phone && email) score += 9;
 
     score = Math.min(score, 100);
     scoreField.value = String(score);
-    const band = score >= 75 ? 'High intent' : score >= 50 ? 'Needs review' : 'Low/early intent';
-    summaryField.value = `${band} lead (${score}/100). Offer: ${inspectionType || 'n/a'} (${offerPrice || 'n/a'}, ${offerDuration || 'n/a'}); Booking URL: ${bookingUrl || 'n/a'}; Address: ${verifiedAddress || 'n/a'}; Timeline: ${timeline || 'n/a'}; Area: ${area || 'n/a'}; Access: ${access || 'n/a'}; Decision: ${decision || 'n/a'}.`;
+    const band = score >= 75 ? 'Priority inspection request' : score >= 50 ? 'Standard inspection request' : 'Early-stage inspection request';
+    summaryField.value = `${band} (${score}/100). Service: ${inspectionType || 'n/a'} (${offerPrice || 'n/a'}, ${offerDuration || 'n/a'}); Online scheduling URL: ${bookingUrl || 'n/a'}; Property: ${verifiedAddress || 'n/a'}; Timing: ${timeline || 'n/a'}; Area: ${area || 'n/a'}; Access: ${access || 'n/a'}; Contact role: ${decision || 'n/a'}.`;
     return { score, band };
   }
 
@@ -92,7 +92,7 @@
     selectedOfferPrice.value = price;
     selectedOfferDuration.value = duration;
     selectedOfferUrl.value = url;
-    selectedOfferSummary.textContent = `${name} - ${price} - ${duration}`;
+    selectedOfferSummary.textContent = `${name} | ${price} | ${duration}`;
     selectedOfferLink.href = url;
     paymentHandoffLink.href = url;
     selectedOfferPanel.hidden = false;
@@ -126,7 +126,7 @@
     addressSource.value = 'ArcGIS World Geocoder';
 
     selectedAddress.hidden = false;
-    selectedAddress.innerHTML = `<span>Verified address</span><strong>${match.matchedAddress}</strong>`;
+    selectedAddress.innerHTML = `<span>Selected address</span><strong>${match.matchedAddress}</strong>`;
     hideAddressSuggestions();
     updateScore();
   }
@@ -134,7 +134,7 @@
   function renderAddressSuggestions(matches) {
     if (!addressSuggestions) return;
     if (!matches.length) {
-      setAddressMessage('No public match yet. Keep typing or continue manually.');
+      setAddressMessage('No matching address found. You can continue with the address you entered.');
       return;
     }
 
@@ -173,7 +173,7 @@
 
     if (addressAbort) addressAbort.abort();
     addressAbort = new AbortController();
-    setAddressMessage('Searching U.S. address matches...');
+    setAddressMessage('Searching U.S. addresses...');
 
     const endpoint = new URL('https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates');
     endpoint.searchParams.set('f', 'json');
@@ -189,7 +189,7 @@
       renderAddressSuggestions((payload.candidates || []).map(normalizeArcgisCandidate));
     } catch (error) {
       if (error.name === 'AbortError') return;
-      setAddressMessage('Address lookup is unavailable. You can continue manually.');
+      setAddressMessage('Address lookup is unavailable. You can continue with the address you entered.');
     }
   }
 
@@ -241,7 +241,7 @@
     requiredRadioNames.forEach((name) => {
       const group = requiredRadios.filter((field) => field.name === name);
       if (!group.some((field) => field.checked)) {
-        status.textContent = 'Choose one answer to continue.';
+        status.textContent = 'Please select an option to continue.';
         group[0]?.closest('.choice')?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
         ok = false;
       }
@@ -294,7 +294,7 @@
         body: new FormData(form)
       });
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      status.textContent = 'Request sent. York Inspections will review your details and follow up.';
+      status.textContent = 'Request received. York Inspections will review the details and follow up.';
       form.reset();
       step = 0;
       syncOffer();

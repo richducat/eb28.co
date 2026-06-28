@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>CadetCatch Desktop</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <style>
       :root {
         color-scheme: light;
@@ -322,7 +323,9 @@
     </main>
 
     <script>
-      const API_BASE = "https://api.cadetcatch.com";
+      const API_BASE = window.location.hostname === "api.cadetcatch.com"
+        ? window.location.origin
+        : "https://api.cadetcatch.com";
       const DEVICE_KEY = "cadetcatch.desktop.deviceID";
       const emailInput = document.getElementById("email");
       const fileInput = document.getElementById("file");

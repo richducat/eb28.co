@@ -17,7 +17,7 @@
   "xcodegenProjectSpec": "ios/CadetCatch/project.yml",
   "scheme": "CadetCatch",
   "teamId": "WN3K69XEP4",
-  "approvalLevel": "local build 95 account email, tester-access gate, desktop companion, access-invite, and StoreKit-verified access API candidate only; exact production_deploy, archive, upload_build, distribute_testflight, select_build, submit_for_review, desktop add-on product, and IAP/subscription approvals pending for the final source commit",
+  "approvalLevel": "local build 95 account email, tester-access gate, desktop companion, access-invite, and StoreKit-verified access API candidate; access API production deploy completed for source commit 05dd4ba0af3fe20474845d698f85780dfb523e42, and exact archive, upload_build, distribute_testflight, select_build, submit_for_review, desktop static deploy, desktop add-on product, and IAP/subscription approvals remain pending for the final source commit",
   "archivePath": null,
   "appStoreConnectState": {
     "appStoreVersionId": null,
@@ -25,7 +25,7 @@
     "reviewSubmissionId": null,
     "appStoreState": "LOCAL_CANDIDATE_NOT_UPLOADED",
     "submittedAt": null,
-    "lastLocalPreparationAt": "2026-06-26T11:30:26Z",
+    "lastLocalPreparationAt": "2026-06-28T04:35:23Z",
     "uploadedAt": null,
     "visibleAscVerificationAt": null,
     "visibleAscStatus": "Not applicable; build 95 has not been archived or uploaded",
@@ -146,14 +146,14 @@
     "Build 95 access API source now includes Apple App Store Server API verification for StoreKit subscription links.",
     "Build 95 access API source now includes SMTP-backed email-only spouse/family and cadet invite delivery.",
     "Do not archive, upload, distribute TestFlight, select for App Review, submit for review, release, expire builds, edit metadata/screenshots/previews, or edit IAP/subscriptions without a separate exact approval record for the final build-95 source commit.",
-    "Do not production deploy the access API without a separate exact approval record for the final clean source commit being deployed.",
     "Do not ship custom free access codes unless they are server-validated, email-bound, role-specific, and single-use.",
     "Tester full access must be configured and verified for richducat@gmail.com, karen.hallett@mac.com, and kenfish@mac.com before App Review submission.",
-    "As of 2026-06-26T11:30:26Z, GET https://api.cadetcatch.com/access/status returned 404 {\\\"detail\\\":\\\"Not Found\\\"} for richducat@gmail.com, karen.hallett@mac.com, and kenfish@mac.com; the access API is not production-ready for tester access."
+    "Access API production deploy for commit 05dd4ba0af3fe20474845d698f85780dfb523e42 was completed and recorded on 2026-06-26; /access/status now returns active tester access for richducat@gmail.com, karen.hallett@mac.com, and kenfish@mac.com.",
+    "Desktop source now includes a same-origin /access/desktop route candidate because https://eb28.co/cc/desktop/ is not deployed yet and the existing /search service does not emit CORS headers for eb28.co."
   ],
   "createdAt": "2026-06-06T11:53:53.691778-04:00",
   "localVerification": {
-    "releaseGate": "must be rerun from a clean tree after release-record reconciliation and before production deploy, archive, upload, build selection, or App Review submission",
+    "releaseGate": "must be rerun from a clean tree after desktop route reconciliation and before production deploy, archive, upload, build selection, or App Review submission",
     "accessAPITests": "passed in temp venv with service dependencies installed using /tmp/cadetcatch-access-api-venv/bin/python -m unittest discover tests -v; 14 tests passed including StoreKit validation rejection cases, email-only invite delivery contract tests, and browser invite redemption page/form tests",
     "accessAPIImportSmoke": "passed in temp venv; imported cadetcatch_access.main.app and AppleStoreKitVerifier",
     "simulatorQA": "passed for clean local build 95 candidate using documented CadetCatch test command",
@@ -200,39 +200,55 @@
       "note": "Build 95 simulator screenshots show matched photo cards covered by Unlock to View while /access/status returns 404, confirming monthly/server access is not granted unconditionally before StoreKit entitlement or production API access is active."
     },
     "accessAPI": {
-      "status": "blocked_404",
-      "checkedAt": "2026-06-26T11:30:26Z",
+      "status": "production_deployed_and_tester_access_verified",
+      "checkedAt": "2026-06-28T04:35:23Z",
       "checkedEmails": [
         "richducat@gmail.com",
         "karen.hallett@mac.com",
         "kenfish@mac.com"
       ],
       "statusEndpoint": "https://api.cadetcatch.com/access/status",
-      "httpStatus": 404,
-      "response": "{\\\"detail\\\":\\\"Not Found\\\"}",
-      "note": "Tester full access and desktop/share access cannot be verified until the production access API is deployed."
+      "httpStatus": 200,
+      "responseSummary": "Each checked tester returned active:true, access_type:comp, role:internal, desktop_add_on_active:true.",
+      "note": "Production access API sidecar is live on api.cadetcatch.com and tester grants are active."
     },
     "desktopCompanion": {
-      "status": "source_added_not_deployed",
+      "status": "source_ready_same_origin_route_added_not_production_deployed",
       "paths": [
         "public/cc/desktop/index.html",
-        "docs/cc/desktop/index.html"
+        "docs/cc/desktop/index.html",
+        "server/cadetcatch-access-api/cadetcatch_access/desktop.html"
       ],
-      "note": "The page uses /access/status and /search but intentionally blocks search until desktop_add_on_active is true."
+      "routeCandidate": "https://api.cadetcatch.com/access/desktop",
+      "eb28StaticUrlStatus": "https://eb28.co/cc/desktop/ returned HTTP 404 during verification",
+      "note": "The desktop page checks /access/status and posts to /search. Same-origin hosting on api.cadetcatch.com avoids the current /search CORS limitation for eb28.co."
     },
     "accessEntitlementGate": {
-      "status": "implemented_and_fail_closed",
-      "note": "iOS full app access now resolves from active StoreKit Family Monthly or production API /access/status active:true. Current production /access/status returns 404, so server-backed tester access stays locked until backend setup is complete."
+      "status": "implemented_and_tester_access_verified",
+      "note": "iOS full app access resolves from active StoreKit Family Monthly or production API /access/status active:true. Internal tester grants now return active:true with desktop_add_on_active:true."
     },
     "storeKitServerVerification": {
-      "status": "source_ready_not_deployed",
+      "status": "deployed_but_fail_closed_until_apple_credentials_are_configured",
       "introducedAtCommit": "480f3b1e2221869796e9a97ea044d9667a26f051",
-      "note": "Access API verifies Apple signedTransactionInfo, requires bundle co.eb28.cadetcatch and product co.eb28.cadetcatch.family.monthly.v1, and rejects wrong transaction IDs, expired subscriptions, and revoked subscriptions."
+      "note": "Access API verifies Apple signedTransactionInfo in source, but the production endpoint currently fails closed with HTTP 503 because App Store Server API private key/root certificate configuration is not present."
     },
     "inviteEmailDelivery": {
-      "status": "source_ready_not_deployed",
-      "note": "POST /access/invitations sends invite links by email, does not return invite_url to the iPhone app, fails closed with HTTP 503 when email delivery is disabled, marks failed attempts delivery_failed, and the emailed /access/redeem link now has a tested browser activation page."
+      "status": "deployed_but_fail_closed_until_smtp_credentials_are_configured",
+      "note": "POST /access/invitations sends invite links by email in source and does not return invite_url to the iPhone app, but production SMTP is disabled/missing so invite creation fails closed until SMTP credentials are configured."
+    },
+    "desktopSearchAPI": {
+      "status": "live_contract_checked",
+      "checkedAt": "2026-06-28T04:33:02Z",
+      "endpoint": "https://api.cadetcatch.com/search",
+      "requestFields": [
+        "file",
+        "top_k=10",
+        "min_score=0.80",
+        "face_index=0"
+      ],
+      "resultSummary": "Test image returned query_faces_detected:1 and matches_returned:7; first returned matches included populated photo_url values.",
+      "corsNote": "Response did not include Access-Control-Allow-Origin for Origin https://eb28.co, so eb28.co static hosting still needs search CORS support or same-origin api.cadetcatch.com hosting."
     }
   },
-  "updatedAt": "2026-06-26T16:02:01Z"
+  "updatedAt": "2026-06-28T04:35:23Z"
 }

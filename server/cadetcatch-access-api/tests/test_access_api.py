@@ -9,6 +9,7 @@ from cadetcatch_access.mailer import InviteMailer
 from cadetcatch_access.main import (
     InvitationRequest,
     create_invitation,
+    desktop_page,
     redeem_invite_form,
     redeem_invite_page,
 )
@@ -106,6 +107,15 @@ class AccessAPITests(unittest.TestCase):
         self.assertIn('name="invite_token"', html)
         self.assertIn("a" * 32, html)
         self.assertIn("Email address", html)
+
+    def test_desktop_page_renders_packaged_desktop_app(self) -> None:
+        response = desktop_page()
+        html = response.body.decode("utf-8")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("CadetCatch Desktop", html)
+        self.assertIn("/access/status", html)
+        self.assertIn("/search", html)
 
     def test_redeem_invite_form_activates_access(self) -> None:
         self.grant_owner()

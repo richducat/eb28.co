@@ -59,7 +59,7 @@
       "Open Home and tap Search Photos. The app sends the selected cadet photo for matching, shows loading state, and then displays possible matches returned by CadetCatch.",
       "Open Photos to review possible matches, view a photo, save it to the iPhone Photos library, save it in the app, and create a family note.",
       "Open Photo Access from More or a locked photo. The monthly subscription screen shows Family Monthly, 1 month, the monthly price, auto-renewal text, Restore Purchases, Privacy Policy, and Terms of Use (EULA) before purchase.",
-      "Open More > Account & Desktop to see the account email field and the spouse/cadet invite slots. These features require the CadetCatch access API before production use.",
+      "Open More > Account & Desktop to see the account email field and spouse/cadet invite slots. Internal tester emails have server-backed full access configured; public invite email delivery remains fail-closed until production SMTP credentials are configured.",
       "If no face, multiple faces, no matches, or a connection problem occurs, the app shows a clear state instead of showing unrelated results."
     ]
   },
@@ -150,9 +150,9 @@
       "Event photo collection and matching are handled by CadetCatch service infrastructure, not by private accounts on the phone.",
       "In-app purchase products must be active in App Store Connect before TestFlight purchase flows can return live products.",
       "Access codes require a server-validated entitlement system before production use; hardcoded free-access codes must not be shipped in the app.",
-      "The current production access API endpoints for desktop and invite status must be deployed and verified before App Review submission.",
-      "The access API source now includes Apple App Store Server API verification for Family Monthly subscription links, but it has not been deployed to api.cadetcatch.com yet.",
-      "Spouse/family and cadet invite delivery requires production SMTP configuration; invite links are email-only and are not returned to the iPhone app."
+      "Production /access/status is live and tester grants are active for the three internal tester emails.",
+      "The same-origin desktop route is source-ready at /access/desktop, but it has not been production-deployed yet. The eb28.co static desktop URL currently returns 404.",
+      "Apple StoreKit server verification and SMTP invite delivery fail closed until the production Apple App Store Server API and SMTP credentials are configured."
     ]
   }
 }

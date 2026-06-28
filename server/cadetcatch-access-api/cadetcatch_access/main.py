@@ -36,6 +36,11 @@ def build_store() -> AccessStore:
     return AccessStore(database_path())
 
 
+def desktop_page_html() -> str:
+    desktop_path = Path(__file__).with_name("desktop.html")
+    return desktop_path.read_text(encoding="utf-8")
+
+
 app = FastAPI(title="CadetCatch Access API", version="1.0")
 
 allowed_origins = [
@@ -407,6 +412,12 @@ def redeem_invite(
 @app.get("/access/redeem", response_class=HTMLResponse)
 def redeem_invite_page(token: str = Query(min_length=16, max_length=240)) -> HTMLResponse:
     return HTMLResponse(redeem_page_html(token=token))
+
+
+@app.get("/access/desktop", response_class=HTMLResponse)
+@app.get("/access/desktop/", response_class=HTMLResponse)
+def desktop_page() -> HTMLResponse:
+    return HTMLResponse(desktop_page_html())
 
 
 @app.post("/access/redeem", response_class=HTMLResponse)

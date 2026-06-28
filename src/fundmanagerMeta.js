@@ -18,6 +18,15 @@ export const LANE_REGISTRY = [
     description: 'Mispricing desk trading gaps between AI consensus and market price.',
   },
   {
+    id: 'kalshi-divergence',
+    name: 'Kalshi Divergence',
+    mode: 'active',
+    cadenceMinutes: 30,
+    venue: 'kalshi',
+    sourceTags: ['sdk:kalshi-divergence'],
+    description: 'Mispricing desk ported to Kalshi contracts through Simmer.',
+  },
+  {
     id: 'weather',
     name: 'Stormfront',
     mode: 'active',
@@ -103,7 +112,7 @@ export const LANE_REGISTRY = [
 ];
 
 export const AGENT_ROSTER = [
-  { id: 'goldman', name: 'Oracle Gap', roles: ['model-vs-market', 'mispricing'], color: '#22d3ee', gridPos: { x: 0, y: 0 }, laneIds: ['divergence'] },
+  { id: 'goldman', name: 'Oracle Gap', roles: ['model-vs-market', 'mispricing'], color: '#22d3ee', gridPos: { x: 0, y: 0 }, laneIds: ['divergence', 'kalshi-divergence'] },
   { id: 'renaissance', name: 'Sprinter', roles: ['5-minute-markets', 'momentum'], color: '#a78bfa', gridPos: { x: 1, y: 0 }, laneIds: ['fast-loop'] },
   { id: 'bridgeweather', name: 'Stormfront', roles: ['noaa-weather', 'forecast-edge'], color: '#34d399', gridPos: { x: 2, y: 0 }, laneIds: ['weather', 'kalshi-weather'] },
   { id: 'cathie', name: 'XPulse', roles: ['tweet-buckets', 'event-arb'], color: '#f472b6', gridPos: { x: 3, y: 0 }, laneIds: ['elon-tweets'] },

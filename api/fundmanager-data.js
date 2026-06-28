@@ -131,6 +131,40 @@ function asArray(value) {
   return Array.isArray(value) ? value : [];
 }
 
+function getVenueBalances(portfolio = {}) {
+  const polymarketSection = portfolio.polymarket || {};
+  const kalshiSection = portfolio.kalshi || {};
+  const simSection = portfolio.sim || {};
+
+  return {
+    polymarket: asNumber(polymarketSection.balance, asNumber(portfolio.balance_usdc)),
+    kalshi: asNumber(kalshiSection.balance),
+    sim: asNumber(simSection.balance, asNumber(portfolio.sim_balance)),
+  };
+}
+
+function getRealVenueFreeCash(portfolio = {}) {
+  const balances = getVenueBalances(portfolio);
+  return Number((balances.polymarket + balances.kalshi).toFixed(2));
+}
+
+function getAvailableCashForLane(definition, portfolio = {}) {
+  const balances = getVenueBalances(portfolio);
+  return asNumber(balances[definition.venue], asNumber(portfolio.balance_usdc));
+}
+
+function getMinimumCashForLane(definition) {
+  if (definition.venue === 'kalshi') {
+    return 1;
+  }
+
+  if (definition.venue === 'sim') {
+    return 0;
+  }
+
+  return 2;
+}
+
 function normalizePosition(position) {
   return {
     marketId: position.market_id || '',
@@ -194,7 +228,7 @@ function buildLaneActivity(definition, positions, orders) {
   };
 }
 
-function deriveLaneState(definition, activity, balanceUsdc) {
+function deriveLaneState(definition, activity, availableCash) {
   if (activity.openOrderCount > 0) {
     return { status: 'RUNNING', reasonCode: null, nextAction: 'manage_live_orders' };
   }
@@ -223,7 +257,7 @@ function deriveLaneState(definition, activity, balanceUsdc) {
     return { status: 'PAUSED', reasonCode: 'SETUP_REQUIRED', nextAction: 'finish_configuration' };
   }
 
-  if (balanceUsdc < 2) {
+  if (availableCash < getMinimumCashForLane(definition)) {
     return { status: 'DEGRADED', reasonCode: 'LOW_FREE_CAPITAL', nextAction: 'free_up_collateral' };
   }
 
@@ -264,9 +298,9 @@ function buildLaneRecentEvents(definition, activity) {
   return events.filter((event) => event.timestamp || event.message);
 }
 
-function buildLaneSnapshot(definition, positions, orders, balanceUsdc) {
+function buildLaneSnapshot(definition, positions, orders, availableCash) {
   const activity = buildLaneActivity(definition, positions, orders);
-  const state = deriveLaneState(definition, activity, balanceUsdc);
+  const state = deriveLaneState(definition, activity, availableCash);
   const recentEvents = buildLaneRecentEvents(definition, activity);
 
   return {
@@ -380,12 +414,15 @@ function summarizeLiveSnapshot({
   const activeRunningLanes = activeTradeLanes.filter((lane) => lane.status === 'RUNNING');
   const activeDegradedLanes = activeTradeLanes.filter((lane) => lane.status === 'DEGRADED');
   const lowCapital = activeTradeLanes.filter((lane) => lane.lastReasonCode === 'LOW_FREE_CAPITAL').length;
+  const venueBalances = getVenueBalances(portfolio);
+  const realFreeCash = getRealVenueFreeCash(portfolio);
+  const computedExposure = positions.reduce((sum, position) => sum + asNumber(position.currentValue), 0);
 
   let status = 'MONITORING';
-  if (activeRunningLanes.length > 0) {
-    status = 'RUNNING';
-  } else if (activeDegradedLanes.length > 0 || lowCapital > 0) {
+  if (activeDegradedLanes.length > 0 || lowCapital > 0) {
     status = 'DEGRADED';
+  } else if (activeRunningLanes.length > 0) {
+    status = 'RUNNING';
   } else if (activeTradeLanes.length > 0) {
     status = 'PAUSED';
   }
@@ -423,14 +460,30 @@ function summarizeLiveSnapshot({
       lastSuccessfulFillAt,
     },
     account: {
-      balanceUsdc: asNumber(portfolio.balance_usdc),
-      totalExposure: asNumber(portfolio.total_exposure),
+      balanceUsdc: realFreeCash,
+      totalExposure: Math.max(asNumber(portfolio.total_exposure), Number(computedExposure.toFixed(2))),
       activePositionCount: positions.length,
       openOrderCount: orders.length,
       totalPnl: asNumber(totalPnl),
       realizedPnl: asNumber(realizedPnl),
       unrealizedPnl: asNumber(unrealizedPnl),
       bySource: portfolio.by_source || {},
+      byVenue: {
+        polymarket: {
+          balance: Number(venueBalances.polymarket.toFixed(2)),
+          currency: 'USDC.e',
+          warning: asArray(portfolio.warnings).find((warning) => /USDC\.e|Polymarket/i.test(String(warning))) || null,
+        },
+        kalshi: {
+          balance: Number(venueBalances.kalshi.toFixed(2)),
+          currency: 'USDC',
+        },
+        sim: {
+          balance: Number(venueBalances.sim.toFixed(2)),
+          currency: '$SIM',
+        },
+      },
+      warnings: asArray(portfolio.warnings),
     },
     providerHealth: {
       status: 'OK',
@@ -486,7 +539,7 @@ async function buildLiveSimmerSnapshot() {
       const laneOrders = orders.filter((order) =>
         order.sourceTags.some((sourceTag) => definition.sourceTags.some((knownTag) => sourceTag === knownTag || sourceTag.startsWith(`${knownTag}:`)))
       );
-      return buildLaneSnapshot(definition, lanePositions, laneOrders, asNumber(portfolio.balance_usdc));
+      return buildLaneSnapshot(definition, lanePositions, laneOrders, getAvailableCashForLane(definition, portfolio));
     })
     .sort(compareLanes);
 

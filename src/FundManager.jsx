@@ -153,6 +153,23 @@ function formatSignedCurrency(value, fallback = '--') {
     return parsed > 0 ? `+${formatted}` : (parsed < 0 ? `-${formatted}` : formatted);
 }
 
+function formatVenueCashBreakdown(account) {
+    const byVenue = account?.byVenue || {};
+    const parts = [];
+
+    if (byVenue.polymarket) {
+        parts.push(`Poly ${formatCurrency(byVenue.polymarket.balance, '$0.00')}`);
+    }
+    if (byVenue.kalshi) {
+        parts.push(`Kalshi ${formatCurrency(byVenue.kalshi.balance, '$0.00')}`);
+    }
+    if (byVenue.sim) {
+        parts.push(`Sim ${formatCompactNumber(byVenue.sim.balance, '0')} $SIM`);
+    }
+
+    return parts.length ? parts.join(' · ') : 'Spendable USDC on live venues';
+}
+
 function formatTimestamp(value, fallback = '--') {
     if (!value) {
         return fallback;
@@ -647,7 +664,7 @@ const FundManager = () => {
         {
             label: 'Free Cash',
             value: formatCurrency(account?.balanceUsdc, loading ? 'Loading...' : '--'),
-            caption: 'Spendable USDC on live venues',
+            caption: formatVenueCashBreakdown(account),
             tone: (account?.balanceUsdc || 0) >= 5 ? 'text-green-300' : 'text-amber-300',
         },
         {

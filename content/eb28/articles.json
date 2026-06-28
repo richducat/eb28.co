@@ -2156,11 +2156,11 @@
     "cluster": "melbourne-web-design",
     "primaryKeyword": "mobile website design Melbourne FL",
     "datePublished": "2026-06-05",
-    "dateModified": "2026-06-23",
+    "dateModified": "2026-06-28",
     "author": "EB28",
-    "heroLabel": "Morning growth refresh",
-    "sourceRunId": "2026-06-23-am",
-    "summary": "A refreshed EB28 growth brief for Melbourne web design buyers, focused on mobile performance, trust, and the first fix most likely to create qualified leads.",
+    "heroLabel": "Evening growth refresh",
+    "sourceRunId": "2026-06-28-pm",
+    "summary": "A refreshed EB28 growth brief for Melbourne web design buyers, focused on mobile speed, trust, and the first screen fixes most likely to create qualified leads.",
     "sections": [
       {
         "heading": "Why this search matters",
@@ -2253,14 +2253,14 @@
         "reason": "Moves ready buyers from research into a practical first-fix recommendation."
       },
       {
-        "label": "Recon Agent founder beta",
-        "href": "/reconcile/",
-        "reason": "Shows how fast follow-up can protect mobile leads after the website captures intent."
-      },
-      {
         "label": "Local SEO map pack checklist for Melbourne FL",
         "href": "/blog/local-seo-map-pack-melbourne-fl/",
         "reason": "Keeps organic-growth content tied to the strongest local-search cluster."
+      },
+      {
+        "label": "Recon Agent founder beta",
+        "href": "/reconcile/",
+        "reason": "Shows how fast follow-up can protect mobile leads after the website captures intent."
       }
     ]
   },

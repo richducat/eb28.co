@@ -1,0 +1,46 @@
+{
+  "brand": "EB28",
+  "generatedAt": "2026-06-28T22:02:35.330Z",
+  "runId": "2026-06-28-pm",
+  "slot": "pm",
+  "article": {
+    "title": "Mobile Website Design Melbourne FL: Stop Phone Lead Loss",
+    "url": "https://eb28.co/blog/mobile-website-design-in-melbourne-fl-why-most-lead-loss-happens-on-phones/",
+    "cluster": "melbourne-web-design",
+    "primaryKeyword": "mobile website design Melbourne FL"
+  },
+  "posts": {
+    "blog": {
+      "title": "Mobile Website Design Melbourne FL: Stop Phone Lead Loss",
+      "url": "https://eb28.co/blog/mobile-website-design-in-melbourne-fl-why-most-lead-loss-happens-on-phones/",
+      "status": "ready_for_build_and_deploy"
+    },
+    "facebook": {
+      "caption": "Mobile Website Design Melbourne FL: Stop Phone Lead Loss\n\nMost local lead loss happens before a visitor reads the page. This EB28 guide covers the mobile first-screen fixes that make a site faster, clearer, and easier to act on.\n\nRead it: https://eb28.co/blog/mobile-website-design-in-melbourne-fl-why-most-lead-loss-happens-on-phones/",
+      "status": "draft_only"
+    },
+    "linkedin": {
+      "caption": "New EB28 growth brief: Mobile Website Design Melbourne FL: Stop Phone Lead Loss\n\nFor Melbourne service businesses, the mobile version of the website is often the real homepage. The guide breaks down offer clarity, local trust signals, speed, internal links, and the project-brief path that protects qualified leads.\n\nhttps://eb28.co/blog/mobile-website-design-in-melbourne-fl-why-most-lead-loss-happens-on-phones/",
+      "status": "draft_only"
+    },
+    "instagram": {
+      "caption": "Mobile website design in Melbourne FL: stop phone lead loss.\n\nFix the first screen, speed, proof, and project-brief path before spending on a full rebuild.\n\nRead the guide at eb28.co/blog/",
+      "creativeBrief": "Carousel: Slide 1 phone lead-loss problem, Slide 2 first-screen offer clarity, Slide 3 proof and local trust, Slide 4 speed/form friction, Slide 5 CTA to Melbourne Web Studio project brief.",
+      "status": "draft_only"
+    },
+    "shortFormVideo": {
+      "hook": "Most website leads are lost on the phone version before buyers ever reach your form.",
+      "script": [
+        "Open with a mobile screen recording or mockup showing a crowded first fold.",
+        "Call out the four fixes: clear offer, local proof, fast load, one obvious project-brief CTA.",
+        "Close with the canonical guide URL and a soft prompt to start the Melbourne Web Studio lead-leak quiz."
+      ],
+      "caption": "Mobile visitors decide fast. This EB28 guide shows what to fix first: https://eb28.co/blog/mobile-website-design-in-melbourne-fl-why-most-lead-loss-happens-on-phones/",
+      "status": "draft_only"
+    },
+    "x": {
+      "caption": "Mobile Website Design Melbourne FL: Stop Phone Lead Loss\n\nThe practical fix: make the mobile offer clear, prove local fit, reduce form friction, and route qualified buyers into the project brief.\n\nhttps://eb28.co/blog/mobile-website-design-in-melbourne-fl-why-most-lead-loss-happens-on-phones/",
+      "status": "draft_only"
+    }
+  }
+}

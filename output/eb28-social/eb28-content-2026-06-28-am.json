@@ -1,0 +1,49 @@
+{
+  "brand": "EB28",
+  "generatedAt": "2026-06-28T10:03:09.203Z",
+  "runId": "2026-06-28-am",
+  "slot": "am",
+  "article": {
+    "slug": "small-business-web-design-in-melbourne-fl-what-actually-brings-leads",
+    "title": "Small Business Web Design in Melbourne FL: What Actually Brings Leads",
+    "url": "https://eb28.co/blog/small-business-web-design-in-melbourne-fl-what-actually-brings-leads/",
+    "cluster": "melbourne-web-design",
+    "primaryKeyword": "small business web design Melbourne FL"
+  },
+  "posts": {
+    "blog": {
+      "title": "Small Business Web Design in Melbourne FL: What Actually Brings Leads",
+      "url": "https://eb28.co/blog/small-business-web-design-in-melbourne-fl-what-actually-brings-leads/",
+      "status": "canonical_refreshed"
+    },
+    "facebook": {
+      "caption": "Small Business Web Design in Melbourne FL: What Actually Brings Leads\n\nA practical guide for Melbourne-area small businesses that want more qualified organic leads, stronger local proof, and a clearer path from visitor to project brief.\n\nRead it: https://eb28.co/blog/small-business-web-design-in-melbourne-fl-what-actually-brings-leads/",
+      "status": "draft_only"
+    },
+    "linkedin": {
+      "caption": "Refreshed EB28 growth brief: Small Business Web Design in Melbourne FL: What Actually Brings Leads\n\nThe practical work is not a prettier brochure site. It is offer clarity, local proof, mobile speed, internal links, measured forms, and fast follow-up tied to the same organic-growth path.\n\nhttps://eb28.co/blog/small-business-web-design-in-melbourne-fl-what-actually-brings-leads/",
+      "status": "draft_only"
+    },
+    "instagram": {
+      "caption": "Small business web design in Melbourne FL, in the practical sense: clear offer, local proof, fast mobile layout, useful internal links, and one obvious next step.\n\nFull guide at eb28.co/blog/",
+      "creativeBrief": "Carousel: Slide 1 lead-loss problem, Slide 2 first-screen offer clarity, Slide 3 local proof and mobile speed, Slide 4 internal links and tracking, Slide 5 CTA to the Melbourne Web Studio project brief.",
+      "status": "draft_only"
+    },
+    "shortFormVideo": {
+      "hook": "Your small business website may look fine and still leak Melbourne leads.",
+      "script": "Open on the first screen. Show the offer, the local proof, the mobile page, and the form path. Then explain that EB28 refreshed the small business web design guide around the fixes that actually move visitors toward a project brief: clarity, proof, speed, internal links, and fast follow-up.",
+      "shotList": [
+        "Screen recording of the article headline and first section",
+        "Cut to Melbourne Web Studio project brief CTA",
+        "Overlay checklist: offer, proof, mobile speed, internal links, follow-up",
+        "End card with eb28.co/blog/ and Melbourne Web Studio mention"
+      ],
+      "cta": "Read the guide: https://eb28.co/blog/small-business-web-design-in-melbourne-fl-what-actually-brings-leads/",
+      "status": "draft_only"
+    }
+  },
+  "publishGate": {
+    "status": "draft_only",
+    "reason": "No external social channel was published; EB28-owned account and channel verification is required before posting."
+  }
+}

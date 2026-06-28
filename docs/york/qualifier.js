@@ -50,7 +50,8 @@
     return { score, band };
   }
 
-  function render() {
+  function render(options = {}) {
+    const { clearStatus = true } = options;
     steps.forEach((el, index) => el.classList.toggle('active', index === step));
     currentStepLabel.textContent = String(step + 1);
     stepTitle.textContent = steps[step].dataset.title || '';
@@ -58,7 +59,7 @@
     prev.style.visibility = step === 0 ? 'hidden' : 'visible';
     next.classList.toggle('hidden', step === steps.length - 1);
     submit.classList.toggle('hidden', step !== steps.length - 1);
-    status.textContent = '';
+    if (clearStatus) status.textContent = '';
     updateScore();
   }
 
@@ -104,7 +105,7 @@
       status.textContent = 'Request sent. York Inspections will review your details and follow up.';
       form.reset();
       step = 0;
-      setTimeout(render, 900);
+      setTimeout(() => render({ clearStatus: false }), 900);
     } catch (error) {
       status.innerHTML = 'The form could not submit automatically. Please call/text <a href="tel:3213390167">321-339-0167</a> or email <a href="mailto:yorkinspectionsllc@gmail.com">yorkinspectionsllc@gmail.com</a>.';
     } finally {

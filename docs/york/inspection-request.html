@@ -4,10 +4,10 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Book a 4-Point, Wind Mitigation, or Home Inspection | York Inspections</title>
-  <meta name="description" content="Use York Inspections' 1-minute inspection check when a carrier, lender, realtor, buyer, or seller needs 4-point, wind mitigation, roof, or home inspection paperwork in Brevard County." />
+  <meta name="description" content="Use York Inspections' 1-minute inspection check to choose a current York inspection offer, verify the property address, and request the right report path in Brevard County." />
   <link rel="canonical" href="https://eb28.co/york/inspection-request.html" />
   <meta property="og:title" content="Book a 4-Point, Wind Mitigation, or Home Inspection | York Inspections" />
-  <meta property="og:description" content="Answer a few questions so York can match the inspection to the carrier letter, closing deadline, realtor request, or property concern." />
+  <meta property="og:description" content="Choose the current York offer, verify the property address, and request the correct 4-point, wind mitigation, roof, or home inspection path." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://eb28.co/york/inspection-request.html" />
   <meta property="og:image" content="https://eb28.co/york/assets/york-og.png" />
@@ -19,7 +19,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="inspection-request.css?v=tyfys-style-1" />
+  <link rel="stylesheet" href="inspection-request.css?v=offers-address-2" />
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -78,6 +78,15 @@
           <input type="hidden" name="landing_page" value="https://eb28.co/york/inspection-request.html" />
           <input type="hidden" name="request_priority_score" id="leadScore" value="0" />
           <input type="hidden" name="request_summary" id="qualificationSummary" value="" />
+          <input type="hidden" name="selected_offer_name" id="selectedOfferName" value="" />
+          <input type="hidden" name="selected_offer_price" id="selectedOfferPrice" value="" />
+          <input type="hidden" name="selected_offer_duration" id="selectedOfferDuration" value="" />
+          <input type="hidden" name="selected_offer_booking_url" id="selectedOfferUrl" value="" />
+          <input type="hidden" name="normalized_property_address" id="normalizedAddress" value="" />
+          <input type="hidden" name="property_area" id="propertyArea" value="" />
+          <input type="hidden" name="property_latitude" id="propertyLatitude" value="" />
+          <input type="hidden" name="property_longitude" id="propertyLongitude" value="" />
+          <input type="hidden" name="address_source" id="addressSource" value="" />
 
           <div class="wizard-top">
             <div class="wizard-brand">
@@ -89,61 +98,86 @@
           <div class="progress" aria-hidden="true"><span id="progressBar"></span></div>
 
           <div class="wizard-body">
-            <fieldset class="form-step active" data-step="1" data-title="What did they ask you for?">
+            <fieldset class="form-step active" data-step="1" data-title="Choose the York offer">
               <section class="promise">
-                <h2>Tell York what the request says. We will route the report correctly.</h2>
+                <h2>Choose the current York offer. We will still verify the fit before scheduling.</h2>
                 <div class="clean-facts">
-                  <span>Takes about 60 seconds</span>
+                  <span>Current public pricing</span>
+                  <span>Links to York booking pages</span>
                   <span>Reviewed before scheduling</span>
-                  <span>No payment due here</span>
                 </div>
               </section>
 
               <section class="question-card">
                 <div class="start-badge">First question</div>
-                <h3 id="stepTitle">What did they ask you for?</h3>
+                <h3 id="stepTitle">Which York service do you need?</h3>
               </section>
 
               <div class="answer-divider">Choose one answer</div>
-              <div class="choice-list">
+              <div class="choice-list offer-list">
                 <label class="choice primary">
-                  <input class="sr-only" type="radio" name="inspection_type" value="Insurance Combo: Wind Mitigation + 4-Point" required />
+                  <input class="sr-only" type="radio" name="inspection_type" value="Insurance Combo" data-price="$150" data-duration="1 hr" data-url="https://yorkinspections.com/ola/services/insurance-combo" required />
                   <span class="dot">A</span>
-                  <span><strong>Insurance combo</strong><small>They asked for wind mitigation and 4-point.</small></span>
+                  <span><strong>Insurance combo</strong><small>$150 | 1 hr | 4-point + wind mitigation.</small></span>
                 </label>
                 <label class="choice">
-                  <input class="sr-only" type="radio" name="inspection_type" value="4-Point Inspection Only" required />
+                  <input class="sr-only" type="radio" name="inspection_type" value="Four Point Inspection" data-price="$145" data-duration="40 mins" data-url="https://yorkinspections.com/ola/services/four-point-inspection" required />
                   <span class="dot">B</span>
-                  <span><strong>4-point inspection</strong><small>They need roof, HVAC, plumbing, and electrical.</small></span>
+                  <span><strong>Four point inspection</strong><small>$145 | 40 mins | Roof, HVAC, plumbing, electrical.</small></span>
                 </label>
                 <label class="choice">
-                  <input class="sr-only" type="radio" name="inspection_type" value="Wind Mitigation Only" required />
+                  <input class="sr-only" type="radio" name="inspection_type" value="Wind Mitigation" data-price="$75" data-duration="15 mins" data-url="https://yorkinspections.com/ola/services/wind-mitigation" required />
                   <span class="dot">C</span>
-                  <span><strong>Wind mitigation</strong><small>They need roof and wind-resistance credits.</small></span>
+                  <span><strong>Wind mitigation</strong><small>$75 | 15 mins | Wind-resistance documentation.</small></span>
                 </label>
                 <label class="choice">
-                  <input class="sr-only" type="radio" name="inspection_type" value="Roof Certification" required />
+                  <input class="sr-only" type="radio" name="inspection_type" value="Roof Certification" data-price="$75" data-duration="15 mins" data-url="https://yorkinspections.com/ola/services/roof-certification" required />
                   <span class="dot">D</span>
-                  <span><strong>Roof certification</strong><small>They need roof condition or age documentation.</small></span>
+                  <span><strong>Roof certification</strong><small>$75 | 15 mins | Roof condition or age paperwork.</small></span>
                 </label>
                 <label class="choice">
-                  <input class="sr-only" type="radio" name="inspection_type" value="Buyer / Seller Home Inspection" required />
+                  <input class="sr-only" type="radio" name="inspection_type" value="Buyer/Seller Inspection" data-price="$399" data-duration="3 hrs" data-url="https://yorkinspections.com/ola/services/buyer-seller-inspection" required />
                   <span class="dot">E</span>
-                  <span><strong>Full home inspection</strong><small>This is for a buyer, seller, or condition review.</small></span>
+                  <span><strong>Buyer/seller inspection</strong><small>$399 | 3 hrs | Full property inspection.</small></span>
                 </label>
                 <label class="choice">
-                  <input class="sr-only" type="radio" name="inspection_type" value="Not sure yet" required />
+                  <input class="sr-only" type="radio" name="inspection_type" value="Construction Draw" data-price="$65" data-duration="15 mins" data-url="https://yorkinspections.com/ola/services/construction-draw" required />
+                  <span class="dot">F</span>
+                  <span><strong>Construction draw</strong><small>$65 | 15 mins | Contractor or draw inspection.</small></span>
+                </label>
+                <label class="choice">
+                  <input class="sr-only" type="radio" name="inspection_type" value="Roof Evaluation" data-price="Free" data-duration="1 hr" data-url="https://yorkinspections.com/ola/services/roof-evaluation" required />
+                  <span class="dot">G</span>
+                  <span><strong>Roof evaluation</strong><small>Free | 1 hr | Roof-focused evaluation request.</small></span>
+                </label>
+                <label class="choice">
+                  <input class="sr-only" type="radio" name="inspection_type" value="Not sure yet" data-price="Review needed" data-duration="York will confirm" data-url="https://yorkinspections.com/" required />
                   <span class="dot">?</span>
                   <span><strong>I am not sure yet</strong><small>Send what you know and York will sort it out.</small></span>
                 </label>
               </div>
+
+              <aside class="selected-offer-panel" id="selectedOfferPanel" hidden>
+                <span>Selected offer</span>
+                <strong id="selectedOfferSummary">Choose an offer above.</strong>
+                <a id="selectedOfferLink" href="https://yorkinspections.com/" target="_blank" rel="noopener">Book/pay page</a>
+              </aside>
             </fieldset>
 
-            <fieldset class="form-step" data-step="2" data-title="How soon is this due?">
+            <fieldset class="form-step" data-step="2" data-title="Address and timing">
               <section class="question-card">
                 <div class="start-badge">Step 2</div>
-                <h3>How soon is this due?</h3>
+                <h3>Where is the property?</h3>
               </section>
+
+              <label class="field-block address-field">Property address
+                <input id="propertyAddress" name="property_address" autocomplete="street-address" required placeholder="Start typing the property address..." aria-describedby="addressHelp" aria-autocomplete="list" />
+                <div class="address-suggestions" id="addressSuggestions" role="listbox" hidden></div>
+                <small id="addressHelp">Type a U.S. address and choose the closest match. You can continue manually if the public lookup misses it.</small>
+              </label>
+              <div class="selected-address" id="selectedAddress" hidden></div>
+
+              <div class="answer-divider">Then choose timing</div>
 
               <div class="choice-list compact">
                 <label class="choice">
@@ -168,9 +202,6 @@
                 </label>
               </div>
 
-              <label class="field-block">Property city / area
-                <input name="property_area" autocomplete="address-level2" required placeholder="Merritt Island, Cocoa, Viera, Melbourne..." />
-              </label>
             </fieldset>
 
             <fieldset class="form-step" data-step="3" data-title="What will make scheduling easier?">
@@ -227,7 +258,7 @@
               <section class="contact-hero">
                 <span class="contact-badge">Last step</span>
                 <h3>Where should York send the next step?</h3>
-                <p>York will confirm the service, timing, and access details. This form does not charge you or automatically book the inspection.</p>
+                <p>York will confirm the service, timing, access details, and payment path. You can also open the York booking page for the selected offer.</p>
               </section>
 
               <label class="field-block">Full name
@@ -249,6 +280,10 @@
                   <option>Email me first</option>
                 </select>
               </label>
+              <div class="payment-handoff" id="paymentHandoff" hidden>
+                <span>Selected York booking page</span>
+                <a id="paymentHandoffLink" href="https://yorkinspections.com/" target="_blank" rel="noopener">Open booking/payment page</a>
+              </div>
             </fieldset>
 
             <div class="form-actions">
@@ -266,14 +301,16 @@
     <section class="service-band" aria-label="Common York inspection requests">
       <div class="section-head">
         <p class="eyebrow dark">Common requests</p>
-        <h2>Use the wording from the letter, lender, or realtor.</h2>
+        <h2>Current York offers connected to their booking pages.</h2>
       </div>
       <div class="service-grid">
-        <article><strong>$95</strong><h3>Insurance combo</h3><p>Pick this when insurance asks for both 4-point and wind mitigation.</p></article>
-        <article><strong>$75</strong><h3>4-point</h3><p>Pick this when the request mentions roof, HVAC, plumbing, and electrical.</p></article>
-        <article><strong>$55</strong><h3>Wind mitigation</h3><p>Pick this when the carrier wants wind-resistance documentation or credits.</p></article>
-        <article><strong>$45</strong><h3>Roof certification</h3><p>Pick this when the request is mainly about roof age, condition, or certification.</p></article>
-        <article><strong>$299+</strong><h3>Full home inspection</h3><p>Pick this for buyer, seller, and broader property condition work.</p></article>
+        <article><strong>$399</strong><h3>Buyer/seller inspection</h3><p>3-hour full inspection for buying, selling, or condition review.</p><a href="https://yorkinspections.com/ola/services/buyer-seller-inspection" target="_blank" rel="noopener">Book/pay on York site</a></article>
+        <article><strong>$150</strong><h3>Insurance combo</h3><p>1-hour wind mitigation and four point inspection request.</p><a href="https://yorkinspections.com/ola/services/insurance-combo" target="_blank" rel="noopener">Book/pay on York site</a></article>
+        <article><strong>$145</strong><h3>Four point</h3><p>40-minute roof, HVAC, plumbing, and electrical documentation.</p><a href="https://yorkinspections.com/ola/services/four-point-inspection" target="_blank" rel="noopener">Book/pay on York site</a></article>
+        <article><strong>$75</strong><h3>Wind mitigation</h3><p>15-minute wind-resistance documentation for insurance review.</p><a href="https://yorkinspections.com/ola/services/wind-mitigation" target="_blank" rel="noopener">Book/pay on York site</a></article>
+        <article><strong>$75</strong><h3>Roof certification</h3><p>15-minute roof condition or age paperwork request.</p><a href="https://yorkinspections.com/ola/services/roof-certification" target="_blank" rel="noopener">Book/pay on York site</a></article>
+        <article><strong>$65</strong><h3>Construction draw</h3><p>15-minute contractor or draw inspection path.</p><a href="https://yorkinspections.com/ola/services/construction-draw" target="_blank" rel="noopener">Book/pay on York site</a></article>
+        <article><strong>Free</strong><h3>Roof evaluation</h3><p>1-hour roof-focused evaluation request.</p><a href="https://yorkinspections.com/ola/services/roof-evaluation" target="_blank" rel="noopener">Book on York site</a></article>
       </div>
     </section>
 
@@ -300,7 +337,7 @@
       </details>
       <details>
         <summary>Is this a paid booking?</summary>
-        <p>No. It is a request for follow-up. York still needs to confirm scope, access, and timing.</p>
+        <p>No. It is a request for follow-up. The page also links to York's current booking/payment pages when you want to continue there.</p>
       </details>
       <details>
         <summary>What should I put in the notes?</summary>
@@ -330,6 +367,6 @@
     <a href="#top">Start Check</a>
   </div>
 
-  <script src="qualifier.js?v=tyfys-style-1"></script>
+  <script src="qualifier.js?v=offers-address-2"></script>
 </body>
 </html>

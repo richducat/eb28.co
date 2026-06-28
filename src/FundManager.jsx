@@ -329,19 +329,31 @@ function deriveAgentHealth(agent, laneMap, systemStatus) {
         };
     }
 
-    const severity = ['RUNNING', 'MONITORING', 'DEGRADED', 'PAUSED'];
-    const chosenLane = linkedLanes
-        .slice()
-        .sort((left, right) => severity.indexOf(right.status) - severity.indexOf(left.status))[0];
     const laneNames = linkedLanes.map((lane) => lane.name).join(', ');
+    const runningLane = linkedLanes.find((lane) => lane.status === 'RUNNING');
+    if (runningLane) {
+        const blockedLanes = linkedLanes.filter((lane) => lane.id !== runningLane.id && lane.lastReasonCode);
+        return {
+            status: 'RUNNING',
+            summary: laneNames,
+            reasonCode: null,
+            detail: blockedLanes.length
+                ? `${runningLane.name} is live; ${blockedLanes.length} linked venue${blockedLanes.length === 1 ? '' : 's'} still blocked.`
+                : `Next action: ${humanizeToken(runningLane.nextAction)}`,
+        };
+    }
+
+    const actionableLane = linkedLanes.find((lane) => lane.lastReasonCode && lane.lastReasonCode !== 'LOW_FREE_CAPITAL')
+        || linkedLanes.find((lane) => lane.lastReasonCode)
+        || linkedLanes[0];
 
     return {
-        status: chosenLane.status || 'DEGRADED',
+        status: actionableLane.status || 'DEGRADED',
         summary: laneNames,
-        reasonCode: chosenLane.lastReasonCode || null,
-        detail: chosenLane.lastReasonCode
-            ? `Blocker: ${humanizeToken(chosenLane.lastReasonCode)}`
-            : `Next action: ${humanizeToken(chosenLane.nextAction)}`,
+        reasonCode: actionableLane.lastReasonCode || null,
+        detail: actionableLane.lastReasonCode
+            ? `Blocker: ${humanizeToken(actionableLane.lastReasonCode)}`
+            : `Next action: ${humanizeToken(actionableLane.nextAction)}`,
     };
 }
 

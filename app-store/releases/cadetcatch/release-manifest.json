@@ -17,18 +17,18 @@
   "xcodegenProjectSpec": "ios/CadetCatch/project.yml",
   "scheme": "CadetCatch",
   "teamId": "WN3K69XEP4",
-  "approvalLevel": "local build 95 account email, tester-access gate, desktop companion, access-invite, and StoreKit-verified access API candidate; access API production deploy completed for source commit 05dd4ba0af3fe20474845d698f85780dfb523e42, and exact archive, upload_build, distribute_testflight, select_build, submit_for_review, desktop static deploy, desktop add-on product, and IAP/subscription approvals remain pending for the final source commit",
+  "approvalLevel": "build 95 is archived, uploaded, selected for App Store version 1.0.1, submitted to App Review, and visible in ASC as Waiting for Review with manual release selected; representation remediation is in progress for promotional text, description, App Privacy, and live simulator-captured screenshots only",
   "archivePath": null,
   "appStoreConnectState": {
     "appStoreVersionId": null,
     "buildId": null,
-    "reviewSubmissionId": null,
-    "appStoreState": "LOCAL_CANDIDATE_NOT_UPLOADED",
-    "submittedAt": null,
-    "lastLocalPreparationAt": "2026-06-28T04:35:23Z",
-    "uploadedAt": null,
-    "visibleAscVerificationAt": null,
-    "visibleAscStatus": "Not applicable; build 95 has not been archived or uploaded",
+    "reviewSubmissionId": "575c019e-da9a-404a-9074-a4e18168cc4a",
+    "appStoreState": "WAITING_FOR_REVIEW",
+    "submittedAt": "2026-06-28T20:00:00Z",
+    "lastLocalPreparationAt": "2026-06-29T17:11:45Z",
+    "uploadedAt": "2026-06-28T00:00:00Z",
+    "visibleAscVerificationAt": "2026-06-29T14:13:19Z",
+    "visibleAscStatus": "1.0.1 Waiting for Review; selected build 95; manual release selected; representation audit found metadata/privacy/screenshot blockers to remediate before public release",
     "visibleAscCreatedAt": null,
     "distributionLogPath": null,
     "verificationBlocked": null
@@ -135,6 +135,19 @@
       "coast"
     ],
     "whatsNew": "CadetCatch build 95 keeps the paid access gate, adds account email controls for future desktop and family sharing access, keeps the approved $12.99 Family Monthly subscription path, and preserves the server photo search and reliable matched-photo previews."
+  },
+  "releaseJsonAssetsObject": {
+    "appIconSource": "app-icon-1024.png",
+    "appIconChanged": false,
+    "iphoneScreenshots": [
+      "screenshots/iphone-6-9/01-find-cadet-photos-preview-6-9.png",
+      "screenshots/iphone-6-9/02-start-with-one-photo-preview-6-9.png",
+      "screenshots/iphone-6-9/03-review-photo-finds-preview-6-9.png",
+      "screenshots/iphone-6-9/04-private-cadet-roster-preview-6-9.png",
+      "screenshots/iphone-6-9/05-match-guidance-preview-6-9.png"
+    ],
+    "captureMethod": "XcodeBuildMCP build_run_sim plus xcrun simctl io screenshot on iPhone 17 Pro Max simulator; app data reset before capture to remove QA seed state; final App Store previews rendered with scripts/render-cadetcatch-app-store-previews.py from receipt-preserved live simulator captures.",
+    "note": "2026-06-29 screenshot pack replaces unsafe/corrupted local non-CadetCatch screenshot sources with App Store preview images built from the actual build-95 app UI. Welcome and More/Desktop raw screenshots were intentionally excluded because the preview pack should avoid external ship imagery, instant-match wording, pricing, and paused desktop-submission content."
   },
   "safetyNotes": [
     "Primary checkout /Users/richardducat/GITHUB/eb28.co is dirty and must not be used for release actions.",
@@ -250,5 +263,5 @@
       "corsNote": "Response did not include Access-Control-Allow-Origin for Origin https://eb28.co, so eb28.co static hosting still needs search CORS support or same-origin api.cadetcatch.com hosting."
     }
   },
-  "updatedAt": "2026-06-28T04:35:23Z"
+  "updatedAt": "2026-06-29T17:11:45Z"
 }

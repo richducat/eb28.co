@@ -116,11 +116,11 @@
   "assets": {
     "appIconSource": "app-icon-1024.png",
     "iphoneScreenshots": [
-      "screenshots/iphone-6-9/01-launch-eagle-6-9.png",
-      "screenshots/iphone-6-9/02-home-6-9.png",
-      "screenshots/iphone-6-9/03-roster-6-9.png",
-      "screenshots/iphone-6-9/04-sources-6-9.png",
-      "screenshots/iphone-6-9/05-decoder-6-9.png"
+      "screenshots/iphone-6-9/01-find-cadet-photos-preview-6-9.png",
+      "screenshots/iphone-6-9/02-start-with-one-photo-preview-6-9.png",
+      "screenshots/iphone-6-9/03-review-photo-finds-preview-6-9.png",
+      "screenshots/iphone-6-9/04-private-cadet-roster-preview-6-9.png",
+      "screenshots/iphone-6-9/05-match-guidance-preview-6-9.png"
     ],
     "ipadScreenshots": [],
     "appPreviewVideos": []

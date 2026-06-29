@@ -55,10 +55,12 @@ No login is required for the core iPhone photo search flow. Add a cadet profile 
 
 ## Internal Launch Notes
 
-- App Store Connect version state: Build 95 local account/desktop access candidate; access API deployed and tester access verified; not archived or uploaded.
-- Attached build ID or build number: Build 95 candidate; ASC build ID not applicable until upload completes and is verified.
-- Review submission ID: Not applicable to this TestFlight upload candidate
-- Release after approval: After approval
+- App Store Connect version state: Build 95 selected for App Store version 1.0.1 and submitted; visible ASC state was Waiting for Review on 2026-06-29.
+- Attached build ID or build number: Build 95 selected and visible in ASC.
+- Review submission ID: 575c019e-da9a-404a-9074-a4e18168cc4a.
+- Release after approval: Manual release; do not publicly release without a separate exact EB28 release approval.
+- Representation remediation: 2026-06-29 audit found live promotional text, description, App Privacy, and screenshots need correction for the current build-95 server-search flow.
+- Screenshot pack: Five 1320x2868 iPhone preview images rendered from live build-95 simulator captures with app-store-screenshot-studio guidance; raw captures are preserved in the build-95 release-artifact receipts.
 - In-app purchases and subscription status: Approved
 - Verification screenshots: app-store/releases/cadetcatch/app-store-connect-snapshots/
 - Post-approval checks to run:

@@ -1,0 +1,51 @@
+{
+  "brand": "EB28",
+  "generatedAt": "2026-06-29T22:01:55.187Z",
+  "runId": "2026-06-29-pm",
+  "slot": "pm",
+  "publishGate": {
+    "status": "draft_only",
+    "reason": "No external EB28-owned social account/channel was verified by a repo script or connector during this run."
+  },
+  "article": {
+    "title": "Small Business Homepage Optimization: The First 10 Seconds",
+    "url": "https://eb28.co/blog/small-business-homepage-optimization-the-first-10-seconds/",
+    "cluster": "conversion",
+    "primaryKeyword": "small business homepage optimization"
+  },
+  "posts": {
+    "blog": {
+      "title": "Small Business Homepage Optimization: The First 10 Seconds",
+      "url": "https://eb28.co/blog/small-business-homepage-optimization-the-first-10-seconds/",
+      "status": "ready_for_build_and_deploy"
+    },
+    "facebook": {
+      "caption": "Small Business Homepage Optimization: The First 10 Seconds\n\nMost small-business homepages lose buyers before the first scroll: unclear offer, buried proof, soft CTA, or too much friction. This refresh breaks down the first 10 seconds that decide whether a visitor becomes a lead.\n\nRead it: https://eb28.co/blog/small-business-homepage-optimization-the-first-10-seconds/",
+      "status": "draft_only"
+    },
+    "linkedin": {
+      "caption": "New EB28 growth brief: Small Business Homepage Optimization: The First 10 Seconds\n\nThe practical homepage test: can a buyer understand what you do, why to trust you, and what to do next in the first 10 seconds? The guide ties above-the-fold copy, proof, forms, internal links, and fast follow-up into one lead path.\n\nhttps://eb28.co/blog/small-business-homepage-optimization-the-first-10-seconds/",
+      "status": "draft_only"
+    },
+    "instagram": {
+      "caption": "small business homepage optimization: the first 10 seconds.\n\nClear offer. Visible proof. Short path to action. Fast follow-up.\n\nRead the full guide at eb28.co/blog/",
+      "creativeBrief": "Carousel: Slide 1 first-10-seconds test, Slide 2 clarify the offer, Slide 3 move proof near the CTA, Slide 4 reduce form friction, Slide 5 route follow-up fast, Slide 6 CTA to the Melbourne Web Studio quiz.",
+      "status": "draft_only"
+    },
+    "shortFormVideo": {
+      "hook": "Your homepage has about 10 seconds to prove it is worth trusting.",
+      "brief": "30-45 second vertical video for owners: show a generic homepage hero, call out unclear offer/proof/CTA/form friction, then show the EB28 checklist path and close on the Melbourne Web Studio quiz.",
+      "script": [
+        "Most small-business homepages do not fail because they are ugly. They fail because a buyer cannot tell what to do next.",
+        "In the first 10 seconds, your page needs a plain offer, visible proof, and one obvious CTA.",
+        "Then the form and follow-up have to match the promise, because delayed response kills warm leads.",
+        "EB28 refreshed the homepage optimization checklist so local businesses can fix the leak without starting from a full rebuild."
+      ],
+      "status": "draft_only"
+    },
+    "x": {
+      "caption": "Small Business Homepage Optimization: The First 10 Seconds\n\nThe first 10 seconds need a plain offer, visible proof, one CTA, and a follow-up path that does not cool off the lead.\n\nhttps://eb28.co/blog/small-business-homepage-optimization-the-first-10-seconds/",
+      "status": "draft_only"
+    }
+  }
+}

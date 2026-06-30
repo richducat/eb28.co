@@ -1,0 +1,51 @@
+{
+  "brand": "EB28",
+  "generatedAt": "2026-06-30T10:01:53.818Z",
+  "runId": "2026-06-30-am",
+  "slot": "am",
+  "article": {
+    "title": "Local RAG System for Business Documents: Implementation Guide",
+    "url": "https://eb28.co/blog/local-rag-system-for-business-documents-a-plain-english-implementation-guide/",
+    "cluster": "private-ai",
+    "primaryKeyword": "local RAG system for business documents"
+  },
+  "posts": {
+    "blog": {
+      "title": "Local RAG System for Business Documents: Implementation Guide",
+      "url": "https://eb28.co/blog/local-rag-system-for-business-documents-a-plain-english-implementation-guide/",
+      "status": "ready_for_build_and_deploy"
+    },
+    "facebook": {
+      "caption": "Local RAG System for Business Documents: Implementation Guide\n\nLocal RAG only helps if it is scoped like a real business system: known document sets, access rules, source citations, logging, and human review before staff rely on the answers.\n\nRead it: https://eb28.co/blog/local-rag-system-for-business-documents-a-plain-english-implementation-guide/",
+      "status": "draft_only"
+    },
+    "linkedin": {
+      "caption": "New EB28 growth brief: Local RAG System for Business Documents: Implementation Guide\n\nThe practical version of private AI for company documents starts with a narrow workflow, trusted source files, citations in every answer, and clear permissions. This refresh ties the technical build to the public lead path through Melbourne Web Studio and Recon Agent.\n\nhttps://eb28.co/blog/local-rag-system-for-business-documents-a-plain-english-implementation-guide/",
+      "status": "draft_only"
+    },
+    "instagram": {
+      "caption": "local RAG for business documents, without the AI hype.\n\nStart with one document workflow. Add access rules. Require source citations. Keep human review where answers affect customers, staff, or money.\n\nRead the full guide at eb28.co/blog/",
+      "creativeBrief": "Carousel: Slide 1 local RAG problem, Slide 2 choose one workflow, Slide 3 define document access, Slide 4 require source citations, Slide 5 keep human review, Slide 6 CTA to the Melbourne Web Studio quiz and Recon Agent beta.",
+      "status": "draft_only"
+    },
+    "shortFormVideo": {
+      "hook": "A private AI document search should not start with the model. It should start with the files it is allowed to see.",
+      "brief": "30-45 second vertical video for owners: show the risk of dumping company docs into a public chatbot, then walk through one scoped local RAG workflow with document boundaries, source citations, staff permissions, and a CTA to EB28/Melbourne Web Studio.",
+      "script": [
+        "If your team wants AI answers from business documents, do not start by choosing a chatbot.",
+        "Start with one narrow workflow and decide which documents are allowed, who can access them, and what the system must refuse.",
+        "A useful local RAG system cites the source file, logs sensitive use, and keeps human review in the path for high-stakes answers.",
+        "EB28 refreshed the Local RAG guide for business owners who want private AI that can actually be trusted at work."
+      ],
+      "status": "draft_only"
+    },
+    "x": {
+      "caption": "Local RAG System for Business Documents: Implementation Guide\n\nPrivate document AI needs a narrow workflow, trusted files, source citations, access rules, and human review before it expands.\n\nhttps://eb28.co/blog/local-rag-system-for-business-documents-a-plain-english-implementation-guide/",
+      "status": "draft_only"
+    }
+  },
+  "publishGate": {
+    "status": "draft_only",
+    "reason": "No external EB28-owned social account/channel was verified by a repo script or connector during this run."
+  }
+}

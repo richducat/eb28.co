@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import hashlib
+import os
 import secrets
 import sqlite3
 from dataclasses import dataclass
@@ -10,6 +11,11 @@ from typing import Any
 
 
 ALLOWED_INVITE_ROLES = {"spouse_or_family", "cadet"}
+DEFAULT_AUTO_ADMIN_EMAILS = {
+    "richard@thankyouforyourservice.co",
+    "karen@thankyouforyourservice.co",
+    "fishkn@upmc.edu",
+}
 
 
 def now_iso() -> str:
@@ -31,6 +37,34 @@ def normalize_email(email: str) -> str:
     if "@" not in normalized or normalized.startswith("@") or normalized.endswith("@"):
         raise ValueError("A valid email address is required.")
     return normalized
+
+
+def auto_admin_emails() -> set[str]:
+    configured = os.getenv("CADETCATCH_AUTO_ADMIN_EMAILS")
+    if configured is None:
+        return DEFAULT_AUTO_ADMIN_EMAILS
+    return {
+        normalize_email(email)
+        for email in configured.split(",")
+        if email.strip()
+    }
+
+
+def is_auto_admin_email(email: str) -> bool:
+    return normalize_email(email) in auto_admin_emails()
+
+
+def auto_admin_status(email: str) -> dict[str, Any]:
+    account_email = normalize_email(email)
+    return {
+        "active": True,
+        "access_type": "comp",
+        "role": "internal_admin",
+        "desktop_add_on_active": True,
+        "can_invite": True,
+        "expires_at": None,
+        "email": account_email,
+    }
 
 
 def token_hash(token: str) -> str:
@@ -169,6 +203,7 @@ class AccessStore:
                 "access_type": "none",
                 "role": "none",
                 "desktop_add_on_active": False,
+                "can_invite": False,
                 "expires_at": None,
             }
         try:
@@ -179,8 +214,11 @@ class AccessStore:
                 "access_type": "none",
                 "role": "none",
                 "desktop_add_on_active": False,
+                "can_invite": False,
                 "expires_at": None,
             }
+        if is_auto_admin_email(account_email):
+            return auto_admin_status(account_email)
         with self.connect() as conn:
             row = conn.execute(
                 "SELECT * FROM access_accounts WHERE email = ?",
@@ -192,6 +230,7 @@ class AccessStore:
                 "access_type": "none",
                 "role": "none",
                 "desktop_add_on_active": False,
+                "can_invite": False,
                 "expires_at": None,
             }
         active = bool(row["active"]) and not is_expired(row["expires_at"])
@@ -200,6 +239,7 @@ class AccessStore:
             "access_type": row["access_type"],
             "role": row["role"],
             "desktop_add_on_active": bool(row["desktop_add_on_active"]) and active,
+            "can_invite": bool(row["can_invite"]) and active,
             "expires_at": row["expires_at"],
             "email": account_email,
         }
@@ -221,12 +261,17 @@ class AccessStore:
         owner_status = self.status(email=owner)
         if not owner_status["active"] or owner_status["access_type"] == "none":
             raise PermissionError("Owner access is not active.")
-        with self.connect() as conn:
-            owner_row = conn.execute(
-                "SELECT can_invite FROM access_accounts WHERE email = ?",
-                (owner,),
-            ).fetchone()
-        if owner_row is None or not bool(owner_row["can_invite"]):
+        if is_auto_admin_email(owner):
+            can_invite = True
+        else:
+            can_invite = False
+            with self.connect() as conn:
+                owner_row = conn.execute(
+                    "SELECT can_invite FROM access_accounts WHERE email = ?",
+                    (owner,),
+                ).fetchone()
+            can_invite = owner_row is not None and bool(owner_row["can_invite"])
+        if not can_invite:
             raise PermissionError("Owner is not allowed to create invitations.")
 
         raw_token = secrets.token_urlsafe(32)

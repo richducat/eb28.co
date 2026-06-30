@@ -25,6 +25,7 @@ CADETCATCH_ACCESS_DB=/var/lib/cadetcatch/access.sqlite3
 CADETCATCH_ACCESS_ADMIN_TOKEN=replace-with-long-random-token
 CADETCATCH_PUBLIC_BASE_URL=https://api.cadetcatch.com
 CADETCATCH_ACCESS_ALLOWED_ORIGINS=https://eb28.co,https://www.eb28.co
+CADETCATCH_AUTO_ADMIN_EMAILS=richard@thankyouforyourservice.co,karen@thankyouforyourservice.co,fishkn@upmc.edu
 CADETCATCH_INVITE_EMAIL_MODE=smtp
 CADETCATCH_INVITE_FROM_EMAIL=support@eb28.co
 CADETCATCH_INVITE_FROM_NAME=CadetCatch
@@ -51,6 +52,12 @@ CADETCATCH_ALLOW_UNVERIFIED_STOREKIT=1
 ```
 
 Do not enable `CADETCATCH_ALLOW_UNVERIFIED_STOREKIT` for production App Review. Production verifies StoreKit transactions through Apple's App Store Server API before treating subscription-link requests as active.
+
+`CADETCATCH_AUTO_ADMIN_EMAILS` is a comma-separated server-side allowlist for internal accounts. Those emails receive full account access, desktop access, and invite permission even if the SQLite access database has not been seeded yet. If the variable is omitted, the default internal allowlist is:
+
+- `richard@thankyouforyourservice.co`
+- `karen@thankyouforyourservice.co`
+- `fishkn@upmc.edu`
 
 Apple root certificate files must be installed under `CADETCATCH_APPLE_ROOT_CERT_DIR` or listed in `CADETCATCH_APPLE_ROOT_CERT_PATHS`. The verifier uses Apple's signed transaction JWS, rejects the wrong bundle/product/transaction IDs, and rejects expired or revoked subscriptions.
 

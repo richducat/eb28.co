@@ -33,6 +33,39 @@ class AccessStoreTests(unittest.TestCase):
         self.assertEqual(status["role"], "internal")
         self.assertTrue(status["desktop_add_on_active"])
 
+    def test_auto_admin_emails_have_full_desktop_access_without_db_grant(self) -> None:
+        store = self.make_store()
+
+        for email in (
+            "richard@thankyouforyourservice.co",
+            "karen@thankyouforyourservice.co",
+            "fishkn@upmc.edu",
+        ):
+            with self.subTest(email=email):
+                status = store.status(email=email.upper())
+
+                self.assertTrue(status["active"])
+                self.assertEqual(status["email"], email)
+                self.assertEqual(status["access_type"], "comp")
+                self.assertEqual(status["role"], "internal_admin")
+                self.assertTrue(status["desktop_add_on_active"])
+                self.assertTrue(status["can_invite"])
+
+    def test_auto_admin_can_create_family_invites_without_db_grant(self) -> None:
+        store = self.make_store()
+
+        invitation = store.create_invitation(
+            owner_email="richard@thankyouforyourservice.co",
+            role="cadet",
+            recipient_email="cadet@example.com",
+            public_base_url="https://api.cadetcatch.com",
+        )
+
+        self.assertEqual(invitation.owner_email, "richard@thankyouforyourservice.co")
+        self.assertEqual(invitation.role, "cadet")
+        self.assertEqual(invitation.recipient_email, "cadet@example.com")
+        self.assertIn("/access/redeem?token=", invitation.invite_url)
+
     def test_invite_is_email_bound_and_single_use(self) -> None:
         store = self.make_store()
         store.grant_access(

@@ -8,6 +8,7 @@ from fastapi import HTTPException
 from cadetcatch_access.mailer import InviteMailer
 from cadetcatch_access.main import (
     InvitationRequest,
+    access_status,
     create_invitation,
     desktop_page,
     redeem_invite_form,
@@ -116,6 +117,19 @@ class AccessAPITests(unittest.TestCase):
         self.assertIn("CadetCatch Desktop", html)
         self.assertIn("/access/status", html)
         self.assertIn("/search", html)
+
+    def test_auto_admin_status_enables_desktop_access(self) -> None:
+        payload = access_status(
+            device_id="desktop-check",
+            email="fishkn@upmc.edu",
+            access_store=self.store,
+        )
+
+        self.assertTrue(payload["active"])
+        self.assertTrue(payload["desktop_add_on_active"])
+        self.assertEqual(payload["access_type"], "comp")
+        self.assertEqual(payload["role"], "internal_admin")
+        self.assertEqual(payload["device_id"], "desktop-check")
 
     def test_redeem_invite_form_activates_access(self) -> None:
         self.grant_owner()

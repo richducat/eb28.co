@@ -1,0 +1,50 @@
+{
+  "brand": "EB28",
+  "generatedAt": "2026-06-30T22:01:35.162Z",
+  "runId": "2026-06-30-pm",
+  "slot": "pm",
+  "article": {
+    "title": "Secure Business AI Assistant: What to Keep Private From Day One",
+    "url": "https://eb28.co/blog/secure-business-ai-assistant-what-to-keep-private-from-day-one/",
+    "cluster": "private-ai",
+    "primaryKeyword": "secure business AI assistant"
+  },
+  "posts": {
+    "blog": {
+      "title": "Secure Business AI Assistant: What to Keep Private From Day One",
+      "url": "https://eb28.co/blog/secure-business-ai-assistant-what-to-keep-private-from-day-one/",
+      "status": "ready_for_build_and_deploy"
+    },
+    "facebook": {
+      "caption": "Secure Business AI Assistant: What to Keep Private From Day One\n\nA practical guide for local businesses that want a private AI assistant without leaking client records, SOPs, finance notes, or lead data.\n\nRead it: https://eb28.co/blog/secure-business-ai-assistant-what-to-keep-private-from-day-one/",
+      "status": "draft_only"
+    },
+    "linkedin": {
+      "caption": "New EB28 growth brief: Secure Business AI Assistant: What to Keep Private From Day One\n\nThis covers the private data boundaries, retrieval workflow, and lead-routing decisions a small business should settle before putting AI into real operations.\n\nhttps://eb28.co/blog/secure-business-ai-assistant-what-to-keep-private-from-day-one/",
+      "status": "draft_only"
+    },
+    "instagram": {
+      "caption": "secure business AI assistant: the private-data version.\n\nWhat stays out, what can be retrieved, and how to route leads without turning client records into model fuel.\n\nRead the full guide at eb28.co/blog/",
+      "creativeBrief": "Carousel: Slide 1 private-data risk, Slide 2 what stays private, Slide 3 retrieval boundaries, Slide 4 lead-routing guardrails, Slide 5 CTA to the Melbourne Web Studio project brief.",
+      "status": "draft_only"
+    },
+    "shortFormVideo": {
+      "hook": "Before you connect AI to your business, decide what it is never allowed to see.",
+      "beats": [
+        "Show examples of private business data: client records, SOPs, finance notes, lead details.",
+        "Explain retrieval boundaries in plain language: cite documents without exposing everything.",
+        "Close with the EB28 project brief CTA for a scoped private-AI workflow."
+      ],
+      "caption": "Secure business AI assistant checklist: what stays private from day one. Read: https://eb28.co/blog/secure-business-ai-assistant-what-to-keep-private-from-day-one/",
+      "status": "draft_only"
+    },
+    "x": {
+      "caption": "Secure Business AI Assistant: What to Keep Private From Day One\n\nThe key: decide private-data boundaries before connecting AI to leads, SOPs, or client records.\n\nhttps://eb28.co/blog/secure-business-ai-assistant-what-to-keep-private-from-day-one/",
+      "status": "draft_only"
+    }
+  },
+  "publishGate": {
+    "status": "draft_only",
+    "reason": "No EB28-owned external social channel was explicitly verified by a repo script or connector for this run."
+  }
+}

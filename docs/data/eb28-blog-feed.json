@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-06-30T10:03:16.920Z",
+  "generatedAt": "2026-06-30T22:02:44.093Z",
   "site": "https://eb28.co",
   "blogUrl": "https://eb28.co/blog/",
   "articles": [
@@ -55,13 +55,13 @@
     },
     {
       "slug": "secure-business-ai-assistant-what-to-keep-private-from-day-one",
-      "title": "Secure Business AI Assistant: What to Keep Private",
+      "title": "Secure Business AI Assistant: What to Keep Private From Day One",
       "description": "Build a secure business AI assistant without leaking client records, SOPs, finance notes, or lead data. Learn what stays private, where retrieval fits, and how to route leads safely.",
       "cluster": "private-ai",
       "primaryKeyword": "secure business AI assistant",
       "url": "https://eb28.co/blog/secure-business-ai-assistant-what-to-keep-private-from-day-one/",
       "datePublished": "2026-06-14",
-      "dateModified": "2026-06-21"
+      "dateModified": "2026-06-30"
     },
     {
       "slug": "ai-appointment-setter-for-small-business-where-it-helps-and-where-it-hurts",

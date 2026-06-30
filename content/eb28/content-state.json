@@ -1,6 +1,20 @@
 {
-  "updatedAt": "2026-06-30T10:01:53.818Z",
+  "updatedAt": "2026-06-30T22:01:35.162Z",
   "runs": [
+    {
+      "runId": "2026-06-30-pm",
+      "date": "2026-06-30",
+      "slot": "pm",
+      "createdAt": "2026-06-30T22:01:35.162Z",
+      "article": {
+        "slug": "secure-business-ai-assistant-what-to-keep-private-from-day-one-2026-06-30-pm",
+        "title": "Secure Business AI Assistant: What to Keep Private From Day One (2026-06-30-pm)",
+        "url": "https://eb28.co/blog/secure-business-ai-assistant-what-to-keep-private-from-day-one-2026-06-30-pm/",
+        "cluster": "private-ai",
+        "primaryKeyword": "secure business AI assistant"
+      },
+      "reportPath": "/private/tmp/eb28-content-engine-20260630-220118/output/eb28-social/eb28-content-2026-06-30-pm.json"
+    },
     {
       "runId": "2026-06-30-am",
       "date": "2026-06-30",

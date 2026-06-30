@@ -482,15 +482,15 @@
   },
   {
     "slug": "secure-business-ai-assistant-what-to-keep-private-from-day-one",
-    "title": "Secure Business AI Assistant: What to Keep Private",
+    "title": "Secure Business AI Assistant: What to Keep Private From Day One",
     "description": "Build a secure business AI assistant without leaking client records, SOPs, finance notes, or lead data. Learn what stays private, where retrieval fits, and how to route leads safely.",
     "cluster": "private-ai",
     "primaryKeyword": "secure business AI assistant",
     "datePublished": "2026-06-14",
-    "dateModified": "2026-06-21",
+    "dateModified": "2026-06-30",
     "author": "EB28",
     "heroLabel": "Evening growth brief",
-    "sourceRunId": "2026-06-21-pm",
+    "sourceRunId": "2026-06-30-pm",
     "summary": "A practical private AI brief for businesses that want useful assistants without exposing client records, SOPs, financial details, lead data, or internal decisions.",
     "sections": [
       {

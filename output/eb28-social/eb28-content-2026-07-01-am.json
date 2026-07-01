@@ -1,0 +1,58 @@
+{
+  "brand": "EB28",
+  "generatedAt": "2026-07-01T10:02:18.592Z",
+  "runId": "2026-07-01-am",
+  "slot": "am",
+  "publishGate": {
+    "status": "draft_only",
+    "reason": "No EB28-owned external social channel was explicitly verified by a repo script or connector for this run.",
+    "verifiedChannels": []
+  },
+  "article": {
+    "title": "AI Receptionist for Local Business: What to Automate",
+    "url": "https://eb28.co/blog/ai-receptionist-for-local-business-what-to-automate-and-what-to-keep-human/",
+    "localPath": "/blog/ai-receptionist-for-local-business-what-to-automate-and-what-to-keep-human/",
+    "cluster": "lead-automation",
+    "primaryKeyword": "AI receptionist for local business"
+  },
+  "posts": {
+    "blog": {
+      "title": "AI Receptionist for Local Business: What to Automate",
+      "url": "https://eb28.co/blog/ai-receptionist-for-local-business-what-to-automate-and-what-to-keep-human/",
+      "status": "ready_for_build_and_deploy"
+    },
+    "facebook": {
+      "caption": "AI Receptionist for Local Business: What to Automate\n\nLocal businesses can automate instant replies, simple intake, missed-call recovery, and reminders without turning complex sales conversations into a script.\n\nRead it: https://eb28.co/blog/ai-receptionist-for-local-business-what-to-automate-and-what-to-keep-human/",
+      "status": "draft_only"
+    },
+    "linkedin": {
+      "caption": "Refreshed EB28 growth guide: AI Receptionist for Local Business: What to Automate\n\nThe practical split is simple: automate confirmation, qualification, routing, and reminders; keep pricing judgment, exceptions, complaints, and trust-heavy conversations human.\n\nhttps://eb28.co/blog/ai-receptionist-for-local-business-what-to-automate-and-what-to-keep-human/",
+      "status": "draft_only"
+    },
+    "instagram": {
+      "caption": "AI receptionist for local business: automate the repeatable steps, keep the trust moments human.\n\nFull guide: eb28.co/blog/",
+      "creativeBrief": "Carousel: missed lead problem, automate-first checklist, keep-human checklist, first-five-minute handoff, CTA to EB28 project brief.",
+      "status": "draft_only"
+    },
+    "shortFormVideo": {
+      "hook": "Your AI receptionist should not replace your best sales judgment.",
+      "script": "Open with missed calls and slow form replies. Show the automate list: confirmation, qualifying questions, reminders, source tagging. Cut to the human list: pricing, exceptions, complaints, and high-value consults. Close with: build the handoff first, then add more automation.",
+      "shotList": [
+        "Website lead form and missed-call notification",
+        "Checklist split into Automate and Keep Human columns",
+        "Simple five-minute lead handoff flow",
+        "EB28 article URL and project-brief CTA"
+      ],
+      "caption": "Automate speed. Keep judgment human. EB28 refreshed the AI receptionist guide for local businesses: https://eb28.co/blog/ai-receptionist-for-local-business-what-to-automate-and-what-to-keep-human/",
+      "status": "draft_only"
+    },
+    "x": {
+      "caption": "AI Receptionist for Local Business: What to Automate\n\nThe key: automate speed and context, but keep pricing judgment and trust-heavy conversations human.\n\nhttps://eb28.co/blog/ai-receptionist-for-local-business-what-to-automate-and-what-to-keep-human/",
+      "status": "draft_only"
+    }
+  },
+  "socialPublishGuard": {
+    "status": "draft_only_pending_verified_channels",
+    "note": "No external social publishing should run until the EB28-owned account, organization, exact channel IDs, and channel ownership are verified."
+  }
+}

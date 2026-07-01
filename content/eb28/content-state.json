@@ -1,6 +1,20 @@
 {
-  "updatedAt": "2026-06-30T22:01:35.162Z",
+  "updatedAt": "2026-07-01T10:02:18.592Z",
   "runs": [
+    {
+      "runId": "2026-07-01-am",
+      "date": "2026-07-01",
+      "slot": "am",
+      "createdAt": "2026-07-01T10:02:18.592Z",
+      "article": {
+        "slug": "ai-receptionist-for-local-business-what-to-automate-and-what-to-keep-human",
+        "title": "AI Receptionist for Local Business: What to Automate",
+        "url": "https://eb28.co/blog/ai-receptionist-for-local-business-what-to-automate-and-what-to-keep-human/",
+        "cluster": "lead-automation",
+        "primaryKeyword": "AI receptionist for local business"
+      },
+      "reportPath": "output/eb28-social/eb28-content-2026-07-01-am.json"
+    },
     {
       "runId": "2026-06-30-pm",
       "date": "2026-06-30",

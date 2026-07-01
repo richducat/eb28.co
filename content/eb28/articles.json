@@ -474,11 +474,11 @@
     "cluster": "private-ai",
     "primaryKeyword": "private AI for small business",
     "datePublished": "2026-06-14",
-    "dateModified": "2026-06-20",
+    "dateModified": "2026-07-01",
     "author": "EB28",
     "heroLabel": "Evening growth brief",
-    "sourceRunId": "2026-06-20-pm",
-    "summary": "A refreshed private AI guide for small businesses, focused on starting with one safe workflow, protecting sensitive data, and connecting useful AI work to qualified leads.",
+    "sourceRunId": "2026-07-01-pm",
+    "summary": "A refreshed private AI guide for small businesses, focused on one safe workflow, clear data boundaries, controlled retrieval, human review, and a path from buyer interest to qualified leads.",
     "sections": [
       {
         "heading": "Why this search matters",
@@ -550,8 +550,8 @@
     ],
     "relatedSlugs": [
       "private-ai-infrastructure-small-business",
-      "ai-lead-follow-up-local-service-business",
-      "website-conversion-checklist-melbourne-fl"
+      "secure-business-ai-assistant-what-to-keep-private-from-day-one",
+      "ai-lead-follow-up-local-service-business"
     ],
     "internalLinks": [
       {
@@ -575,14 +575,14 @@
         "reason": "Keeps AI infrastructure readers connected to the secure, practical implementation cluster."
       },
       {
+        "label": "Secure business AI assistant guide",
+        "href": "/blog/secure-business-ai-assistant-what-to-keep-private-from-day-one/",
+        "reason": "Shows what data and workflow boundaries should be decided before an assistant touches sensitive business context."
+      },
+      {
         "label": "AI lead follow-up for local service businesses",
         "href": "/blog/ai-lead-follow-up-local-service-business/",
         "reason": "Shows where private AI can support lead intake without replacing human judgment."
-      },
-      {
-        "label": "Website conversion checklist for Melbourne FL",
-        "href": "/blog/website-conversion-checklist-melbourne-fl/",
-        "reason": "Connects the topic to the page changes most likely to create more qualified enquiries."
       }
     ]
   },

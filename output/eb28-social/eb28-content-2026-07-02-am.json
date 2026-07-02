@@ -1,0 +1,46 @@
+{
+  "brand": "EB28",
+  "generatedAt": "2026-07-02T10:02:43.739Z",
+  "runId": "2026-07-02-am",
+  "slot": "am",
+  "article": {
+    "title": "Local RAG System for Business Documents: Implementation Guide",
+    "url": "https://eb28.co/blog/local-rag-system-for-business-documents-a-plain-english-implementation-guide/",
+    "cluster": "private-ai",
+    "primaryKeyword": "local RAG system for business documents"
+  },
+  "posts": {
+    "blog": {
+      "title": "Local RAG System for Business Documents: Implementation Guide",
+      "url": "https://eb28.co/blog/local-rag-system-for-business-documents-a-plain-english-implementation-guide/",
+      "status": "ready_for_build_and_deploy"
+    },
+    "facebook": {
+      "caption": "Local RAG System for Business Documents: Implementation Guide\n\nA practical guide for local businesses that want private document search, clearer staff workflows, and a safer path from company knowledge to action.\n\nRead it: https://eb28.co/blog/local-rag-system-for-business-documents-a-plain-english-implementation-guide/",
+      "status": "draft_only_unpublished"
+    },
+    "instagram": {
+      "caption": "local RAG for business documents: the practical version.\n\nWe broke down document scope, access rules, source citations, review paths, and where private AI should connect to real lead flow.\n\nRead the full guide at eb28.co/blog/",
+      "creativeBrief": "Carousel: Slide 1 problem statement, Slide 2 what to fix first, Slide 3 technical SEO checks, Slide 4 internal links, Slide 5 CTA to project brief.",
+      "status": "draft_only_unpublished"
+    },
+    "x": {
+      "caption": "Local RAG System for Business Documents: A Plain-English Implementation Guide (2026-07-02-am)\n\nThe key: connect the search intent to a page that is fast, useful, internally linked, and measured in Search Console.\n\nhttps://eb28.co/blog/local-rag-system-for-business-documents-a-plain-english-implementation-guide-2026-/",
+      "status": "draft_only_unpublished"
+    },
+    "linkedin": {
+      "caption": "New EB28 growth brief: Local RAG System for Business Documents: Implementation Guide\n\nThis covers document scope, access rules, source citations, review paths, and how private document search becomes a safer business workflow.\n\nhttps://eb28.co/blog/local-rag-system-for-business-documents-a-plain-english-implementation-guide/",
+      "status": "draft_only_unpublished"
+    },
+    "shortFormVideo": {
+      "hook": "Your company documents should be searchable without pasting sensitive files into public AI tools.",
+      "brief": "30-45 second vertical video: open with the risk of unmanaged document AI, show the safer local RAG checklist, then point viewers to the EB28 implementation guide.",
+      "beats": [
+        "Name the problem: staff need fast answers from private documents",
+        "Show the guardrails: document scope, access rules, source citations, review path",
+        "Close with the canonical guide URL and project brief CTA"
+      ],
+      "status": "draft_only_unpublished"
+    }
+  }
+}

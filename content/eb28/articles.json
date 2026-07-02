@@ -1,5 +1,121 @@
 [
   {
+    "slug": "local-rag-system-for-business-documents-a-plain-english-implementation-guide",
+    "title": "Local RAG System for Business Documents: Implementation Guide",
+    "description": "A plain-English implementation guide for secure local RAG: document scope, access rules, source citations, review paths, and how to turn private document search into a scoped EB28 build.",
+    "cluster": "private-ai",
+    "primaryKeyword": "local RAG system for business documents",
+    "datePublished": "2026-06-04",
+    "dateModified": "2026-07-02",
+    "author": "EB28",
+    "heroLabel": "Morning growth brief",
+    "sourceRunId": "2026-07-02-am",
+    "summary": "Refreshed private AI guide for owners who want secure document search, source citations, staff access rules, and a scoped first step before connecting company files to AI.",
+    "sections": [
+      {
+        "heading": "Why this search matters",
+        "body": [
+          "Someone searching for \"local RAG system for business documents\" is usually trying to make company files easier to search without pasting private records into a public chatbot. They need a plain-English path from documents to answers, with clear boundaries around what the AI can see.",
+          "The buyer wants AI speed without handing sensitive business data to tools they do not control. That means the implementation has to cover document access, retrieval quality, answer review, logging, and staff permissions before anyone talks about model choice."
+        ],
+        "bullets": [
+          "Define the document set before choosing a model",
+          "Separate public, internal, client, finance, and staff-only files",
+          "Show employees where answers came from, not only the generated response",
+          "Give owners a direct next step instead of a vague AI strategy prompt"
+        ]
+      },
+      {
+        "heading": "What to fix first",
+        "body": [
+          "Start with one narrow workflow: SOP lookup, policy search, client history, finance review, or staff onboarding. Build the private path before adding more moving parts.",
+          "A useful first version should retrieve a small trusted document set, cite the source document, refuse answers outside scope, and give the team a way to flag bad answers. That is more valuable than a broad AI demo that cannot be trusted in daily work."
+        ],
+        "bullets": [
+          "Define which data can be used and which data stays out",
+          "Use private retrieval for documents that should not be pasted into public tools",
+          "Require source citations inside the answer so staff can verify the result",
+          "Connect private AI to lead automation only where the workflow is clear",
+          "Use official security and AI-risk references instead of hype"
+        ]
+      },
+      {
+        "heading": "How EB28 turns it into a system",
+        "body": [
+          "Private AI earns trust when access, data boundaries, retrieval quality, logging, and human review are planned before the first prompt is written.",
+          "EB28 treats a local RAG build as a controlled business system, not a novelty. The same discipline applies to the public site: publish useful guidance, link it to Melbourne Web Studio and Recon Agent paths, measure what searchers respond to, and improve the pages that show buying intent."
+        ],
+        "bullets": [
+          "Map who can access each document collection",
+          "Test retrieval quality with real staff questions before expanding scope",
+          "Keep human review in the workflow for sensitive answers",
+          "Use the project brief to turn a private AI idea into a scoped implementation plan"
+        ]
+      }
+    ],
+    "faqs": [
+      {
+        "question": "What is a local RAG system for business documents?",
+        "answer": "It is a private document search and answer system that retrieves relevant company files first, then uses AI to draft an answer from those sources. The goal is faster staff access to trusted knowledge without exposing sensitive documents to uncontrolled public tools."
+      },
+      {
+        "question": "What should a business prepare before building one?",
+        "answer": "Start with a narrow document set, clear access rules, source-citation requirements, logging expectations, and a human review path for sensitive answers. That scope makes the first build easier to test and safer to expand."
+      }
+    ],
+    "citations": [
+      {
+        "label": "NIST: AI Risk Management Framework",
+        "url": "https://www.nist.gov/itl/ai-risk-management-framework"
+      },
+      {
+        "label": "OWASP: Top 10 for Large Language Model Applications",
+        "url": "https://owasp.org/www-project-top-10-for-large-language-model-applications/"
+      },
+      {
+        "label": "Google Search Central: SEO Starter Guide",
+        "url": "https://developers.google.com/search/docs/fundamentals/seo-starter-guide"
+      }
+    ],
+    "relatedSlugs": [
+      "local-seo-map-pack-melbourne-fl",
+      "website-conversion-checklist-melbourne-fl",
+      "melbourne-fl-web-design-cost-guide-2026"
+    ],
+    "internalLinks": [
+      {
+        "label": "Private AI infrastructure for small businesses",
+        "href": "/blog/private-ai-infrastructure-small-business/",
+        "reason": "Keeps AI infrastructure readers connected to the secure, practical implementation cluster."
+      },
+      {
+        "label": "AI lead follow-up for local service businesses",
+        "href": "/blog/ai-lead-follow-up-local-service-business/",
+        "reason": "Shows where private AI can support lead intake without replacing human judgment."
+      },
+      {
+        "label": "EB28 private AI and app development homepage",
+        "href": "/",
+        "reason": "Moves technical readers toward the core EB28 service path."
+      },
+      {
+        "label": "Melbourne Web Studio lead leak quiz",
+        "href": "/melbournewebstudio/#quiz",
+        "reason": "Connects private AI readers to the local website and conversion path that captures project intent."
+      },
+      {
+        "label": "Recon Agent founder beta",
+        "href": "/reconcile/",
+        "reason": "Shows how EB28 turns operational AI and automation ideas into focused product workflows."
+      },
+      {
+        "label": "Website conversion checklist for Melbourne FL",
+        "href": "/blog/website-conversion-checklist-melbourne-fl/",
+        "reason": "Connects the topic to the page changes most likely to create more qualified enquiries."
+      }
+    ]
+  },
+  {
     "slug": "space-coast-local-seo-citations-where-real-authority-comes-from-2026-06-18-pm",
     "title": "Space Coast Local SEO Citations: Build Real Authority",
     "description": "Learn how Space Coast local SEO citations build real authority, support map-pack visibility, and connect EB28 website fixes to qualified leads.",
@@ -2028,122 +2144,6 @@
         "label": "Recon Agent founder beta",
         "href": "/reconcile/",
         "reason": "Shows how fast follow-up can protect mobile leads after the website captures intent."
-      }
-    ]
-  },
-  {
-    "slug": "local-rag-system-for-business-documents-a-plain-english-implementation-guide",
-    "title": "Local RAG System for Business Documents: Implementation Guide",
-    "description": "A plain-English implementation guide for secure local RAG: document scope, access rules, source citations, review paths, and how to turn private document search into a scoped EB28 build.",
-    "cluster": "private-ai",
-    "primaryKeyword": "local RAG system for business documents",
-    "datePublished": "2026-06-04",
-    "dateModified": "2026-06-30",
-    "author": "EB28",
-    "heroLabel": "Morning growth brief",
-    "sourceRunId": "2026-06-30-am",
-    "summary": "Refreshed private AI guide for owners who want secure document search, source citations, staff access rules, and a scoped first step before connecting company files to AI.",
-    "sections": [
-      {
-        "heading": "Why this search matters",
-        "body": [
-          "Someone searching for \"local RAG system for business documents\" is usually trying to make company files easier to search without pasting private records into a public chatbot. They need a plain-English path from documents to answers, with clear boundaries around what the AI can see.",
-          "The buyer wants AI speed without handing sensitive business data to tools they do not control. That means the implementation has to cover document access, retrieval quality, answer review, logging, and staff permissions before anyone talks about model choice."
-        ],
-        "bullets": [
-          "Define the document set before choosing a model",
-          "Separate public, internal, client, finance, and staff-only files",
-          "Show employees where answers came from, not only the generated response",
-          "Give owners a direct next step instead of a vague AI strategy prompt"
-        ]
-      },
-      {
-        "heading": "What to fix first",
-        "body": [
-          "Start with one narrow workflow: SOP lookup, policy search, client history, finance review, or staff onboarding. Build the private path before adding more moving parts.",
-          "A useful first version should retrieve a small trusted document set, cite the source document, refuse answers outside scope, and give the team a way to flag bad answers. That is more valuable than a broad AI demo that cannot be trusted in daily work."
-        ],
-        "bullets": [
-          "Define which data can be used and which data stays out",
-          "Use private retrieval for documents that should not be pasted into public tools",
-          "Require source citations inside the answer so staff can verify the result",
-          "Connect private AI to lead automation only where the workflow is clear",
-          "Use official security and AI-risk references instead of hype"
-        ]
-      },
-      {
-        "heading": "How EB28 turns it into a system",
-        "body": [
-          "Private AI earns trust when access, data boundaries, retrieval quality, logging, and human review are planned before the first prompt is written.",
-          "EB28 treats a local RAG build as a controlled business system, not a novelty. The same discipline applies to the public site: publish useful guidance, link it to Melbourne Web Studio and Recon Agent paths, measure what searchers respond to, and improve the pages that show buying intent."
-        ],
-        "bullets": [
-          "Map who can access each document collection",
-          "Test retrieval quality with real staff questions before expanding scope",
-          "Keep human review in the workflow for sensitive answers",
-          "Use the project brief to turn a private AI idea into a scoped implementation plan"
-        ]
-      }
-    ],
-    "faqs": [
-      {
-        "question": "What is a local RAG system for business documents?",
-        "answer": "It is a private document search and answer system that retrieves relevant company files first, then uses AI to draft an answer from those sources. The goal is faster staff access to trusted knowledge without exposing sensitive documents to uncontrolled public tools."
-      },
-      {
-        "question": "What should a business prepare before building one?",
-        "answer": "Start with a narrow document set, clear access rules, source-citation requirements, logging expectations, and a human review path for sensitive answers. That scope makes the first build easier to test and safer to expand."
-      }
-    ],
-    "citations": [
-      {
-        "label": "NIST: AI Risk Management Framework",
-        "url": "https://www.nist.gov/itl/ai-risk-management-framework"
-      },
-      {
-        "label": "OWASP: Top 10 for Large Language Model Applications",
-        "url": "https://owasp.org/www-project-top-10-for-large-language-model-applications/"
-      },
-      {
-        "label": "Google Search Central: SEO Starter Guide",
-        "url": "https://developers.google.com/search/docs/fundamentals/seo-starter-guide"
-      }
-    ],
-    "relatedSlugs": [
-      "local-seo-map-pack-melbourne-fl",
-      "website-conversion-checklist-melbourne-fl",
-      "melbourne-fl-web-design-cost-guide-2026"
-    ],
-    "internalLinks": [
-      {
-        "label": "Private AI infrastructure for small businesses",
-        "href": "/blog/private-ai-infrastructure-small-business/",
-        "reason": "Keeps AI infrastructure readers connected to the secure, practical implementation cluster."
-      },
-      {
-        "label": "AI lead follow-up for local service businesses",
-        "href": "/blog/ai-lead-follow-up-local-service-business/",
-        "reason": "Shows where private AI can support lead intake without replacing human judgment."
-      },
-      {
-        "label": "EB28 private AI and app development homepage",
-        "href": "/",
-        "reason": "Moves technical readers toward the core EB28 service path."
-      },
-      {
-        "label": "Melbourne Web Studio lead leak quiz",
-        "href": "/melbournewebstudio/#quiz",
-        "reason": "Connects private AI readers to the local website and conversion path that captures project intent."
-      },
-      {
-        "label": "Recon Agent founder beta",
-        "href": "/reconcile/",
-        "reason": "Shows how EB28 turns operational AI and automation ideas into focused product workflows."
-      },
-      {
-        "label": "Website conversion checklist for Melbourne FL",
-        "href": "/blog/website-conversion-checklist-melbourne-fl/",
-        "reason": "Connects the topic to the page changes most likely to create more qualified enquiries."
       }
     ]
   },

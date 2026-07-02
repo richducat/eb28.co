@@ -269,9 +269,9 @@ const ROUTE_META = {
         ...BASE_ROUTE_META,
         key: 'deskos',
         path: '/deskos/',
-        title: 'EB28 Desk OS | 8 Prediction-Market Trading Agents + Kill-Switch Safety System',
+        title: 'EB28 Desk OS | 8 Trading Agents + Bluechip, the Robinhood Agentic Equities Desk',
         description:
-            'License the EB28 Desk OS: eight autonomous Polymarket and Kalshi trading agents behind a gated runner, global kill switch, capital guard, and live dashboard. Paper mode first, real money only when you flip the gate.',
+            'License the EB28 Desk OS: eight autonomous Polymarket and Kalshi trading agents behind a gated runner, global kill switch, capital guard, and live dashboard — plus Bluechip, the flagship US equities desk in live beta on Robinhood’s official Agentic Trading API. Paper mode first, real money only when you flip the gate.',
         image: FUNDMANAGER_IMAGE,
         includeInSitemap: true,
         structuredData: [

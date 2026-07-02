@@ -905,8 +905,14 @@ const FundManager = () => {
                                                 <span className="rounded-full border border-emerald-400/30 bg-emerald-500/10 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-emerald-300">
                                                     Robinhood Agentic · live beta
                                                 </span>
+                                                <a
+                                                    href="/deskos/#bluechip"
+                                                    className="rounded-full bg-[#5eead4]/15 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.16em] text-teal-200 ring-1 ring-[#5eead4]/40 transition-all hover:bg-[#5eead4] hover:text-[#020617]"
+                                                >
+                                                    Request early access →
+                                                </a>
                                                 <span className="text-[10px] uppercase tracking-[0.14em] text-white/40">
-                                                    Stocks desk — not yet for sale
+                                                    Trading on this tape right now
                                                 </span>
                                             </div>
                                         ) : (

@@ -135,6 +135,54 @@ const FAQS = [
     },
 ];
 
+const BLUECHIP = {
+    color: '#5eead4',
+    bullets: [
+        'Official rails, not scraping: orders flow through Robinhood’s Agentic Trading system at agent.robinhood.com. No credential bots. No ToS roulette.',
+        'Broker-checked before placement: every order passes Robinhood’s review_equity_order step before it goes anywhere.',
+        'Walled garden by design: Bluechip trades only inside a dedicated Agentic sub-account you create. It physically cannot touch your main account.',
+        'Blue-chip watchlist, small clips: AAPL, NVDA, TSLA, MSFT, GOOGL, AMD, SPY, QQQ — $5 fractional dip buys, max 2 per 15-minute cycle. Small by design during beta.',
+        'Same Desk OS safety stack as every desk on this page: gated runner, global kill switch, paper/review mode by default. One switch to live. One switch back.',
+        'We publish our tape: every decision streams to the public dashboard — watch it before you spend a dollar.',
+    ],
+    steps: [
+        {
+            step: '01 — Isolate',
+            title: 'Create the walled garden',
+            body: 'Create a dedicated Agentic sub-account in Robinhood. That walled garden is all Bluechip ever sees — it physically cannot touch your main account.',
+        },
+        {
+            step: '02 — Paper first',
+            title: 'Boot in review mode',
+            body: 'The default mode places nothing. Watch the desk flag $5 dip candidates on the blue-chip watchlist without a dollar moving.',
+        },
+        {
+            step: '03 — Your switch',
+            title: 'Flip the gate when you decide',
+            body: 'One switch to live, one switch back. Every order still clears Robinhood’s own review step before placement.',
+        },
+        {
+            step: '04 — On tape',
+            title: 'Everything is journaled',
+            body: 'Every decision lands in your trade journal — and ours streams to the public dashboard you can watch right now.',
+        },
+    ],
+    faqs: [
+        {
+            q: 'How is this different from every other stock bot?',
+            a: 'Most bots log into your brokerage with your password — a ToS violation waiting for a ban. Bluechip uses Robinhood’s own Agentic Trading API: official agent rails, a broker-side order review on every trade, and a dedicated sub-account it can’t step outside of.',
+        },
+        {
+            q: 'Is EB28 partnered with Robinhood?',
+            a: 'No. Bluechip is built on Robinhood’s official Agentic Trading API — the public front door Robinhood built for agents. Robinhood does not endorse or sponsor EB28. Want proof it’s real? The live tape is public on the fund manager dashboard.',
+        },
+        {
+            q: 'Will this make me money?',
+            a: 'We don’t claim that, and you should walk away from anyone who does. Bluechip is licensed software you operate — not investment advice, not a managed fund, not a financial service. Trading involves risk of loss. Watch the live tape and judge the desk’s decisions yourself.',
+        },
+    ],
+};
+
 function CheckoutButton({ href, children, big = false, ghost = false }) {
     const base = big
         ? 'rounded-full px-8 py-4 text-base font-bold uppercase tracking-[0.14em]'
@@ -323,6 +371,74 @@ const DeskOS = () => {
                     </div>
                 </section>
 
+                {/* ============ BLUECHIP FLAGSHIP ============ */}
+                <section className="mt-16" id="bluechip">
+                    <div className="eb28-panel relative rounded-[28px] border-2 border-[#5eead4]/50 p-6 pt-8 shadow-[0_0_48px_rgba(94,234,212,0.15)] sm:p-8 sm:pt-9">
+                        <div className="absolute -top-3 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-[#5eead4] px-4 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-[#020617]">
+                            Flagship desk · live beta · US equities
+                        </div>
+                        <div className="text-center">
+                            <h3 className="text-lg font-bold tracking-[0.2em]" style={{ color: BLUECHIP.color }}>
+                                BLUECHIP
+                            </h3>
+                            <h2 className="mx-auto mt-1 max-w-2xl text-2xl font-bold text-white sm:text-3xl">
+                                Stocks. Through the front door.
+                            </h2>
+                            <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-white/70">
+                                Most stock bots borrow your password and hope the broker doesn’t notice. Bluechip trades
+                                US equities through <span className="text-teal-200">Robinhood’s official Agentic Trading API</span> —
+                                the first EB28 desk built for the agentic-brokerage era.
+                            </p>
+                        </div>
+
+                        <ul className="mx-auto mt-7 max-w-3xl space-y-2.5">
+                            {BLUECHIP.bullets.map((line, index) => (
+                                <li key={index} className="flex gap-2 text-[13px] leading-relaxed text-white/70">
+                                    <span className="mt-[2px]" style={{ color: BLUECHIP.color }}>▸</span>
+                                    <span>{line}</span>
+                                </li>
+                            ))}
+                        </ul>
+
+                        <div className="mt-7 grid grid-cols-1 gap-3 sm:grid-cols-2">
+                            {BLUECHIP.steps.map((item) => (
+                                <div key={item.step} className="rounded-2xl border border-[#5eead4]/10 bg-black/20 p-4">
+                                    <div className="text-[10px] uppercase tracking-[0.2em] text-teal-200/70">{item.step}</div>
+                                    <div className="mt-1 text-sm font-bold text-teal-100">{item.title}</div>
+                                    <p className="mt-1.5 text-[12px] leading-relaxed text-white/65">{item.body}</p>
+                                </div>
+                            ))}
+                        </div>
+
+                        <div className="mt-7 space-y-3">
+                            {BLUECHIP.faqs.map((faq) => (
+                                <details key={faq.q} className="group rounded-2xl border border-[#5eead4]/10 bg-black/20 p-4">
+                                    <summary className="cursor-pointer list-none text-sm font-bold text-white/90 transition-colors group-open:text-teal-200">
+                                        {faq.q}
+                                    </summary>
+                                    <p className="mt-3 text-[13px] leading-relaxed text-white/65">{faq.a}</p>
+                                </details>
+                            ))}
+                        </div>
+
+                        <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
+                            <CheckoutButton href="mailto:social@eb28.co?subject=Bluechip%20early%20access" big>
+                                Request Bluechip early access
+                            </CheckoutButton>
+                            <CheckoutButton href="/fundmanager/" big ghost>
+                                Watch the live tape →
+                            </CheckoutButton>
+                        </div>
+                        <p className="mt-4 text-center text-[11px] text-white/40">
+                            Live beta. Not for sale yet — the founding cohort gets first keys when the gate opens.
+                        </p>
+                        <p className="mx-auto mt-5 max-w-2xl text-center text-[12px] leading-relaxed text-white/50">
+                            Trading involves risk of loss. Bluechip is licensed software you operate in your own account —
+                            not investment advice, not a managed fund. You hold the switch; you hold the risk.
+                        </p>
+                    </div>
+                </section>
+
                 {/* ============ THE OS STACK ============ */}
                 <section className="mt-16">
                     <div className="eb28-panel rounded-[28px] border border-[#22d3ee]/10 p-6 sm:p-8">
@@ -475,8 +591,9 @@ const DeskOS = () => {
                             performance (including ours, which is negative) does not indicate future results.
                         </p>
                         <p>
-                            Polymarket, Kalshi, and Simmer are third-party platforms with their own terms, eligibility rules, and regional
-                            restrictions — you are responsible for complying with them. Trade only money you can afford to lose.
+                            Polymarket, Kalshi, Simmer, and Robinhood are third-party platforms with their own terms, eligibility rules, and regional
+                            restrictions — you are responsible for complying with them. Robinhood Agentic Trading is a beta program;
+                            Robinhood does not endorse or sponsor EB28. Trade only money you can afford to lose.
                         </p>
                         <p>
                             © {new Date().getFullYear()} EB28 · <a href="/fundmanager/" className="underline underline-offset-2 hover:text-cyan-200">Live dashboard</a> · Support: social@eb28.co

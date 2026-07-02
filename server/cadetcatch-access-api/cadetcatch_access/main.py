@@ -18,6 +18,12 @@ from .storekit import (
     StoreKitLinkRequest,
     StoreKitVerificationError,
 )
+from .googleplay import (
+    GooglePlayConfigurationError,
+    GooglePlayLinkRequest,
+    GooglePlayVerificationError,
+    GooglePlayVerifier,
+)
 
 
 def env_bool(name: str) -> bool:
@@ -79,6 +85,14 @@ class SubscriptionLinkRequest(BaseModel):
     original_transaction_id: str = Field(min_length=1, max_length=220)
 
 
+class GooglePlaySubscriptionLinkRequest(BaseModel):
+    device_id: str = Field(min_length=1, max_length=160)
+    email: EmailStr
+    package_name: str = Field(default="co.eb28.cadetcatch", min_length=1, max_length=180)
+    product_id: str = Field(min_length=1, max_length=180)
+    purchase_token: str = Field(min_length=16, max_length=4096)
+
+
 class InvitationRequest(BaseModel):
     device_id: str = Field(min_length=1, max_length=160)
     owner_email: EmailStr
@@ -99,6 +113,10 @@ def store() -> AccessStore:
 
 def storekit_verifier() -> AppleStoreKitVerifier:
     return AppleStoreKitVerifier.from_env()
+
+
+def google_play_verifier() -> GooglePlayVerifier:
+    return GooglePlayVerifier.from_env()
 
 
 def invite_mailer() -> InviteMailer:
@@ -336,6 +354,55 @@ def link_subscription(
             f"Apple-verified transaction {payload.transaction_id}; device {payload.device_id}"
             if verified
             else f"Unverified staging link from device {payload.device_id}; transaction {payload.transaction_id}"
+        )
+    )
+
+
+@app.post("/access/google-play/link")
+def link_google_play_subscription(
+    payload: GooglePlaySubscriptionLinkRequest,
+    access_store: AccessStore = Depends(store),
+) -> dict[str, object]:
+    link_request = GooglePlayLinkRequest(
+        package_name=payload.package_name,
+        product_id=payload.product_id,
+        purchase_token=payload.purchase_token,
+    )
+    if env_bool("CADETCATCH_ALLOW_UNVERIFIED_GOOGLE_PLAY"):
+        verified = None
+    else:
+        try:
+            verified = google_play_verifier().verify(link_request)
+        except GooglePlayConfigurationError as error:
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail=str(error),
+            ) from error
+        except GooglePlayVerificationError as error:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail=str(error),
+            ) from error
+        except Exception as error:
+            raise HTTPException(
+                status_code=status.HTTP_502_BAD_GATEWAY,
+                detail="Google Play subscription verification failed.",
+            ) from error
+    expires_at = verified.expires_at if verified else None
+    order_note = f"; order {verified.order_id}" if verified and verified.order_id else ""
+    return access_store.grant_access(
+        email=str(payload.email),
+        access_type="subscriber",
+        role="owner",
+        desktop_add_on_active=False,
+        can_invite=True,
+        expires_at=expires_at,
+        original_transaction_id=payload.purchase_token,
+        product_id=payload.product_id,
+        note=(
+            f"Google Play-verified token from device {payload.device_id}{order_note}"
+            if verified
+            else f"Unverified Google Play staging link from device {payload.device_id}; token {payload.purchase_token[:16]}..."
         )
     )
 

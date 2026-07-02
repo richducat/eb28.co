@@ -17,6 +17,9 @@
     "cadetcatch:release-gate": "node scripts/verify-cadetcatch-release.mjs --mode release-surface",
     "cadetcatch:upload-gate": "node scripts/verify-cadetcatch-release.mjs --mode upload",
     "cadetcatch:sim-qa": "node scripts/cadetcatch-simulator-qa.mjs",
+    "cadetcatch:google-play-gate": "node scripts/verify-cadetcatch-google-play.mjs",
+    "cadetcatch:android:build": "cd android && ANDROID_HOME=\"$HOME/Library/Android/sdk\" ./gradlew :app:assembleDebug --console=plain",
+    "cadetcatch:android:bundle": "cd android && ANDROID_HOME=\"$HOME/Library/Android/sdk\" ./gradlew :app:bundleRelease --console=plain",
     "test:cadetcatch": "npm run cadetcatch:sim-qa -- --simulator \"iPhone 17 Pro Max\"",
     "preview": "vite preview",
     "sync:ios": "npx cap sync ios && node scripts/ensure-wakeup-admob-spm.mjs"

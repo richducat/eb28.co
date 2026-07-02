@@ -1,0 +1,9 @@
+<resources>
+    <style name="Theme.CadetCatch" parent="android:style/Theme.Material.Light.NoActionBar">
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:navigationBarColor">#F3F7FC</item>
+        <item name="android:statusBarColor">#F3F7FC</item>
+    </style>
+</resources>

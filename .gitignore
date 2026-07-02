@@ -9,3 +9,7 @@ docs/api/fundmanager-data
 public/data/
 public/api/
 output/cadetcatch-simulator/
+android/.gradle/
+android/local.properties
+android/build/
+android/app/build/

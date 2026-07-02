@@ -1,0 +1,47 @@
+{
+  "brand": "EB28",
+  "generatedAt": "2026-07-02T22:02:35.229Z",
+  "runId": "2026-07-02-pm",
+  "slot": "pm",
+  "article": {
+    "title": "Secure Business AI Assistant: What to Keep Private From Day One",
+    "url": "https://eb28.co/blog/secure-business-ai-assistant-what-to-keep-private-from-day-one/",
+    "cluster": "private-ai",
+    "primaryKeyword": "secure business AI assistant"
+  },
+  "posts": {
+    "blog": {
+      "title": "Secure Business AI Assistant: What to Keep Private From Day One",
+      "url": "https://eb28.co/blog/secure-business-ai-assistant-what-to-keep-private-from-day-one/",
+      "status": "ready_for_build_and_deploy"
+    },
+    "facebook": {
+      "caption": "Secure Business AI Assistant: What to Keep Private From Day One\n\nA practical guide for business owners who want AI speed without exposing client records, SOPs, finance notes, or lead data.\n\nRead it: https://eb28.co/blog/secure-business-ai-assistant-what-to-keep-private-from-day-one/",
+      "status": "draft_only_not_published"
+    },
+    "instagram": {
+      "caption": "secure business AI assistant: the practical version.\n\nWhat stays private, where retrieval fits, and how to route leads safely without turning sensitive records into public prompt material.\n\nRead the full guide at eb28.co/blog/",
+      "creativeBrief": "Carousel: Slide 1 problem statement, Slide 2 what to fix first, Slide 3 technical SEO checks, Slide 4 internal links, Slide 5 CTA to project brief.",
+      "status": "draft_only_not_published"
+    },
+    "x": {
+      "caption": "Secure Business AI Assistant: What to Keep Private From Day One\n\nThe key: define private data boundaries, use retrieval carefully, log access, and keep human review in the workflow.\n\nhttps://eb28.co/blog/secure-business-ai-assistant-what-to-keep-private-from-day-one/",
+      "status": "draft_only_not_published"
+    },
+    "linkedin": {
+      "caption": "EB28 refresh: Secure Business AI Assistant: What to Keep Private From Day One\n\nThis covers what should stay out of public AI tools, where private retrieval fits, and how to route lead workflows safely.\n\nhttps://eb28.co/blog/secure-business-ai-assistant-what-to-keep-private-from-day-one/",
+      "status": "draft_only_not_published"
+    },
+    "shortFormVideo": {
+      "brief": "30-45 second vertical video: open with \"Do not paste client records into public AI tools\", then show three private-data categories, one safe retrieval workflow, and a final CTA to read the EB28 guide.",
+      "hook": "Your AI assistant is only useful if it keeps private business data private.",
+      "scenes": [
+        "Hook: public AI prompt box with redacted client/SOP/finance examples",
+        "Boundary: what stays private from day one",
+        "Workflow: retrieval, logging, access control, and human review",
+        "CTA: read the EB28 secure AI assistant guide"
+      ],
+      "status": "draft_only_not_published"
+    }
+  }
+}

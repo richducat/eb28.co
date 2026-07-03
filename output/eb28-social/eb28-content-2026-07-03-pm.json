@@ -1,0 +1,38 @@
+{
+  "brand": "EB28",
+  "generatedAt": "2026-07-03T22:00:54.079Z",
+  "runId": "2026-07-03-pm",
+  "slot": "pm",
+  "article": {
+    "title": "Best Website Builder in Melbourne FL: What Local Companies Should Look For",
+    "url": "https://eb28.co/blog/best-website-builder-in-melbourne-fl-what-local-companies-should-look-for/",
+    "cluster": "melbourne-web-design",
+    "primaryKeyword": "best website builder Melbourne FL"
+  },
+  "posts": {
+    "blog": {
+      "title": "Best Website Builder in Melbourne FL: What Local Companies Should Look For",
+      "url": "https://eb28.co/blog/best-website-builder-in-melbourne-fl-what-local-companies-should-look-for/",
+      "status": "ready_for_build_and_deploy"
+    },
+    "facebook": {
+      "caption": "Best Website Builder in Melbourne FL: What Local Companies Should Look For\n\nA practical guide for Melbourne-area businesses comparing website builders by ownership, mobile speed, local SEO, proof, and lead capture.\n\nRead it: https://eb28.co/blog/best-website-builder-in-melbourne-fl-what-local-companies-should-look-for/",
+      "status": "draft_only_until_eb28_channel_is_verified"
+    },
+    "instagram": {
+      "caption": "best website builder Melbourne FL: the practical version.\n\nOwnership, speed, proof, local SEO, and lead capture matter more than a prettier template.\n\nRead the full guide at eb28.co/blog/",
+      "creativeBrief": "Carousel: Slide 1 buyer problem, Slide 2 ownership and handoff, Slide 3 mobile speed and proof, Slide 4 local SEO and conversion checks, Slide 5 CTA to the Melbourne Web Studio quiz.",
+      "status": "draft_only_until_eb28_channel_is_verified"
+    },
+    "linkedin": {
+      "caption": "New EB28 growth brief: Best Website Builder in Melbourne FL: What Local Companies Should Look For\n\nThis covers the practical SEO and conversion checks local companies should use before paying for another website build: ownership, mobile speed, proof, local search fit, and a measurable path from visitor to qualified enquiry.\n\nhttps://eb28.co/blog/best-website-builder-in-melbourne-fl-what-local-companies-should-look-for/",
+      "status": "draft_only_until_eb28_channel_is_verified"
+    },
+    "shortFormVideo": {
+      "hook": "Most Melbourne business websites do not need more decoration first. They need a cleaner path from searcher to qualified enquiry.",
+      "brief": "30-45 second vertical video: show a search for a local website builder, cut to the five checks: ownership, mobile speed, local proof, lead capture, and follow-up. End on the Melbourne Web Studio quiz and the canonical blog URL.",
+      "caption": "Best website builder in Melbourne FL? Start with ownership, speed, proof, local SEO, and lead capture. Full guide: https://eb28.co/blog/best-website-builder-in-melbourne-fl-what-local-companies-should-look-for/",
+      "status": "draft_only_until_eb28_channel_is_verified"
+    }
+  }
+}

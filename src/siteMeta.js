@@ -28,6 +28,7 @@ const THOMAS_CUSTOM_HOMES_CUSTOM_DOMAIN_IMAGE = `${THOMAS_CUSTOM_HOMES_SITE_ORIG
 const MELBOURNE_WEB_STUDIO_CANONICAL_URL = `${SITE_ORIGIN}/melbournewebstudio/`;
 const FREE_WEBSITE_BUILD_CANONICAL_URL = `${SITE_ORIGIN}/free-website-build/`;
 const CADETCATCH_IMAGE = `${SITE_ORIGIN}/cc/img/find-cadet-photos.png`;
+const CADETCATCH_SITE_ORIGIN = 'https://cadetcatch.com';
 
 const ORGANIZATION_SCHEMA = {
     '@context': 'https://schema.org',
@@ -741,7 +742,11 @@ export function detectRouteKey({ pathname = '/', hostname = '' } = {}) {
         return 'weedauthority';
     }
 
-    if (normalizedPathname === '/cc') {
+    if (
+        normalizedPathname === '/cc' ||
+        normalizedHostname === 'cadetcatch.com' ||
+        normalizedHostname === 'www.cadetcatch.com'
+    ) {
         return 'cc';
     }
 
@@ -761,6 +766,17 @@ export function getRouteMeta(routeOrLocation = 'home') {
         baseMeta = buildThomasRouteMeta(getThomasPageByRouteKey(routeKey), {
             primaryHost: true,
         });
+    }
+
+    const isCadetCatchPrimaryHost =
+        normalizedHostname === 'cadetcatch.com' || normalizedHostname === 'www.cadetcatch.com';
+
+    if (routeKey === 'cc' && isCadetCatchPrimaryHost) {
+        baseMeta = {
+            ...baseMeta,
+            canonicalUrlOverride: `${CADETCATCH_SITE_ORIGIN}/`,
+            image: `${CADETCATCH_SITE_ORIGIN}/img/find-cadet-photos.png`,
+        };
     }
 
     return {

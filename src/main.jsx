@@ -50,7 +50,10 @@ const isWeedAuthorityRoute =
   pathname.startsWith('/weedauthority/') ||
   hostname === 'weedauthority.eb28.co' ||
   hostname === 'weedauthority.ed28.co';
-const isCadetCatchRoute = pathname === '/cc';
+const isCadetCatchRoute =
+  pathname === '/cc' ||
+  hostname === 'cadetcatch.com' ||
+  hostname === 'www.cadetcatch.com';
 const isAlarmClockRoute =
   isNativeAlarmClockApp ||
   pathname === '/alarmclock' ||

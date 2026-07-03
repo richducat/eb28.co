@@ -10,11 +10,18 @@ import {
 } from 'lucide-react';
 
 const APP_STORE_URL = 'https://apps.apple.com/us/app/cadetcatch/id6769565852';
-const SUPPORT_URL = '/cc/support/';
-const PRIVACY_URL = '/cc/privacy/';
+// On the dedicated cadetcatch.com domain the page is served from the site root,
+// so internal links drop the /cc prefix. On eb28.co the page lives under /cc.
+const ON_CADETCATCH_DOMAIN =
+  typeof window !== 'undefined' &&
+  /(^|\.)cadetcatch\.com$/.test(window.location.hostname.toLowerCase());
+const BASE = ON_CADETCATCH_DOMAIN ? '' : '/cc';
+const HOME_URL = `${BASE}/`;
+const SUPPORT_URL = `${BASE}/support/`;
+const PRIVACY_URL = `${BASE}/privacy/`;
 const TERMS_URL = 'https://www.apple.com/legal/internet-services/itunes/dev/stdeula/';
-const SWAB_SUMMER_GUIDE_URL = '/cc/swab-summer-photos/';
-const DESKTOP_URL = '/cc/desktop/';
+const SWAB_SUMMER_GUIDE_URL = `${BASE}/swab-summer-photos/`;
+const IMG = (name) => `${BASE}/img/${name}`;
 
 function AppStoreBadge({ className = '' }) {
   return (
@@ -59,17 +66,17 @@ const HOW_IT_WORKS_STEPS = [
 
 const SCREENSHOTS = [
   {
-    src: '/cc/img/find-cadet-photos.png',
+    src: IMG('find-cadet-photos.png'),
     alt: 'CadetCatch home screen on iPhone showing photo collections, saved photos, and a prompt to add a cadet',
     caption: 'Start photo searches from Home once your cadet is on your roster.',
   },
   {
-    src: '/cc/img/start-with-one-photo.png',
+    src: IMG('start-with-one-photo.png'),
     alt: 'CadetCatch Add Cadet screen prompting for one clear profile photo, name, and unit',
     caption: 'One clear photo of your cadet is all it takes to get started.',
   },
   {
-    src: '/cc/img/review-photo-finds.png',
+    src: IMG('review-photo-finds.png'),
     alt: 'CadetCatch Photos screen with New and Saved tabs for reviewing possible photo matches',
     caption: 'Review new finds and keep the ones you love organized.',
   },
@@ -109,7 +116,7 @@ export default function CadetCatch() {
       {/* Header */}
       <header className="sticky top-0 z-40 border-b border-slate-200 bg-white/90 backdrop-blur">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6">
-          <a href="/cc/" className="flex items-center gap-2.5" aria-label="CadetCatch home">
+          <a href={HOME_URL} className="flex items-center gap-2.5" aria-label="CadetCatch home">
             <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-900 text-sm font-bold text-white">
               CC
             </span>
@@ -162,7 +169,7 @@ export default function CadetCatch() {
           </div>
           <div className="flex justify-center lg:justify-end">
             <img
-              src="/cc/img/find-cadet-photos.png"
+              src={IMG('find-cadet-photos.png')}
               alt="CadetCatch app home screen on an iPhone"
               width="400"
               height="869"
@@ -285,11 +292,8 @@ export default function CadetCatch() {
               ))}
             </ul>
             <div className="mt-6 rounded-xl bg-slate-50 p-4 text-sm text-slate-600">
-              Optional add-on:{' '}
-              <a href={DESKTOP_URL} className="font-medium text-orange-700 underline hover:text-orange-800">
-                desktop access
-              </a>{' '}
-              for $7.99, if you prefer reviewing photos on a bigger screen.
+              Optional add-on: <span className="font-medium text-orange-700">desktop access</span> for
+              $7.99, if you prefer reviewing photos on a bigger screen.
             </div>
             <div className="mt-8 flex justify-center">
               <AppStoreBadge />

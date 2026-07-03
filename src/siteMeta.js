@@ -27,6 +27,7 @@ const THOMAS_CUSTOM_HOMES_IMAGE = `${SITE_ORIGIN}/tch/og-image.png`;
 const THOMAS_CUSTOM_HOMES_CUSTOM_DOMAIN_IMAGE = `${THOMAS_CUSTOM_HOMES_SITE_ORIGIN}/og-image.png`;
 const MELBOURNE_WEB_STUDIO_CANONICAL_URL = `${SITE_ORIGIN}/melbournewebstudio/`;
 const FREE_WEBSITE_BUILD_CANONICAL_URL = `${SITE_ORIGIN}/free-website-build/`;
+const CADETCATCH_IMAGE = `${SITE_ORIGIN}/cc/img/find-cadet-photos.png`;
 
 const ORGANIZATION_SCHEMA = {
     '@context': 'https://schema.org',
@@ -512,12 +513,13 @@ const ROUTE_META = {
         ...BASE_ROUTE_META,
         key: 'cc',
         path: '/cc/',
-        title: 'CadetCatch | Tactical Photo Recovery for Military Parents',
+        title: 'CadetCatch — Find Coast Guard Academy cadet photos faster',
         description:
-            'CadetCatch helps military families scan academy photo drops, save matched photos, and decode military jargon from a mobile-first command center.',
-        image: DEFAULT_IMAGE,
-        themeColor: '#1c1917',
-        colorScheme: 'dark',
+            'CadetCatch helps U.S. Coast Guard Academy (USCGA) families find cadet photos faster during Swab Summer and beyond. Add a clear photo of your cadet, search event photos, and review possible matches on your iPhone.',
+        image: CADETCATCH_IMAGE,
+        siteName: 'CadetCatch',
+        themeColor: '#f8fafc',
+        colorScheme: 'light',
         includeInSitemap: true,
         structuredData: [
             ORGANIZATION_SCHEMA,
@@ -526,17 +528,38 @@ const ROUTE_META = {
                 '@type': 'SoftwareApplication',
                 name: 'CadetCatch',
                 applicationCategory: 'LifestyleApplication',
-                operatingSystem: 'Web',
-                isAccessibleForFree: false,
-                url: `${SITE_ORIGIN}/cc/`,
-                image: DEFAULT_IMAGE,
+                operatingSystem: 'iOS',
+                offers: {
+                    '@type': 'Offer',
+                    name: 'Family Monthly',
+                    price: '12.99',
+                    priceCurrency: 'USD',
+                    description: 'Auto-renewing monthly subscription. Free to download.',
+                    url: 'https://apps.apple.com/us/app/cadetcatch/id6769565852',
+                },
+                url: 'https://apps.apple.com/us/app/cadetcatch/id6769565852',
+                image: CADETCATCH_IMAGE,
                 description:
-                    'A mobile-first photo recovery and jargon decoder interface for parents of military cadets.',
+                    'CadetCatch helps Coast Guard Academy families keep up with cadet photos without digging through every gallery by hand. Search event photos and review possible matches yourself.',
                 provider: {
                     '@id': ORGANIZATION_ID,
                 },
             },
         ],
+    },
+    ccswabsummer: {
+        ...BASE_ROUTE_META,
+        key: 'ccswabsummer',
+        path: '/cc/swab-summer-photos/',
+        title: 'Swab Summer 2026 Photo Guide for USCGA Families | CadetCatch',
+        description:
+            'A plain-English guide for U.S. Coast Guard Academy (USCGA) families on finding Swab Summer 2026 event photos of your swab, from Day One through Family Weekend.',
+        image: CADETCATCH_IMAGE,
+        siteName: 'CadetCatch',
+        themeColor: '#f8fafc',
+        colorScheme: 'light',
+        includeInSitemap: true,
+        structuredData: [],
     },
     dash: {
         ...BASE_ROUTE_META,

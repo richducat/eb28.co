@@ -1,0 +1,47 @@
+{
+  "brand": "EB28",
+  "generatedAt": "2026-07-03T10:01:07.035Z",
+  "runId": "2026-07-03-am",
+  "slot": "am",
+  "article": {
+    "title": "Space Coast Local SEO Citations: Where Real Authority Comes From",
+    "url": "https://eb28.co/blog/space-coast-local-seo-citations-where-real-authority-comes-from-2026-07-03-am/",
+    "cluster": "local-seo",
+    "primaryKeyword": "Space Coast local SEO citations"
+  },
+  "posts": {
+    "blog": {
+      "title": "Space Coast Local SEO Citations: Where Real Authority Comes From",
+      "url": "https://eb28.co/blog/space-coast-local-seo-citations-where-real-authority-comes-from-2026-07-03-am/",
+      "status": "ready_for_build_and_deploy"
+    },
+    "facebook": {
+      "caption": "Space Coast Local SEO Citations: Where Real Authority Comes From\n\nA practical guide for local businesses that want more qualified organic leads, stronger search visibility, and a faster path from visitor to customer.\n\nRead it: https://eb28.co/blog/space-coast-local-seo-citations-where-real-authority-comes-from-2026-07-03-am/",
+      "status": "draft_only_not_published"
+    },
+    "instagram": {
+      "caption": "Space Coast local SEO citations: the practical version.\n\nWe broke down what to fix first, how to connect it to real lead flow, and what EB28 checks daily to keep search growth moving.\n\nRead the full guide at eb28.co/blog/",
+      "creativeBrief": "Carousel: Slide 1 problem statement, Slide 2 what to fix first, Slide 3 technical SEO checks, Slide 4 internal links, Slide 5 CTA to project brief.",
+      "status": "draft_only_not_published"
+    },
+    "x": {
+      "caption": "Space Coast Local SEO Citations: Where Real Authority Comes From\n\nThe key: connect the search intent to a page that is fast, useful, internally linked, and measured in Search Console.\n\nhttps://eb28.co/blog/space-coast-local-seo-citations-where-real-authority-comes-from-2026-07-03-am/",
+      "status": "draft_only_not_published"
+    },
+    "linkedin": {
+      "caption": "New EB28 growth brief: Space Coast Local SEO Citations: Where Real Authority Comes From\n\nThis covers the practical SEO and conversion fixes that turn a business website into a more reliable organic lead path.\n\nhttps://eb28.co/blog/space-coast-local-seo-citations-where-real-authority-comes-from-2026-07-03-am/",
+      "status": "draft_only_not_published"
+    },
+    "shortFormVideo": {
+      "brief": "30-45 second vertical video: open with a messy directory/citation list, show three fixes: consistent business details, credible local mentions, and a page path that turns searchers into enquiries. End with the EB28 article title and Melbourne Web Studio quiz CTA.",
+      "hook": "Local citations only help when they point to a business that looks trustworthy everywhere.",
+      "scenes": [
+        "Hook: scattered citation listings with inconsistent details",
+        "Fix: one consistent local story across Google profile, homepage, reviews, and citations",
+        "Proof: credible local mentions over directory spam",
+        "CTA: read the EB28 local SEO citations guide"
+      ],
+      "status": "draft_only_not_published"
+    }
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "brand": "EB28",
+  "generatedAt": "2026-07-05T10:02:54.596Z",
+  "runId": "2026-07-05-am",
+  "slot": "am",
+  "article": {
+    "title": "Small Business Homepage Optimization: The First 10 Seconds",
+    "url": "https://eb28.co/blog/small-business-homepage-optimization-the-first-10-seconds/",
+    "cluster": "conversion",
+    "primaryKeyword": "small business homepage optimization"
+  },
+  "posts": {
+    "blog": {
+      "title": "Small Business Homepage Optimization: The First 10 Seconds",
+      "url": "https://eb28.co/blog/small-business-homepage-optimization-the-first-10-seconds/",
+      "status": "canonical_refresh_ready_for_build_and_deploy"
+    },
+    "facebook": {
+      "caption": "Small Business Homepage Optimization: The First 10 Seconds\n\nThe homepage test is simple: can a buyer understand the offer, trust the proof, and take the next step in the first 10 seconds? This EB28 refresh keeps the canonical guide current with the practical fixes that improve organic lead flow.\n\nRead it: https://eb28.co/blog/small-business-homepage-optimization-the-first-10-seconds/",
+      "status": "draft_only_no_verified_eb28_social_channel"
+    },
+    "instagram": {
+      "caption": "small business homepage optimization, without the rebuild spiral.\n\nFix the first 10 seconds: headline, proof, form friction, internal links, and follow-up promise.\n\nFull guide at eb28.co/blog/",
+      "creativeBrief": "Carousel: Slide 1 first-10-seconds test, Slide 2 headline clarity, Slide 3 proof near CTA, Slide 4 form friction, Slide 5 email-first next step.",
+      "status": "draft_only_no_verified_eb28_social_channel"
+    },
+    "x": {
+      "caption": "Small Business Homepage Optimization: The First 10 Seconds\n\nThe first screen should answer: what is this, why trust it, and what should I do next?\n\nhttps://eb28.co/blog/small-business-homepage-optimization-the-first-10-seconds/",
+      "status": "draft_only_no_verified_eb28_social_channel"
+    },
+    "linkedin": {
+      "caption": "EB28 refreshed the canonical guide: Small Business Homepage Optimization: The First 10 Seconds\n\nThe useful work is not a giant redesign. It is tightening the first screen, moving proof closer to action, reducing form friction, and connecting the page to fast follow-up.\n\nhttps://eb28.co/blog/small-business-homepage-optimization-the-first-10-seconds/",
+      "status": "draft_only_no_verified_eb28_social_channel"
+    },
+    "shortFormVideo": {
+      "hook": "Your homepage has about 10 seconds to prove the next click is worth it.",
+      "script": [
+        "Open with the offer in buyer language, not company language.",
+        "Move the strongest proof next to the first call to action.",
+        "Keep the form short and make email-first follow-up explicit.",
+        "Link this page into your SEO cluster so impressions have somewhere useful to land."
+      ],
+      "shotBrief": "Vertical 20-30 second screen-record style clip showing the first-screen checklist, proof placement, and the Melbourne Web Studio lead leak quiz as the CTA.",
+      "caption": "First 10 seconds: clear offer, visible proof, low-friction next step. Full EB28 guide: https://eb28.co/blog/small-business-homepage-optimization-the-first-10-seconds/",
+      "status": "draft_only_no_verified_eb28_social_channel"
+    }
+  },
+  "publishingPolicy": {
+    "status": "draft_only",
+    "reason": "No EB28-owned external social account or channel was verified during this run."
+  }
+}

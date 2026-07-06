@@ -1926,16 +1926,16 @@
   },
   {
     "slug": "ai-receptionist-for-local-business-what-to-automate-and-what-to-keep-human",
-    "title": "AI Receptionist for Local Business: What to Automate",
-    "description": "Use an AI receptionist for local business without losing the human handoff. See what to automate, what to keep human, and how to capture leads.",
+    "title": "AI Receptionist for Local Business: What to Automate and Keep Human",
+    "description": "Use an AI receptionist for local business without losing the human handoff. See what to automate, what to keep human, and how to turn more web enquiries into qualified conversations.",
     "cluster": "lead-automation",
     "primaryKeyword": "AI receptionist for local business",
     "datePublished": "2026-06-03",
-    "dateModified": "2026-07-01",
+    "dateModified": "2026-07-06",
     "author": "EB28",
-    "heroLabel": "Morning growth refresh",
-    "sourceRunId": "2026-07-01-am",
-    "summary": "A refreshed guide to using an AI receptionist for local business lead handling without replacing the human judgment that closes valuable jobs.",
+    "heroLabel": "Evening growth brief",
+    "sourceRunId": "2026-07-06-pm",
+    "summary": "A refreshed guide to AI receptionist workflows for local businesses: automate intake, confirmation, qualification, and routing while keeping pricing, exceptions, complaints, and trust-heavy sales with a person.",
     "sections": [
       {
         "heading": "Why this search matters",
@@ -1967,7 +1967,7 @@
         "heading": "What to keep human",
         "body": [
           "Keep judgment-heavy conversations with the owner, manager, or sales team. The AI receptionist can prepare the context, but a person should handle negotiation, complex scope, sensitive customer history, and anything that could damage trust if answered too mechanically.",
-          "For local businesses, the best setup feels like faster follow-up, not a wall between the buyer and the business. That means the automation should make the human reply easier, more specific, and better timed."
+          "For local businesses, the best setup feels like faster follow-up, not a wall between the buyer and the business. The automation should make the human reply easier, more specific, and better timed."
         ],
         "bullets": [
           "Final pricing, custom scope, and discount decisions",
@@ -2019,9 +2019,9 @@
       }
     ],
     "relatedSlugs": [
-      "local-seo-map-pack-melbourne-fl",
+      "ai-lead-follow-up-local-service-business",
       "website-conversion-checklist-melbourne-fl",
-      "melbourne-fl-web-design-cost-guide-2026"
+      "local-seo-map-pack-melbourne-fl"
     ],
     "internalLinks": [
       {
@@ -2030,7 +2030,7 @@
         "reason": "Connects the receptionist workflow to the broader EB28 build and automation offer."
       },
       {
-        "label": "Melbourne Web Studio local website builder page",
+        "label": "Melbourne Web Studio lead leak quiz",
         "href": "/melbournewebstudio/#quiz",
         "reason": "Gives local businesses a direct project-brief path for conversion and website work."
       },

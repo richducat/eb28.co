@@ -1,0 +1,42 @@
+{
+  "brand": "EB28",
+  "generatedAt": "2026-07-06T10:01:48.295Z",
+  "runId": "2026-07-06-am",
+  "slot": "am",
+  "article": {
+    "title": "Private AI vs ChatGPT for Business: How to Choose the Right Workflow",
+    "url": "https://eb28.co/blog/private-ai-vs-chatgpt-for-business-how-to-choose-the-right-workflow/",
+    "cluster": "private-ai",
+    "primaryKeyword": "private AI vs ChatGPT for business"
+  },
+  "posts": {
+    "blog": {
+      "title": "Private AI vs ChatGPT for Business: How to Choose the Right Workflow",
+      "url": "https://eb28.co/blog/private-ai-vs-chatgpt-for-business-how-to-choose-the-right-workflow/",
+      "status": "ready_for_build_and_deploy"
+    },
+    "facebook": {
+      "caption": "Private AI vs ChatGPT for Business: How to Choose the Right Workflow\n\nA practical guide for deciding when hosted AI is enough, when private retrieval is safer, and how to protect sensitive workflows without slowing down.\n\nRead it: https://eb28.co/blog/private-ai-vs-chatgpt-for-business-how-to-choose-the-right-workflow/",
+      "status": "draft_only"
+    },
+    "instagram": {
+      "caption": "Private AI vs ChatGPT for business: use hosted tools for low-risk drafting, use private retrieval when sensitive documents or customer history are involved, and keep human review in the workflow. Full guide at eb28.co/blog/",
+      "creativeBrief": "Carousel: Slide 1 decision split, Slide 2 hosted AI use cases, Slide 3 private AI use cases, Slide 4 governance checklist, Slide 5 site-form CTA.",
+      "status": "draft_only"
+    },
+    "linkedin": {
+      "caption": "Refreshed EB28 growth brief: Private AI vs ChatGPT for Business: How to Choose the Right Workflow\n\nThe useful split is not \"AI or no AI.\" It is which workflows can use hosted tools, which need private retrieval, and where human review belongs.\n\nhttps://eb28.co/blog/private-ai-vs-chatgpt-for-business-how-to-choose-the-right-workflow/",
+      "status": "draft_only"
+    },
+    "shortFormVideo": {
+      "hook": "Before your team pastes customer data into an AI tool, decide which workflow it belongs in.",
+      "script": [
+        "Open with the private AI vs ChatGPT decision: hosted tools are useful for low-risk drafting.",
+        "Show the risk line: customer history, financial notes, SOPs, and internal documents need tighter access rules.",
+        "Close with the action: map one workflow, classify the data, then choose hosted AI, private retrieval, or human review."
+      ],
+      "creativeBrief": "30-second vertical video with a three-column decision board: Hosted AI, Private AI, Human Review. End card points to eb28.co/blog/.",
+      "status": "draft_only"
+    }
+  }
+}

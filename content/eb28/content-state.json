@@ -1,6 +1,20 @@
 {
-  "updatedAt": "2026-07-05T23:01:35.579Z",
+  "updatedAt": "2026-07-06T10:01:48.296Z",
   "runs": [
+    {
+      "runId": "2026-07-06-am",
+      "date": "2026-07-06",
+      "slot": "am",
+      "createdAt": "2026-07-06T10:01:48.296Z",
+      "article": {
+        "slug": "private-ai-vs-chatgpt-for-business-how-to-choose-the-right-workflow",
+        "title": "Private AI vs ChatGPT for Business: How to Choose the Right Workflow",
+        "url": "https://eb28.co/blog/private-ai-vs-chatgpt-for-business-how-to-choose-the-right-workflow/",
+        "cluster": "private-ai",
+        "primaryKeyword": "private AI vs ChatGPT for business"
+      },
+      "reportPath": "output/eb28-social/eb28-content-2026-07-06-am.json"
+    },
     {
       "runId": "2026-07-05-pm",
       "date": "2026-07-05",

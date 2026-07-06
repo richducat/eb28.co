@@ -1,0 +1,44 @@
+{
+  "brand": "EB28",
+  "generatedAt": "2026-07-05T23:01:35.579Z",
+  "runId": "2026-07-05-pm",
+  "slot": "pm",
+  "article": {
+    "title": "Website Audit Melbourne FL: Checklist for Lost Leads",
+    "url": "https://eb28.co/blog/website-audit-checklist-for-melbourne-fl-businesses-losing-leads/",
+    "cluster": "conversion",
+    "primaryKeyword": "website audit Melbourne FL"
+  },
+  "posts": {
+    "blog": {
+      "title": "Website Audit Melbourne FL: Checklist for Lost Leads",
+      "url": "https://eb28.co/blog/website-audit-checklist-for-melbourne-fl-businesses-losing-leads/",
+      "status": "ready_for_build_and_deploy"
+    },
+    "facebook": {
+      "caption": "Website Audit Melbourne FL: Checklist for Lost Leads\n\nA practical checklist for Melbourne businesses losing leads to unclear offers, weak proof, slow forms, and follow-up gaps.\n\nRead it: https://eb28.co/blog/website-audit-checklist-for-melbourne-fl-businesses-losing-leads/",
+      "status": "draft_only"
+    },
+    "linkedin": {
+      "caption": "Refreshed EB28 growth brief: Website Audit Melbourne FL: Checklist for Lost Leads\n\nThis covers the practical SEO and conversion fixes that turn a business website into a more reliable organic lead path: clearer first-screen copy, proof near the CTA, simpler forms, and internal links that support buyer intent.\n\nhttps://eb28.co/blog/website-audit-checklist-for-melbourne-fl-businesses-losing-leads/",
+      "status": "draft_only"
+    },
+    "instagram": {
+      "caption": "website audit Melbourne FL: the practical version.\n\nCheck the first screen, proof, form friction, follow-up promise, and internal links before buying more traffic.\n\nRead the full guide at eb28.co/blog/",
+      "creativeBrief": "Carousel: Slide 1 lead-loss symptom, Slide 2 first-screen clarity, Slide 3 proof and CTA placement, Slide 4 form and follow-up audit, Slide 5 CTA to the Melbourne Web Studio lead leak quiz.",
+      "status": "draft_only"
+    },
+    "shortFormVideo": {
+      "hook": "If your Melbourne website gets visits but not leads, audit these five things before you buy more traffic.",
+      "outline": [
+        "Show the homepage first screen and call out unclear offer risk.",
+        "Point to missing proof near the primary CTA.",
+        "Show the form and identify nonessential friction.",
+        "Explain why follow-up speed matters after the form submit.",
+        "End with the EB28 article URL and Melbourne Web Studio quiz CTA."
+      ],
+      "caption": "Website traffic is not the same as lead flow. Use this audit before buying more clicks: https://eb28.co/blog/website-audit-checklist-for-melbourne-fl-businesses-losing-leads/",
+      "status": "draft_only"
+    }
+  }
+}

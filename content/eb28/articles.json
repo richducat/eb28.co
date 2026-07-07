@@ -6,11 +6,11 @@
     "cluster": "private-ai",
     "primaryKeyword": "local RAG system for business documents",
     "datePublished": "2026-06-04",
-    "dateModified": "2026-07-02",
+    "dateModified": "2026-07-07",
     "author": "EB28",
-    "heroLabel": "Morning growth brief",
-    "sourceRunId": "2026-07-02-am",
-    "summary": "Refreshed private AI guide for owners who want secure document search, source citations, staff access rules, and a scoped first step before connecting company files to AI.",
+    "heroLabel": "Evening growth brief",
+    "sourceRunId": "2026-07-07-pm",
+    "summary": "Refreshed private AI guide for owners who want secure document search, source citations, staff access rules, answer-quality checks, and a scoped first step before connecting company files to AI.",
     "sections": [
       {
         "heading": "Why this search matters",
@@ -49,6 +49,7 @@
           "Map who can access each document collection",
           "Test retrieval quality with real staff questions before expanding scope",
           "Keep human review in the workflow for sensitive answers",
+          "Use Search Console and enquiry quality to decide which private AI pages deserve deeper examples",
           "Use the project brief to turn a private AI idea into a scoped implementation plan"
         ]
       }

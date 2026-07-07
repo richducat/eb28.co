@@ -1,0 +1,47 @@
+{
+  "brand": "EB28",
+  "generatedAt": "2026-07-07T22:01:39.566Z",
+  "runId": "2026-07-07-pm",
+  "slot": "pm",
+  "article": {
+    "title": "Local RAG System for Business Documents: Implementation Guide",
+    "url": "https://eb28.co/blog/local-rag-system-for-business-documents-a-plain-english-implementation-guide/",
+    "cluster": "private-ai",
+    "primaryKeyword": "local RAG system for business documents"
+  },
+  "posts": {
+    "blog": {
+      "title": "Local RAG System for Business Documents: Implementation Guide",
+      "url": "https://eb28.co/blog/local-rag-system-for-business-documents-a-plain-english-implementation-guide/",
+      "status": "draft_only_ready_for_deploy"
+    },
+    "facebook": {
+      "caption": "Local RAG System for Business Documents: Implementation Guide\n\nA practical guide for owners who want private document search without turning company files into a risky AI experiment. Start with scope, access rules, citations, review paths, and one workflow the team can actually trust.\n\nRead it: https://eb28.co/blog/local-rag-system-for-business-documents-a-plain-english-implementation-guide/",
+      "status": "draft_only_not_published"
+    },
+    "instagram": {
+      "caption": "Local RAG sounds technical, but the first decision is simple: which business documents should AI be allowed to search?\n\nThe EB28 guide breaks down document scope, access rules, source citations, review paths, and the safe first workflow.\n\nRead the full guide at eb28.co/blog/",
+      "creativeBrief": "Carousel: Slide 1 private document search problem, Slide 2 choose one workflow, Slide 3 set access rules, Slide 4 require citations, Slide 5 use the EB28 project brief.",
+      "status": "draft_only_not_published"
+    },
+    "x": {
+      "caption": "Local RAG works when the scope is narrow, sources are cited, access rules are clear, and humans can review sensitive answers.\n\nhttps://eb28.co/blog/local-rag-system-for-business-documents-a-plain-english-implementation-guide/",
+      "status": "draft_only_not_published"
+    },
+    "linkedin": {
+      "caption": "Refreshed EB28 guide: Local RAG System for Business Documents: Implementation Guide\n\nThe practical version of local RAG is not model shopping. It is document scope, access rules, source citations, logging, review paths, and one trusted workflow before expansion.\n\nhttps://eb28.co/blog/local-rag-system-for-business-documents-a-plain-english-implementation-guide/",
+      "status": "draft_only_not_published"
+    },
+    "shortFormVideo": {
+      "hook": "Before you build a private AI document search, decide what it is not allowed to see.",
+      "script": [
+        "Open with a messy folder or internal knowledge base and the line: \"This is where most private AI projects get risky.\"",
+        "Show the first safe step: choose one workflow, such as SOP lookup or staff onboarding.",
+        "Show three controls on screen: access rules, source citations, and human review.",
+        "Close with: \"EB28 turns private AI ideas into scoped systems before the first prompt goes live.\""
+      ],
+      "caption": "Local RAG for business documents starts with boundaries, not hype. Full guide: https://eb28.co/blog/local-rag-system-for-business-documents-a-plain-english-implementation-guide/",
+      "status": "draft_only_not_published"
+    }
+  }
+}

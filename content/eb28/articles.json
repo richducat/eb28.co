@@ -1372,11 +1372,11 @@
     "cluster": "lead-automation",
     "primaryKeyword": "CRM automation for local service business",
     "datePublished": "2026-06-08",
-    "dateModified": "2026-06-26",
+    "dateModified": "2026-07-07",
     "author": "EB28",
     "heroLabel": "Morning growth brief",
-    "sourceRunId": "2026-06-26-am",
-    "summary": "A refreshed guide for the lead automation cluster, focused on the simplest CRM handoff stack that captures, qualifies, follows up, and reports without adding sales-system bloat.",
+    "sourceRunId": "2026-07-07-am",
+    "summary": "A refreshed guide for the lead automation cluster, focused on the smallest CRM automation stack that captures, qualifies, follows up, and reports without adding sales-system bloat.",
     "sections": [
       {
         "heading": "Why this search matters",
@@ -1415,6 +1415,19 @@
           "Send an instant confirmation with the expected response window",
           "Route high-intent leads to a human with the context needed for a useful reply",
           "Review search and conversion data before adding more automation"
+        ]
+      },
+      {
+        "heading": "What to measure before adding more automation",
+        "body": [
+          "A simple CRM stack should prove where leads came from, how fast they were answered, and which follow-up steps actually produced booked work.",
+          "Before adding another tool, check whether the current path can show missed leads, unanswered requests, duplicate contacts, stale pipeline stages, and the pages that created the highest-intent enquiries."
+        ],
+        "bullets": [
+          "Track form source, service category, urgency, and first-response time",
+          "Keep email-first public contact paths clear so the website does not expose personal phone numbers",
+          "Review CRM fields against real sales decisions instead of collecting data no one uses",
+          "Use the site form or richducat@gmail.com as the public next step when a buyer is ready to talk"
         ]
       }
     ],

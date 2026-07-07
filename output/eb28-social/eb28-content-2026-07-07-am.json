@@ -1,0 +1,43 @@
+{
+  "brand": "EB28",
+  "generatedAt": "2026-07-07T10:05:08.491Z",
+  "runId": "2026-07-07-am",
+  "slot": "am",
+  "article": {
+    "title": "CRM Automation for Local Service Businesses: The Simple Stack That Works",
+    "url": "https://eb28.co/blog/crm-automation-for-local-service-businesses-the-simple-stack-that-works/",
+    "cluster": "lead-automation",
+    "primaryKeyword": "CRM automation for local service business"
+  },
+  "posts": {
+    "blog": {
+      "title": "CRM Automation for Local Service Businesses: The Simple Stack That Works",
+      "url": "https://eb28.co/blog/crm-automation-for-local-service-businesses-the-simple-stack-that-works/",
+      "status": "canonical_refresh_ready_for_build_and_deploy"
+    },
+    "facebook": {
+      "caption": "CRM Automation for Local Service Businesses: The Simple Stack That Works\n\nMost local-service CRM problems are not software problems first. They are handoff problems: source, service need, urgency, owner, next step, and first-response time.\n\nThis EB28 refresh shows the simple stack worth fixing before adding more tools.\n\nRead it: https://eb28.co/blog/crm-automation-for-local-service-businesses-the-simple-stack-that-works/",
+      "status": "draft_only_copy_not_published"
+    },
+    "linkedin": {
+      "caption": "New EB28 organic-growth refresh: CRM Automation for Local Service Businesses: The Simple Stack That Works\n\nThe practical CRM automation stack for local service businesses starts after the form: confirmation, qualification, routing, first-response time, and reporting that shows which pages create booked work.\n\nhttps://eb28.co/blog/crm-automation-for-local-service-businesses-the-simple-stack-that-works/",
+      "status": "draft_only_copy_not_published"
+    },
+    "instagram": {
+      "caption": "CRM automation for local service businesses: fix the handoff before adding tools.\n\nSource page. Service need. Urgency. Owner. Next step. First response time.\n\nFull guide: eb28.co/blog/",
+      "creativeBrief": "Carousel: Slide 1 missed-lead handoff problem, Slide 2 five-minute CRM checklist, Slide 3 source/urgency/owner fields, Slide 4 human follow-up promise, Slide 5 site form or richducat@gmail.com CTA.",
+      "status": "draft_only_copy_not_published"
+    },
+    "shortFormVideo": {
+      "hook": "Your CRM is not broken because it lacks features. It is broken because the first five minutes after a lead comes in are unclear.",
+      "beats": [
+        "Show a form submission landing in a shared inbox or CRM queue",
+        "Overlay the five required fields: source, service, urgency, owner, next step",
+        "Show the confirmation and human response window",
+        "End on the canonical EB28 CRM guide URL and site-form CTA"
+      ],
+      "caption": "Before you buy another CRM tool, map the first five minutes after a lead asks for help. https://eb28.co/blog/crm-automation-for-local-service-businesses-the-simple-stack-that-works/",
+      "status": "draft_only_brief_not_published"
+    }
+  }
+}

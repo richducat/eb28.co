@@ -1730,11 +1730,11 @@
     "cluster": "melbourne-web-design",
     "primaryKeyword": "mobile website design Melbourne FL",
     "datePublished": "2026-06-05",
-    "dateModified": "2026-07-04",
+    "dateModified": "2026-07-09",
     "author": "EB28",
-    "heroLabel": "Morning growth refresh",
-    "sourceRunId": "2026-07-04-am",
-    "summary": "A refreshed EB28 growth brief for Melbourne web design buyers, focused on mobile speed, trust, first-screen clarity, and follow-up paths that protect qualified phone traffic.",
+    "heroLabel": "Evening growth refresh",
+    "sourceRunId": "2026-07-09-pm",
+    "summary": "A refreshed EB28 PM growth brief for Melbourne web design buyers, focused on mobile speed, trust, first-screen clarity, and follow-up paths that protect qualified phone traffic.",
     "sections": [
       {
         "heading": "Why this search matters",
@@ -2937,9 +2937,19 @@
     "relatedSlugs": [],
     "internalLinks": [
       {
+        "label": "Website conversion checklist for Melbourne FL",
+        "href": "/blog/website-conversion-checklist-melbourne-fl/",
+        "reason": "Connects the public tape recap to the conversion discipline EB28 applies to organic-growth work."
+      },
+      {
+        "label": "EB28 private AI and app development homepage",
+        "href": "/",
+        "reason": "Connects the Bluechip transparency work back to EB28 broader software and automation services."
+      },
+      {
         "label": "The Tape, Daily archive",
         "href": "/tape/",
-        "reason": "One page per market day — every number in this recap links back to a daily shift report."
+        "reason": "One page per market day with the source shift reports behind this recap."
       },
       {
         "label": "The live fund dashboard",
@@ -2949,22 +2959,12 @@
       {
         "label": "Answers: trading-bot questions without the hype",
         "href": "/answers/",
-        "reason": "Safety, legality, scams, track records — plain-English answers backed by this tape."
+        "reason": "Safety, legality, scams, track records, and plain-English answers backed by the tape."
       },
       {
         "label": "Bluechip, the desk behind the tape",
         "href": "/bluechip/",
         "reason": "What the software is, what it costs, and what it deliberately does not promise."
-      },
-      {
-        "label": "Shift report: June 29, 2026",
-        "href": "/tape/2026-06-29/",
-        "reason": "A full day of journal entries, exactly as recorded."
-      },
-      {
-        "label": "Shift report: June 30, 2026",
-        "href": "/tape/2026-06-30/",
-        "reason": "A full day of journal entries, exactly as recorded."
       }
     ]
   }

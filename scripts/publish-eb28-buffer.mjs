@@ -4,6 +4,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import process from 'node:process';
 import sharp from 'sharp';
+import { assertPublishingAuthorized } from './lib/eb28-social-publish-policy.mjs';
 
 const ROOT = process.cwd();
 const OUTPUT_DIR = path.join(ROOT, 'output', 'eb28-social');
@@ -486,6 +487,7 @@ async function publish(pkg, context, options) {
     console.log(JSON.stringify({ ok: true, status: 'skipped', reason: 'EB28_SOCIAL_POSTING_ENABLED is not true' }, null, 2));
     return;
   }
+  if (!options.dryRun) assertPublishingAuthorized(pkg);
 
   const state = await readJson(STATE_FILE, { publishedRuns: {} });
   if (!options.force && state.publishedRuns?.[context.runId]) {

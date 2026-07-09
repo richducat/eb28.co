@@ -10,6 +10,7 @@ import {
   analyzeSocialPackage,
   normalizeKeyword,
 } from './lib/eb28-content-quality.mjs';
+import { getPublishingAuthorizationError } from './lib/eb28-social-publish-policy.mjs';
 
 const ROOT = process.cwd();
 const ARTICLES_FILE = path.join(ROOT, 'content', 'eb28', 'articles.json');
@@ -90,6 +91,15 @@ async function main() {
       Boolean(latestSocialQuality?.ok),
       'Latest owned-social package is canonical, complete, safe, and draft-only.',
       latestSocialQuality ? { score: latestSocialQuality.score, failures: latestSocialQuality.failures } : { latestReportPath },
+    ),
+  );
+
+  const publishGuardReason = latestSocial ? getPublishingAuthorizationError(latestSocial) : null;
+  checks.push(
+    check(
+      /not explicitly authorized for external publishing/i.test(publishGuardReason || ''),
+      'Buffer publisher refuses a draft-only package before any API call.',
+      { reason: publishGuardReason, latestReportPath },
     ),
   );
 

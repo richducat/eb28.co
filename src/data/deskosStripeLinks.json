@@ -48,5 +48,13 @@
     "product": "prod_Ugl1xVhlllcv5y",
     "price": "price_1ThNVtByTro6FO6k2XZ93WLD",
     "url": "https://buy.stripe.com/14A6oG1OBdRGaqYaaGbbG0S"
+  },
+  "bluechip-founding-beta": {
+    "product": "prod_Ur3dbQDGqCDvh0",
+    "price": "price_1TrLWVByTro6FO6kDEC3C8uB",
+    "paymentLink": "plink_1TrLWWByTro6FO6kTUH6RGUv",
+    "url": "https://buy.stripe.com/4gM28qdxjfZO9mU5UqbbG0T",
+    "priceUsd": 98,
+    "betaWindowOpened": "2026-07-09"
   }
 }

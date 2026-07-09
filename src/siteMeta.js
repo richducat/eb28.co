@@ -309,12 +309,19 @@ const ROUTE_META = {
             ORGANIZATION_SCHEMA,
             {
                 '@context': 'https://schema.org',
-                '@type': 'WebPage',
-                name: 'Bluechip by EB28',
+                '@type': 'Product',
+                name: 'EB28 Bluechip — Founding Beta License',
                 url: 'https://eb28.co/bluechip/',
                 description:
                     'Bluechip is EB28’s flagship US-equities desk in live beta: licensed software the operator runs in an isolated Robinhood Agentic sub-account, behind a kill switch, with a public trade tape.',
-                provider: { '@id': ORGANIZATION_ID },
+                brand: { '@type': 'Brand', name: 'EB28' },
+                offers: {
+                    '@type': 'Offer',
+                    priceCurrency: 'USD',
+                    price: '98',
+                    availability: 'https://schema.org/LimitedAvailability',
+                    url: 'https://eb28.co/bluechip/',
+                },
             },
         ],
     },

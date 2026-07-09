@@ -3,6 +3,8 @@ import React from 'react';
 import {
     DESK_COMMERCE,
     DESK_PRICE_USD,
+    BLUECHIP_CHECKOUT_URL,
+    BLUECHIP_PRICE_USD,
     BUNDLE_CHECKOUT_URL,
     BUNDLE_PRICE_USD,
     OPERATOR_CHECKOUT_URL,
@@ -422,15 +424,16 @@ const DeskOS = () => {
                         </div>
 
                         <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-                            <CheckoutButton href="mailto:social@eb28.co?subject=Bluechip%20early%20access" big>
-                                Request Bluechip early access
+                            <CheckoutButton href={BLUECHIP_CHECKOUT_URL} big>
+                                Get the founding beta — ${BLUECHIP_PRICE_USD}
                             </CheckoutButton>
                             <CheckoutButton href="/fundmanager/" big ghost>
                                 Watch the live tape →
                             </CheckoutButton>
                         </div>
                         <p className="mt-4 text-center text-[11px] text-white/40">
-                            Live beta. Not for sale yet — the founding cohort gets first keys when the gate opens.{' '}
+                            ${BLUECHIP_PRICE_USD} beta-tester price for the first 30 days of the beta (opened July 9) ·
+                            one-time license · 30-day get-it-running guarantee.{' '}
                             <a href="/bluechip/" className="text-teal-200 underline underline-offset-2 hover:text-teal-100">
                                 Read the Bluechip story →
                             </a>

@@ -11,9 +11,18 @@ import {
   Wallet,
 } from 'lucide-react';
 
-const EARLY_ACCESS_URL = 'mailto:social@eb28.co?subject=Bluechip%20early%20access';
+const CHECKOUT_URL = 'https://buy.stripe.com/4gM28qdxjfZO9mU5UqbbG0T';
+const PRICE_USD = 98;
+const QUESTIONS_URL = 'mailto:social@eb28.co?subject=Bluechip%20question';
 const TAPE_URL = '/fundmanager/';
 const DESKOS_URL = '/deskos/';
+
+const AFTER_YOU_PAY = [
+  'Instant Stripe receipt to your email. Card handled by Stripe — we never see your number.',
+  'Within 24 hours: a personal onboarding email from a human with your license, the install guide, and your first paper-mode session scheduled if you want a hand.',
+  'Your desk starts in paper mode. It cannot touch real money until you deliberately flip it live yourself.',
+  '30-day get-it-running guarantee: genuinely try and can’t get your desk running in paper mode? Email us, get every cent back, keep the code.',
+];
 
 const MANIFESTO = [
   'Somewhere on a trading floor, there’s a name for you. Dumb money. That’s the nurse buying one share of Apple after a night shift. The electrician putting a little into an index fund for his kids. The teacher reading earnings reports on her lunch break. They say it in meetings. They print it in research notes. They mean you.',
@@ -87,13 +96,15 @@ const SAMPLE_TAPE = [
 const DISCLAIMER =
   'Bluechip is licensed software that you install and operate. It is not investment advice, not a fund, and not a financial service. Trading securities involves risk, and you can lose money, including everything you put in. Nothing on this page promises or implies profit. Activity shown on the public dashboard, good or bad, is a record of past activity and is not a prediction of future results. Robinhood and related marks belong to their owner, which does not endorse or sponsor EB28 or Bluechip.';
 
-function EarlyAccessButton({ className = '' }) {
+function BuyButton({ className = '' }) {
   return (
     <a
-      href={EARLY_ACCESS_URL}
+      href={CHECKOUT_URL}
+      target="_blank"
+      rel="noopener noreferrer"
       className={`inline-flex items-center gap-2 rounded-full bg-orange-600 px-6 py-3 text-base font-semibold text-white shadow-sm transition-colors hover:bg-orange-700 ${className}`}
     >
-      Request early access
+      Get the founding beta — ${PRICE_USD}
       <ChevronRight className="h-4 w-4" aria-hidden="true" />
     </a>
   );
@@ -112,10 +123,12 @@ export default function BluechipPage() {
             <span className="text-lg font-semibold tracking-tight">Bluechip <span className="font-normal text-slate-500">by EB28</span></span>
           </a>
           <a
-            href={EARLY_ACCESS_URL}
+            href={CHECKOUT_URL}
+            target="_blank"
+            rel="noopener noreferrer"
             className="rounded-full bg-orange-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-orange-700"
           >
-            Request early access
+            Get the beta — ${PRICE_USD}
           </a>
         </div>
       </header>
@@ -147,9 +160,10 @@ export default function BluechipPage() {
               included.
             </p>
             <div className="mt-8 flex flex-col items-start gap-3">
-              <EarlyAccessButton />
+              <BuyButton />
               <p className="text-sm text-slate-500">
-                Live beta · early access by email, onboarded in small batches · Desk OS catalog from $47
+                ${PRICE_USD} beta-tester price for the first 30 days (opened July 9) · one-time
+                license · 30-day get-it-running guarantee
               </p>
             </div>
             <p className="mt-6 max-w-xl text-xs leading-relaxed text-slate-400">
@@ -274,32 +288,52 @@ export default function BluechipPage() {
             <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-orange-100">
               <HardHat className="h-6 w-6 text-orange-700" aria-hidden="true" />
             </div>
-            <h2 className="text-2xl font-bold tracking-tight">Bluechip is in live beta. Get on the list.</h2>
+            <div className="flex items-baseline justify-between gap-4">
+              <h2 className="text-2xl font-bold tracking-tight">Founding beta license</h2>
+              <p className="shrink-0">
+                <span className="text-4xl font-bold tracking-tight">${PRICE_USD}</span>
+                <span className="text-sm text-slate-500"> one-time</span>
+              </p>
+            </div>
+            <p className="mt-1 text-sm text-slate-500">
+              Beta-tester price for the first 30 days of the beta, which opened July 9. After that it
+              goes up. No countdown theatrics — that’s just the date.
+            </p>
             <p className="mt-4 text-sm leading-relaxed text-slate-600">
               Bluechip is running right now, small by design: $5 fractional clips, US equities only,
               and the operator holds the switch. Small by design is a feature, not an apology — you
-              don’t hand a new tool the whole job on day one. We’re onboarding early access in
-              batches so we can watch every desk closely.
+              don’t hand a new tool the whole job on day one. We onboard founding desks in small
+              batches so we can watch every one closely.
             </p>
-            <p className="mt-4 text-sm leading-relaxed text-slate-600">
-              Email <span className="font-semibold text-slate-900">social@eb28.co</span> with the
-              subject <span className="font-semibold text-slate-900">“Bluechip early access”</span>{' '}
-              and we’ll take it from there. The rest of the{' '}
-              <a href={DESKOS_URL} className="font-medium text-orange-700 underline hover:text-orange-600">
+            <div className="mt-6 rounded-xl bg-slate-50 p-4">
+              <p className="text-xs font-semibold uppercase tracking-wide text-orange-700">
+                What happens after you pay
+              </p>
+              <ul className="mt-3 space-y-2.5">
+                {AFTER_YOU_PAY.map((item) => (
+                  <li key={item.slice(0, 30)} className="flex items-start gap-2.5">
+                    <Check className="mt-0.5 h-4 w-4 shrink-0 text-orange-600" aria-hidden="true" />
+                    <span className="text-sm leading-relaxed text-slate-600">{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="mt-8 flex flex-col items-center gap-3">
+              <BuyButton />
+              <a href={TAPE_URL} className="text-sm font-medium text-slate-600 underline underline-offset-4 hover:text-slate-900">
+                Watch the live tape first
+              </a>
+              <a href={QUESTIONS_URL} className="text-xs text-slate-400 underline underline-offset-4 hover:text-slate-600">
+                Have a question before you buy? Email a human: social@eb28.co
+              </a>
+            </div>
+            <p className="mt-6 text-center text-xs leading-relaxed text-slate-400">
+              The rest of the{' '}
+              <a href={DESKOS_URL} className="underline hover:text-slate-600">
                 EB28 Desk OS catalog
               </a>{' '}
               is open today: $47 per desk, $197 for the bundle, $497 for the operator tier.
             </p>
-            <div className="mt-6 rounded-xl bg-slate-50 p-4 text-sm text-slate-600">
-              We onboard beta desks in small batches, in order of request. No countdown timers, no
-              fake urgency. When your batch is up, you’ll hear from us.
-            </div>
-            <div className="mt-8 flex flex-col items-center gap-3">
-              <EarlyAccessButton />
-              <a href={TAPE_URL} className="text-sm font-medium text-slate-600 underline underline-offset-4 hover:text-slate-900">
-                Watch the live tape first
-              </a>
-            </div>
           </div>
         </div>
       </section>

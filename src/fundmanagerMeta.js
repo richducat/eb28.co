@@ -183,6 +183,10 @@ export const DESK_COMMERCE = {
 
 export const BUNDLE_CHECKOUT_URL = 'https://buy.stripe.com/4gMdR8gJveVK56E6YubbG0R';
 export const OPERATOR_CHECKOUT_URL = 'https://buy.stripe.com/14A6oG1OBdRGaqYaaGbbG0S';
+// Bluechip founding-beta license — $98 beta-tester price for the first 30 days
+// of the beta (opened 2026-07-09). Record: deskosStripeLinks.json "bluechip-founding-beta".
+export const BLUECHIP_PRICE_USD = 98;
+export const BLUECHIP_CHECKOUT_URL = 'https://buy.stripe.com/4gM28qdxjfZO9mU5UqbbG0T';
 
 export function humanizeIdentifier(value) {
   return String(value || '')

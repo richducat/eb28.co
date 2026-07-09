@@ -26,8 +26,43 @@
       href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap"
     />
     <title>Inspector Gadgets · York Inspections</title>
-    <script type="module" crossorigin src="/HIP/app/assets/index-C-iEoICG.js"></script>
-    <link rel="stylesheet" crossorigin href="/HIP/app/assets/index-DYPP87AC.css">
+    <script>
+      // Always run the latest deploy: GitHub Pages caches index.html for up to
+      // ten minutes and browsers cache it longer, so a stale shell keeps
+      // loading an old bundle. On boot, fetch a cache-busted copy of this page,
+      // compare bundle hashes, and hard-swap to the new version when they
+      // differ. Runs before any user input, so the reload can't lose edits.
+      (function () {
+        try {
+          // Post-refresh landing: clean the cache-busting query off the URL.
+          if (location.search.indexOf("_r=") !== -1) {
+            history.replaceState(null, "", location.pathname + location.hash);
+          }
+          // Loop guard: if we JUST forced a refresh and the CDN still served
+          // the old shell, don't bounce again this session — the next natural
+          // load retries.
+          if (sessionStorage.getItem("hia:ver-reload")) {
+            sessionStorage.removeItem("hia:ver-reload");
+            return;
+          }
+          var current = (document.querySelector('script[type="module"][src*="index-"]') || {}).src || "";
+          var currentHash = (current.match(/index-[A-Za-z0-9_-]+\.js/) || [])[0];
+          if (!currentHash) return; // dev server — nothing to compare
+          fetch(location.pathname + "?_v=" + Date.now(), { cache: "no-store" })
+            .then(function (res) { return res.ok ? res.text() : ""; })
+            .then(function (html) {
+              var fresh = (html.match(/index-[A-Za-z0-9_-]+\.js/) || [])[0];
+              if (fresh && fresh !== currentHash) {
+                sessionStorage.setItem("hia:ver-reload", "1");
+                location.replace(location.pathname + "?_r=" + Date.now() + location.hash);
+              }
+            })
+            .catch(function () {});
+        } catch (e) {}
+      })();
+    </script>
+    <script type="module" crossorigin src="/HIP/app/assets/index-C_s25BEv.js"></script>
+    <link rel="stylesheet" crossorigin href="/HIP/app/assets/index-BSzJQ9rU.css">
   </head>
   <body>
     <div id="root"></div>

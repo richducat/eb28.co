@@ -78,3 +78,26 @@ No tool, agency, or AI can guarantee 100 customers/day — and anything promisin
 that for $0 is selling you something. What is guaranteed: before this work, the
 conversion rate was structurally 0%. Now every visitor the blog engine earns has
 a working path to becoming a paying customer without human involvement.
+
+## 2026-07-09 — Full-auto growth systems (live)
+
+Three self-publishing systems now run via launchd, all lint-gated by
+`scripts/compliance_lint.py` (fail closed), all carrying the standard
+software-not-advice / risk-of-loss disclaimer, all auto-committing only
+their own generated paths and pushing to main:
+
+1. **The Tape, Daily** (`ai.eb28.tape.daily`, Mon–Fri 5:30pm ET) —
+   `scripts/generate-tape-daily.py` renders one shift-report page per market
+   day from the Robinhood desk journal + fund snapshot to `docs/tape/`,
+   with a 30-day backfilled archive. Fails closed on stale/missing snapshot.
+2. **/answers hub** (`ai.eb28.answers.nightly`, daily 8:45pm ET) —
+   `scripts/generate-answers-hub.py` + 20-question seed cluster in
+   `content/eb28/answers.json`. Publishes 1 new page/night and refreshes 2
+   old ones — capped per Google's March 2026 scaled-content enforcement;
+   every page carries first-party tape data, FAQPage JSON-LD, visible
+   last-updated dates, and CFTC/FINRA source links.
+3. **Weekly tape recap** (`ai.eb28.tape.weekly`, Sunday 5pm ET) —
+   `scripts/generate-tape-weekly-recap.py` aggregates the week's tape into
+   a blog post through `scripts/generate-eb28-blog.mjs`.
+
+Plists live in `ops/launchd/` and are installed to `~/Library/LaunchAgents`.

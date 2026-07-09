@@ -174,10 +174,23 @@ def send_telegram(text):
 def main():
     facts = today_facts()
     pack = build_pack(facts)
+    # Compliance gate — fail closed. A blocked pack is never written or sent.
+    sys.path.insert(0, str(Path(__file__).parent))
+    from compliance_lint import lint
+    violations = lint(pack)
+    if violations:
+        send_telegram(
+            "⚠️ Today's post pack was BLOCKED by the compliance gate — nothing was published:\n"
+            + "\n".join(violations[:5])
+        )
+        print("BLOCKED by compliance lint:")
+        for v in violations:
+            print("  ✗", v)
+        sys.exit(1)
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     out = OUT_DIR / f"{datetime.now(ET).strftime('%Y-%m-%d')}.md"
     out.write_text(pack)
-    sent = send_telegram("\U0001F4E3 Today's Bluechip post pack is ready:\n\n" + pack)
+    sent = send_telegram("\U0001F4E3 Today's Bluechip post pack is ready (compliance-checked ✓):\n\n" + pack)
     print(f"pack written: {out}")
     print(f"telegram: {'sent' if sent else 'no session — pack on disk only'}")
 

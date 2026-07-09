@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import SiteNav from './SiteNav.jsx';
+import { TickerTape, LiveChart, WATCHLIST } from './TradingView.jsx';
 import {
   Check,
   ChevronRight,
@@ -11,6 +13,14 @@ import {
   Wallet,
 } from 'lucide-react';
 
+// On the dedicated daytradingbot.net domain the same page wears the domain
+// brand; the desk itself is still named Bluechip everywhere in the copy.
+const ON_DTB_DOMAIN =
+  typeof window !== 'undefined' &&
+  /(^|\.)daytradingbot\.net$/.test(window.location.hostname.toLowerCase());
+const BRAND = ON_DTB_DOMAIN ? 'DayTradingBot' : 'EB28';
+const BRAND_SUB = ON_DTB_DOMAIN ? 'by EB28' : 'Bluechip';
+
 const CHECKOUT_URL = 'https://buy.stripe.com/4gM28qdxjfZO9mU5UqbbG0T';
 const PRICE_USD = 98;
 const QUESTIONS_URL = 'mailto:social@eb28.co?subject=Bluechip%20question';
@@ -19,9 +29,43 @@ const DESKOS_URL = '/deskos/';
 
 const AFTER_YOU_PAY = [
   'Instant Stripe receipt to your email. Card handled by Stripe — we never see your number.',
-  'Within 24 hours: a personal onboarding email from a human with your license, the install guide, and your first paper-mode session scheduled if you want a hand.',
+  'Within 24 hours: a personal onboarding email from a human with your license, the plain-English install guide, and your first paper-mode session scheduled if you want a hand. Then the Setup Portal at eb28.co/setup walks you through the rest, one click at a time.',
   'Your desk starts in paper mode. It cannot touch real money until you deliberately flip it live yourself.',
-  '30-day get-it-running guarantee: genuinely try and can’t get your desk running in paper mode? Email us, get every cent back, keep the code.',
+  '30-day get-it-running guarantee: genuinely try and can’t get your desk running in paper mode? Email social@eb28.co with your Stripe receipt within 30 days — full refund to your card through Stripe, and you keep the code.',
+];
+
+const WHAT_BLUECHIP_IS_NOT = [
+  {
+    title: 'Not a fund',
+    body: 'We never hold your money, never touch your account. You buy software; your dollars stay at your broker, in a sub-account only you control.',
+  },
+  {
+    title: 'Not advice',
+    body: 'We never tell you what to buy and we make no predictions. The desk follows written rules you can read, and you hold every switch.',
+  },
+  {
+    title: 'Not Robinhood',
+    body: 'Robinhood does not endorse or sponsor EB28. We connect through their official Agentic Trading API — the public front door they built for agents.',
+  },
+];
+
+const PLAIN_ENGLISH = [
+  {
+    term: 'Paper mode',
+    plain: 'The desk pretends to trade. It watches real prices and writes down every decision it would make, but no real money moves. This is how your desk starts, and you can stay here as long as you want.',
+  },
+  {
+    term: 'Agentic sub-account',
+    plain: 'A separate compartment inside your Robinhood account that you create. The desk lives there and only there — it physically cannot reach the rest of your money.',
+  },
+  {
+    term: 'Kill switch',
+    plain: 'One control that stops everything, everywhere, immediately. You hold it, not us. There is also one switch to go live and one switch to go back to paper.',
+  },
+  {
+    term: 'The tape',
+    plain: 'The running public record of every decision the desk makes — buys, passes, and losses, all in the same font on the same page. Ours is at eb28.co/fundmanager.',
+  },
 ];
 
 const MANIFESTO = [
@@ -37,7 +81,7 @@ const SPECS = [
   'Confined to a dedicated, isolated Robinhood Agentic sub-account that you create. It cannot touch the rest of your money.',
   'Watches eight names: AAPL, NVDA, TSLA, MSFT, GOOGL, AMD, SPY, QQQ. Buys small $5 fractional dips, max two per 15-minute cycle. Small by design during beta.',
   'Runs behind the full EB28 Desk OS safety stack: gated runner, global kill switch, paper-and-review mode first, one switch live, one switch back, full journal of everything.',
-  'Radical transparency: every decision streams to the public dashboard, including losses. Our own site prints its negative test PnL on purpose.',
+  'Radical transparency: every decision streams to the public dashboard, including losses. The tape is never edited — wins and losses print in the same font.',
 ];
 
 const HOW_IT_WORKS = [
@@ -69,6 +113,10 @@ const HOW_IT_WORKS = [
 
 const FAQS = [
   {
+    q: 'How does EB28 make money on this?',
+    a: 'You pay $98 once for a software license. That is the entire business. We take no cut of your trades, we earn nothing when you trade more, we never hold your money, and there is no subscription. If we ever add paid products, they will be priced in plain dollars on a page like this one.',
+  },
+  {
     q: 'Will Bluechip make me money?',
     a: 'We don’t know, and we won’t pretend to. Bluechip is licensed software you operate, not a money machine. It trades small $5 fractional clips during beta, and you can lose the money you trade. What we sell is the desk: tools, discipline, transparency, and control. The outcomes are the market’s business, not our marketing.',
   },
@@ -96,6 +144,89 @@ const SAMPLE_TAPE = [
 const DISCLAIMER =
   'Bluechip is licensed software that you install and operate. It is not investment advice, not a fund, and not a financial service. Trading securities involves risk, and you can lose money, including everything you put in. Nothing on this page promises or implies profit. Activity shown on the public dashboard, good or bad, is a record of past activity and is not a prediction of future results. Robinhood and related marks belong to their owner, which does not endorse or sponsor EB28 or Bluechip.';
 
+// Live demo: the same market the desk watches, plus the desk's actual most
+// recent journal decision for the selected name — real product, no mockups.
+function DeskDemo() {
+  const [active, setActive] = useState('NVDA');
+  const [actions, setActions] = useState([]);
+  useEffect(() => {
+    fetch('/data/fundmanager-public.json', { cache: 'no-store' })
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => {
+        const acts = (d && Array.isArray(d.recentActions)) ? d.recentActions : [];
+        setActions(acts.filter((a) => String(a.message || '').startsWith('Bluechip')));
+      })
+      .catch(() => {});
+  }, []);
+  const tv = WATCHLIST.find((w) => w.label === active) || WATCHLIST[0];
+  const match = actions.find((a) => String(a.message || '').includes(active));
+  return (
+    <section className="border-b border-slate-200 bg-white py-16">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6">
+        <div className="text-center">
+          <p className="text-xs font-semibold uppercase tracking-wide text-orange-700">Live demo</p>
+          <h2 className="mt-2 text-3xl font-bold tracking-tight">See what the desk sees.</h2>
+          <p className="mx-auto mt-3 max-w-2xl text-slate-600">
+            This is the same market Bluechip watches all day. Pick a name — the panel shows the
+            desk’s actual most-recent decision on it, straight from the journal.
+          </p>
+        </div>
+        <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
+          {WATCHLIST.map(({ label }) => (
+            <button
+              key={label}
+              onClick={() => setActive(label)}
+              className={`rounded-full px-4 py-1.5 text-sm font-semibold transition-colors ${
+                active === label
+                  ? 'bg-slate-900 text-white'
+                  : 'border border-slate-300 bg-white text-slate-600 hover:border-slate-400'
+              }`}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+        <div className="mt-8 grid gap-6 lg:grid-cols-[2fr,1fr]">
+          <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-lg">
+            <LiveChart symbol={tv.symbol} />
+          </div>
+          <div className="flex flex-col gap-4">
+            <div className="rounded-3xl border border-slate-200 bg-slate-50 p-6">
+              <p className="text-xs font-semibold uppercase tracking-wide text-orange-700">The desk’s rule</p>
+              <p className="mt-2 text-sm leading-relaxed text-slate-600">
+                Buy a <b className="text-slate-900">$5 fractional clip</b> when a watchlist name dips{' '}
+                <b className="text-slate-900">≥1.5% below yesterday’s close</b>. Max{' '}
+                <b className="text-slate-900">2 buys per 15-minute cycle</b>. Every order passes
+                Robinhood’s own review step. That’s the whole rule — no vibes.
+              </p>
+            </div>
+            <div className="flex-1 rounded-3xl bg-slate-900 p-6">
+              <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+                Latest desk decision on {active}
+              </p>
+              {match ? (
+                <p className="mt-3 text-sm leading-relaxed text-slate-200">{String(match.message).slice(0, 200)}</p>
+              ) : (
+                <p className="mt-3 text-sm leading-relaxed text-slate-300">
+                  No dip past the threshold on {active} in recent cycles — so the desk did nothing.
+                  Doing nothing is a decision too. Discipline is the feature.
+                </p>
+              )}
+              <a href={TAPE_URL} className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-orange-400 hover:text-orange-300">
+                See every decision on the tape →
+              </a>
+            </div>
+            <p className="text-xs leading-relaxed text-slate-400">
+              Chart and quotes by TradingView. The decision shown is the desk’s real journal entry —
+              a record of past activity, not a recommendation or a prediction.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function BuyButton({ className = '' }) {
   return (
     <a
@@ -113,25 +244,8 @@ function BuyButton({ className = '' }) {
 export default function BluechipPage() {
   return (
     <div className="min-h-screen bg-slate-50 font-sans text-slate-900 antialiased">
-      {/* Header */}
-      <header className="sticky top-0 z-40 border-b border-slate-200 bg-white/90 backdrop-blur">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6">
-          <a href="/bluechip/" className="flex items-center gap-2.5" aria-label="Bluechip home">
-            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-900 text-sm font-bold text-white">
-              $
-            </span>
-            <span className="text-lg font-semibold tracking-tight">Bluechip <span className="font-normal text-slate-500">by EB28</span></span>
-          </a>
-          <a
-            href={CHECKOUT_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="rounded-full bg-orange-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-orange-700"
-          >
-            Get the beta — ${PRICE_USD}
-          </a>
-        </div>
-      </header>
+      <SiteNav active="/bluechip/" brand={BRAND} subtitle={BRAND_SUB} cta={{ href: CHECKOUT_URL, label: `Get the beta — $${PRICE_USD}` }} />
+      <TickerTape />
 
       {/* Live tape banner */}
       <a
@@ -148,7 +262,7 @@ export default function BluechipPage() {
         <div className="grid items-center gap-10 lg:grid-cols-2">
           <div>
             <p className="mb-4 inline-block rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-blue-900">
-              EB28 Bluechip · US equities desk · Live beta
+              {ON_DTB_DOMAIN ? 'DayTradingBot · powered by the EB28 Bluechip desk · Live beta' : 'EB28 Bluechip · US equities desk · Live beta'}
             </p>
             <h1 className="text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl">
               They call it dumb money. We built it a desk.
@@ -202,8 +316,25 @@ export default function BluechipPage() {
         </div>
       </section>
 
+      {/* What Bluechip is NOT */}
+      <section className="border-y border-slate-200 bg-white py-10">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
+          <div className="grid gap-6 sm:grid-cols-3">
+            {WHAT_BLUECHIP_IS_NOT.map(({ title, body }) => (
+              <div key={title} className="rounded-2xl border border-slate-200 bg-slate-50 p-5">
+                <h3 className="text-sm font-bold uppercase tracking-wide text-slate-900">{title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-slate-600">{body}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Live demo — chart + the desk's real decisions */}
+      <DeskDemo />
+
       {/* Manifesto */}
-      <section className="border-y border-slate-200 bg-white py-16">
+      <section className="border-b border-slate-200 bg-white py-16">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <div className="mx-auto max-w-2xl">
             <p className="text-xs font-semibold uppercase tracking-wide text-orange-700">Read this first</p>
@@ -254,6 +385,27 @@ export default function BluechipPage() {
                 <h3 className="mt-1 text-lg font-semibold">{title}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-slate-600">{body}</p>
               </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Plain English definitions */}
+      <section className="py-16">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
+          <h2 className="text-center text-3xl font-bold tracking-tight">Plain English, on purpose</h2>
+          <p className="mx-auto mt-3 max-w-2xl text-center text-slate-600">
+            Four terms you’ll see on this page, explained the way we’d explain them across a kitchen
+            table. Tap any of them.
+          </p>
+          <div className="mx-auto mt-10 max-w-3xl space-y-3">
+            {PLAIN_ENGLISH.map(({ term, plain }) => (
+              <details key={term} className="group rounded-2xl border border-slate-200 bg-white p-5">
+                <summary className="cursor-pointer list-none text-sm font-bold text-slate-900 transition-colors group-open:text-orange-700">
+                  What is “{term}”?
+                </summary>
+                <p className="mt-3 text-sm leading-relaxed text-slate-600">{plain}</p>
+              </details>
             ))}
           </div>
         </div>
@@ -320,6 +472,9 @@ export default function BluechipPage() {
             </div>
             <div className="mt-8 flex flex-col items-center gap-3">
               <BuyButton />
+              <p className="text-xs text-slate-500">
+                You can lose the money you trade. Bluechip is software you operate — not advice, not a fund.
+              </p>
               <a href={TAPE_URL} className="text-sm font-medium text-slate-600 underline underline-offset-4 hover:text-slate-900">
                 Watch the live tape first
               </a>

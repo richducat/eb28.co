@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import SiteNav from './SiteNav.jsx';
 
 import {
     AGENT_ROSTER as AGENTS,
@@ -701,12 +702,11 @@ const FundManager = () => {
 
     return (
         <div className="min-h-screen overflow-x-hidden bg-[#020617] text-[#22d3ee] font-mono relative selection:bg-[#22d3ee] selection:text-[#020617]">
+            <SiteNav dark active="/fundmanager/" subtitle="Live Tape" cta={{ href: '/bluechip/', label: 'Get the desk — $98' }} />
             {/* Background Image */}
             <div className="absolute inset-0 -z-20">
                 <img src="/images/fundmanager_bg.png" alt="Fund Manager Data" className="w-full h-full object-cover opacity-[0.05]" />
             </div>
-            <div className="fixed inset-0 crt-overlay opacity-10 pointer-events-none z-50"></div>
-            <div className="fixed inset-0 eb28-appbuilder-noise opacity-5 pointer-events-none"></div>
 
             <div className="relative z-10 mx-auto max-w-7xl px-3 py-4 sm:px-4 sm:py-5 lg:px-6 lg:py-6">
                 <header className="mb-6">

@@ -9,7 +9,7 @@ const LINKS = [
   { href: '/setup/', label: 'Setup' },
 ];
 
-export default function SiteNav({ dark = false, active = '', cta = null, subtitle = 'EB28' }) {
+export default function SiteNav({ dark = false, active = '', cta = null, subtitle = 'EB28', brand = 'EB28' }) {
   const wrap = dark
     ? 'sticky top-0 z-40 border-b border-white/10 bg-[#020617]/90 backdrop-blur'
     : 'sticky top-0 z-40 border-b border-slate-200 bg-white/90 backdrop-blur';
@@ -26,7 +26,7 @@ export default function SiteNav({ dark = false, active = '', cta = null, subtitl
             $
           </span>
           <span className={`text-lg font-semibold tracking-tight ${brandText}`}>
-            EB28 <span className={`font-normal ${brandSub}`}>· {subtitle}</span>
+            {brand} <span className={`font-normal ${brandSub}`}>· {subtitle}</span>
           </span>
         </a>
         <nav className="hidden items-center gap-6 sm:flex" aria-label="Site">

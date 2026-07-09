@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ArrowRight, Bot, BarChart, CheckCircle, Clock, Mail, ShieldCheck } from 'lucide-react';
+import SiteNav from './SiteNav.jsx';
 import { submitLeadCapture } from './leadCapture.js';
 
 // Post-purchase onboarding. Stripe Payment Links redirect here after payment
@@ -10,7 +11,7 @@ const PRODUCTS = {
     'diy-ai-foundation': {
         name: 'DIY AI Foundation Build',
         price: '$10 one-time',
-        icon: <Bot className="w-8 h-8 text-blue-400" />,
+        icon: <Bot className="w-8 h-8 text-blue-600" />,
         deliverySla: 'within 24 hours',
         steps: [
             'Tell us about your business and the task you want automated (form below, ~2 minutes).',
@@ -37,7 +38,7 @@ const PRODUCTS = {
     'white-glove-onboarding': {
         name: 'White-Glove Onboarding',
         price: '$1,000 one-time',
-        icon: <ShieldCheck className="w-8 h-8 text-amber-400" />,
+        icon: <ShieldCheck className="w-8 h-8 text-amber-600" />,
         deliverySla: 'kickoff within 1 business day, live within 7 days',
         steps: [
             'Tell us about your business and what to set up first (form below, ~2 minutes).',
@@ -78,7 +79,7 @@ const PRODUCTS = {
     'recon-agent-beta': {
         name: 'Recon Agent Founder Beta',
         price: '$17/mo',
-        icon: <BarChart className="w-8 h-8 text-cyan-300" />,
+        icon: <BarChart className="w-8 h-8 text-cyan-600" />,
         deliverySla: 'within 1 business day',
         steps: [
             'Tell us which Stripe account and finance inbox to watch (form below, ~2 minutes).',
@@ -109,12 +110,39 @@ const PRODUCTS = {
             },
         ],
     },
+    'bluechip-founding-beta': {
+        name: 'Bluechip — Founding Beta License',
+        price: '$98 one-time',
+        icon: <BarChart className="w-8 h-8 text-teal-600" />,
+        deliverySla: 'personal onboarding email within 24 hours',
+        steps: [
+            'Tell us where your desk will run (form below, ~2 minutes). That’s all we need.',
+            'Within 24 hours a human sends your license, the plain-English install guide, and an offer to do the first session together.',
+            'Your desk starts in paper mode — it pretends to trade so you can watch it work. It cannot touch real money until you deliberately flip it live yourself.',
+        ],
+        fields: [
+            {
+                id: 'computer',
+                label: 'What computer will run your desk? *',
+                placeholder: 'e.g. MacBook Air 2021, Mac mini, Windows 11 laptop — not sure is a fine answer',
+                type: 'text',
+                required: true,
+            },
+            {
+                id: 'robinhoodStatus',
+                label: 'Do you have a Robinhood account already?',
+                placeholder: 'Yes / No / Not sure — we’ll walk you through the Agentic sub-account either way',
+                type: 'text',
+                required: false,
+            },
+        ],
+    },
 };
 
 const GENERIC_PRODUCT = {
     name: 'Your EB28 purchase',
     price: '',
-    icon: <CheckCircle className="w-8 h-8 text-green-400" />,
+    icon: <CheckCircle className="w-8 h-8 text-emerald-600" />,
     deliverySla: 'within 1 business day',
     steps: [
         'Confirm your details in the form below (~2 minutes).',
@@ -173,93 +201,97 @@ export default function WelcomePage() {
     };
 
     return (
-        <div className="min-h-screen bg-slate-900 text-slate-100 font-sans selection:bg-blue-500 selection:text-white">
-            <main className="relative pt-20 pb-24 overflow-hidden">
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-blue-600/20 rounded-full blur-[100px] -z-10"></div>
-
+        <div className="min-h-screen bg-slate-50 font-sans text-slate-900 antialiased">
+            <SiteNav subtitle="Welcome" cta={{ href: 'mailto:social@eb28.co?subject=Onboarding%20question', label: 'Get a human' }} />
+            <main className="relative pt-14 pb-24">
                 <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
                     {/* Confirmation header */}
                     <div className="text-center mb-12">
-                        <div className="inline-flex items-center justify-center w-20 h-20 bg-green-500/20 rounded-full mb-6">
-                            <CheckCircle className="w-10 h-10 text-green-400" />
+                        <div className="inline-flex items-center justify-center w-20 h-20 bg-emerald-100 rounded-full mb-6">
+                            <CheckCircle className="w-10 h-10 text-emerald-600" />
                         </div>
-                        <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight text-white mb-4">
+                        <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-slate-900 mb-4">
                             Payment received. You&rsquo;re in.
                         </h1>
-                        <p className="text-xl text-slate-400">
+                        <p className="text-xl text-slate-600">
                             {product.name}{product.price ? ` — ${product.price}` : ''}. Setup starts now — complete the
                             two-minute form below and everything else happens automatically.
                         </p>
                     </div>
 
                     {/* What happens next */}
-                    <div className="bg-slate-800/60 border border-slate-700 rounded-2xl p-8 mb-10 backdrop-blur-sm">
+                    <div className="bg-white border border-slate-200 rounded-2xl p-8 mb-10">
                         <div className="flex items-center gap-3 mb-6">
-                            <div className="p-3 rounded-lg bg-slate-800">{product.icon}</div>
-                            <h2 className="text-2xl font-bold text-white">What happens next</h2>
+                            <div className="p-3 rounded-xl bg-slate-100">{product.icon}</div>
+                            <h2 className="text-2xl font-bold tracking-tight">What happens next</h2>
                         </div>
                         <ol className="space-y-4">
                             {product.steps.map((step, idx) => (
-                                <li key={idx} className="flex items-start text-slate-300">
-                                    <span className="flex items-center justify-center w-7 h-7 rounded-full bg-blue-600 text-white text-sm font-bold mr-4 shrink-0">
+                                <li key={idx} className="flex items-start text-slate-600">
+                                    <span className="flex items-center justify-center w-7 h-7 rounded-full bg-orange-600 text-white text-sm font-bold mr-4 shrink-0">
                                         {idx + 1}
                                     </span>
                                     <span className="leading-relaxed">{step}</span>
                                 </li>
                             ))}
                         </ol>
-                        <div className="mt-6 flex items-center text-sm text-slate-400">
-                            <Clock className="w-4 h-4 mr-2 text-green-400" />
+                        <div className="mt-6 flex items-center text-sm text-slate-500">
+                            <Clock className="w-4 h-4 mr-2 text-emerald-600" />
                             Delivery {product.deliverySla} of completing the form below.
                         </div>
                     </div>
 
                     {/* Onboarding intake */}
-                    <div className="bg-slate-900 rounded-3xl p-8 md:p-10 border border-slate-800 shadow-2xl">
+                    <div className="bg-white rounded-3xl p-8 md:p-10 border border-slate-200 shadow-lg">
                         {formStatus === 'success' ? (
                             <div className="text-center py-12">
-                                <div className="inline-flex items-center justify-center w-16 h-16 bg-green-500/20 rounded-full mb-6">
-                                    <Mail className="w-8 h-8 text-green-400" />
+                                <div className="inline-flex items-center justify-center w-16 h-16 bg-emerald-100 rounded-full mb-6">
+                                    <Mail className="w-8 h-8 text-emerald-600" />
                                 </div>
-                                <h2 className="text-2xl font-bold text-white mb-3">Onboarding started.</h2>
-                                <p className="text-slate-400 max-w-md mx-auto">
+                                <h2 className="text-2xl font-bold tracking-tight mb-3">Onboarding started.</h2>
+                                <p className="text-slate-600 max-w-md mx-auto">
                                     Your setup is in the build queue. Watch your inbox — delivery {product.deliverySla}.
                                     You can reply to any email from us if something changes. Once your system is
                                     running, we&rsquo;ll check in — if it&rsquo;s working for you, we&rsquo;d love a
                                     short testimonial.
                                 </p>
-                                <a href="/" className="inline-flex items-center mt-8 px-6 py-3 bg-slate-800 hover:bg-slate-700 text-white rounded-lg font-medium transition-colors">
-                                    Back to eb28.co <ArrowRight className="w-4 h-4 ml-2" />
-                                </a>
+                                <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
+                                    <a href="/setup/" className="inline-flex items-center rounded-full bg-orange-600 px-6 py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-orange-700">
+                                        Next: open your Setup Portal <ArrowRight className="w-4 h-4 ml-2" />
+                                    </a>
+                                    <a href="/" className="inline-flex items-center rounded-full border border-slate-300 bg-white px-6 py-3 text-sm font-semibold text-slate-700 transition-colors hover:border-slate-400">
+                                        Back to eb28.co
+                                    </a>
+                                </div>
                             </div>
                         ) : (
                             <form onSubmit={handleSubmit} className="space-y-6">
-                                <h2 className="text-2xl font-bold text-white">Start your setup</h2>
+                                <h2 className="text-2xl font-bold tracking-tight">Start your setup</h2>
 
                                 {formError && (
-                                    <div className="p-4 bg-red-500/10 border border-red-500/30 rounded-lg text-red-300 text-sm">
+                                    <div className="p-4 bg-rose-50 border border-rose-200 rounded-xl text-rose-700 text-sm">
                                         {formError}
                                     </div>
                                 )}
 
                                 <div className="grid md:grid-cols-2 gap-6">
                                     <div>
-                                        <label htmlFor="welcome-name" className="block text-sm font-medium text-slate-300 mb-2">Name *</label>
-                                        <input id="welcome-name" name="name" autoComplete="name" type="text" value={formData.name} onChange={(e) => updateField('name', e.target.value)} required className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all" placeholder="John Doe" />
+                                        <label htmlFor="welcome-name" className="block text-sm font-medium text-slate-700 mb-2">Name *</label>
+                                        <input id="welcome-name" name="name" autoComplete="name" type="text" value={formData.name} onChange={(e) => updateField('name', e.target.value)} required className="w-full px-4 py-3 bg-white border border-slate-300 rounded-xl text-slate-900 focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all" placeholder="John Doe" />
                                     </div>
                                     <div>
-                                        <label htmlFor="welcome-email" className="block text-sm font-medium text-slate-300 mb-2">Email used at checkout *</label>
-                                        <input id="welcome-email" name="email" autoComplete="email" type="email" value={formData.email} onChange={(e) => updateField('email', e.target.value)} required className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all" placeholder="john@example.com" />
+                                        <label htmlFor="welcome-email" className="block text-sm font-medium text-slate-700 mb-2">Email used at checkout *</label>
+                                        <input id="welcome-email" name="email" autoComplete="email" type="email" value={formData.email} onChange={(e) => updateField('email', e.target.value)} required className="w-full px-4 py-3 bg-white border border-slate-300 rounded-xl text-slate-900 focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all" placeholder="john@example.com" />
                                     </div>
                                 </div>
 
                                 {product.fields.map((field) => (
                                     <div key={field.id}>
-                                        <label htmlFor={`welcome-${field.id}`} className="block text-sm font-medium text-slate-300 mb-2">{field.label}</label>
+                                        <label htmlFor={`welcome-${field.id}`} className="block text-sm font-medium text-slate-700 mb-2">{field.label}</label>
                                         {field.type === 'textarea' ? (
-                                            <textarea id={`welcome-${field.id}`} name={field.id} rows="4" value={formData[field.id] || ''} onChange={(e) => updateField(field.id, e.target.value)} required={field.required} className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all" placeholder={field.placeholder}></textarea>
+                                            <textarea id={`welcome-${field.id}`} name={field.id} rows="4" value={formData[field.id] || ''} onChange={(e) => updateField(field.id, e.target.value)} required={field.required} className="w-full px-4 py-3 bg-white border border-slate-300 rounded-xl text-slate-900 focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all" placeholder={field.placeholder}></textarea>
                                         ) : (
-                                            <input id={`welcome-${field.id}`} name={field.id} type={field.type} value={formData[field.id] || ''} onChange={(e) => updateField(field.id, e.target.value)} required={field.required} className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all" placeholder={field.placeholder} />
+                                            <input id={`welcome-${field.id}`} name={field.id} type={field.type} value={formData[field.id] || ''} onChange={(e) => updateField(field.id, e.target.value)} required={field.required} className="w-full px-4 py-3 bg-white border border-slate-300 rounded-xl text-slate-900 focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all" placeholder={field.placeholder} />
                                         )}
                                     </div>
                                 ))}
@@ -267,14 +299,14 @@ export default function WelcomePage() {
                                 <button
                                     type="submit"
                                     disabled={formStatus === 'submitting'}
-                                    className="w-full py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white font-bold rounded-lg text-lg transition-all shadow-lg shadow-blue-600/20 flex items-center justify-center disabled:opacity-60 disabled:cursor-not-allowed"
+                                    className="w-full py-4 bg-orange-600 hover:bg-orange-700 text-white font-bold rounded-full text-lg transition-colors shadow-sm flex items-center justify-center disabled:opacity-60 disabled:cursor-not-allowed"
                                 >
                                     {formStatus === 'submitting' ? 'Submitting...' : 'Start My Setup'}
                                     {formStatus !== 'submitting' && <ArrowRight className="ml-2 w-5 h-5" />}
                                 </button>
 
                                 <p className="text-center text-xs text-slate-500 flex items-center justify-center">
-                                    <ShieldCheck className="w-4 h-4 mr-1 text-green-400" />
+                                    <ShieldCheck className="w-4 h-4 mr-1 text-emerald-600" />
                                     Your details go straight into the build queue and nowhere else.
                                 </p>
                             </form>

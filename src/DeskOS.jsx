@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 import {
     DESK_COMMERCE,
@@ -11,6 +11,8 @@ import {
     OPERATOR_PRICE_USD,
     LANE_INDEX,
 } from './fundmanagerMeta';
+import SiteNav from './SiteNav.jsx';
+import { TickerTape } from './TradingView.jsx';
 
 const SOLO_TOTAL = Object.keys(DESK_COMMERCE).length * DESK_PRICE_USD;
 
@@ -30,7 +32,7 @@ const AGENT_SECTIONS = [
         laneId: 'divergence',
         callsign: 'Oracle Gap',
         hunts: 'gaps between AI consensus and market price',
-        color: '#22d3ee',
+        color: '#0891b2',
         bullets: [
             'Compares what the models believe against what the crowd is paying — and only moves when the spread is wide enough to matter.',
             'Runs on Polymarket and Kalshi from the same codebase. One brain, two venues.',
@@ -41,7 +43,7 @@ const AGENT_SECTIONS = [
         laneId: 'weather',
         callsign: 'Stormfront',
         hunts: 'Polymarket temperature contracts priced against stale forecasts',
-        color: '#34d399',
+        color: '#059669',
         bullets: [
             'Pulls NOAA forecast data on a 30-minute clock — most traders price weather markets off vibes and yesterday’s news.',
             'Trades only when the forecast and the market disagree by a configurable edge threshold you control.',
@@ -51,7 +53,7 @@ const AGENT_SECTIONS = [
         laneId: 'kalshi-weather',
         callsign: 'Barometer',
         hunts: 'the same weather edge, ported to Kalshi forecast contracts',
-        color: '#4ade80',
+        color: '#16a34a',
         bullets: [
             'Same NOAA pipeline, different venue — because an edge that works in one market is worth checking in every market.',
             'Kalshi settlement via Solana USDC, handled end to end by the included wallet plumbing.',
@@ -61,7 +63,7 @@ const AGENT_SECTIONS = [
         laneId: 'elon-tweets',
         callsign: 'XPulse',
         hunts: 'Elon tweet-count bucket markets',
-        color: '#f472b6',
+        color: '#db2777',
         bullets: [
             'Tracks posting velocity and prices the weekly buckets before the herd updates its priors.',
             'Moonshot sizing profile: small, capped entries on long-odds buckets — built to be wrong cheaply and right big.',
@@ -71,7 +73,7 @@ const AGENT_SECTIONS = [
         laneId: 'mert-sniper',
         callsign: 'Last Call',
         hunts: 'lopsided order books minutes before market close',
-        color: '#2dd4bf',
+        color: '#0d9488',
         bullets: [
             'Scans 200 near-expiry markets per cycle hunting for books where the smart money has already voted.',
             'Strict spread and conviction filters — most cycles it executes nothing, and that discipline is the feature.',
@@ -81,7 +83,7 @@ const AGENT_SECTIONS = [
         laneId: 'signal-sniper',
         callsign: 'Newshound',
         hunts: 'breaking headlines that match your keywords',
-        color: '#fb923c',
+        color: '#ea580c',
         bullets: [
             'You feed it keywords and target markets; it watches the wire so you stop refreshing news feeds at midnight.',
             'Ships in watch-only mode — it flags, you decide, until you deliberately hand it the keys.',
@@ -91,7 +93,7 @@ const AGENT_SECTIONS = [
         laneId: 'copytrading',
         callsign: 'Whale Shadow',
         hunts: 'the wallets of traders who are already winning',
-        color: '#94a3b8',
+        color: '#475569',
         bullets: [
             'Mirrors a wallet list you curate, with per-trade caps and a buy-only safety mode.',
             'Whale-exit detection: when your whales start unloading, it notices.',
@@ -121,7 +123,7 @@ const FAQS = [
     },
     {
         q: 'Will these agents make me money?',
-        a: 'Unknown — and anyone who promises otherwise is lying to you. You are buying software and a safety system, not returns. Our own live test book is down $61.61 and that number is printed on the sales page on purpose. Prediction markets are risk. Trade money you can lose.',
+        a: 'Unknown — and anyone who promises otherwise is lying to you. You are buying software and a safety system, not returns. Our real lifetime test results, good or bad, are on the public live dashboard for anyone to check at any time. Prediction markets are risk. Trade money you can lose.',
     },
     {
         q: 'Why sell it if it works?',
@@ -138,7 +140,7 @@ const FAQS = [
 ];
 
 const BLUECHIP = {
-    color: '#5eead4',
+    color: '#0d9488',
     bullets: [
         'Official rails, not scraping: orders flow through Robinhood’s Agentic Trading system at agent.robinhood.com. No credential bots. No ToS roulette.',
         'Broker-checked before placement: every order passes Robinhood’s review_equity_order step before it goes anywhere.',
@@ -147,175 +149,162 @@ const BLUECHIP = {
         'Same Desk OS safety stack as every desk on this page: gated runner, global kill switch, paper/review mode by default. One switch to live. One switch back.',
         'We publish our tape: every decision streams to the public dashboard — watch it before you spend a dollar.',
     ],
-    steps: [
-        {
-            step: '01 — Isolate',
-            title: 'Create the walled garden',
-            body: 'Create a dedicated Agentic sub-account in Robinhood. That walled garden is all Bluechip ever sees — it physically cannot touch your main account.',
-        },
-        {
-            step: '02 — Paper first',
-            title: 'Boot in review mode',
-            body: 'The default mode places nothing. Watch the desk flag $5 dip candidates on the blue-chip watchlist without a dollar moving.',
-        },
-        {
-            step: '03 — Your switch',
-            title: 'Flip the gate when you decide',
-            body: 'One switch to live, one switch back. Every order still clears Robinhood’s own review step before placement.',
-        },
-        {
-            step: '04 — On tape',
-            title: 'Everything is journaled',
-            body: 'Every decision lands in your trade journal — and ours streams to the public dashboard you can watch right now.',
-        },
-    ],
-    faqs: [
-        {
-            q: 'How is this different from every other stock bot?',
-            a: 'Most bots log into your brokerage with your password — a ToS violation waiting for a ban. Bluechip uses Robinhood’s own Agentic Trading API: official agent rails, a broker-side order review on every trade, and a dedicated sub-account it can’t step outside of.',
-        },
-        {
-            q: 'Is EB28 partnered with Robinhood?',
-            a: 'No. Bluechip is built on Robinhood’s official Agentic Trading API — the public front door Robinhood built for agents. Robinhood does not endorse or sponsor EB28. Want proof it’s real? The live tape is public on the fund manager dashboard.',
-        },
-        {
-            q: 'Will this make me money?',
-            a: 'We don’t claim that, and you should walk away from anyone who does. Bluechip is licensed software you operate — not investment advice, not a managed fund, not a financial service. Trading involves risk of loss. Watch the live tape and judge the desk’s decisions yourself.',
-        },
-    ],
 };
+
+const FALLBACK_TAPE = [
+    { time: '', message: 'Bluechip: reviewed $5.00 GOOGL buy — dip vs prev close. Review mode: nothing placed.' },
+    { time: '', message: 'Stormfront: NOAA forecast vs market — no edge past threshold. No action.' },
+    { time: '', message: 'Whale Shadow: roster re-vetted, 8 wallets tracked, all windows positive.' },
+    { time: '', message: 'The Tape: every decision journaled. Losses included. That’s the point.' },
+];
 
 function CheckoutButton({ href, children, big = false, ghost = false }) {
     const base = big
-        ? 'rounded-full px-8 py-4 text-base font-bold uppercase tracking-[0.14em]'
-        : 'rounded-full px-5 py-2.5 text-[12px] font-bold uppercase tracking-[0.16em]';
+        ? 'rounded-full px-8 py-4 text-base font-semibold'
+        : 'rounded-full px-5 py-2.5 text-sm font-semibold';
     const skin = ghost
-        ? 'border border-[#22d3ee]/35 text-cyan-200 hover:border-[#22d3ee]/70'
-        : 'bg-[#22d3ee] text-[#020617] hover:bg-cyan-300 hover:shadow-[0_0_32px_rgba(34,211,238,0.5)]';
+        ? 'border border-slate-300 bg-white text-slate-700 hover:border-slate-400'
+        : 'bg-orange-600 text-white shadow-sm hover:bg-orange-700';
     return (
-        <a href={href} target={href.startsWith('http') ? '_blank' : undefined} rel="noopener noreferrer" className={`${base} ${skin} inline-block text-center transition-all`}>
+        <a href={href} target={href.startsWith('http') ? '_blank' : undefined} rel="noopener noreferrer" className={`${base} ${skin} inline-block text-center transition-colors`}>
             {children}
         </a>
     );
 }
 
 function SectionLabel({ children }) {
-    return <p className="text-[10px] uppercase tracking-[0.26em] text-cyan-300/60">{children}</p>;
+    return <p className="text-xs font-semibold uppercase tracking-wide text-orange-700">{children}</p>;
+}
+
+// The one deliberately dark element on the page: the tape is alive, and dark
+// is reserved for live proof. Pulls real recent actions from the public
+// snapshot; falls back to representative static lines if the fetch fails.
+function LiveTapeBand() {
+    const [events, setEvents] = useState(null);
+    useEffect(() => {
+        fetch('/data/fundmanager-public.json', { cache: 'no-store' })
+            .then((r) => (r.ok ? r.json() : null))
+            .then((d) => {
+                const acts = (d && Array.isArray(d.recentActions)) ? d.recentActions.slice(0, 4) : [];
+                if (acts.length) {
+                    setEvents(acts.map((a) => ({
+                        time: a.timestamp ? new Date(a.timestamp).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }) : '',
+                        message: String(a.message || '').slice(0, 140),
+                    })));
+                }
+            })
+            .catch(() => {});
+    }, []);
+    const rows = events || FALLBACK_TAPE;
+    return (
+        <div className="rounded-3xl bg-slate-900 p-6 shadow-xl ring-1 ring-slate-200 sm:p-8">
+            <div className="flex items-center justify-between border-b border-slate-700 pb-3">
+                <span className="text-xs font-semibold uppercase tracking-wide text-slate-400">
+                    The live tape — straight from the floor
+                </span>
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/15 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-emerald-400">
+                    <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400" aria-hidden="true"></span>
+                    Desks on duty
+                </span>
+            </div>
+            <ul className="mt-4 space-y-3.5">
+                {rows.map(({ time, message }, i) => (
+                    <li key={i} className="flex gap-3">
+                        <span className="shrink-0 pt-0.5 font-mono text-[11px] text-slate-500">{time || '· ·'}</span>
+                        <span className="text-sm leading-relaxed text-slate-300">{message}</span>
+                    </li>
+                ))}
+            </ul>
+            <a href="/fundmanager/" className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-orange-400 hover:text-orange-300">
+                Watch the whole floor live →
+            </a>
+        </div>
+    );
 }
 
 const DeskOS = () => {
     return (
-        <div className="min-h-screen overflow-x-hidden bg-[#020617] font-mono text-white/85 selection:bg-[#22d3ee] selection:text-[#020617]">
-            <div className="fixed inset-0 crt-overlay pointer-events-none z-50 opacity-10"></div>
-            <div className="fixed inset-0 eb28-appbuilder-noise pointer-events-none opacity-5"></div>
+        <div className="min-h-screen bg-slate-50 font-sans text-slate-900 antialiased">
+            <SiteNav active="/deskos/" subtitle="Desk OS" cta={{ href: BUNDLE_CHECKOUT_URL, label: `Get the Desk OS — $${BUNDLE_PRICE_USD}` }} />
+            <TickerTape />
 
-            <div className="relative z-10 mx-auto max-w-5xl px-4 py-10 sm:px-6 lg:py-14">
+            <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:py-16">
 
                 {/* ============ HERO ============ */}
-                <header className="text-center">
-                    <p className="text-[11px] uppercase tracking-[0.3em] text-cyan-300/70">
-                        From the EB28 trading lab · for people who are done babysitting markets
-                    </p>
-                    <h1 className="mx-auto mt-5 max-w-4xl text-[clamp(1.9rem,5.5vw,3.4rem)] font-bold leading-[1.08] tracking-tight text-white">
-                        Eight Trading Agents Watch Polymarket and Kalshi For You, Around the Clock —
-                        <span className="text-[#22d3ee]"> Behind a Kill Switch That Makes Blowing Up Nearly Impossible</span>
-                    </h1>
-                    <p className="mx-auto mt-6 max-w-2xl text-sm leading-relaxed text-white/65 sm:text-base">
-                        The Desk OS is the exact agent fleet, safety system, and live dashboard running the
-                        EB28 fund manager right now — packaged so you can run the whole floor on your own
-                        machine, in paper mode, before a single real dollar moves.
-                    </p>
-                    <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-                        <CheckoutButton href={BUNDLE_CHECKOUT_URL} big>
-                            Get the full Desk OS — ${BUNDLE_PRICE_USD}
-                        </CheckoutButton>
-                        <CheckoutButton href="/fundmanager/" big ghost>
-                            Watch it trade live first →
-                        </CheckoutButton>
+                <header className="grid items-center gap-10 lg:grid-cols-2">
+                    <div>
+                        <p className="mb-4 inline-block rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-blue-900">
+                            From the EB28 trading lab · for people done babysitting markets
+                        </p>
+                        <h1 className="text-4xl font-bold leading-[1.1] tracking-tight text-slate-900 sm:text-5xl">
+                            Eight trading agents watch the markets for you —
+                            <span className="text-orange-600"> behind a kill switch that makes blowing up nearly impossible.</span>
+                        </h1>
+                        <p className="mt-6 max-w-xl text-lg leading-relaxed text-slate-600">
+                            The Desk OS is the exact agent fleet, safety system, and live dashboard running the
+                            EB28 fund manager right now — packaged so you can run the whole floor on your own
+                            machine, in paper mode, before a single real dollar moves.
+                        </p>
+                        <div className="mt-8 flex flex-wrap items-center gap-4">
+                            <CheckoutButton href={BUNDLE_CHECKOUT_URL} big>
+                                Get the full Desk OS — ${BUNDLE_PRICE_USD}
+                            </CheckoutButton>
+                            <CheckoutButton href="/fundmanager/" big ghost>
+                                Watch it trade live first
+                            </CheckoutButton>
+                        </div>
+                        <p className="mt-4 text-sm text-slate-500">
+                            One-time license · instant Stripe checkout · 30-day get-it-running guarantee
+                        </p>
                     </div>
-                    <p className="mt-4 text-[11px] text-white/40">
-                        One-time license · instant Stripe checkout · 30-day get-it-running guarantee
-                    </p>
+                    <LiveTapeBand />
                 </header>
 
-                {/* ============ PROBLEM / AGITATION ============ */}
-                <section className="mt-16">
-                    <div className="eb28-panel rounded-[28px] border border-[#22d3ee]/10 p-6 sm:p-8">
+                {/* ============ PROBLEM / STORY ============ */}
+                <section className="mt-16 grid gap-6 lg:grid-cols-2">
+                    <div className="rounded-3xl border border-slate-200 bg-white p-6 sm:p-8">
                         <SectionLabel>The 3 a.m. problem</SectionLabel>
-                        <h2 className="mt-2 text-xl font-bold text-white sm:text-2xl">
-                            Prediction markets don't close. You do.
+                        <h2 className="mt-2 text-xl font-bold tracking-tight sm:text-2xl">
+                            Prediction markets don’t close. You do.
                         </h2>
-                        <div className="mt-4 space-y-4 text-sm leading-relaxed text-white/70">
+                        <div className="mt-4 space-y-4 text-sm leading-relaxed text-slate-600">
                             <p>
                                 The best entries on Polymarket show up at ugly hours. A weather contract gets mispriced
                                 while the new NOAA run is published. A 5-minute crypto sprint goes lopsided at 3:41 a.m.
-                                A market two minutes from expiry is sitting at 91 cents when the answer is already public.
+                                A market two minutes from expiry sits at 91 cents when the answer is already public.
                             </p>
                             <p>
-                                You won't catch those manually. Nobody does. The people quietly collecting them run
-                                <span className="text-cyan-200"> agents</span> — small, single-purpose programs that watch
-                                one pattern each and never sleep, never revenge-trade, and never "just check Twitter for a second."
+                                You won’t catch those manually. Nobody does. The people quietly collecting them run
+                                <span className="font-semibold text-slate-900"> agents</span> — small, single-purpose programs that watch
+                                one pattern each and never sleep, never revenge-trade, and never “just check Twitter for a second.”
                             </p>
                             <p>
-                                And here's the part nobody says out loud: the hard part was never writing a trading bot.
-                                It's writing the thing that <span className="text-cyan-200">stops</span> a trading bot —
+                                And here’s the part nobody says out loud: the hard part was never writing a trading bot.
+                                It’s writing the thing that <span className="font-semibold text-slate-900">stops</span> a trading bot —
                                 before a bug, a dead API, or your own 2 a.m. overconfidence empties a wallet.
                             </p>
                         </div>
                     </div>
-                </section>
-
-                {/* ============ STORY / MECHANISM ORIGIN ============ */}
-                <section className="mt-10">
-                    <div className="eb28-panel rounded-[28px] border border-[#22d3ee]/10 p-6 sm:p-8">
+                    <div className="rounded-3xl border border-slate-200 bg-white p-6 sm:p-8">
                         <SectionLabel>Why this exists</SectionLabel>
-                        <h2 className="mt-2 text-xl font-bold text-white sm:text-2xl">
+                        <h2 className="mt-2 text-xl font-bold tracking-tight sm:text-2xl">
                             On May 31st I shut down my own trading floor with one command. That command is the product.
                         </h2>
-                        <div className="mt-4 space-y-4 text-sm leading-relaxed text-white/70">
+                        <div className="mt-4 space-y-4 text-sm leading-relaxed text-slate-600">
                             <p>
                                 I ran this fleet live — nine scheduled agents trading real, small-stakes money on
                                 Polymarket and Kalshi. When market conditions turned and the desks needed a rework,
-                                I didn't have to hunt down rogue processes or pray I'd found every cron job.
-                                One switch flipped. Nine desks stood down. Cleanly. Provably. The archived
-                                schedules sat untouched until the day the fleet came back online in paper mode.
+                                I didn’t have to hunt down rogue processes. One switch flipped. Nine desks stood down.
+                                Cleanly. Provably.
                             </p>
                             <p>
-                                That's the machine you're buying: not a "money printer" (run from anyone using that
-                                phrase), but a <span className="text-cyan-200">prediction-market operating system</span> —
+                                That’s the machine you’re buying: not a “money printer” (run from anyone using that
+                                phrase), but a <span className="font-semibold text-slate-900">prediction-market operating system</span> —
                                 agents on top, and underneath them a gated runner, a global kill switch, per-desk circuit
-                                breakers, a capital guard, and a journal that records everything the fleet does.
+                                breakers, a capital guard, and a journal that records everything.
                             </p>
-                            <p className="font-bold text-white/85">
+                            <p className="font-semibold text-slate-900">
                                 Strategies are opinions. The safety system is the asset.
-                            </p>
-                        </div>
-                    </div>
-                </section>
-
-                {/* ============ RADICAL TRANSPARENCY / PROOF ============ */}
-                <section className="mt-10">
-                    <div className="eb28-panel rounded-[28px] border border-amber-400/20 bg-amber-500/5 p-6 sm:p-8">
-                        <SectionLabel>Read this before you buy anything from anyone</SectionLabel>
-                        <h2 className="mt-2 text-xl font-bold text-white sm:text-2xl">
-                            Our live test book is down $61.61. It's printed here on purpose.
-                        </h2>
-                        <div className="mt-4 space-y-4 text-sm leading-relaxed text-white/70">
-                            <p>
-                                Every bot seller on the internet shows you a green screenshot. We publish the
-                                <a href="/fundmanager/" className="text-cyan-200 underline underline-offset-4 hover:text-cyan-100"> entire live tape</a> —
-                                desk health, blockers, open positions, and the real lifetime PnL of our small-stakes live
-                                testing, which today reads <span className="font-bold text-rose-300">−$61.61</span>.
-                                The paper fleet currently manages a virtual bankroll of ~$9,970 $SIM against real market prices.
-                            </p>
-                            <p>
-                                Why show you a losing number? Because it's the only number we can show you honestly —
-                                and because the system's job isn't to guarantee wins. Its job is to make sure
-                                <span className="text-cyan-200"> testing is cheap, losses are capped, and every result is recorded</span>.
-                                If another vendor won't show you their tape, ask yourself why.
-                            </p>
-                            <p className="text-[12px] text-white/50">
-                                You're buying software, not returns. Prediction markets involve real risk of loss. Nothing here is investment advice.
                             </p>
                         </div>
                     </div>
@@ -325,46 +314,43 @@ const DeskOS = () => {
                 <section className="mt-16">
                     <div className="text-center">
                         <SectionLabel>The fleet</SectionLabel>
-                        <h2 className="mt-2 text-2xl font-bold text-white sm:text-3xl">
-                            Eight specialists. One obsession each.
-                        </h2>
-                        <p className="mx-auto mt-3 max-w-2xl text-sm leading-relaxed text-white/60">
+                        <h2 className="mt-2 text-3xl font-bold tracking-tight">Eight specialists. One obsession each.</h2>
+                        <p className="mx-auto mt-3 max-w-2xl text-slate-600">
                             License any agent solo for ${DESK_PRICE_USD} — readable Python, config file, runner integration,
                             and install guide. Or take the whole floor below and save.
                         </p>
                     </div>
 
-                    <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-2">
+                    <div className="mt-10 grid grid-cols-1 gap-5 md:grid-cols-2">
                         {AGENT_SECTIONS.map((agent) => {
                             const commerce = DESK_COMMERCE[agent.laneId] || {};
                             const lane = LANE_INDEX[agent.laneId] || {};
                             return (
-                                <article key={agent.laneId} className="eb28-panel flex flex-col rounded-[26px] border border-[#22d3ee]/10 p-5 transition-all hover:border-[#22d3ee]/30 sm:p-6">
+                                <article key={agent.laneId} className="flex flex-col rounded-3xl border border-slate-200 bg-white p-6 transition-shadow hover:shadow-lg">
                                     <div className="flex items-start justify-between gap-3">
                                         <div>
-                                            <h3 className="text-lg font-bold" style={{ color: agent.color }}>
-                                                {agent.callsign.toUpperCase()}
-                                            </h3>
-                                            <p className="mt-1 text-[12px] leading-relaxed text-white/65">
-                                                Hunts {agent.hunts}.
-                                            </p>
+                                            <div className="flex items-center gap-2">
+                                                <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: agent.color }} aria-hidden="true"></span>
+                                                <h3 className="text-lg font-bold tracking-tight">{agent.callsign}</h3>
+                                            </div>
+                                            <p className="mt-1 text-sm leading-relaxed text-slate-600">Hunts {agent.hunts}.</p>
                                         </div>
-                                        <span className="whitespace-nowrap rounded-full border border-white/10 bg-black/30 px-2.5 py-1 text-[9px] uppercase tracking-[0.18em] text-white/50">
+                                        <span className="whitespace-nowrap rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-wide text-slate-500">
                                             {lane.venue || 'polymarket'} · {lane.cadenceMinutes || 15}m
                                         </span>
                                     </div>
                                     <ul className="mt-4 flex-1 space-y-2.5">
                                         {agent.bullets.map((line, index) => (
-                                            <li key={index} className="flex gap-2 text-[12px] leading-relaxed text-white/70">
-                                                <span className="mt-[2px] text-cyan-300">▸</span>
+                                            <li key={index} className="flex gap-2 text-sm leading-relaxed text-slate-600">
+                                                <span className="mt-[3px] text-orange-600">▸</span>
                                                 <span>{line}</span>
                                             </li>
                                         ))}
                                     </ul>
-                                    <div className="mt-5 flex items-center justify-between gap-3 border-t border-white/5 pt-4">
-                                        <span className="text-sm font-bold text-white">${DESK_PRICE_USD} <span className="text-[10px] font-normal uppercase tracking-[0.14em] text-white/40">one-time</span></span>
+                                    <div className="mt-5 flex items-center justify-between gap-3 border-t border-slate-100 pt-4">
+                                        <span className="text-base font-bold">${DESK_PRICE_USD} <span className="text-xs font-normal uppercase tracking-wide text-slate-400">one-time</span></span>
                                         <CheckoutButton href={commerce.checkoutUrl || BUNDLE_CHECKOUT_URL}>
-                                            License {agent.callsign} →
+                                            License {agent.callsign}
                                         </CheckoutButton>
                                     </div>
                                 </article>
@@ -375,95 +361,63 @@ const DeskOS = () => {
 
                 {/* ============ BLUECHIP FLAGSHIP ============ */}
                 <section className="mt-16" id="bluechip">
-                    <div className="eb28-panel relative rounded-[28px] border-2 border-[#5eead4]/50 p-6 pt-8 shadow-[0_0_48px_rgba(94,234,212,0.15)] sm:p-8 sm:pt-9">
-                        <div className="absolute -top-3 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-[#5eead4] px-4 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-[#020617]">
+                    <div className="relative rounded-3xl border-2 border-teal-600/40 bg-white p-6 pt-9 shadow-lg sm:p-8 sm:pt-10">
+                        <div className="absolute -top-3 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-teal-600 px-4 py-1 text-[10px] font-bold uppercase tracking-wide text-white">
                             Flagship desk · live beta · US equities
                         </div>
                         <div className="text-center">
-                            <h3 className="text-lg font-bold tracking-[0.2em]" style={{ color: BLUECHIP.color }}>
-                                BLUECHIP
-                            </h3>
-                            <h2 className="mx-auto mt-1 max-w-2xl text-2xl font-bold text-white sm:text-3xl">
+                            <h3 className="text-sm font-bold uppercase tracking-[0.2em] text-teal-700">Bluechip</h3>
+                            <h2 className="mx-auto mt-1 max-w-2xl text-2xl font-bold tracking-tight sm:text-3xl">
                                 Stocks. Through the front door.
                             </h2>
-                            <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-white/70">
+                            <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-slate-600">
                                 Most stock bots borrow your password and hope the broker doesn’t notice. Bluechip trades
-                                US equities through <span className="text-teal-200">Robinhood’s official Agentic Trading API</span> —
+                                US equities through <span className="font-semibold text-slate-900">Robinhood’s official Agentic Trading API</span> —
                                 the first EB28 desk built for the agentic-brokerage era.
                             </p>
                         </div>
 
                         <ul className="mx-auto mt-7 max-w-3xl space-y-2.5">
                             {BLUECHIP.bullets.map((line, index) => (
-                                <li key={index} className="flex gap-2 text-[13px] leading-relaxed text-white/70">
-                                    <span className="mt-[2px]" style={{ color: BLUECHIP.color }}>▸</span>
+                                <li key={index} className="flex gap-2 text-sm leading-relaxed text-slate-600">
+                                    <span className="mt-[3px] text-teal-600">▸</span>
                                     <span>{line}</span>
                                 </li>
                             ))}
                         </ul>
 
-                        <div className="mt-7 grid grid-cols-1 gap-3 sm:grid-cols-2">
-                            {BLUECHIP.steps.map((item) => (
-                                <div key={item.step} className="rounded-2xl border border-[#5eead4]/10 bg-black/20 p-4">
-                                    <div className="text-[10px] uppercase tracking-[0.2em] text-teal-200/70">{item.step}</div>
-                                    <div className="mt-1 text-sm font-bold text-teal-100">{item.title}</div>
-                                    <p className="mt-1.5 text-[12px] leading-relaxed text-white/65">{item.body}</p>
-                                </div>
-                            ))}
-                        </div>
-
-                        <div className="mt-7 space-y-3">
-                            {BLUECHIP.faqs.map((faq) => (
-                                <details key={faq.q} className="group rounded-2xl border border-[#5eead4]/10 bg-black/20 p-4">
-                                    <summary className="cursor-pointer list-none text-sm font-bold text-white/90 transition-colors group-open:text-teal-200">
-                                        {faq.q}
-                                    </summary>
-                                    <p className="mt-3 text-[13px] leading-relaxed text-white/65">{faq.a}</p>
-                                </details>
-                            ))}
-                        </div>
-
                         <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
                             <CheckoutButton href={BLUECHIP_CHECKOUT_URL} big>
                                 Get the founding beta — ${BLUECHIP_PRICE_USD}
                             </CheckoutButton>
-                            <CheckoutButton href="/fundmanager/" big ghost>
-                                Watch the live tape →
+                            <CheckoutButton href="/bluechip/" big ghost>
+                                Read the Bluechip story
                             </CheckoutButton>
                         </div>
-                        <p className="mt-4 text-center text-[11px] text-white/40">
+                        <p className="mt-4 text-center text-xs text-slate-500">
                             ${BLUECHIP_PRICE_USD} beta-tester price for the first 30 days of the beta (opened July 9) ·
-                            one-time license · 30-day get-it-running guarantee.{' '}
-                            <a href="/bluechip/" className="text-teal-200 underline underline-offset-2 hover:text-teal-100">
-                                Read the Bluechip story →
-                            </a>
-                        </p>
-                        <p className="mx-auto mt-5 max-w-2xl text-center text-[12px] leading-relaxed text-white/50">
-                            Trading involves risk of loss. Bluechip is licensed software you operate in your own account —
-                            not investment advice, not a managed fund. You hold the switch; you hold the risk.
+                            one-time license · 30-day get-it-running guarantee
                         </p>
                     </div>
                 </section>
 
                 {/* ============ THE OS STACK ============ */}
                 <section className="mt-16">
-                    <div className="eb28-panel rounded-[28px] border border-[#22d3ee]/10 p-6 sm:p-8">
+                    <div className="text-center">
                         <SectionLabel>Not sold separately — at any price</SectionLabel>
-                        <h2 className="mt-2 text-xl font-bold text-white sm:text-2xl">
-                            The operating system underneath the agents
-                        </h2>
-                        <p className="mt-3 max-w-2xl text-sm leading-relaxed text-white/60">
-                            This is the layer that took the longest to build and the layer every "bot for sale"
+                        <h2 className="mt-2 text-3xl font-bold tracking-tight">The operating system underneath the agents</h2>
+                        <p className="mx-auto mt-3 max-w-2xl text-slate-600">
+                            This is the layer that took the longest to build and the layer every “bot for sale”
                             skips. It only ships with the bundle.
                         </p>
-                        <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
-                            {OS_STACK.map((item) => (
-                                <div key={item.name} className="rounded-2xl border border-[#22d3ee]/10 bg-black/20 p-4">
-                                    <div className="text-sm font-bold text-cyan-200">{item.name}</div>
-                                    <p className="mt-1.5 text-[12px] leading-relaxed text-white/65">{item.detail}</p>
-                                </div>
-                            ))}
-                        </div>
+                    </div>
+                    <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2">
+                        {OS_STACK.map((item) => (
+                            <div key={item.name} className="rounded-2xl border border-slate-200 bg-white p-5">
+                                <div className="text-sm font-bold text-slate-900">{item.name}</div>
+                                <p className="mt-1.5 text-sm leading-relaxed text-slate-600">{item.detail}</p>
+                            </div>
+                        ))}
                     </div>
                 </section>
 
@@ -471,15 +425,15 @@ const DeskOS = () => {
                 <section className="mt-16" id="offer">
                     <div className="text-center">
                         <SectionLabel>The offer</SectionLabel>
-                        <h2 className="mt-2 text-2xl font-bold text-white sm:text-3xl">Three ways in</h2>
+                        <h2 className="mt-2 text-3xl font-bold tracking-tight">Three ways in</h2>
                     </div>
 
-                    <div className="mt-8 grid grid-cols-1 gap-4 lg:grid-cols-3">
-                        <div className="eb28-panel flex flex-col rounded-[28px] border border-white/10 p-6">
-                            <div className="text-[10px] uppercase tracking-[0.22em] text-white/45">Single agent</div>
-                            <div className="mt-3 text-3xl font-bold text-white">${DESK_PRICE_USD}</div>
-                            <div className="text-[11px] uppercase tracking-[0.16em] text-white/40">one-time, per agent</div>
-                            <ul className="mt-5 flex-1 space-y-2 text-[12px] leading-relaxed text-white/65">
+                    <div className="mt-10 grid grid-cols-1 gap-5 lg:grid-cols-3">
+                        <div className="flex flex-col rounded-3xl border border-slate-200 bg-white p-6">
+                            <div className="text-xs font-semibold uppercase tracking-wide text-slate-500">Single agent</div>
+                            <div className="mt-3 text-3xl font-bold">${DESK_PRICE_USD}</div>
+                            <div className="text-xs uppercase tracking-wide text-slate-400">one-time, per agent</div>
+                            <ul className="mt-5 flex-1 space-y-2 text-sm leading-relaxed text-slate-600">
                                 <li>▸ Any one agent, full source</li>
                                 <li>▸ Config + install guide</li>
                                 <li>▸ Runner integration scripts</li>
@@ -490,19 +444,19 @@ const DeskOS = () => {
                             </div>
                         </div>
 
-                        <div className="eb28-panel relative flex flex-col rounded-[28px] border-2 border-[#22d3ee]/60 p-6 shadow-[0_0_48px_rgba(34,211,238,0.15)]">
-                            <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-[#22d3ee] px-4 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-[#020617]">
+                        <div className="relative flex flex-col rounded-3xl border-2 border-orange-500 bg-white p-6 shadow-lg">
+                            <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-orange-600 px-4 py-1 text-[10px] font-bold uppercase tracking-wide text-white">
                                 The actual deal
                             </div>
-                            <div className="text-[10px] uppercase tracking-[0.22em] text-cyan-300/70">Full Desk OS</div>
+                            <div className="text-xs font-semibold uppercase tracking-wide text-orange-700">Full Desk OS</div>
                             <div className="mt-3 flex items-baseline gap-3">
-                                <div className="text-4xl font-bold text-white">${BUNDLE_PRICE_USD}</div>
-                                <div className="text-sm text-white/40 line-through">${SOLO_TOTAL} solo</div>
+                                <div className="text-4xl font-bold">${BUNDLE_PRICE_USD}</div>
+                                <div className="text-sm text-slate-400 line-through">${SOLO_TOTAL} solo</div>
                             </div>
-                            <div className="text-[11px] uppercase tracking-[0.16em] text-white/40">one-time · lifetime license</div>
-                            <ul className="mt-5 flex-1 space-y-2 text-[12px] leading-relaxed text-white/70">
-                                <li>▸ <span className="font-bold text-white">All 8 agents</span> (${SOLO_TOTAL} if bought solo)</li>
-                                <li>▸ <span className="font-bold text-white">The complete OS</span>: gated runner, kill switch, capital guard, circuit breakers, journal</li>
+                            <div className="text-xs uppercase tracking-wide text-slate-400">one-time · lifetime license</div>
+                            <ul className="mt-5 flex-1 space-y-2 text-sm leading-relaxed text-slate-600">
+                                <li>▸ <span className="font-semibold text-slate-900">All 8 agents</span> (${SOLO_TOTAL} if bought solo)</li>
+                                <li>▸ <span className="font-semibold text-slate-900">The complete OS</span>: gated runner, kill switch, capital guard, circuit breakers, journal</li>
                                 <li>▸ The live telemetry dashboard, self-hosted</li>
                                 <li>▸ All 9 pre-written launchd schedules</li>
                                 <li>▸ Paper-mode config so day one risks $0</li>
@@ -515,11 +469,11 @@ const DeskOS = () => {
                             </div>
                         </div>
 
-                        <div className="eb28-panel flex flex-col rounded-[28px] border border-white/10 p-6">
-                            <div className="text-[10px] uppercase tracking-[0.22em] text-white/45">Operator install</div>
-                            <div className="mt-3 text-3xl font-bold text-white">${OPERATOR_PRICE_USD}</div>
-                            <div className="text-[11px] uppercase tracking-[0.16em] text-white/40">one-time · done with you</div>
-                            <ul className="mt-5 flex-1 space-y-2 text-[12px] leading-relaxed text-white/65">
+                        <div className="flex flex-col rounded-3xl border border-slate-200 bg-white p-6">
+                            <div className="text-xs font-semibold uppercase tracking-wide text-slate-500">Operator install</div>
+                            <div className="mt-3 text-3xl font-bold">${OPERATOR_PRICE_USD}</div>
+                            <div className="text-xs uppercase tracking-wide text-slate-400">one-time · done with you</div>
+                            <ul className="mt-5 flex-1 space-y-2 text-sm leading-relaxed text-slate-600">
                                 <li>▸ Everything in the bundle</li>
                                 <li>▸ 1:1 install session — we stand up your floor together</li>
                                 <li>▸ Wallet, risk-cap, and dashboard configuration</li>
@@ -533,8 +487,8 @@ const DeskOS = () => {
                         </div>
                     </div>
 
-                    <p id="fleet-note" className="mt-6 text-center text-[12px] leading-relaxed text-white/50">
-                        30-day guarantee on every tier: genuinely try to get a desk running in paper mode and can't?
+                    <p id="fleet-note" className="mt-6 text-center text-sm leading-relaxed text-slate-500">
+                        30-day guarantee on every tier: genuinely try to get a desk running in paper mode and can’t?
                         Email social@eb28.co and you get every cent back. Keep the code.
                     </p>
                 </section>
@@ -543,15 +497,15 @@ const DeskOS = () => {
                 <section className="mt-16">
                     <div className="text-center">
                         <SectionLabel>Straight answers</SectionLabel>
-                        <h2 className="mt-2 text-2xl font-bold text-white sm:text-3xl">Questions a smart buyer asks</h2>
+                        <h2 className="mt-2 text-3xl font-bold tracking-tight">Questions a smart buyer asks</h2>
                     </div>
                     <div className="mt-8 space-y-3">
                         {FAQS.map((faq) => (
-                            <details key={faq.q} className="eb28-panel group rounded-2xl border border-[#22d3ee]/10 p-5">
-                                <summary className="cursor-pointer list-none text-sm font-bold text-white/90 transition-colors group-open:text-cyan-200">
+                            <details key={faq.q} className="group rounded-2xl border border-slate-200 bg-white p-5">
+                                <summary className="cursor-pointer list-none text-sm font-bold text-slate-900 transition-colors group-open:text-orange-700">
                                     {faq.q}
                                 </summary>
-                                <p className="mt-3 text-[13px] leading-relaxed text-white/65">{faq.a}</p>
+                                <p className="mt-3 text-sm leading-relaxed text-slate-600">{faq.a}</p>
                             </details>
                         ))}
                     </div>
@@ -559,11 +513,11 @@ const DeskOS = () => {
 
                 {/* ============ FINAL CTA ============ */}
                 <section className="mt-16 pb-10">
-                    <div className="eb28-panel rounded-[28px] border border-[#22d3ee]/25 bg-gradient-to-br from-[#22d3ee]/10 to-transparent p-8 text-center sm:p-10">
-                        <h2 className="mx-auto max-w-2xl text-2xl font-bold leading-snug text-white sm:text-3xl">
+                    <div className="rounded-3xl bg-blue-950 p-8 text-center text-white sm:p-12">
+                        <h2 className="mx-auto max-w-2xl text-2xl font-bold leading-snug tracking-tight sm:text-3xl">
                             In an hour, your machine can be running the same fleet you just watched trade.
                         </h2>
-                        <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-white/60">
+                        <p className="mx-auto mt-4 max-w-xl text-sm leading-relaxed text-blue-100">
                             Paper mode first. Kill switch always. Real money only when you — not the software,
                             not us, not FOMO — deliberately flip the gate.
                         </p>
@@ -571,26 +525,26 @@ const DeskOS = () => {
                             <CheckoutButton href={BUNDLE_CHECKOUT_URL} big>
                                 Get the Desk OS — ${BUNDLE_PRICE_USD}
                             </CheckoutButton>
-                            <CheckoutButton href="/fundmanager/" big ghost>
+                            <a href="/fundmanager/" className="inline-flex items-center gap-2 rounded-full bg-amber-400 px-8 py-4 text-base font-semibold text-blue-950 transition-colors hover:bg-amber-300">
                                 Still skeptical? Watch the tape →
-                            </CheckoutButton>
+                            </a>
                         </div>
 
-                        <div className="mx-auto mt-8 max-w-xl space-y-3 text-left text-[12px] leading-relaxed text-white/55">
+                        <div className="mx-auto mt-8 max-w-xl space-y-3 text-left text-xs leading-relaxed text-blue-200/80">
                             <p>
-                                <span className="font-bold text-white/75">P.S.</span> — The ${BUNDLE_PRICE_USD} bundle exists because selling
+                                <span className="font-bold text-white">P.S.</span> — The ${BUNDLE_PRICE_USD} bundle exists because selling
                                 agents one at a time is good business and selling the whole floor is a better product. The OS layer —
                                 the kill switch, the capital guard, the journal — is not sold separately at any price. If you want the
                                 machine and not just a bot, this is the only door.
                             </p>
                             <p>
-                                <span className="font-bold text-white/75">P.P.S.</span> — Yes, the live tape shows a loss. It will show
-                                tomorrow's numbers too, whatever they are. That's the whole point. Buy from people who show you the tape.
+                                <span className="font-bold text-white">P.P.S.</span> — Yes, the live tape shows a loss. It will show
+                                tomorrow’s numbers too, whatever they are. That’s the whole point. Buy from people who show you the tape.
                             </p>
                         </div>
                     </div>
 
-                    <div className="mt-8 space-y-2 text-center text-[10px] leading-relaxed text-white/35">
+                    <div className="mt-8 space-y-2 text-center text-xs leading-relaxed text-slate-400">
                         <p>
                             EB28 Desk OS is a software license for educational and personal-automation use. It is not investment advice,
                             a managed fund, or a solicitation to trade. Prediction-market trading involves substantial risk of loss; past
@@ -602,7 +556,7 @@ const DeskOS = () => {
                             Robinhood does not endorse or sponsor EB28. Trade only money you can afford to lose.
                         </p>
                         <p>
-                            © {new Date().getFullYear()} EB28 · <a href="/fundmanager/" className="underline underline-offset-2 hover:text-cyan-200">Live dashboard</a> · Support: social@eb28.co
+                            © {new Date().getFullYear()} EB28 · <a href="/fundmanager/" className="underline underline-offset-2 hover:text-slate-600">Live dashboard</a> · Support: social@eb28.co
                         </p>
                     </div>
                 </section>

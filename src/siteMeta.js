@@ -325,6 +325,47 @@ const ROUTE_META = {
             },
         ],
     },
+    daytradingbot: {
+        ...BASE_ROUTE_META,
+        key: 'daytradingbot',
+        path: '/',
+        title: 'DayTradingBot — The AI Stocks Desk on Robinhood’s Official Agentic API',
+        description:
+            'DayTradingBot is a small, honest AI equities desk you run yourself: built on Robinhood’s official Agentic Trading API, isolated sub-account, kill switch, and a public live tape. $98 founding beta.',
+        image: FUNDMANAGER_IMAGE,
+        includeInSitemap: false,
+        structuredData: [
+            ORGANIZATION_SCHEMA,
+            {
+                '@context': 'https://schema.org',
+                '@type': 'Product',
+                name: 'DayTradingBot (EB28 Bluechip) — Founding Beta License',
+                url: 'https://daytradingbot.net/',
+                description:
+                    'An AI equities desk the operator runs in an isolated Robinhood Agentic sub-account, behind a kill switch, with a public trade tape. Licensed software — not investment advice.',
+                brand: { '@type': 'Brand', name: 'EB28' },
+                offers: {
+                    '@type': 'Offer',
+                    priceCurrency: 'USD',
+                    price: '98',
+                    availability: 'https://schema.org/LimitedAvailability',
+                    url: 'https://daytradingbot.net/',
+                },
+            },
+        ],
+    },
+    setup: {
+        ...BASE_ROUTE_META,
+        key: 'setup',
+        path: '/setup/',
+        title: 'Desk Setup Portal | EB28',
+        description:
+            'Owner setup for your EB28 desk: connect your wallet in one click, fund your desk from your own wallet, and link Robinhood the safe way — on your machine.',
+        image: FUNDMANAGER_IMAGE,
+        robots: NOINDEX_ROBOTS,
+        includeInSitemap: false,
+        structuredData: [],
+    },
     start: {
         ...BASE_ROUTE_META,
         key: 'start',
@@ -643,6 +684,7 @@ export const STATIC_ROUTE_OUTPUTS = [
     { routeKey: 'fundmanager', outputPath: 'fundmanager/index.html' },
     { routeKey: 'deskos', outputPath: 'deskos/index.html' },
     { routeKey: 'bluechip', outputPath: 'bluechip/index.html' },
+    { routeKey: 'setup', outputPath: 'setup/index.html' },
     { routeKey: 'start', outputPath: 'start/index.html' },
     { routeKey: 'start', outputPath: 'links/index.html' },
     { routeKey: 'reconcile', outputPath: 'reconcile/index.html' },
@@ -709,8 +751,21 @@ export function detectRouteKey({ pathname = '/', hostname = '' } = {}) {
         return 'deskos';
     }
 
+    if (
+        normalizedHostname === 'daytradingbot.net' ||
+        normalizedHostname === 'www.daytradingbot.net'
+    ) {
+        if (normalizedPathname === '/') {
+            return 'daytradingbot';
+        }
+    }
+
     if (normalizedPathname === '/bluechip' || normalizedPathname.startsWith('/bluechip/')) {
         return 'bluechip';
+    }
+
+    if (normalizedPathname === '/setup' || normalizedPathname.startsWith('/setup/')) {
+        return 'setup';
     }
 
     if (normalizedPathname === '/start' || normalizedPathname === '/links') {

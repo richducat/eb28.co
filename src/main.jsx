@@ -67,9 +67,16 @@ const isWelcomeRoute =
 const isStartRoute =
   pathname === '/start' ||
   pathname === '/links';
+const isDayTradingBotHost =
+  hostname === 'daytradingbot.net' ||
+  hostname === 'www.daytradingbot.net';
 const isBluechipRoute =
   pathname === '/bluechip' ||
-  pathname.startsWith('/bluechip/');
+  pathname.startsWith('/bluechip/') ||
+  (isDayTradingBotHost && (pathname === '' || pathname === '/'));
+const isSetupPortalRoute =
+  pathname === '/setup' ||
+  pathname.startsWith('/setup/');
 
 function renderComponent(Component) {
   root.render(
@@ -162,6 +169,11 @@ async function renderApp() {
 
   if (isBluechipRoute) {
     await renderRoute(() => import('./BluechipPage.jsx'));
+    return;
+  }
+
+  if (isSetupPortalRoute) {
+    await renderRoute(() => import('./SetupPortal.jsx'));
     return;
   }
 

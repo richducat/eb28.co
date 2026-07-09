@@ -10,6 +10,7 @@ const ARTICLES_FILE = path.join(ROOT, 'content', 'eb28', 'articles.json');
 const DOCS_DIR = path.join(ROOT, 'docs');
 const BLOG_DIR = path.join(DOCS_DIR, 'blog');
 const DATA_DIR = path.join(DOCS_DIR, 'data');
+const RETIRED_PUBLIC_URLS = new Set([`${SITE_ORIGIN}/deskos/`, `${SITE_ORIGIN}/limitless/`]);
 
 const INTERNAL_SOURCE_LINKS = [
   {
@@ -47,6 +48,10 @@ function stripTags(value) {
     .replace(/<[^>]+>/g, ' ')
     .replace(/\s+/g, ' ')
     .trim();
+}
+
+function cleanGeneratedText(value) {
+  return String(value || '').replace(/[ \t]+$/gm, '');
 }
 
 function articlePath(article) {
@@ -833,19 +838,28 @@ function renderArticlePage(article, allArticles) {
 async function writeArticlePages(articles) {
   await fs.rm(BLOG_DIR, { recursive: true, force: true });
   await fs.mkdir(BLOG_DIR, { recursive: true });
-  await fs.writeFile(path.join(BLOG_DIR, 'index.html'), renderIndexPage(articles), 'utf8');
+  await fs.writeFile(path.join(BLOG_DIR, 'index.html'), cleanGeneratedText(renderIndexPage(articles)), 'utf8');
 
   for (const article of articles) {
     const articleDir = path.join(BLOG_DIR, article.slug);
     await fs.mkdir(articleDir, { recursive: true });
-    await fs.writeFile(path.join(articleDir, 'index.html'), renderArticlePage(article, articles), 'utf8');
+    await fs.writeFile(
+      path.join(articleDir, 'index.html'),
+      cleanGeneratedText(renderArticlePage(article, articles)),
+      'utf8',
+    );
   }
 }
 
 async function writeFeedFiles(articles) {
   await fs.mkdir(DATA_DIR, { recursive: true });
+  const latestContentDate = articles
+    .map((article) => article.dateModified || article.datePublished || '')
+    .filter(Boolean)
+    .sort()
+    .at(-1);
   const feed = {
-    generatedAt: new Date().toISOString(),
+    generatedAt: latestContentDate ? `${latestContentDate}T12:00:00.000Z` : null,
     site: SITE_ORIGIN,
     blogUrl: `${SITE_ORIGIN}${BLOG_PATH}`,
     articles: articles.map((article) => ({
@@ -887,7 +901,7 @@ async function writeFeedFiles(articles) {
 </rss>
 `;
 
-  await fs.writeFile(path.join(BLOG_DIR, 'feed.xml'), rss, 'utf8');
+  await fs.writeFile(path.join(BLOG_DIR, 'feed.xml'), cleanGeneratedText(rss), 'utf8');
 }
 
 async function updateSitemap(articles) {
@@ -907,19 +921,45 @@ async function updateSitemap(articles) {
     urls.push({ url, lastmod });
   };
 
-  const locRegex = /<loc>([\s\S]*?)<\/loc>/g;
+  const existingEntries = [];
+  const urlBlockRegex = /<url>([\s\S]*?)<\/url>/g;
   let match;
-  while ((match = locRegex.exec(existing))) {
-    const existingUrl = match[1].trim();
-    if (existingUrl === `${SITE_ORIGIN}${BLOG_PATH}` || existingUrl.startsWith(`${SITE_ORIGIN}${BLOG_PATH}`)) {
-      continue;
-    }
-    addUrl(existingUrl);
+  while ((match = urlBlockRegex.exec(existing))) {
+    const block = match[1];
+    const existingUrl = block.match(/<loc>([\s\S]*?)<\/loc>/)?.[1]?.trim() || '';
+    const lastmod = block.match(/<lastmod>([\s\S]*?)<\/lastmod>/)?.[1]?.trim() || '';
+    if (existingUrl) existingEntries.push({ url: existingUrl, lastmod });
   }
 
-  addUrl(`${SITE_ORIGIN}${BLOG_PATH}`, articles[0]?.dateModified || articles[0]?.datePublished || '');
-  for (const article of articles) {
-    addUrl(articleUrl(article), article.dateModified || article.datePublished || '');
+  const latestBlogDate = articles
+    .map((article) => article.dateModified || article.datePublished || '')
+    .filter(Boolean)
+    .sort()
+    .at(-1);
+  const desiredBlogEntries = [
+    { url: `${SITE_ORIGIN}${BLOG_PATH}`, lastmod: latestBlogDate || '' },
+    ...articles.map((article) => ({
+      url: articleUrl(article),
+      lastmod: article.dateModified || article.datePublished || '',
+    })),
+  ];
+
+  let insertedBlogEntries = false;
+  for (const entry of existingEntries) {
+    if (RETIRED_PUBLIC_URLS.has(entry.url)) continue;
+    const isBlogEntry = entry.url === `${SITE_ORIGIN}${BLOG_PATH}` || entry.url.startsWith(`${SITE_ORIGIN}${BLOG_PATH}`);
+    if (isBlogEntry) {
+      if (!insertedBlogEntries) {
+        for (const desired of desiredBlogEntries) addUrl(desired.url, desired.lastmod);
+        insertedBlogEntries = true;
+      }
+      continue;
+    }
+    addUrl(entry.url, entry.lastmod);
+  }
+
+  if (!insertedBlogEntries) {
+    for (const desired of desiredBlogEntries) addUrl(desired.url, desired.lastmod);
   }
 
   const xml = [

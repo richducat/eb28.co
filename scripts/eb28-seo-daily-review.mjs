@@ -17,6 +17,7 @@ const WEBMASTERS_SCOPE = 'https://www.googleapis.com/auth/webmasters';
 const GMAIL_SEND_SCOPE = 'https://www.googleapis.com/auth/gmail.send';
 const ARTICLES_FILE = path.join(ROOT, 'content', 'eb28', 'articles.json');
 const OUTPUT_DIR = path.join(ROOT, 'output', 'seo-daily');
+const REPORT_RECIPIENT = process.env.SEO_REPORT_TO || 'richducat@gmail.com';
 
 function loadEnvFile(filePath) {
   if (!fs.existsSync(filePath)) return;
@@ -42,7 +43,6 @@ function parseArgs(argv) {
     inspectUrls: false,
     sendEmail: false,
     runLighthouse: false,
-    deployVercel: false,
     siteUrl: DEFAULT_GSC_SITE_URL,
     sitemapUrl: DEFAULT_SITEMAP_URL,
   };
@@ -55,7 +55,6 @@ function parseArgs(argv) {
     else if (arg === '--inspect-urls') options.inspectUrls = true;
     else if (arg === '--send-email') options.sendEmail = true;
     else if (arg === '--run-lighthouse') options.runLighthouse = true;
-    else if (arg === '--deploy-vercel') options.deployVercel = true;
     else if (arg === '--site-url') {
       options.siteUrl = next || options.siteUrl;
       index += 1;
@@ -63,7 +62,7 @@ function parseArgs(argv) {
       options.sitemapUrl = next || options.sitemapUrl;
       index += 1;
     } else if (arg === '--help' || arg === '-h') {
-      console.log('Usage: node scripts/eb28-seo-daily-review.mjs [--safe-updates] [--submit-sitemap] [--inspect-urls] [--send-email] [--run-lighthouse] [--deploy-vercel]');
+      console.log('Usage: node scripts/eb28-seo-daily-review.mjs [--safe-updates] [--submit-sitemap] [--inspect-urls] [--send-email] [--run-lighthouse]');
       process.exit(0);
     } else {
       throw new Error(`Unknown argument: ${arg}`);
@@ -127,7 +126,13 @@ async function readArticles() {
 async function getNewestArticles(limit = 5) {
   const articles = await readArticles();
   return [...articles]
-    .sort((a, b) => String(b.datePublished || '').localeCompare(String(a.datePublished || '')))
+    .sort((a, b) => {
+      const modified = String(b.dateModified || b.datePublished || '').localeCompare(
+        String(a.dateModified || a.datePublished || ''),
+      );
+      if (modified !== 0) return modified;
+      return String(b.datePublished || '').localeCompare(String(a.datePublished || ''));
+    })
     .slice(0, limit)
     .map((article) => ({
       title: article.title,
@@ -648,7 +653,7 @@ async function sendReportEmail({ subject, report }) {
         },
         body: JSON.stringify({
           from: process.env.RESEND_FROM_EMAIL,
-          to: ['social@eb28.co'],
+          to: [REPORT_RECIPIENT],
           subject,
           text: report,
         }),
@@ -661,19 +666,16 @@ async function sendReportEmail({ subject, report }) {
 
   const token = await getAccessToken(`${WEBMASTERS_SCOPE} ${GMAIL_SEND_SCOPE}`).catch(() => null);
   if (!token) {
-    const formSubmit = await sendViaFormSubmit({ subject, report });
-    if (formSubmit.ok) return formSubmit;
     return {
       ok: false,
       skipped: true,
-      reason: 'Missing email credentials. Configure RESEND_API_KEY + RESEND_FROM_EMAIL, Gmail OAuth with gmail.send scope, or keep FormSubmit available.',
-      fallback: formSubmit,
+      reason: 'Missing email credentials. Configure RESEND_API_KEY + RESEND_FROM_EMAIL or Gmail OAuth with gmail.send scope.',
     };
   }
 
   const from = process.env.GMAIL_FROM_EMAIL || 'richducat@gmail.com';
   const raw = [
-    `To: social@eb28.co`,
+    `To: ${REPORT_RECIPIENT}`,
     `From: ${from}`,
     `Subject: ${subject}`,
     'Content-Type: text/plain; charset="UTF-8"',
@@ -692,45 +694,7 @@ async function sendReportEmail({ subject, report }) {
     });
     return { ok: true, provider: 'gmail', id: json.id || null };
   } catch (error) {
-    const formSubmit = await sendViaFormSubmit({ subject, report });
-    if (formSubmit.ok) return formSubmit;
-    return { ok: false, provider: 'gmail', error: error.message, fallback: formSubmit };
-  }
-}
-
-async function sendViaFormSubmit({ subject, report }) {
-  if (process.env.SEO_DISABLE_FORMSUBMIT === '1') {
-    return { ok: false, skipped: true, provider: 'formsubmit', reason: 'SEO_DISABLE_FORMSUBMIT=1' };
-  }
-
-  try {
-    const json = await requestJson('https://formsubmit.co/ajax/social@eb28.co', {
-      method: 'POST',
-      headers: {
-        accept: 'application/json',
-        'content-type': 'application/json',
-      },
-      body: JSON.stringify({
-        _subject: subject,
-        _template: 'table',
-        sourcePage: 'EB28 SEO daily review automation',
-        report,
-      }),
-    });
-    const responseText = String(json?.message || json?.success || '').trim();
-    const normalized = responseText.toLowerCase();
-    const looksBlocked = /open this page|through a web server|will not work|failed|error/.test(normalized);
-    const looksDelivered = !looksBlocked && (json?.success === true || /sent|success/.test(normalized));
-    if (!looksDelivered) {
-      return {
-        ok: false,
-        provider: 'formsubmit',
-        reason: responseText || 'FormSubmit response did not confirm delivery.',
-      };
-    }
-    return { ok: true, provider: 'formsubmit', response: responseText || 'sent' };
-  } catch (error) {
-    return { ok: false, provider: 'formsubmit', error: error.message };
+    return { ok: false, provider: 'gmail', error: error.message };
   }
 }
 
@@ -796,12 +760,8 @@ async function main() {
     : { skipped: true };
 
   const localSeo = options.safeUpdates
-    ? runCommand(process.execPath, ['scripts/check-eb28-seo.mjs'])
+    ? runCommand('npm', ['run', 'check:eb28-seo'])
     : { ok: true, stdout: 'Skipped local SEO validation because --safe-updates was not set.' };
-
-  const deployment = options.deployVercel
-    ? runCommand('npx', ['vercel', 'deploy', '--prod', '--yes'])
-    : { skipped: true, stdout: 'Skipped production deploy because --deploy-vercel was not set.' };
 
   const liveChecks = [];
   for (const url of urlsToCheck) {
@@ -828,7 +788,7 @@ async function main() {
   const melbourneSubdomain = liveChecks.find((check) => check.url === `${MELBOURNE_WEB_STUDIO_ORIGIN}/`);
 
   const report = [
-    `# EB28 Daily SEO Review`,
+    `# EB28 Weekly SEO Review`,
     '',
     `Generated: ${new Date().toISOString()}`,
     `Production: ${SITE_ORIGIN}`,
@@ -848,12 +808,7 @@ async function main() {
     '',
     `## Deployment`,
     '',
-    deployment.skipped
-      ? '- Production deploy skipped by flags.'
-      : `- Vercel production deploy: ${deployment.ok ? 'passed' : 'failed'}`,
-    deployment.skipped ? '' : '```',
-    deployment.skipped ? '' : summarizeCommand(deployment),
-    deployment.skipped ? '' : '```',
+    '- This review script never deploys directly. Production changes must be committed with a scoped diff, pushed to `main`, deployed by GitHub Pages, and then verified at the live EB28 URLs.',
     '',
     `## Live Crawl Checks`,
     '',
@@ -952,15 +907,14 @@ async function main() {
   await fsp.writeFile(datedPath, report, 'utf8');
 
   const email = options.sendEmail
-    ? await sendReportEmail({ subject: 'EB28 Daily SEO Review', report })
+    ? await sendReportEmail({ subject: 'EB28 Weekly SEO Review', report })
     : { skipped: true };
 
   const buildOk = safeUpdates.skipped || Boolean(safeUpdates.blog.ok);
-  const deployOk = deployment.skipped || Boolean(deployment.ok);
   const liveOk = liveChecks.every((check) => check.ok);
 
   const result = {
-    ok: Boolean(buildOk && localSeo.ok && deployOk && liveOk),
+    ok: Boolean(buildOk && localSeo.ok && liveOk),
     reportPath: latestPath,
     datedReportPath: datedPath,
     sitemapSubmission,
@@ -980,7 +934,7 @@ async function main() {
 
   console.log(JSON.stringify(result, null, 2));
 
-  if (!localSeo.ok) {
+  if (!result.ok) {
     process.exitCode = 1;
   }
 }

@@ -29,7 +29,8 @@
     "eb28:seo": "node scripts/eb28-seo-daily-review.mjs --safe-updates --submit-sitemap --inspect-urls --send-email",
     "eb28:social:prepare": "node scripts/publish-eb28-buffer.mjs --prepare",
     "eb28:social:publish": "node scripts/publish-eb28-buffer.mjs --publish",
-    "check:eb28-seo": "node scripts/check-eb28-seo.mjs"
+    "check:eb28-content": "node scripts/check-eb28-content-quality.mjs",
+    "check:eb28-seo": "node scripts/check-eb28-seo.mjs && node scripts/check-eb28-content-quality.mjs"
   },
   "dependencies": {
     "@capacitor/cli": "^8.2.0",

@@ -3,13 +3,21 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import process from 'node:process';
+import {
+  CONTENT_QUALITY_VERSION,
+  analyzeArticleQuality,
+  analyzeSocialPackage,
+  normalizeKeyword,
+} from './lib/eb28-content-quality.mjs';
 
 const ROOT = process.cwd();
 const CONTENT_DIR = path.join(ROOT, 'content', 'eb28');
 const ARTICLES_FILE = path.join(CONTENT_DIR, 'articles.json');
 const BACKLOG_FILE = path.join(CONTENT_DIR, 'topic-backlog.json');
 const STATE_FILE = path.join(CONTENT_DIR, 'content-state.json');
-const OUTPUT_DIR = path.join(ROOT, 'output', 'eb28-social');
+const OUTPUT_RELATIVE_DIR = path.join('output', 'eb28-social');
+const OUTPUT_DIR = path.join(ROOT, OUTPUT_RELATIVE_DIR);
+const DEFAULT_REFRESH_COOLDOWN_DAYS = Number.parseInt(process.env.EB28_REFRESH_COOLDOWN_DAYS || '21', 10);
 
 const CLUSTER_INTERNAL_LINKS = {
   'local-seo': [
@@ -172,6 +180,199 @@ const CLUSTER_MESSAGING = {
   },
 };
 
+const CLUSTER_QUALITY_DETAILS = {
+  'local-seo': {
+    audience:
+      'owners and marketing leads at Melbourne and Space Coast businesses that need qualified local visibility, not a vanity ranking report',
+    diagnostics: [
+      'Confirm the Google Business Profile name, categories, hours, service area, and landing-page destination are accurate',
+      'Compare the search promise in the profile with the headline and proof on the linked page',
+      'Review whether local reviews, citations, and on-site location details agree instead of creating mixed signals',
+      'Check the actual enquiry path on a phone before adding another directory listing or blog post',
+    ],
+    metrics: [
+      'Qualified calls, forms, bookings, and direction requests tied to the target service',
+      'Search Console impressions, clicks, click-through rate, and average position for the target query and page',
+      'Business Profile discovery actions and the landing pages that receive those visits',
+      'Indexing, canonical, internal-link, and conversion-path health for the page being promoted',
+    ],
+    boundaries: [
+      'Do not buy links, create fake locations, or stuff city names into copy that does not help a buyer',
+      'Do not promise a ranking position or treat a temporary map movement as durable demand',
+      'Keep business information consistent and document who owns profile, domain, analytics, and directory access',
+      'Make one measurable improvement at a time so the result can be reviewed honestly',
+    ],
+    citations: [
+      {
+        label: 'Google Search Central: SEO Starter Guide',
+        url: 'https://developers.google.com/search/docs/fundamentals/seo-starter-guide',
+      },
+      {
+        label: 'Google Business Profile Help: improve local ranking',
+        url: 'https://support.google.com/business/answer/7091',
+      },
+      {
+        label: 'Google Search Central: LocalBusiness structured data',
+        url: 'https://developers.google.com/search/docs/appearance/structured-data/local-business',
+      },
+    ],
+    socialHook: 'Local visibility improves when the profile, website, proof, and enquiry path tell the same story.',
+    visualDirection: 'Use a local-search diagnostic board: profile signal, landing page, proof, and enquiry path connected in one clear flow.',
+  },
+  'melbourne-web-design': {
+    audience:
+      'Melbourne and Brevard County owners comparing a redesign, a new website, or a local web partner and trying to avoid another attractive site that does not convert',
+    diagnostics: [
+      'Open the page on a real phone and ask whether the offer, location, proof, and next step are clear before scrolling',
+      'Check loading, interaction, and layout stability with field data where it exists and lab data for diagnosis',
+      'Trace every primary call to action through confirmation and follow-up instead of stopping at the button',
+      'Confirm the business controls its domain, analytics, content, forms, and source files before signing a rebuild contract',
+    ],
+    metrics: [
+      'Qualified project briefs, booked conversations, and completed forms by landing page',
+      'Mobile conversion rate and form completion rate, reviewed with enough volume to avoid false conclusions',
+      'Core Web Vitals, broken interactions, accessibility defects, and layout regressions on priority templates',
+      'Search impressions and clicks for the service-and-location queries each page is meant to answer',
+    ],
+    boundaries: [
+      'Do not hide ownership, hosting, analytics, or maintenance terms behind a design-only proposal',
+      'Do not trade readable type, contrast, keyboard access, or stable mobile layout for visual novelty',
+      'Do not rebuild pages that already perform until the actual leak has been measured',
+      'Keep the scope tied to a buyer problem, a measurable path, and a clear handoff plan',
+    ],
+    citations: [
+      {
+        label: 'web.dev: Web Vitals',
+        url: 'https://web.dev/articles/vitals',
+      },
+      {
+        label: 'W3C Web Accessibility Initiative: WCAG overview',
+        url: 'https://www.w3.org/WAI/standards-guidelines/wcag/',
+      },
+      {
+        label: 'Google Search Central: SEO Starter Guide',
+        url: 'https://developers.google.com/search/docs/fundamentals/seo-starter-guide',
+      },
+    ],
+    socialHook: 'A website should make the next decision easier on a phone, not merely look impressive in a desktop mockup.',
+    visualDirection: 'Show a mobile-first before-and-after with offer clarity, proof, one primary action, and a clean follow-up path.',
+  },
+  conversion: {
+    audience:
+      'small-business owners who already have traffic or referrals but are losing buyers between the first page view and a completed enquiry',
+    diagnostics: [
+      'Read the first screen as a new buyer and identify the offer, audience, proof, and next step without using insider knowledge',
+      'Review analytics and form events for the exact point where visitors hesitate or leave',
+      'Test the full path on mobile, including validation, confirmation, routing, and response expectations',
+      'Separate traffic problems from message, trust, usability, and follow-up problems before changing the page',
+    ],
+    metrics: [
+      'Completed qualified enquiries rather than button clicks or raw sessions alone',
+      'Form starts, validation failures, completions, and time to the first useful response',
+      'Conversion rate by landing page, device class, source, and buyer intent when sample size supports it',
+      'Search Console query/page movement for pages that were changed to match clearer intent',
+    ],
+    boundaries: [
+      'Do not manufacture urgency, testimonials, scarcity, or performance claims',
+      'Do not add fields unless each one changes qualification, routing, or the next conversation',
+      'Do not call a higher click rate a business win unless qualified enquiries also improve',
+      'Keep accessibility, privacy, and a clear human escalation path inside the conversion design',
+    ],
+    citations: [
+      {
+        label: 'web.dev: Web Vitals',
+        url: 'https://web.dev/articles/vitals',
+      },
+      {
+        label: 'W3C Web Accessibility Initiative: WCAG overview',
+        url: 'https://www.w3.org/WAI/standards-guidelines/wcag/',
+      },
+      {
+        label: 'Google Search Central: SEO Starter Guide',
+        url: 'https://developers.google.com/search/docs/fundamentals/seo-starter-guide',
+      },
+    ],
+    socialHook: 'More traffic will not repair a page that makes the offer, proof, form, or follow-up hard to trust.',
+    visualDirection: 'Map the conversion path as four panels: promise, proof, action, and response, with one friction point called out in each.',
+  },
+  'lead-automation': {
+    audience:
+      'service-business owners and operators who need faster lead handling without handing pricing, qualification, or relationship decisions to an unsupervised bot',
+    diagnostics: [
+      'Map the first five minutes after an enquiry and identify where ownership or context is lost',
+      'Separate deterministic confirmations and routing from conversations that require judgment',
+      'List every data field, system permission, failure mode, and human escalation before connecting tools',
+      'Review consent, sender identity, opt-out handling, logs, and error recovery for every automated message',
+    ],
+    metrics: [
+      'Time to acknowledgement and time to a useful human response for qualified leads',
+      'Routing accuracy, duplicate-message rate, failed handoffs, and leads that required manual recovery',
+      'Appointments or qualified conversations created without increasing complaints or opt-outs',
+      'Source-page and intent data preserved from the first enquiry through the CRM record',
+    ],
+    boundaries: [
+      'Keep pricing exceptions, legal commitments, high-value qualification, and sensitive disputes with an accountable person',
+      'Use accurate sender information and honor channel-specific consent and opt-out requirements',
+      'Fail closed when identity, destination, permission, or required lead context cannot be verified',
+      'Log the automation decision and make it easy for staff to correct or take over the conversation',
+    ],
+    citations: [
+      {
+        label: 'NIST: Artificial Intelligence Risk Management Framework',
+        url: 'https://www.nist.gov/itl/ai-risk-management-framework',
+      },
+      {
+        label: 'NIST: Privacy Framework',
+        url: 'https://www.nist.gov/privacy-framework',
+      },
+      {
+        label: 'FTC: CAN-SPAM compliance guide for business',
+        url: 'https://www.ftc.gov/business-guidance/resources/can-spam-act-compliance-guide-business',
+      },
+    ],
+    socialHook: 'Good lead automation shortens the wait while keeping consequential decisions and exceptions accountable to a person.',
+    visualDirection: 'Use a lead-handoff timeline that separates automatic confirmation, routing, human review, and follow-up measurement.',
+  },
+  'private-ai': {
+    audience:
+      'small-business owners and technical leads evaluating private AI for documents or internal workflows without weakening access control, privacy, or human oversight',
+    diagnostics: [
+      'Choose one narrow job and document the data, users, permissions, answer standard, and failure cost',
+      'Classify what may enter the system, what must stay out, and how deletion or correction will work',
+      'Test retrieval quality and citation traceability before adding actions or broader access',
+      'Review model, hosting, logging, vendor, backup, and incident-response boundaries as one system',
+    ],
+    metrics: [
+      'Answer usefulness and citation accuracy on a representative evaluation set',
+      'Unsupported-answer rate, access-control failures, stale-document retrieval, and human correction rate',
+      'Time saved on the chosen workflow after review time and exception handling are included',
+      'Adoption by the intended staff without unauthorized data movement or shadow workflows',
+    ],
+    boundaries: [
+      'Do not place sensitive data into a workflow until access, retention, logging, and vendor boundaries are documented',
+      'Do not give the system write access or external actions merely because read-only answers look useful',
+      'Require citations and human review for answers that affect customers, money, compliance, or safety',
+      'Keep an evaluation set and rollback path so a model or document change can be checked before release',
+    ],
+    citations: [
+      {
+        label: 'NIST: Artificial Intelligence Risk Management Framework',
+        url: 'https://www.nist.gov/itl/ai-risk-management-framework',
+      },
+      {
+        label: 'NIST: Privacy Framework',
+        url: 'https://www.nist.gov/privacy-framework',
+      },
+      {
+        label: 'OWASP: Top 10 for Large Language Model Applications',
+        url: 'https://owasp.org/www-project-top-10-for-large-language-model-applications/',
+      },
+    ],
+    socialHook: 'Private AI starts with a narrow job, explicit data boundaries, cited answers, and a person who owns the exceptions.',
+    visualDirection: 'Diagram a private-AI workflow from approved documents to retrieval, cited answer, human review, and logged correction.',
+  },
+};
+
 function getClusterMessaging(cluster) {
   return CLUSTER_MESSAGING[cluster] || CLUSTER_MESSAGING.conversion;
 }
@@ -181,6 +382,10 @@ function parseArgs(argv) {
     write: false,
     slot: 'auto',
     date: null,
+    forceRefresh: false,
+    refreshCooldownDays: Number.isFinite(DEFAULT_REFRESH_COOLDOWN_DAYS)
+      ? DEFAULT_REFRESH_COOLDOWN_DAYS
+      : 21,
   };
 
   for (let index = 2; index < argv.length; index += 1) {
@@ -194,12 +399,23 @@ function parseArgs(argv) {
     } else if (arg === '--date') {
       options.date = next || null;
       index += 1;
+    } else if (arg === '--force-refresh') {
+      options.forceRefresh = true;
+    } else if (arg === '--refresh-cooldown-days') {
+      options.refreshCooldownDays = Number.parseInt(next || '', 10);
+      index += 1;
     } else if (arg === '--help' || arg === '-h') {
-      console.log('Usage: node scripts/eb28-content-engine.mjs [--write] [--slot am|pm|auto] [--date YYYY-MM-DD]');
+      console.log(
+        'Usage: node scripts/eb28-content-engine.mjs [--write] [--slot am|pm|auto] [--date YYYY-MM-DD] [--force-refresh] [--refresh-cooldown-days N]',
+      );
       process.exit(0);
     } else {
       throw new Error(`Unknown argument: ${arg}`);
     }
+  }
+
+  if (!Number.isInteger(options.refreshCooldownDays) || options.refreshCooldownDays < 0) {
+    throw new Error('--refresh-cooldown-days must be a non-negative integer.');
   }
 
   return options;
@@ -251,31 +467,96 @@ async function writeJson(filePath, value) {
   await fs.writeFile(filePath, `${JSON.stringify(value, null, 2)}\n`, 'utf8');
 }
 
-function chooseTopic(backlog, articles, runId) {
+function dateToUtcDay(value) {
+  const parsed = new Date(`${value}T12:00:00Z`);
+  return Number.isNaN(parsed.getTime()) ? null : parsed;
+}
+
+function daysSince(value, currentDate) {
+  const earlier = dateToUtcDay(value);
+  const current = dateToUtcDay(currentDate);
+  if (!earlier || !current) return Number.POSITIVE_INFINITY;
+  return Math.floor((current.getTime() - earlier.getTime()) / 86_400_000);
+}
+
+function selectContentPlan(backlog, articles, { date, forceRefresh, refreshCooldownDays }) {
+  if (!Array.isArray(backlog) || !backlog.length) {
+    throw new Error('The EB28 topic backlog is empty. Add a researched, non-overlapping topic before publishing.');
+  }
+
+  const articlesByKeyword = new Map();
+  for (const article of articles) {
+    const keyword = normalizeKeyword(article.primaryKeyword);
+    if (!keyword) continue;
+    const matches = articlesByKeyword.get(keyword) || [];
+    matches.push(article);
+    articlesByKeyword.set(keyword, matches);
+  }
+
+  const duplicateKeyword = [...articlesByKeyword.entries()].find(([, matches]) => matches.length > 1);
+  if (duplicateKeyword) {
+    throw new Error(
+      `Duplicate primary keyword detected before generation: "${duplicateKeyword[0]}" appears on ${duplicateKeyword[1]
+        .map((article) => article.slug)
+        .join(', ')}. Collapse the duplicates before continuing.`,
+    );
+  }
+
   const usedSlugs = new Set(articles.map((article) => article.slug));
-  const usedKeywords = new Set(articles.map((article) => String(article.primaryKeyword || '').toLowerCase()));
-  const available = backlog.filter((topic) => {
-    const slug = slugify(topic.title);
-    const keyword = String(topic.primaryKeyword || '').toLowerCase();
-    return !usedSlugs.has(slug) && !usedKeywords.has(keyword);
+  const available = backlog.find((topic) => {
+    const keyword = normalizeKeyword(topic.primaryKeyword);
+    return !usedSlugs.has(slugify(topic.title)) && !articlesByKeyword.has(keyword);
   });
 
-  if (!available.length) {
-    const fallbackIndex = Math.abs([...runId].reduce((total, char) => total + char.charCodeAt(0), 0)) % backlog.length;
-    const topic = backlog[fallbackIndex] || {
-      cluster: 'organic-growth',
-      primaryKeyword: 'organic lead generation system',
-      title: `Organic Lead Generation System Update ${runId}`,
-      angle: 'daily operational improvement',
-      intent: 'commercial',
-    };
+  if (available) {
     return {
-      ...topic,
-      title: `${topic.title} (${runId})`,
+      operation: 'create',
+      topic: available,
+      existingArticle: null,
+      daysSinceRefresh: null,
     };
   }
 
-  return available[0];
+  const refreshCandidates = backlog
+    .map((topic, index) => {
+      const existingArticle = articlesByKeyword.get(normalizeKeyword(topic.primaryKeyword))?.[0] || null;
+      if (!existingArticle) return null;
+      const modified = existingArticle.dateModified || existingArticle.datePublished || '1970-01-01';
+      return {
+        topic,
+        existingArticle,
+        modified,
+        age: daysSince(modified, date),
+        index,
+      };
+    })
+    .filter(Boolean)
+    .sort((a, b) => String(a.modified).localeCompare(String(b.modified)) || a.index - b.index);
+
+  if (!refreshCandidates.length) {
+    throw new Error(
+      'Every backlog topic is unavailable and none maps to a canonical article. Add a researched unique topic instead of creating a dated fallback slug.',
+    );
+  }
+
+  const selected = refreshCandidates[0];
+  if (!forceRefresh && selected.age < refreshCooldownDays) {
+    return {
+      operation: 'no_change',
+      topic: selected.topic,
+      existingArticle: selected.existingArticle,
+      daysSinceRefresh: selected.age,
+      refreshCooldownDays,
+    };
+  }
+
+  return {
+    operation: 'refresh',
+    topic: selected.topic,
+    existingArticle: selected.existingArticle,
+    daysSinceRefresh: selected.age,
+    refreshCooldownDays,
+  };
 }
 
 function buildInternalLinks(article) {
@@ -309,87 +590,151 @@ function buildInternalLinks(article) {
     .slice(0, 4);
 }
 
-function buildArticle(topic, { date, slot, runId }) {
-  const slug = slugify(topic.title);
-  const clusterLabel = String(topic.cluster || 'organic-growth').replace(/-/g, ' ');
-  const keyword = topic.primaryKeyword || topic.title;
-  const angle = topic.angle || 'practical implementation';
-  const messaging = getClusterMessaging(topic.cluster || 'organic-growth');
+function getClusterQualityDetails(cluster) {
+  return CLUSTER_QUALITY_DETAILS[cluster] || CLUSTER_QUALITY_DETAILS.conversion;
+}
+
+function buildDescription(keyword) {
+  const candidates = [
+    `A practical ${keyword} guide: what to fix first, what to measure, and how to turn the work into more qualified enquiries without wasted effort.`,
+    `Learn ${keyword}: the priorities, proof, measurements, and safeguards that create a clearer path from buyer interest to qualified enquiries.`,
+    `${keyword} explained for business owners: first fixes, useful measurements, avoidable risks, and a practical path to better enquiries.`,
+    `${keyword}: priorities, proof, measurement, safeguards, and a clearer path from search visibility to qualified enquiries.`,
+  ];
+  const selected = candidates.find((candidate) => candidate.length >= 110 && candidate.length <= 170);
+  if (!selected) {
+    throw new Error(`Unable to build a 110-170 character meta description for "${keyword}".`);
+  }
+  return selected;
+}
+
+function buildArticle(topic, { date, slot, runId, existingArticle = null }) {
+  const cluster = topic.cluster || existingArticle?.cluster || 'conversion';
+  const keyword = topic.primaryKeyword || existingArticle?.primaryKeyword || topic.title;
+  const angle = topic.angle || existingArticle?.contentAngle || 'practical implementation';
+  const messaging = getClusterMessaging(cluster);
+  const details = getClusterQualityDetails(cluster);
+  const existingTitle = existingArticle?.title || '';
+  const title = normalizeKeyword(existingTitle).includes(normalizeKeyword(keyword)) ? existingTitle : topic.title;
+  const slug = existingArticle?.slug || slugify(topic.title);
+  const description = buildDescription(keyword);
   const article = {
+    ...(existingArticle || {}),
+    contentVersion: CONTENT_QUALITY_VERSION,
     slug,
-    title: topic.title,
-    description: `${topic.title} for business owners who want clearer search visibility, better buyer trust, and a website path that turns interest into real enquiries.`,
-    cluster: topic.cluster || 'organic-growth',
+    title,
+    description,
+    cluster,
     primaryKeyword: keyword,
-    datePublished: date,
+    contentIntent: topic.intent || existingArticle?.contentIntent || 'commercial',
+    contentAngle: angle,
+    audience: details.audience,
+    datePublished: existingArticle?.datePublished || date,
     dateModified: date,
     author: 'EB28',
-    heroLabel: slot === 'am' ? 'Morning growth brief' : 'Evening growth brief',
+    heroLabel: 'Practical growth guide',
     sourceRunId: runId,
-    summary: `A plain-English ${slot.toUpperCase()} growth brief for the ${clusterLabel} cluster, focused on ${angle} and the first fix most likely to create qualified leads.`,
+    summary: `${keyword} works best when the page or workflow answers a real buyer question, removes one measurable source of friction, and keeps ownership clear. This guide is for ${details.audience}. It explains the first fixes, a 30-day implementation sequence, the measurements that matter, and the boundaries that protect trust.`,
     sections: [
       {
-        heading: 'Why this search matters',
+        heading: `Quick answer: ${keyword}`,
         body: [
-          `Someone searching for "${keyword}" is usually closer to a buying decision than a research rabbit hole. They want to know what to fix, who to trust, and whether the next step is worth their time.`,
-          messaging.buyerProblem,
+          `${keyword} is not a single tactic or software purchase. It is a focused improvement process built around ${angle}. The useful version begins with a specific buyer problem, identifies the smallest change that can solve it, and connects that change to a page or workflow where a qualified person can take the next step.`,
+          `For ${details.audience}, the goal is not more activity for its own sake. The goal is a clearer decision path with evidence that the right people can find it, understand it, trust it, and complete the next step. That means search visibility, usability, proof, follow-up, and measurement have to support the same promise.`,
         ],
         bullets: [
-          'Answer the question in the first few lines',
-          'Use the same phrase a real buyer would use',
-          'Show what a serious fix includes',
-          'Give the reader a direct next step instead of a vague contact prompt',
+          `Define the exact buyer question behind "${keyword}" before changing copy or tools`,
+          'Name the one business outcome the work is supposed to improve',
+          'Document the current path from discovery through enquiry and response',
+          'Ship the smallest testable improvement, then inspect the result before expanding scope',
         ],
       },
       {
-        heading: 'What to fix first',
+        heading: 'Start with the buyer and the real constraint',
         body: [
-          messaging.firstFix,
-          'Do not bury the fix inside a giant redesign. A small improvement to a page that already gets impressions can beat a bigger project that never ships.',
+          `${messaging.buyerProblem} A useful audit therefore starts with the moment a buyer becomes uncertain: the search result, first screen, proof section, form, automated reply, or internal handoff. The visible symptom may be low traffic or weak conversion, but the constraint is often a mismatch between the promise and the experience that follows it.`,
+          `Write down what the buyer is trying to decide, what evidence would reduce risk, and what should happen after the next action. Then compare that ideal path with the live one on a phone and in the operating systems behind it. This prevents a design, SEO, or automation project from optimizing the wrong step simply because it is easy to count.`,
+        ],
+        bullets: details.diagnostics,
+      },
+      {
+        heading: 'What to fix first and what to leave alone',
+        body: [
+          `${messaging.firstFix} Keep the first release narrow enough to review. A focused change to an existing page or handoff is easier to validate than a large rebuild, and it creates a cleaner signal about whether the original diagnosis was correct. Preserve what already works until evidence shows that it is part of the problem.`,
+          `Prioritize clarity, trust, accessibility, ownership, and recovery before visual polish or additional automation. If the reader cannot tell what is offered, the system cannot explain why it made a decision, or the team cannot recover a failed handoff, adding another channel usually increases noise. The best first fix makes the next decision easier for both the buyer and the operator.`,
         ],
         bullets: messaging.bullets,
       },
       {
-        heading: 'How EB28 turns it into a system',
+        heading: `A practical 30-day ${keyword} plan`,
         body: [
-          messaging.system,
-          'That loop is what the EB28 automation runs daily. It keeps content production, technical SEO, internal links, Search Console checks, and reporting tied to the same ranking goal.',
+          `Use the first month to create one controlled learning loop instead of a backlog of disconnected tasks. Start with a baseline, make one coherent set of changes, verify that the live experience matches the plan, and wait for enough evidence to judge direction. Keep a short decision log so later refreshes build on what was learned rather than repeating the same audit.`,
+          `The plan should fit the amount of traffic and operational data available. A small local business may need qualitative review plus a few weeks of search and enquiry signals; a higher-volume page can support faster comparisons. In either case, avoid declaring a win from one metric, one day, or a lab test that does not reflect real buyers.`,
         ],
         bullets: [
-          'Publish two content updates daily at 6 AM and 6 PM Eastern',
-          'Run a daily SEO review after the evening content cycle',
-          'Inspect the newest URLs and pull actual query average position when Search Console credentials are available',
-          'Send a report to social@eb28.co when email credentials are configured'
+          'Week 1: capture the current page or workflow, baseline useful metrics, and list the top buyer objections',
+          'Week 2: implement the smallest coherent fix, including copy, proof, links, accessibility, tracking, and handoff details',
+          'Week 3: verify production on mobile and desktop, test the full enquiry path, and correct broken or ambiguous states',
+          'Week 4: review qualified outcomes, Search Console or operational signals, user questions, and the next highest-confidence improvement',
+        ],
+      },
+      {
+        heading: 'Measure outcomes instead of publishing activity',
+        body: [
+          `A publish event is not the outcome. For ${keyword}, measurement should connect discoverability and experience to a qualified business action. Review the page or workflow as a system: whether the right audience arrived, whether the promise matched their need, whether the action completed, and whether the team responded with the context required to continue.`,
+          `Use precise labels and keep source limits visible. Search Console reports search performance, analytics reports observed behavior, form or CRM records report submitted intent, and staff feedback explains exceptions. None of those sources alone proves revenue impact. Read them together, state what is unavailable, and make the next decision from confirmed evidence rather than a persuasive dashboard.`,
+        ],
+        bullets: details.metrics,
+      },
+      {
+        heading: 'Keep the system useful, safe, and accountable',
+        body: [
+          `${messaging.system} The system stays useful when every change has an owner, a reason, a validation step, and a rollback path. That discipline matters most when a workflow touches customer data, public claims, accessibility, search visibility, or automated communication, because a small error can travel farther than the original improvement.`,
+          `Review citations before publishing and remove any claim that the source does not support. Keep public contact paths intentional, keep retired client material out of the output, and do not publish social drafts without verifying the owned account and destination. If a credential or production surface is unavailable, preserve the last verified state and report the blocker rather than filling the gap with an assumption.`,
+        ],
+        bullets: details.boundaries,
+      },
+      {
+        heading: 'Choose the next step from evidence',
+        body: [
+          `The right next step is usually smaller than a full rebuild. Use the diagnostic checklist above, choose the constraint with the strongest evidence, and define what would make the change worth keeping. If the problem spans search, design, automation, and reporting, keep one accountable owner while specialists work from the same buyer path and measurement plan.`,
+          `EB28 approaches ${keyword} as a connected operating problem, not a bundle of disconnected deliverables. Start with the live page or workflow, confirm the buyer decision it needs to support, and use the project brief or Melbourne Web Studio lead-leak quiz to document the first improvement without committing to unnecessary scope.`,
+        ],
+        bullets: [
+          'Bring the live URL or workflow, not only a list of desired features',
+          'State the buyer action and business outcome that matter most',
+          'List known constraints, unavailable data, and systems that must remain unchanged',
+          'Agree on the production verification and reporting evidence before work begins',
         ],
       },
     ],
     faqs: [
       {
-        question: `How does "${keyword}" help organic leads?`,
-        answer:
-          'It helps when the page answers a real buying question, links to a relevant service path, loads quickly, and includes enough proof for a visitor to take action.',
+        question: `What should a business fix first for ${keyword}?`,
+        answer: `Fix the first verified break in the buyer path. That may be an unclear search promise, a weak mobile first screen, missing proof, a difficult form, or a slow handoff. Baseline the current result, make one coherent change, and verify the full path before expanding the project.`,
       },
       {
-        question: 'How often should this page be reviewed?',
-        answer:
-          'Review it after Search Console has enough data, then refresh titles, intros, FAQs, citations, and internal links when the page is gaining impressions but sitting below page one.',
+        question: `How long does ${keyword} take to show useful results?`,
+        answer: `The implementation can often begin with a focused change, but the evaluation period depends on traffic, crawl timing, lead volume, and the business cycle. Use the first 30 days to establish a baseline, ship, verify production, and collect enough evidence to choose the next step without overreading early noise.`,
+      },
+      {
+        question: `Which metrics matter most for ${keyword}?`,
+        answer: `Use metrics that connect the target audience to a qualified action: relevant search impressions and clicks, page or workflow completion, form quality, response time, routing accuracy, and confirmed conversations or bookings. Keep each data source labeled, and do not treat activity alone as proof of business impact.`,
+      },
+      {
+        question: 'When should a business bring in outside help?',
+        answer: `Outside help is useful when the problem crosses several systems, internal ownership is unclear, or the team cannot safely test and verify production. A good partner should explain the diagnosis, preserve access and ownership, state evidence limits, and leave a measurable operating process instead of creating permanent dependence.`,
       },
     ],
-    citations: [
-      {
-        label: 'Google Search Central: SEO Starter Guide',
-        url: 'https://developers.google.com/search/docs/fundamentals/seo-starter-guide',
-      },
-      {
-        label: 'Google Search Central: Ask Google to recrawl URLs',
-        url: 'https://developers.google.com/search/docs/advanced/crawling/ask-google-to-recrawl',
-      },
-    ],
-    relatedSlugs: [
-      'local-seo-map-pack-melbourne-fl',
-      'website-conversion-checklist-melbourne-fl',
-      'melbourne-fl-web-design-cost-guide-2026',
-    ].filter((relatedSlug) => relatedSlug !== slug),
+    citations: details.citations,
+    relatedSlugs:
+      existingArticle?.relatedSlugs?.length >= 3
+        ? existingArticle.relatedSlugs.filter((relatedSlug) => relatedSlug !== slug)
+        : [
+            'local-seo-map-pack-melbourne-fl',
+            'website-conversion-checklist-melbourne-fl',
+            'melbourne-fl-web-design-cost-guide-2026',
+          ].filter((relatedSlug) => relatedSlug !== slug),
   };
 
   return {
@@ -398,16 +743,25 @@ function buildArticle(topic, { date, slot, runId }) {
   };
 }
 
-function buildSocialPackage(article, { date, slot, runId }) {
+function buildSocialPackage(article, { date, slot, runId, operation }) {
   const url = `https://eb28.co/blog/${article.slug}/`;
+  const messaging = getClusterMessaging(article.cluster);
+  const details = getClusterQualityDetails(article.cluster);
   return {
     brand: 'EB28',
     generatedAt: new Date().toISOString(),
     runId,
     slot,
+    operation,
+    publishingPolicy: {
+      externalPublishing: 'not_authorized',
+      requiredState: 'draft_only',
+      note: 'Verify the exact EB28-owned account and channel in the publishing tool before any separate publishing action.',
+    },
     article: {
       title: article.title,
       url,
+      slug: article.slug,
       cluster: article.cluster,
       primaryKeyword: article.primaryKeyword,
     },
@@ -415,25 +769,35 @@ function buildSocialPackage(article, { date, slot, runId }) {
       blog: {
         title: article.title,
         url,
-        status: 'ready_for_build_and_deploy',
+        status: 'draft_only',
       },
       facebook: {
-        caption: `${article.title}\n\nA practical guide for local businesses that want more qualified organic leads, stronger search visibility, and a faster path from visitor to customer.\n\nRead it: ${url}`,
-        status: 'ready_to_publish',
+        caption: `${details.socialHook}\n\n${messaging.firstFix}\n\nThe new EB28 guide breaks the work into a buyer-path audit, a 30-day plan, useful measurements, and the boundaries that protect trust.\n\nRead: ${url}`,
+        status: 'draft_only',
       },
       instagram: {
-        caption: `${article.primaryKeyword}: the practical version.\n\nWe broke down what to fix first, how to connect it to real lead flow, and what EB28 checks daily to keep search growth moving.\n\nRead the full guide at eb28.co/blog/`,
-        creativeBrief:
-          'Carousel: Slide 1 problem statement, Slide 2 what to fix first, Slide 3 technical SEO checks, Slide 4 internal links, Slide 5 CTA to project brief.',
-        status: 'ready_to_publish_when_eb28_social_channel_is_configured',
+        caption: `${article.primaryKeyword}, without the busywork.\n\nStart with the real buyer constraint. Fix one measurable break. Verify the live path. Keep claims, access, and automation accountable.\n\nThe full practical guide is now at eb28.co/blog/.`,
+        creativeBrief: `${details.visualDirection} Build a six-slide carousel: buyer problem, diagnostic, first fix, 30-day plan, measurements, and evidence-based next step. Use documentary screenshots or simple diagrams instead of generic stock imagery.`,
+        status: 'draft_only',
       },
       x: {
-        caption: `${article.title}\n\nThe key: connect the search intent to a page that is fast, useful, internally linked, and measured in Search Console.\n\n${url}`,
-        status: 'ready_to_publish',
+        caption: `${details.socialHook}\n\nNew EB28 guide: ${article.title}\n${url}`,
+        status: 'draft_only',
       },
       linkedin: {
-        caption: `New EB28 growth brief: ${article.title}\n\nThis covers the practical SEO and conversion fixes that turn a business website into a more reliable organic lead path.\n\n${url}`,
-        status: 'ready_to_publish',
+        caption: `A useful ${article.primaryKeyword} project starts with a buyer constraint, not a software list.\n\nThis EB28 guide covers the diagnostic, first fix, 30-day implementation loop, outcome measurements, and the safeguards that keep the work accountable.\n\n${url}`,
+        status: 'draft_only',
+      },
+      shortFormVideo: {
+        hook: details.socialHook,
+        brief: [
+          `Open with the buyer problem behind "${article.primaryKeyword}" in one sentence.`,
+          details.visualDirection,
+          'Show the first fix, one useful measurement, and one boundary that prevents a misleading result.',
+          'Close on the canonical guide URL and the instruction to audit the live path before buying more scope.',
+        ],
+        caption: `${article.title}: diagnose the real constraint, fix one measurable break, and verify the live path. ${url}`,
+        status: 'draft_only',
       },
     },
   };
@@ -443,6 +807,9 @@ async function main() {
   const options = parseArgs(process.argv);
   const slot = resolveSlot(options.slot);
   const date = options.date || easternParts().date;
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || !dateToUtcDay(date)) {
+    throw new Error('--date must be a valid YYYY-MM-DD date.');
+  }
   const runId = `${date}-${slot}`;
 
   const [articles, backlog, state] = await Promise.all([
@@ -464,15 +831,63 @@ async function main() {
     return;
   }
 
-  const topic = chooseTopic(backlog, articles, runId);
-  const article = buildArticle(topic, { date, slot, runId });
-  const socialPackage = buildSocialPackage(article, { date, slot, runId });
-  const reportPath = path.join(OUTPUT_DIR, `eb28-content-${runId}.json`);
+  const plan = selectContentPlan(backlog, articles, {
+    date,
+    forceRefresh: options.forceRefresh,
+    refreshCooldownDays: options.refreshCooldownDays,
+  });
+
+  if (plan.operation === 'no_change') {
+    const result = {
+      ok: true,
+      status: 'no_change',
+      runId,
+      operation: plan.operation,
+      reason: 'refresh_cooldown',
+      refreshCooldownDays: plan.refreshCooldownDays,
+      daysSinceRefresh: plan.daysSinceRefresh,
+      nextEligibleArticle: {
+        slug: plan.existingArticle.slug,
+        title: plan.existingArticle.title,
+        dateModified: plan.existingArticle.dateModified || plan.existingArticle.datePublished,
+      },
+    };
+    console.log(JSON.stringify(result, null, 2));
+    return;
+  }
+
+  const article = buildArticle(plan.topic, {
+    date,
+    slot,
+    runId,
+    existingArticle: plan.existingArticle,
+  });
+  const socialPackage = buildSocialPackage(article, {
+    date,
+    slot,
+    runId,
+    operation: plan.operation,
+  });
+  const articleQuality = analyzeArticleQuality(article);
+  const socialQuality = analyzeSocialPackage(socialPackage);
+  if (!articleQuality.ok || !socialQuality.ok) {
+    throw new Error(
+      `Content quality gate failed: ${JSON.stringify({
+        article: articleQuality.failures,
+        social: socialQuality.failures,
+      })}`,
+    );
+  }
+
+  const reportPath = path.posix.join('output', 'eb28-social', `eb28-content-${runId}.json`);
+  const reportAbsolutePath = path.join(ROOT, reportPath);
 
   const result = {
     ok: true,
     status: options.write ? 'written' : 'dry_run',
     runId,
+    operation: plan.operation,
+    daysSinceRefresh: plan.daysSinceRefresh,
     article: {
       slug: article.slug,
       title: article.title,
@@ -480,11 +895,25 @@ async function main() {
       cluster: article.cluster,
       primaryKeyword: article.primaryKeyword,
     },
+    quality: {
+      article: {
+        ok: articleQuality.ok,
+        score: articleQuality.score,
+        wordCount: articleQuality.wordCount,
+      },
+      social: {
+        ok: socialQuality.ok,
+        score: socialQuality.score,
+      },
+    },
     socialPackagePath: reportPath,
   };
 
   if (options.write) {
-    const nextArticles = [article, ...articles];
+    const nextArticles =
+      plan.operation === 'refresh'
+        ? articles.map((existing) => (existing.slug === plan.existingArticle.slug ? article : existing))
+        : [article, ...articles];
     const nextState = {
       ...state,
       updatedAt: new Date().toISOString(),
@@ -493,6 +922,7 @@ async function main() {
           runId,
           date,
           slot,
+          operation: plan.operation,
           createdAt: new Date().toISOString(),
           article: result.article,
           reportPath,
@@ -504,7 +934,7 @@ async function main() {
     await writeJson(ARTICLES_FILE, nextArticles);
     await writeJson(STATE_FILE, nextState);
     await fs.mkdir(OUTPUT_DIR, { recursive: true });
-    await writeJson(reportPath, socialPackage);
+    await writeJson(reportAbsolutePath, socialPackage);
   }
 
   console.log(JSON.stringify(result, null, 2));

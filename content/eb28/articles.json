@@ -2865,5 +2865,107 @@
         "reason": "Routes high-intent local SEO readers into the project intake path."
       }
     ]
+  },
+  {
+    "slug": "bluechip-desk-week-in-review-2026-07-05",
+    "title": "The Tape, Weekly: Bluechip Desk Recap for June 29 – July 3, 2026",
+    "description": "Weekly recap from the public tape: 321 cycles, 101 setups reviewed, 0 orders placed across 4 market days (June 29 – July 3, 2026). Every number links to a daily shift report anyone can audit.",
+    "cluster": "desk-transparency",
+    "primaryKeyword": "public trading tape weekly recap",
+    "datePublished": "2026-07-05",
+    "author": "EB28",
+    "heroLabel": "Weekly tape recap",
+    "sourceRunId": "tape-weekly-2026-07-05",
+    "summary": "What the Bluechip desk actually did during the week of June 29 – July 3, 2026: every cycle, every setup reviewed, every order placed — and the quiet stretches in between — aggregated from the daily shift reports on the public tape.",
+    "sections": [
+      {
+        "heading": "The week in numbers",
+        "body": [
+          "Between June 29 – July 3, 2026, the Bluechip desk ran 321 cycles across 4 market days, reviewed 101 dip setups on its eight-name watchlist, and placed 0 orders. The desk operated in review-only (paper) mode all week.",
+          "These are journal counts, not marketing numbers. Every figure below is aggregated from the desk's own journal — the same file the operator reads — and each day links to a full shift report where the individual entries are printed in order."
+        ],
+        "bullets": [
+          "Monday, June 29, 2026 — 84 cycles, 4 setups reviewed, 0 orders placed (AMD)",
+          "Tuesday, June 30, 2026 — 96 cycles, 0 setups reviewed, 0 orders placed",
+          "Wednesday, July 1, 2026 — 90 cycles, 62 setups reviewed, 0 orders placed (NVDA, AMD, QQQ)",
+          "Thursday, July 2, 2026 — 51 cycles, 35 setups reviewed, 0 orders placed (AMD, TSLA, NVDA, GOOGL)"
+        ]
+      },
+      {
+        "heading": "What the desk flagged",
+        "body": [
+          "Across the week the desk flagged dips in AMD, NVDA, QQQ, TSLA, GOOGL — 101 individual setups in total, each one prepared as a small $5 fractional order and sent to Robinhood's broker-side review step. Because the desk runs in review-only (paper) mode, that is where each one stopped: prepared, journaled, and not placed. The point of the beta is the record, not the volume.",
+          "A review entry records the moment a watched name dipped past the desk's threshold: the signal, the quote context at that second, the order it drafted, and the broker-side checks that ran. Reading a handful of them is the fastest way to understand the desk's temperament — start with any daily page in the archive."
+        ]
+      },
+      {
+        "heading": "Why we publish the boring weeks",
+        "body": [
+          "Most trading products show you their best week. We publish every week, because the whole argument for Bluechip is the record: a desk you can audit before you believe anything we say about it. Quiet weeks, degraded-status warnings, and zeros in the 'placed' column are part of that record, not blemishes on it.",
+          "The standard caveats are part of the record too. Bluechip is licensed software that you install and operate — not investment advice, not a fund, not a financial service. Trading involves risk of loss, and you can lose money, including everything you put in. Past activity on this tape is a record, not a prediction of future results. Robinhood does not endorse or sponsor EB28 or Bluechip."
+        ]
+      }
+    ],
+    "faqs": [
+      {
+        "question": "Where do these weekly numbers come from?",
+        "answer": "From the desk's own journal file, aggregated by the same script that renders the daily pages at eb28.co/tape. Nothing is hand-edited between the journal and this post."
+      },
+      {
+        "question": "Why were no orders placed this week?",
+        "answer": "The desk runs in review-only mode during the public beta: it prepares real orders through Robinhood's official Agentic Trading API and stops at the broker-side review step, so every decision is journaled with zero execution. That is deliberate — the beta exists to build a record, not volume."
+      },
+      {
+        "question": "Is this recap investment advice?",
+        "answer": "No. It is a factual report of what our own software did during one week, published for transparency. We never recommend trades or predict outcomes, and trading always involves risk of loss."
+      }
+    ],
+    "citations": [
+      {
+        "label": "CFTC customer advisory: criminals' increasing use of generative AI in fraud",
+        "url": "https://www.cftc.gov/LearnAndProtect/AdvisoriesAndArticles/AI_Fraud.html"
+      },
+      {
+        "label": "FINRA investor insights",
+        "url": "https://www.finra.org/investors/insights"
+      },
+      {
+        "label": "SEC / Investor.gov alerts and bulletins",
+        "url": "https://www.investor.gov/introduction-investing/general-resources/news-alerts/alerts-bulletins"
+      }
+    ],
+    "relatedSlugs": [],
+    "internalLinks": [
+      {
+        "label": "The Tape, Daily archive",
+        "href": "/tape/",
+        "reason": "One page per market day — every number in this recap links back to a daily shift report."
+      },
+      {
+        "label": "The live fund dashboard",
+        "href": "/fundmanager/",
+        "reason": "The same desk, updated every few minutes, warnings and all."
+      },
+      {
+        "label": "Answers: trading-bot questions without the hype",
+        "href": "/answers/",
+        "reason": "Safety, legality, scams, track records — plain-English answers backed by this tape."
+      },
+      {
+        "label": "Bluechip, the desk behind the tape",
+        "href": "/bluechip/",
+        "reason": "What the software is, what it costs, and what it deliberately does not promise."
+      },
+      {
+        "label": "Shift report: June 29, 2026",
+        "href": "/tape/2026-06-29/",
+        "reason": "A full day of journal entries, exactly as recorded."
+      },
+      {
+        "label": "Shift report: June 30, 2026",
+        "href": "/tape/2026-06-30/",
+        "reason": "A full day of journal entries, exactly as recorded."
+      }
+    ]
   }
 ]

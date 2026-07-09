@@ -67,6 +67,9 @@ const isWelcomeRoute =
 const isStartRoute =
   pathname === '/start' ||
   pathname === '/links';
+const isBluechipRoute =
+  pathname === '/bluechip' ||
+  pathname.startsWith('/bluechip/');
 
 function renderComponent(Component) {
   root.render(
@@ -154,6 +157,11 @@ async function renderApp() {
 
   if (isStartRoute) {
     await renderRoute(() => import('./StartPage.jsx'));
+    return;
+  }
+
+  if (isBluechipRoute) {
+    await renderRoute(() => import('./BluechipPage.jsx'));
     return;
   }
 

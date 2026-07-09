@@ -430,7 +430,10 @@ const DeskOS = () => {
                             </CheckoutButton>
                         </div>
                         <p className="mt-4 text-center text-[11px] text-white/40">
-                            Live beta. Not for sale yet — the founding cohort gets first keys when the gate opens.
+                            Live beta. Not for sale yet — the founding cohort gets first keys when the gate opens.{' '}
+                            <a href="/bluechip/" className="text-teal-200 underline underline-offset-2 hover:text-teal-100">
+                                Read the Bluechip story →
+                            </a>
                         </p>
                         <p className="mx-auto mt-5 max-w-2xl text-center text-[12px] leading-relaxed text-white/50">
                             Trading involves risk of loss. Bluechip is licensed software you operate in your own account —

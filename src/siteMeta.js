@@ -296,6 +296,28 @@ const ROUTE_META = {
             },
         ],
     },
+    bluechip: {
+        ...BASE_ROUTE_META,
+        key: 'bluechip',
+        path: '/bluechip/',
+        title: 'Bluechip by EB28 | Dumb Money Just Got a Desk',
+        description:
+            'They call it dumb money. Bluechip is a small, honest equities desk you run yourself: Robinhood’s official Agentic API, a public tape, a kill switch. Live beta.',
+        image: FUNDMANAGER_IMAGE,
+        includeInSitemap: true,
+        structuredData: [
+            ORGANIZATION_SCHEMA,
+            {
+                '@context': 'https://schema.org',
+                '@type': 'WebPage',
+                name: 'Bluechip by EB28',
+                url: 'https://eb28.co/bluechip/',
+                description:
+                    'Bluechip is EB28’s flagship US-equities desk in live beta: licensed software the operator runs in an isolated Robinhood Agentic sub-account, behind a kill switch, with a public trade tape.',
+                provider: { '@id': ORGANIZATION_ID },
+            },
+        ],
+    },
     start: {
         ...BASE_ROUTE_META,
         key: 'start',
@@ -613,6 +635,7 @@ export const STATIC_ROUTE_OUTPUTS = [
     { routeKey: 'appbuilder', outputPath: 'appbuilder/index.html' },
     { routeKey: 'fundmanager', outputPath: 'fundmanager/index.html' },
     { routeKey: 'deskos', outputPath: 'deskos/index.html' },
+    { routeKey: 'bluechip', outputPath: 'bluechip/index.html' },
     { routeKey: 'start', outputPath: 'start/index.html' },
     { routeKey: 'start', outputPath: 'links/index.html' },
     { routeKey: 'reconcile', outputPath: 'reconcile/index.html' },
@@ -677,6 +700,10 @@ export function detectRouteKey({ pathname = '/', hostname = '' } = {}) {
 
     if (normalizedPathname === '/deskos' || normalizedHostname === 'deskos.eb28.co') {
         return 'deskos';
+    }
+
+    if (normalizedPathname === '/bluechip' || normalizedPathname.startsWith('/bluechip/')) {
+        return 'bluechip';
     }
 
     if (normalizedPathname === '/start' || normalizedPathname === '/links') {

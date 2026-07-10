@@ -232,6 +232,11 @@ function FooterDisclaimer() {
         <p>{CREDIT_GPS_DISCLAIMER}</p>
         <p>{OFFER_DISCLAIMER}</p>
         <p>{CONSULTATION_DISCLAIMER}</p>
+        <p className="flex flex-wrap gap-x-4 gap-y-1 pt-1 font-bold">
+          <a href="https://eb28.co/limitless/privacy/" className="hover:text-white">Privacy Policy</a>
+          <a href="https://eb28.co/limitless/terms/" className="hover:text-white">Terms of Use</a>
+          <a href="https://eb28.co/limitless/support/" className="hover:text-white">Support</a>
+        </p>
       </div>
     </footer>
   );

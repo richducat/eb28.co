@@ -27,24 +27,23 @@
     />
     <title>Inspector Gadgets · York Inspections</title>
     <script>
-      // Always run the latest deploy: GitHub Pages caches index.html for up to
-      // ten minutes and browsers cache it longer, so a stale shell keeps
-      // loading an old bundle. On boot, fetch a cache-busted copy of this page,
-      // compare bundle hashes, and hard-swap to the new version when they
-      // differ. Runs before any user input, so the reload can't lose edits.
+      // Pick up new deploys — but ONLY on the first load of a tab session, and
+      // NEVER once the app has booted. A field inspector who switches to the
+      // camera and back triggers an iOS tab reload; auto-swapping the bundle
+      // then (or looping when the CDN briefly serves two versions) would
+      // interrupt an in-progress inspection and drop unsaved edits. So: at most
+      // one version check, before any editing is possible; every later reload
+      // just loads the current bundle and restores saved work.
       (function () {
         try {
-          // Post-refresh landing: clean the cache-busting query off the URL.
           if (location.search.indexOf("_r=") !== -1) {
             history.replaceState(null, "", location.pathname + location.hash);
           }
-          // Loop guard: if we JUST forced a refresh and the CDN still served
-          // the old shell, don't bounce again this session — the next natural
-          // load retries.
-          if (sessionStorage.getItem("hia:ver-reload")) {
-            sessionStorage.removeItem("hia:ver-reload");
-            return;
-          }
+          // The app already ran this session (this is a mid-session reload /
+          // tab restore) — load as-is, don't bounce to another version.
+          if (sessionStorage.getItem("hia:booted")) return;
+          // Already reloaded once this session — don't loop on a flapping CDN.
+          if (sessionStorage.getItem("hia:ver-reload")) return;
           var current = (document.querySelector('script[type="module"][src*="index-"]') || {}).src || "";
           var currentHash = (current.match(/index-[A-Za-z0-9_-]+\.js/) || [])[0];
           if (!currentHash) return; // dev server — nothing to compare
@@ -52,7 +51,8 @@
             .then(function (res) { return res.ok ? res.text() : ""; })
             .then(function (html) {
               var fresh = (html.match(/index-[A-Za-z0-9_-]+\.js/) || [])[0];
-              if (fresh && fresh !== currentHash) {
+              // Don't reload if the app booted while the fetch was in flight.
+              if (fresh && fresh !== currentHash && !sessionStorage.getItem("hia:booted")) {
                 sessionStorage.setItem("hia:ver-reload", "1");
                 location.replace(location.pathname + "?_r=" + Date.now() + location.hash);
               }
@@ -61,7 +61,7 @@
         } catch (e) {}
       })();
     </script>
-    <script type="module" crossorigin src="/HIP/app/assets/index-BmUNNitc.js"></script>
+    <script type="module" crossorigin src="/HIP/app/assets/index-GkB8KhY4.js"></script>
     <link rel="stylesheet" crossorigin href="/HIP/app/assets/index-CkLS32vh.css">
   </head>
   <body>

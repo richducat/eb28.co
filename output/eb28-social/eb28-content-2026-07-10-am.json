@@ -1,0 +1,54 @@
+{
+  "brand": "EB28",
+  "generatedAt": "2026-07-10T10:01:52.508Z",
+  "runId": "2026-07-10-am",
+  "slot": "am",
+  "operation": "refresh",
+  "publishingPolicy": {
+    "externalPublishing": "not_authorized",
+    "requiredState": "draft_only",
+    "note": "Verify the exact EB28-owned account and channel in the publishing tool before any separate publishing action."
+  },
+  "article": {
+    "title": "Local SEO Services in Melbourne FL: What Should Be Fixed Before You Pay Monthly",
+    "url": "https://eb28.co/blog/local-seo-services-in-melbourne-fl-what-should-be-fixed-before-you-pay-monthly/",
+    "slug": "local-seo-services-in-melbourne-fl-what-should-be-fixed-before-you-pay-monthly",
+    "cluster": "local-seo",
+    "primaryKeyword": "local SEO services Melbourne FL"
+  },
+  "posts": {
+    "blog": {
+      "title": "Local SEO Services in Melbourne FL: What Should Be Fixed Before You Pay Monthly",
+      "url": "https://eb28.co/blog/local-seo-services-in-melbourne-fl-what-should-be-fixed-before-you-pay-monthly/",
+      "status": "draft_only"
+    },
+    "facebook": {
+      "caption": "Local visibility improves when the profile, website, proof, and enquiry path tell the same story.\n\nStart by lining up the Google Business Profile, homepage promise, service content, reviews, citations, and contact path so they all tell the same local story.\n\nThe new EB28 guide breaks the work into a buyer-path audit, a 30-day plan, useful measurements, and the boundaries that protect trust.\n\nRead: https://eb28.co/blog/local-seo-services-in-melbourne-fl-what-should-be-fixed-before-you-pay-monthly/",
+      "status": "draft_only"
+    },
+    "instagram": {
+      "caption": "local SEO services Melbourne FL, without the busywork.\n\nStart with the real buyer constraint. Fix one measurable break. Verify the live path. Keep claims, access, and automation accountable.\n\nThe full practical guide is now at https://eb28.co/blog/local-seo-services-in-melbourne-fl-what-should-be-fixed-before-you-pay-monthly/",
+      "creativeBrief": "Use a local-search diagnostic board: profile signal, landing page, proof, and enquiry path connected in one clear flow. Build a six-slide carousel: buyer problem, diagnostic, first fix, 30-day plan, measurements, and evidence-based next step. Use documentary screenshots or simple diagrams instead of generic stock imagery.",
+      "status": "draft_only"
+    },
+    "x": {
+      "caption": "Local visibility improves when the profile, website, proof, and enquiry path tell the same story.\n\nNew EB28 guide: Local SEO Services in Melbourne FL: What Should Be Fixed Before You Pay Monthly\nhttps://eb28.co/blog/local-seo-services-in-melbourne-fl-what-should-be-fixed-before-you-pay-monthly/",
+      "status": "draft_only"
+    },
+    "linkedin": {
+      "caption": "A useful local SEO services Melbourne FL project starts with a buyer constraint, not a software list.\n\nThis EB28 guide covers the diagnostic, first fix, 30-day implementation loop, outcome measurements, and the safeguards that keep the work accountable.\n\nhttps://eb28.co/blog/local-seo-services-in-melbourne-fl-what-should-be-fixed-before-you-pay-monthly/",
+      "status": "draft_only"
+    },
+    "shortFormVideo": {
+      "hook": "Local visibility improves when the profile, website, proof, and enquiry path tell the same story.",
+      "brief": [
+        "Open with the buyer problem behind \"local SEO services Melbourne FL\" in one sentence.",
+        "Use a local-search diagnostic board: profile signal, landing page, proof, and enquiry path connected in one clear flow.",
+        "Show the first fix, one useful measurement, and one boundary that prevents a misleading result.",
+        "Close on the canonical guide URL and the instruction to audit the live path before buying more scope."
+      ],
+      "caption": "Local SEO Services in Melbourne FL: What Should Be Fixed Before You Pay Monthly: diagnose the real constraint, fix one measurable break, and verify the live path. https://eb28.co/blog/local-seo-services-in-melbourne-fl-what-should-be-fixed-before-you-pay-monthly/",
+      "status": "draft_only"
+    }
+  }
+}

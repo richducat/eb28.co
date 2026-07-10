@@ -147,19 +147,19 @@
   ],
   "createdAt": "2026-06-06T11:53:53.691778-04:00",
   "localVerification": {
-    "releaseGate": "pending for 1.0.2 build 96 until the changes are committed and the clean-tree gate is rerun",
+    "releaseGate": "passed on the clean 1.0.2 build 96 source commit bb1113e6b9b092e276121b38b1920505d8637ce1 before this receipt-only manifest update",
     "accessAPITests": "passed in temp venv with service dependencies installed using /tmp/cadetcatch-access-api-venv/bin/python -m unittest discover tests -v; 14 tests passed including StoreKit validation rejection cases, email-only invite delivery contract tests, and browser invite redemption page/form tests",
     "accessAPIImportSmoke": "passed in temp venv; imported cadetcatch_access.main.app and AppleStoreKitVerifier",
-    "simulatorQA": "pending for 1.0.2 build 96",
+    "simulatorQA": "passed for clean local 1.0.2 build 96 candidate using npm run test:cadetcatch",
     "simulatorQAReceipt": {
-      "status": "pending",
+      "status": "passed",
       "command": "npm run test:cadetcatch",
       "simulator": "iPhone 17 Pro Max iOS 26.5",
-      "screenshot": null,
-      "screenshotSha256": null,
-      "xcodebuildLog": null,
-      "xcodebuildLogSha256": null,
-      "verifiedAt": null
+      "screenshot": "/Users/richardducat/Documents/Codex/Release-Worktrees/CadetCatch/android-play-1.0.1-1-20260703/output/cadetcatch-simulator/cadetcatch-2026-07-10T21-26-49-986Z.png",
+      "screenshotSha256": "c5f76933aa802c703baed7283fa689523fef3f247d6f48d4c123d85486b86f69",
+      "xcodebuildLog": "/Users/richardducat/Documents/Codex/Release-Worktrees/CadetCatch/android-play-1.0.1-1-20260703/output/cadetcatch-simulator/logs/xcodebuild-2026-07-10T21-26-22-272Z.log",
+      "xcodebuildLogSha256": "7baee1fe2b03bf0b9e85450a56e2a37d0e195407fefe0fae5551d960a78bb5d1",
+      "verifiedAt": "2026-07-10T21:26:49Z"
     },
     "matchedPhotoPreviewQA": {
       "status": "passed",
@@ -188,10 +188,16 @@
       "exampleURL": "https://pub-2264690a142a418ab996c86d3523fa08.r2.dev/photos/1561614049297355.jpg",
       "note": "Remote matched-photo loader bypasses URLCache so previously broken R2 photo URLs can load after becoming reachable."
     },
-    "appStorePreflight": "pending for 1.0.2 build 96",
+    "appStorePreflight": "passed for 1.0.2 build 96 with live URL checks; cadetcatch.com, /privacy/, and /support/ each returned HTTP 200",
+    "uiTestSuite": {
+      "status": "blocked_by_existing_target_configuration",
+      "command": "xcodebuild -project ios/CadetCatch/CadetCatch.xcodeproj -scheme CadetCatch -destination id=7C85426B-CA76-4F78-9D8A-557AD2C88426 -derivedDataPath output/cadetcatch-simulator/DerivedData test -only-testing:CadetCatchUITests/CadetCatchUITests/testAppLaunches",
+      "failure": "CadetCatchUITests has neither INFOPLIST_FILE nor GENERATE_INFOPLIST_FILE, so Xcode 26.5 cancels test building before test execution.",
+      "xcresult": "/Users/richardducat/Documents/Codex/Release-Worktrees/CadetCatch/android-play-1.0.1-1-20260703/output/cadetcatch-simulator/DerivedData/Logs/Test/Test-CadetCatch-2026.07.10_17-27-19--0400.xcresult"
+    },
     "monetizationGate": {
       "status": "local_simulator_verified_locked",
-      "note": "Build 95 simulator evidence showed matched photo cards covered by Unlock to View while /access/status returned 404. Build 96 preserves the same access and product logic; rerun simulator QA before any release action."
+      "note": "Build 96 simulator QA launched with matched photo cards covered by Unlock to View, confirming the app still does not grant unconditional matched-photo access. Source inspection also confirms one free preview search and the approved .v1 product identifiers remain intact."
     },
     "accessAPI": {
       "status": "production_deployed_and_tester_access_verified",
@@ -244,5 +250,5 @@
       "corsNote": "Response did not include Access-Control-Allow-Origin for Origin https://eb28.co, so eb28.co static hosting still needs search CORS support or same-origin api.cadetcatch.com hosting."
     }
   },
-  "updatedAt": "2026-07-10T21:22:16Z"
+  "updatedAt": "2026-07-10T21:29:00Z"
 }

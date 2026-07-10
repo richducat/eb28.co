@@ -152,7 +152,8 @@
       "Access codes require a server-validated entitlement system before production use; hardcoded free-access codes must not be shipped in the app.",
       "Production /access/status is live and tester grants are active for the three internal tester emails.",
       "The same-origin desktop route is source-ready at /access/desktop, but it has not been production-deployed yet. The eb28.co static desktop URL currently returns 404.",
-      "Apple StoreKit server verification and SMTP invite delivery fail closed until the production Apple App Store Server API and SMTP credentials are configured."
+      "Apple StoreKit server verification and SMTP invite delivery fail closed until the production Apple App Store Server API and SMTP credentials are configured.",
+      "The app target builds, installs, and launches, but the CadetCatchUITests target cannot run under Xcode 26.5 until it is given an Info.plist or GENERATE_INFOPLIST_FILE is enabled."
     ]
   }
 }

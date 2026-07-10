@@ -1,4 +1,5 @@
 {
-  "_instructions": "Paste a GA4 measurement ID (looks like G-XXXXXXXXXX) to activate analytics on every page — no rebuild needed. Create one free at analytics.google.com. Leave empty to keep analytics off.",
-  "ga4MeasurementId": ""
+  "_instructions": "ga4MeasurementId activates site analytics. appleProviderToken enables Apple campaign parameters only on links that declare a campaign token; leave it empty until copied from App Store Connect.",
+  "ga4MeasurementId": "G-CTFMM8B2L2",
+  "appleProviderToken": ""
 }

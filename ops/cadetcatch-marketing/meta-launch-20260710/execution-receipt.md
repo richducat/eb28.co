@@ -22,6 +22,7 @@
 - Public measurement ID: `G-CTFMM8B2L2`.
 - Added `guide_view`, `pricing_view`, and `app_store_click` collection with campaign and creative parameters.
 - Configured the deploy to serve `/analytics-config.json` as JSON and removed unverified invitation and desktop-access claims from the paid-traffic storefront.
+- Pushed the implementation to `codex/cadetcatch-meta-launch-20260710` and opened draft PR `richducat/eb28.co#5`; no production deploy or merge was performed.
 - A production deploy and live DebugView proof remain pending final source reconciliation and the launch gates below.
 
 ## App Store

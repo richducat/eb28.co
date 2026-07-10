@@ -5,8 +5,8 @@ Use this file as the exact reviewer-facing source for the build being submitted.
 ## Build identity
 
 - App: CadetCatch
-- Version: 1.0.1
-- Build: 95
+- Version: 1.0.2
+- Build: 96
 
 ## Summary for App Review
 
@@ -59,6 +59,6 @@ CadetCatch is an iPhone app for cadet families to keep a private local roster, s
 - Event photo collection and matching are handled by CadetCatch, not by private accounts on this phone.
 - The app does not access private social accounts, private photo libraries, private websites, or logged-in pages in this build.
 - If no face, multiple faces, no matches, or a connection problem occurs, the app shows a clear state instead of showing unrelated results.
-- In-app purchase products must be active in App Store Connect for TestFlight purchase testing. Build 95 requests the approved `.v1` product IDs listed above.
-- Build 95 keeps CadetCatch photo matching behavior from build 92, keeps the paid access gate from build 94, keeps the approved StoreKit product IDs and $12.99 Family Monthly fallback price, adds account email controls for future desktop and family sharing access, and keeps the stale remote photo cache bypass so repaired photo URLs can load fresh previews in the app.
+- In-app purchase products must be active in App Store Connect for TestFlight purchase testing. Build 96 requests the approved `.v1` product IDs listed above.
+- Build 96 preserves one free preview search, CadetCatch photo matching behavior, the paid access gate, the approved StoreKit product IDs and $12.99 Family Monthly fallback price, and the stale remote photo cache bypass. It updates in-app Privacy and Support destinations to cadetcatch.com.
 - The access API endpoints are deployed and the internal tester emails have full server-backed access. The same-origin desktop route is source-ready but still requires a separate production deploy before it can be used live. StoreKit server verification and SMTP invite delivery remain fail-closed until their production credentials are configured.

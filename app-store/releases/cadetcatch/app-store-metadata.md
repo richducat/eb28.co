@@ -6,13 +6,13 @@
 - Subtitle: Find cadet photos faster
 - Bundle ID: co.eb28.cadetcatch
 - SKU: cadetcatch-ios
-- Version: 1.0.1
-- Build: 95
+- Version: 1.0.2
+- Build: 96
 - Primary category: Lifestyle
 - Secondary category: Photo & Video
-- Marketing URL: https://eb28.co/cc/
-- Support URL: https://eb28.co/cc/support/
-- Privacy Policy URL: https://eb28.co/cc/privacy/
+- Marketing URL: https://cadetcatch.com/
+- Support URL: https://cadetcatch.com/support/
+- Privacy Policy URL: https://cadetcatch.com/privacy/
 - Terms of Use: https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
 
 ## Promotional Text
@@ -27,7 +27,7 @@ Create a private roster on your iPhone, add a clear cadet photo, search event ph
 
 CadetCatch shows possible matches for you to review. For best results, use a clear photo where only your cadet is visible.
 
-Privacy Policy: https://eb28.co/cc/privacy/
+Privacy Policy: https://cadetcatch.com/privacy/
 Terms of Use (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/
 
 ## Keywords
@@ -36,7 +36,7 @@ cadet, military, academy, photos, family, parents, coast
 
 ## What's New
 
-CadetCatch build 95 keeps the paid access gate, adds account email controls for desktop and family sharing access, keeps the approved $12.99 Family Monthly subscription path, and preserves the server photo search and reliable matched-photo previews.
+CadetCatch build 96 updates in-app privacy and support links to cadetcatch.com while preserving one free preview search, the paid access gate, the approved $12.99 Family Monthly path, and reliable matched-photo previews.
 
 ## Review Notes
 
@@ -55,14 +55,14 @@ No login is required for the core iPhone photo search flow. Add a cadet profile 
 
 ## Internal Launch Notes
 
-- App Store Connect version state: Build 95 selected for App Store version 1.0.1 and submitted; visible ASC state was Waiting for Review on 2026-06-29.
-- Attached build ID or build number: Build 95 selected and visible in ASC.
-- Review submission ID: 575c019e-da9a-404a-9074-a4e18168cc4a.
+- App Store Connect version state: 1.0.2 build 96 is local-only and has not been uploaded, selected, or submitted.
+- Attached build ID or build number: None for 1.0.2 build 96.
+- Prior review receipt: 1.0.1 build 95 was visible in ASC as Waiting for Review with manual release selected on 2026-06-29.
 - Release after approval: Manual release; do not publicly release without a separate exact EB28 release approval.
-- Representation remediation: 2026-06-29 audit found live promotional text, description, App Privacy, and screenshots need correction for the current build-95 server-search flow.
-- Screenshot pack: Five 1320x2868 iPhone preview images rendered from live build-95 simulator captures with app-store-screenshot-studio guidance; raw captures are preserved in the build-95 release-artifact receipts.
+- Representation remediation: The 1.0.2 package uses cadetcatch.com privacy and support URLs; App Store Connect metadata, App Privacy, and screenshot state still require direct verification before submission.
+- Screenshot pack: Five 1320x2868 iPhone preview images remain from live build-95 simulator captures; verify them against build 96 before App Store mutation.
 - In-app purchases and subscription status: Approved
 - Verification screenshots: app-store/releases/cadetcatch/app-store-connect-snapshots/
 - Post-approval checks to run:
-  - Confirm live support and privacy URLs after Pages deployment.
+  - Confirm https://cadetcatch.com/support/ and https://cadetcatch.com/privacy/ are live.
   - Re-run photo checks against the current CadetCatch photo service before external demo sessions.

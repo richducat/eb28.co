@@ -3,45 +3,45 @@
   "bundleId": "co.eb28.cadetcatch",
   "appStoreConnectAppId": "6769565852",
   "platform": "iOS",
-  "marketingVersion": "1.0.1",
-  "buildNumber": "95",
-  "baselineCommit": "6adf7d2392efccbc34ac5788fd7387de6df7694b",
-  "baselineTree": "2374b7b19defa200312ac08d70381628bead8fc6",
-  "sourceIdentityType": "isolated git worktree branch with CadetCatch server search API integration",
-  "baseParentCommit": "38a9dfa82ac276241dda86ded4f1eb09858e7e87",
+  "marketingVersion": "1.0.2",
+  "buildNumber": "96",
+  "baselineCommit": "3ed29ef9f769f060b6b989ed6bc61862e588dfd3",
+  "baselineTree": "ad468401323c044511eaa5005b63011678eed413",
+  "sourceIdentityType": "isolated clean git worktree branch based on the build-95-equivalent iOS source plus the later Android lane",
+  "baseParentCommit": "3ed29ef9f769f060b6b989ed6bc61862e588dfd3",
   "indexParentCommit": null,
-  "sourceRef": "refs/heads/codex/cadetcatch-server-search-sop-20260622",
-  "releaseBranch": "codex/cadetcatch-server-search-sop-20260622",
-  "worktreePath": "/Users/richardducat/GITHUB/eb28-cadetcatch-server-search-sop-20260622",
+  "sourceRef": "refs/heads/codex/cadetcatch-1.0.2-build96",
+  "releaseBranch": "codex/cadetcatch-1.0.2-build96",
+  "worktreePath": "/Users/richardducat/Documents/Codex/Release-Worktrees/CadetCatch/android-play-1.0.1-1-20260703",
   "xcodeProjectPath": "ios/CadetCatch/CadetCatch.xcodeproj",
   "xcodegenProjectSpec": "ios/CadetCatch/project.yml",
   "scheme": "CadetCatch",
   "teamId": "WN3K69XEP4",
-  "approvalLevel": "build 95 is archived, uploaded, selected for App Store version 1.0.1, submitted to App Review, and visible in ASC as Waiting for Review with manual release selected; representation remediation is in progress for promotional text, description, App Privacy, and live simulator-captured screenshots only",
+  "approvalLevel": "local preparation and verification only for 1.0.2 build 96; no approval or action exists for archive, upload, TestFlight distribution, App Store Connect metadata mutation, build selection, submission, or release",
   "archivePath": null,
   "appStoreConnectState": {
     "appStoreVersionId": null,
     "buildId": null,
-    "reviewSubmissionId": "575c019e-da9a-404a-9074-a4e18168cc4a",
-    "appStoreState": "WAITING_FOR_REVIEW",
-    "submittedAt": "2026-06-28T20:00:00Z",
-    "lastLocalPreparationAt": "2026-06-29T17:11:45Z",
-    "uploadedAt": "2026-06-28T00:00:00Z",
-    "visibleAscVerificationAt": "2026-06-29T14:13:19Z",
-    "visibleAscStatus": "1.0.1 Waiting for Review; selected build 95; manual release selected; representation audit found metadata/privacy/screenshot blockers to remediate before public release",
+    "reviewSubmissionId": null,
+    "appStoreState": "NOT_UPLOADED_LOCAL_ONLY",
+    "submittedAt": null,
+    "lastLocalPreparationAt": "2026-07-10T21:22:16Z",
+    "uploadedAt": null,
+    "visibleAscVerificationAt": null,
+    "visibleAscStatus": "1.0.2 build 96 is local-only; no current App Store Connect state was verified during this preparation task",
     "visibleAscCreatedAt": null,
     "distributionLogPath": null,
-    "verificationBlocked": null
+    "verificationBlocked": "Authenticated App Store Connect inspection was outside this local source task; verify version creation, agreements, privacy, screenshots, IAP availability, and build state before any external mutation."
   },
   "sourceMetadataVerification": {
-    "projectYmlMarketingVersion": "1.0.1",
-    "projectYmlCurrentProjectVersion": "95",
+    "projectYmlMarketingVersion": "1.0.2",
+    "projectYmlCurrentProjectVersion": "96",
     "projectYmlBundleId": "co.eb28.cadetcatch",
     "pbxMarketingVersions": [
-      "1.0.1"
+      "1.0.2"
     ],
     "pbxCurrentProjectVersions": [
-      "95"
+      "96"
     ],
     "pbxBundleIds": [
       "co.eb28.CadetCatchUITests",
@@ -87,14 +87,6 @@
     },
     {
       "status": "M",
-      "path": "docs/cadetcatch-access-pass-system.md"
-    },
-    {
-      "status": "M",
-      "path": "docs/cadetcatch-desktop-add-on.md"
-    },
-    {
-      "status": "M",
       "path": "ios/CadetCatch/CadetCatch.xcodeproj/project.pbxproj"
     },
     {
@@ -104,27 +96,15 @@
     {
       "status": "M",
       "path": "ios/CadetCatch/project.yml"
-    },
-    {
-      "status": "??",
-      "path": "docs/cadetcatch-tester-access-checklist.md"
-    },
-    {
-      "status": "??",
-      "path": "docs/cc/desktop/"
-    },
-    {
-      "status": "??",
-      "path": "public/cc/desktop/"
     }
   ],
   "releaseJsonVersionObject": {
-    "marketingVersion": "1.0.1",
-    "buildNumber": "95",
+    "marketingVersion": "1.0.2",
+    "buildNumber": "96",
     "releaseType": "MANUAL",
     "phasedRelease": false,
     "promotionalText": "Private cadet rosters, event photo search, clearer match ranges, reliable previews, saved finds, family notes, and a plain-English academy terms guide.",
-    "description": "CadetCatch helps Coast Guard Academy families keep up with cadet photos without digging through every gallery by hand.\n\nCreate a private roster on your iPhone, add a clear cadet photo, search event photos for possible matches, review likely finds, save photos to your iPhone Photos library, and keep simple notes for family follow-up.\n\nCadetCatch shows possible matches for you to review. For best results, use a clear photo where only your cadet is visible.\n\nPrivacy Policy: https://eb28.co/cc/privacy/\nTerms of Use (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/",
+    "description": "CadetCatch helps Coast Guard Academy families keep up with cadet photos without digging through every gallery by hand.\n\nCreate a private roster on your iPhone, add a clear cadet photo, search event photos for possible matches, review likely finds, save photos to your iPhone Photos library, and keep simple notes for family follow-up.\n\nCadetCatch shows possible matches for you to review. For best results, use a clear photo where only your cadet is visible.\n\nPrivacy Policy: https://cadetcatch.com/privacy/\nTerms of Use (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/",
     "keywords": [
       "cadet",
       "military",
@@ -134,7 +114,7 @@
       "parents",
       "coast"
     ],
-    "whatsNew": "CadetCatch build 95 keeps the paid access gate, adds account email controls for future desktop and family sharing access, keeps the approved $12.99 Family Monthly subscription path, and preserves the server photo search and reliable matched-photo previews."
+    "whatsNew": "CadetCatch build 96 updates in-app privacy and support links to cadetcatch.com while preserving one free preview search, the paid access gate, the approved $12.99 Family Monthly path, and reliable matched-photo previews."
   },
   "releaseJsonAssetsObject": {
     "appIconSource": "app-icon-1024.png",
@@ -151,14 +131,15 @@
   },
   "safetyNotes": [
     "Primary checkout /Users/richardducat/GITHUB/eb28.co is dirty and must not be used for release actions.",
-    "Builds 85, 86, 87, 88, 89, 90, 91, and 92 have prior upload or upload-processing evidence and must not be reused.",
+    "Builds 85 through 95 have prior upload, TestFlight, selection, or App Review evidence and must not be reused.",
     "Build 92 preserves build 91 parent-facing copy and adds the stale remote photo URL cache bypass fix from source commit 6adf7d2392efccbc34ac5788fd7387de6df7694b.",
     "Build 93 is superseded before upload because its fallback copy used the wrong $19.99 monthly price.",
     "Build 94 is reserved for the corrected $12.99 Family Monthly price fallback and desktop add-on/access-invite planning pass.",
-    "Build 95 is the local account email, spouse/family invite, cadet invite, tester-access gate, and static desktop companion implementation candidate.",
+    "Build 95 is the prior uploaded and App Review-submitted account email, spouse/family invite, cadet invite, tester-access gate, and static desktop companion candidate.",
     "Build 95 access API source now includes Apple App Store Server API verification for StoreKit subscription links.",
     "Build 95 access API source now includes SMTP-backed email-only spouse/family and cadet invite delivery.",
-    "Do not archive, upload, distribute TestFlight, select for App Review, submit for review, release, expire builds, edit metadata/screenshots/previews, or edit IAP/subscriptions without a separate exact approval record for the final build-95 source commit.",
+    "Build 96 is the local-only 1.0.2 candidate. It preserves one free preview search and the approved .v1 StoreKit product identifiers while updating privacy and support links to cadetcatch.com.",
+    "Do not archive, upload, distribute TestFlight, select for App Review, submit for review, release, expire builds, edit App Store Connect metadata/screenshots/previews, or edit IAP/subscriptions without a separate exact approval record for the final build-96 source commit.",
     "Do not ship custom free access codes unless they are server-validated, email-bound, role-specific, and single-use.",
     "Tester full access must be configured and verified for richducat@gmail.com, karen.hallett@mac.com, and kenfish@mac.com before App Review submission.",
     "Access API production deploy for commit 05dd4ba0af3fe20474845d698f85780dfb523e42 was completed and recorded on 2026-06-26; /access/status now returns active tester access for richducat@gmail.com, karen.hallett@mac.com, and kenfish@mac.com.",
@@ -166,19 +147,19 @@
   ],
   "createdAt": "2026-06-06T11:53:53.691778-04:00",
   "localVerification": {
-    "releaseGate": "must be rerun from a clean tree after desktop route reconciliation and before production deploy, archive, upload, build selection, or App Review submission",
+    "releaseGate": "pending for 1.0.2 build 96 until the changes are committed and the clean-tree gate is rerun",
     "accessAPITests": "passed in temp venv with service dependencies installed using /tmp/cadetcatch-access-api-venv/bin/python -m unittest discover tests -v; 14 tests passed including StoreKit validation rejection cases, email-only invite delivery contract tests, and browser invite redemption page/form tests",
     "accessAPIImportSmoke": "passed in temp venv; imported cadetcatch_access.main.app and AppleStoreKitVerifier",
-    "simulatorQA": "passed for clean local build 95 candidate using documented CadetCatch test command",
+    "simulatorQA": "pending for 1.0.2 build 96",
     "simulatorQAReceipt": {
-      "status": "passed",
+      "status": "pending",
       "command": "npm run test:cadetcatch",
       "simulator": "iPhone 17 Pro Max iOS 26.5",
-      "screenshot": "/Users/richardducat/GITHUB/eb28-cadetcatch-server-search-sop-20260622/output/cadetcatch-simulator/cadetcatch-2026-06-26T02-57-41-838Z.png",
-      "screenshotSha256": "3ad173e4c686ecc973dcf2822bb1056cad0feab100e3b5b0cbcef022a186da82",
-      "xcodebuildLog": "/Users/richardducat/GITHUB/eb28-cadetcatch-server-search-sop-20260622/output/cadetcatch-simulator/logs/xcodebuild-2026-06-26T02-57-29-078Z.log",
-      "xcodebuildLogSha256": "373d4b0ef05bef5cca0a631657e3eb704ba3899de34743f136516099f8fb581d",
-      "verifiedAt": "2026-06-26T02:57:41Z"
+      "screenshot": null,
+      "screenshotSha256": null,
+      "xcodebuildLog": null,
+      "xcodebuildLogSha256": null,
+      "verifiedAt": null
     },
     "matchedPhotoPreviewQA": {
       "status": "passed",
@@ -207,10 +188,10 @@
       "exampleURL": "https://pub-2264690a142a418ab996c86d3523fa08.r2.dev/photos/1561614049297355.jpg",
       "note": "Remote matched-photo loader bypasses URLCache so previously broken R2 photo URLs can load after becoming reachable."
     },
-    "appStorePreflight": "passed for build 95 with --skip-network",
+    "appStorePreflight": "pending for 1.0.2 build 96",
     "monetizationGate": {
       "status": "local_simulator_verified_locked",
-      "note": "Build 95 simulator screenshots show matched photo cards covered by Unlock to View while /access/status returns 404, confirming monthly/server access is not granted unconditionally before StoreKit entitlement or production API access is active."
+      "note": "Build 95 simulator evidence showed matched photo cards covered by Unlock to View while /access/status returned 404. Build 96 preserves the same access and product logic; rerun simulator QA before any release action."
     },
     "accessAPI": {
       "status": "production_deployed_and_tester_access_verified",
@@ -263,5 +244,5 @@
       "corsNote": "Response did not include Access-Control-Allow-Origin for Origin https://eb28.co, so eb28.co static hosting still needs search CORS support or same-origin api.cadetcatch.com hosting."
     }
   },
-  "updatedAt": "2026-06-29T17:11:45Z"
+  "updatedAt": "2026-07-10T21:22:16Z"
 }

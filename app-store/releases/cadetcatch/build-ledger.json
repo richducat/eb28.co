@@ -3,16 +3,16 @@
   "appName": "CadetCatch",
   "bundleId": "co.eb28.cadetcatch",
   "appStoreConnectAppId": "6769565852",
-  "highestKnownUploadedBuild": 92,
-  "highestKnownAppStoreSubmittedBuild": 80,
+  "highestKnownUploadedBuild": 95,
+  "highestKnownAppStoreSubmittedBuild": 95,
   "activeReview": {
     "marketingVersion": "1.0.1",
-    "buildNumber": 80,
-    "buildId": "df052001-85ae-4380-99a1-6ad808a40b9a",
+    "buildNumber": 95,
+    "buildId": null,
     "reviewSubmissionId": "575c019e-da9a-404a-9074-a4e18168cc4a",
     "state": "WAITING_FOR_REVIEW",
-    "verifiedFromSnapshot": "app-store/releases/cadetcatch/app-store-connect-snapshots/submit-build80.json",
-    "submittedAt": "2026-06-06T18:57:48.893Z"
+    "verifiedFromSnapshot": "/Users/richardducat/Documents/Codex/Release-Artifacts/CadetCatch/build-95-20260628/receipts/cadetcatch-build95-waiting-for-review-20260628.png",
+    "submittedAt": "2026-06-28T20:00:00Z"
   },
   "blockedBuildNumbers": [
     1,
@@ -36,9 +36,10 @@
     91,
     92,
     93,
-    94
+    94,
+    95
   ],
-  "nextUploadMustUseBuildNumberGreaterThan": 94,
+  "nextUploadMustUseBuildNumberGreaterThan": 95,
   "notes": [
     "Build 80 is the active App Store review recovery candidate and must not be re-uploaded.",
     "Builds 82, 83, 84 exist in App Store Connect/TestFlight evidence and must not be overwritten by stale source.",
@@ -53,7 +54,8 @@
     "Build 92 was uploaded to App Store Connect on 2026-06-24 and verified visible in TestFlight; it must not be reused.",
     "Build 93 is reserved for the monetization gate fix that removes unconditional monthly access and restores .v1 StoreKit product IDs.",
     "Build 94 is reserved for the corrected $12.99 Family Monthly price fallback and desktop add-on/access-invite planning pass.",
-    "Build 95 is reserved for the local account email, spouse/family invite, cadet invite, tester-access gate, and static desktop companion implementation candidate."
+    "Build 95 was uploaded, selected, and submitted to App Review for version 1.0.1; it must not be reused.",
+    "Build 96 is the next local-only 1.0.2 candidate and has not been archived or uploaded."
   ],
-  "lastUpdated": "2026-06-26"
+  "lastUpdated": "2026-07-10"
 }

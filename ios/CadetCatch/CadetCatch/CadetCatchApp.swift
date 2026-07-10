@@ -3061,7 +3061,7 @@ struct PurchaseOptionsSheet: View {
                     .disabled(isRestoring || busyProduct != nil)
 
                     HStack(spacing: 14) {
-                        Link("Privacy", destination: URL(string: "https://eb28.co/cc/privacy/")!)
+                        Link("Privacy", destination: URL(string: "https://cadetcatch.com/privacy/")!)
                         Link("Terms", destination: URL(string: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")!)
                     }
                     .font(.caption.weight(.bold))
@@ -4150,10 +4150,10 @@ struct MoreView: View {
             }
 
             Section("Links") {
-                Link(destination: URL(string: "https://eb28.co/cc/privacy/")!) {
+                Link(destination: URL(string: "https://cadetcatch.com/privacy/")!) {
                     Label("Privacy Policy", systemImage: "lock.shield")
                 }
-                Link(destination: URL(string: "https://eb28.co/cc/support/")!) {
+                Link(destination: URL(string: "https://cadetcatch.com/support/")!) {
                     Label("Support", systemImage: "questionmark.circle")
                 }
             }

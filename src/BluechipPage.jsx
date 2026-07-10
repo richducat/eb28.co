@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import SiteNav from './SiteNav.jsx';
 import { TickerTape, LiveChart, WATCHLIST } from './TradingView.jsx';
+import { fetchFundSnapshot, laneEvents } from './fundSnapshot.js';
 import {
   Check,
   ChevronRight,
@@ -150,13 +151,13 @@ function DeskDemo() {
   const [active, setActive] = useState('NVDA');
   const [actions, setActions] = useState([]);
   useEffect(() => {
-    fetch('/data/fundmanager-public.json', { cache: 'no-store' })
-      .then((r) => (r.ok ? r.json() : null))
-      .then((d) => {
-        const acts = (d && Array.isArray(d.recentActions)) ? d.recentActions : [];
-        setActions(acts.filter((a) => String(a.message || '').startsWith('Bluechip')));
-      })
-      .catch(() => {});
+    let cancelled = false;
+    fetchFundSnapshot().then((snapshot) => {
+      if (cancelled || !snapshot) return;
+      // Bluechip's own decisions live on its lane, not the fleet-wide feed.
+      setActions(laneEvents(snapshot, 'robinhood-equities', { limit: 40 }));
+    });
+    return () => { cancelled = true; };
   }, []);
   const tv = WATCHLIST.find((w) => w.label === active) || WATCHLIST[0];
   const match = actions.find((a) => String(a.message || '').includes(active));

@@ -51,31 +51,84 @@ async function publishData() {
   }
 }
 
-async function verifyPublish() {
-  // Cache-bust: raw.githubusercontent caches by full URL for ~300s.
-  const response = await fetch(`${VERIFY_URL}?cb=${Date.now()}`, {
-    headers: { 'User-Agent': 'EB28-FundPublisher/1.0' },
-    cache: 'no-store',
-  });
+// FAIL CLOSED. When the live Simmer source is unreachable, the generator falls
+// back to a committed placeholder (source: static-public-cache, stale: true,
+// updatedAt frozen in the past). Publishing that overwrites the public tape
+// with fiction — the exact thing this product promises never to do. Better to
+// leave the last known-good snapshot on the branch than to broadcast a stale
+// placeholder as if it were live.
+const MAX_SNAPSHOT_AGE_MS = 60 * 60 * 1000; // 1h — publisher runs every 5 min
 
-  if (!response.ok) {
-    throw new Error(`verify failed with ${response.status}`);
+async function assertPublishable() {
+  const snapshot = JSON.parse(await fs.readFile(snapshotPath, 'utf8'));
+  const reasons = [];
+
+  if (snapshot.ok === false) reasons.push('snapshot.ok is false');
+  if (snapshot.stale === true) reasons.push('snapshot marked stale');
+  if (String(snapshot.source || '').includes('static-public-cache')) {
+    reasons.push(`fallback source: ${snapshot.source}`);
+  }
+  if (snapshot.fallbackReason) reasons.push(`fallbackReason: ${snapshot.fallbackReason}`);
+
+  const updatedAt = Date.parse(snapshot.updatedAt || '');
+  if (!Number.isFinite(updatedAt)) {
+    reasons.push('missing/unparseable updatedAt');
+  } else if (Date.now() - updatedAt > MAX_SNAPSHOT_AGE_MS) {
+    reasons.push(`snapshot is ${Math.round((Date.now() - updatedAt) / 60000)} min old`);
   }
 
-  const snapshot = await response.json();
-  return {
-    updatedAt: snapshot.updatedAt || null,
-    status: snapshot.summary?.status ?? null,
-    balanceUsdc: snapshot.account?.balanceUsdc ?? null,
-    activeLanes: snapshot.summary?.activeLanes ?? null,
-  };
+  return { snapshot, reasons };
+}
+
+async function verifyPublish() {
+  // raw.githubusercontent caches by full URL for ~300s and rate-limits the
+  // cache-busted verify. The push already succeeded by this point, so a 429 is
+  // noise, not failure — retry briefly, then report unverified.
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    const response = await fetch(`${VERIFY_URL}?cb=${Date.now()}`, {
+      headers: { 'User-Agent': 'EB28-FundPublisher/1.0' },
+      cache: 'no-store',
+    });
+
+    if (response.ok) {
+      const snapshot = await response.json();
+      return {
+        verified: true,
+        updatedAt: snapshot.updatedAt || null,
+        status: snapshot.summary?.status ?? null,
+        balanceUsdc: snapshot.account?.balanceUsdc ?? null,
+        activeLanes: snapshot.summary?.activeLanes ?? null,
+      };
+    }
+
+    if (response.status !== 429) {
+      throw new Error(`verify failed with ${response.status}`);
+    }
+    await new Promise((resolve) => setTimeout(resolve, 20_000 * (attempt + 1)));
+  }
+
+  return { verified: false, note: 'rate-limited by raw CDN; push already committed' };
 }
 
 async function main() {
   await generateStaticData();
+
+  const { snapshot, reasons } = await assertPublishable();
+  if (reasons.length) {
+    console.error(JSON.stringify({
+      ok: false,
+      skippedPublish: true,
+      reasons,
+      source: snapshot.source ?? null,
+      updatedAt: snapshot.updatedAt ?? null,
+      note: 'last known-good snapshot left in place on the fund-state branch',
+    }, null, 2));
+    process.exit(1);
+  }
+
   await publishData();
   const verify = await verifyPublish();
-  console.log(JSON.stringify({ ok: true, verify }, null, 2));
+  console.log(JSON.stringify({ ok: true, source: snapshot.source, verify }, null, 2));
 }
 
 main().catch((error) => {

@@ -13,6 +13,7 @@ import {
 } from './fundmanagerMeta';
 import SiteNav from './SiteNav.jsx';
 import { TickerTape } from './TradingView.jsx';
+import { fetchFundSnapshot, recentActions } from './fundSnapshot.js';
 
 const SOLO_TOTAL = Object.keys(DESK_COMMERCE).length * DESK_PRICE_USD;
 
@@ -182,18 +183,17 @@ function SectionLabel({ children }) {
 function LiveTapeBand() {
     const [events, setEvents] = useState(null);
     useEffect(() => {
-        fetch('/data/fundmanager-public.json', { cache: 'no-store' })
-            .then((r) => (r.ok ? r.json() : null))
-            .then((d) => {
-                const acts = (d && Array.isArray(d.recentActions)) ? d.recentActions.slice(0, 4) : [];
-                if (acts.length) {
-                    setEvents(acts.map((a) => ({
-                        time: a.timestamp ? new Date(a.timestamp).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }) : '',
-                        message: String(a.message || '').slice(0, 140),
-                    })));
-                }
-            })
-            .catch(() => {});
+        let cancelled = false;
+        fetchFundSnapshot().then((snapshot) => {
+            if (cancelled || !snapshot) return;
+            const acts = recentActions(snapshot, { limit: 4 });
+            if (!acts.length) return;
+            setEvents(acts.map((a) => ({
+                time: a.timestamp ? new Date(a.timestamp).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }) : '',
+                message: String(a.message || '').slice(0, 140),
+            })));
+        });
+        return () => { cancelled = true; };
     }, []);
     const rows = events || FALLBACK_TAPE;
     return (

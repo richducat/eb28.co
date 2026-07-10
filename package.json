@@ -23,6 +23,7 @@
     "publish:fundmanager": "node scripts/publish-fundmanager-live.mjs",
     "build": "node scripts/build-site.mjs",
     "preview": "vite preview",
+    "limitless:ios:sync": "node scripts/sync-limitless-ios.mjs",
     "sync:ios": "npx cap sync ios && node scripts/ensure-wakeup-admob-spm.mjs",
     "eb28:content": "node scripts/eb28-content-engine.mjs --write",
     "eb28:blog": "node scripts/generate-eb28-blog.mjs",

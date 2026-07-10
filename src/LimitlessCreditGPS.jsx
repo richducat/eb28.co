@@ -22,7 +22,6 @@ import {
   Route,
   Save,
   Search,
-  ShieldCheck,
   Sprout,
   Target,
   TrendingUp,
@@ -36,7 +35,6 @@ import {
   GoalCard,
   LessonCard,
   OfferCard,
-  QuizCard,
   RiskBadge,
   ScenarioCard,
   SimulationResultCard,
@@ -48,9 +46,9 @@ import {
   goalOptions,
   lessons,
   offers,
-  quizSteps,
   scenarioOptions,
 } from './creditgps/mockData.js';
+import QuizExperience from './creditgps/QuizExperience.jsx';
 import {
   CONSULTATION_DISCLAIMER,
   CREDIT_GPS_DISCLAIMER,
@@ -358,151 +356,6 @@ function OnboardingScreen({ profile, updateProfile, navigate }) {
           </button>
         </div>
       </section>
-    </main>
-  );
-}
-
-function QuizInput({ step, profile, setField }) {
-  if (step.type === 'choice') {
-    return (
-      <div className="grid gap-2 sm:grid-cols-2">
-        {step.options.map((option) => (
-          <button
-            key={option}
-            type="button"
-            onClick={() => setField(step.id, option)}
-            className={`rounded-lg border px-4 py-3 text-left text-sm font-bold transition-colors ${
-              profile[step.id] === option
-                ? 'border-blue-500 bg-blue-50 text-blue-950'
-                : 'border-slate-200 bg-white text-slate-700 hover:border-blue-300'
-            }`}
-          >
-            {option}
-          </button>
-        ))}
-      </div>
-    );
-  }
-
-  if (step.type === 'money') {
-    return (
-      <label className="block">
-        <span className="mb-2 block text-sm font-bold text-slate-700">Estimated amount</span>
-        <span className="flex rounded-lg border border-slate-200 bg-white focus-within:border-blue-500">
-          <span className="flex items-center px-4 text-lg font-black text-slate-400">$</span>
-          <input
-            value={profile[step.id] ?? ''}
-            onChange={(event) => setField(step.id, event.target.value)}
-            inputMode="numeric"
-            placeholder={step.placeholder}
-            className="min-w-0 flex-1 rounded-r-lg border-0 bg-transparent px-2 py-4 text-lg font-extrabold text-slate-950 outline-none"
-          />
-        </span>
-      </label>
-    );
-  }
-
-  if (step.type === 'boolean') {
-    return (
-      <div className="grid grid-cols-2 gap-2">
-        {[true, false].map((value) => (
-          <button
-            key={String(value)}
-            type="button"
-            onClick={() => setField(step.id, value)}
-            className={`rounded-lg border px-4 py-4 text-sm font-extrabold transition-colors ${
-              profile[step.id] === value
-                ? 'border-blue-500 bg-blue-50 text-blue-950'
-                : 'border-slate-200 bg-white text-slate-700 hover:border-blue-300'
-            }`}
-          >
-            {value ? 'Yes' : 'No'}
-          </button>
-        ))}
-      </div>
-    );
-  }
-
-  if (step.type === 'multi') {
-    return (
-      <div className="space-y-2">
-        {step.options.map((option) => (
-          <button
-            key={option.id}
-            type="button"
-            onClick={() => setField(option.id, !profile[option.id])}
-            className={`flex w-full items-center justify-between rounded-lg border px-4 py-3 text-left text-sm font-bold transition-colors ${
-              profile[option.id]
-                ? 'border-blue-500 bg-blue-50 text-blue-950'
-                : 'border-slate-200 bg-white text-slate-700 hover:border-blue-300'
-            }`}
-          >
-            {option.label}
-            {profile[option.id] ? <ShieldCheck className="h-4 w-4 text-blue-700" /> : null}
-          </button>
-        ))}
-      </div>
-    );
-  }
-
-  return null;
-}
-
-function QuizScreen({ profile, updateProfile, navigate }) {
-  const [index, setIndex] = useState(0);
-  const step = quizSteps[index];
-  const progress = Math.round(((index + 1) / quizSteps.length) * 100);
-
-  const setField = (field, value) => updateProfile({ [field]: value });
-  const next = () => {
-    if (index < quizSteps.length - 1) {
-      setIndex((current) => current + 1);
-      return;
-    }
-
-    updateProfile({ onboarding_completed: true });
-    navigate(`${BASE_PATH}/dashboard`);
-  };
-
-  return (
-    <main className="mx-auto grid max-w-6xl gap-6 px-4 py-8 sm:px-6 lg:grid-cols-[0.78fr_0.42fr] lg:py-12">
-      <section>
-        <button type="button" onClick={() => navigate(`${BASE_PATH}/onboarding`)} className="mb-5 inline-flex items-center gap-2 text-sm font-bold text-slate-300 hover:text-white">
-          <ChevronLeft className="h-4 w-4" /> Goal selection
-        </button>
-        <QuizCard step={step}>
-          <QuizInput step={step} profile={profile} setField={setField} />
-          <div className="mt-6 flex items-center justify-between gap-3">
-            <button
-              type="button"
-              onClick={() => setIndex((current) => Math.max(0, current - 1))}
-              disabled={index === 0}
-              className="rounded-lg border border-slate-200 px-4 py-3 text-sm font-bold text-slate-700 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
-            >
-              Back
-            </button>
-            <button
-              type="button"
-              onClick={next}
-              className="inline-flex items-center gap-2 rounded-lg bg-slate-950 px-5 py-3 text-sm font-extrabold text-white transition-colors hover:bg-blue-700"
-            >
-              {index === quizSteps.length - 1 ? 'Build my plan' : 'Next question'}
-              <ArrowRight className="h-4 w-4" />
-            </button>
-          </div>
-        </QuizCard>
-      </section>
-      <aside className="rounded-lg border border-white/10 bg-white/10 p-4 text-white backdrop-blur-xl lg:mt-10">
-        <p className="text-xs font-bold uppercase tracking-[0.18em] text-blue-200">Profile route</p>
-        <h2 className="mt-3 text-2xl font-black">{getGoalTitle(profile.primary_goal)}</h2>
-        <div className="mt-5 h-2 rounded-full bg-white/10">
-          <div className="h-2 rounded-full bg-blue-400" style={{ width: `${progress}%` }} />
-        </div>
-        <p className="mt-3 text-sm font-bold text-slate-300">{progress}% profile complete</p>
-        <p className="mt-5 rounded-lg border border-white/10 bg-slate-950/50 p-3 text-xs leading-5 text-slate-300">
-          {CREDIT_GPS_DISCLAIMER}
-        </p>
-      </aside>
     </main>
   );
 }
@@ -1210,7 +1063,7 @@ export default function LimitlessCreditGPS() {
       case 'onboarding':
         return <OnboardingScreen profile={profile} updateProfile={updateProfile} navigate={navigate} />;
       case 'quiz':
-        return <QuizScreen profile={profile} updateProfile={updateProfile} navigate={navigate} />;
+        return <QuizExperience profile={profile} updateProfile={updateProfile} navigate={navigate} basePath={BASE_PATH} />;
       case 'dashboard':
         return (
           <DashboardScreen

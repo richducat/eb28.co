@@ -53,7 +53,7 @@ export const quizSteps = [
   {
     id: 'score_range',
     label: 'About where is your credit score today?',
-    helper: 'A range is enough. Limitless Credit GPS does not need an exact score for the MVP.',
+    helper: 'A close range is enough — no exact score and no credit pull needed.',
     type: 'choice',
     options: ['Under 500', '500-579', '580-639', '640-699', '700-759', '760+', 'Not sure'],
   },

@@ -7,7 +7,12 @@ import WebKit
 /// and localStorage-backed state persists between launches.
 struct WebShellView: UIViewRepresentable {
     static let scheme = "creditgps"
-    static let startURL = URL(string: "\(scheme)://app/limitless/")!
+    static var startURL: URL {
+        // QA hook: launch a specific route in the simulator, e.g.
+        // SIMCTL_CHILD_CREDITGPS_START_PATH=/limitless/quiz/ simctl launch ...
+        let path = ProcessInfo.processInfo.environment["CREDITGPS_START_PATH"] ?? "/limitless/"
+        return URL(string: "\(scheme)://app\(path)") ?? URL(string: "\(scheme)://app/limitless/")!
+    }
 
     func makeCoordinator() -> Coordinator {
         Coordinator()

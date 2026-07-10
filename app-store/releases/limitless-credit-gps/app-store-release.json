@@ -1,0 +1,138 @@
+{
+  "$schemaVersion": 2,
+  "app": {
+    "name": "Limitless Credit GPS",
+    "subtitle": "Simulate credit moves first",
+    "bundleId": "co.eb28.limitlesscreditgps",
+    "sku": "limitless-credit-gps",
+    "platforms": [
+      "iOS"
+    ],
+    "primaryCategory": "Finance",
+    "secondaryCategory": "Education",
+    "copyright": "2026 EB28",
+    "ageRatingQuestionnaireCompleted": true,
+    "ageRatingBand": "4+",
+    "hasAiChatOrAssistant": false,
+    "aiContentReviewedForAgeRating": false,
+    "traderStatusReviewed": true,
+    "exportCompliance": {
+      "reviewed": true,
+      "documentationRequired": false,
+      "documentationStatus": "NOT_REQUIRED",
+      "infoPlistKeyConfigured": true
+    }
+  },
+  "version": {
+    "marketingVersion": "1.0.0",
+    "buildNumber": "2",
+    "releaseType": "AUTOMATIC",
+    "phasedRelease": false,
+    "builtWithXcode26OrLater": true,
+    "promotionalText": "Run any credit move before you make it \u2014 see likely direction, risk, and your next best step. Free, private, no credit pull.",
+    "description": "Know the likely credit impact before you make the move.\n\nLimitless Credit GPS is a free credit education and decision simulator. Answer a 60-second quiz \u2014 no account, no SSN, no credit pull \u2014 and get a personalized plan with your estimated risk level and next best move.\n\nWhat you can do:\n\n- Simulate 11 common credit moves before you act: pay off a card, open or close a card, request a limit increase, pay a collection, consolidate debt, apply for a mortgage, and more\n- See likely direction, confidence, risk, and timing for each move in plain English \u2014 never fake point predictions\n- Understand sudden score changes with the Why Did My Score Drop explainer\n- Follow a step-by-step action plan matched to your goal: buy a home, buy a car, rebuild credit, fix collections, build from scratch, get better rates, business funding, or apartment approval\n- Learn the fundamentals in 15 two-minute lessons written in plain English\n- Save simulations to your plan and track progress\n\nPrivate by design: everything you enter stays on your device. No registration, no ads, no tracking.\n\nLimitless Credit GPS provides educational estimates based on common credit scoring factors. It does not guarantee score changes, credit approvals, account removals, or financial outcomes, and it does not provide financial, credit repair, or legal advice.\n\nPrivacy Policy: https://eb28.co/limitless/privacy/\nTerms: https://eb28.co/limitless/terms/",
+    "keywords": [
+      "credit",
+      "score",
+      "simulator",
+      "utilization",
+      "fico",
+      "repair",
+      "builder",
+      "collections",
+      "mortgage",
+      "debt",
+      "planner"
+    ],
+    "whatsNew": "Initial release."
+  },
+  "urls": {
+    "marketingUrl": "https://eb28.co/limitless/",
+    "supportUrl": "https://eb28.co/limitless/support/",
+    "privacyPolicyUrl": "https://eb28.co/limitless/privacy/",
+    "userPrivacyChoicesUrl": "",
+    "termsUrl": "https://eb28.co/limitless/terms/"
+  },
+  "review": {
+    "contactName": "Richard Ducat",
+    "contactEmail": "support@eb28.co",
+    "contactPhone": "+1-602-306-3920",
+    "demoRequired": false,
+    "demoUsername": "",
+    "demoPassword": "",
+    "notes": [
+      "Version 1.0.0 build 2. No login, no account, no payment. The full experience is available immediately on first launch.",
+      "The app is a self-contained credit education and decision simulator. All content and simulation logic run on-device; user answers are stored locally and never uploaded.",
+      "Core flow: tap Start My Credit GPS, pick a goal, answer the 11-question profile quiz (about 60 seconds), and the app builds a personalized plan with an estimated risk level and next best move.",
+      "From the dashboard: Run a Credit Move simulates 11 common credit decisions (payoff, open/close card, limit increase, pay collection, consolidate, mortgage application, missed payment) and returns likely direction, confidence, risk, and timing with plain-English explanations. The app deliberately never shows fake point predictions.",
+      "Why Did My Score Drop matches recent events to common causes. Learn contains 15 original educational lessons. My Plan tracks action items and saved simulations.",
+      "The app does not access credit reports, does not connect to credit bureaus, and does not provide credit repair services. Educational disclaimers are shown on the welcome screen, quiz, results, and footer.",
+      "Privacy policy, terms, and support links are in the app footer and open in Safari: https://eb28.co/limitless/privacy/",
+      "The app declares ITSAppUsesNonExemptEncryption = NO (standard HTTPS only)."
+    ]
+  },
+  "distribution": {
+    "usesLogin": false,
+    "supportsIphone": true,
+    "supportsIpad": false,
+    "containsUserGeneratedContent": false,
+    "createsAccounts": false,
+    "requiresExternalHardware": false,
+    "usesPushNotifications": false,
+    "usesLocalNotifications": false
+  },
+  "monetization": {
+    "hasAds": false,
+    "adNetwork": "",
+    "appAdsTxtUrl": "",
+    "hasInAppPurchases": false,
+    "hasSubscriptions": false,
+    "paidAppsAgreementStatus": "NOT_NEEDED",
+    "subscriptionUiIncludesRestore": false,
+    "subscriptionUiIncludesTerms": false,
+    "products": []
+  },
+  "privacy": {
+    "privacyPolicyLinkedInApp": true,
+    "appPrivacyAnswersCurrent": true,
+    "trackingUsed": false,
+    "attFlowImplemented": false,
+    "accountDeletionImplemented": false,
+    "privacyManifestReviewed": true,
+    "requiredReasonApisReviewed": true,
+    "thirdPartySdkPrivacyReviewed": true,
+    "sendsDataToThirdPartyAi": false,
+    "aiDataSharingDisclosedInApp": false
+  },
+  "assets": {
+    "appIconSource": "../../../ios/LimitlessCreditGPS/LimitlessCreditGPS/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png",
+    "iphoneScreenshots": [
+      "screenshots/iphone-69-01-welcome.png",
+      "screenshots/iphone-69-02-quiz.png",
+      "screenshots/iphone-69-03-dashboard.png",
+      "screenshots/iphone-69-04-simulator.png",
+      "screenshots/iphone-69-05-score-drop.png",
+      "screenshots/iphone-69-06-learn.png"
+    ],
+    "ipadScreenshots": [],
+    "appPreviewVideos": []
+  },
+  "verification": {
+    "testedDevices": [
+      "iPhone 16 Pro (simulator)",
+      "iPhone 16 Pro Max (simulator)"
+    ],
+    "testedFlows": [
+      "fresh install launch to welcome screen",
+      "goal selection and full 11-question quiz to plan reveal",
+      "quiz skip logic with zero cards",
+      "run credit move simulation and save to plan",
+      "score drop explainer",
+      "lesson library browse and lesson detail",
+      "privacy/terms/support footer links open in Safari"
+    ],
+    "knownRisks": [
+      "Guideline 4.2 minimum functionality: mitigated by fully on-device interactive simulator, quiz, plan tracking, and original lesson content; review notes call this out."
+    ]
+  }
+}

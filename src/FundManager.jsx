@@ -10,7 +10,13 @@ import {
     LANE_INDEX,
 } from './fundmanagerMeta';
 
-const PROD_REMOTE_SNAPSHOT_HOSTS = new Set(['eb28.co', 'www.eb28.co', 'fundmanager.eb28.co']);
+const PROD_REMOTE_SNAPSHOT_HOSTS = new Set([
+    'eb28.co',
+    'www.eb28.co',
+    'fundmanager.eb28.co',
+    'daytradingbot.net',
+    'www.daytradingbot.net',
+]);
 const STATIC_PREVIEW_HOSTS = new Set(['localhost', '127.0.0.1']);
 const PROD_REMOTE_SNAPSHOT_URL = 'https://raw.githubusercontent.com/richducat/eb28.co/fund-state/fund-state.json';
 const SOURCE_TIMEOUT_MS = 5000;
@@ -19,33 +25,35 @@ const IS_PROD_REMOTE_SNAPSHOT_HOST =
 const detectedProdRemoteSnapshotUrl = IS_PROD_REMOTE_SNAPSHOT_HOST ? PROD_REMOTE_SNAPSHOT_URL : '';
 const REMOTE_SNAPSHOT_URL = import.meta.env.VITE_FUNDMANAGER_PUBLIC_STATE_URL || detectedProdRemoteSnapshotUrl;
 
+// Light-theme status tones matching the daylight design language shared by
+// Bluechip, Desk OS, and the tape/answers pages.
 const STATUS_TONE = {
     RUNNING: {
-        badge: 'border-green-400/30 bg-green-500/10 text-green-300',
-        dot: 'bg-green-400',
+        badge: 'border-emerald-200 bg-emerald-50 text-emerald-700',
+        dot: 'bg-emerald-500',
     },
     DEGRADED: {
-        badge: 'border-amber-400/30 bg-amber-500/10 text-amber-300',
-        dot: 'bg-amber-400',
+        badge: 'border-amber-200 bg-amber-50 text-amber-700',
+        dot: 'bg-amber-500',
     },
     PAUSED: {
-        badge: 'border-rose-400/30 bg-rose-500/10 text-rose-300',
-        dot: 'bg-rose-400',
+        badge: 'border-rose-200 bg-rose-50 text-rose-700',
+        dot: 'bg-rose-500',
     },
     STALE: {
-        badge: 'border-orange-400/30 bg-orange-500/10 text-orange-300',
-        dot: 'bg-orange-400',
+        badge: 'border-orange-200 bg-orange-50 text-orange-700',
+        dot: 'bg-orange-500',
     },
     OFFLINE: {
-        badge: 'border-slate-400/30 bg-slate-500/10 text-slate-300',
+        badge: 'border-slate-200 bg-slate-100 text-slate-600',
         dot: 'bg-slate-400',
     },
     MONITORING: {
-        badge: 'border-cyan-400/30 bg-cyan-500/10 text-cyan-300',
-        dot: 'bg-cyan-400',
+        badge: 'border-cyan-200 bg-cyan-50 text-cyan-700',
+        dot: 'bg-cyan-500',
     },
     CONNECTING: {
-        badge: 'border-slate-400/30 bg-slate-500/10 text-slate-300',
+        badge: 'border-slate-200 bg-slate-100 text-slate-600',
         dot: 'bg-slate-400',
     },
 };
@@ -672,100 +680,93 @@ const FundManager = () => {
             label: 'Updated',
             value: snapshot?.updatedAt ? formatRelativeTimestamp(snapshot.updatedAt) : (loading ? 'Loading...' : '--'),
             caption: 'Snapshot age — publishes every cycle',
-            tone: snapshot?.stale ? 'text-orange-300' : 'text-cyan-300',
+            tone: snapshot?.stale ? 'text-orange-600' : 'text-cyan-700',
         },
         {
             label: 'Free Cash',
             value: formatCurrency(account?.balanceUsdc, loading ? 'Loading...' : '--'),
             caption: formatVenueCashBreakdown(account),
-            tone: (account?.balanceUsdc || 0) >= 5 ? 'text-green-300' : 'text-amber-300',
+            tone: (account?.balanceUsdc || 0) >= 5 ? 'text-emerald-600' : 'text-amber-600',
         },
         {
             label: 'Exposure',
             value: formatCurrency(account?.totalExposure, loading ? 'Loading...' : '--'),
             caption: 'Capital working inside open positions',
-            tone: 'text-blue-300',
+            tone: 'text-blue-700',
         },
         {
             label: 'Open Book',
             value: `${account?.activePositionCount ?? 0} pos / ${account?.openOrderCount ?? 0} ord`,
             caption: 'Live positions and resting orders',
-            tone: 'text-fuchsia-300',
+            tone: 'text-slate-900',
         },
         {
             label: 'Desk PnL',
             value: formatSignedCurrency(account?.totalPnl, loading ? 'Loading...' : '--'),
             caption: 'Real lifetime result — never edited',
-            tone: (account?.totalPnl || 0) >= 0 ? 'text-emerald-300' : 'text-rose-300',
+            tone: (account?.totalPnl || 0) >= 0 ? 'text-emerald-600' : 'text-rose-600',
         },
     ];
 
     return (
-        <div className="min-h-screen overflow-x-hidden bg-[#020617] text-[#22d3ee] font-mono relative selection:bg-[#22d3ee] selection:text-[#020617]">
-            <SiteNav dark active="/fundmanager/" subtitle="Live Tape" cta={{ href: '/bluechip/', label: 'Get the desk — $98' }} />
-            {/* Background Image */}
-            <div className="absolute inset-0 -z-20">
-                <img src="/images/fundmanager_bg.png" alt="Fund Manager Data" className="w-full h-full object-cover opacity-[0.05]" />
-            </div>
+        <div className="min-h-screen overflow-x-hidden bg-slate-50 font-sans text-slate-900 antialiased">
+            <SiteNav active="/fundmanager/" subtitle="Live Tape" cta={{ href: '/bluechip/', label: 'Get the desk — $98' }} />
 
-            <div className="relative z-10 mx-auto max-w-7xl px-3 py-4 sm:px-4 sm:py-5 lg:px-6 lg:py-6">
+            <div className="mx-auto max-w-7xl px-3 py-6 sm:px-4 sm:py-8 lg:px-6">
                 <header className="mb-6">
-                    <section className="eb28-panel rounded-[28px] border border-[#22d3ee]/15 p-4 sm:p-6">
+                    <section className="rounded-3xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
                         <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
                             <div className="min-w-0">
-                                <div className="flex items-start gap-3 sm:gap-4">
-                                    <div className="text-[2.4rem] leading-none text-[#22d3ee]/80 animate-pulse sm:text-[2.9rem]">&gt;</div>
-                                    <div className="min-w-0">
-                                        <div className="flex flex-wrap items-center gap-2">
-                                            <h1 className="text-[clamp(1.8rem,7vw,3rem)] font-bold tracking-[-0.08em] leading-none break-words">
-                                                FUNDMANAGER.EB28.CO
-                                            </h1>
-                                            <span className={`inline-flex items-center gap-2 rounded-full border px-2 py-1 text-[9px] font-bold uppercase tracking-[0.18em] ${systemTone.badge}`}>
-                                                <span className={`h-2 w-2 rounded-full ${systemTone.dot}`}></span>
-                                                {systemState}
-                                            </span>
-                                        </div>
-                                        <p className="mt-2 text-[10px] uppercase tracking-[0.22em] opacity-55 sm:text-[11px]">
-                                            The EB28 Desk OS — live telemetry
-                                        </p>
-                                        <p className="mt-3 max-w-2xl text-[12px] leading-relaxed text-white/65 sm:text-sm">
-                                            Eight autonomous trading desks scanning Polymarket and Kalshi around the clock.
-                                            Every order has to clear a kill-switch gate, a capital guard, and a trade journal
-                                            before a cent moves. This page is the real feed — wins, losses, and blockers included.
-                                        </p>
-                                        <p className="mt-3 max-w-2xl text-[12px] font-bold leading-relaxed text-cyan-200 sm:text-sm">
-                                            {SYSTEM_HEADLINE[systemState] || SYSTEM_HEADLINE.CONNECTING}
-                                        </p>
-                                        <div className="mt-4 flex flex-wrap gap-2 text-[10px] uppercase tracking-[0.18em] text-white/55">
-                                            <span className="rounded-full border border-[#22d3ee]/10 bg-black/20 px-2.5 py-1">
-                                                Source {snapshot?.sourceType || 'snapshot'}
-                                            </span>
-                                            <span className="rounded-full border border-[#22d3ee]/10 bg-black/20 px-2.5 py-1">
-                                                Cycle {(summary?.cycleIntervalMinutes || 10)}m
-                                            </span>
-                                            <span className="rounded-full border border-[#22d3ee]/10 bg-black/20 px-2.5 py-1">
-                                                Updated {formatTimestamp(snapshot?.updatedAt)}
-                                            </span>
-                                        </div>
-                                        <div className="mt-5 flex flex-wrap items-center gap-3">
-                                            <a
-                                                href="/deskos/"
-                                                className="rounded-full bg-[#22d3ee] px-5 py-2.5 text-[12px] font-bold uppercase tracking-[0.16em] text-[#020617] transition-all hover:bg-cyan-300 hover:shadow-[0_0_28px_rgba(34,211,238,0.45)]"
-                                            >
-                                                Own this system →
-                                            </a>
-                                            <a
-                                                href="#desk-fleet"
-                                                className="rounded-full border border-[#22d3ee]/30 px-5 py-2.5 text-[12px] font-bold uppercase tracking-[0.16em] text-cyan-200 transition-colors hover:border-[#22d3ee]/60"
-                                            >
-                                                Meet the desks ↓
-                                            </a>
-                                        </div>
+                                <div className="min-w-0">
+                                    <p className="mb-3 inline-block rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold uppercase tracking-wide text-blue-900">
+                                        The EB28 Desk OS · live telemetry
+                                    </p>
+                                    <div className="flex flex-wrap items-center gap-3">
+                                        <h1 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+                                            The Live Tape
+                                        </h1>
+                                        <span className={`inline-flex items-center gap-2 rounded-full border px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.14em] ${systemTone.badge}`}>
+                                            <span className={`h-2 w-2 rounded-full ${systemTone.dot}`}></span>
+                                            {systemState}
+                                        </span>
+                                    </div>
+                                    <p className="mt-3 max-w-2xl text-sm leading-relaxed text-slate-600">
+                                        Eight autonomous trading desks scanning Polymarket and Kalshi around the clock.
+                                        Every order has to clear a kill-switch gate, a capital guard, and a trade journal
+                                        before a cent moves. This page is the real feed — wins, losses, and blockers included.
+                                    </p>
+                                    <p className="mt-3 max-w-2xl text-sm font-semibold leading-relaxed text-slate-800">
+                                        {SYSTEM_HEADLINE[systemState] || SYSTEM_HEADLINE.CONNECTING}
+                                    </p>
+                                    <div className="mt-4 flex flex-wrap gap-2 text-[11px] font-semibold text-slate-500">
+                                        <span className="rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1">
+                                            Source {snapshot?.sourceType || 'snapshot'}
+                                        </span>
+                                        <span className="rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1">
+                                            Cycle {(summary?.cycleIntervalMinutes || 10)}m
+                                        </span>
+                                        <span className="rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1">
+                                            Updated {formatTimestamp(snapshot?.updatedAt)}
+                                        </span>
+                                    </div>
+                                    <div className="mt-5 flex flex-wrap items-center gap-3">
+                                        <a
+                                            href="/deskos/"
+                                            className="rounded-full bg-orange-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-orange-700"
+                                        >
+                                            Own this system →
+                                        </a>
+                                        <a
+                                            href="#desk-fleet"
+                                            className="rounded-full border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 transition-colors hover:border-slate-400"
+                                        >
+                                            Meet the desks ↓
+                                        </a>
                                     </div>
                                 </div>
 
                                 {errorMessage ? (
-                                    <div className="mt-5 rounded-2xl border border-rose-500/20 bg-rose-500/10 p-3 text-[11px] leading-relaxed text-rose-200">
+                                    <div className="mt-5 rounded-2xl border border-rose-200 bg-rose-50 p-3 text-xs leading-relaxed text-rose-700">
                                         Snapshot unavailable: {errorMessage}
                                     </div>
                                 ) : null}
@@ -773,12 +774,12 @@ const FundManager = () => {
 
                             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:w-[42rem]">
                                 {systemCards.map((card) => (
-                                    <div key={card.label} className="rounded-2xl border border-[#22d3ee]/10 bg-black/20 p-3 sm:p-4">
-                                        <div className="text-[10px] uppercase tracking-[0.22em] opacity-50">{card.label}</div>
+                                    <div key={card.label} className="rounded-2xl border border-slate-200 bg-slate-50 p-3 sm:p-4">
+                                        <div className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-400">{card.label}</div>
                                         <div className={`mt-2 text-sm font-bold sm:text-base ${card.tone}`}>
                                             {card.value}
                                         </div>
-                                        <div className="mt-2 text-[10px] leading-snug text-white/40">
+                                        <div className="mt-2 text-[10px] leading-snug text-slate-500">
                                             {card.caption}
                                         </div>
                                     </div>
@@ -789,12 +790,12 @@ const FundManager = () => {
                 </header>
 
                 <section id="desk-fleet" className="mb-6 scroll-mt-6">
-                    <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+                    <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
                         <div>
-                            <p className="text-[10px] uppercase tracking-[0.24em] opacity-45">The desk fleet</p>
-                            <h2 className="text-lg font-bold text-white/90 sm:text-xl">The live trading floor. Eight you can own.</h2>
+                            <p className="text-xs font-bold uppercase tracking-[0.14em] text-orange-700">The desk fleet</p>
+                            <h2 className="mt-1 text-xl font-bold tracking-tight text-slate-900 sm:text-2xl">The live trading floor. Eight you can own.</h2>
                         </div>
-                        <p className="text-[11px] uppercase tracking-[0.22em] text-white/50">
+                        <p className="text-xs font-semibold text-slate-500">
                             Status pulls straight from the live orchestrator
                         </p>
                     </div>
@@ -811,11 +812,11 @@ const FundManager = () => {
                             return (
                                 <article
                                     key={agent.id}
-                                    className="eb28-panel rounded-[26px] border border-[#22d3ee]/10 p-4 transition-all hover:border-[#22d3ee]/30 hover:shadow-[0_16px_36px_rgba(3,7,18,0.45)] sm:p-5"
+                                    className="rounded-3xl border border-slate-200 bg-white p-4 shadow-sm transition-all hover:border-orange-300 hover:shadow-lg sm:p-5"
                                 >
                                     <div className="flex flex-col gap-4">
                                         <div className="flex items-start gap-3 sm:gap-4">
-                                            <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-2xl border border-[#22d3ee]/20 bg-[#0f172a] pixel-art ring-1 ring-[#22d3ee]/10 sm:h-[4.5rem] sm:w-[4.5rem]">
+                                            <div className="h-16 w-16 flex-shrink-0 overflow-hidden rounded-2xl bg-slate-900 pixel-art ring-1 ring-slate-200 sm:h-[4.5rem] sm:w-[4.5rem]">
                                                 {agent.external ? (
                                                     <div
                                                         className="flex h-full w-full items-center justify-center text-2xl font-bold"
@@ -838,18 +839,15 @@ const FundManager = () => {
                                             <div className="min-w-0 flex-1">
                                                 <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                                                     <div className="min-w-0">
-                                                        <p className="mb-2 text-[10px] uppercase tracking-[0.24em] opacity-40">
+                                                        <p className="mb-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-400">
                                                             {(commerce || agent.kind === 'trading') ? 'Trading desk' : 'Support desk'}
                                                         </p>
-                                                        <h3
-                                                            className="text-base font-bold leading-tight break-words sm:text-lg xl:text-base"
-                                                            style={{ color: agent.color }}
-                                                        >
-                                                            {agent.name.toUpperCase()}
+                                                        <h3 className="text-base font-bold leading-tight tracking-tight text-slate-900 break-words sm:text-lg xl:text-base">
+                                                            {agent.name}
                                                         </h3>
                                                     </div>
 
-                                                    <span className={`inline-flex items-center gap-2 self-start rounded-full border px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.2em] ${statusTone.badge}`}>
+                                                    <span className={`inline-flex items-center gap-2 self-start rounded-full border px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.14em] ${statusTone.badge}`}>
                                                         <span className={`h-2 w-2 rounded-full ${statusTone.dot}`}></span>
                                                         {health.status}
                                                     </span>
@@ -859,7 +857,7 @@ const FundManager = () => {
                                                     {agent.roles.map((role) => (
                                                         <span
                                                             key={role}
-                                                            className="rounded-full border border-[#22d3ee]/10 bg-[#22d3ee]/8 px-2 py-1 text-[10px] uppercase tracking-[0.14em] text-white/60"
+                                                            className="rounded-full border border-slate-200 bg-slate-100 px-2 py-1 text-[10px] font-medium text-slate-500"
                                                         >
                                                             {role.replace(/-/g, ' ')}
                                                         </span>
@@ -868,17 +866,17 @@ const FundManager = () => {
                                             </div>
                                         </div>
 
-                                        <div className="rounded-2xl border border-white/5 bg-black/20 p-3">
+                                        <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3">
                                             {(primaryLane?.description || agent.description) ? (
-                                                <p className="mb-2 text-[11px] leading-relaxed text-white/75 sm:text-xs">
+                                                <p className="mb-2 text-xs leading-relaxed text-slate-600">
                                                     {primaryLane?.description || agent.description}
                                                 </p>
                                             ) : null}
-                                            <div className="mb-2 text-[10px] uppercase tracking-[0.2em] text-white/50">Live assignment</div>
-                                            <p className="text-[11px] font-bold leading-relaxed text-white/85 sm:text-xs">
+                                            <div className="mb-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-400">Live assignment</div>
+                                            <p className="text-xs font-semibold leading-relaxed text-slate-800">
                                                 {health.summary}
                                             </p>
-                                            <p className="mt-2 text-[11px] leading-relaxed text-white/65 sm:text-xs">
+                                            <p className="mt-2 text-xs leading-relaxed text-slate-500">
                                                 {plainReason || health.detail}
                                             </p>
                                         </div>
@@ -889,34 +887,34 @@ const FundManager = () => {
                                                     href={commerce.checkoutUrl}
                                                     target="_blank"
                                                     rel="noopener noreferrer"
-                                                    className="rounded-full bg-[#22d3ee]/15 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.16em] text-cyan-200 ring-1 ring-[#22d3ee]/40 transition-all hover:bg-[#22d3ee] hover:text-[#020617]"
+                                                    className="rounded-full bg-orange-600 px-4 py-2 text-xs font-semibold text-white shadow-sm transition-colors hover:bg-orange-700"
                                                 >
                                                     License this agent — ${DESK_PRICE_USD}
                                                 </a>
                                                 <a
                                                     href="/deskos/"
-                                                    className="text-[10px] uppercase tracking-[0.14em] text-white/45 underline-offset-4 transition-colors hover:text-cyan-200 hover:underline"
+                                                    className="text-xs font-medium text-slate-500 underline-offset-4 transition-colors hover:text-orange-700 hover:underline"
                                                 >
                                                     or all 8 + the OS — ${BUNDLE_PRICE_USD}
                                                 </a>
                                             </div>
                                         ) : agent.external === 'robinhood' ? (
                                             <div className="flex flex-wrap items-center gap-2">
-                                                <span className="rounded-full border border-emerald-400/30 bg-emerald-500/10 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-emerald-300">
+                                                <span className="rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.12em] text-emerald-700">
                                                     Robinhood Agentic · live beta
                                                 </span>
                                                 <a
                                                     href="/bluechip/"
-                                                    className="rounded-full bg-[#5eead4]/15 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.16em] text-teal-200 ring-1 ring-[#5eead4]/40 transition-all hover:bg-[#5eead4] hover:text-[#020617]"
+                                                    className="rounded-full bg-slate-900 px-4 py-2 text-xs font-semibold text-white transition-colors hover:bg-slate-700"
                                                 >
                                                     Founding beta — $98 →
                                                 </a>
-                                                <span className="text-[10px] uppercase tracking-[0.14em] text-white/40">
+                                                <span className="text-[10px] font-medium uppercase tracking-[0.12em] text-slate-400">
                                                     Trading on this tape right now
                                                 </span>
                                             </div>
                                         ) : (
-                                            <div className="text-[10px] uppercase tracking-[0.16em] text-white/35">
+                                            <div className="text-[10px] font-medium uppercase tracking-[0.12em] text-slate-400">
                                                 Included with every Desk OS bundle
                                             </div>
                                         )}
@@ -928,10 +926,10 @@ const FundManager = () => {
                 </section>
 
                 <section className="mb-6">
-                    <div className="eb28-panel rounded-[28px] border border-[#22d3ee]/10 p-4 sm:p-6">
+                    <div className="rounded-3xl border border-slate-200 bg-white p-4 shadow-sm sm:p-6">
                         <div className="mb-4">
-                            <p className="text-[10px] uppercase tracking-[0.24em] opacity-45">How the machine works</p>
-                            <h2 className="mt-1 text-lg font-bold text-white/90 sm:text-xl">Four gates between an idea and your money</h2>
+                            <p className="text-xs font-bold uppercase tracking-[0.14em] text-orange-700">How the machine works</p>
+                            <h2 className="mt-1 text-xl font-bold tracking-tight text-slate-900 sm:text-2xl">Four gates between an idea and your money</h2>
                         </div>
                         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
                             {[
@@ -956,10 +954,10 @@ const FundManager = () => {
                                     body: 'Every fill, skip, and blocker is journaled and published to this dashboard. What you see is the unedited record.',
                                 },
                             ].map((item) => (
-                                <div key={item.step} className="rounded-2xl border border-[#22d3ee]/10 bg-black/20 p-4">
-                                    <div className="text-[10px] uppercase tracking-[0.22em] text-cyan-300/70">{item.step}</div>
-                                    <div className="mt-2 text-sm font-bold text-white/90">{item.title}</div>
-                                    <p className="mt-2 text-[11px] leading-relaxed text-white/60">{item.body}</p>
+                                <div key={item.step} className="rounded-2xl border border-slate-200 bg-slate-50 p-4">
+                                    <div className="text-[10px] font-bold uppercase tracking-[0.14em] text-orange-700">{item.step}</div>
+                                    <div className="mt-2 text-sm font-bold text-slate-900">{item.title}</div>
+                                    <p className="mt-2 text-xs leading-relaxed text-slate-600">{item.body}</p>
                                 </div>
                             ))}
                         </div>
@@ -967,33 +965,33 @@ const FundManager = () => {
                 </section>
 
                 <section className="grid grid-cols-1 gap-4 pb-8 xl:grid-cols-4">
-                    <div className="eb28-panel rounded-[28px] border border-[#22d3ee]/10 p-4 sm:p-5 xl:col-span-1">
+                    <div className="rounded-3xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5 xl:col-span-1">
                         <div className="mb-4">
-                            <p className="text-[10px] uppercase tracking-[0.24em] opacity-45">Lane health</p>
-                            <h2 className="mt-1 text-lg font-bold text-white/90">Execution truth</h2>
+                            <p className="text-xs font-bold uppercase tracking-[0.14em] text-orange-700">Lane health</p>
+                            <h2 className="mt-1 text-lg font-bold tracking-tight text-slate-900">Execution truth</h2>
                         </div>
 
                         <div className="space-y-3">
                             {stableLaneSort(snapshot?.lanes).map((lane) => {
                                 const tone = getStatusTone(lane.status);
                                 return (
-                                    <div key={lane.id} className="rounded-2xl border border-[#22d3ee]/10 bg-black/20 p-3">
+                                    <div key={lane.id} className="rounded-2xl border border-slate-200 bg-slate-50 p-3">
                                         <div className="flex items-start justify-between gap-3">
                                             <div className="min-w-0">
-                                                <div className="text-[11px] font-bold uppercase tracking-[0.18em] text-white/85">
+                                                <div className="text-xs font-bold text-slate-800">
                                                     {lane.name}
                                                 </div>
-                                                <div className="mt-1 text-[10px] uppercase tracking-[0.18em] text-white/45">
+                                                <div className="mt-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-400">
                                                     {LANE_MODE_LABEL[lane.mode] || humanizeToken(lane.mode)}
                                                 </div>
                                             </div>
-                                            <span className={`inline-flex items-center gap-2 rounded-full border px-2 py-1 text-[9px] font-bold uppercase tracking-[0.18em] ${tone.badge}`}>
+                                            <span className={`inline-flex items-center gap-2 rounded-full border px-2 py-1 text-[9px] font-bold uppercase tracking-[0.12em] ${tone.badge}`}>
                                                 <span className={`h-2 w-2 rounded-full ${tone.dot}`}></span>
                                                 {lane.status}
                                             </span>
                                         </div>
 
-                                        <div className="mt-3 space-y-2 text-[11px] leading-relaxed text-white/65">
+                                        <div className="mt-3 space-y-2 text-xs leading-relaxed text-slate-600">
                                             <div>Next: {humanizeToken(lane.nextAction)}</div>
                                             <div>Blocker: {humanizeToken(lane.lastReasonCode)}</div>
                                             <div>Cadence: {lane.cadenceMinutes ? `${lane.cadenceMinutes}m` : '--'}</div>
@@ -1001,12 +999,12 @@ const FundManager = () => {
                                             <div>PnL: {formatSignedCurrency(lane.providerActivity?.positionPnlUsd, '$0.00')}</div>
                                             <div>Book: {lane.providerActivity?.positionCount || 0} pos / {lane.providerActivity?.openOrderCount || 0} ord</div>
                                             {lane.circuitBreaker?.open ? (
-                                                <div className="text-rose-200">
+                                                <div className="font-semibold text-rose-600">
                                                     Circuit open until {formatTimestamp(lane.circuitBreaker.openUntil)}
                                                 </div>
                                             ) : null}
                                             {lane.cooldowns?.length ? (
-                                                <div className="text-amber-200">
+                                                <div className="font-semibold text-amber-700">
                                                     Cooldowns: {lane.cooldowns.length}
                                                 </div>
                                             ) : null}
@@ -1016,66 +1014,66 @@ const FundManager = () => {
                             })}
 
                             {!snapshot?.lanes?.length ? (
-                                <div className="rounded-2xl border border-[#22d3ee]/10 bg-black/20 p-3 text-[11px] leading-relaxed text-white/60">
+                                <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3 text-xs leading-relaxed text-slate-500">
                                     No orchestrator lanes available yet.
                                 </div>
                             ) : null}
                         </div>
                     </div>
 
-                    <div className="eb28-panel rounded-[28px] border border-[#22d3ee]/10 p-4 sm:p-5 xl:col-span-3">
+                    <div className="rounded-3xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5 xl:col-span-3">
                         <div className="mb-4 flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
                             <div>
-                                <p className="text-[10px] uppercase tracking-[0.24em] opacity-45">Live system telemetry</p>
-                                <h2 className="mt-1 text-lg font-bold text-white/90">Top blockers and recent actions</h2>
+                                <p className="text-xs font-bold uppercase tracking-[0.14em] text-orange-700">Live system telemetry</p>
+                                <h2 className="mt-1 text-lg font-bold tracking-tight text-slate-900">Top blockers and recent actions</h2>
                             </div>
-                            <span className={`inline-flex items-center gap-2 rounded-full border px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.2em] ${systemTone.badge}`}>
+                            <span className={`inline-flex items-center gap-2 rounded-full border px-2.5 py-1 text-[9px] font-bold uppercase tracking-[0.14em] ${systemTone.badge}`}>
                                 <span className={`h-2 w-2 rounded-full ${systemTone.dot}`}></span>
                                 {snapshot ? (snapshot.stale ? 'Snapshot stale' : 'Snapshot live') : (loading ? 'Loading snapshot' : 'Snapshot unavailable')}
                             </span>
                         </div>
 
                         <div className="grid grid-cols-1 gap-4 lg:grid-cols-[minmax(0,17rem)_minmax(0,1fr)]">
-                            <div className="rounded-2xl border border-[#22d3ee]/10 bg-black/20 p-3">
-                                <div className="mb-3 text-[10px] uppercase tracking-[0.2em] text-white/45">Top blockers</div>
+                            <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3">
+                                <div className="mb-3 text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-400">Top blockers</div>
                                 <div className="space-y-2">
                                     {topBlockers.length ? topBlockers.map((blocker) => (
-                                        <div key={blocker.reasonCode} className="rounded-xl border border-amber-400/15 bg-amber-500/5 p-3">
-                                            <div className="text-[10px] uppercase tracking-[0.18em] text-amber-200/70">
+                                        <div key={blocker.reasonCode} className="rounded-xl border border-amber-200 bg-amber-50 p-3">
+                                            <div className="text-[10px] font-semibold uppercase tracking-[0.12em] text-amber-700">
                                                 {humanizeToken(blocker.reasonCode)}
                                             </div>
-                                            <div className="mt-1 text-lg font-bold text-amber-200">
+                                            <div className="mt-1 text-lg font-bold text-amber-700">
                                                 {blocker.count}
                                             </div>
                                         </div>
                                     )) : (
-                                        <div className="rounded-xl border border-[#22d3ee]/10 bg-[#22d3ee]/5 p-3 text-[11px] leading-relaxed text-white/60">
+                                        <div className="rounded-xl border border-slate-200 bg-white p-3 text-xs leading-relaxed text-slate-500">
                                             No blockers recorded in the latest snapshot.
                                         </div>
                                     )}
                                 </div>
                             </div>
 
-                            <div className="custom-scrollbar max-h-[26rem] overflow-y-auto rounded-2xl border border-[#22d3ee]/10 bg-[#22d3ee]/5 p-3 text-[11px] leading-relaxed sm:p-4">
+                            <div className="custom-scrollbar max-h-[26rem] overflow-y-auto rounded-2xl bg-slate-900 p-3 text-xs leading-relaxed shadow-inner sm:p-4">
                                 {recentActions.length ? recentActions.map((action, index) => (
-                                    <div key={`${action.timestamp || 'na'}-${index}`} className={`mb-3 rounded-xl border px-3 py-2 ${index === 0 ? 'border-[#22d3ee]/20 bg-[#22d3ee]/8 text-[#22d3ee]' : 'border-white/5 bg-black/10 text-white/60'}`}>
+                                    <div key={`${action.timestamp || 'na'}-${index}`} className={`mb-3 rounded-xl border px-3 py-2 ${index === 0 ? 'border-amber-400/30 bg-amber-400/10 text-amber-200' : 'border-slate-700 bg-slate-800/60 text-slate-300'}`}>
                                         <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
-                                            <span className="text-[10px] uppercase tracking-[0.18em] opacity-60">
+                                            <span className="text-[10px] font-semibold uppercase tracking-[0.14em] opacity-70">
                                                 {action.laneId ? humanizeToken(action.laneId) : 'System'}
                                             </span>
-                                            <span className="text-[10px] uppercase tracking-[0.18em] opacity-45">
+                                            <span className="text-[10px] uppercase tracking-[0.14em] opacity-50">
                                                 {formatTimestamp(action.timestamp)}
                                             </span>
                                         </div>
                                         <div className="mt-1">{action.message}</div>
                                     </div>
                                 )) : (
-                                    <div className="rounded-xl border border-[#22d3ee]/10 bg-black/10 p-3 text-white/60">
+                                    <div className="rounded-xl border border-slate-700 bg-slate-800/60 p-3 text-slate-300">
                                         No recent actions have been published yet.
                                     </div>
                                 )}
-                                <div className="cursor-blink mt-3 text-[10px] text-white/40">
-                                    SYSTEM://ORCHESTRATOR_STATE_STREAM
+                                <div className="mt-3 text-[10px] uppercase tracking-[0.14em] text-slate-500">
+                                    Live orchestrator stream — refreshes every 30 seconds
                                 </div>
                             </div>
                         </div>
@@ -1083,121 +1081,121 @@ const FundManager = () => {
                 </section>
 
                 <section className="grid grid-cols-1 gap-4 pb-8 xl:grid-cols-2">
-                    <div className="eb28-panel rounded-[28px] border border-[#22d3ee]/10 p-4 sm:p-5">
+                    <div className="rounded-3xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
                         <div className="mb-4 flex items-start justify-between gap-3">
                             <div>
-                                <p className="text-[10px] uppercase tracking-[0.24em] opacity-45">Live book</p>
-                                <h2 className="mt-1 text-lg font-bold text-white/90">Positions by desk</h2>
+                                <p className="text-xs font-bold uppercase tracking-[0.14em] text-orange-700">Live book</p>
+                                <h2 className="mt-1 text-lg font-bold tracking-tight text-slate-900">Positions by desk</h2>
                             </div>
-                            <span className="rounded-full border border-[#22d3ee]/10 bg-black/20 px-2.5 py-1 text-[10px] uppercase tracking-[0.18em] text-white/55">
+                            <span className="rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-500">
                                 {liveBook.positions?.length || 0} active
                             </span>
                         </div>
 
                         <div className="space-y-3">
                             {liveBook.positions?.length ? liveBook.positions.map((position) => (
-                                <div key={`${position.marketId}-${position.question}`} className="rounded-2xl border border-[#22d3ee]/10 bg-black/20 p-3">
+                                <div key={`${position.marketId}-${position.question}`} className="rounded-2xl border border-slate-200 bg-slate-50 p-3">
                                     <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
                                         <div className="min-w-0">
-                                            <div className="text-[10px] uppercase tracking-[0.18em] text-white/45">
+                                            <div className="text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-400">
                                                 {position.sources?.length ? humanizeToken(position.sources[0]) : 'Desk'}
                                             </div>
-                                            <div className="mt-1 text-sm font-bold leading-relaxed text-white/90">
+                                            <div className="mt-1 text-sm font-bold leading-relaxed text-slate-900">
                                                 {position.question}
                                             </div>
                                         </div>
                                         <div className="text-left sm:text-right">
-                                            <div className="text-sm font-bold text-cyan-300">
+                                            <div className="text-sm font-bold text-slate-900">
                                                 {formatCurrency(position.currentValue)}
                                             </div>
-                                            <div className={`mt-1 text-[11px] ${Number(position.pnl) >= 0 ? 'text-emerald-300' : 'text-rose-300'}`}>
+                                            <div className={`mt-1 text-xs font-semibold ${Number(position.pnl) >= 0 ? 'text-emerald-600' : 'text-rose-600'}`}>
                                                 {formatSignedCurrency(position.pnl)}
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div className="mt-3 flex flex-wrap gap-2 text-[10px] uppercase tracking-[0.16em] text-white/50">
-                                        <span className="rounded-full border border-white/10 bg-[#22d3ee]/5 px-2 py-1">
+                                    <div className="mt-3 flex flex-wrap gap-2 text-[10px] font-medium text-slate-500">
+                                        <span className="rounded-full border border-slate-200 bg-white px-2 py-1">
                                             {position.venue}
                                         </span>
-                                        <span className="rounded-full border border-white/10 bg-[#22d3ee]/5 px-2 py-1">
+                                        <span className="rounded-full border border-slate-200 bg-white px-2 py-1">
                                             YES {formatCompactNumber(position.sharesYes, '0')}
                                         </span>
-                                        <span className="rounded-full border border-white/10 bg-[#22d3ee]/5 px-2 py-1">
+                                        <span className="rounded-full border border-slate-200 bg-white px-2 py-1">
                                             NO {formatCompactNumber(position.sharesNo, '0')}
                                         </span>
-                                        <span className="rounded-full border border-white/10 bg-[#22d3ee]/5 px-2 py-1">
+                                        <span className="rounded-full border border-slate-200 bg-white px-2 py-1">
                                             Resolve {formatTimestamp(position.resolvesAt)}
                                         </span>
                                     </div>
                                 </div>
                             )) : (
-                                <div className="rounded-2xl border border-[#22d3ee]/10 bg-black/20 p-3 text-[11px] leading-relaxed text-white/60">
+                                <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3 text-xs leading-relaxed text-slate-500">
                                     No active positions are visible in the live book.
                                 </div>
                             )}
                         </div>
                     </div>
 
-                    <div className="eb28-panel rounded-[28px] border border-[#22d3ee]/10 p-4 sm:p-5">
+                    <div className="rounded-3xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
                         <div className="mb-4 flex items-start justify-between gap-3">
                             <div>
-                                <p className="text-[10px] uppercase tracking-[0.24em] opacity-45">Order blotter</p>
-                                <h2 className="mt-1 text-lg font-bold text-white/90">Live queue and stray sources</h2>
+                                <p className="text-xs font-bold uppercase tracking-[0.14em] text-orange-700">Order blotter</p>
+                                <h2 className="mt-1 text-lg font-bold tracking-tight text-slate-900">Live queue and stray sources</h2>
                             </div>
-                            <span className="rounded-full border border-[#22d3ee]/10 bg-black/20 px-2.5 py-1 text-[10px] uppercase tracking-[0.18em] text-white/55">
+                            <span className="rounded-full border border-slate-200 bg-slate-50 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-500">
                                 {liveBook.openOrders?.length || 0} open
                             </span>
                         </div>
 
                         <div className="space-y-3">
                             {liveBook.openOrders?.length ? liveBook.openOrders.map((order) => (
-                                <div key={`${order.tradeId || order.orderId || order.marketId}-${order.createdAt}`} className="rounded-2xl border border-[#22d3ee]/10 bg-black/20 p-3">
+                                <div key={`${order.tradeId || order.orderId || order.marketId}-${order.createdAt}`} className="rounded-2xl border border-slate-200 bg-slate-50 p-3">
                                     <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
                                         <div className="min-w-0">
-                                            <div className="text-[10px] uppercase tracking-[0.18em] text-white/45">
+                                            <div className="text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-400">
                                                 {humanizeToken(order.sourceTag)}
                                             </div>
-                                            <div className="mt-1 text-sm font-bold leading-relaxed text-white/90">
+                                            <div className="mt-1 text-sm font-bold leading-relaxed text-slate-900">
                                                 {order.question}
                                             </div>
                                         </div>
                                         <div className="text-left sm:text-right">
-                                            <div className="text-sm font-bold text-cyan-300">
+                                            <div className="text-sm font-bold text-slate-900">
                                                 {order.tradeType?.toUpperCase()} {order.side?.toUpperCase()}
                                             </div>
-                                            <div className="mt-1 text-[11px] text-white/55">
+                                            <div className="mt-1 text-xs text-slate-500">
                                                 {formatTimestamp(order.createdAt)}
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div className="mt-3 flex flex-wrap gap-2 text-[10px] uppercase tracking-[0.16em] text-white/50">
-                                        <span className="rounded-full border border-white/10 bg-[#22d3ee]/5 px-2 py-1">
+                                    <div className="mt-3 flex flex-wrap gap-2 text-[10px] font-medium text-slate-500">
+                                        <span className="rounded-full border border-slate-200 bg-white px-2 py-1">
                                             {order.venue}
                                         </span>
-                                        <span className="rounded-full border border-white/10 bg-[#22d3ee]/5 px-2 py-1">
+                                        <span className="rounded-full border border-slate-200 bg-white px-2 py-1">
                                             Price {formatCurrency(order.price)}
                                         </span>
-                                        <span className="rounded-full border border-white/10 bg-[#22d3ee]/5 px-2 py-1">
+                                        <span className="rounded-full border border-slate-200 bg-white px-2 py-1">
                                             Cost {formatCurrency(order.costUsdc)}
                                         </span>
                                     </div>
                                 </div>
                             )) : (
-                                <div className="rounded-2xl border border-[#22d3ee]/10 bg-black/20 p-3 text-[11px] leading-relaxed text-white/60">
+                                <div className="rounded-2xl border border-slate-200 bg-slate-50 p-3 text-xs leading-relaxed text-slate-500">
                                     No live open orders are sitting on the blotter right now.
                                 </div>
                             )}
 
                             {liveBook.untrackedSources?.length ? (
-                                <div className="rounded-2xl border border-amber-300/15 bg-amber-500/5 p-3">
-                                    <div className="text-[10px] uppercase tracking-[0.2em] text-amber-200/70">
+                                <div className="rounded-2xl border border-amber-200 bg-amber-50 p-3">
+                                    <div className="text-[10px] font-semibold uppercase tracking-[0.14em] text-amber-700">
                                         Unmapped Sources
                                     </div>
                                     <div className="mt-2 flex flex-wrap gap-2">
                                         {liveBook.untrackedSources.map((sourceTag) => (
-                                            <span key={sourceTag} className="rounded-full border border-amber-300/20 bg-black/20 px-2 py-1 text-[10px] uppercase tracking-[0.16em] text-amber-100">
+                                            <span key={sourceTag} className="rounded-full border border-amber-200 bg-white px-2 py-1 text-[10px] font-medium text-amber-700">
                                                 {sourceTag}
                                             </span>
                                         ))}
@@ -1209,15 +1207,15 @@ const FundManager = () => {
                 </section>
 
                 <section className="pb-24">
-                    <div className="eb28-panel rounded-[28px] border border-[#22d3ee]/25 bg-gradient-to-br from-[#22d3ee]/10 to-transparent p-6 text-center sm:p-8">
-                        <p className="text-[10px] uppercase tracking-[0.24em] text-cyan-300/70">This dashboard is the demo</p>
-                        <h2 className="mx-auto mt-2 max-w-2xl text-xl font-bold leading-snug text-white sm:text-2xl">
+                    <div className="rounded-3xl bg-slate-900 p-6 text-center shadow-xl sm:p-8">
+                        <p className="text-xs font-bold uppercase tracking-[0.14em] text-orange-400">This dashboard is the demo</p>
+                        <h2 className="mx-auto mt-2 max-w-2xl text-xl font-bold leading-snug tracking-tight text-white sm:text-2xl">
                             Everything you're watching — the eight agents, the kill switch, the capital guard, this telemetry — ships as one package.
                         </h2>
                         <div className="mt-5 flex flex-wrap items-center justify-center gap-3">
                             <a
                                 href="/deskos/"
-                                className="rounded-full bg-[#22d3ee] px-6 py-3 text-sm font-bold uppercase tracking-[0.14em] text-[#020617] transition-all hover:bg-cyan-300 hover:shadow-[0_0_32px_rgba(34,211,238,0.5)]"
+                                className="rounded-full bg-orange-600 px-6 py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-orange-700"
                             >
                                 Get the Desk OS — ${BUNDLE_PRICE_USD}
                             </a>
@@ -1225,12 +1223,12 @@ const FundManager = () => {
                                 href={BUNDLE_CHECKOUT_URL}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="rounded-full border border-[#22d3ee]/35 px-6 py-3 text-sm font-bold uppercase tracking-[0.14em] text-cyan-200 transition-colors hover:border-[#22d3ee]/70"
+                                className="rounded-full border border-white/30 px-6 py-3 text-sm font-semibold text-white transition-colors hover:border-white/60"
                             >
                                 Skip the pitch, checkout →
                             </a>
                         </div>
-                        <p className="mt-4 text-[11px] text-white/40">
+                        <p className="mt-4 text-xs text-slate-400">
                             Software license, not investment advice. Markets carry risk — read the full disclosures on the Desk OS page.
                         </p>
                     </div>

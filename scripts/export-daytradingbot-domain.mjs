@@ -19,7 +19,16 @@ const targetDir = path.resolve(process.argv[2] || defaultTargetDir);
 const primaryHostname = 'daytradingbot.net';
 
 const ROUTES = ['bluechip', 'deskos', 'fundmanager', 'setup', 'welcome'];
-const DATA_DIRS = ['assets', 'data', 'api', 'images'];
+// NOTE: 'data' is deliberately NOT wiped/copied wholesale. The target repo's
+// data/ dir is owned by the growth scripts that live there (tape-days.json,
+// weekly-recaps.json), and the gitignored live fund JSONs in docs/data must
+// never be exported — a committed copy goes stale immediately and shadows the
+// live fund-state feed the dashboard fetches. Only the blog feed is copied.
+const DATA_DIRS = ['assets', 'api', 'images'];
+const DATA_FILES = ['eb28-blog-feed.json'];
+// Sections owned by the daytradingbot.net repo itself — never touched here,
+// and their sitemap entries must survive an export.
+const PRESERVED_URL_PATTERNS = ['/tape/', '/tape', '/answers/', '/answers', '/weekly/', '/weekly'];
 
 function escapeAttribute(value) {
   return String(value)
@@ -106,6 +115,12 @@ async function main() {
   for (const dir of DATA_DIRS) {
     await copyDirIfExists(path.join(docsDir, dir), path.join(targetDir, dir));
   }
+  for (const file of DATA_FILES) {
+    try {
+      await fs.mkdir(path.join(targetDir, 'data'), { recursive: true });
+      await fs.copyFile(path.join(docsDir, 'data', file), path.join(targetDir, 'data', file));
+    } catch { /* optional */ }
+  }
   await copyDirIfExists(path.join(docsDir, 'favicon.svg'), path.join(targetDir, 'favicon.svg'));
   try {
     await fs.copyFile(path.join(docsDir, 'analytics-config.json'), path.join(targetDir, 'analytics-config.json'));
@@ -118,9 +133,18 @@ async function main() {
   await writeFile('CNAME', 'daytradingbot.net\n');
   await writeFile('.nojekyll', '');
   await writeFile('robots.txt', 'User-agent: *\nAllow: /\n\nSitemap: https://daytradingbot.net/sitemap.xml\n');
+  // Merge the sitemap: funnel routes plus every existing entry owned by the
+  // target repo's own generators (tape/answers/weekly) — never drop those.
+  let preservedBlocks = [];
+  try {
+    const existingSitemap = await fs.readFile(path.join(targetDir, 'sitemap.xml'), 'utf8');
+    preservedBlocks = (existingSitemap.match(/<url>[\s\S]*?<\/url>/g) || []).filter((block) =>
+      PRESERVED_URL_PATTERNS.some((pattern) => block.includes(`daytradingbot.net${pattern}`)),
+    );
+  } catch { /* first export: nothing to preserve */ }
   await writeFile(
     'sitemap.xml',
-    `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n  <url><loc>https://daytradingbot.net/</loc></url>\n${ROUTES.map((slug) => `  <url><loc>https://daytradingbot.net/${slug}/</loc></url>`).join('\n')}\n</urlset>\n`,
+    `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n  <url><loc>https://daytradingbot.net/</loc></url>\n${ROUTES.map((slug) => `  <url><loc>https://daytradingbot.net/${slug}/</loc></url>`).join('\n')}\n${preservedBlocks.map((block) => `  ${block}`).join('\n')}\n</urlset>\n`,
   );
 
   console.log(`Exported DayTradingBot domain files to ${targetDir}`);

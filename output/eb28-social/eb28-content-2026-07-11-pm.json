@@ -1,0 +1,54 @@
+{
+  "brand": "EB28",
+  "generatedAt": "2026-07-11T22:01:50.671Z",
+  "runId": "2026-07-11-pm",
+  "slot": "pm",
+  "operation": "refresh",
+  "publishingPolicy": {
+    "externalPublishing": "not_authorized",
+    "requiredState": "draft_only",
+    "note": "Verify the exact EB28-owned account and channel in the publishing tool before any separate publishing action."
+  },
+  "article": {
+    "title": "Automated Lead Follow-Up for Contractors: Stop Losing Jobs",
+    "url": "https://eb28.co/blog/automated-lead-follow-up-for-contractors-how-to-stop-losing-hot-enquiries/",
+    "slug": "automated-lead-follow-up-for-contractors-how-to-stop-losing-hot-enquiries",
+    "cluster": "lead-automation",
+    "primaryKeyword": "automated lead follow up for contractors"
+  },
+  "posts": {
+    "blog": {
+      "title": "Automated Lead Follow-Up for Contractors: Stop Losing Jobs",
+      "url": "https://eb28.co/blog/automated-lead-follow-up-for-contractors-how-to-stop-losing-hot-enquiries/",
+      "status": "draft_only"
+    },
+    "facebook": {
+      "caption": "Good lead automation shortens the wait while keeping consequential decisions and exceptions accountable to a person.\n\nStart with the handoff after the form: confirmation, qualification, routing, reminders, and a fast human reply when the lead is worth it.\n\nThe new EB28 guide breaks the work into a buyer-path audit, a 30-day plan, useful measurements, and the boundaries that protect trust.\n\nRead: https://eb28.co/blog/automated-lead-follow-up-for-contractors-how-to-stop-losing-hot-enquiries/",
+      "status": "draft_only"
+    },
+    "instagram": {
+      "caption": "automated lead follow up for contractors, without the busywork.\n\nStart with the real buyer constraint. Fix one measurable break. Verify the live path. Keep claims, access, and automation accountable.\n\nThe full practical guide is now at eb28.co/blog/.",
+      "creativeBrief": "Use a lead-handoff timeline that separates automatic confirmation, routing, human review, and follow-up measurement. Build a six-slide carousel: buyer problem, diagnostic, first fix, 30-day plan, measurements, and evidence-based next step. Use documentary screenshots or simple diagrams instead of generic stock imagery.",
+      "status": "draft_only"
+    },
+    "x": {
+      "caption": "Good lead automation shortens the wait while keeping consequential decisions and exceptions accountable to a person.\n\nNew EB28 guide: Automated Lead Follow-Up for Contractors: Stop Losing Jobs\nhttps://eb28.co/blog/automated-lead-follow-up-for-contractors-how-to-stop-losing-hot-enquiries/",
+      "status": "draft_only"
+    },
+    "linkedin": {
+      "caption": "A useful automated lead follow up for contractors project starts with a buyer constraint, not a software list.\n\nThis EB28 guide covers the diagnostic, first fix, 30-day implementation loop, outcome measurements, and the safeguards that keep the work accountable.\n\nhttps://eb28.co/blog/automated-lead-follow-up-for-contractors-how-to-stop-losing-hot-enquiries/",
+      "status": "draft_only"
+    },
+    "shortFormVideo": {
+      "hook": "Good lead automation shortens the wait while keeping consequential decisions and exceptions accountable to a person.",
+      "brief": [
+        "Open with the buyer problem behind \"automated lead follow up for contractors\" in one sentence.",
+        "Use a lead-handoff timeline that separates automatic confirmation, routing, human review, and follow-up measurement.",
+        "Show the first fix, one useful measurement, and one boundary that prevents a misleading result.",
+        "Close on the canonical guide URL and the instruction to audit the live path before buying more scope."
+      ],
+      "caption": "Automated Lead Follow-Up for Contractors: Stop Losing Jobs: diagnose the real constraint, fix one measurable break, and verify the live path. https://eb28.co/blog/automated-lead-follow-up-for-contractors-how-to-stop-losing-hot-enquiries/",
+      "status": "draft_only"
+    }
+  }
+}

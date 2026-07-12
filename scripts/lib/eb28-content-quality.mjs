@@ -144,13 +144,23 @@ export function analyzeSocialPackage(socialPackage) {
   const posts = Object.entries(socialPackage?.posts || {});
   const articleUrl = String(socialPackage?.article?.url || '');
   const serialized = JSON.stringify(socialPackage || {});
+  const advanced = socialPackage?.creativeStandards?.version === '2026-07-social-v2';
+  const featureUrl = String(socialPackage?.featureSpotlight?.cta?.url || '');
+  const allowedDestinations = new Set(
+    [articleUrl, featureUrl, ...Object.values(socialPackage?.destinations || {})].filter(Boolean),
+  );
+  const explicitPostUrls = posts.map(([, post]) => String(post?.url || '')).filter(Boolean);
+  const captions = ['facebook', 'instagram', 'linkedin', 'x', 'shortFormVideo']
+    .map((channel) => String(socialPackage?.posts?.[channel]?.caption || ''))
+    .filter(Boolean);
   const checks = [
     {
-      id: 'canonical-url',
+      id: 'destination-integrity',
       ok:
         /^https:\/\/eb28\.co\/blog\/[^/]+\/$/.test(articleUrl) &&
-        posts.every(([, post]) => !post.url || post.url === articleUrl),
-      message: 'Every explicit post URL points to the canonical EB28 article.',
+        explicitPostUrls.every((url) => allowedDestinations.has(url)) &&
+        (!featureUrl || /^https:\/\/eb28\.co\/(?!deskos\/|limitless\/)/i.test(featureUrl)),
+      message: 'Every explicit destination is the canonical guide or its approved active EB28 feature path.',
     },
     {
       id: 'draft-only',
@@ -168,6 +178,88 @@ export function analyzeSocialPackage(socialPackage) {
       message: 'Social copy contains no blocked contact or retired-client paths.',
     },
   ];
+
+  if (advanced) {
+    const instagramCaption = String(socialPackage?.posts?.instagram?.caption || '');
+    const xCaption = String(socialPackage?.posts?.x?.caption || '');
+    const shortForm = socialPackage?.posts?.shortFormVideo || {};
+    const creative = socialPackage?.creativeSystem || {};
+    const requiredFormats = creative.requiredFormats || {};
+    checks.push(
+      {
+        id: 'platform-copy-depth',
+        ok:
+          String(socialPackage?.posts?.facebook?.caption || '').length >= 420 &&
+          instagramCaption.length >= 500 &&
+          instagramCaption.length <= 2200 &&
+          String(socialPackage?.posts?.linkedin?.caption || '').length >= 480 &&
+          xCaption.length > 70 &&
+          xCaption.length <= 280,
+        message: 'Platform copy is substantive, scannable, and inside the key platform limits.',
+      },
+      {
+        id: 'instagram-discovery',
+        ok: (instagramCaption.match(/#[A-Za-z0-9_]+/g) || []).length >= 3,
+        message: 'Instagram copy includes a small, relevant discovery set instead of generic hashtag spam.',
+      },
+      {
+        id: 'short-form-production-brief',
+        ok:
+          Number(shortForm.durationSeconds || 0) >= 20 &&
+          Number(shortForm.durationSeconds || 0) <= 60 &&
+          Array.isArray(shortForm.beats) &&
+          shortForm.beats.length >= 5 &&
+          Array.isArray(shortForm.onScreenText) &&
+          shortForm.onScreenText.length >= 3,
+        message: 'Short-form output includes a shootable 20-60 second beat sheet and on-screen text.',
+      },
+      {
+        id: 'feature-coverage',
+        ok:
+          Boolean(socialPackage?.featureSpotlight?.id) &&
+          socialPackage?.featureSpotlight?.lane === 'business-growth' &&
+          Array.isArray(socialPackage?.featureSpotlight?.features) &&
+          socialPackage.featureSpotlight.features.length >= 3 &&
+          /^https:\/\/eb28\.co\//.test(featureUrl),
+        message: 'The package markets one active EB28 feature with concrete capabilities and an owned destination.',
+      },
+      {
+        id: 'creative-system',
+        ok:
+          creative.version === '2026-07-social-v2' &&
+          Boolean(creative.headline) &&
+          Boolean(creative.subhead) &&
+          Array.isArray(creative.steps) &&
+          creative.steps.length === 3 &&
+          creative.steps.every((step) => step.label && step.value) &&
+          Boolean(creative.metric?.label) &&
+          Boolean(creative.metric?.value),
+        message: 'The visual brief has a headline, supporting idea, three-step narrative, and measurable proof point.',
+      },
+      {
+        id: 'visual-format-coverage',
+        ok:
+          requiredFormats?.instagramCarousel?.width === 1080 &&
+          requiredFormats?.instagramCarousel?.height === 1350 &&
+          requiredFormats?.instagramCarousel?.slides === 4 &&
+          requiredFormats?.vertical?.width === 1080 &&
+          requiredFormats?.vertical?.height === 1920 &&
+          requiredFormats?.landscape?.width === 1200 &&
+          requiredFormats?.landscape?.height === 675,
+        message: 'The visual plan covers 4:5 carousel, 9:16 vertical, and 16:9 landscape formats.',
+      },
+      {
+        id: 'platform-distinctiveness',
+        ok: captions.length >= 5 && new Set(captions.map((caption) => normalizeKeyword(caption))).size === captions.length,
+        message: 'Each platform receives distinct copy instead of one caption pasted everywhere.',
+      },
+      {
+        id: 'claim-discipline',
+        ok: !/guaranteed (?:leads|rankings|results|returns)|#1|military-grade|risk-free|passive income|money printer/i.test(serialized),
+        message: 'Social output avoids unsupported guarantees, rankings, and hype claims.',
+      },
+    );
+  }
 
   return {
     ok: checks.every((check) => check.ok),

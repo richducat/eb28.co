@@ -15,6 +15,7 @@ const CONTENT_DIR = path.join(ROOT, 'content', 'eb28');
 const ARTICLES_FILE = path.join(CONTENT_DIR, 'articles.json');
 const BACKLOG_FILE = path.join(CONTENT_DIR, 'topic-backlog.json');
 const STATE_FILE = path.join(CONTENT_DIR, 'content-state.json');
+const SOCIAL_FEATURES_FILE = path.join(CONTENT_DIR, 'social-features.json');
 const OUTPUT_RELATIVE_DIR = path.join('output', 'eb28-social');
 const OUTPUT_DIR = path.join(ROOT, OUTPUT_RELATIVE_DIR);
 const DEFAULT_REFRESH_COOLDOWN_DAYS = Number.parseInt(process.env.EB28_REFRESH_COOLDOWN_DAYS || '21', 10);
@@ -743,10 +744,121 @@ function buildArticle(topic, { date, slot, runId, existingArticle = null }) {
   };
 }
 
-function buildSocialPackage(article, { date, slot, runId, operation }) {
+function compact(value) {
+  return String(value || '').replace(/\s+/g, ' ').trim();
+}
+
+function truncateAtWord(value, maxLength) {
+  const text = compact(value);
+  if (text.length <= maxLength) return text;
+  const clipped = text.slice(0, Math.max(0, maxLength - 1));
+  const boundary = clipped.lastIndexOf(' ');
+  return `${(boundary > maxLength * 0.55 ? clipped.slice(0, boundary) : clipped).replace(/[.,;:!?-]+$/, '')}…`;
+}
+
+function stableIndex(seed, length) {
+  if (!length) return 0;
+  let hash = 0;
+  for (const character of String(seed || '')) hash = (hash * 31 + character.charCodeAt(0)) >>> 0;
+  return hash % length;
+}
+
+function clusterLabel(cluster) {
+  return String(cluster || 'growth system')
+    .split('-')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+}
+
+function selectFeatureSpotlight(featureCatalog, cluster, seed) {
+  const businessFeatures = (featureCatalog?.features || []).filter(
+    (feature) => feature.lane === 'business-growth' && feature.status !== 'retired',
+  );
+  const matching = businessFeatures.filter((feature) => (feature.clusters || []).includes(cluster));
+  const candidates = matching.length ? matching : businessFeatures;
+  if (!candidates.length) {
+    throw new Error('No active business-growth features are available in content/eb28/social-features.json.');
+  }
+  return candidates[stableIndex(seed, candidates.length)];
+}
+
+function hashtagsForCluster(cluster) {
+  const tags = {
+    'local-seo': ['#LocalSEO', '#MelbourneFL', '#SmallBusinessMarketing', '#EB28'],
+    'melbourne-web-design': ['#WebDesign', '#MelbourneFL', '#ConversionDesign', '#EB28'],
+    conversion: ['#ConversionRateOptimization', '#LeadGeneration', '#SmallBusiness', '#EB28'],
+    'lead-automation': ['#LeadAutomation', '#AISystems', '#SmallBusiness', '#EB28'],
+    'private-ai': ['#PrivateAI', '#RAG', '#BusinessAutomation', '#EB28'],
+  };
+  return tags[cluster] || tags.conversion;
+}
+
+function buildXCaption({ hook, feature, url }) {
+  const featureLine = `${feature.name}: ${feature.features?.[0] || feature.promise}`;
+  const reserved = url.length + 2;
+  const body = truncateAtWord(`${hook} ${featureLine}`, Math.max(80, 280 - reserved));
+  return `${body}\n${url}`;
+}
+
+function buildSocialPackage(article, { date, slot, runId, operation, featureCatalog }) {
   const url = `https://eb28.co/blog/${article.slug}/`;
   const messaging = getClusterMessaging(article.cluster);
   const details = getClusterQualityDetails(article.cluster);
+  const feature = selectFeatureSpotlight(featureCatalog, article.cluster, `${runId}:${article.slug}`);
+  const hashtags = hashtagsForCluster(article.cluster);
+  const diagnostic = details.diagnostics[0];
+  const metric = details.metrics[0];
+  const boundary = details.boundaries[0];
+  const featureUrl = feature.cta?.url || 'https://eb28.co/';
+  const featureStatus = feature.status === 'founder_beta' ? 'Founder beta' : 'Active feature';
+  const featureSummary = {
+    id: feature.id,
+    name: feature.name,
+    lane: feature.lane,
+    status: feature.status,
+    newSince: feature.newSince,
+    audience: feature.audience,
+    promise: feature.promise,
+    features: feature.features,
+    cta: feature.cta,
+    visualTheme: feature.visualTheme,
+  };
+  const platformStrategy = {
+    facebook: 'Problem-to-plan post with a practical checklist and one feature proof point.',
+    instagram: 'Four-slide 4:5 carousel with a save-worthy diagnostic, first fix, feature spotlight, and measurable next step.',
+    linkedin: 'Operator lesson with a specific build sequence and a soft product connection.',
+    x: 'One concise operating insight plus the canonical guide.',
+    shortFormVideo: 'Thirty-to-forty-five-second vertical explainer with visible UI, workflow steps, and on-screen captions.',
+  };
+  const creativeSystem = {
+    version: featureCatalog?.version || '2026-07-social-v2',
+    pillar: clusterLabel(article.cluster),
+    objective: 'qualified_attention',
+    eyebrow: `${slot.toUpperCase()} FIELD NOTE`,
+    headline: details.socialHook,
+    subhead: `${article.title}. Start with one constraint, ship one useful fix, and measure the handoff.`,
+    theme: feature.visualTheme || 'cobalt',
+    feature: featureSummary,
+    steps: [
+      { label: 'Find the constraint', value: diagnostic },
+      { label: 'Build the first fix', value: messaging.firstFix },
+      { label: 'Connect the feature', value: `${feature.name}: ${feature.features?.[0] || feature.promise}` },
+    ],
+    metric: {
+      label: 'What to measure',
+      value: metric,
+    },
+    cta: {
+      label: 'Read the full EB28 field guide',
+      url,
+    },
+    disclaimer: boundary,
+    requiredFormats: {
+      instagramCarousel: { width: 1080, height: 1350, slides: 4 },
+      vertical: { width: 1080, height: 1920 },
+      landscape: { width: 1200, height: 675 },
+    },
+  };
   return {
     brand: 'EB28',
     generatedAt: new Date().toISOString(),
@@ -758,6 +870,12 @@ function buildSocialPackage(article, { date, slot, runId, operation }) {
       requiredState: 'draft_only',
       note: 'Verify the exact EB28-owned account and channel in the publishing tool before any separate publishing action.',
     },
+    creativeStandards: {
+      version: featureCatalog?.version || '2026-07-social-v2',
+      voice: 'Specific, operator-led, plain English, evidence-aware, and free of unsupported guarantees.',
+      visual: 'Mobile-first 4:5 carousel plus 9:16 and 16:9 derivatives; bold type, one focal idea per slide, no generic stock imagery.',
+      featureCoverage: 'Every package selects one active EB28 feature from the central catalog and ties it to the article intent.',
+    },
     article: {
       title: article.title,
       url,
@@ -765,6 +883,13 @@ function buildSocialPackage(article, { date, slot, runId, operation }) {
       cluster: article.cluster,
       primaryKeyword: article.primaryKeyword,
     },
+    featureSpotlight: featureSummary,
+    destinations: {
+      canonicalGuide: url,
+      feature: featureUrl,
+    },
+    platformStrategy,
+    creativeSystem,
     posts: {
       blog: {
         title: article.title,
@@ -772,31 +897,40 @@ function buildSocialPackage(article, { date, slot, runId, operation }) {
         status: 'draft_only',
       },
       facebook: {
-        caption: `${details.socialHook}\n\n${messaging.firstFix}\n\nThe new EB28 guide breaks the work into a buyer-path audit, a 30-day plan, useful measurements, and the boundaries that protect trust.\n\nRead: ${url}`,
+        caption: `${details.socialHook}\n\nBefore adding another tool, inspect the path:\n\n1. ${diagnostic}\n2. ${messaging.firstFix}\n3. Measure ${metric.charAt(0).toLowerCase()}${metric.slice(1)}.\n\n${featureStatus}: ${feature.name}\n${feature.promise}\n\nRead the field guide: ${url}\nSee the feature: ${featureUrl}`,
+        url,
         status: 'draft_only',
       },
       instagram: {
-        caption: `${article.primaryKeyword}, without the busywork.\n\nStart with the real buyer constraint. Fix one measurable break. Verify the live path. Keep claims, access, and automation accountable.\n\nThe full practical guide is now at eb28.co/blog/.`,
-        creativeBrief: `${details.visualDirection} Build a six-slide carousel: buyer problem, diagnostic, first fix, 30-day plan, measurements, and evidence-based next step. Use documentary screenshots or simple diagrams instead of generic stock imagery.`,
+        caption: `${details.socialHook}\n\nIf “${article.primaryKeyword}” is the goal, do not start with a software list.\n\n01 — Find the constraint\n${diagnostic}\n\n02 — Build one useful fix\n${messaging.firstFix}\n\n03 — Connect a real EB28 feature\n${feature.name}: ${feature.features?.[0] || feature.promise}\n\n04 — Prove the handoff\nTrack ${metric.charAt(0).toLowerCase()}${metric.slice(1)}.\n\nSave this for the next audit. Full guide at ${url}\n\n${hashtags.join(' ')}`,
+        creativeBrief: `${details.visualDirection} Use the generated four-slide carousel: decisive cover, diagnostic-to-fix flow, ${feature.name} spotlight, and measurement/CTA. Show documentary UI or a simple workflow diagram when a real screenshot is available; never use a generic office stock photo.`,
+        url,
         status: 'draft_only',
       },
       x: {
-        caption: `${details.socialHook}\n\nNew EB28 guide: ${article.title}\n${url}`,
+        caption: buildXCaption({ hook: details.socialHook, feature, url }),
+        url,
         status: 'draft_only',
       },
       linkedin: {
-        caption: `A useful ${article.primaryKeyword} project starts with a buyer constraint, not a software list.\n\nThis EB28 guide covers the diagnostic, first fix, 30-day implementation loop, outcome measurements, and the safeguards that keep the work accountable.\n\n${url}`,
+        caption: `${details.socialHook}\n\nA useful ${article.primaryKeyword} project starts with a buyer constraint, not a software list.\n\nThe operating sequence:\n• ${diagnostic}\n• ${messaging.firstFix}\n• Measure ${metric.charAt(0).toLowerCase()}${metric.slice(1)}\n\nWhat EB28 has added: ${feature.name}. ${feature.promise}\n\nThe full guide covers the 30-day build loop, safeguards, and evidence-based next step.\n\n${url}\n\n${hashtags.slice(0, 3).join(' ')}`,
+        url,
         status: 'draft_only',
       },
       shortFormVideo: {
         hook: details.socialHook,
-        brief: [
-          `Open with the buyer problem behind "${article.primaryKeyword}" in one sentence.`,
-          details.visualDirection,
-          'Show the first fix, one useful measurement, and one boundary that prevents a misleading result.',
-          'Close on the canonical guide URL and the instruction to audit the live path before buying more scope.',
+        durationSeconds: 40,
+        format: '9:16 vertical, burned-in captions, screen recording or workflow diagram, no talking-head requirement',
+        beats: [
+          { seconds: '0-3', visual: 'Large hook over the live page or workflow map', voiceover: details.socialHook },
+          { seconds: '3-12', visual: 'Highlight the buyer constraint', voiceover: diagnostic },
+          { seconds: '12-24', visual: 'Animate the first-fix path', voiceover: messaging.firstFix },
+          { seconds: '24-34', visual: `Show ${feature.name} with one real feature`, voiceover: feature.promise },
+          { seconds: '34-40', visual: 'Show the measurement and canonical URL', voiceover: `Measure ${metric.charAt(0).toLowerCase()}${metric.slice(1)}. Read the full guide at EB28.` },
         ],
-        caption: `${article.title}: diagnose the real constraint, fix one measurable break, and verify the live path. ${url}`,
+        onScreenText: ['Find the constraint', 'Build one useful fix', `Feature: ${feature.name}`, 'Measure the handoff'],
+        caption: `${truncateAtWord(details.socialHook, 130)} ${feature.name}: ${truncateAtWord(feature.promise, 120)} ${url} ${hashtags.slice(0, 4).join(' ')}`,
+        url,
         status: 'draft_only',
       },
     },
@@ -812,10 +946,11 @@ async function main() {
   }
   const runId = `${date}-${slot}`;
 
-  const [articles, backlog, state] = await Promise.all([
+  const [articles, backlog, state, featureCatalog] = await Promise.all([
     readJson(ARTICLES_FILE, []),
     readJson(BACKLOG_FILE, []),
     readJson(STATE_FILE, { runs: [] }),
+    readJson(SOCIAL_FEATURES_FILE, { features: [] }),
   ]);
 
   const existingRun = (state.runs || []).find((run) => run.runId === runId);
@@ -867,6 +1002,7 @@ async function main() {
     slot,
     runId,
     operation: plan.operation,
+    featureCatalog,
   });
   const articleQuality = analyzeArticleQuality(article);
   const socialQuality = analyzeSocialPackage(socialPackage);
@@ -904,6 +1040,8 @@ async function main() {
       social: {
         ok: socialQuality.ok,
         score: socialQuality.score,
+        creativeVersion: socialPackage.creativeStandards?.version || null,
+        featureId: socialPackage.featureSpotlight?.id || null,
       },
     },
     socialPackagePath: reportPath,

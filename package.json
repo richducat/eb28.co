@@ -29,9 +29,12 @@
     "eb28:blog": "node scripts/generate-eb28-blog.mjs",
     "eb28:seo": "node scripts/eb28-seo-daily-review.mjs --safe-updates --submit-sitemap --inspect-urls --send-email",
     "eb28:social:prepare": "node scripts/publish-eb28-buffer.mjs --prepare",
+    "eb28:social:verify": "node scripts/publish-eb28-buffer.mjs --verify",
     "eb28:social:publish": "node scripts/publish-eb28-buffer.mjs --publish",
+    "bluechip:social:dry-run": "python3 scripts/generate-bluechip-daily.py --dry-run",
     "check:eb28-content": "node scripts/check-eb28-content-quality.mjs",
-    "check:eb28-seo": "node scripts/check-eb28-seo.mjs && node scripts/check-eb28-content-quality.mjs"
+    "check:eb28-social": "node scripts/check-eb28-social.mjs",
+    "check:eb28-seo": "node scripts/check-eb28-seo.mjs && node scripts/check-eb28-content-quality.mjs && node scripts/check-eb28-social.mjs"
   },
   "dependencies": {
     "@capacitor/cli": "^8.2.0",

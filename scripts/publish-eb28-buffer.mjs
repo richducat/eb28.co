@@ -3,8 +3,8 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import process from 'node:process';
-import sharp from 'sharp';
 import { assertPublishingAuthorized } from './lib/eb28-social-publish-policy.mjs';
+import { renderSocialAssetSet } from './lib/eb28-social-visuals.mjs';
 
 const ROOT = process.cwd();
 const OUTPUT_DIR = path.join(ROOT, 'output', 'eb28-social');
@@ -34,6 +34,8 @@ function parseArgs(argv) {
       options.mode = 'prepare';
     } else if (arg === '--publish') {
       options.mode = 'publish';
+    } else if (arg === '--verify') {
+      options.mode = 'verify';
     } else if (arg === '--date') {
       options.date = next || null;
       index += 1;
@@ -56,14 +58,14 @@ function parseArgs(argv) {
   }
 
   if (!options.mode) {
-    throw new Error('Choose one mode: --prepare or --publish');
+    throw new Error('Choose one mode: --prepare, --verify, or --publish');
   }
 
   return options;
 }
 
 function printHelp() {
-  console.log(`Usage: node scripts/publish-eb28-buffer.mjs --prepare|--publish [options]
+  console.log(`Usage: node scripts/publish-eb28-buffer.mjs --prepare|--verify|--publish [options]
 
 Options:
   --date YYYY-MM-DD       Content date. Defaults to America/New_York today.
@@ -71,6 +73,10 @@ Options:
   --package PATH          Explicit social package path.
   --dry-run               Print publish plan without calling Buffer.
   --force                 Publish even if the runId is already in the local state file.
+
+--verify is read-only. It checks the API account, organization, exact channel IDs,
+platforms, channel ownership, disconnection state, and queue pause state without
+creating, scheduling, editing, or deleting a post.
 
 Required env for --publish when EB28_SOCIAL_POSTING_ENABLED=true:
   BUFFER_API_KEY
@@ -132,98 +138,51 @@ async function writeJson(filePath, value) {
   await fs.writeFile(filePath, `${JSON.stringify(value, null, 2)}\n`, 'utf8');
 }
 
-function escapeXml(value) {
-  return String(value || '')
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
-}
-
-function wrapText(value, maxChars, maxLines) {
-  const words = compact(value)
-    .split(' ')
-    .flatMap((word) => {
-      if (word.length <= maxChars) return [word];
-      const chunks = [];
-      for (let index = 0; index < word.length; index += maxChars) {
-        chunks.push(word.slice(index, index + maxChars));
-      }
-      return chunks;
-    })
-    .filter(Boolean);
-  const lines = [];
-  let current = '';
-
-  for (const word of words) {
-    const next = current ? `${current} ${word}` : word;
-    if (next.length > maxChars && current) {
-      lines.push(current);
-      current = word;
-    } else {
-      current = next;
-    }
-    if (lines.length === maxLines) break;
-  }
-
-  if (lines.length < maxLines && current) lines.push(current);
-  if (lines.length > maxLines) return lines.slice(0, maxLines);
-  if (lines.length === maxLines && words.join(' ').length > lines.join(' ').length) {
-    lines[maxLines - 1] = `${lines[maxLines - 1].replace(/[.,;:!?-]+$/, '')}...`;
-  }
-  return lines;
-}
-
-function svgTextLines(lines, { x, y, size, weight = 700, fill = '#e5e7eb', lineHeight = 1.18 }) {
-  return lines
-    .map((line, index) => {
-      const dy = index === 0 ? 0 : size * lineHeight;
-      return `<text x="${x}" y="${y + dy}" fill="${fill}" font-family="Inter, Arial, sans-serif" font-size="${size}" font-weight="${weight}">${escapeXml(line)}</text>`;
-    })
-    .join('\n');
-}
-
-function buildCardSvg(pkg) {
-  const titleLines = wrapText(pkg.article?.title || 'EB28 Growth Brief', 30, 2);
-  const keywordLines = wrapText(pkg.article?.primaryKeyword || 'organic growth system', 36, 2);
-  const url = pkg.article?.url || 'https://eb28.co/start';
-  const urlLines = wrapText(url.replace('https://', '').replace(/\/$/, ''), 42, 2);
-
-  return `<?xml version="1.0" encoding="UTF-8"?>
-<svg width="1080" height="1350" viewBox="0 0 1080 1350" xmlns="http://www.w3.org/2000/svg">
-  <defs>
-    <linearGradient id="grid" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#020617"/>
-      <stop offset="0.58" stop-color="#0f172a"/>
-      <stop offset="1" stop-color="#111827"/>
-    </linearGradient>
-    <pattern id="dots" width="36" height="36" patternUnits="userSpaceOnUse">
-      <circle cx="2" cy="2" r="1.5" fill="#1f2937"/>
-    </pattern>
-  </defs>
-  <rect width="1080" height="1350" fill="url(#grid)"/>
-  <rect width="1080" height="1350" fill="url(#dots)" opacity="0.65"/>
-  <rect x="70" y="78" width="940" height="1194" rx="34" fill="#020617" stroke="#334155" stroke-width="2"/>
-  <rect x="110" y="118" width="860" height="72" rx="18" fill="#0f172a" stroke="#1e293b"/>
-  <text x="140" y="165" fill="#22d3ee" font-family="Arial, sans-serif" font-size="42" font-weight="800">&gt;_</text>
-  <text x="228" y="164" fill="#f8fafc" font-family="Inter, Arial, sans-serif" font-size="34" font-weight="800">EB28</text>
-  <text x="810" y="164" fill="#94a3b8" font-family="Inter, Arial, sans-serif" font-size="25" font-weight="700">${escapeXml(String(pkg.slot || '').toUpperCase())} BRIEF</text>
-  <line x1="110" y1="250" x2="970" y2="250" stroke="#1e293b" stroke-width="2"/>
-  <text x="120" y="326" fill="#22d3ee" font-family="Inter, Arial, sans-serif" font-size="28" font-weight="800">TODAY'S OPERATING NOTE</text>
-  ${svgTextLines(titleLines, { x: 120, y: 420, size: 52, weight: 850, fill: '#f8fafc', lineHeight: 1.42 })}
-  <rect x="120" y="795" width="840" height="144" rx="24" fill="#0f172a" stroke="#1e293b"/>
-  <text x="154" y="848" fill="#94a3b8" font-family="Inter, Arial, sans-serif" font-size="24" font-weight="700">SEARCH INTENT</text>
-  ${svgTextLines(keywordLines, { x: 154, y: 896, size: 33, weight: 750, fill: '#e5e7eb', lineHeight: 1.22 })}
-  <text x="120" y="1032" fill="#cbd5e1" font-family="Inter, Arial, sans-serif" font-size="33" font-weight="650">Build the page. Show the work. Measure the lead path.</text>
-  ${svgTextLines(urlLines, { x: 120, y: 1110, size: 26, weight: 800, fill: '#22d3ee', lineHeight: 1.24 })}
-  <text x="120" y="1214" fill="#94a3b8" font-family="Inter, Arial, sans-serif" font-size="23" font-weight="650">Software, not advice. Automation with the losses included.</text>
-</svg>`;
-}
-
 function publicAssetUrl(runId) {
+  return `${socialAssetBaseUrl()}/${encodeURIComponent(runId)}/feed-01-cover.jpg`;
+}
+
+function socialAssetBaseUrl() {
   const base = compact(process.env.EB28_SOCIAL_MEDIA_BASE_URL) || 'https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets';
-  return `${base.replace(/\/+$/, '')}/${runId}.png`;
+  return base.replace(/\/+$/, '');
+}
+
+function fallbackCreativeSystem(pkg) {
+  const title = pkg.article?.title || 'EB28 growth field note';
+  const hook = compact(pkg.posts?.shortFormVideo?.hook || pkg.posts?.instagram?.caption || title);
+  return {
+    version: '2026-07-social-v2',
+    pillar: compact(pkg.article?.cluster || 'Growth system'),
+    objective: 'qualified_attention',
+    eyebrow: `${String(pkg.slot || 'EB28').toUpperCase()} FIELD NOTE`,
+    headline: hook || title,
+    subhead: `${title}. Find the constraint, build one useful fix, and measure the handoff.`,
+    theme: 'cobalt',
+    feature: {
+      name: 'EB28 operating guide',
+      status: 'active',
+      promise: 'A practical path from buyer problem to measurable next step.',
+      features: [
+        'Buyer-path diagnostic',
+        'One focused first fix',
+        'A measurement and accountable handoff',
+      ],
+    },
+    steps: [
+      { label: 'Find the constraint', value: 'Identify the exact buyer problem and the point where confidence or context is lost.' },
+      { label: 'Build the first fix', value: 'Ship the smallest useful improvement before adding another tool or channel.' },
+      { label: 'Measure the handoff', value: 'Track the qualified next step and the time to a useful response.' },
+    ],
+    metric: {
+      label: 'What to measure',
+      value: 'Qualified enquiries and completed handoffs, not clicks or activity alone.',
+    },
+    cta: {
+      label: 'Read the full EB28 field guide',
+      url: pkg.article?.url || 'https://eb28.co/blog/',
+    },
+    disclaimer: 'Keep claims evidence-based and consequential decisions accountable to a person.',
+  };
 }
 
 async function prepareAsset(pkg, context) {
@@ -231,35 +190,41 @@ async function prepareAsset(pkg, context) {
     throw new Error(`Invalid EB28 social package: missing article.title in ${context.packagePath}`);
   }
 
-  const assetPath = path.join(ASSET_DIR, `${context.runId}.png`);
-  const relativePath = path.relative(ROOT, assetPath);
-  const svg = buildCardSvg(pkg);
-  await fs.mkdir(path.dirname(assetPath), { recursive: true });
-  await sharp(Buffer.from(svg)).png().toFile(assetPath);
-
-  const asset = {
-    type: 'image',
-    localPath: relativePath,
-    publicUrl: publicAssetUrl(context.runId),
-    alt: `EB28 growth brief card for ${pkg.article.title}`,
-  };
+  const creativeSystem = pkg.creativeSystem || fallbackCreativeSystem(pkg);
+  const visualAssets = await renderSocialAssetSet({
+    creative: creativeSystem,
+    rootDir: ROOT,
+    outputDir: ASSET_DIR,
+    fileBase: context.runId,
+    publicBaseUrl: socialAssetBaseUrl(),
+  });
+  const coverAsset = visualAssets.instagramCarousel[0];
 
   const nextPkg = {
     ...pkg,
-    bufferAsset: asset,
+    creativeSystem,
+    visualAssets,
+    bufferAsset: coverAsset,
     posts: {
       ...pkg.posts,
-      instagram: pkg.posts?.instagram ? { ...pkg.posts.instagram, media: asset } : pkg.posts?.instagram,
-      shortFormVideo: pkg.posts?.shortFormVideo ? { ...pkg.posts.shortFormVideo, media: asset } : pkg.posts?.shortFormVideo,
+      facebook: pkg.posts?.facebook ? { ...pkg.posts.facebook, media: visualAssets.landscape } : pkg.posts?.facebook,
+      instagram: pkg.posts?.instagram
+        ? { ...pkg.posts.instagram, media: { type: 'carousel', items: visualAssets.instagramCarousel } }
+        : pkg.posts?.instagram,
+      linkedin: pkg.posts?.linkedin ? { ...pkg.posts.linkedin, media: visualAssets.landscape } : pkg.posts?.linkedin,
+      x: pkg.posts?.x ? { ...pkg.posts.x, media: visualAssets.landscape } : pkg.posts?.x,
+      shortFormVideo: pkg.posts?.shortFormVideo
+        ? { ...pkg.posts.shortFormVideo, media: visualAssets.vertical }
+        : pkg.posts?.shortFormVideo,
     },
     socialPublishGuard: {
-      status: 'buffer_ready_pending_verified_channels',
-      note: 'Buffer publishing is enabled only when the API account, organization, exact channel IDs, and EB28-owned channels verify successfully.',
+      status: 'assets_ready_connection_unverified',
+      note: 'Assets are ready. External publishing still requires explicit package authorization plus a fresh read-only verification of the EB28 API account, organization, exact channel IDs, and channel state.',
     },
   };
 
   await writeJson(context.packagePath, nextPkg);
-  console.log(JSON.stringify({ ok: true, status: 'prepared', runId: context.runId, asset }, null, 2));
+  console.log(JSON.stringify({ ok: true, status: 'prepared', runId: context.runId, visualAssets }, null, 2));
 }
 
 function isEnabled() {
@@ -353,7 +318,7 @@ async function getBufferContext() {
   const account = data.account;
   const expectedEmail = compact(process.env.EB28_BUFFER_EXPECTED_ACCOUNT_EMAIL || 'social@eb28.co').toLowerCase();
   if (compact(account?.email).toLowerCase() !== expectedEmail) {
-    throw new Error(`Refusing to publish: Buffer API account is ${account?.email || 'unknown'}, expected ${expectedEmail}.`);
+    throw new Error(`EB28 Buffer account mismatch: API account is ${account?.email || 'unknown'}, expected ${expectedEmail}.`);
   }
 
   const organizationId = compact(process.env.EB28_BUFFER_ORGANIZATION_ID);
@@ -363,7 +328,7 @@ async function getBufferContext() {
 
   const organization = (account.organizations || []).find((item) => item.id === organizationId);
   if (!organization) {
-    throw new Error(`Refusing to publish: organization ${organizationId} is not available to ${account.email}.`);
+    throw new Error(`EB28 Buffer organization mismatch: ${organizationId} is not available to ${account.email}.`);
   }
 
   const channelData = await bufferRequest(`
@@ -374,6 +339,8 @@ async function getBufferContext() {
         displayName
         service
         isQueuePaused
+        isDisconnected
+        isLocked
       }
     }
   `);
@@ -388,23 +355,92 @@ async function getBufferContext() {
 function findAndValidateChannel({ platform, channelId, channels }) {
   const channel = channels.find((item) => item.id === channelId);
   if (!channel) {
-    throw new Error(`Refusing to publish ${platform}: channel ${channelId} was not returned by Buffer.`);
+    throw new Error(`EB28 ${platform} channel verification failed: ${channelId} was not returned by Buffer.`);
   }
   if (compact(channel.service).toLowerCase() !== platform) {
-    throw new Error(`Refusing to publish ${platform}: channel ${channelId} is service ${channel.service}.`);
+    throw new Error(`EB28 ${platform} channel verification failed: ${channelId} is service ${channel.service}.`);
   }
   if (channel.isQueuePaused) {
-    throw new Error(`Refusing to publish ${platform}: channel ${channel.displayName || channel.name} queue is paused.`);
+    throw new Error(`EB28 ${platform} channel verification failed: ${channel.displayName || channel.name} queue is paused.`);
+  }
+  if (channel.isDisconnected) {
+    throw new Error(`EB28 ${platform} channel verification failed: ${channel.displayName || channel.name} is disconnected.`);
+  }
+  if (channel.isLocked) {
+    throw new Error(`EB28 ${platform} channel verification failed: ${channel.displayName || channel.name} is locked.`);
   }
   const visibleName = `${channel.name || ''} ${channel.displayName || ''}`.toLowerCase();
   if (!visibleName.includes('eb28')) {
-    throw new Error(`Refusing to publish ${platform}: channel name "${channel.displayName || channel.name}" does not look EB28-owned.`);
+    throw new Error(`EB28 ${platform} channel verification failed: "${channel.displayName || channel.name}" does not look EB28-owned.`);
   }
   return channel;
 }
 
-function postForPlatform(platform, pkg, assetUrl, channelId) {
-  const imageAsset = { image: { url: assetUrl } };
+async function verifyConnections() {
+  const platforms = parsePlatformAllowlist();
+  const channelMap = parseChannelMap();
+  const missing = platforms.filter((platform) => !channelMap[platform]);
+  if (missing.length) {
+    throw new Error(`Missing exact Buffer channel IDs for: ${missing.join(', ')}`);
+  }
+
+  const bufferContext = await getBufferContext();
+  const channels = platforms.map((platform) => {
+    const channel = findAndValidateChannel({
+      platform,
+      channelId: channelMap[platform],
+      channels: bufferContext.channels,
+    });
+    return {
+      platform,
+      id: channel.id,
+      name: channel.displayName || channel.name,
+      isQueuePaused: Boolean(channel.isQueuePaused),
+      isDisconnected: Boolean(channel.isDisconnected),
+      isLocked: Boolean(channel.isLocked),
+    };
+  });
+
+  console.log(
+    JSON.stringify(
+      {
+        ok: true,
+        status: 'connection_verified_read_only',
+        checkedAt: new Date().toISOString(),
+        accountEmail: bufferContext.account.email,
+        organizationId: bufferContext.organization.id,
+        organizationName: bufferContext.organization.name,
+        postingEnabledFlag: isEnabled(),
+        platforms,
+        channels,
+        mutationCount: 0,
+      },
+      null,
+      2,
+    ),
+  );
+}
+
+function imageAsset(url) {
+  return { image: { url } };
+}
+
+function imageAssetsForPlatform(platform, pkg, fallbackUrl) {
+  if (platform === 'instagram') {
+    const carousel = pkg.visualAssets?.instagramCarousel || [];
+    const urls = carousel.map((asset) => compact(asset.publicUrl)).filter(Boolean);
+    return (urls.length ? urls : [fallbackUrl]).map(imageAsset);
+  }
+  if (platform === 'tiktok') {
+    const verticalUrl = compact(pkg.visualAssets?.vertical?.publicUrl) || fallbackUrl;
+    return [imageAsset(verticalUrl)];
+  }
+  return [imageAsset(fallbackUrl)];
+}
+
+function postForPlatform(platform, pkg, channelId) {
+  const fallbackUrl = pkg.bufferAsset?.publicUrl || publicAssetUrl(pkg.runId);
+  const assets = imageAssetsForPlatform(platform, pkg, fallbackUrl);
   if (platform === 'instagram') {
     const caption = publicCaption(pkg.posts?.instagram?.caption, pkg);
     if (!caption) throw new Error('Missing Instagram caption in EB28 social package.');
@@ -413,7 +449,7 @@ function postForPlatform(platform, pkg, assetUrl, channelId) {
       text: caption,
       schedulingType: enumValue('automatic'),
       mode: enumValue('addToQueue'),
-      assets: [imageAsset],
+      assets,
       metadata: {
         instagram: {
           type: enumValue('post'),
@@ -431,7 +467,7 @@ function postForPlatform(platform, pkg, assetUrl, channelId) {
       text: caption,
       schedulingType: enumValue('automatic'),
       mode: enumValue('addToQueue'),
-      assets: [imageAsset],
+      assets,
       metadata: {
         tiktok: {
           title: compact(pkg.article?.title).slice(0, 90) || 'EB28 growth brief',
@@ -443,7 +479,7 @@ function postForPlatform(platform, pkg, assetUrl, channelId) {
 }
 
 function publicCaption(value, pkg) {
-  const caption = compact(value);
+  const caption = String(value || '').trim();
   if (caption && !/draft[- ]?only|pending verified|pending channel|ready_for/i.test(caption)) {
     return caption;
   }
@@ -506,7 +542,7 @@ async function publish(pkg, context, options) {
   const plan = platforms.map((platform) => ({
     platform,
     channelId: channelMap[platform],
-    input: postForPlatform(platform, pkg, assetUrl, channelMap[platform]),
+    input: postForPlatform(platform, pkg, channelMap[platform]),
   }));
 
   if (options.dryRun) {
@@ -562,6 +598,10 @@ async function publish(pkg, context, options) {
 
 async function main() {
   const options = parseArgs(process.argv);
+  if (options.mode === 'verify') {
+    await verifyConnections();
+    return;
+  }
   const context = resolvePackagePath(options);
   const pkg = await readJson(context.packagePath, null);
   if (!pkg) throw new Error(`EB28 social package not found: ${context.packagePath}`);

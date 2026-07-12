@@ -1,0 +1,237 @@
+{
+  "version": "2026-07-social-v2",
+  "updatedAt": "2026-07-12",
+  "features": [
+    {
+      "id": "free-website-growth-hosting",
+      "lane": "business-growth",
+      "status": "active",
+      "newSince": "2026-06-19",
+      "clusters": ["local-seo", "melbourne-web-design", "conversion"],
+      "name": "Free Website Build + Growth Hosting",
+      "audience": "Melbourne and Space Coast businesses that need a clearer site, stronger local visibility, and a dependable lead path",
+      "promise": "See a custom website concept before paying a design fee; approve it, then Growth Hosting keeps the site live and improving for $98 per month.",
+      "features": [
+        "Custom first website concept with no upfront design fee",
+        "Hosting, SSL, technical upkeep, local SEO foundations, and performance checks",
+        "Weekly local content tied to the services customers actually search for",
+        "Lead capture, confirmation, and routing checks before launch"
+      ],
+      "cta": {
+        "label": "Claim a free website build",
+        "url": "https://eb28.co/free-website-build/"
+      },
+      "visualTheme": "cobalt"
+    },
+    {
+      "id": "ai-agent-foundation",
+      "lane": "business-growth",
+      "status": "active",
+      "newSince": "2026-06-12",
+      "clusters": ["lead-automation", "private-ai", "conversion"],
+      "name": "AI Agent Foundation",
+      "audience": "small businesses that want to prove one useful AI workflow before funding a larger build",
+      "promise": "Start with one business task, a secure account, linked source material, and a custom system prompt for $10.",
+      "features": [
+        "One narrow workflow instead of a vague all-purpose chatbot",
+        "Secure account setup and basic knowledge-source connection",
+        "Custom operating prompt matched to the business task",
+        "Human handoff with an integration guide"
+      ],
+      "cta": {
+        "label": "Build the $10 proof of concept",
+        "url": "https://eb28.co/#pricing"
+      },
+      "visualTheme": "violet"
+    },
+    {
+      "id": "white-glove-onboarding",
+      "lane": "business-growth",
+      "status": "active",
+      "newSince": "2026-06-12",
+      "clusters": ["lead-automation", "private-ai", "conversion"],
+      "name": "White-Glove Onboarding",
+      "audience": "owners who need a working AI and lead-capture system without becoming their own implementation team",
+      "promise": "EB28 configures the agent, knowledge base, lead capture, and tool connections, then hands over a working system with a human owner.",
+      "features": [
+        "AI agent and knowledge base configured on approved business data",
+        "Lead capture connected to the site, inbox, and CRM",
+        "One-to-one kickoff and operating handoff",
+        "Thirty days of measured adjustments after launch"
+      ],
+      "cta": {
+        "label": "Architect the full system",
+        "url": "https://eb28.co/#pricing"
+      },
+      "visualTheme": "amber"
+    },
+    {
+      "id": "private-ai-rag",
+      "lane": "business-growth",
+      "status": "active",
+      "newSince": "2026-06-12",
+      "clusters": ["private-ai"],
+      "name": "Private AI + Local RAG",
+      "audience": "teams that need useful answers from private documents without pasting sensitive material into public tools",
+      "promise": "Run a focused AI workflow on local hardware or a controlled cloud path, with approved retrieval sources and accountable review.",
+      "features": [
+        "Local or controlled-cloud model deployment",
+        "Semantic search across approved company documents",
+        "Role-based access and explicit data boundaries",
+        "Cited answers, human review, and logged corrections"
+      ],
+      "cta": {
+        "label": "Scope a private AI workflow",
+        "url": "https://eb28.co/#services"
+      },
+      "visualTheme": "emerald"
+    },
+    {
+      "id": "eb28-app-builder",
+      "lane": "business-growth",
+      "status": "active",
+      "newSince": "2026-06-12",
+      "clusters": ["melbourne-web-design", "conversion", "private-ai"],
+      "name": "EB28 App Builder",
+      "audience": "founders and operators who need to turn a rough product idea into an inspectable build brief and working source",
+      "promise": "Start with a short prompt, expand it into a real creative brief, compare distinct directions, and inspect the generated source.",
+      "features": [
+        "Prompt expansion into audience, goal, capabilities, and design fundamentals",
+        "Reference-screenshot direction for tone, spacing, and color mood",
+        "Three distinct visual directions for side-by-side review",
+        "Live preview, source inspection, version history, and ZIP export"
+      ],
+      "cta": {
+        "label": "Open the App Builder",
+        "url": "https://eb28.co/appbuilder/"
+      },
+      "visualTheme": "magenta"
+    },
+    {
+      "id": "recon-agent-founder-beta",
+      "lane": "business-growth",
+      "status": "founder_beta",
+      "newSince": "2026-06-12",
+      "clusters": ["conversion", "lead-automation"],
+      "name": "Recon Agent Founder Beta",
+      "audience": "operators who need a daily view of payout and reconciliation problems without digging through every transaction by hand",
+      "promise": "A focused operating summary that surfaces payout problems early and keeps the next review action visible.",
+      "features": [
+        "Daily operating summary",
+        "Fast identification of payout and reconciliation problems",
+        "Founder onboarding support",
+        "A narrow workflow with visible source evidence"
+      ],
+      "cta": {
+        "label": "See Recon Agent",
+        "url": "https://eb28.co/reconcile/"
+      },
+      "visualTheme": "cyan"
+    },
+    {
+      "id": "lead-automation-system",
+      "lane": "business-growth",
+      "status": "active",
+      "newSince": "2026-06-12",
+      "clusters": ["lead-automation", "conversion", "local-seo"],
+      "name": "Revenue + Lead Automation",
+      "audience": "service businesses that lose qualified enquiries between the first click, the form, and a useful human response",
+      "promise": "Capture intent, acknowledge the lead quickly, preserve source context, and route the next step without automating away judgment.",
+      "features": [
+        "AI-assisted lead qualification with a visible human escalation",
+        "Source-aware confirmation, routing, and reminder flows",
+        "CRM handoff and lifecycle measurement",
+        "Consent, sender identity, opt-out, and recovery checks"
+      ],
+      "cta": {
+        "label": "Audit the lead path",
+        "url": "https://eb28.co/#contact"
+      },
+      "visualTheme": "orange"
+    },
+    {
+      "id": "bluechip-founding-beta",
+      "lane": "trading-software",
+      "status": "founder_beta",
+      "newSince": "2026-07-09",
+      "clusters": ["bluechip", "desk-os"],
+      "name": "Bluechip Founding Beta",
+      "audience": "retail traders who want an inspectable Robinhood agent with paper-first onboarding and a public activity record",
+      "promise": "A $98 one-time software license for a paper-first equities desk that starts small, keeps every decision visible, and stays under the operator's control.",
+      "features": [
+        "Paper mode against real prices before any live-money decision",
+        "Dedicated Robinhood Agentic sub-account controlled by the operator",
+        "Public activity tape with wins, losses, and no-trade days",
+        "Guided Setup Portal and human onboarding"
+      ],
+      "cta": {
+        "label": "See the Bluechip beta",
+        "url": "https://eb28.co/bluechip/"
+      },
+      "visualTheme": "bluechip"
+    },
+    {
+      "id": "desk-os-safety-system",
+      "lane": "trading-software",
+      "status": "active",
+      "newSince": "2026-07-01",
+      "clusters": ["desk-os"],
+      "name": "Desk OS Safety System",
+      "audience": "operators experimenting with autonomous market agents who care more about stopping conditions than hype",
+      "promise": "Eight specialized agents behind one local-first operating system built around control, containment, and review.",
+      "features": [
+        "Global kill switch with every desk off by default",
+        "Capital guard and per-desk circuit breakers",
+        "Append-only decision journal and public dashboard",
+        "Local-first operation on the owner's machine and keys"
+      ],
+      "cta": {
+        "label": "Explore Desk OS",
+        "url": "https://eb28.co/deskos/"
+      },
+      "visualTheme": "terminal"
+    },
+    {
+      "id": "fund-manager-live-tape",
+      "lane": "trading-software",
+      "status": "live_proof",
+      "newSince": "2026-06-27",
+      "clusters": ["bluechip", "desk-os"],
+      "name": "Fund Manager Live Tape",
+      "audience": "buyers who want to inspect what the agents actually did before believing a product claim",
+      "promise": "A public operating record that shows activity, inactivity, errors, wins, and losses in the same place.",
+      "features": [
+        "Live lane and venue status",
+        "Recent decisions and position activity",
+        "Transparent degraded or no-trade states",
+        "A proof surface separate from the checkout page"
+      ],
+      "cta": {
+        "label": "Watch the public tape",
+        "url": "https://eb28.co/fundmanager/"
+      },
+      "visualTheme": "tape"
+    },
+    {
+      "id": "bluechip-setup-portal",
+      "lane": "trading-software",
+      "status": "active",
+      "newSince": "2026-07-09",
+      "clusters": ["bluechip"],
+      "name": "Bluechip Setup Portal",
+      "audience": "new beta operators who need to configure the desk without guessing at account, mode, or risk settings",
+      "promise": "A guided path from license to paper mode, with an explicit operator handoff before anything touches real money.",
+      "features": [
+        "Plain-English setup sequence",
+        "Paper-mode default and risk-setting review",
+        "Dedicated-account guidance",
+        "Human onboarding available within the beta flow"
+      ],
+      "cta": {
+        "label": "Preview the setup path",
+        "url": "https://eb28.co/setup/"
+      },
+      "visualTheme": "slate"
+    }
+  ]
+}

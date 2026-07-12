@@ -120,14 +120,15 @@
     "appIconSource": "app-icon-1024.png",
     "appIconChanged": false,
     "iphoneScreenshots": [
-      "screenshots/iphone-6-9/01-find-cadet-photos-preview-6-9.png",
-      "screenshots/iphone-6-9/02-start-with-one-photo-preview-6-9.png",
-      "screenshots/iphone-6-9/03-review-photo-finds-preview-6-9.png",
-      "screenshots/iphone-6-9/04-private-cadet-roster-preview-6-9.png",
-      "screenshots/iphone-6-9/05-match-guidance-preview-6-9.png"
+      "screenshots/asc/iphone-69/01.png",
+      "screenshots/asc/iphone-69/02.png",
+      "screenshots/asc/iphone-69/03.png",
+      "screenshots/asc/iphone-69/04.png",
+      "screenshots/asc/iphone-69/05.png",
+      "screenshots/asc/iphone-69/06.png"
     ],
-    "captureMethod": "XcodeBuildMCP build_run_sim plus xcrun simctl io screenshot on iPhone 17 Pro Max simulator; app data reset before capture to remove QA seed state; final App Store previews rendered with scripts/render-cadetcatch-app-store-previews.py from receipt-preserved live simulator captures.",
-    "note": "2026-06-29 screenshot pack replaces unsafe/corrupted local non-CadetCatch screenshot sources with App Store preview images built from the actual build-95 app UI. Welcome and More/Desktop raw screenshots were intentionally excluded because the preview pack should avoid external ship imagery, instant-match wording, pricing, and paused desktop-submission content."
+    "captureMethod": "xcodebuild plus xcrun simctl on an iPhone 17 Pro Max simulator running iOS 26.5; deterministic build-96 states were seeded from a verified live CadetCatch search response; final App Store screenshots were rendered with scripts/render-cadetcatch-app-store-screenshots.mjs.",
+    "note": "2026-07-12 local screenshot package contains six 1320x2868 and six 1284x2778 images built from the actual CadetCatch 1.0.2 build-96 UI. The sequence covers real search results, Home, full-photo review and Save to Photos, Match Range, Roster, and parent-facing guidance. No App Store Connect screenshot mutation was performed."
   },
   "safetyNotes": [
     "Primary checkout /Users/richardducat/GITHUB/eb28.co is dirty and must not be used for release actions.",

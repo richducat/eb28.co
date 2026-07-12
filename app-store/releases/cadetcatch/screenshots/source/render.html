@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="data:,">
+  <title>CadetCatch App Store frame</title>
+  <style>
+    @font-face {
+      font-family: "CadetCatch Montserrat";
+      src: url("../../../../../ios/CadetCatch/CadetCatch/Fonts/Montserrat.ttf") format("truetype");
+      font-display: block;
+    }
+    :root {
+      color-scheme: dark;
+      --navy: #03162e;
+      --navy-deep: #010b19;
+      --ink: #f8fbff;
+      --muted: #b9c8da;
+      --orange: #ff4c16;
+      --aqua: #46d7d0;
+      --gold: #ffd166;
+      --green: #5bd18c;
+      --accent: var(--orange);
+      --accent-soft: var(--aqua);
+      --device-top: 690px;
+      --device-width: 1040px;
+      --device-radius: 92px;
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      overflow: hidden;
+      background: var(--navy-deep);
+    }
+    body {
+      font-family: "CadetCatch Montserrat", "SF Pro Rounded", -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    .artboard {
+      position: absolute;
+      inset: 0 auto auto 0;
+      width: 1320px;
+      height: 2868px;
+      overflow: hidden;
+      transform-origin: top left;
+      background:
+        linear-gradient(136deg, rgba(70, 215, 208, .10), transparent 30%),
+        linear-gradient(315deg, rgba(255, 76, 22, .12), transparent 34%),
+        linear-gradient(160deg, #092642 0%, var(--navy) 46%, var(--navy-deep) 100%);
+      color: var(--ink);
+    }
+    body[data-frame="2"] { --accent: var(--aqua); --accent-soft: var(--orange); }
+    body[data-frame="3"] { --accent: var(--green); --accent-soft: var(--gold); }
+    body[data-frame="4"] { --accent: var(--gold); --accent-soft: var(--aqua); }
+    body[data-frame="5"] { --accent: var(--orange); --accent-soft: var(--gold); }
+    body[data-frame="6"] { --accent: var(--aqua); --accent-soft: var(--green); }
+    body[data-frame="3"] .artboard {
+      background:
+        linear-gradient(136deg, rgba(91, 209, 140, .12), transparent 32%),
+        linear-gradient(315deg, rgba(255, 209, 102, .10), transparent 34%),
+        linear-gradient(160deg, #12382f 0%, #061d2b 48%, #010b19 100%);
+    }
+    body[data-frame="5"] .artboard {
+      background:
+        linear-gradient(136deg, rgba(255, 209, 102, .11), transparent 31%),
+        linear-gradient(315deg, rgba(255, 76, 22, .13), transparent 36%),
+        linear-gradient(160deg, #3a241d 0%, #102039 50%, #010b19 100%);
+    }
+    .grid {
+      position: absolute;
+      inset: 0;
+      opacity: .22;
+      background-image:
+        linear-gradient(rgba(185, 200, 218, .13) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(185, 200, 218, .13) 1px, transparent 1px);
+      background-size: 88px 88px;
+      mask-image: linear-gradient(to bottom, #000 0%, rgba(0, 0, 0, .65) 42%, transparent 82%);
+    }
+    .route-lines {
+      position: absolute;
+      inset: 0;
+      opacity: .18;
+      background:
+        linear-gradient(112deg, transparent 0 43%, var(--accent) 43% 43.35%, transparent 43.35% 100%),
+        linear-gradient(68deg, transparent 0 72%, var(--accent-soft) 72% 72.28%, transparent 72.28% 100%);
+    }
+    .brand {
+      position: absolute;
+      z-index: 3;
+      top: 74px;
+      left: 90px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      font-size: 47px;
+      font-weight: 900;
+    }
+    .brand img {
+      width: 78px;
+      height: 78px;
+      border-radius: 20px;
+      box-shadow: 0 14px 38px rgba(0, 0, 0, .34);
+    }
+    .brand strong { color: var(--accent); }
+    .signal {
+      position: absolute;
+      z-index: 3;
+      top: 94px;
+      right: 90px;
+      width: 172px;
+      height: 16px;
+      border-top: 3px solid var(--accent);
+      border-bottom: 3px solid var(--accent-soft);
+      transform: skewX(-28deg);
+    }
+    .copy {
+      position: absolute;
+      z-index: 3;
+      top: 205px;
+      left: 92px;
+      right: 74px;
+    }
+    .eyebrow {
+      margin: 0 0 18px;
+      color: var(--accent);
+      font-size: 30px;
+      font-weight: 900;
+      letter-spacing: 0;
+    }
+    h1 {
+      max-width: 1140px;
+      margin: 0;
+      color: var(--ink);
+      font-size: 114px;
+      font-weight: 950;
+      line-height: .96;
+      letter-spacing: 0;
+      white-space: pre-line;
+      text-wrap: balance;
+    }
+    .subhead {
+      max-width: 1090px;
+      margin: 22px 0 0;
+      color: var(--muted);
+      font-size: 38px;
+      font-weight: 650;
+      line-height: 1.18;
+      letter-spacing: 0;
+    }
+    .device-shadow {
+      position: absolute;
+      z-index: 1;
+      top: calc(var(--device-top) + 180px);
+      left: 108px;
+      right: 108px;
+      height: 1900px;
+      border: 3px solid color-mix(in srgb, var(--accent) 50%, transparent);
+      transform: translate(26px, 32px);
+      opacity: .34;
+      filter: blur(14px);
+    }
+    .device {
+      position: absolute;
+      z-index: 2;
+      top: var(--device-top);
+      left: 50%;
+      width: var(--device-width);
+      transform: translateX(-50%);
+      overflow: hidden;
+      border: 10px solid #34455e;
+      border-radius: var(--device-radius);
+      background: #020611;
+      box-shadow: 0 58px 120px rgba(0, 0, 0, .56), 0 0 0 14px rgba(1, 9, 20, .74);
+    }
+    .device img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: calc(var(--device-radius) - 12px);
+    }
+    body[data-focus="range"] {
+      --device-top: 760px;
+      --device-width: 1110px;
+      --device-radius: 72px;
+    }
+    body[data-focus="range"] .device {
+      height: 1500px;
+    }
+    body[data-focus="range"] .device img {
+      width: 1090px;
+      max-width: none;
+      transform: translate(0, -865px);
+      border-radius: 0;
+    }
+    body[data-focus="range"] .device-shadow {
+      top: 900px;
+      height: 1360px;
+    }
+  </style>
+</head>
+<body>
+  <main class="artboard">
+    <div class="grid" aria-hidden="true"></div>
+    <div class="route-lines" aria-hidden="true"></div>
+    <div class="brand">
+      <img src="../../app-icon-1024.png" alt="">
+      <span>Cadet<strong>Catch</strong></span>
+    </div>
+    <div class="signal" aria-hidden="true"></div>
+    <section class="copy">
+      <p class="eyebrow" id="eyebrow"></p>
+      <h1 id="headline"></h1>
+      <p class="subhead" id="subhead"></p>
+    </section>
+    <div class="device-shadow" aria-hidden="true"></div>
+    <div class="device"><img id="screen" alt=""></div>
+  </main>
+
+  <script>
+    const frames = {
+      1: {
+        file: "02-photos.png",
+        eyebrow: "POSSIBLE MATCHES",
+        headline: "Find cadet\nphotos faster.",
+        subhead: "Review likely event photos together, without scrolling every gallery."
+      },
+      2: {
+        file: "01-home.png",
+        eyebrow: "ONE CLEAR REFERENCE PHOTO",
+        headline: "Start every search\nfrom one place.",
+        subhead: "Choose your cadet, confirm the collection, and begin from Home."
+      },
+      3: {
+        file: "03-photo-detail.png",
+        eyebrow: "FULL-PHOTO REVIEW",
+        headline: "Open it. Save it.\nKeep the moment.",
+        subhead: "Save the full matched photo directly to your iPhone Photos library."
+      },
+      4: {
+        file: "01-home.png",
+        eyebrow: "FLEXIBLE MATCH RANGE",
+        headline: "Choose how broad\nto search.",
+        subhead: "High, Medium, and Low help with clear portraits, side angles, and lookalikes.",
+        focus: "range"
+      },
+      5: {
+        file: "04-roster.png",
+        eyebrow: "CADET ROSTER",
+        headline: "Keep your cadet\nready to search.",
+        subhead: "One organized profile keeps every photo search focused."
+      },
+      6: {
+        file: "05-info.png",
+        eyebrow: "GUIDANCE FOR FAMILIES",
+        headline: "Know what makes\na better match.",
+        subhead: "Clear tips explain reference photos, tough angles, and careful review."
+      }
+    };
+
+    const params = new URLSearchParams(location.search);
+    const frameNumber = Number(params.get("frame") || 1);
+    const frame = frames[frameNumber] || frames[1];
+    const artboard = document.querySelector(".artboard");
+
+    document.body.dataset.frame = String(frameNumber);
+    if (frame.focus) document.body.dataset.focus = frame.focus;
+    document.getElementById("eyebrow").textContent = frame.eyebrow;
+    document.getElementById("headline").textContent = frame.headline;
+    document.getElementById("subhead").textContent = frame.subhead;
+
+    const updateScale = () => {
+      const scaleX = window.innerWidth / 1320;
+      const scaleY = window.innerHeight / 2868;
+      artboard.style.transform = `scale(${scaleX}, ${scaleY})`;
+    };
+    updateScale();
+    window.addEventListener("resize", updateScale);
+
+    const screen = document.getElementById("screen");
+    screen.src = `../raw/iphone-69/${frame.file}`;
+    screen.addEventListener("load", () => { document.body.dataset.ready = "true"; });
+  </script>
+</body>
+</html>

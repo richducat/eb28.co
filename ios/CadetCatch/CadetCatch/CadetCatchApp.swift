@@ -3203,6 +3203,16 @@ struct PhotosView: View {
             CandidateDetailView(candidate: candidate)
                 .presentationDetents([.large])
         }
+        #if DEBUG
+        .onAppear {
+            guard
+                ProcessInfo.processInfo.arguments.contains("--cadetcatch-screenshot-photo-detail"),
+                selectedCandidate == nil,
+                let firstCandidate = visibleCandidates.first
+            else { return }
+            selectedCandidate = firstCandidate
+        }
+        #endif
     }
 }
 

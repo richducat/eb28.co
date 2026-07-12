@@ -45,7 +45,8 @@ No login is required for the core iPhone photo search flow. Add a cadet profile 
 ## Submission Snapshot
 
 - Release type: Manual
-- iPhone screenshots attached: Yes
+- Local iPhone screenshot package prepared: Yes; six 6.9-inch and six 6.5-inch images
+- App Store Connect screenshot attachment verified: No; no App Store Connect mutation was performed
 - iPad screenshots attached: Not required; target is iPhone only
 - Login required: No for the core iPhone photo search flow
 - Subscriptions present: Yes
@@ -60,7 +61,7 @@ No login is required for the core iPhone photo search flow. Add a cadet profile 
 - Prior review receipt: 1.0.1 build 95 was visible in ASC as Waiting for Review with manual release selected on 2026-06-29.
 - Release after approval: Manual release; do not publicly release without a separate exact EB28 release approval.
 - Representation remediation: The 1.0.2 package uses cadetcatch.com privacy and support URLs; App Store Connect metadata, App Privacy, and screenshot state still require direct verification before submission.
-- Screenshot pack: Five 1320x2868 iPhone preview images remain from live build-95 simulator captures; verify them against build 96 before App Store mutation.
+- Screenshot pack: Six premium 1320x2868 images and six matching 1284x2778 images were prepared on 2026-07-12 from live CadetCatch 1.0.2 build-96 Simulator states and verified backend search results. The package is local only and still requires a separately approved App Store Connect screenshot action.
 - In-app purchases and subscription status: Approved
 - Verification screenshots: app-store/releases/cadetcatch/app-store-connect-snapshots/
 - Post-approval checks to run:

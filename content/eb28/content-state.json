@@ -1,6 +1,21 @@
 {
-  "updatedAt": "2026-07-11T22:01:50.672Z",
+  "updatedAt": "2026-07-12T10:01:37.037Z",
   "runs": [
+    {
+      "runId": "2026-07-12-am",
+      "date": "2026-07-12",
+      "slot": "am",
+      "operation": "refresh",
+      "createdAt": "2026-07-12T10:01:37.037Z",
+      "article": {
+        "slug": "ai-appointment-setter-for-small-business-where-it-helps-and-where-it-hurts",
+        "title": "AI Appointment Setter for Small Business: What to Automate",
+        "url": "https://eb28.co/blog/ai-appointment-setter-for-small-business-where-it-helps-and-where-it-hurts/",
+        "cluster": "lead-automation",
+        "primaryKeyword": "AI appointment setter for small business"
+      },
+      "reportPath": "output/eb28-social/eb28-content-2026-07-12-am.json"
+    },
     {
       "runId": "2026-07-11-pm",
       "date": "2026-07-11",

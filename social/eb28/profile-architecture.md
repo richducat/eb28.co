@@ -1,10 +1,10 @@
 # EB28 profile architecture and launch narrative
 
-This is the recommended profile split. It is ready to apply after the user approves the role for `@eb28co`; it is not permission to mutate a profile or publish.
+This profile split was approved on 2026-07-12. `@eb28co` is the business-growth account for websites, Growth Hosting, private AI, apps, Recon Agent, and lead automation. It must not carry Bluechip, Desk OS, public-tape, or other trading-software content. The decision authorizes the account lane; it does not authorize a specific post or profile mutation.
 
 ## 1. EB28 business growth
 
-**Recommended handle:** `@eb28co`
+**Approved handle:** `@eb28co`
 **Audience:** local-business owners, operators, and founders who need a clearer website, useful AI, or a dependable lead path
 **Primary link:** `https://eb28.co/start`
 
@@ -36,7 +36,7 @@ This is the recommended profile split. It is ready to apply after the user appro
 
 ### X
 
-Create only if the handle is available and the business-growth role is approved.
+Create only if the handle is available and the exact EB28-owned channel is separately connected and verified.
 **Bio:** Building practical websites, private AI, apps, and lead systems. Clear promise, visible proof, measured handoff.
 **Link:** `https://eb28.co/start`
 
@@ -48,17 +48,17 @@ Create only if the handle is available and the business-growth role is approved.
 
 ## 2. Bluechip / Desk OS trading software
 
-Use a distinct verified handle. Detailed platform copy and the first three pinned posts live in `social/deskos/profiles.md`.
+Use distinct verified handles. Detailed platform copy and the first three pinned posts live in `social/deskos/profiles.md`. Trading content remains blocked from `@eb28co` at the machine-policy layer.
 
 **Audience:** operators evaluating paper-first autonomous trading software and visible safety controls
 **Primary proof link:** `https://eb28.co/fundmanager/`
 **Primary disclosure:** Software, not investment advice. Trading carries real risk of loss.
 
-## Launch sequence after approval
+## Launch sequence
 
-1. Record the approved mapping in `content/eb28/social-account-architecture.json`.
-2. Align names, bios, links, avatars, banners, pinned posts, and the first nine grid topics before connecting a publisher.
-3. Re-run the read-only Buffer audit and record the exact account, organization, platform, channel ID, pause, disconnect, and lock state.
-4. Generate the all-feature campaign library and review the copy and imagery for both lanes.
-5. Authorize one package at a time only after its lane matches the connected account.
-6. Measure qualified profile visits, saves, completed owned-site actions, and useful conversations. Do not treat impressions alone as product traction.
+1. Align `@eb28co` names, bios, links, avatars, banners, pinned posts, and the first nine grid topics with business growth.
+2. Re-run the read-only Buffer audit and record the exact account, organization, platform, channel ID, pause, disconnect, and lock state.
+3. Generate the all-feature campaign library and review the copy and imagery, keeping business and trading outputs in their separate lanes.
+4. Authorize one business-growth package at a time only after its lane matches `@eb28co`; all generated packages remain `draft_only` by default.
+5. Measure qualified profile visits, saves, completed owned-site actions, and useful conversations. Do not treat impressions alone as product traction.
+6. Choose and verify separate owned Bluechip / Desk OS handles before connecting any trading publisher.

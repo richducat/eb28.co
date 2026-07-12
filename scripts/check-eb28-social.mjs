@@ -67,7 +67,11 @@ async function main() {
     architecture,
     generatedAt: '2099-01-01T00:00:00.000Z',
   });
-  const architectureError = getSocialAccountArchitectureError(library.campaigns[0], architecture);
+  const businessCampaign = library.campaigns.find((campaign) => campaign.lane === 'business-growth');
+  const tradingCampaign = library.campaigns.find((campaign) => campaign.lane === 'trading-software');
+  const businessArchitectureError = getSocialAccountArchitectureError(businessCampaign, architecture);
+  const tradingArchitectureError = getSocialAccountArchitectureError(tradingCampaign, architecture);
+  const missingLaneArchitectureError = getSocialAccountArchitectureError({}, architecture);
   const checks = [
     check(catalog.version === '2026-07-social-v2', 'Feature catalog uses the current social creative version.'),
     check(!duplicateIds.length, 'Feature catalog IDs are unique.', { duplicateIds }),
@@ -119,13 +123,23 @@ async function main() {
       'Every cover uses a deliberate complete product summary instead of truncated promise copy.',
     ),
     check(
-      architecture.decision?.status === 'pending_user_choice' &&
-        architecture.publishingPolicy?.status === 'blocked_pending_brand_decision' &&
-        architecture.publishingPolicy?.externalPublishing === 'not_authorized' &&
-        architecture.publishingPolicy?.allowedLanes?.length === 0 &&
-        /account architecture is pending_user_choice/i.test(architectureError || ''),
-      'Account architecture blocks every lane until the @eb28co brand role is explicitly approved.',
-      { architectureError },
+      architecture.version === '2026-07-account-architecture-v2' &&
+        architecture.decision?.status === 'approved' &&
+        architecture.decision?.approvedRole === 'business-growth' &&
+        architecture.decision?.approvedHandle === '@eb28co' &&
+        architecture.publishingPolicy?.status === 'approved' &&
+        architecture.publishingPolicy?.externalPublishing === 'authorized' &&
+        JSON.stringify(architecture.publishingPolicy?.allowedLanes) === JSON.stringify(['business-growth']) &&
+        JSON.stringify(architecture.publishingPolicy?.blockedLanes) === JSON.stringify(['trading-software']) &&
+        businessArchitectureError === null,
+      'Account architecture approves @eb28co only for the business-growth lane.',
+      { businessArchitectureError },
+    ),
+    check(
+      /trading-software lane is not approved/i.test(tradingArchitectureError || '') &&
+        /does not declare a business-growth or trading-software lane/i.test(missingLaneArchitectureError || ''),
+      'Account architecture still fails closed for trading packages and packages without a declared lane.',
+      { tradingArchitectureError, missingLaneArchitectureError },
     ),
   ];
 

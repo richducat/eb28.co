@@ -1,12 +1,12 @@
 # Desk OS / Bluechip profile setup
 
-The trading-software profile is intentionally **not assigned to `@eb28co` yet**. The current Instagram and TikTok connections use that handle, but the public profile mixes a Desk OS bio with a business-automation post. `content/eb28/social-account-architecture.json` keeps publishing blocked until the handle role is approved.
+The trading-software profile is intentionally **not assigned to `@eb28co`**. The user approved the current Instagram and TikTok handle for business growth on 2026-07-12. `content/eb28/social-account-architecture.json` now rejects every trading-software package for those channels.
 
 ## Recommended separation
 
 - Keep `@eb28co` for EB28 business growth: free website builds, Growth Hosting, private AI, App Builder, Recon Agent, and lead automation.
 - Choose a distinct owned handle for Bluechip / Desk OS, then verify availability and ownership before adding it to Buffer.
-- Do not rename, reconnect, archive, or publish from either account until that mapping is approved.
+- Do not route trading copy through `@eb28co`. Do not connect or publish from a trading account until its distinct owned handle is chosen and verified.
 
 Candidate trading handles are planning prompts only—not verified availability:
 
@@ -54,14 +54,13 @@ Use a personal builder identity with plain affiliation disclosure. Do not create
 2. **The off-switch is the product:** kill switch, capital guard, circuit breakers, and the decision journal.
 3. **Read the tape before the pitch:** current lane states, inactivity, errors, fills, and unresolved blockers on the public proof surface.
 
-## Unblock checklist
+## Trading-handle unblock checklist
 
-1. Approve the role of `@eb28co`.
-2. Choose and verify the separate trading handle if the lanes are split.
-3. Update `content/eb28/social-account-architecture.json` with `decision.status=approved`, the exact allowed lane, and the approved profile mapping.
-4. Align display name, bio, link, avatar, pinned posts, and first-grid narrative.
-5. Connect only the exact owned profiles and rerun `npm run eb28:social:verify`.
-6. Keep every campaign `draft_only` until a separate package is explicitly authorized.
+1. Choose and verify a separate owned trading handle.
+2. Align its display name, bio, link, avatar, pinned posts, and first-grid narrative.
+3. Add a distinct trading-account policy and exact channel allowlist without changing the `@eb28co` business-growth mapping.
+4. Connect only the exact owned profiles and rerun a read-only connection audit for that account.
+5. Keep every campaign `draft_only` until a separate package is explicitly authorized.
 
 ## Standing rule
 

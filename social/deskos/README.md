@@ -3,7 +3,7 @@
 Platform-specific launch material for Desk OS and Bluechip. Every draft must be checked against the live tape before posting.
 
 ## Files
-- **profiles.md** — the separate trading-profile recommendation, bios, pinned narrative, and unblock checklist. Do not apply it until the `@eb28co` role is approved.
+- **profiles.md** — the separate trading-profile recommendation, bios, pinned narrative, and unblock checklist. The `@eb28co` role is now approved for business growth, so these trading profiles must use distinct verified handles.
 - **x-twitter.md** — 6 threads + 25 standalone posts + bio + pinned tweet.
 - **linkedin.md** — 8 posts + founder headline/about blurb.
 - **reddit-hackernews.md** — 9 posts with per-sub posting rules (read these — Reddit removes promo).
@@ -35,3 +35,5 @@ Never claim income, returns, "passive income," or guarantees. It's a **software 
 ## Publishing boundary
 
 The daily automation delivers an internal draft pack to Telegram; it does not create a public post. The Buffer publisher must fail closed on the wrong account, organization, channel, paused queue, disconnected channel, locked channel, `draft_only` package, unresolved account architecture, or a package lane that is not approved for the selected profile.
+
+`@eb28co` is not a selected trading profile. Trading remains excluded until separate Bluechip / Desk OS handles are chosen, connected, and verified.

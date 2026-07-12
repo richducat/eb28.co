@@ -58,6 +58,14 @@ npm run bluechip:social:dry-run
 
 `eb28:social:verify` requires the EB28-scoped Buffer API key, expected account, organization ID, exact channel map, and platform allowlist. Never substitute a different Buffer workspace when it fails.
 
+## Approved account architecture
+
+- `@eb28co` is the business-growth account for websites, Growth Hosting, private AI, apps, Recon Agent, and lead automation.
+- Bluechip, Desk OS, the public tape, and every other trading-software feature require separate verified handles.
+- The machine policy allowlists only `business-growth` for `@eb28co` and rejects trading or missing-lane packages before an API mutation.
+- Generated content remains `draft_only`. Architecture approval is not approval for a specific post; the publisher still requires an exact EB28 credential, a healthy allowlisted channel, and a separately authorized non-draft package.
+- Instagram and TikTok are the only currently verified Buffer channels. Facebook, LinkedIn, and X stay unavailable until each exact EB28-owned channel is connected and verified.
+
 ## Connection snapshot from 2026-07-12
 
 - Instagram `@eb28co` exists with one public post.
@@ -65,15 +73,15 @@ npm run bluechip:social:dry-run
 - X `@eb28co` does not exist.
 - Facebook and LinkedIn are not present in the verified EB28 Buffer configuration.
 - The available local Buffer API token belongs to the Free Chatbot Builder account, and the signed-in Chrome workspace belongs to another brand, so neither is a valid EB28 mutation path.
-- The public profile identity is internally inconsistent: the bio positions `@eb28co` as Desk OS, while the only visible post markets a generic AI receptionist. Choose the account architecture before reconnecting or publishing.
-- The deployed GitHub credential does belong to `social@eb28.co`; its read-only audit verified both current channels while reporting the account architecture as not publish-ready.
+- The public profile identity was inconsistent at audit time: the bio positioned `@eb28co` as Desk OS, while the only visible post marketed a generic AI receptionist. Profile text and pinned/grid narrative still need to be aligned before a first business-growth publish.
+- The deployed GitHub credential belongs to `social@eb28.co`; its read-only audit verified both current channels with zero mutations.
 
-## Required decision before live publishing
+## Requirements before live publishing
 
-1. Decide whether `@eb28co` is the umbrella EB28 account or a trading-software account. The recommended mapping is `@eb28co` for business growth plus a separate verified handle for Bluechip / Desk OS.
-2. Keep the deployed GitHub credential scoped to `social@eb28.co`. If local publishing is ever approved, provision an equally scoped EB28 credential; never reuse the Free Chatbot Builder token.
-3. Set the exact organization ID, channel IDs, and platform allowlist for only the EB28-owned profiles, then run `npm run eb28:social:verify` until it returns `connection_verified_read_only` and `mutationCount: 0`.
-4. Align the selected profile name, bio, link, pinned post, and first-grid narrative using `social/eb28/profile-architecture.md` before authorizing any package for external publishing.
-5. Update `content/eb28/social-account-architecture.json` only after the decision. Until its decision and policy statuses are both approved and the package lane is allowlisted, `--publish` refuses the package even if other flags or credentials are present.
+1. Keep the deployed GitHub credential scoped to `social@eb28.co`. If local publishing is used, provision an equally scoped EB28 credential; never reuse the Free Chatbot Builder token.
+2. Set the exact organization ID, channel IDs, and platform allowlist for only the EB28-owned profiles, then run `npm run eb28:social:verify` until it returns `connection_verified_read_only` and `mutationCount: 0`.
+3. Align the profile name, bio, link, pinned post, and first-grid narrative using `social/eb28/profile-architecture.md` before authorizing the first business-growth package.
+4. Keep every generated package `draft_only`; authorize a specific business-growth package only after editorial review and a fresh connection audit.
+5. Never use `@eb28co` for Bluechip, Desk OS, public-tape, or other trading content. Choose and verify separate handles first.
 
 Treat this snapshot as historical evidence only. Use the read-only audit for current state.

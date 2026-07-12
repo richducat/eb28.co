@@ -21,6 +21,15 @@
         "label": "Claim a free website build",
         "url": "https://eb28.co/free-website-build/"
       },
+      "campaign": {
+        "hook": "A free website is only useful when the path after approval is clear.",
+        "summary": "A custom concept first; $98/month Growth Hosting starts only after the owner approves launch.",
+        "problem": "Owners are often asked to fund a redesign before they can inspect the offer, mobile experience, or lead handoff.",
+        "demonstration": "Show the custom concept, mobile first screen, contact path, and launch checklist before asking for approval.",
+        "proof": "The owner can review the actual concept before deciding whether Growth Hosting is worth starting.",
+        "metric": "Qualified enquiries, completed contact paths, mobile performance, and time to a useful response.",
+        "objection": "The first concept has no upfront design fee; the $98 monthly service begins only after owner approval."
+      },
       "visualTheme": "cobalt"
     },
     {
@@ -40,7 +49,16 @@
       ],
       "cta": {
         "label": "Build the $10 proof of concept",
-        "url": "https://eb28.co/#pricing"
+        "url": "https://eb28.co/#packages"
+      },
+      "campaign": {
+        "hook": "$10 should buy a decision, not a mystery chatbot.",
+        "summary": "A $10 proof of concept for one narrow AI task, approved sources, and a human handoff.",
+        "problem": "Small teams can overfund broad AI projects before proving that one narrow workflow is useful.",
+        "demonstration": "Show the exact task, approved source material, operating prompt, answer, and human handoff in one flow.",
+        "proof": "A scoped proof of concept makes the useful behavior and the missing production work inspectable.",
+        "metric": "Correct task completions, escalations, source coverage, and unresolved exceptions.",
+        "objection": "This is a focused proof of concept, not a finished enterprise deployment or an all-purpose employee."
       },
       "visualTheme": "violet"
     },
@@ -61,7 +79,16 @@
       ],
       "cta": {
         "label": "Architect the full system",
-        "url": "https://eb28.co/#pricing"
+        "url": "https://eb28.co/#packages"
+      },
+      "campaign": {
+        "hook": "The setup is part of the product.",
+        "summary": "EB28 configures the agent, knowledge, lead capture, tool connections, and the first 30 days of adjustments.",
+        "problem": "Owners do not need another empty dashboard and a folder of instructions they have no time to implement.",
+        "demonstration": "Map the configured agent, approved knowledge, lead capture, connected tools, human owner, and recovery path.",
+        "proof": "The handoff includes a working system, named ownership, and a measured adjustment period instead of setup promises alone.",
+        "metric": "Successful handoffs, unresolved exceptions, routing accuracy, and corrections during the first 30 days.",
+        "objection": "EB28 configures the system, while the business keeps its accounts, data boundaries, and consequential decisions."
       },
       "visualTheme": "amber"
     },
@@ -84,6 +111,15 @@
         "label": "Scope a private AI workflow",
         "url": "https://eb28.co/#services"
       },
+      "campaign": {
+        "hook": "Private AI starts with what the model is not allowed to see.",
+        "summary": "A focused AI workflow on local hardware or controlled cloud, using approved sources and cited answers.",
+        "problem": "A useful assistant becomes a liability when source boundaries, access, citations, and corrections are undefined.",
+        "demonstration": "Diagram approved documents flowing through retrieval into a cited answer, human review, and logged correction.",
+        "proof": "Every answer can be tied to an approved source and reviewed by an accountable person.",
+        "metric": "Citation coverage, answer corrections, access exceptions, and unresolved questions.",
+        "objection": "Private does not mean invisible or unreviewed; it means controlled sources, explicit access, and accountable operation."
+      },
       "visualTheme": "emerald"
     },
     {
@@ -104,6 +140,15 @@
       "cta": {
         "label": "Open the App Builder",
         "url": "https://eb28.co/appbuilder/"
+      },
+      "campaign": {
+        "hook": "A prettier prompt is not a product brief.",
+        "summary": "Turn a rough prompt into a structured brief, three directions, live preview, source, and ZIP export.",
+        "problem": "Rough ideas fail when audience, goals, capabilities, states, and visual fundamentals stay implicit.",
+        "demonstration": "Show one rough prompt becoming a structured brief, three distinct directions, a live preview, and inspectable source.",
+        "proof": "The builder exposes the brief, versions, preview, and generated source so the direction can be evaluated instead of imagined.",
+        "metric": "Time to an inspectable prototype, unresolved fundamentals, version comparisons, and export readiness.",
+        "objection": "Generated source is a starting artifact to inspect and improve, not automatic proof that a product is production-ready."
       },
       "visualTheme": "magenta"
     },
@@ -126,6 +171,15 @@
         "label": "See Recon Agent",
         "url": "https://eb28.co/reconcile/"
       },
+      "campaign": {
+        "hook": "The payout problem should surface before the month-end scramble.",
+        "summary": "A daily, evidence-linked view of what matched, what looks wrong, and what needs review next.",
+        "problem": "Operators lose review time when matched payouts, exceptions, and the next action are buried across transaction exports.",
+        "demonstration": "Show a daily summary separating what matched, what looks wrong, the source evidence, and who reviews it next.",
+        "proof": "The workflow keeps the exception and its supporting record visible instead of replacing accounting judgment.",
+        "metric": "Unmatched items, time to review, corrected exceptions, and items still waiting on evidence.",
+        "objection": "Recon Agent surfaces and organizes review work; it does not move money or replace an accountant."
+      },
       "visualTheme": "cyan"
     },
     {
@@ -146,6 +200,15 @@
       "cta": {
         "label": "Audit the lead path",
         "url": "https://eb28.co/#contact"
+      },
+      "campaign": {
+        "hook": "The first five minutes after a qualified enquiry are part of the product.",
+        "summary": "Capture intent, confirm quickly, preserve source context, and route a useful human response.",
+        "problem": "Qualified buyers disappear when confirmation, context, ownership, and the next response are slow or ambiguous.",
+        "demonstration": "Trace one enquiry from source page through confirmation, qualification, routing, CRM handoff, and human reply.",
+        "proof": "The system preserves buyer intent and makes failed, duplicate, or unowned handoffs visible.",
+        "metric": "Time to useful response, completed handoffs, duplicate messages, failed routes, complaints, and opt-outs.",
+        "objection": "Automation supports the relationship; it does not impersonate judgment or remove consent and escalation controls."
       },
       "visualTheme": "orange"
     },
@@ -168,6 +231,15 @@
         "label": "See the Bluechip beta",
         "url": "https://eb28.co/bluechip/"
       },
+      "campaign": {
+        "hook": "Paper mode is the first release gate, not the demo.",
+        "summary": "$98 one-time licensed software for a paper-first equities desk with operator-controlled live access.",
+        "problem": "Black-box trading software asks for trust before the operator can inspect decisions, stopping conditions, or account boundaries.",
+        "demonstration": "Show paper-mode cycles, the dedicated account boundary, a decision journal, the public tape, and the operator-controlled live switch.",
+        "proof": "The buyer can inspect activity, inactivity, losses, and system state before making any live-money decision.",
+        "metric": "Cycles, reviews, placed decisions, paper fills, system status, and unresolved blockers — never promised returns.",
+        "objection": "Bluechip is software, not investment advice; trading carries real risk of loss and the operator remains responsible."
+      },
       "visualTheme": "bluechip"
     },
     {
@@ -188,6 +260,15 @@
       "cta": {
         "label": "Explore Desk OS",
         "url": "https://eb28.co/deskos/"
+      },
+      "campaign": {
+        "hook": "The off-switch is the product.",
+        "summary": "Eight specialized agents behind a local-first safety system with one global kill switch.",
+        "problem": "An autonomous agent is not operationally ready when nobody can explain what stops it, contains it, or records the exception.",
+        "demonstration": "Show the global kill switch, capital guard, per-desk circuit breaker, decision journal, and current lane state.",
+        "proof": "Controls and degraded states are visible separately from any trade or performance result.",
+        "metric": "Blocked decisions, stopped lanes, journal completeness, capital-guard events, and unresolved safety checks.",
+        "objection": "Safety controls reduce avoidable exposure; they do not remove market risk or make autonomous trading safe by default."
       },
       "visualTheme": "terminal"
     },
@@ -210,6 +291,15 @@
         "label": "Watch the public tape",
         "url": "https://eb28.co/fundmanager/"
       },
+      "campaign": {
+        "hook": "A live tape should show nothing happening, too.",
+        "summary": "A public record of activity, inactivity, errors, fills, losses, and degraded states.",
+        "problem": "A highlight reel hides the no-trade days, errors, degraded lanes, and missing evidence buyers need to evaluate a system.",
+        "demonstration": "Open the current tape and show its update time, lane states, recent decisions, inactivity, errors, and fills in context.",
+        "proof": "The proof surface is separate from checkout and includes unflattering operating states rather than only selected wins.",
+        "metric": "Snapshot freshness, active and degraded lanes, decisions, fills, errors, and unresolved blockers.",
+        "objection": "The tape is operating evidence, not a return forecast, audited performance record, or promise of future results."
+      },
       "visualTheme": "tape"
     },
     {
@@ -230,6 +320,15 @@
       "cta": {
         "label": "Preview the setup path",
         "url": "https://eb28.co/setup/"
+      },
+      "campaign": {
+        "hook": "No one should guess their way from a software license to live money.",
+        "summary": "A guided path through account boundaries, paper mode, risk settings, and operator review.",
+        "problem": "Account selection, mode, credentials, limits, and stopping conditions become dangerous when they are buried in setup assumptions.",
+        "demonstration": "Walk through the account boundary, paper-mode default, risk settings, connection checks, and explicit operator handoff.",
+        "proof": "Each setup gate stays visible and paper mode remains the default until the operator deliberately completes the required review.",
+        "metric": "Completed setup gates, failed connection checks, unresolved risk settings, and paper-mode verification.",
+        "objection": "Completing setup does not authorize live trading; the operator must make and own that separate decision."
       },
       "visualTheme": "slate"
     }

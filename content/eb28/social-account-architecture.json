@@ -1,0 +1,66 @@
+{
+  "version": "2026-07-account-architecture-v1",
+  "updatedAt": "2026-07-12",
+  "decision": {
+    "status": "pending_user_choice",
+    "question": "Should @eb28co represent EB28 business growth or EB28 trading software?",
+    "recommendation": "Keep @eb28co for business growth and create separate Desk OS / Bluechip handles.",
+    "reason": "The audiences, proof standards, risk disclosures, and conversion paths are materially different."
+  },
+  "verifiedConnectionSnapshot": {
+    "checkedAt": "2026-07-12T18:50:49.966Z",
+    "evidenceType": "read_only_buffer_audit",
+    "accountEmail": "social@eb28.co",
+    "channels": [
+      {
+        "platform": "instagram",
+        "id": "6a3de9b35ab6d2f106727271",
+        "handle": "@eb28co",
+        "connected": true,
+        "queuePaused": false,
+        "locked": false
+      },
+      {
+        "platform": "tiktok",
+        "id": "6a3de6795ab6d2f106726af0",
+        "handle": "@eb28co",
+        "connected": true,
+        "queuePaused": false,
+        "locked": false
+      }
+    ],
+    "note": "This is dated connection evidence, not permission to publish. Re-run the read-only audit before any external action."
+  },
+  "recommendedAccounts": [
+    {
+      "role": "business-growth",
+      "recommendedHandle": "@eb28co",
+      "platforms": ["instagram", "tiktok", "facebook", "linkedin", "x"],
+      "positioning": "Free website builds, Growth Hosting, private AI, app development, Recon Agent, and lead automation.",
+      "primaryUrl": "https://eb28.co/start"
+    },
+    {
+      "role": "trading-software",
+      "recommendedHandle": null,
+      "platforms": ["instagram", "tiktok", "youtube", "x", "linkedin"],
+      "positioning": "Bluechip, Desk OS safety controls, the public tape, and paper-first setup.",
+      "primaryUrl": "https://eb28.co/fundmanager/",
+      "note": "Choose and verify a distinct owned handle before connecting a publisher."
+    }
+  ],
+  "publishingPolicy": {
+    "status": "blocked_pending_brand_decision",
+    "externalPublishing": "not_authorized",
+    "expectedBufferAccountEmail": "social@eb28.co",
+    "allowedLanes": [],
+    "localCredentialPolicy": "Reject any API identity other than social@eb28.co; the Free Chatbot Builder token is never an EB28 fallback.",
+    "unblockRequirements": [
+      "Approve the role for @eb28co.",
+      "Choose and verify the trading-software handles if the lanes are split.",
+      "Align profile name, bio, link, pinned post, and first-grid narrative for each account.",
+      "Record only the approved lane or lanes in publishingPolicy.allowedLanes.",
+      "Run the read-only Buffer audit against the exact account and channel IDs.",
+      "Create a separately authorized non-draft package before any publish action."
+    ]
+  }
+}

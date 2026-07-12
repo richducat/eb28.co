@@ -861,6 +861,7 @@ function buildSocialPackage(article, { date, slot, runId, operation, featureCata
   };
   return {
     brand: 'EB28',
+    lane: 'business-growth',
     generatedAt: new Date().toISOString(),
     runId,
     slot,

@@ -4,12 +4,14 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import process from 'node:process';
 import { assertPublishingAuthorized } from './lib/eb28-social-publish-policy.mjs';
+import { assertSocialAccountArchitecture } from './lib/eb28-social-account-policy.mjs';
 import { renderSocialAssetSet } from './lib/eb28-social-visuals.mjs';
 
 const ROOT = process.cwd();
 const OUTPUT_DIR = path.join(ROOT, 'output', 'eb28-social');
 const ASSET_DIR = path.join(OUTPUT_DIR, 'assets');
 const STATE_FILE = path.join(OUTPUT_DIR, 'buffer-publish-state.json');
+const ACCOUNT_ARCHITECTURE_FILE = path.join(ROOT, 'content', 'eb28', 'social-account-architecture.json');
 const BUFFER_API_URL = 'https://api.buffer.com';
 const DEFAULT_PLATFORMS = ['instagram', 'tiktok'];
 
@@ -191,12 +193,24 @@ async function prepareAsset(pkg, context) {
   }
 
   const creativeSystem = pkg.creativeSystem || fallbackCreativeSystem(pkg);
+  const featureId = compact(pkg.featureSpotlight?.id || creativeSystem.feature?.id);
+  const proofImagePath = featureId ? path.join(OUTPUT_DIR, 'proof-captures', `${featureId}.jpg`) : '';
+  let proofImageExists = false;
+  if (proofImagePath) {
+    try {
+      await fs.access(proofImagePath);
+      proofImageExists = true;
+    } catch {
+      proofImageExists = false;
+    }
+  }
   const visualAssets = await renderSocialAssetSet({
     creative: creativeSystem,
     rootDir: ROOT,
     outputDir: ASSET_DIR,
     fileBase: context.runId,
     publicBaseUrl: socialAssetBaseUrl(),
+    proofImagePath: proofImageExists ? proofImagePath : '',
   });
   const coverAsset = visualAssets.instagramCarousel[0];
 
@@ -377,6 +391,8 @@ function findAndValidateChannel({ platform, channelId, channels }) {
 }
 
 async function verifyConnections() {
+  const architecture = await readJson(ACCOUNT_ARCHITECTURE_FILE, null);
+  if (!architecture) throw new Error(`Missing EB28 social account architecture: ${ACCOUNT_ARCHITECTURE_FILE}`);
   const platforms = parsePlatformAllowlist();
   const channelMap = parseChannelMap();
   const missing = platforms.filter((platform) => !channelMap[platform]);
@@ -385,6 +401,10 @@ async function verifyConnections() {
   }
 
   const bufferContext = await getBufferContext();
+  const architectureEmail = compact(architecture.publishingPolicy?.expectedBufferAccountEmail).toLowerCase();
+  if (architectureEmail && compact(bufferContext.account.email).toLowerCase() !== architectureEmail) {
+    throw new Error(`EB28 account architecture expects ${architectureEmail}, but Buffer returned ${bufferContext.account.email}.`);
+  }
   const channels = platforms.map((platform) => {
     const channel = findAndValidateChannel({
       platform,
@@ -413,6 +433,17 @@ async function verifyConnections() {
         postingEnabledFlag: isEnabled(),
         platforms,
         channels,
+        publishingReadiness: {
+          ready:
+            architecture.decision?.status === 'approved' &&
+            architecture.publishingPolicy?.status === 'approved' &&
+            architecture.publishingPolicy?.externalPublishing === 'authorized' &&
+            (architecture.publishingPolicy?.allowedLanes || []).length > 0,
+          decisionStatus: architecture.decision?.status || 'unknown',
+          policyStatus: architecture.publishingPolicy?.status || 'unknown',
+          allowedLanes: architecture.publishingPolicy?.allowedLanes || [],
+          note: architecture.decision?.recommendation || architecture.publishingPolicy?.unblockRequirements?.[0] || '',
+        },
         mutationCount: 0,
       },
       null,
@@ -523,7 +554,11 @@ async function publish(pkg, context, options) {
     console.log(JSON.stringify({ ok: true, status: 'skipped', reason: 'EB28_SOCIAL_POSTING_ENABLED is not true' }, null, 2));
     return;
   }
-  if (!options.dryRun) assertPublishingAuthorized(pkg);
+  if (!options.dryRun) {
+    assertPublishingAuthorized(pkg);
+    const architecture = await readJson(ACCOUNT_ARCHITECTURE_FILE, null);
+    assertSocialAccountArchitecture(pkg, architecture);
+  }
 
   const state = await readJson(STATE_FILE, { publishedRuns: {} });
   if (!options.force && state.publishedRuns?.[context.runId]) {

@@ -1,31 +1,68 @@
-# EB28 Desk OS — Profiles & Setup
+# Desk OS / Bluechip profile setup
 
-Claim these first. Use one consistent handle (suggested: **@eb28co** / **eb28**). Put **eb28.co/start** in every bio — it's the one hub link that routes to the sales page, the live tape, and your socials. Send me the final handles and I'll wire them into the hub so every link works.
+The trading-software profile is intentionally **not assigned to `@eb28co` yet**. The current Instagram and TikTok connections use that handle, but the public profile mixes a Desk OS bio with a business-automation post. `content/eb28/social-account-architecture.json` keeps publishing blocked until the handle role is approved.
 
-## Avatar / banner
-- Avatar: the `>_` terminal glyph on dark (#020617) with cyan (#22d3ee) — matches the dashboard.
-- Banner: a screenshot of the live dashboard (eb28.co/fundmanager) with the tagline "Buy from people who show you the tape."
+## Recommended separation
 
-## Per-platform
+- Keep `@eb28co` for EB28 business growth: free website builds, Growth Hosting, private AI, App Builder, Recon Agent, and lead automation.
+- Choose a distinct owned handle for Bluechip / Desk OS, then verify availability and ownership before adding it to Buffer.
+- Do not rename, reconnect, archive, or publish from either account until that mapping is approved.
 
-### X / Twitter — @eb28co
-Bio: *Building EB28 Desk OS — a local-first fleet of trading agents behind one kill switch. I show the live tape, losses included. Software, not a fund. ↓*
-Link: eb28.co/start · Pin: the pinned thread in x-twitter.md. Best for: threads, build-in-public, the scam-teardown and transparency angles.
+Candidate trading handles are planning prompts only—not verified availability:
 
-### LinkedIn — personal profile (founder)
-Headline + About: see linkedin.md. Link in About + featured section. Best for: the founder story, engineering lessons, the "why I'm selling it" and Robinhood posts. Put links in the first comment, not the post body.
+- `@bluechipbyeb28`
+- `@eb28deskos`
+- `@eb28bluechip`
 
-### YouTube — EB28
-Channel tagline: *Autonomous trading agents behind a kill switch. I show the real tape — losses included.* Best for: the weekly long-form (dashboard tour, full bundle walkthrough, Q&A). Link eb28.co/start + eb28.co/deskos in every description.
+## Trading profile copy after a handle is approved
 
-### TikTok / Instagram Reels — @eb28co
-Bio: *The off-switch is the product. Live tape (losses included) → eb28.co/start* Best for: the 12 short scripts. Reels: cross-post the same cuts. Keep the risk line in captions.
+### Instagram
 
-### Reddit — u/eb28co
-No selling from the profile. Participate genuinely; the posts in reddit-hackernews.md are value-first and mostly link-free in the body. Read each sub's rules before posting.
+**Display name:** Bluechip / Desk OS by EB28
+**Bio:** Paper-first trading software behind a kill switch. Public tape, losses and no-trade days included. Software, not advice.
+**Link:** `https://eb28.co/fundmanager/`
 
-### Hacker News
-One Show HN (see reddit-hackernews.md). URL field → eb28.co/fundmanager (the live tape), never the checkout.
+### TikTok
 
-## The standing rule
-Every bio, post, and caption: software license, not investment advice; real risk of loss including ours; no income claims. The live losing tape is the hook, not a P&L promise.
+**Display name:** Bluechip by EB28
+**Bio:** Paper-first trading software. Live tape, losses included. Software, not advice.
+**Link:** `https://eb28.co/fundmanager/`
+
+### X
+
+**Display name:** Bluechip / Desk OS by EB28
+**Bio:** Building paper-first trading software behind a kill switch. I publish the tape, including losses, errors, and no-trade days. Software, not a fund.
+**Link:** `https://eb28.co/start`
+
+### YouTube
+
+**Channel name:** Bluechip / Desk OS by EB28
+**Description:** Product walkthroughs, safety-control demonstrations, setup guides, and weekly public-tape reviews. Software, not investment advice; trading carries real risk of loss.
+**Links:** `https://eb28.co/fundmanager/` and `https://eb28.co/bluechip/`
+
+### LinkedIn
+
+Use the founder profile until a distinct company page has enough recurring product material. Keep the founder disclosure visible and put product links in the Featured section or first comment when appropriate.
+
+### Reddit / Hacker News
+
+Use a personal builder identity with plain affiliation disclosure. Do not create a promotional EB28 persona, automate replies, or place checkout links where community rules prohibit them.
+
+## First three pinned trading posts
+
+1. **What Bluechip is—and is not:** paper-first licensed software, dedicated-account boundary, operator control, and risk disclosure.
+2. **The off-switch is the product:** kill switch, capital guard, circuit breakers, and the decision journal.
+3. **Read the tape before the pitch:** current lane states, inactivity, errors, fills, and unresolved blockers on the public proof surface.
+
+## Unblock checklist
+
+1. Approve the role of `@eb28co`.
+2. Choose and verify the separate trading handle if the lanes are split.
+3. Update `content/eb28/social-account-architecture.json` with `decision.status=approved`, the exact allowed lane, and the approved profile mapping.
+4. Align display name, bio, link, avatar, pinned posts, and first-grid narrative.
+5. Connect only the exact owned profiles and rerun `npm run eb28:social:verify`.
+6. Keep every campaign `draft_only` until a separate package is explicitly authorized.
+
+## Standing rule
+
+Every trading bio, post, and caption must describe a software license, not investment advice; state real risk of loss; avoid income or return claims; and treat the live tape as operating evidence rather than a forecast.

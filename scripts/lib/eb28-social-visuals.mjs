@@ -115,10 +115,11 @@ function brandHeader({ width, theme, eyebrow = 'FIELD NOTE' }) {
 }
 
 function footer({ width, height, theme, label = 'eb28.co' }) {
+  const displayLabel = truncate(String(label || 'eb28.co').replace(/^https?:\/\//i, '').replace(/\/$/, ''), 34);
   return `
     <line x1="76" y1="${height - 104}" x2="${width - 76}" y2="${height - 104}" stroke="#334155"/>
-    <text x="76" y="${height - 58}" fill="#94a3b8" font-family="Arial, sans-serif" font-size="22" font-weight="700">Clear promise. Visible proof. Measured handoff.</text>
-    <text x="${width - 76}" y="${height - 58}" text-anchor="end" fill="${theme.accent}" font-family="monospace" font-size="22" font-weight="800">${escapeXml(truncate(label, 42))}</text>
+    <text x="76" y="${height - 58}" fill="#94a3b8" font-family="Arial, sans-serif" font-size="20" font-weight="700">Visible proof. Measured handoff.</text>
+    <text x="${width - 76}" y="${height - 58}" text-anchor="end" fill="${theme.accent}" font-family="monospace" font-size="20" font-weight="800">${escapeXml(displayLabel)}</text>
   `;
 }
 
@@ -260,10 +261,31 @@ function storySvg(creative, theme) {
 </svg>`;
 }
 
-function landscapeSvg(creative, theme) {
+function landscapeSvg(creative, theme, proofDataUrl = '') {
   const width = 1200;
   const height = 675;
   const headline = wrapText(creative.headline, 27, 3);
+  if (proofDataUrl) {
+    return `<?xml version="1.0" encoding="UTF-8"?>
+<svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="proof-shade" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#020617" stop-opacity="0.98"/>
+      <stop offset="0.58" stop-color="#020617" stop-opacity="0.86"/>
+      <stop offset="1" stop-color="#020617" stop-opacity="0.18"/>
+    </linearGradient>
+  </defs>
+  <image href="${proofDataUrl}" x="0" y="0" width="1200" height="675" preserveAspectRatio="xMidYMid slice"/>
+  <rect width="1200" height="675" fill="url(#proof-shade)"/>
+  <rect x="52" y="48" width="680" height="579" rx="34" fill="#020617" fill-opacity="0.72" stroke="#334155"/>
+  <text x="86" y="104" fill="${theme.accent}" font-family="monospace" font-size="26" font-weight="900">&gt;_ EB28</text>
+  <text x="86" y="154" fill="#94a3b8" font-family="Arial, sans-serif" font-size="17" font-weight="900" letter-spacing="2">REAL PRODUCT SURFACE</text>
+  ${textLines(headline, { x: 86, y: 247, size: 48, weight: 900, fill: theme.ink, lineHeight: 1.08 })}
+  <text x="86" y="465" fill="${theme.accent2}" font-family="Arial, sans-serif" font-size="23" font-weight="900">${escapeXml(truncate(creative.feature?.name || 'EB28 feature', 44))}</text>
+  ${textLines(wrapText(creative.subhead, 46, 3), { x: 86, y: 515, size: 21, weight: 650, fill: '#cbd5e1', lineHeight: 1.2 })}
+  <text x="86" y="596" fill="${theme.accent}" font-family="monospace" font-size="19" font-weight="800">${escapeXml(truncate(String(creative.cta?.url || 'eb28.co').replace(/^https?:\/\//i, '').replace(/\/$/, ''), 48))}</text>
+</svg>`;
+  }
   const steps = (creative.steps || []).slice(0, 3);
   const stepCards = steps
     .map((step, index) => {
@@ -313,6 +335,7 @@ export async function renderSocialAssetSet({
   outputDir,
   fileBase,
   publicBaseUrl = '',
+  proofImagePath = '',
 }) {
   if (!creative?.headline || !creative?.subhead) {
     throw new Error('Social creative requires headline and subhead.');
@@ -320,6 +343,14 @@ export async function renderSocialAssetSet({
   const theme = THEMES[creative.theme] || THEMES.cobalt;
   const campaignDir = path.join(outputDir, fileBase);
   await fs.mkdir(campaignDir, { recursive: true });
+  let proofDataUrl = '';
+  if (proofImagePath) {
+    const proofBuffer = await sharp(proofImagePath)
+      .resize(1200, 675, { fit: 'cover', position: 'north' })
+      .jpeg({ quality: 88, chromaSubsampling: '4:4:4', mozjpeg: true })
+      .toBuffer();
+    proofDataUrl = `data:image/jpeg;base64,${proofBuffer.toString('base64')}`;
+  }
 
   const specs = [
     { name: 'feed-01-cover.jpg', width: 1080, height: 1350, svg: coverSvg(creative, theme), alt: `${creative.headline} — EB28 social cover` },
@@ -327,7 +358,7 @@ export async function renderSocialAssetSet({
     { name: 'feed-03-feature.jpg', width: 1080, height: 1350, svg: featureSvg(creative, theme), alt: `${creative.feature?.name || 'EB28 feature'} — feature details` },
     { name: 'feed-04-proof.jpg', width: 1080, height: 1350, svg: proofSvg(creative, theme), alt: `${creative.headline} — measurement and next step` },
     { name: 'story-1080x1920.jpg', width: 1080, height: 1920, svg: storySvg(creative, theme), alt: `${creative.headline} — vertical story graphic` },
-    { name: 'landscape-1200x675.jpg', width: 1200, height: 675, svg: landscapeSvg(creative, theme), alt: `${creative.headline} — landscape social graphic` },
+    { name: 'landscape-1200x675.jpg', width: 1200, height: 675, svg: landscapeSvg(creative, theme, proofDataUrl), alt: proofDataUrl ? `${creative.feature?.name || creative.headline} — real EB28 product surface` : `${creative.headline} — landscape social graphic` },
   ];
 
   for (const spec of specs) await renderJpeg(spec.svg, path.join(campaignDir, spec.name));
@@ -346,6 +377,12 @@ export async function renderSocialAssetSet({
     instagramCarousel: records.slice(0, 4),
     vertical: records[4],
     landscape: records[5],
+    proofSource: proofImagePath
+      ? {
+          type: 'public-page-capture',
+          localPath: path.relative(rootDir, proofImagePath).split(path.sep).join('/'),
+        }
+      : null,
   };
 }
 

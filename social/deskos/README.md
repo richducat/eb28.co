@@ -3,7 +3,7 @@
 Platform-specific launch material for Desk OS and Bluechip. Every draft must be checked against the live tape before posting.
 
 ## Files
-- **profiles.md** — handles, bios, and link strategy for every platform (set these up first).
+- **profiles.md** — the separate trading-profile recommendation, bios, pinned narrative, and unblock checklist. Do not apply it until the `@eb28co` role is approved.
 - **x-twitter.md** — 6 threads + 25 standalone posts + bio + pinned tweet.
 - **linkedin.md** — 8 posts + founder headline/about blurb.
 - **reddit-hackernews.md** — 9 posts with per-sub posting rules (read these — Reddit removes promo).
@@ -13,6 +13,7 @@ Platform-specific launch material for Desk OS and Bluechip. Every draft must be 
 - `../../scripts/deskos-social-engine.mjs` — generate fresh posts on demand.
 - `../../content/eb28/social-features.json` — current Bluechip, Desk OS, live-tape, and onboarding feature definitions.
 - `../../scripts/generate-bluechip-daily.py` — daily real-tape pack, feature rotation, copy, imagery, compliance gate, and Telegram handoff.
+- `../../scripts/generate-eb28-feature-campaign-library.mjs` — all-feature draft copy, video briefs, and image sets for both lanes.
 - `../eb28/README.md` — full automation inventory, visual contract, connection audit, and current channel snapshot.
 
 ## The one rule that protects you
@@ -33,4 +34,4 @@ Never claim income, returns, "passive income," or guarantees. It's a **software 
 
 ## Publishing boundary
 
-The daily automation delivers an internal draft pack to Telegram; it does not create a public post. The Buffer publisher must fail closed on the wrong account, organization, channel, paused queue, disconnected channel, locked channel, or `draft_only` package.
+The daily automation delivers an internal draft pack to Telegram; it does not create a public post. The Buffer publisher must fail closed on the wrong account, organization, channel, paused queue, disconnected channel, locked channel, `draft_only` package, unresolved account architecture, or a package lane that is not approved for the selected profile.

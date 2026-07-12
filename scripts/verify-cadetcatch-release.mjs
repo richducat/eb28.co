@@ -41,6 +41,9 @@ const paths = {
   reviewNotes: rel('app-store/releases/cadetcatch/review-notes.md'),
   projectYml: rel('ios/CadetCatch/project.yml'),
   pbxproj: rel('ios/CadetCatch/CadetCatch.xcodeproj/project.pbxproj'),
+  appSource: rel('ios/CadetCatch/CadetCatch/CadetCatchApp.swift'),
+  googleServiceInfo: rel('ios/CadetCatch/CadetCatch/GoogleService-Info.plist'),
+  packageResolved: rel('ios/CadetCatch/CadetCatch.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved'),
 };
 
 const releaseJson = readJson(paths.releaseJson);
@@ -63,6 +66,7 @@ checkVersionBuildConsistency();
 checkActiveText();
 checkScreenshots();
 checkBuildResources();
+checkAnalytics();
 checkLedger();
 checkModeSpecificRules();
 
@@ -190,6 +194,74 @@ function checkBuildResources() {
   }
 }
 
+function checkAnalytics() {
+  const appSource = read(paths.appSource);
+  const analyticsStart = appSource.indexOf('enum CadetCatchAnalyticsEvent');
+  const analyticsEnd = appSource.indexOf('@main');
+  const analyticsSource = analyticsStart >= 0 && analyticsEnd > analyticsStart
+    ? appSource.slice(analyticsStart, analyticsEnd)
+    : '';
+  const googleServiceInfo = readPlist(paths.googleServiceInfo);
+  const packageResolved = read(paths.packageResolved);
+
+  const requiredSourceTokens = [
+    'import FirebaseAnalytics',
+    'import FirebaseCore',
+    'FirebaseApp.configure(options: options)',
+    'case rosterCreated = "roster_created"',
+    'case photoCheckStarted = "photo_check_started"',
+    'case photoCheckCompleted = "photo_check_completed"',
+    'case paywallView = "paywall_view"',
+    'Analytics.logTransaction(transaction)',
+    'allow_ad_personalization_signals',
+  ];
+  for (const token of requiredSourceTokens) {
+    if (!appSource.includes(token)) failures.push(`CadetCatch analytics source is missing required token: ${token}`);
+  }
+
+  if (!projectYml.includes('product: FirebaseAnalyticsCore')) {
+    failures.push('project.yml must use FirebaseAnalyticsCore for privacy-preserving app measurement without identity support.');
+  }
+  if (!packageResolved.includes('"identity" : "firebase-ios-sdk"')) {
+    failures.push('Package.resolved does not contain the Firebase Apple SDK.');
+  }
+  if (!packageResolved.includes('"identity" : "google-ads-on-device-conversion-ios-sdk"')) {
+    failures.push('Package.resolved does not contain the Google Ads on-device conversion SDK.');
+  }
+
+  const requiredFirebaseKeys = ['GOOGLE_APP_ID', 'PROJECT_ID', 'GCM_SENDER_ID', 'API_KEY', 'BUNDLE_ID'];
+  for (const key of requiredFirebaseKeys) {
+    if (typeof googleServiceInfo[key] !== 'string' || googleServiceInfo[key].trim() === '') {
+      failures.push(`GoogleService-Info.plist is missing a non-empty ${key} value from a Firebase-generated iOS app configuration.`);
+    }
+  }
+
+  const forbiddenAnalyticsTokens = [
+    'Analytics.setUserID',
+    'cadet_name',
+    'cadet_email',
+    'image_url',
+    'photo_url',
+    'face_embedding',
+  ];
+  for (const token of forbiddenAnalyticsTokens) {
+    if (analyticsSource.includes(token)) failures.push(`CadetCatch analytics source contains forbidden identifier token: ${token}`);
+  }
+
+  if (releaseJson.privacy?.trackingUsed !== false) {
+    failures.push('App Store release privacy state must keep trackingUsed false unless ATT and a separate privacy review are completed.');
+  }
+  if (releaseJson.privacy?.thirdPartySdkPrivacyReviewed !== true) {
+    failures.push('Firebase Analytics privacy manifests and App Privacy disclosures must be reviewed before release.');
+  }
+  if (releaseJson.privacy?.privacyManifestReviewed !== true) {
+    failures.push('App and third-party privacy manifests must be reviewed before release.');
+  }
+  if (releaseJson.privacy?.appPrivacyAnswersCurrent !== true) {
+    failures.push('App Store Connect App Privacy answers must be updated for Firebase Analytics before release.');
+  }
+}
+
 function checkLedger() {
   const activeReviewBuild = Number(ledger.activeReview?.buildNumber);
   if (activeReviewBuild !== Number(manifest.appStoreConnectState?.appStoreState === 'WAITING_FOR_REVIEW' ? manifestBuild : activeReviewBuild)) {
@@ -274,6 +346,22 @@ function readJson(filePath) {
     return JSON.parse(read(filePath));
   } catch (error) {
     failures.push(`Invalid JSON in ${path.relative(repoRoot, filePath)}: ${error.message}`);
+    return {};
+  }
+}
+
+function readPlist(filePath) {
+  if (!existsSync(filePath)) {
+    failures.push(`Missing required file: ${path.relative(repoRoot, filePath)}`);
+    return {};
+  }
+  try {
+    return JSON.parse(execFileSync('/usr/bin/plutil', ['-convert', 'json', '-o', '-', filePath], {
+      encoding: 'utf8',
+      stdio: ['ignore', 'pipe', 'pipe'],
+    }));
+  } catch (error) {
+    failures.push(`Invalid plist in ${path.relative(repoRoot, filePath)}: ${error.message}`);
     return {};
   }
 }

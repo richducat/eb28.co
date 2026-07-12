@@ -8,7 +8,7 @@ settings:
   base:
     SWIFT_VERSION: "6.0"
     MARKETING_VERSION: "1.0.2"
-    CURRENT_PROJECT_VERSION: "96"
+    CURRENT_PROJECT_VERSION: "97"
 targets:
   CadetCatch:
     type: application
@@ -23,6 +23,8 @@ targets:
       - package: AppAuth
       - package: GTMSessionFetcher
       - package: GTMAppAuth
+      - package: Firebase
+        product: FirebaseAnalyticsCore
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: co.eb28.cadetcatch
@@ -32,6 +34,9 @@ targets:
         TARGETED_DEVICE_FAMILY: "1"
         CODE_SIGN_STYLE: Automatic
         DEVELOPMENT_TEAM: WN3K69XEP4
+        OTHER_LDFLAGS:
+          - "$(inherited)"
+          - "-ObjC"
     info:
       path: CadetCatch/Info.plist
       properties:
@@ -80,6 +85,9 @@ targets:
     sources: CadetCatchUITests
     dependencies:
       - target: CadetCatch
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
 packages:
   GoogleSignIn:
     url: https://github.com/google/GoogleSignIn-iOS
@@ -93,3 +101,6 @@ packages:
   GTMAppAuth:
     url: https://github.com/google/GTMAppAuth.git
     from: 4.1.1
+  Firebase:
+    url: https://github.com/firebase/firebase-ios-sdk.git
+    from: 12.5.0

@@ -7,7 +7,7 @@
 - Bundle ID: co.eb28.cadetcatch
 - SKU: cadetcatch-ios
 - Version: 1.0.2
-- Build: 96
+- Build: 97
 - Primary category: Lifestyle
 - Secondary category: Photo & Video
 - Marketing URL: https://cadetcatch.com/
@@ -36,7 +36,7 @@ cadet, military, academy, photos, family, parents, coast
 
 ## What's New
 
-CadetCatch build 96 updates in-app privacy and support links to cadetcatch.com while preserving one free preview search, the paid access gate, the approved $12.99 Family Monthly path, and reliable matched-photo previews.
+CadetCatch build 97 adds privacy-protected app measurement for completed photo checks and verified StoreKit purchases while preserving the paid access gate, the approved $12.99 Family Monthly path, and reliable matched-photo previews.
 
 ## Review Notes
 
@@ -51,16 +51,17 @@ No login is required for the core iPhone photo search flow. Add a cadet profile 
 - Login required: No for the core iPhone photo search flow
 - Subscriptions present: Yes
 - Ads present: No
-- App Privacy updated for this build: Yes
+- App Privacy updated for this build: No; Firebase Analytics disclosures require review before upload
 - Export compliance reviewed: Yes
 
 ## Internal Launch Notes
 
-- App Store Connect version state: 1.0.2 build 96 is local-only and has not been uploaded, selected, or submitted.
-- Attached build ID or build number: None for 1.0.2 build 96.
+- App Store Connect version state: 1.0.2 build 97 is local-only and has not been archived, uploaded, selected, or submitted.
+- Attached build ID or build number: None for 1.0.2 build 97.
 - Prior review receipt: 1.0.1 build 95 was visible in ASC as Waiting for Review with manual release selected on 2026-06-29.
 - Release after approval: Manual release; do not publicly release without a separate exact EB28 release approval.
 - Representation remediation: The 1.0.2 package uses cadetcatch.com privacy and support URLs; App Store Connect metadata, App Privacy, and screenshot state still require direct verification before submission.
+- Conversion measurement: Build 97 adds `roster_created`, `photo_check_started`, `photo_check_completed`, and `paywall_view`, plus Firebase's verified StoreKit 2 transaction logger. No cadet names, photos, emails, units, image URLs, face data, or user IDs are sent. Firebase registration, the production config file, DebugView proof, GA4/Ads linking, and App Privacy disclosure remain launch blockers.
 - Screenshot pack: Six premium 1320x2868 images and six matching 1284x2778 images were prepared on 2026-07-12 from live CadetCatch 1.0.2 build-96 Simulator states and verified backend search results. The package is local only and still requires a separately approved App Store Connect screenshot action.
 - In-app purchases and subscription status: Approved
 - Verification screenshots: app-store/releases/cadetcatch/app-store-connect-snapshots/

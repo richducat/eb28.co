@@ -55,7 +55,8 @@
     "Build 93 is reserved for the monetization gate fix that removes unconditional monthly access and restores .v1 StoreKit product IDs.",
     "Build 94 is reserved for the corrected $12.99 Family Monthly price fallback and desktop add-on/access-invite planning pass.",
     "Build 95 was uploaded, selected, and submitted to App Review for version 1.0.1; it must not be reused.",
-    "Build 96 is the next local-only 1.0.2 candidate and has not been archived or uploaded."
+    "Build 96 is the prior local-only 1.0.2 privacy URL candidate and has not been archived or uploaded.",
+    "Build 97 is the local-only 1.0.2 conversion-measurement candidate and has not been archived or uploaded."
   ],
-  "lastUpdated": "2026-07-10"
+  "lastUpdated": "2026-07-12"
 }

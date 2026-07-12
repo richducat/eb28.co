@@ -8,12 +8,71 @@ import SwiftUI
 import UIKit
 import Vision
 import ActivityKit
+import FirebaseAnalytics
+import FirebaseCore
+
+enum CadetCatchAnalyticsEvent: String {
+    case rosterCreated = "roster_created"
+    case photoCheckStarted = "photo_check_started"
+    case photoCheckCompleted = "photo_check_completed"
+    case paywallView = "paywall_view"
+}
+
+@MainActor
+enum CadetCatchAnalytics {
+    private static let loggedTransactionIDsKey = "cadetcatch.analytics.logged-transactions.v1"
+    private(set) static var isConfigured = false
+
+    static func configure() {
+        guard FirebaseApp.app() == nil else {
+            isConfigured = true
+            return
+        }
+
+        guard
+            let path = Bundle.main.path(forResource: "GoogleService-Info", ofType: "plist"),
+            let options = FirebaseOptions(contentsOfFile: path),
+            !options.googleAppID.isEmpty,
+            options.projectID?.isEmpty == false
+        else {
+            #if DEBUG
+            print("CadetCatch analytics disabled: Firebase app configuration is missing.")
+            #endif
+            return
+        }
+
+        FirebaseApp.configure(options: options)
+        Analytics.setUserProperty("false", forName: "allow_ad_personalization_signals")
+        isConfigured = true
+    }
+
+    static func log(_ event: CadetCatchAnalyticsEvent, parameters: [String: Any]? = nil) {
+        guard isConfigured else { return }
+        Analytics.logEvent(event.rawValue, parameters: parameters)
+    }
+
+    static func logVerifiedTransaction(_ transaction: StoreKit.Transaction) {
+        guard isConfigured else { return }
+
+        let transactionID = String(transaction.id)
+        let defaults = UserDefaults.standard
+        var loggedIDs = Set(defaults.stringArray(forKey: loggedTransactionIDsKey) ?? [])
+        guard loggedIDs.insert(transactionID).inserted else { return }
+
+        Analytics.logTransaction(transaction)
+        defaults.set(Array(loggedIDs.sorted().suffix(200)), forKey: loggedTransactionIDsKey)
+    }
+}
 
 @main
 struct CadetCatchApp: App {
     @State private var store = CadetCatchStore()
     @State private var purchases = PurchaseManager()
     @State private var access = AccessManager()
+
+    init() {
+        CadetCatchAnalytics.configure()
+    }
 
     var body: some Scene {
         WindowGroup {
@@ -355,6 +414,7 @@ final class CadetCatchStore {
     }
 
     func addCadet(name: String, unit: String, relation: String, photoData: Data) {
+        let isFirstCadet = cadets.isEmpty
         let cadet = Cadet(
             name: name.trimmingCharacters(in: .whitespacesAndNewlines),
             unit: unit.trimmingCharacters(in: .whitespacesAndNewlines),
@@ -365,6 +425,9 @@ final class CadetCatchStore {
         activeCadetID = cadet.id
         selectedTab = .home
         persist()
+        if isFirstCadet {
+            CadetCatchAnalytics.log(.rosterCreated)
+        }
     }
 
     func selectCadet(_ cadet: Cadet) {
@@ -441,6 +504,7 @@ final class CadetCatchStore {
         }
 
         scanProgress.reset()
+        CadetCatchAnalytics.log(.photoCheckStarted)
         scanProgress.message = "Sending your cadet photo for matching..."
         showScanReceipt = false
         
@@ -476,6 +540,13 @@ final class CadetCatchStore {
                 return
             }
             lastScanMessage = scanResult.message
+
+            if scanResult.isCompleted {
+                CadetCatchAnalytics.log(
+                    .photoCheckCompleted,
+                    parameters: ["result": scanResult.outcome.rawValue]
+                )
+            }
 
             let scannedAt = Date()
 
@@ -753,6 +824,7 @@ final class PurchaseManager {
             switch result {
             case .success(let verification):
                 let transaction = try checkVerified(verification)
+                CadetCatchAnalytics.logVerifiedTransaction(transaction)
                 if commerceProduct == .monthly {
                     entitledProductIDs.insert(transaction.productID)
                     monthlySubscriptionLink = Self.subscriptionLinkPayload(from: transaction)
@@ -812,6 +884,7 @@ final class PurchaseManager {
             monthlySubscriptionLink = Self.subscriptionLinkPayload(from: transaction)
             await refreshEntitlements()
         }
+        CadetCatchAnalytics.logVerifiedTransaction(transaction)
         await transaction.finish()
     }
 
@@ -1263,10 +1336,29 @@ enum PhotoScope: String, CaseIterable, Identifiable {
     var id: String { rawValue }
 }
 
+enum PhotoCheckOutcome: String {
+    case matched
+    case noMatch = "no_match"
+    case cancelled
+    case invalidPhoto = "invalid_photo"
+    case noFace = "no_face"
+    case multipleFaces = "multiple_faces"
+    case failed
+
+    var isCompleted: Bool {
+        self == .matched || self == .noMatch
+    }
+}
+
 struct ScanResult {
     var candidates: [PhotoCandidate]
     var checkedImageCount: Int
     var message: String
+    var outcome: PhotoCheckOutcome
+
+    var isCompleted: Bool {
+        outcome.isCompleted
+    }
 }
 
 private enum CadetCatchSearchAPI {
@@ -1478,17 +1570,17 @@ enum PublicPhotoScanner {
                 minScore: searchTolerance.minimumScore
             )
             if Task.isCancelled {
-                return ScanResult(candidates: [], checkedImageCount: 0, message: "Search Stopped")
+                return ScanResult(candidates: [], checkedImageCount: 0, message: "Search Stopped", outcome: .cancelled)
             }
 
             guard response.queryFacesDetected > 0 else {
                 await update(progress, message: "No face detected. Choose a clearer, front-facing cadet photo.", total: 1, scanned: 1, matched: 0, onProgress: onProgress)
-                return ScanResult(candidates: [], checkedImageCount: 0, message: "No face detected. Choose a clearer, front-facing cadet photo.")
+                return ScanResult(candidates: [], checkedImageCount: 0, message: "No face detected. Choose a clearer, front-facing cadet photo.", outcome: .noFace)
             }
 
             guard response.queryFacesDetected == 1 else {
                 await update(progress, message: "Multiple faces detected. Choose a photo with only your cadet visible.", total: 1, scanned: 1, matched: 0, onProgress: onProgress)
-                return ScanResult(candidates: [], checkedImageCount: 0, message: "Multiple faces detected. Choose a photo with only your cadet visible.")
+                return ScanResult(candidates: [], checkedImageCount: 0, message: "Multiple faces detected. Choose a photo with only your cadet visible.", outcome: .multipleFaces)
             }
 
             let candidates = response.matches.compactMap { match in
@@ -1497,7 +1589,7 @@ enum PublicPhotoScanner {
 
             guard !candidates.isEmpty else {
                 await update(progress, message: "No matching event photos found yet.", total: 1, scanned: 1, matched: 0, onProgress: onProgress)
-                return ScanResult(candidates: [], checkedImageCount: response.matchesReturned, message: "No matching event photos found yet.")
+                return ScanResult(candidates: [], checkedImageCount: response.matchesReturned, message: "No matching event photos found yet.", outcome: .noMatch)
             }
 
             await update(
@@ -1511,20 +1603,21 @@ enum PublicPhotoScanner {
             return ScanResult(
                 candidates: candidates,
                 checkedImageCount: response.matchesReturned,
-                message: "\(candidates.count) possible match\(candidates.count == 1 ? "" : "es") found."
+                message: "\(candidates.count) possible match\(candidates.count == 1 ? "" : "es") found.",
+                outcome: .matched
             )
         } catch CadetCatchSearchAPI.SearchError.invalidImage {
             await update(progress, message: "Could not read that cadet photo. Choose a different image.", total: 1, scanned: 1, matched: 0, onProgress: onProgress)
-            return ScanResult(candidates: [], checkedImageCount: 0, message: "Could not read that cadet photo. Choose a different image.")
+            return ScanResult(candidates: [], checkedImageCount: 0, message: "Could not read that cadet photo. Choose a different image.", outcome: .invalidPhoto)
         } catch CadetCatchSearchAPI.SearchError.noFaceDetected {
             await update(progress, message: "No face detected. Choose a clearer, front-facing cadet photo.", total: 1, scanned: 1, matched: 0, onProgress: onProgress)
-            return ScanResult(candidates: [], checkedImageCount: 0, message: "No face detected. Choose a clearer, front-facing cadet photo.")
+            return ScanResult(candidates: [], checkedImageCount: 0, message: "No face detected. Choose a clearer, front-facing cadet photo.", outcome: .noFace)
         } catch CadetCatchSearchAPI.SearchError.multipleFacesDetected {
             await update(progress, message: "Multiple faces detected. Choose a photo with only your cadet visible.", total: 1, scanned: 1, matched: 0, onProgress: onProgress)
-            return ScanResult(candidates: [], checkedImageCount: 0, message: "Multiple faces detected. Choose a photo with only your cadet visible.")
+            return ScanResult(candidates: [], checkedImageCount: 0, message: "Multiple faces detected. Choose a photo with only your cadet visible.", outcome: .multipleFaces)
         } catch {
             await update(progress, message: "We could not search photos right now. Check your connection and try again.", total: 1, scanned: 1, matched: 0, onProgress: onProgress)
-            return ScanResult(candidates: [], checkedImageCount: 0, message: "We could not search photos right now. Check your connection and try again.")
+            return ScanResult(candidates: [], checkedImageCount: 0, message: "We could not search photos right now. Check your connection and try again.", outcome: .failed)
         }
     }
 
@@ -3079,6 +3172,7 @@ struct PurchaseOptionsSheet: View {
                 }
             }
             .task {
+                CadetCatchAnalytics.log(.paywallView)
                 await purchases.loadProducts()
             }
         }

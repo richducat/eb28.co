@@ -14,6 +14,7 @@
 		7BFB0FCC3EE0DE8F7E453EDF /* ScanActivityAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF9BDE9017D1E75C5372F90E /* ScanActivityAttributes.swift */; };
 		7E81EC141AAA2DCEF9A2DADE /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3F6D70CBCE3F2ECAD841A5DF /* GoogleService-Info.plist */; };
 		84E31476B107183B7C57B437 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = A2FED9A84D982C3CA93BB578 /* GoogleSignIn */; };
+		87E6BAAFF82233AEAC4461F5 /* FirebaseAnalyticsCore in Frameworks */ = {isa = PBXBuildFile; productRef = 5D08F29F1E3819AFB73F0139 /* FirebaseAnalyticsCore */; };
 		A03F4DF05625A1AB7FB15488 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 83FA992840CE2C0778DA0D32 /* Assets.xcassets */; };
 		AF3B5835E634A18BD180306D /* GTMAppAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 9AD7B0DE8151607BF4ABCAE2 /* GTMAppAuth */; };
 		B4A649CB80775D86DE51B59E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 26E2C58DB4AC745A57AB0638 /* LaunchScreen.storyboard */; };
@@ -67,6 +68,7 @@
 				BA664DA3479CCEDA92A08A1C /* AppAuth in Frameworks */,
 				F09183122658918324E28821 /* GTMSessionFetcher in Frameworks */,
 				AF3B5835E634A18BD180306D /* GTMAppAuth in Frameworks */,
+				87E6BAAFF82233AEAC4461F5 /* FirebaseAnalyticsCore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -191,6 +193,7 @@
 				CAEEF5ED1904BC7F8D21FE85 /* AppAuth */,
 				5BDA0F8AE58E1C5C23982D86 /* GTMSessionFetcher */,
 				9AD7B0DE8151607BF4ABCAE2 /* GTMAppAuth */,
+				5D08F29F1E3819AFB73F0139 /* FirebaseAnalyticsCore */,
 			);
 			productName = CadetCatch;
 			productReference = 5B60D0351E205A2FA21B2A52 /* CadetCatch.app */;
@@ -247,6 +250,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				305B0090BC58CE5D30C388F9 /* XCRemoteSwiftPackageReference "AppAuth-iOS" */,
+				3D9075B7160A4A5CD09E9928 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 				7334C6B2D0B07EEBCE6B13C6 /* XCRemoteSwiftPackageReference "GTMAppAuth" */,
 				E0504458B7F9326416A68FE6 /* XCRemoteSwiftPackageReference "gtm-session-fetcher" */,
 				EB51B706C16752BDFA8DB56A /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
@@ -354,7 +358,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 96;
+				CURRENT_PROJECT_VERSION = 97;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -412,7 +416,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 96;
+				CURRENT_PROJECT_VERSION = 97;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -474,6 +478,10 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = co.eb28.cadetcatch;
 				PRODUCT_NAME = CadetCatch;
 				SDKROOT = iphoneos;
@@ -493,6 +501,10 @@
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
+				);
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-ObjC",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = co.eb28.cadetcatch;
 				PRODUCT_NAME = CadetCatch;
@@ -523,6 +535,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -539,6 +552,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -601,6 +615,14 @@
 				minimumVersion = 1.7.6;
 			};
 		};
+		3D9075B7160A4A5CD09E9928 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 12.5.0;
+			};
+		};
 		7334C6B2D0B07EEBCE6B13C6 /* XCRemoteSwiftPackageReference "GTMAppAuth" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/google/GTMAppAuth.git";
@@ -632,6 +654,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = E0504458B7F9326416A68FE6 /* XCRemoteSwiftPackageReference "gtm-session-fetcher" */;
 			productName = GTMSessionFetcher;
+		};
+		5D08F29F1E3819AFB73F0139 /* FirebaseAnalyticsCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3D9075B7160A4A5CD09E9928 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAnalyticsCore;
 		};
 		9AD7B0DE8151607BF4ABCAE2 /* GTMAppAuth */ = {
 			isa = XCSwiftPackageProductDependency;

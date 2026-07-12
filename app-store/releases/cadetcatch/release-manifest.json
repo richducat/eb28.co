@@ -4,20 +4,20 @@
   "appStoreConnectAppId": "6769565852",
   "platform": "iOS",
   "marketingVersion": "1.0.2",
-  "buildNumber": "96",
-  "baselineCommit": "3ed29ef9f769f060b6b989ed6bc61862e588dfd3",
-  "baselineTree": "ad468401323c044511eaa5005b63011678eed413",
-  "sourceIdentityType": "isolated clean git worktree branch based on the build-95-equivalent iOS source plus the later Android lane",
-  "baseParentCommit": "3ed29ef9f769f060b6b989ed6bc61862e588dfd3",
+  "buildNumber": "97",
+  "baselineCommit": "48622d90ff1ed17d46b1d51c8da3d031510cc828",
+  "baselineTree": "112b3452140657998475799c5c72939faf928ae3",
+  "sourceIdentityType": "isolated build-97 conversion-measurement worktree based on the latest local build-96 source and screenshot commit",
+  "baseParentCommit": "48622d90ff1ed17d46b1d51c8da3d031510cc828",
   "indexParentCommit": null,
-  "sourceRef": "refs/heads/codex/cadetcatch-1.0.2-build96",
-  "releaseBranch": "codex/cadetcatch-1.0.2-build96",
-  "worktreePath": "/Users/richardducat/Documents/Codex/Release-Worktrees/CadetCatch/android-play-1.0.1-1-20260703",
+  "sourceRef": "refs/heads/codex/cadetcatch-1.0.2-build97-conversions",
+  "releaseBranch": "codex/cadetcatch-1.0.2-build97-conversions",
+  "worktreePath": "/Users/richardducat/Documents/Codex/Release-Worktrees/CadetCatch/conversion-goals-20260712",
   "xcodeProjectPath": "ios/CadetCatch/CadetCatch.xcodeproj",
   "xcodegenProjectSpec": "ios/CadetCatch/project.yml",
   "scheme": "CadetCatch",
   "teamId": "WN3K69XEP4",
-  "approvalLevel": "local preparation and verification only for 1.0.2 build 96; no approval or action exists for archive, upload, TestFlight distribution, App Store Connect metadata mutation, build selection, submission, or release",
+  "approvalLevel": "local preparation and verification only for 1.0.2 build 97; no approval or action exists for archive, upload, TestFlight distribution, App Store Connect metadata mutation, build selection, submission, or release",
   "archivePath": null,
   "appStoreConnectState": {
     "appStoreVersionId": null,
@@ -25,23 +25,23 @@
     "reviewSubmissionId": null,
     "appStoreState": "NOT_UPLOADED_LOCAL_ONLY",
     "submittedAt": null,
-    "lastLocalPreparationAt": "2026-07-10T21:22:16Z",
+    "lastLocalPreparationAt": "2026-07-12T22:18:04Z",
     "uploadedAt": null,
     "visibleAscVerificationAt": null,
-    "visibleAscStatus": "1.0.2 build 96 is local-only; no current App Store Connect state was verified during this preparation task",
+    "visibleAscStatus": "1.0.2 build 97 is local-only; no App Store Connect mutation was performed during conversion measurement preparation",
     "visibleAscCreatedAt": null,
     "distributionLogPath": null,
-    "verificationBlocked": "Authenticated App Store Connect inspection was outside this local source task; verify version creation, agreements, privacy, screenshots, IAP availability, and build state before any external mutation."
+    "verificationBlocked": "Firebase app registration, App Privacy answers, privacy policy disclosure, production event receipt, and App Store Connect readiness must be verified before any external release mutation."
   },
   "sourceMetadataVerification": {
     "projectYmlMarketingVersion": "1.0.2",
-    "projectYmlCurrentProjectVersion": "96",
+    "projectYmlCurrentProjectVersion": "97",
     "projectYmlBundleId": "co.eb28.cadetcatch",
     "pbxMarketingVersions": [
       "1.0.2"
     ],
     "pbxCurrentProjectVersions": [
-      "96"
+      "97"
     ],
     "pbxBundleIds": [
       "co.eb28.CadetCatchUITests",
@@ -91,16 +91,24 @@
     },
     {
       "status": "M",
+      "path": "ios/CadetCatch/CadetCatch.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved"
+    },
+    {
+      "status": "M",
       "path": "ios/CadetCatch/CadetCatch/CadetCatchApp.swift"
     },
     {
       "status": "M",
       "path": "ios/CadetCatch/project.yml"
+    },
+    {
+      "status": "M",
+      "path": "scripts/verify-cadetcatch-release.mjs"
     }
   ],
   "releaseJsonVersionObject": {
     "marketingVersion": "1.0.2",
-    "buildNumber": "96",
+    "buildNumber": "97",
     "releaseType": "MANUAL",
     "phasedRelease": false,
     "promotionalText": "Private cadet rosters, event photo search, clearer match ranges, reliable previews, saved finds, family notes, and a plain-English academy terms guide.",
@@ -114,7 +122,7 @@
       "parents",
       "coast"
     ],
-    "whatsNew": "CadetCatch build 96 updates in-app privacy and support links to cadetcatch.com while preserving one free preview search, the paid access gate, the approved $12.99 Family Monthly path, and reliable matched-photo previews."
+    "whatsNew": "CadetCatch build 97 adds privacy-protected app measurement for completed photo checks and verified StoreKit purchases while preserving the paid access gate, approved $12.99 Family Monthly path, and reliable matched-photo previews."
   },
   "releaseJsonAssetsObject": {
     "appIconSource": "app-icon-1024.png",
@@ -139,8 +147,9 @@
     "Build 95 is the prior uploaded and App Review-submitted account email, spouse/family invite, cadet invite, tester-access gate, and static desktop companion candidate.",
     "Build 95 access API source now includes Apple App Store Server API verification for StoreKit subscription links.",
     "Build 95 access API source now includes SMTP-backed email-only spouse/family and cadet invite delivery.",
-    "Build 96 is the local-only 1.0.2 candidate. It preserves one free preview search and the approved .v1 StoreKit product identifiers while updating privacy and support links to cadetcatch.com.",
-    "Do not archive, upload, distribute TestFlight, select for App Review, submit for review, release, expire builds, edit App Store Connect metadata/screenshots/previews, or edit IAP/subscriptions without a separate exact approval record for the final build-96 source commit.",
+    "Build 96 remains the prior local-only privacy URL candidate and has not been archived or uploaded.",
+    "Build 97 is the local-only conversion-measurement candidate. It adds Firebase Analytics 12.16.0 funnel events and deduplicated verified StoreKit transaction logging without user IDs, cadet data, photo data, emails, or ad-personalization signals.",
+    "Do not archive, upload, distribute TestFlight, select for App Review, submit for review, release, expire builds, edit App Store Connect metadata/screenshots/previews, or edit IAP/subscriptions without a separate exact approval record for the final build-97 source commit.",
     "Do not ship custom free access codes unless they are server-validated, email-bound, role-specific, and single-use.",
     "Tester full access must be configured and verified for richducat@gmail.com, karen.hallett@mac.com, and kenfish@mac.com before App Review submission.",
     "Access API production deploy for commit 05dd4ba0af3fe20474845d698f85780dfb523e42 was completed and recorded on 2026-06-26; /access/status now returns active tester access for richducat@gmail.com, karen.hallett@mac.com, and kenfish@mac.com.",
@@ -148,10 +157,10 @@
   ],
   "createdAt": "2026-06-06T11:53:53.691778-04:00",
   "localVerification": {
-    "releaseGate": "passed on the clean 1.0.2 build 96 source commit bb1113e6b9b092e276121b38b1920505d8637ce1 before this receipt-only manifest update",
+    "releaseGate": "blocked for build 97 until a Firebase-generated iOS configuration is installed and Analytics/App Privacy disclosures are reviewed",
     "accessAPITests": "passed in temp venv with service dependencies installed using /tmp/cadetcatch-access-api-venv/bin/python -m unittest discover tests -v; 14 tests passed including StoreKit validation rejection cases, email-only invite delivery contract tests, and browser invite redemption page/form tests",
     "accessAPIImportSmoke": "passed in temp venv; imported cadetcatch_access.main.app and AppleStoreKitVerifier",
-    "simulatorQA": "passed for clean local 1.0.2 build 96 candidate using npm run test:cadetcatch",
+    "simulatorQA": "build and UI tests passed locally for dirty build-97 implementation; full npm run test:cadetcatch remains blocked by the intentional release gate until Firebase configuration and privacy review are complete",
     "simulatorQAReceipt": {
       "status": "passed",
       "command": "npm run test:cadetcatch",
@@ -189,16 +198,16 @@
       "exampleURL": "https://pub-2264690a142a418ab996c86d3523fa08.r2.dev/photos/1561614049297355.jpg",
       "note": "Remote matched-photo loader bypasses URLCache so previously broken R2 photo URLs can load after becoming reachable."
     },
-    "appStorePreflight": "passed for 1.0.2 build 96 with live URL checks; cadetcatch.com, /privacy/, and /support/ each returned HTTP 200",
+    "appStorePreflight": "pending for build 97 because the privacy policy and App Privacy disclosures do not yet describe Firebase Analytics conversion measurement",
     "uiTestSuite": {
-      "status": "blocked_by_existing_target_configuration",
-      "command": "xcodebuild -project ios/CadetCatch/CadetCatch.xcodeproj -scheme CadetCatch -destination id=7C85426B-CA76-4F78-9D8A-557AD2C88426 -derivedDataPath output/cadetcatch-simulator/DerivedData test -only-testing:CadetCatchUITests/CadetCatchUITests/testAppLaunches",
-      "failure": "CadetCatchUITests has neither INFOPLIST_FILE nor GENERATE_INFOPLIST_FILE, so Xcode 26.5 cancels test building before test execution.",
-      "xcresult": "/Users/richardducat/Documents/Codex/Release-Worktrees/CadetCatch/android-play-1.0.1-1-20260703/output/cadetcatch-simulator/DerivedData/Logs/Test/Test-CadetCatch-2026.07.10_17-27-19--0400.xcresult"
+      "status": "passed",
+      "command": "CC=/Users/richardducat/Documents/Codex/2026-06-08/cadetcatch-release-handoff/scripts/cadetcatch-clang-wrapper.sh xcodebuild -quiet -project ios/CadetCatch/CadetCatch.xcodeproj -scheme CadetCatch -configuration Debug -destination id=7C85426B-CA76-4F78-9D8A-557AD2C88426 CODE_SIGNING_ALLOWED=NO test",
+      "note": "Build 97 enables GENERATE_INFOPLIST_FILE for CadetCatchUITests; xcodebuild test completed successfully on iPhone 17 Pro Max, iOS 26.5.",
+      "verifiedAt": "2026-07-12T22:17:22Z"
     },
     "monetizationGate": {
-      "status": "local_simulator_verified_locked",
-      "note": "Build 96 simulator QA launched with matched photo cards covered by Unlock to View, confirming the app still does not grant unconditional matched-photo access. Source inspection also confirms one free preview search and the approved .v1 product identifiers remain intact."
+      "status": "source_preserved_build97_compile_and_tests_passed",
+      "note": "Build 97 preserves the paid access gate and approved .v1 product identifiers while adding conversion measurement only after verified StoreKit transactions and successful photo-check completion."
     },
     "accessAPI": {
       "status": "production_deployed_and_tester_access_verified",

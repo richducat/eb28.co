@@ -22,7 +22,7 @@
   },
   "version": {
     "marketingVersion": "1.0.2",
-    "buildNumber": "96",
+    "buildNumber": "97",
     "releaseType": "MANUAL",
     "phasedRelease": false,
     "promotionalText": "Private cadet rosters, event photo search, clearer match ranges, reliable previews, saved finds, family notes, and a plain-English academy terms guide.",
@@ -36,7 +36,7 @@
       "parents",
       "coast"
     ],
-    "whatsNew": "CadetCatch build 96 updates in-app privacy and support links to cadetcatch.com while preserving one free preview search, the paid access gate, the approved $12.99 Family Monthly path, and reliable matched-photo previews."
+    "whatsNew": "CadetCatch build 97 adds privacy-protected app measurement for completed photo checks and verified StoreKit purchases while preserving the paid access gate, approved $12.99 Family Monthly path, and reliable matched-photo previews."
   },
   "urls": {
     "marketingUrl": "https://cadetcatch.com/",
@@ -105,13 +105,13 @@
   },
   "privacy": {
     "privacyPolicyLinkedInApp": true,
-    "appPrivacyAnswersCurrent": true,
+    "appPrivacyAnswersCurrent": false,
     "trackingUsed": false,
     "attFlowImplemented": false,
     "accountDeletionImplemented": false,
-    "privacyManifestReviewed": true,
+    "privacyManifestReviewed": false,
     "requiredReasonApisReviewed": true,
-    "thirdPartySdkPrivacyReviewed": true
+    "thirdPartySdkPrivacyReviewed": false
   },
   "assets": {
     "appIconSource": "app-icon-1024.png",

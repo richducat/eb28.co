@@ -35,33 +35,56 @@
       // one version check, before any editing is possible; every later reload
       // just loads the current bundle and restores saved work.
       (function () {
-        try {
-          if (location.search.indexOf("_r=") !== -1) {
-            history.replaceState(null, "", location.pathname + location.hash);
-          }
-          // The app already ran this session (this is a mid-session reload /
-          // tab restore) — load as-is, don't bounce to another version.
-          if (sessionStorage.getItem("hia:booted")) return;
-          // Already reloaded once this session — don't loop on a flapping CDN.
-          if (sessionStorage.getItem("hia:ver-reload")) return;
-          var current = (document.querySelector('script[type="module"][src*="index-"]') || {}).src || "";
-          var currentHash = (current.match(/index-[A-Za-z0-9_-]+\.js/) || [])[0];
-          if (!currentHash) return; // dev server — nothing to compare
+        function currentHash() {
+          var s = (document.querySelector('script[type="module"][src*="index-"]') || {}).src || "";
+          return (s.match(/index-[A-Za-z0-9_-]+\.js/) || [])[0];
+        }
+        // Compare the loaded bundle to a freshly-fetched shell; if a newer deploy
+        // exists, bounce to it ONCE per session (guarded so a flapping CDN can't
+        // loop). Called before first edit, and again when the inspector returns
+        // after being away — the app flushes unsaved work on hide, so a reload on
+        // return is data-safe.
+        function checkAndReload() {
+          if (sessionStorage.getItem("hia:ver-reload")) return; // one bounce per session
+          var have = currentHash();
+          if (!have) return; // dev server — nothing to compare
           fetch(location.pathname + "?_v=" + Date.now(), { cache: "no-store" })
             .then(function (res) { return res.ok ? res.text() : ""; })
             .then(function (html) {
               var fresh = (html.match(/index-[A-Za-z0-9_-]+\.js/) || [])[0];
-              // Don't reload if the app booted while the fetch was in flight.
-              if (fresh && fresh !== currentHash && !sessionStorage.getItem("hia:booted")) {
+              if (fresh && fresh !== have && !sessionStorage.getItem("hia:ver-reload")) {
                 sessionStorage.setItem("hia:ver-reload", "1");
                 location.replace(location.pathname + "?_r=" + Date.now() + location.hash);
               }
             })
             .catch(function () {});
+        }
+        try {
+          if (location.search.indexOf("_r=") !== -1) {
+            history.replaceState(null, "", location.pathname + location.hash);
+          }
+          // First load of a tab session: check before any editing is possible. A
+          // mid-session reload / tab restore skips this so it can't interrupt an
+          // in-progress inspection — the visibility check below covers those.
+          if (!sessionStorage.getItem("hia:booted")) {
+            checkAndReload();
+          }
+          // Long-lived mobile tabs never re-run the first-load check, so they can
+          // sit on a stale (crashy) build for days. When the inspector leaves the
+          // app and comes back after a while — NOT a quick camera snap — re-check
+          // and update onto the latest build.
+          var hiddenAt = 0;
+          document.addEventListener("visibilitychange", function () {
+            if (document.visibilityState === "hidden") {
+              hiddenAt = Date.now();
+            } else if (document.visibilityState === "visible" && hiddenAt && Date.now() - hiddenAt > 45000) {
+              checkAndReload();
+            }
+          });
         } catch (e) {}
       })();
     </script>
-    <script type="module" crossorigin src="/HIP/app/assets/index-B9Ib0KXi.js"></script>
+    <script type="module" crossorigin src="/HIP/app/assets/index-B6n8utH3.js"></script>
     <link rel="stylesheet" crossorigin href="/HIP/app/assets/index-BzQmsmu3.css">
   </head>
   <body>

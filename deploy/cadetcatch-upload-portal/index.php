@@ -4,6 +4,8 @@ declare(strict_types=1);
 ini_set('display_errors', '0');
 ini_set('log_errors', '1');
 
+require_once __DIR__ . '/ingestion.php';
+
 session_name('cadetcatch_upload');
 session_set_cookie_params([
     'lifetime' => 0,
@@ -182,16 +184,37 @@ function upload_photos(): array
         }
 
         chmod($targetPath, 0644);
+        $publicUrl = public_base_url() . '/' . rawurlencode($safeName);
+        $sha256 = hash_file('sha256', $targetPath);
+        $sourceVisible = is_file($targetPath) && is_readable($targetPath) && is_string($sha256);
+        $indexing = $sourceVisible
+            ? cadetcatch_notify_ingestion($publicUrl, $safeName, $sha256)
+            : [
+                'accepted' => false,
+                'status' => 'source_verification_failed',
+                'message' => 'File was saved, but source verification failed.',
+            ];
         $uploaded[] = [
             'original' => $name,
             'filename' => $safeName,
-            'url' => public_base_url() . '/' . rawurlencode($safeName),
+            'url' => $publicUrl,
+            'sha256' => is_string($sha256) ? $sha256 : null,
+            'source_visible' => $sourceVisible,
+            'indexing' => $indexing,
         ];
     }
 
+    $indexAccepted = count(array_filter(
+        $uploaded,
+        static fn(array $item): bool => !empty($item['indexing']['accepted'])
+    ));
+    $indexAttention = count($uploaded) - $indexAccepted;
+
     return [
         'ok' => count($uploaded) > 0,
-        'message' => count($uploaded) . ' uploaded, ' . count($rejected) . ' rejected.',
+        'indexing_ok' => count($uploaded) > 0 && $indexAttention === 0,
+        'message' => count($uploaded) . ' uploaded, ' . $indexAccepted . ' accepted for indexing, '
+            . $indexAttention . ' need indexing attention, ' . count($rejected) . ' rejected.',
         'uploaded' => $uploaded,
         'rejected' => $rejected,
     ];
@@ -394,7 +417,10 @@ form.addEventListener('submit', async (event) => {
       body: new FormData(form)
     });
     const payload = await response.json();
-    setStatus(payload.message || (payload.ok ? 'Upload complete.' : 'Upload failed.'), payload.ok ? 'ok' : 'bad');
+    setStatus(
+      payload.message || (payload.ok ? 'Upload complete.' : 'Upload failed.'),
+      payload.ok && payload.indexing_ok ? 'ok' : 'bad'
+    );
 
     for (const item of payload.uploaded || []) {
       const row = document.createElement('div');
@@ -404,6 +430,12 @@ form.addEventListener('submit', async (event) => {
       const link = row.querySelector('a');
       link.href = item.url;
       link.textContent = item.url;
+      const indexing = document.createElement('div');
+      indexing.className = 'meta';
+      indexing.textContent = item.indexing && item.indexing.message
+        ? item.indexing.message
+        : 'Indexing status was not returned.';
+      row.appendChild(indexing);
       results.appendChild(row);
     }
     for (const item of payload.rejected || []) {

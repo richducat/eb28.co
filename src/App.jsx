@@ -187,13 +187,6 @@ const App = () => {
       description: "A live portfolio dashboard watching real positions around the clock — proof our agents run for real."
     },
     {
-      id: 'tool-deskos',
-      title: "Desk OS — Trading Agents",
-      type: "Agent System",
-      url: "/deskos/",
-      description: "Eight prediction-market trading agents behind a gated runner, kill switch, and capital guard."
-    },
-    {
       id: 0,
       title: "Tesla Helper App",
       type: "Utility App",
@@ -252,34 +245,34 @@ const App = () => {
 
   const seoArticles = [
     {
-      title: 'AI Receptionist for Local Business',
-      href: '/blog/ai-receptionist-for-local-business-what-to-automate-and-what-to-keep-human/',
+      title: 'AI Appointment Setter for Small Business',
+      href: '/blog/ai-appointment-setter-for-small-business-where-it-helps-and-where-it-hurts/',
       cluster: 'Lead automation',
-      description: 'What to automate, what to keep human, and how to stop ready buyers from going cold.'
+      description: 'Where appointment automation helps, where it hurts, and how to keep human control in the right places.'
     },
     {
-      title: 'Website Audit Checklist for Melbourne FL',
-      href: '/blog/website-audit-checklist-for-melbourne-fl-businesses-losing-leads/',
+      title: 'Automated Lead Follow-Up for Contractors',
+      href: '/blog/automated-lead-follow-up-for-contractors-how-to-stop-losing-hot-enquiries/',
+      cluster: 'Lead automation',
+      description: 'How contractors can respond faster without letting software own pricing, qualification, or trust.'
+    },
+    {
+      title: 'Website Redesign in Melbourne FL',
+      href: '/blog/website-redesign-in-melbourne-fl-fix-the-leaks-before-you-rebuild-everything/',
       cluster: 'Conversion',
-      description: 'A practical lead-leak checklist for local businesses that need more calls from the traffic they already have.'
+      description: 'What to fix before rebuilding a local website so the redesign solves the actual lead leak.'
     },
     {
-      title: 'Best Website Builder in Melbourne FL',
-      href: '/blog/best-website-builder-in-melbourne-fl-what-local-companies-should-look-for/',
+      title: 'Lead Generation Website in Melbourne FL',
+      href: '/blog/lead-generation-website-in-melbourne-fl-the-page-elements-that-make-people-act/',
       cluster: 'Melbourne web design',
-      description: 'What local companies should look for before trusting a website builder with their first impression.'
+      description: 'The page elements that help nearby buyers understand the offer and take the next step.'
     },
     {
-      title: 'How to Rank in the Melbourne FL Map Pack',
-      href: '/blog/how-to-rank-in-the-melbourne-fl-map-pack-without-spammy-seo/',
+      title: 'Local SEO Services in Melbourne FL',
+      href: '/blog/local-seo-services-in-melbourne-fl-what-should-be-fixed-before-you-pay-monthly/',
       cluster: 'Local SEO',
-      description: 'How profile signals, website content, reviews, and citations work together without spammy SEO.'
-    },
-    {
-      title: 'Website Conversion Checklist for Melbourne FL',
-      href: '/blog/website-conversion-checklist-melbourne-fl/',
-      cluster: 'Conversion',
-      description: 'The homepage, proof, CTA, and follow-up fixes that help local traffic become real enquiries.'
+      description: 'What should already be correct before a business pays monthly for local SEO support.'
     }
   ];
 
@@ -938,7 +931,6 @@ const App = () => {
                 <li><a href="#deployments" className="hover:text-blue-400 transition-colors">eb28.co Cloud Hosting</a></li>
                 <li><a href="/appbuilder/" className="hover:text-blue-400 transition-colors">EB28 App Builder</a></li>
                 <li><a href="/fundmanager/" className="hover:text-blue-400 transition-colors">Fund Manager Live</a></li>
-                <li><a href="/deskos/" className="hover:text-blue-400 transition-colors">Desk OS</a></li>
                 <li><a href="/blog/private-ai-infrastructure-small-business/" className="hover:text-blue-400 transition-colors">Private AI Guide</a></li>
               </ul>
             </div>

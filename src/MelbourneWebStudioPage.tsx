@@ -64,7 +64,6 @@ import {
 } from "lucide-react";
 
 const DISCOVERY_CALL_URL = "/melbournewebstudio/#quiz";
-const CLAIM_EMAIL = "social@eb28.co";
 const FREE_BUILD_PACKAGE = "Free Website Build";
 const GROWTH_HOSTING_PACKAGE = "EB28 Growth Hosting";
 const AI_SUITE_PACKAGE = "AI Business Suite";
@@ -504,7 +503,7 @@ const TrustSignals = () => (
           {
             icon: Mail,
             title: "Lead routing checked",
-            text: `Website and claim forms route to ${CLAIM_EMAIL}.`,
+            text: "Website and claim forms use the EB28 intake workflow.",
           },
         ].map((item) => {
           const Icon = item.icon;
@@ -1038,7 +1037,7 @@ const Team = () => {
       setTimeout(() => setIsSuccess(false), 5000);
     } catch (error) {
       console.error("Direct inquiry failed", error);
-      setSubmitError("Something went wrong. Please try again or email social@eb28.co.");
+      setSubmitError("Something went wrong. Please try again from the intake form.");
     } finally {
       setIsSubmitting(false);
     }
@@ -1259,9 +1258,9 @@ const Team = () => {
               </div>
               <div>
                 <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">
-                  Direct inbox
+                  Direct intake
                 </p>
-                <p className="text-sm font-bold">social@eb28.co</p>
+                <p className="text-sm font-bold">Use the project brief form</p>
               </div>
             </div>
           </div>
@@ -3313,29 +3312,29 @@ const Resources = () => {
           <div className="grid md:grid-cols-3 gap-4">
             {[
               {
-                title: "AI Receptionist for Local Business",
-                href: "/blog/ai-receptionist-for-local-business-what-to-automate-and-what-to-keep-human/",
-                text: "What to automate, what to keep human, and how to keep ready buyers from going cold.",
+                title: "AI Appointment Setter for Small Business",
+                href: "/blog/ai-appointment-setter-for-small-business-where-it-helps-and-where-it-hurts/",
+                text: "Where appointment automation helps, where it hurts, and how to keep human control in the right places.",
               },
               {
-                title: "Website Audit Checklist for Melbourne FL",
-                href: "/blog/website-audit-checklist-for-melbourne-fl-businesses-losing-leads/",
-                text: "A practical lead-leak checklist for local businesses that need more calls from existing traffic.",
+                title: "Automated Lead Follow-Up for Contractors",
+                href: "/blog/automated-lead-follow-up-for-contractors-how-to-stop-losing-hot-enquiries/",
+                text: "How contractors can respond faster without letting software own pricing, qualification, or trust.",
               },
               {
-                title: "Melbourne FL Web Design Cost Guide",
-                href: "/blog/melbourne-fl-web-design-cost-guide-2026/",
-                text: "Pricing, scope, and ROI signals for local businesses comparing website builders.",
+                title: "Website Redesign in Melbourne FL",
+                href: "/blog/website-redesign-in-melbourne-fl-fix-the-leaks-before-you-rebuild-everything/",
+                text: "What to fix before rebuilding a local website so the redesign solves the actual lead leak.",
               },
               {
-                title: "Local SEO Map Pack Checklist",
-                href: "/blog/local-seo-map-pack-melbourne-fl/",
-                text: "Google Business Profile, reviews, citations, and website signals working together.",
+                title: "Lead Generation Website in Melbourne FL",
+                href: "/blog/lead-generation-website-in-melbourne-fl-the-page-elements-that-make-people-act/",
+                text: "The page elements that help nearby buyers understand the offer and take the next step.",
               },
               {
-                title: "How to Rank in the Melbourne FL Map Pack",
-                href: "/blog/how-to-rank-in-the-melbourne-fl-map-pack-without-spammy-seo/",
-                text: "How Google profile signals, reviews, citations, and website proof work together without spammy SEO.",
+                title: "Local SEO Services in Melbourne FL",
+                href: "/blog/local-seo-services-in-melbourne-fl-what-should-be-fixed-before-you-pay-monthly/",
+                text: "What should already be correct before a business pays monthly for local SEO support.",
               },
               {
                 title: "Website Conversion Checklist",
@@ -3451,7 +3450,7 @@ const GrowthContact = () => {
       window.setTimeout(() => setIsSuccess(false), 6000);
     } catch (error) {
       console.error("Growth Hosting inquiry failed", error);
-      setSubmitError(`Something went wrong. Please email ${CLAIM_EMAIL}.`);
+      setSubmitError("Something went wrong. Please try the form again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -3476,7 +3475,7 @@ const GrowthContact = () => {
               "No upfront website build fee",
               "$98/month managed hosting and local SEO upkeep",
               "Weekly local blog or Google Business content prompt",
-              `Inquiry routing checked to ${CLAIM_EMAIL}`,
+              "Inquiry routing checked through the EB28 intake workflow",
             ].map((item) => (
               <div key={item} className="flex items-center gap-3 text-slate-700">
                 <CheckCircle2 className="w-5 h-5 text-blue-600 flex-shrink-0" />
@@ -3541,10 +3540,10 @@ const GrowthContact = () => {
             disabled={isSubmitting}
             className="mt-5 w-full bg-blue-600 text-white font-bold py-4 rounded-lg hover:bg-blue-500 transition-all flex items-center justify-center gap-2 disabled:opacity-70"
           >
-            {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : <>Send to {CLAIM_EMAIL} <ArrowRight className="w-4 h-4" /></>}
+            {isSubmitting ? <Loader2 className="w-5 h-5 animate-spin" /> : <>Send inquiry <ArrowRight className="w-4 h-4" /></>}
           </button>
           {submitError && <p className="mt-4 text-sm text-red-200">{submitError}</p>}
-          {isSuccess && <p className="mt-4 text-sm text-emerald-200">Sent. We will reply from {CLAIM_EMAIL}.</p>}
+          {isSuccess && <p className="mt-4 text-sm text-emerald-200">Sent. We will reply by email.</p>}
         </form>
       </div>
     </section>
@@ -3630,7 +3629,7 @@ const Footer = () => (
       <div>
         <h4 className="font-bold mb-6">Contact Info</h4>
         <ul className="space-y-4 text-slate-400 text-sm">
-          <li>social@eb28.co</li>
+          <li>Use the project brief form above</li>
           <li>Based in Melbourne, FL</li>
         </ul>
       </div>
@@ -4009,9 +4008,9 @@ const Testimonials = () => {
     },
     {
       quote:
-        `All claim and inquiry forms are configured to send to ${CLAIM_EMAIL}, with launch-time routing available for each approved business site.`,
+        "All claim and inquiry forms use the EB28 intake workflow, with launch-time routing available for each approved business site.",
       author: "EB28 Lead Routing",
-      business: CLAIM_EMAIL,
+      business: "Growth Hosting intake",
       image:
         "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=150",
     },

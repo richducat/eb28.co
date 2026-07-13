@@ -20,20 +20,9 @@ const isAppBuilderRoute = pathname === '/appbuilder';
 const isFundManagerRoute =
   pathname === '/fundmanager' ||
   hostname === 'fundmanager.eb28.co';
-const isDeskOsRoute =
-  pathname === '/deskos' ||
-  hostname === 'deskos.eb28.co';
 const isReconAgentRoute =
   pathname === '/reconcile' ||
   hostname === 'reconcile.eb28.co';
-const isLimitlessCreditGpsRoute =
-  pathname === '/limitless' ||
-  pathname.startsWith('/limitless/') ||
-  pathname === '/credit-gps' ||
-  pathname.startsWith('/credit-gps/') ||
-  pathname === '/limitless-credit-gps' ||
-  pathname.startsWith('/limitless-credit-gps/') ||
-  hostname === 'creditgps.eb28.co';
 const isThomasCustomHomesRoute =
   pathname === '/tch' ||
   pathname.startsWith('/tch/') ||
@@ -107,18 +96,8 @@ async function renderApp() {
     return;
   }
 
-  if (isDeskOsRoute) {
-    await renderRoute(() => import('./DeskOS'));
-    return;
-  }
-
   if (isReconAgentRoute) {
     await renderRoute(() => import('./ReconAgentPage'));
-    return;
-  }
-
-  if (isLimitlessCreditGpsRoute) {
-    await renderRoute(() => import('./LimitlessCreditGPS'));
     return;
   }
 

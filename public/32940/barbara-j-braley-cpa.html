@@ -237,7 +237,8 @@
         background: var(--accent);
         flex: 0 0 auto;
       }
-      form {
+      form,
+      .claim-card {
         display: grid;
         gap: 12px;
         padding: 24px;
@@ -400,7 +401,7 @@
             </p>
             <div class="hero-actions">
               <a class="btn accent" href="#claim">Claim this free site</a>
-              <a class="btn" href="mailto:social@eb28.co?subject=Book%20the%20free%20EB28%20website%20review%20for%20Barbara%20J%20Braley%2C%20CPA&amp;body=I%20want%20to%20claim%20the%20free%20website%20concept%20for%20Barbara%20J%20Braley%2C%20CPA%20and%20book%20a%2010-minute%20review%20call.%0A%0AName%3A%0ARole%20with%20the%20business%3A%0APhone%3A%0APreferred%2010-minute%20review%20window%3A%0ABackup%20review%20window%3A%0ACurrent%20website%20or%20Google%20listing%3A%0A">Email EB28</a>
+              <a class="btn" href="https://eb28.co/melbournewebstudio/#quiz">Open project brief</a>
             </div>
           </div>
           <aside class="preview" aria-label="Website concept preview">
@@ -455,7 +456,7 @@
             </article>
             <article class="card">
               <h3>Lead routing</h3>
-              <p>Every claim form on this concept sends to <strong>social@eb28.co</strong>. EB28 can route approved site leads to the business's preferred inbox at launch.</p>
+              <p>Every claim path on this concept points to the EB28 intake workflow. EB28 can route approved site leads to the business's preferred inbox at launch.</p>
             </article>
           </div>
         </div>
@@ -477,74 +478,17 @@
               <li>No ownership confusion: the owner keeps the business, domain, content rights, and customer relationships.</li>
             </ul>
           </div>
-          <form action="https://formsubmit.co/social@eb28.co" method="POST" accept-charset="UTF-8">
-            <p class="form-intro">Tell EB28 when to review this free site with you. The request goes straight to social@eb28.co.</p>
-            <input type="hidden" name="_subject" value="Booked review request: Barbara J Braley, CPA free EB28 website" />
-            <input type="hidden" name="_captcha" value="false" />
-            <input type="hidden" name="_template" value="table" />
-            <input type="hidden" name="_next" value="https://eb28.co/32940/claim-received.html" />
-            <input type="hidden" name="source" value="eb28-32940-barbara-j-braley-cpa" />
-            <input type="hidden" name="business" value="Barbara J Braley, CPA" />
-            <input type="hidden" name="category" value="CPA, tax, accounting, and bookkeeping office" />
-            <input type="hidden" name="concept_url" value="https://eb28.co/32940/barbara-j-braley-cpa.html" />
-            <input type="hidden" name="offer" value="Free website build plus EB28 Growth Hosting at $98/month with SEO and weekly blog posts" />
-            <input type="hidden" name="requested_next_step" value="Claim free website concept and confirm a 10-minute owner review call" />
-            <input type="hidden" name="review_timezone" value="America/New_York" />
-            <div class="field-grid">
-              <label>
-                Your name
-                <input name="name" autocomplete="name" required placeholder="Name" />
-              </label>
-              <label>
-                Work email
-                <input name="email" type="email" autocomplete="email" required placeholder="you@example.com" />
-              </label>
-            </div>
-            <div class="field-grid">
-              <label>
-                Role with the business
-                <input name="reviewer_role" required placeholder="Owner, manager, marketing..." />
-              </label>
-              <label>
-                Phone for confirmation
-                <input name="phone" type="tel" autocomplete="tel" required placeholder="Best number" />
-              </label>
-            </div>
-            <div class="slot-panel">
-              <div class="slot-label">Fast 10-minute review windows</div>
-              <div class="slot-grid" data-review-slot-grid>
-                <button type="button" class="slot-button" data-slot="Next business morning ET">Next business morning ET</button>
-                <button type="button" class="slot-button" data-slot="Next business afternoon ET">Next business afternoon ET</button>
-              </div>
-              <p class="slot-help">Pick a slot to fill the review fields, or type a different time. Times are interpreted in Eastern time.</p>
-            </div>
-            <div class="field-grid">
-              <label>
-                Preferred 10-minute review window
-                <input name="preferred_review_time" required placeholder="Today 3:00 PM ET, Friday morning..." />
-              </label>
-              <label>
-                Backup review window
-                <input name="backup_review_time" required placeholder="Another specific day/time that works" />
-              </label>
-            </div>
-            <label class="checkbox-field">
-              <input name="confirm_review_intent" type="checkbox" required value="Yes, confirm one of these review windows" />
-              I want EB28 to confirm one of these 10-minute review windows for this free website concept.
-            </label>
-            <label>
-              What should EB28 check first?
-              <textarea name="message" placeholder="Optional: current website, Google listing, photos, menu, booking link, or anything that needs to be corrected before launch."></textarea>
-            </label>
-            <button class="btn accent" type="submit">Book my free website review</button>
-            <p class="fine">No obligation. Prefer email? Send a note to <a href="mailto:social@eb28.co?subject=Book%20the%20free%20EB28%20website%20review%20for%20Barbara%20J%20Braley%2C%20CPA&amp;body=I%20want%20to%20claim%20the%20free%20website%20concept%20for%20Barbara%20J%20Braley%2C%20CPA%20and%20book%20a%2010-minute%20review%20call.%0A%0AName%3A%0ARole%20with%20the%20business%3A%0APhone%3A%0APreferred%2010-minute%20review%20window%3A%0ABackup%20review%20window%3A%0ACurrent%20website%20or%20Google%20listing%3A%0A">social@eb28.co</a>. Reply "no thanks" any time and EB28 will stop following up.</p>
-          </form>
+          <div class="claim-card">
+            <p class="form-intro">Use the EB28 intake workflow to request review of this free site concept. No public inbox or third-party form endpoint is embedded on this page.</p>
+            <a class="btn accent" href="https://eb28.co/melbournewebstudio/#quiz">Open the EB28 intake form</a>
+            <p class="fine">No obligation. EB28 can route approved site leads to the business's preferred inbox at launch.</p>
+          </div>
         </div>
       </section>
     </main>
 
     <footer>
-      Prepared by <a href="https://eb28.co">EB28</a>. Unofficial concept for owner review only. Contact <a href="mailto:social@eb28.co">social@eb28.co</a>.
+      Prepared by <a href="https://eb28.co">EB28</a>. Unofficial concept for owner review only. Use the EB28 intake form for review requests.
     </footer>
     <script>
       (() => {

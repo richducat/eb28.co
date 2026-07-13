@@ -64,7 +64,6 @@ function buildThomasLocalBusinessSchema(imageUrl) {
         '@type': 'LocalBusiness',
         name: THOMAS_COMPANY_NAME,
         url: THOMAS_CUSTOM_HOMES_SITE_ORIGIN,
-        telephone: '+1-321-587-1163',
         image: imageUrl,
         areaServed: [
             'Viera, Florida',
@@ -95,7 +94,6 @@ function buildThomasStructuredData(page, imageUrl) {
             '@type': 'Organization',
             name: THOMAS_COMPANY_NAME,
             url: THOMAS_CUSTOM_HOMES_SITE_ORIGIN,
-            telephone: '+1-321-587-1163',
         },
         buildThomasLocalBusinessSchema(imageUrl),
         {
@@ -267,35 +265,6 @@ const ROUTE_META = {
             },
         ],
     },
-    deskos: {
-        ...BASE_ROUTE_META,
-        key: 'deskos',
-        path: '/deskos/',
-        title: 'EB28 Desk OS | 8 Trading Agents + Bluechip, the Robinhood Agentic Equities Desk',
-        description:
-            'License the EB28 Desk OS: eight autonomous Polymarket and Kalshi trading agents behind a gated runner, global kill switch, capital guard, and live dashboard — plus Bluechip, the flagship US equities desk in live beta on Robinhood’s official Agentic Trading API. Paper mode first, real money only when you flip the gate.',
-        image: FUNDMANAGER_IMAGE,
-        includeInSitemap: true,
-        structuredData: [
-            ORGANIZATION_SCHEMA,
-            {
-                '@context': 'https://schema.org',
-                '@type': 'Product',
-                name: 'EB28 Desk OS',
-                description:
-                    'A prediction-market agent operating system: eight trading agents, a gated runner with kill switch, capital guard, trade journal, and live dashboard, licensed as software.',
-                image: FUNDMANAGER_IMAGE,
-                brand: { '@type': 'Brand', name: 'EB28' },
-                offers: {
-                    '@type': 'AggregateOffer',
-                    priceCurrency: 'USD',
-                    lowPrice: '47',
-                    highPrice: '497',
-                    offerCount: '10',
-                },
-            },
-        ],
-    },
     bluechip: {
         ...BASE_ROUTE_META,
         key: 'bluechip',
@@ -410,34 +379,6 @@ const ROUTE_META = {
             },
         ],
     },
-    creditgps: {
-        ...BASE_ROUTE_META,
-        key: 'creditgps',
-        path: '/limitless/',
-        title: 'Limitless Credit GPS | Credit Decision Simulator',
-        description:
-            'Limitless Credit GPS helps users simulate common credit moves, understand likely credit impact direction, and choose a smarter next action before applying or changing accounts.',
-        image: DEFAULT_IMAGE,
-        includeInSitemap: true,
-        structuredData: [
-            ORGANIZATION_SCHEMA,
-            {
-                '@context': 'https://schema.org',
-                '@type': 'SoftwareApplication',
-                name: 'Limitless Credit GPS',
-                applicationCategory: 'FinanceApplication',
-                operatingSystem: 'Web',
-                isAccessibleForFree: true,
-                url: `${SITE_ORIGIN}/limitless/`,
-                image: DEFAULT_IMAGE,
-                description:
-                    'A free credit education and decision simulator that explains likely direction, risk, confidence, and next best action for common credit moves.',
-                provider: {
-                    '@id': ORGANIZATION_ID,
-                },
-            },
-        ],
-    },
     ...THOMAS_ROUTE_META,
     melbournewebstudio: {
         ...BASE_ROUTE_META,
@@ -446,7 +387,7 @@ const ROUTE_META = {
         canonicalUrlOverride: MELBOURNE_WEB_STUDIO_CANONICAL_URL,
         title: 'Melbourne Web Studio | Free Website Build + $98/mo Growth Hosting',
         description:
-            'EB28 builds custom local business websites for free, then hosts and improves approved sites for $98/month with SEO upkeep, weekly blog posts, and lead routing to social@eb28.co.',
+            'EB28 builds custom local business websites for free, then hosts and improves approved sites for $98/month with SEO upkeep, weekly blog posts, and owner-approved lead routing.',
         image: DEFAULT_IMAGE,
         siteName: 'Melbourne Web Studio',
         themeColor: '#ffffff',
@@ -466,7 +407,6 @@ const ROUTE_META = {
                 '@type': 'LocalBusiness',
                 name: 'Melbourne Web Studio',
                 url: MELBOURNE_WEB_STUDIO_CANONICAL_URL,
-                email: 'social@eb28.co',
                 image: DEFAULT_IMAGE,
                 priceRange: '$$',
                 areaServed: ['Melbourne, Florida', 'Brevard County, Florida', 'Space Coast'],
@@ -495,7 +435,7 @@ const ROUTE_META = {
         canonicalUrlOverride: FREE_WEBSITE_BUILD_CANONICAL_URL,
         title: 'Free Website Build for Local Businesses | $98/mo Growth Hosting | EB28',
         description:
-            'EB28 builds a free local business website concept before you pay. Approved sites can launch on $98/month Growth Hosting with managed hosting, SEO, weekly content, and lead routing to social@eb28.co.',
+            'EB28 builds a free local business website concept before you pay. Approved sites can launch on $98/month Growth Hosting with managed hosting, SEO, weekly content, and owner-approved lead routing.',
         image: DEFAULT_IMAGE,
         siteName: 'EB28 Growth Hosting',
         themeColor: '#fafaf9',
@@ -747,10 +687,6 @@ export function detectRouteKey({ pathname = '/', hostname = '' } = {}) {
         return 'fundmanager';
     }
 
-    if (normalizedPathname === '/deskos' || normalizedHostname === 'deskos.eb28.co') {
-        return 'deskos';
-    }
-
     if (
         normalizedHostname === 'daytradingbot.net' ||
         normalizedHostname === 'www.daytradingbot.net'
@@ -778,18 +714,6 @@ export function detectRouteKey({ pathname = '/', hostname = '' } = {}) {
 
     if (normalizedPathname === '/welcome' || normalizedPathname.startsWith('/welcome/')) {
         return 'welcome';
-    }
-
-    if (
-        normalizedPathname === '/limitless' ||
-        normalizedPathname.startsWith('/limitless/') ||
-        normalizedPathname === '/credit-gps' ||
-        normalizedPathname.startsWith('/credit-gps/') ||
-        normalizedPathname === '/limitless-credit-gps' ||
-        normalizedPathname.startsWith('/limitless-credit-gps/') ||
-        normalizedHostname === 'creditgps.eb28.co'
-    ) {
-        return 'creditgps';
     }
 
     if (

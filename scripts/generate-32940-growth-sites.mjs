@@ -7,8 +7,8 @@ import { fileURLToPath } from 'node:url';
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const outDir = path.join(repoRoot, 'public', '32940');
 const replacementProspectsPath = path.join(repoRoot, 'scripts', 'data', '32940-replacement-prospects.json');
-const claimEmail = 'social@eb28.co';
 const studioUrl = 'https://eb28.co/melbournewebstudio/';
+const intakeUrl = `${studioUrl}#quiz`;
 const claimReceivedUrl = 'https://eb28.co/32940/claim-received.html';
 
 const baseProspects = [
@@ -909,14 +909,6 @@ const escapeHtml = (value = '') =>
 
 const attr = escapeHtml;
 
-function buildMailto(prospect) {
-  const subject = encodeURIComponent(`Book the free EB28 website review for ${prospect.name}`);
-  const body = encodeURIComponent(
-    `I want to claim the free website concept for ${prospect.name} and book a 10-minute review call.\n\nName:\nRole with the business:\nPhone:\nPreferred 10-minute review window:\nBackup review window:\nCurrent website or Google listing:\n`,
-  );
-  return `mailto:${claimEmail}?subject=${subject}&body=${body}`;
-}
-
 function renderReviewSlotScript() {
   return `<script>
       (() => {
@@ -995,7 +987,6 @@ function focusMarkup(items) {
 function renderProspectPage(prospect, index) {
   const title = `${prospect.name} free website concept | EB28 Growth Hosting`;
   const description = `A free local website concept for ${prospect.name}. EB28 can host, optimize, and publish weekly local content for $98/month after owner approval.`;
-  const mailto = buildMailto(prospect);
   const accent = index % 3 === 0 ? '#0f766e' : index % 3 === 1 ? '#2563eb' : '#be123c';
 
   return `<!doctype html>
@@ -1237,7 +1228,8 @@ function renderProspectPage(prospect, index) {
         background: var(--accent);
         flex: 0 0 auto;
       }
-      form {
+      form,
+      .claim-card {
         display: grid;
         gap: 12px;
         padding: 24px;
@@ -1400,7 +1392,7 @@ function renderProspectPage(prospect, index) {
             </p>
             <div class="hero-actions">
               <a class="btn accent" href="#claim">Claim this free site</a>
-              <a class="btn" href="${attr(mailto)}">Email EB28</a>
+              <a class="btn" href="${attr(intakeUrl)}">Open project brief</a>
             </div>
           </div>
           <aside class="preview" aria-label="Website concept preview">
@@ -1453,7 +1445,7 @@ function renderProspectPage(prospect, index) {
             </article>
             <article class="card">
               <h3>Lead routing</h3>
-              <p>Every claim form on this concept sends to <strong>${claimEmail}</strong>. EB28 can route approved site leads to the business's preferred inbox at launch.</p>
+              <p>Every claim path on this concept points to the EB28 intake workflow. EB28 can route approved site leads to the business's preferred inbox at launch.</p>
             </article>
           </div>
         </div>
@@ -1475,74 +1467,17 @@ function renderProspectPage(prospect, index) {
               <li>No ownership confusion: the owner keeps the business, domain, content rights, and customer relationships.</li>
             </ul>
           </div>
-          <form action="https://formsubmit.co/${claimEmail}" method="POST" accept-charset="UTF-8">
-            <p class="form-intro">Tell EB28 when to review this free site with you. The request goes straight to ${claimEmail}.</p>
-            <input type="hidden" name="_subject" value="Booked review request: ${attr(prospect.name)} free EB28 website" />
-            <input type="hidden" name="_captcha" value="false" />
-            <input type="hidden" name="_template" value="table" />
-            <input type="hidden" name="_next" value="${attr(claimReceivedUrl)}" />
-            <input type="hidden" name="source" value="eb28-32940-${attr(prospect.slug)}" />
-            <input type="hidden" name="business" value="${attr(prospect.name)}" />
-            <input type="hidden" name="category" value="${attr(prospect.category)}" />
-            <input type="hidden" name="concept_url" value="https://eb28.co/32940/${attr(prospect.slug)}.html" />
-            <input type="hidden" name="offer" value="Free website build plus EB28 Growth Hosting at $98/month with SEO and weekly blog posts" />
-            <input type="hidden" name="requested_next_step" value="Claim free website concept and confirm a 10-minute owner review call" />
-            <input type="hidden" name="review_timezone" value="America/New_York" />
-            <div class="field-grid">
-              <label>
-                Your name
-                <input name="name" autocomplete="name" required placeholder="Name" />
-              </label>
-              <label>
-                Work email
-                <input name="email" type="email" autocomplete="email" required placeholder="you@example.com" />
-              </label>
-            </div>
-            <div class="field-grid">
-              <label>
-                Role with the business
-                <input name="reviewer_role" required placeholder="Owner, manager, marketing..." />
-              </label>
-              <label>
-                Phone for confirmation
-                <input name="phone" type="tel" autocomplete="tel" required placeholder="Best number" />
-              </label>
-            </div>
-            <div class="slot-panel">
-              <div class="slot-label">Fast 10-minute review windows</div>
-              <div class="slot-grid" data-review-slot-grid>
-                <button type="button" class="slot-button" data-slot="Next business morning ET">Next business morning ET</button>
-                <button type="button" class="slot-button" data-slot="Next business afternoon ET">Next business afternoon ET</button>
-              </div>
-              <p class="slot-help">Pick a slot to fill the review fields, or type a different time. Times are interpreted in Eastern time.</p>
-            </div>
-            <div class="field-grid">
-              <label>
-                Preferred 10-minute review window
-                <input name="preferred_review_time" required placeholder="Today 3:00 PM ET, Friday morning..." />
-              </label>
-              <label>
-                Backup review window
-                <input name="backup_review_time" required placeholder="Another specific day/time that works" />
-              </label>
-            </div>
-            <label class="checkbox-field">
-              <input name="confirm_review_intent" type="checkbox" required value="Yes, confirm one of these review windows" />
-              I want EB28 to confirm one of these 10-minute review windows for this free website concept.
-            </label>
-            <label>
-              What should EB28 check first?
-              <textarea name="message" placeholder="Optional: current website, Google listing, photos, menu, booking link, or anything that needs to be corrected before launch."></textarea>
-            </label>
-            <button class="btn accent" type="submit">Book my free website review</button>
-            <p class="fine">No obligation. Prefer email? Send a note to <a href="${attr(mailto)}">${claimEmail}</a>. Reply "no thanks" any time and EB28 will stop following up.</p>
-          </form>
+          <div class="claim-card">
+            <p class="form-intro">Use the EB28 intake workflow to request review of this free site concept. No public inbox or third-party form endpoint is embedded on this page.</p>
+            <a class="btn accent" href="${attr(intakeUrl)}">Open the EB28 intake form</a>
+            <p class="fine">No obligation. EB28 can route approved site leads to the business's preferred inbox at launch.</p>
+          </div>
         </div>
       </section>
     </main>
 
     <footer>
-      Prepared by <a href="https://eb28.co">EB28</a>. Unofficial concept for owner review only. Contact <a href="mailto:${claimEmail}">${claimEmail}</a>.
+      Prepared by <a href="https://eb28.co">EB28</a>. Unofficial concept for owner review only. Use the EB28 intake form for review requests.
     </footer>
     ${renderReviewSlotScript()}
   </body>
@@ -1558,7 +1493,7 @@ function renderClaimReceivedPage() {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex,follow" />
     <title>Website review request received | EB28</title>
-    <meta name="description" content="EB28 received your free website review request and will reply from social@eb28.co." />
+    <meta name="description" content="EB28 received your free website review request and will follow up by email." />
     <style>
       :root {
         color-scheme: light;
@@ -1659,16 +1594,16 @@ function renderClaimReceivedPage() {
     <main>
       <p class="eyebrow">Request received</p>
       <h1>EB28 has your free website review request.</h1>
-      <p>The request was sent to <strong>${claimEmail}</strong>. EB28 will reply from that inbox to confirm the best 10-minute review time and any details needed before launch.</p>
+      <p>EB28 will reply by email to confirm the best 10-minute review time and any details needed before launch.</p>
       <div class="actions">
         <a class="button primary" href="${studioUrl}">View EB28 Growth Hosting</a>
-        <a class="button" href="mailto:${claimEmail}?subject=Free%20website%20review%20request%20follow-up">Email ${claimEmail}</a>
+        <a class="button" href="${intakeUrl}">Open intake form</a>
         <a class="button" href="/32940/">Back to concepts</a>
       </div>
       <div class="details">
         <span><strong>Offer:</strong> free website build; Growth Hosting is $98/month after owner approval.</span>
         <span><strong>Includes:</strong> managed hosting, technical SEO upkeep, and weekly local blog or Google Business content prompts.</span>
-        <span><strong>Routing:</strong> all owner-review requests go to ${claimEmail}.</span>
+        <span><strong>Routing:</strong> owner-review requests use the EB28 intake workflow.</span>
       </div>
     </main>
   </body>
@@ -1712,7 +1647,7 @@ function renderIndex() {
       <p>EB28 prepared these noindex owner-review pages as a lead-generation offer: the custom website build is free, and approved sites can be hosted, optimized, and supported for $98/month with weekly local content.</p>
       <div class="actions">
         <a class="button" href="${studioUrl}">View EB28 Growth Hosting</a>
-        <a class="button" href="mailto:${claimEmail}?subject=32940%20free%20website%20concepts">Email ${claimEmail}</a>
+        <a class="button" href="${intakeUrl}">Open intake form</a>
       </div>
       <section class="index-list" aria-label="Business website concepts">
         ${links}

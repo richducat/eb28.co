@@ -27,59 +27,99 @@
     />
     <title>Inspector Gadgets · York Inspections</title>
     <script>
-      // Pick up new deploys — but ONLY on the first load of a tab session, and
-      // NEVER once the app has booted. A field inspector who switches to the
-      // camera and back triggers an iOS tab reload; auto-swapping the bundle
-      // then (or looping when the CDN briefly serves two versions) would
-      // interrupt an in-progress inspection and drop unsaved edits. So: at most
-      // one version check, before any editing is possible; every later reload
-      // just loads the current bundle and restores saved work.
+      // ALWAYS run the latest deploy. This checks the deployed shell on EVERY
+      // document load (boot, manual refresh, iOS tab restore) AND whenever the
+      // inspector returns to the app after being away — so a long-lived field
+      // device can never sit on a stale (crashy) build. It is:
+      //   • loop-safe — only bounces to a DIFFERENT hash, and refuses to bounce
+      //     to the same target twice inside 20s (guards the window where GitHub
+      //     Pages' CDN is still propagating a deploy and the reload can't yet
+      //     fetch the version we just saw, which would otherwise reload-storm);
+      //   • data-safe — it bounces at load time (before any edit exists) and on
+      //     return-after-away, NOT mid-edit; a quick camera/file-picker round
+      //     trip (< 45s) is excluded so a reload can't race an in-flight photo
+      //     import; and the app itself flushes unsaved work on hide/pagehide +
+      //     a 60s autosave, so any reload resumes from saved state.
       (function () {
         function currentHash() {
           var s = (document.querySelector('script[type="module"][src*="index-"]') || {}).src || "";
           return (s.match(/index-[A-Za-z0-9_-]+\.js/) || [])[0];
         }
-        // Compare the loaded bundle to a freshly-fetched shell; if a newer deploy
-        // exists, bounce to it ONCE per session (guarded so a flapping CDN can't
-        // loop). Called before first edit, and again when the inspector returns
-        // after being away — the app flushes unsaved work on hide, so a reload on
-        // return is data-safe.
+        var checking = false;
+        // Reload to this same page — but PRESERVING any query params (e.g.
+        // Stripe's ?subscribed=1 / ?checkout=cancelled, which App.tsx reads on
+        // boot) — with a unique _r stamp so the navigation misses the CDN cache
+        // and pulls the new HTML.
+        function bounceUrl() {
+          try {
+            var sp = new URLSearchParams(location.search);
+            sp.set("_r", String(Date.now()));
+            return location.pathname + "?" + sp.toString() + location.hash;
+          } catch (e) {
+            return location.pathname + "?_r=" + Date.now() + location.hash;
+          }
+        }
         function checkAndReload() {
-          if (sessionStorage.getItem("hia:ver-reload")) return; // one bounce per session
+          if (checking) return; // one in-flight check at a time
           var have = currentHash();
-          if (!have) return; // dev server — nothing to compare
+          if (!have) return; // dev server — no hashed bundle to compare
+          checking = true;
           fetch(location.pathname + "?_v=" + Date.now(), { cache: "no-store" })
             .then(function (res) { return res.ok ? res.text() : ""; })
             .then(function (html) {
               var fresh = (html.match(/index-[A-Za-z0-9_-]+\.js/) || [])[0];
-              if (fresh && fresh !== have && !sessionStorage.getItem("hia:ver-reload")) {
-                sessionStorage.setItem("hia:ver-reload", "1");
-                location.replace(location.pathname + "?_r=" + Date.now() + location.hash);
+              if (!fresh || fresh === have) {
+                // Already on the latest build — clear any stale flap marker.
+                try { sessionStorage.removeItem("hia:bounce-to"); } catch (e) {}
+                return;
               }
+              // A different build is live. Avoid a reload storm: if we ALREADY
+              // bounced toward this exact hash < 20s ago and still didn't land on
+              // it, the CDN is mid-propagation — skip this round and let the next
+              // natural load / return retry once it has settled.
+              var mark = "";
+              try { mark = sessionStorage.getItem("hia:bounce-to") || ""; } catch (e) {}
+              var parts = mark.split("|");
+              if (parts[0] === fresh && Date.now() - (+parts[1] || 0) < 20000) return;
+              try { sessionStorage.setItem("hia:bounce-to", fresh + "|" + Date.now()); } catch (e) {}
+              location.replace(bounceUrl());
             })
-            .catch(function () {});
+            .catch(function () {})
+            .then(function () { checking = false; });
         }
         try {
-          if (location.search.indexOf("_r=") !== -1) {
-            history.replaceState(null, "", location.pathname + location.hash);
-          }
-          // First load of a tab session: check before any editing is possible. A
-          // mid-session reload / tab restore skips this so it can't interrupt an
-          // in-progress inspection — the visibility check below covers those.
-          if (!sessionStorage.getItem("hia:booted")) {
-            checkAndReload();
-          }
-          // Long-lived mobile tabs never re-run the first-load check, so they can
-          // sit on a stale (crashy) build for days. When the inspector leaves the
-          // app and comes back after a while — NOT a quick camera snap — re-check
-          // and update onto the latest build.
-          var hiddenAt = 0;
-          document.addEventListener("visibilitychange", function () {
-            if (document.visibilityState === "hidden") {
-              hiddenAt = Date.now();
-            } else if (document.visibilityState === "visible" && hiddenAt && Date.now() - hiddenAt > 45000) {
-              checkAndReload();
+          // Strip only our own _r marker on landing — keep every other query
+          // param so App.tsx still sees Stripe/deep-link params after a bounce.
+          try {
+            var landSp = new URLSearchParams(location.search);
+            if (landSp.has("_r")) {
+              landSp.delete("_r");
+              var landQs = landSp.toString();
+              history.replaceState(null, "", location.pathname + (landQs ? "?" + landQs : "") + location.hash);
             }
+          } catch (e) {}
+          // Every document load lands on the latest build.
+          checkAndReload();
+          // Re-check whenever the inspector's attention RETURNS to the app after
+          // being away a bit — covers a backgrounded tab (visibilitychange), an
+          // OS app-switch on desktop (window blur/focus), and a bfcache back-nav
+          // (pageshow). NOT a quick (<45s) glance away, so a reload can't race an
+          // in-flight photo import. We update on these natural return boundaries
+          // rather than a raw timer, which would interrupt an actively-edited tab.
+          var awayAt = 0;
+          function markAway() { if (!awayAt) awayAt = Date.now(); }
+          function onReturn() {
+            var was = awayAt; awayAt = 0;
+            if (was && Date.now() - was > 45000) checkAndReload();
+          }
+          document.addEventListener("visibilitychange", function () {
+            if (document.visibilityState === "hidden") markAway(); else onReturn();
+          });
+          window.addEventListener("blur", markAway);
+          window.addEventListener("focus", onReturn);
+          window.addEventListener("pageshow", function (e) {
+            // A bfcache restore never re-runs this script, so re-check directly.
+            if (e && e.persisted) checkAndReload(); else onReturn();
           });
         } catch (e) {}
       })();

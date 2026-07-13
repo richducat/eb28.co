@@ -106,11 +106,20 @@
           // (pageshow). NOT a quick (<45s) glance away, so a reload can't race an
           // in-flight photo import. We update on these natural return boundaries
           // rather than a raw timer, which would interrupt an actively-edited tab.
+          // NEVER auto-reload a RUNNING app while the inspector is actively working
+          // (labeling photos, mid-import) — the app sets window.__hiaNoReload while
+          // the Photos view is open or an import is running. A reload there is
+          // data-safe (autosave flushes on hide) but yanks them out of labeling,
+          // which is exactly what Beth reported. The every-document-LOAD check above
+          // is unaffected, so a fresh load / manual refresh still lands on latest.
+          function busy() {
+            try { return !!window.__hiaNoReload; } catch (e) { return false; }
+          }
           var awayAt = 0;
           function markAway() { if (!awayAt) awayAt = Date.now(); }
           function onReturn() {
             var was = awayAt; awayAt = 0;
-            if (was && Date.now() - was > 45000) checkAndReload();
+            if (was && Date.now() - was > 45000 && !busy()) checkAndReload();
           }
           document.addEventListener("visibilitychange", function () {
             if (document.visibilityState === "hidden") markAway(); else onReturn();
@@ -118,13 +127,14 @@
           window.addEventListener("blur", markAway);
           window.addEventListener("focus", onReturn);
           window.addEventListener("pageshow", function (e) {
-            // A bfcache restore never re-runs this script, so re-check directly.
-            if (e && e.persisted) checkAndReload(); else onReturn();
+            // A bfcache restore never re-runs this script, so re-check directly
+            // (unless mid-labeling).
+            if (e && e.persisted) { if (!busy()) checkAndReload(); } else onReturn();
           });
         } catch (e) {}
       })();
     </script>
-    <script type="module" crossorigin src="/HIP/app/assets/index-DtxAB32g.js"></script>
+    <script type="module" crossorigin src="/HIP/app/assets/index-BYQf2ImI.js"></script>
     <link rel="stylesheet" crossorigin href="/HIP/app/assets/index-XtV0jAjb.css">
   </head>
   <body>

@@ -1,4 +1,4 @@
-From 6c159f4b08fbb57f2484473ceb66ba1180b3ebc5 Mon Sep 17 00:00:00 2001
+From 75536f8db00ca200f88b17be23221ce0157ef579 Mon Sep 17 00:00:00 2001
 From: Richard Ducat <richducat@gmail.com>
 Date: Mon, 13 Jul 2026 11:45:04 -0400
 Subject: [PATCH] Add durable photo ingestion and protected desktop search
@@ -10,8 +10,8 @@ Subject: [PATCH] Add durable photo ingestion and protected desktop search
  app/face.py                                |  34 +-
  app/images.py                              |  15 +-
  app/indexer.py                             |  15 +-
- app/ingestion.py                           | 400 +++++++++++++++++++++
- app/main.py                                | 185 +++++++++-
+ app/ingestion.py                           | 425 +++++++++++++++++++++
+ app/main.py                                | 185 ++++++++-
  app/models.py                              |   3 +-
  app/security.py                            |  49 ++-
  app/vector_store.py                        |  18 +-
@@ -22,8 +22,8 @@ Subject: [PATCH] Add durable photo ingestion and protected desktop search
  requirements.txt                           |   4 +-
  scripts/process_ingest_queue.py            |  47 +++
  tests/test_api_contract.py                 | 199 ++++++++++
- tests/test_ingestion.py                    | 155 ++++++++
- 19 files changed, 1208 insertions(+), 43 deletions(-)
+ tests/test_ingestion.py                    | 199 ++++++++++
+ 19 files changed, 1277 insertions(+), 43 deletions(-)
  create mode 100644 app/ingestion.py
  create mode 100644 deploy/cadetcatch-ingestion-worker.service
  create mode 100644 deploy/cadetcatch-ingestion-worker.timer
@@ -307,10 +307,10 @@ index 3c703dc..c0023cc 100644
 -
 diff --git a/app/ingestion.py b/app/ingestion.py
 new file mode 100644
-index 0000000..08806b8
+index 0000000..f484116
 --- /dev/null
 +++ b/app/ingestion.py
-@@ -0,0 +1,400 @@
+@@ -0,0 +1,425 @@
 +from __future__ import annotations
 +
 +import hashlib
@@ -318,7 +318,7 @@ index 0000000..08806b8
 +import secrets
 +import sqlite3
 +import tempfile
-+from datetime import datetime, timezone
++from datetime import datetime, timedelta, timezone
 +from pathlib import Path
 +from typing import Any
 +from urllib.parse import quote, urljoin, urlparse
@@ -338,6 +338,12 @@ index 0000000..08806b8
 +
 +def now_iso() -> str:
 +    return datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
++
++
++def past_iso(seconds: int) -> str:
++    return (
++        datetime.now(timezone.utc) - timedelta(seconds=seconds)
++    ).replace(microsecond=0).isoformat().replace("+00:00", "Z")
 +
 +
 +def allowed_source_hosts() -> set[str]:
@@ -482,6 +488,25 @@ index 0000000..08806b8
 +    def claim(self, job_id: str | None = None) -> dict[str, Any] | None:
 +        with self.connect() as conn:
 +            conn.execute("BEGIN IMMEDIATE")
++            stale_before = past_iso(900)
++            timestamp = now_iso()
++            conn.execute(
++                """
++                UPDATE ingestion_jobs
++                SET status = 'failed', reason = 'worker_interrupted_after_three_attempts',
++                    updated_at = ?, completed_at = ?
++                WHERE status = 'processing' AND updated_at < ? AND attempts >= 3
++                """,
++                (timestamp, timestamp, stale_before),
++            )
++            conn.execute(
++                """
++                UPDATE ingestion_jobs
++                SET status = 'queued', reason = 'requeued_after_interrupted_worker', updated_at = ?
++                WHERE status = 'processing' AND updated_at < ? AND attempts < 3
++                """,
++                (timestamp, stale_before),
++            )
 +            if job_id:
 +                row = conn.execute(
 +                    "SELECT * FROM ingestion_jobs WHERE id = ? AND status = 'queued'",
@@ -1514,10 +1539,10 @@ index 0000000..298d192
 +    assert response.json()["reason"] == "no_ingestion_records"
 diff --git a/tests/test_ingestion.py b/tests/test_ingestion.py
 new file mode 100644
-index 0000000..40b4838
+index 0000000..6705957
 --- /dev/null
 +++ b/tests/test_ingestion.py
-@@ -0,0 +1,155 @@
+@@ -0,0 +1,199 @@
 +from __future__ import annotations
 +
 +import hashlib
@@ -1650,6 +1675,50 @@ index 0000000..40b4838
 +    assert completed["status"] == "failed"
 +    assert "SHA-256" in completed["reason"]
 +    assert ledger.summary()["failures"] == 1
++
++
++def test_stale_processing_jobs_are_retried_then_failed(tmp_path: Path) -> None:
++    ledger = IngestionLedger(tmp_path / "ingestion.sqlite3")
++    job, _ = ledger.enqueue(
++        source_url="https://tyfys.net/cadetcatch/interrupted.jpg",
++        source_filename="interrupted.jpg",
++        event_id="default",
++        sha256=hashlib.sha256(image_bytes()).hexdigest(),
++    )
++
++    first_claim = ledger.claim(job["id"])
++    assert first_claim is not None
++    assert first_claim["status"] == "processing"
++    assert first_claim["attempts"] == 1
++
++    with ledger.connect() as conn:
++        conn.execute(
++            "UPDATE ingestion_jobs SET updated_at = '2000-01-01T00:00:00Z' WHERE id = ?",
++            (job["id"],),
++        )
++
++    second_claim = ledger.claim(job["id"])
++    assert second_claim is not None
++    assert second_claim["status"] == "processing"
++    assert second_claim["attempts"] == 2
++    assert second_claim["reason"] == "requeued_after_interrupted_worker"
++
++    with ledger.connect() as conn:
++        conn.execute(
++            """
++            UPDATE ingestion_jobs
++            SET attempts = 3, updated_at = '2000-01-01T00:00:00Z'
++            WHERE id = ?
++            """,
++            (job["id"],),
++        )
++
++    assert ledger.claim(job["id"]) is None
++    exhausted = ledger.get(job["id"])
++    assert exhausted is not None
++    assert exhausted["status"] == "failed"
++    assert exhausted["reason"] == "worker_interrupted_after_three_attempts"
++    assert exhausted["completed_at"] is not None
 +
 +
 +def test_orientation_normalization_keeps_self_match_above_point_99(tmp_path: Path) -> None:

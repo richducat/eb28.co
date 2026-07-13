@@ -93,6 +93,16 @@ class RedeemInviteRequest(BaseModel):
     device_id: str = Field(min_length=1, max_length=160)
 
 
+class WebLoginStartRequest(BaseModel):
+    email: EmailStr
+
+
+class WebLoginVerifyRequest(BaseModel):
+    challenge_id: str = Field(min_length=12, max_length=120)
+    email: EmailStr
+    code: str = Field(pattern=r"^\d{6}$")
+
+
 def store() -> AccessStore:
     return build_store()
 
@@ -103,6 +113,41 @@ def storekit_verifier() -> AppleStoreKitVerifier:
 
 def invite_mailer() -> InviteMailer:
     return InviteMailer.from_env()
+
+
+def web_auth_secret() -> str:
+    secret = os.getenv("CADETCATCH_WEB_AUTH_SECRET", "")
+    if len(secret) < 32:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Web authentication is not configured.",
+        )
+    return secret
+
+
+def require_web_gateway(
+    x_cadetcatch_gateway_key: str | None = Header(default=None),
+) -> None:
+    expected = os.getenv("CADETCATCH_WEB_GATEWAY_KEY", "")
+    if len(expected) < 32:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Web gateway access is not configured.",
+        )
+    if not x_cadetcatch_gateway_key or not secrets.compare_digest(
+        x_cadetcatch_gateway_key,
+        expected,
+    ):
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Forbidden")
+
+
+def bearer_token(authorization: str | None) -> str:
+    if not authorization or not authorization.lower().startswith("bearer "):
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Unauthorized")
+    token = authorization[7:].strip()
+    if not token:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Unauthorized")
+    return token
 
 
 def require_admin(
@@ -290,6 +335,91 @@ def access_status(
     response = access_store.status(email=email)
     response["device_id"] = device_id
     return response
+
+
+@app.post(
+    "/access/web-auth/start",
+    status_code=status.HTTP_202_ACCEPTED,
+    dependencies=[Depends(require_web_gateway)],
+)
+def start_web_login(
+    payload: WebLoginStartRequest,
+    access_store: AccessStore = Depends(store),
+    mailer: InviteMailer = Depends(invite_mailer),
+) -> dict[str, object]:
+    try:
+        challenge_id, code = access_store.create_web_login_challenge(
+            email=str(payload.email),
+            secret=web_auth_secret(),
+        )
+    except PermissionError as error:
+        raise HTTPException(status_code=status.HTTP_429_TOO_MANY_REQUESTS, detail=str(error)) from error
+    except ValueError as error:
+        raise HTTPException(status_code=status.HTTP_503_SERVICE_UNAVAILABLE, detail=str(error)) from error
+    try:
+        mailer.send_login_code(str(payload.email), code)
+    except InviteDeliveryError as error:
+        raise HTTPException(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Sign-in email could not be sent.",
+        ) from error
+    return {
+        "accepted": True,
+        "challenge_id": challenge_id,
+        "expires_in": 600,
+    }
+
+
+@app.post(
+    "/access/web-auth/verify",
+    dependencies=[Depends(require_web_gateway)],
+)
+def verify_web_login(
+    payload: WebLoginVerifyRequest,
+    access_store: AccessStore = Depends(store),
+) -> dict[str, object]:
+    try:
+        token, session = access_store.verify_web_login_challenge(
+            challenge_id=payload.challenge_id,
+            email=str(payload.email),
+            code=payload.code,
+            secret=web_auth_secret(),
+        )
+    except PermissionError as error:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=str(error)) from error
+    return {"session_token": token, "session": session}
+
+
+@app.get(
+    "/access/web-session",
+    dependencies=[Depends(require_web_gateway)],
+)
+def get_web_session(
+    authorization: str | None = Header(default=None),
+    access_store: AccessStore = Depends(store),
+) -> dict[str, object]:
+    session = access_store.web_session(
+        token=bearer_token(authorization),
+        secret=web_auth_secret(),
+    )
+    if session is None:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Session expired.")
+    return session
+
+
+@app.post(
+    "/access/web-auth/logout",
+    dependencies=[Depends(require_web_gateway)],
+)
+def logout_web_session(
+    authorization: str | None = Header(default=None),
+    access_store: AccessStore = Depends(store),
+) -> dict[str, bool]:
+    access_store.revoke_web_session(
+        token=bearer_token(authorization),
+        secret=web_auth_secret(),
+    )
+    return {"logged_out": True}
 
 
 @app.post("/access/subscription/link")

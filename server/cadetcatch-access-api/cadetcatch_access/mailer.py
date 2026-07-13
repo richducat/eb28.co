@@ -54,13 +54,29 @@ class InviteMailer:
             raise InviteDeliveryError("Invitation email delivery is not configured.")
         self._send_smtp(invitation)
 
-    def _send_smtp(self, invitation: CreatedInvitation) -> None:
-        if not self.from_email:
-            raise InviteDeliveryError("CADETCATCH_INVITE_FROM_EMAIL is required for SMTP invites.")
-        if not self.smtp_host:
-            raise InviteDeliveryError("CADETCATCH_SMTP_HOST is required for SMTP invites.")
+    def send_login_code(self, email: str, code: str) -> None:
+        message = build_login_code_message(
+            email,
+            code,
+            self.from_email or "support@eb28.co",
+            self.from_name,
+        )
+        if self.mode == "console":
+            print(message)
+            return
+        if self.mode != "smtp":
+            raise InviteDeliveryError("Login-code email delivery is not configured.")
+        self._send_message(message)
 
+    def _send_smtp(self, invitation: CreatedInvitation) -> None:
         message = build_invitation_message(invitation, self.from_email, self.from_name)
+        self._send_message(message)
+
+    def _send_message(self, message: EmailMessage) -> None:
+        if not self.from_email:
+            raise InviteDeliveryError("CADETCATCH_INVITE_FROM_EMAIL is required for SMTP email.")
+        if not self.smtp_host:
+            raise InviteDeliveryError("CADETCATCH_SMTP_HOST is required for SMTP email.")
         try:
             if self.use_ssl:
                 with smtplib.SMTP_SSL(self.smtp_host, self.smtp_port, context=ssl.create_default_context()) as smtp:
@@ -101,5 +117,21 @@ def build_invitation_message(invitation: CreatedInvitation, from_email: str, fro
     message["Subject"] = "Your CadetCatch access invite"
     message["From"] = f"{from_name} <{from_email}>" if from_name else from_email
     message["To"] = invitation.recipient_email
+    message.set_content(body)
+    return message
+
+
+def build_login_code_message(email: str, code: str, from_email: str, from_name: str) -> EmailMessage:
+    body = (
+        "Use this one-time code to sign in to CadetCatch Web:\n\n"
+        f"{code}\n\n"
+        "The code expires in 10 minutes and can be used once. "
+        "If you did not request it, you can ignore this email.\n\n"
+        "CadetCatch"
+    )
+    message = EmailMessage()
+    message["Subject"] = f"{code} is your CadetCatch sign-in code"
+    message["From"] = f"{from_name} <{from_email}>" if from_name else from_email
+    message["To"] = email
     message.set_content(body)
     return message

@@ -25,6 +25,8 @@ CADETCATCH_ACCESS_DB=/var/lib/cadetcatch/access.sqlite3
 CADETCATCH_ACCESS_ADMIN_TOKEN=replace-with-long-random-token
 CADETCATCH_PUBLIC_BASE_URL=https://api.cadetcatch.com
 CADETCATCH_ACCESS_ALLOWED_ORIGINS=https://eb28.co,https://www.eb28.co
+CADETCATCH_WEB_AUTH_SECRET=replace-with-independent-32-plus-character-secret
+CADETCATCH_WEB_GATEWAY_KEY=replace-with-cloudflare-shared-32-plus-character-key
 CADETCATCH_AUTO_ADMIN_EMAILS=richard@thankyouforyourservice.co,karen@thankyouforyourservice.co,fishkn@upmc.edu
 CADETCATCH_INVITE_EMAIL_MODE=smtp
 CADETCATCH_INVITE_FROM_EMAIL=support@eb28.co
@@ -60,6 +62,19 @@ Do not enable `CADETCATCH_ALLOW_UNVERIFIED_STOREKIT` for production App Review. 
 - `fishkn@upmc.edu`
 
 Apple root certificate files must be installed under `CADETCATCH_APPLE_ROOT_CERT_DIR` or listed in `CADETCATCH_APPLE_ROOT_CERT_PATHS`. The verifier uses Apple's signed transaction JWS, rejects the wrong bundle/product/transaction IDs, and rejects expired or revoked subscriptions.
+
+## Passwordless Website Sessions
+
+The website-only routes are protected from direct browser use by `X-CadetCatch-Gateway-Key`; only the Cloudflare Pages Function receives that secret.
+
+- `POST /access/web-auth/start` creates a six-digit, 10-minute, one-use code and sends it through the configured SMTP service.
+- `POST /access/web-auth/verify` consumes the code and returns a high-entropy session token to Cloudflare.
+- `GET /access/web-session` revalidates the account and its current entitlement on every protected web request.
+- `POST /access/web-auth/logout` revokes the server-side session.
+
+Raw codes and session tokens are never stored in SQLite. HMAC digests are stored instead. Five bad code attempts consume a challenge, five code requests per email per hour are allowed, and sessions expire after 30 days.
+
+Website search is allowed only for an active verified `subscriber`, a redeemed Family invite whose owner still has an active subscriber record, or an active `comp`/`complimentary`/`internal` grant. `desktop_add_on_active` is intentionally not required and no separate web product exists.
 
 ## Invitation Email Delivery
 

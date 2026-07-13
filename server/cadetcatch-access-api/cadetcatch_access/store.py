@@ -1,11 +1,12 @@
 from __future__ import annotations
 
 import hashlib
+import hmac
 import os
 import secrets
 import sqlite3
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 
@@ -20,6 +21,18 @@ DEFAULT_AUTO_ADMIN_EMAILS = {
 
 def now_iso() -> str:
     return datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+
+
+def future_iso(seconds: int) -> str:
+    return (
+        datetime.now(timezone.utc) + timedelta(seconds=seconds)
+    ).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+
+
+def past_iso(seconds: int) -> str:
+    return (
+        datetime.now(timezone.utc) - timedelta(seconds=seconds)
+    ).replace(microsecond=0).isoformat().replace("+00:00", "Z")
 
 
 def is_expired(expires_at: str | None) -> bool:
@@ -69,6 +82,16 @@ def auto_admin_status(email: str) -> dict[str, Any]:
 
 def token_hash(token: str) -> str:
     return hashlib.sha256(token.encode("utf-8")).hexdigest()
+
+
+def secret_digest(secret: str, purpose: str, value: str) -> str:
+    if len(secret) < 32:
+        raise ValueError("Web authentication secret must be at least 32 characters.")
+    return hmac.new(
+        secret.encode("utf-8"),
+        f"{purpose}:{value}".encode("utf-8"),
+        hashlib.sha256,
+    ).hexdigest()
 
 
 @dataclass(frozen=True)
@@ -136,6 +159,44 @@ class AccessStore:
                 """
                 CREATE UNIQUE INDEX IF NOT EXISTS idx_access_invite_owner_role
                 ON access_invitations(owner_email, role)
+                """
+            )
+            conn.execute(
+                """
+                CREATE TABLE IF NOT EXISTS web_login_challenges (
+                    id TEXT PRIMARY KEY,
+                    email TEXT NOT NULL,
+                    code_digest TEXT NOT NULL,
+                    attempts INTEGER NOT NULL DEFAULT 0,
+                    expires_at TEXT NOT NULL,
+                    consumed_at TEXT,
+                    created_at TEXT NOT NULL
+                )
+                """
+            )
+            conn.execute(
+                """
+                CREATE INDEX IF NOT EXISTS idx_web_login_email_created
+                ON web_login_challenges(email, created_at DESC)
+                """
+            )
+            conn.execute(
+                """
+                CREATE TABLE IF NOT EXISTS web_sessions (
+                    id TEXT PRIMARY KEY,
+                    email TEXT NOT NULL,
+                    token_digest TEXT UNIQUE NOT NULL,
+                    expires_at TEXT NOT NULL,
+                    revoked_at TEXT,
+                    created_at TEXT NOT NULL,
+                    last_seen_at TEXT NOT NULL
+                )
+                """
+            )
+            conn.execute(
+                """
+                CREATE INDEX IF NOT EXISTS idx_web_session_email
+                ON web_sessions(email, created_at DESC)
                 """
             )
 
@@ -243,6 +304,215 @@ class AccessStore:
             "expires_at": row["expires_at"],
             "email": account_email,
         }
+
+    def web_entitlement(self, *, email: str) -> dict[str, Any]:
+        account_email = normalize_email(email)
+        account = self.status(email=account_email)
+        response = {
+            "email": account_email,
+            "active": bool(account["active"]),
+            "subscriber_access": False,
+            "access_type": account["access_type"],
+            "role": account["role"],
+            "expires_at": account["expires_at"],
+            "reason": "subscription_required",
+        }
+        if not account["active"]:
+            response["reason"] = (
+                "account_not_found"
+                if account["access_type"] == "none"
+                else "subscription_inactive"
+            )
+            return response
+
+        if account["access_type"] == "subscriber":
+            response["subscriber_access"] = True
+            response["reason"] = "active_family_subscription"
+            return response
+
+        if account["access_type"] in {"comp", "complimentary", "internal"}:
+            response["subscriber_access"] = True
+            response["reason"] = "active_complimentary_grant"
+            return response
+
+        if account["access_type"] == "family_invite":
+            with self.connect() as conn:
+                invite = conn.execute(
+                    """
+                    SELECT owner_email
+                    FROM access_invitations
+                    WHERE recipient_email = ? AND status = 'redeemed'
+                    ORDER BY redeemed_at DESC
+                    LIMIT 1
+                    """,
+                    (account_email,),
+                ).fetchone()
+            if invite is None:
+                response["active"] = False
+                response["reason"] = "family_invite_not_found"
+                return response
+            owner = self.status(email=invite["owner_email"])
+            if not owner["active"] or owner["access_type"] != "subscriber":
+                response["active"] = False
+                response["reason"] = "family_owner_subscription_inactive"
+                return response
+            response["subscriber_access"] = True
+            response["reason"] = "active_family_invite"
+            return response
+
+        response["reason"] = "unsupported_access_type"
+        return response
+
+    def create_web_login_challenge(
+        self,
+        *,
+        email: str,
+        secret: str,
+        ttl_seconds: int = 600,
+        max_requests_per_hour: int = 5,
+    ) -> tuple[str, str]:
+        account_email = normalize_email(email)
+        if ttl_seconds < 60 or ttl_seconds > 1800:
+            raise ValueError("Login-code lifetime must be between 60 and 1800 seconds.")
+        timestamp = now_iso()
+        challenge_id = secrets.token_urlsafe(18)
+        code = f"{secrets.randbelow(1_000_000):06d}"
+        digest = secret_digest(secret, "login-code", f"{challenge_id}:{account_email}:{code}")
+        with self.connect() as conn:
+            recent = conn.execute(
+                """
+                SELECT COUNT(*) AS count
+                FROM web_login_challenges
+                WHERE email = ? AND created_at >= ?
+                """,
+                (account_email, past_iso(3600)),
+            ).fetchone()["count"]
+            if int(recent) >= max_requests_per_hour:
+                raise PermissionError("Too many login codes requested. Try again later.")
+            conn.execute(
+                """
+                UPDATE web_login_challenges
+                SET consumed_at = ?
+                WHERE email = ? AND consumed_at IS NULL
+                """,
+                (timestamp, account_email),
+            )
+            conn.execute(
+                """
+                INSERT INTO web_login_challenges (
+                    id, email, code_digest, attempts, expires_at, consumed_at, created_at
+                ) VALUES (?, ?, ?, 0, ?, NULL, ?)
+                """,
+                (challenge_id, account_email, digest, future_iso(ttl_seconds), timestamp),
+            )
+        return challenge_id, code
+
+    def verify_web_login_challenge(
+        self,
+        *,
+        challenge_id: str,
+        email: str,
+        code: str,
+        secret: str,
+        session_ttl_seconds: int = 2_592_000,
+        max_attempts: int = 5,
+    ) -> tuple[str, dict[str, Any]]:
+        account_email = normalize_email(email)
+        if len(code) != 6 or not code.isdigit():
+            raise PermissionError("Invalid or expired login code.")
+        timestamp = now_iso()
+        failed = False
+        raw_token = ""
+        expires_at = ""
+        with self.connect() as conn:
+            conn.execute("BEGIN IMMEDIATE")
+            row = conn.execute(
+                "SELECT * FROM web_login_challenges WHERE id = ? AND email = ?",
+                (challenge_id, account_email),
+            ).fetchone()
+            if (
+                row is None
+                or row["consumed_at"] is not None
+                or is_expired(row["expires_at"])
+                or int(row["attempts"]) >= max_attempts
+            ):
+                failed = True
+            else:
+                candidate = secret_digest(
+                    secret,
+                    "login-code",
+                    f"{challenge_id}:{account_email}:{code}",
+                )
+            if not failed and not hmac.compare_digest(candidate, row["code_digest"]):
+                attempts = int(row["attempts"]) + 1
+                consumed_at = timestamp if attempts >= max_attempts else None
+                conn.execute(
+                    """
+                    UPDATE web_login_challenges
+                    SET attempts = ?, consumed_at = ?
+                    WHERE id = ?
+                    """,
+                    (attempts, consumed_at, challenge_id),
+                )
+                failed = True
+
+            if not failed:
+                conn.execute(
+                    "UPDATE web_login_challenges SET consumed_at = ? WHERE id = ?",
+                    (timestamp, challenge_id),
+                )
+                raw_token = secrets.token_urlsafe(48)
+                session_id = secrets.token_urlsafe(18)
+                token_digest = secret_digest(secret, "web-session", raw_token)
+                expires_at = future_iso(session_ttl_seconds)
+                conn.execute(
+                    """
+                    INSERT INTO web_sessions (
+                        id, email, token_digest, expires_at, revoked_at, created_at, last_seen_at
+                    ) VALUES (?, ?, ?, ?, NULL, ?, ?)
+                    """,
+                    (session_id, account_email, token_digest, expires_at, timestamp, timestamp),
+                )
+        if failed:
+            raise PermissionError("Invalid or expired login code.")
+        session = self.web_entitlement(email=account_email)
+        session.update({"authenticated": True, "session_expires_at": expires_at})
+        return raw_token, session
+
+    def web_session(self, *, token: str, secret: str) -> dict[str, Any] | None:
+        if not token:
+            return None
+        digest = secret_digest(secret, "web-session", token)
+        timestamp = now_iso()
+        with self.connect() as conn:
+            row = conn.execute(
+                "SELECT * FROM web_sessions WHERE token_digest = ?",
+                (digest,),
+            ).fetchone()
+            if row is None or row["revoked_at"] is not None or is_expired(row["expires_at"]):
+                return None
+            conn.execute(
+                "UPDATE web_sessions SET last_seen_at = ? WHERE id = ?",
+                (timestamp, row["id"]),
+            )
+        session = self.web_entitlement(email=row["email"])
+        session.update({"authenticated": True, "session_expires_at": row["expires_at"]})
+        return session
+
+    def revoke_web_session(self, *, token: str, secret: str) -> bool:
+        if not token:
+            return False
+        digest = secret_digest(secret, "web-session", token)
+        with self.connect() as conn:
+            result = conn.execute(
+                """
+                UPDATE web_sessions
+                SET revoked_at = ?
+                WHERE token_digest = ? AND revoked_at IS NULL
+                """,
+                (now_iso(), digest),
+            )
+        return result.rowcount > 0
 
     def create_invitation(
         self,

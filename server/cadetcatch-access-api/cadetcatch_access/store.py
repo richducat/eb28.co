@@ -308,12 +308,18 @@ class AccessStore:
     def web_entitlement(self, *, email: str) -> dict[str, Any]:
         account_email = normalize_email(email)
         account = self.status(email=account_email)
+        is_admin = bool(account["active"]) and (
+            account["access_type"] == "internal"
+            or account["role"] in {"internal", "internal_admin"}
+        )
         response = {
             "email": account_email,
             "active": bool(account["active"]),
             "subscriber_access": False,
             "access_type": account["access_type"],
             "role": account["role"],
+            "is_admin": is_admin,
+            "can_invite": bool(account["can_invite"]),
             "expires_at": account["expires_at"],
             "reason": "subscription_required",
         }

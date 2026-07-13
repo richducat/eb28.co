@@ -61,6 +61,8 @@ Do not enable `CADETCATCH_ALLOW_UNVERIFIED_STOREKIT` for production App Review. 
 - `karen@thankyouforyourservice.co`
 - `fishkn@upmc.edu`
 
+These administrators use the same passwordless website flow as subscribers: enter the listed email address and use the one-time six-digit code delivered to that inbox. Do not create shared passwords or passwords based on a person's name. Their authenticated sessions include `is_admin: true`, full desktop access, and invite permission.
+
 Apple root certificate files must be installed under `CADETCATCH_APPLE_ROOT_CERT_DIR` or listed in `CADETCATCH_APPLE_ROOT_CERT_PATHS`. The verifier uses Apple's signed transaction JWS, rejects the wrong bundle/product/transaction IDs, and rejects expired or revoked subscriptions.
 
 ## Passwordless Website Sessions

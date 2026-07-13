@@ -87,6 +87,21 @@ class WebAuthStoreTests(unittest.TestCase):
         self.assertTrue(session["subscriber_access"])
         self.assertEqual(session["reason"], "active_complimentary_grant")
 
+    def test_named_admins_receive_explicit_admin_sessions(self) -> None:
+        for email in (
+            "richard@thankyouforyourservice.co",
+            "karen@thankyouforyourservice.co",
+            "fishkn@upmc.edu",
+        ):
+            with self.subTest(email=email):
+                session = self.store.web_entitlement(email=email)
+
+                self.assertTrue(session["active"])
+                self.assertTrue(session["subscriber_access"])
+                self.assertTrue(session["is_admin"])
+                self.assertTrue(session["can_invite"])
+                self.assertEqual(session["role"], "internal_admin")
+
     def test_inactive_and_unknown_users_authenticate_but_get_paywall(self) -> None:
         expired = (
             datetime.now(timezone.utc) - timedelta(days=1)

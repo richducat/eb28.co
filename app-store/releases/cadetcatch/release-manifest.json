@@ -25,13 +25,13 @@
     "reviewSubmissionId": null,
     "appStoreState": "NOT_UPLOADED_LOCAL_ONLY",
     "submittedAt": null,
-    "lastLocalPreparationAt": "2026-07-12T22:18:04Z",
+    "lastLocalPreparationAt": "2026-07-13T17:10:39Z",
     "uploadedAt": null,
     "visibleAscVerificationAt": null,
     "visibleAscStatus": "1.0.2 build 97 is local-only; no App Store Connect mutation was performed during conversion measurement preparation",
     "visibleAscCreatedAt": null,
     "distributionLogPath": null,
-    "verificationBlocked": "Firebase app registration, App Privacy answers, privacy policy disclosure, production event receipt, and App Store Connect readiness must be verified before any external release mutation."
+    "verificationBlocked": "Firebase app registration, the production iOS configuration, and simulator-to-Firebase event delivery are complete. App Privacy answers, privacy policy disclosure, third-party privacy-manifest review, production-build event receipt, Google Ads link approval, Ads onboarding/payment, and App Store Connect readiness must still be verified before any external release mutation."
   },
   "sourceMetadataVerification": {
     "projectYmlMarketingVersion": "1.0.2",
@@ -95,6 +95,14 @@
     },
     {
       "status": "M",
+      "path": "ios/CadetCatch/CadetCatch/GoogleService-Info.plist"
+    },
+    {
+      "status": "M",
+      "path": "ios/CadetCatch/CadetCatch/Info.plist"
+    },
+    {
+      "status": "M",
       "path": "ios/CadetCatch/CadetCatch/CadetCatchApp.swift"
     },
     {
@@ -149,6 +157,11 @@
     "Build 95 access API source now includes SMTP-backed email-only spouse/family and cadet invite delivery.",
     "Build 96 remains the prior local-only privacy URL candidate and has not been archived or uploaded.",
     "Build 97 is the local-only conversion-measurement candidate. It adds Firebase Analytics 12.16.0 funnel events and deduplicated verified StoreKit transaction logging without user IDs, cadet data, photo data, emails, or ad-personalization signals.",
+    "On 2026-07-13 Firebase project cadetcatch and iOS app stream 15250018699 were registered for co.eb28.cadetcatch, and the Firebase-generated production configuration was merged with the existing Google Sign-In OAuth keys.",
+    "Runtime logging confirmed Firebase Analytics 12.16.0 initialized against the CadetCatch app ID without IDFA identity support. The invalid long-form ad-personalization user property was replaced with Google's supported GOOGLE_ANALYTICS_DEFAULT_ALLOW_AD_PERSONALIZATION_SIGNALS=false Info.plist control.",
+    "The GA4 link request to Google Ads customer 430-105-5805 was submitted with personalized advertising OFF, auto-tagging ON, and embedded Analytics-edit access from Ads OFF; Ads-side approval remains pending.",
+    "Firebase Realtime Analytics received first_open, session_start, and user_engagement from the unsigned CadetCatch simulator build, confirming event delivery to the registered project without claiming production App Store distribution.",
+    "GA4 key event photo_check_completed was created with no default monetary value and once-per-event counting. Google's native in_app_purchase and App Store subscription key events remain the revenue goals; low-intent funnel events were not promoted to key events.",
     "Do not archive, upload, distribute TestFlight, select for App Review, submit for review, release, expire builds, edit App Store Connect metadata/screenshots/previews, or edit IAP/subscriptions without a separate exact approval record for the final build-97 source commit.",
     "Do not ship custom free access codes unless they are server-validated, email-bound, role-specific, and single-use.",
     "Tester full access must be configured and verified for richducat@gmail.com, karen.hallett@mac.com, and kenfish@mac.com before App Review submission.",
@@ -157,10 +170,10 @@
   ],
   "createdAt": "2026-06-06T11:53:53.691778-04:00",
   "localVerification": {
-    "releaseGate": "blocked for build 97 until a Firebase-generated iOS configuration is installed and Analytics/App Privacy disclosures are reviewed",
+    "releaseGate": "Firebase configuration checks and unsigned post-registration simulator tests pass; build 97 remains blocked until Analytics/App Privacy disclosures and app and third-party privacy manifests are reviewed",
     "accessAPITests": "passed in temp venv with service dependencies installed using /tmp/cadetcatch-access-api-venv/bin/python -m unittest discover tests -v; 14 tests passed including StoreKit validation rejection cases, email-only invite delivery contract tests, and browser invite redemption page/form tests",
     "accessAPIImportSmoke": "passed in temp venv; imported cadetcatch_access.main.app and AppleStoreKitVerifier",
-    "simulatorQA": "build and UI tests passed locally for dirty build-97 implementation; full npm run test:cadetcatch remains blocked by the intentional release gate until Firebase configuration and privacy review are complete",
+    "simulatorQA": "direct unsigned xcodebuild tests passed after production Firebase registration and privacy-control corrections. The full npm run test:cadetcatch wrapper remains intentionally blocked by the privacy-review release gate; its normal signed simulator path also encountered inherited resource-fork xattrs, while CODE_SIGNING_ALLOWED=NO verification passed.",
     "simulatorQAReceipt": {
       "status": "passed",
       "command": "npm run test:cadetcatch",
@@ -170,6 +183,45 @@
       "xcodebuildLog": "/Users/richardducat/Documents/Codex/Release-Worktrees/CadetCatch/android-play-1.0.1-1-20260703/output/cadetcatch-simulator/logs/xcodebuild-2026-07-10T21-26-22-272Z.log",
       "xcodebuildLogSha256": "7baee1fe2b03bf0b9e85450a56e2a37d0e195407fefe0fae5551d960a78bb5d1",
       "verifiedAt": "2026-07-10T21:26:49Z"
+    },
+    "postFirebaseSimulatorQAReceipt": {
+      "status": "passed",
+      "command": "CC=/Users/richardducat/Documents/Codex/2026-06-08/cadetcatch-release-handoff/scripts/cadetcatch-clang-wrapper.sh xcodebuild -quiet -project ios/CadetCatch/CadetCatch.xcodeproj -scheme CadetCatch -configuration Debug -destination id=7C85426B-CA76-4F78-9D8A-557AD2C88426 CODE_SIGNING_ALLOWED=NO test",
+      "simulator": "iPhone 17 Pro Max iOS 26.5",
+      "note": "Command exited 0 after installing the Firebase-generated app configuration, removing the invalid ad-personalization user property, and enforcing the supported Info.plist privacy control.",
+      "verifiedAt": "2026-07-13T17:10:18Z"
+    },
+    "runtimeAnalyticsProof": {
+      "status": "passed",
+      "provider": "Firebase Realtime Analytics",
+      "projectId": "cadetcatch",
+      "iosStreamId": "15250018699",
+      "bundleId": "co.eb28.cadetcatch",
+      "activeUsersLast30Minutes": 1,
+      "events": [
+        "first_open",
+        "session_start",
+        "user_engagement"
+      ],
+      "identitySupportLinked": false,
+      "screenshot": "output/cadetcatch-simulator/cadetcatch-firebase-2026-07-13T16-56-00Z.png",
+      "screenshotSha256": "5ec6f9a08bd9663de4884f34f0b9387cb9d687648901a90ab0fd7a4241996d4a",
+      "note": "Realtime receipt came from the unsigned simulator build against the registered Firebase project. GA4 standard stream tables and Ads conversion import can lag; Ads-side link approval remains pending.",
+      "verifiedAt": "2026-07-13T16:56:05Z"
+    },
+    "googleAnalyticsKeyEvents": {
+      "status": "configured",
+      "propertyId": "545114858",
+      "customKeyEvent": "photo_check_completed",
+      "defaultMonetaryValue": null,
+      "countingMethod": "once_per_event",
+      "nativeRevenueKeyEvents": [
+        "in_app_purchase",
+        "app_store_subscription_convert",
+        "app_store_subscription_renew"
+      ],
+      "note": "photo_check_completed is a measurement signal only and should remain secondary in Google Ads until it proves incremental paid-user quality. Revenue bidding should use verified purchase value.",
+      "verifiedAt": "2026-07-13T17:08:00Z"
     },
     "matchedPhotoPreviewQA": {
       "status": "passed",
@@ -198,12 +250,12 @@
       "exampleURL": "https://pub-2264690a142a418ab996c86d3523fa08.r2.dev/photos/1561614049297355.jpg",
       "note": "Remote matched-photo loader bypasses URLCache so previously broken R2 photo URLs can load after becoming reachable."
     },
-    "appStorePreflight": "pending for build 97 because the privacy policy and App Privacy disclosures do not yet describe Firebase Analytics conversion measurement",
+    "appStorePreflight": "pending for build 97 because the privacy policy and App Privacy disclosures do not yet describe Firebase Analytics conversion measurement; Firebase registration and production config are complete",
     "uiTestSuite": {
       "status": "passed",
       "command": "CC=/Users/richardducat/Documents/Codex/2026-06-08/cadetcatch-release-handoff/scripts/cadetcatch-clang-wrapper.sh xcodebuild -quiet -project ios/CadetCatch/CadetCatch.xcodeproj -scheme CadetCatch -configuration Debug -destination id=7C85426B-CA76-4F78-9D8A-557AD2C88426 CODE_SIGNING_ALLOWED=NO test",
-      "note": "Build 97 enables GENERATE_INFOPLIST_FILE for CadetCatchUITests; xcodebuild test completed successfully on iPhone 17 Pro Max, iOS 26.5.",
-      "verifiedAt": "2026-07-12T22:17:22Z"
+      "note": "Build 97 enables GENERATE_INFOPLIST_FILE for CadetCatchUITests; unsigned xcodebuild test completed successfully on iPhone 17 Pro Max, iOS 26.5 after the real Firebase configuration and privacy-control corrections.",
+      "verifiedAt": "2026-07-13T17:10:18Z"
     },
     "monetizationGate": {
       "status": "source_preserved_build97_compile_and_tests_passed",

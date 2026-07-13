@@ -24,10 +24,7 @@ enum CadetCatchAnalytics {
     private(set) static var isConfigured = false
 
     static func configure() {
-        guard FirebaseApp.app() == nil else {
-            isConfigured = true
-            return
-        }
+        guard !isConfigured else { return }
 
         guard
             let path = Bundle.main.path(forResource: "GoogleService-Info", ofType: "plist"),
@@ -42,7 +39,6 @@ enum CadetCatchAnalytics {
         }
 
         FirebaseApp.configure(options: options)
-        Analytics.setUserProperty("false", forName: "allow_ad_personalization_signals")
         isConfigured = true
     }
 

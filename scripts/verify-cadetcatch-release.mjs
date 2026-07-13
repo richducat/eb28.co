@@ -42,6 +42,7 @@ const paths = {
   projectYml: rel('ios/CadetCatch/project.yml'),
   pbxproj: rel('ios/CadetCatch/CadetCatch.xcodeproj/project.pbxproj'),
   appSource: rel('ios/CadetCatch/CadetCatch/CadetCatchApp.swift'),
+  appInfo: rel('ios/CadetCatch/CadetCatch/Info.plist'),
   googleServiceInfo: rel('ios/CadetCatch/CadetCatch/GoogleService-Info.plist'),
   packageResolved: rel('ios/CadetCatch/CadetCatch.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved'),
 };
@@ -201,6 +202,7 @@ function checkAnalytics() {
   const analyticsSource = analyticsStart >= 0 && analyticsEnd > analyticsStart
     ? appSource.slice(analyticsStart, analyticsEnd)
     : '';
+  const appInfo = readPlist(paths.appInfo);
   const googleServiceInfo = readPlist(paths.googleServiceInfo);
   const packageResolved = read(paths.packageResolved);
 
@@ -213,7 +215,6 @@ function checkAnalytics() {
     'case photoCheckCompleted = "photo_check_completed"',
     'case paywallView = "paywall_view"',
     'Analytics.logTransaction(transaction)',
-    'allow_ad_personalization_signals',
   ];
   for (const token of requiredSourceTokens) {
     if (!appSource.includes(token)) failures.push(`CadetCatch analytics source is missing required token: ${token}`);
@@ -236,6 +237,10 @@ function checkAnalytics() {
     }
   }
 
+  if (appInfo.GOOGLE_ANALYTICS_DEFAULT_ALLOW_AD_PERSONALIZATION_SIGNALS !== false) {
+    failures.push('Info.plist must disable Firebase Analytics ad-personalization signals by default.');
+  }
+
   const forbiddenAnalyticsTokens = [
     'Analytics.setUserID',
     'cadet_name',
@@ -243,6 +248,7 @@ function checkAnalytics() {
     'image_url',
     'photo_url',
     'face_embedding',
+    'allow_ad_personalization_signals',
   ];
   for (const token of forbiddenAnalyticsTokens) {
     if (analyticsSource.includes(token)) failures.push(`CadetCatch analytics source contains forbidden identifier token: ${token}`);

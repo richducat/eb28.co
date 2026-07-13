@@ -1,0 +1,37 @@
+{
+  "generated_at": "2026-07-10T21:51:22.202Z",
+  "state": "DRAFT",
+  "paid_campaign_state": "PAUSED",
+  "inputs": {
+    "app_ui": [
+      "public/cc/img/start-with-one-photo.png",
+      "ops/cadetcatch-marketing/meta-launch-20260710/creatives/source/shipping-ui/cadetcatch-synthetic-results.png"
+    ],
+    "synthetic_images": [
+      "ops/cadetcatch-marketing/meta-launch-20260710/creatives/source/generated/synthetic-demo-profile.png",
+      "ops/cadetcatch-marketing/meta-launch-20260710/creatives/source/generated/synthetic-guide-reader.png"
+    ]
+  },
+  "outputs": [
+    "s1-outcome-1080x1350.png",
+    "t1-transparency-1080x1350.png",
+    "w1-free-preview-price-1080x1350.png",
+    "g1-free-guide-1080x1350.png",
+    "c1-card-1-1080x1080.png",
+    "c1-card-2-1080x1080.png",
+    "c1-card-3-1080x1080.png",
+    "c1-card-4-1080x1080.png",
+    "frames/v1/v1-frame-01.png",
+    "frames/v1/v1-frame-02.png",
+    "frames/v1/v1-frame-03.png",
+    "frames/v1/v1-frame-04.png",
+    "frames/g2/g2-frame-01.png",
+    "frames/g2/g2-frame-02.png",
+    "frames/g2/g2-frame-03.png",
+    "frames/g2/g2-frame-04.png",
+    "frames/g2/g2-frame-05.png",
+    "frames/g2/g2-frame-06.png",
+    "v1-scroll-search-1080x1920.mp4",
+    "g2-guide-video-1080x1920.mp4"
+  ]
+}

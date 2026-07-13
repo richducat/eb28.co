@@ -5,50 +5,65 @@
     "subtitle": "Find cadet photos faster",
     "bundleId": "co.eb28.cadetcatch",
     "sku": "cadetcatch-ios",
-    "platforms": ["iOS"],
+    "platforms": [
+      "iOS"
+    ],
     "primaryCategory": "Lifestyle",
-    "secondaryCategory": "Lifestyle",
+    "secondaryCategory": "Photo & Video",
     "copyright": "2026 EB28",
-    "ageRatingQuestionnaireCompleted": true,
-    "traderStatusReviewed": true,
+    "ageRatingQuestionnaireCompleted": false,
+    "traderStatusReviewed": false,
     "exportCompliance": {
-      "reviewed": true,
+      "reviewed": false,
       "documentationRequired": false,
       "documentationStatus": "NOT_REQUIRED",
       "infoPlistKeyConfigured": true
     }
   },
   "version": {
-    "marketingVersion": "1.0.0",
-    "buildNumber": "4",
+    "marketingVersion": "1.0.2",
+    "buildNumber": "96",
     "releaseType": "MANUAL",
     "phasedRelease": false,
-    "promotionalText": "Private cadet rosters, public-source photo checks, covered previews, saved finds, review notes, and a plain-English academy terms decoder.",
-    "description": "CadetCatch helps Coast Guard Academy families keep up with public cadet photos without digging through every gallery by hand.\n\nCreate a private roster on your iPhone, add approved public photo sources, scan those sources for possible face matches, review match confidence, unlock covered results, save likely finds, and keep simple notes for family follow-up.\n\nCadetCatch only checks public HTTPS sources that you add or enable. It does not scan private social accounts, private photo libraries, or non-public websites unless a future connected-source version explicitly asks for that access.",
-    "keywords": ["cadet", "military", "academy", "photos", "family", "parents", "coast"],
-    "whatsNew": "Adds StoreKit purchase gates for one-time checks, one-photo unlocks, monthly access, covered result previews, and restore purchases."
+    "promotionalText": "One free preview search, transparent possible matches you review yourself, and simple options for another search, one photo, or monthly family access.",
+    "description": "CadetCatch helps Coast Guard Academy families find photos faster without scrolling through every event gallery by hand.\n\nAdd one clear reference photo, run a photo search, and review the possible matches yourself. You decide which matches to view and save to your iPhone Photos library.\n\nStart with one free preview search. After the preview, optional purchases are available through Apple:\n\n- One-Time Photo Check: $1.99 for one additional photo search.\n- Unlock One Photo: $1.99 to view, save, and share one matched photo.\n- Family Monthly: $12.99/month for continuous photo searches and unlocked matches while active.\n\nPrices may vary by storefront and are confirmed before purchase. Family Monthly renews automatically until canceled in Apple subscription settings. Restore Purchases, Privacy Policy, and Terms of Use are available in the app.\n\nCadetCatch shows possible matches, not confirmed identifications. Review every result yourself.\n\nCadetCatch is an independent app and is not affiliated with, endorsed by, or connected to the U.S. Coast Guard Academy, the U.S. Coast Guard, or the Department of Homeland Security.\n\nPrivacy Policy: https://cadetcatch.com/privacy/\nTerms of Use (EULA): https://www.apple.com/legal/internet-services/itunes/dev/stdeula/",
+    "keywords": [
+      "cadet",
+      "academy",
+      "photos",
+      "family",
+      "parents",
+      "coast",
+      "uscga",
+      "event",
+      "search"
+    ],
+    "whatsNew": "One free preview search is now explained more clearly, along with transparent possible-match review and current purchase options. Privacy and support links now use cadetcatch.com."
   },
   "urls": {
-    "marketingUrl": "https://eb28.co/cc/",
-    "supportUrl": "https://eb28.co/cc/support/",
-    "privacyPolicyUrl": "https://eb28.co/cc/privacy/",
+    "marketingUrl": "https://cadetcatch.com/",
+    "supportUrl": "https://cadetcatch.com/support/",
+    "privacyPolicyUrl": "https://cadetcatch.com/privacy/",
     "userPrivacyChoicesUrl": "",
     "termsUrl": "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/"
   },
   "review": {
     "contactName": "Richard Ducat",
-    "contactEmail": "social@eb28.co",
+    "contactEmail": "support@eb28.co",
     "contactPhone": "+1-602-306-3920",
     "demoRequired": false,
     "demoUsername": "",
     "demoPassword": "",
     "notes": [
-      "No login is required.",
-      "Add a cadet profile from Roster using a clear face photo selected from Photos.",
-      "Open Sources to enable or add public HTTPS photo pages. The app does not scan private accounts.",
-      "Open Home and run Check Photos. Results are covered until an unlock purchase or monthly access is active.",
-      "Open Photos to review possible matches, unlock a photo, save an unlocked match, and create a review note.",
-      "If a source has no usable images or no match above the threshold, the app reports that result instead of showing sample matches."
+      "DRAFT FOR VERSION 1.0.2 BUILD 96: this local candidate has not been uploaded. Do not paste these notes into App Store Connect until they are verified against the exact archived build.",
+      "No login is required for the core iPhone photo-search flow.",
+      "Open Roster and add a cadet using a clear, single-person reference photo selected from Photos.",
+      "Open Home and tap Search Photos. A fresh installation includes one free preview search. The selected reference photo is sent to CadetCatch only when the user starts a search.",
+      "Open Photos to review possible matches. The app presents suggestions for the user to review; it does not claim that a match is a confirmed identification.",
+      "After the free preview search, Photo Access offers a $1.99 One-Time Photo Check, a $1.99 Unlock One Photo option, and $12.99/month Family Monthly access. Verify live StoreKit pricing in the submitted build.",
+      "Family Monthly provides continuous searches and unlocked matches while active. Restore Purchases, Privacy Policy, and Terms of Use must be visible before purchase.",
+      "For an unlocked match, test Save to Photos and the in-app save and note controls.",
+      "If the reference photo has no usable face, contains multiple faces, returns no possible matches, or the service is unavailable, the app must show a clear state rather than unrelated or sample results."
     ]
   },
   "distribution": {
@@ -67,68 +82,59 @@
     "appAdsTxtUrl": "",
     "hasInAppPurchases": true,
     "hasSubscriptions": true,
-    "paidAppsAgreementStatus": "ACTIVE",
-    "subscriptionUiIncludesRestore": true,
-    "subscriptionUiIncludesTerms": true,
+    "paidAppsAgreementStatus": "UNRESOLVED",
+    "subscriptionUiIncludesRestore": false,
+    "subscriptionUiIncludesTerms": false,
     "products": [
       {
-        "productId": "co.eb28.cadetcatch.search.once",
+        "productId": "co.eb28.cadetcatch.search.once.v1",
         "type": "CONSUMABLE",
         "name": "One-Time Photo Check",
-        "price": "2.00 USD"
+        "price": "1.99 USD"
       },
       {
-        "productId": "co.eb28.cadetcatch.photo.unlock",
+        "productId": "co.eb28.cadetcatch.photo.unlock.v1",
         "type": "CONSUMABLE",
         "name": "Unlock One Photo",
-        "price": "2.00 USD"
+        "price": "1.99 USD"
       },
       {
-        "productId": "co.eb28.cadetcatch.family.monthly",
+        "productId": "co.eb28.cadetcatch.family.monthly.v1",
         "type": "AUTO_RENEWABLE_SUBSCRIPTION",
         "name": "Family Monthly",
-        "price": "12.50 USD/month"
+        "price": "12.99 USD/month"
       }
     ]
   },
   "privacy": {
-    "privacyPolicyLinkedInApp": true,
-    "appPrivacyAnswersCurrent": true,
+    "privacyPolicyLinkedInApp": false,
+    "appPrivacyAnswersCurrent": false,
     "trackingUsed": false,
     "attFlowImplemented": false,
     "accountDeletionImplemented": false,
-    "privacyManifestReviewed": true,
-    "requiredReasonApisReviewed": true,
-    "thirdPartySdkPrivacyReviewed": true
+    "privacyManifestReviewed": false,
+    "requiredReasonApisReviewed": false,
+    "thirdPartySdkPrivacyReviewed": false
   },
   "assets": {
     "appIconSource": "app-icon-1024.png",
-    "iphoneScreenshots": [
-      "screenshots/iphone-6-9/01-launch-eagle-6-9.png",
-      "screenshots/iphone-6-9/02-home-6-9.png",
-      "screenshots/iphone-6-9/03-roster-6-9.png",
-      "screenshots/iphone-6-9/04-sources-6-9.png",
-      "screenshots/iphone-6-9/05-decoder-6-9.png"
-    ],
+    "iphoneScreenshots": [],
     "ipadScreenshots": [],
     "appPreviewVideos": []
   },
   "verification": {
-    "testedDevices": ["iPhone 17 Pro Max simulator"],
-    "testedFlows": [
-      "fresh launch with EAGLE background",
-      "add cadet with selected profile photo",
-      "public HTTPS source management",
-      "public source scan with covered result previews and no sample-data fallback",
-      "StoreKit purchase sheet and restore purchase controls",
-      "photo review, unlock, and saved photo flow",
-      "plain-English terms decoder",
-      "reset local data"
-    ],
+    "testedDevices": [],
+    "testedFlows": [],
     "knownRisks": [
-      "Public websites may change markup or block automated image access; the app surfaces empty/no-match states when a source cannot provide usable public images.",
-      "Private social account scanning is intentionally not included in this build.",
-      "StoreKit products must exist in App Store Connect before TestFlight purchase flows can return live products."
+      "Version 1.0.2 build 96 is the locally verified next candidate. The live App Store version remains 1.0.1, and build 96 has not been archived, uploaded, selected, or submitted.",
+      "This origin/main worktree contains an obsolete CadetCatch Xcode target declaring version 1.0.0 build 2 and a different StoreKit product. It is not a verified source for the live version 1.0.1 behavior and must not be archived as the next release without reconciling the current shipping source.",
+      "The last known build-95 source implements one free preview search and the three .v1 StoreKit products, but it still uses eb28.co in in-app Privacy and Support links. The exact next build must use cadetcatch.com in the app as well as in metadata.",
+      "The next build must contain no customer-facing desktop or invitation promises unless those features are production-ready. This release metadata intentionally makes no such claims.",
+      "No next-build screenshots have been captured or approved. Existing screenshots in this directory are not referenced because they have not been verified against the exact next build.",
+      "No fresh-install, search, purchase, restore, save-to-Photos, failure-state, background-behavior, or device QA has been completed for the next build.",
+      "Paid Apps Agreement, banking, tax, product availability, App Privacy answers, age rating, and trader status require current App Store Connect verification.",
+      "App Privacy and the privacy policy must disclose that the selected reference photo is sent to CadetCatch when the user starts a server-side photo search.",
+      "The exact next build must be checked for privacy manifests, required-reason API declarations, and all third-party SDK privacy manifests before submission."
     ]
   }
 }

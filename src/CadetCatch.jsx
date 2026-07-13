@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import {
   BookmarkCheck,
   Check,
@@ -23,10 +23,17 @@ const TERMS_URL = 'https://www.apple.com/legal/internet-services/itunes/dev/stde
 const SWAB_SUMMER_GUIDE_URL = `${BASE}/swab-summer-photos/`;
 const IMG = (name) => `${BASE}/img/${name}`;
 
-function AppStoreBadge({ className = '' }) {
+function trackCadetCatchEvent(name, parameters) {
+  if (typeof window === 'undefined') return false;
+  return window.CadetCatchAnalytics?.track(name, parameters) || false;
+}
+
+function AppStoreBadge({ className = '', linkLocation }) {
   return (
     <a
       href={APP_STORE_URL}
+      data-cc-app-store
+      data-cc-link-location={linkLocation}
       className={`inline-flex items-center gap-3 rounded-xl bg-slate-900 px-5 py-3 text-white shadow-md transition-transform hover:scale-[1.02] active:scale-[0.98] ${className}`}
       aria-label="Download CadetCatch on the App Store"
     >
@@ -107,10 +114,44 @@ const PRICING_FEATURES = [
   'Search event photos and review possible matches',
   'Save photos to your iPhone Photos library',
   'Keep simple notes on the photos you find',
-  'Two email invites included: one spouse or family member, one cadet',
 ];
 
 export default function CadetCatch() {
+  const pricingRef = useRef(null);
+
+  useEffect(() => {
+    const pricing = pricingRef.current;
+    if (!pricing) return undefined;
+
+    let tracked = false;
+    const trackPricingView = () => {
+      if (tracked) return;
+      tracked = true;
+      trackCadetCatchEvent('pricing_view', {
+        plan_name: 'family_monthly',
+        price: 12.99,
+        currency: 'USD',
+      });
+    };
+
+    if (typeof window.IntersectionObserver !== 'function') {
+      trackPricingView();
+      return undefined;
+    }
+
+    const observer = new window.IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          trackPricingView();
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.25 },
+    );
+    observer.observe(pricing);
+    return () => observer.disconnect();
+  }, []);
+
   return (
     <div className="min-h-screen bg-slate-50 font-sans text-slate-900 antialiased">
       {/* Header */}
@@ -124,6 +165,8 @@ export default function CadetCatch() {
           </a>
           <a
             href={APP_STORE_URL}
+            data-cc-app-store
+            data-cc-link-location="header"
             className="rounded-full bg-orange-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-orange-700"
           >
             Get the app
@@ -156,7 +199,7 @@ export default function CadetCatch() {
               digging through every gallery by hand.
             </p>
             <div className="mt-8 flex flex-col items-start gap-3">
-              <AppStoreBadge />
+              <AppStoreBadge linkLocation="hero" />
               <p className="text-sm text-slate-500">
                 Free to download · Family Monthly subscription $12.99/month, auto-renewing
               </p>
@@ -263,7 +306,7 @@ export default function CadetCatch() {
       </section>
 
       {/* Pricing */}
-      <section className="py-16">
+      <section ref={pricingRef} className="py-16">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <h2 className="text-center text-3xl font-bold tracking-tight">
             Simple, transparent pricing
@@ -291,12 +334,8 @@ export default function CadetCatch() {
                 </li>
               ))}
             </ul>
-            <div className="mt-6 rounded-xl bg-slate-50 p-4 text-sm text-slate-600">
-              Optional add-on: <span className="font-medium text-orange-700">desktop access</span> for
-              $7.99, if you prefer reviewing photos on a bigger screen.
-            </div>
             <div className="mt-8 flex justify-center">
-              <AppStoreBadge />
+              <AppStoreBadge linkLocation="pricing" />
             </div>
             <p className="mt-4 text-center text-xs text-slate-400">
               By subscribing you agree to Apple’s{' '}
@@ -365,7 +404,12 @@ export default function CadetCatch() {
               <a href={TERMS_URL} className="text-slate-600 hover:text-slate-900">
                 Terms (Apple standard EULA)
               </a>
-              <a href={APP_STORE_URL} className="text-slate-600 hover:text-slate-900">
+              <a
+                href={APP_STORE_URL}
+                data-cc-app-store
+                data-cc-link-location="footer"
+                className="text-slate-600 hover:text-slate-900"
+              >
                 Download on the App Store
               </a>
             </nav>

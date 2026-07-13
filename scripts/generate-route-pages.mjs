@@ -8,6 +8,7 @@ import {
     buildSitemapXml,
 } from '../src/siteMeta.js';
 import { injectSeoMarkup } from '../src/seo.js';
+import { injectCadetCatchNoscriptFallback } from './lib/cadetcatch-html.mjs';
 
 const repoRoot = process.cwd();
 const docsDir = path.join(repoRoot, 'docs');
@@ -62,6 +63,12 @@ function makeRouteFileFriendly(html, routeKey) {
     return html.replace(/(src|href)="\/assets\//g, '$1="../assets/');
 }
 
+function injectRouteNoscriptFallback(html, routeKey) {
+    return routeKey === 'cc'
+        ? injectCadetCatchNoscriptFallback(html, '/cc')
+        : html;
+}
+
 async function writeFile(relativePath, contents) {
     const fullPath = path.join(docsDir, relativePath);
     await fs.mkdir(path.dirname(fullPath), { recursive: true });
@@ -75,7 +82,10 @@ async function main() {
         await writeFile(
             outputPath,
             makeRouteFileFriendly(
-                injectRouteBootLabel(injectBuildMarkup(injectSeoMarkup(htmlTemplate, routeKey)), routeKey),
+                injectRouteNoscriptFallback(
+                    injectRouteBootLabel(injectBuildMarkup(injectSeoMarkup(htmlTemplate, routeKey)), routeKey),
+                    routeKey,
+                ),
                 routeKey,
             ),
         );

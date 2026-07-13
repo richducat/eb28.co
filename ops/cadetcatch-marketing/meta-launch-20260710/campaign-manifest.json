@@ -1,0 +1,504 @@
+{
+  "schema_version": "1.0.0",
+  "package_id": "cadetcatch-meta-launch-20260710",
+  "package_state": "DRAFT",
+  "generated_on": "2026-07-10",
+  "owner": {
+    "legal_entity": "TYFYS MANAGEMENT LLC",
+    "operating_owner": "Richard Ducat",
+    "portfolio_contact": "meta@eb28.co",
+    "page_contact": "cadetcatch@eb28.co",
+    "product": "CadetCatch",
+    "website": "https://cadetcatch.com",
+    "app_store_id": "6769565852",
+    "app_store_base_url": "https://apps.apple.com/us/app/cadetcatch/id6769565852"
+  },
+  "safety": {
+    "external_mutations_permitted_by_package": false,
+    "default_meta_delivery_status": "PAUSED",
+    "creative_status": "DRAFT",
+    "outreach_status": "DRAFT_NOT_SENT",
+    "maximum_lifetime_spend_cents": 60000,
+    "activation_requires_all_mandatory_qa": true,
+    "forbid_group_member_scraping": true,
+    "forbid_customer_list_upload_for_pilot": true,
+    "forbid_meta_sdk_or_att_change_for_pilot": true,
+    "forbid_claims": [
+      "facial recognition",
+      "face recognition",
+      "AI recon",
+      "biometric",
+      "guaranteed matches",
+      "official USCGA affiliation"
+    ]
+  },
+  "business_assets": {
+    "business_portfolio_name": "TYFYS MANAGEMENT LLC",
+    "facebook_page_name": "CadetCatch",
+    "facebook_page_username_preference": [
+      "CadetCatchApp",
+      "CadetCatchByEB28"
+    ],
+    "instagram_username_preference": [
+      "CadetCatchApp",
+      "CadetCatchByEB28"
+    ],
+    "ad_account_name": "CadetCatch | US | USD | ET",
+    "ad_account_currency": "USD",
+    "ad_account_timezone": "America/New_York",
+    "page_bio": "CadetCatch helps Coast Guard Academy families search event photos and review possible matches themselves. Independent; not affiliated with USCGA, USCG, or DHS.",
+    "business_id": "{{META_BUSINESS_ID}}",
+    "ad_account_id": "{{META_AD_ACCOUNT_ID}}",
+    "page_id": "{{META_PAGE_ID}}",
+    "instagram_user_id": "{{META_INSTAGRAM_USER_ID}}"
+  },
+  "apple_campaign_links": {
+    "provider_token": "{{APPLE_PROVIDER_TOKEN}}",
+    "url_template": "https://apps.apple.com/us/app/cadetcatch/id6769565852?pt={{APPLE_PROVIDER_TOKEN}}&ct={{CAMPAIGN_TOKEN}}&mt=8",
+    "links": [
+      {
+        "key": "cold",
+        "campaign_token": "cc_meta_cold_2026",
+        "url": "https://apps.apple.com/us/app/cadetcatch/id6769565852?pt={{APPLE_PROVIDER_TOKEN}}&ct=cc_meta_cold_2026&mt=8"
+      },
+      {
+        "key": "warm",
+        "campaign_token": "cc_meta_warm_2026",
+        "url": "https://apps.apple.com/us/app/cadetcatch/id6769565852?pt={{APPLE_PROVIDER_TOKEN}}&ct=cc_meta_warm_2026&mt=8"
+      },
+      {
+        "key": "groups",
+        "campaign_token": "cc_meta_groups_2026",
+        "url": "https://apps.apple.com/us/app/cadetcatch/id6769565852?pt={{APPLE_PROVIDER_TOKEN}}&ct=cc_meta_groups_2026&mt=8"
+      },
+      {
+        "key": "partner",
+        "campaign_token": "cc_meta_partner_2026",
+        "url": "https://apps.apple.com/us/app/cadetcatch/id6769565852?pt={{APPLE_PROVIDER_TOKEN}}&ct=cc_meta_partner_2026&mt=8"
+      }
+    ],
+    "group_reporting_policy": "Use the aggregate groups token for every approved group placement during the pilot; do not create per-group tokens until expected volume can clear Apple's reporting threshold."
+  },
+  "campaign": {
+    "name": "CC_US_iOS_Traffic_SwabSummer_2026-07",
+    "status": "PAUSED",
+    "buying_type": "AUCTION",
+    "objective": "OUTCOME_TRAFFIC",
+    "special_ad_categories": [],
+    "campaign_budget_optimization": false,
+    "bid_strategy": "LOWEST_COST_WITHOUT_CAP",
+    "performance_goal": "LINK_CLICKS",
+    "destination_link_type": "APPLE_APP_STORE_CAMPAIGN_LINK",
+    "duration_days": 30,
+    "start_time": "{{START_AT_ISO8601_AMERICA_NEW_YORK}}",
+    "end_time": "{{END_AT_ISO8601_AMERICA_NEW_YORK_EXACTLY_30_DAYS_LATER}}",
+    "maximum_lifetime_spend_cents": 60000,
+    "spend_currency": "USD"
+  },
+  "budget_scenarios": {
+    "base": {
+      "condition": "Use unless an eligible public partner supplies written permission and a valid partnership-ad code by pilot day 7.",
+      "ad_set_lifetime_budget_cents": {
+        "AS1_Cold_US_iOS_40plus": 48000,
+        "AS2_Warm_MetaEngagers": 12000
+      },
+      "total_lifetime_budget_cents": 60000
+    },
+    "authorized_partner": {
+      "condition": "Use only when the partner gate passes by pilot day 7; reallocate $100 from AS1, never add budget.",
+      "ad_set_lifetime_budget_cents": {
+        "AS1_Cold_US_iOS_40plus": 38000,
+        "AS2_Warm_MetaEngagers": 12000,
+        "AS3_PublicPartner": 10000
+      },
+      "total_lifetime_budget_cents": 60000
+    }
+  },
+  "placements": {
+    "device_platforms": [
+      "mobile"
+    ],
+    "publisher_platforms": [
+      "facebook",
+      "instagram"
+    ],
+    "facebook_positions": [
+      "feed",
+      "story",
+      "reels"
+    ],
+    "instagram_positions": [
+      "stream",
+      "story",
+      "reels"
+    ],
+    "optional_inventory": [
+      {
+        "name": "facebook_groups_feed",
+        "policy": "Enable only if selectable for this objective and compatible with the assigned asset. It is general inventory and must never be represented as targeting a named group."
+      }
+    ],
+    "explicitly_excluded": [
+      "facebook_right_column",
+      "messenger",
+      "threads",
+      "audience_network",
+      "in_stream_video",
+      "desktop"
+    ]
+  },
+  "ad_sets": [
+    {
+      "name": "AS1_Cold_US_iOS_40plus",
+      "status": "PAUSED",
+      "role": "cold_prospecting",
+      "base_lifetime_budget_cents": 48000,
+      "partner_scenario_lifetime_budget_cents": 38000,
+      "billing_event": "IMPRESSIONS",
+      "optimization_goal": "LINK_CLICKS",
+      "destination_type": "WEBSITE",
+      "destination_link_key": "cold",
+      "targeting": {
+        "geo_locations": {
+          "countries": [
+            "US"
+          ],
+          "location_types": [
+            "home",
+            "recent"
+          ]
+        },
+        "age_min": 40,
+        "age_max": 65,
+        "genders": "ALL",
+        "locales": [
+          "English"
+        ],
+        "device_platforms": [
+          "mobile"
+        ],
+        "user_os": [
+          "iOS"
+        ],
+        "advantage_plus_audience": true,
+        "suggestions_live_lookup_required": true,
+        "suggested_interest_names": [
+          "United States Coast Guard Academy",
+          "United States Coast Guard",
+          "United States service academies",
+          "Military family",
+          "Parents of college-age children"
+        ],
+        "suggestion_policy": "Use only suggestions returned as eligible by the live Meta account. If unavailable or undersized, remove suggestions and remain broad under the strict controls above. Do not substitute Army, Navy, veteran, or military-history interests.",
+        "custom_audiences": [],
+        "excluded_custom_audiences": [],
+        "group_membership_targeting": "PROHIBITED_AND_UNAVAILABLE"
+      }
+    },
+    {
+      "name": "AS2_Warm_MetaEngagers",
+      "status": "PAUSED",
+      "role": "warm_engagement_retargeting",
+      "base_lifetime_budget_cents": 12000,
+      "partner_scenario_lifetime_budget_cents": 12000,
+      "billing_event": "IMPRESSIONS",
+      "optimization_goal": "LINK_CLICKS",
+      "destination_type": "WEBSITE",
+      "destination_link_key": "warm",
+      "activation_condition": "Remain PAUSED until the combined eligible audience is ready and total campaign reach is approximately 1000 or greater.",
+      "targeting": {
+        "geo_locations": {
+          "countries": [
+            "US"
+          ]
+        },
+        "age_min": 40,
+        "age_max": 65,
+        "genders": "ALL",
+        "locales": [
+          "English"
+        ],
+        "device_platforms": [
+          "mobile"
+        ],
+        "user_os": [
+          "iOS"
+        ],
+        "advantage_plus_audience": false,
+        "custom_audience_union": [
+          {
+            "name": "CadetCatch Facebook and Instagram engagers — 365d",
+            "id": "{{META_ENGAGERS_365D_AUDIENCE_ID}}"
+          },
+          {
+            "name": "CadetCatch 50% video viewers — 30d",
+            "id": "{{META_VIDEO_VIEWERS_50_PERCENT_30D_AUDIENCE_ID}}"
+          },
+          {
+            "name": "CadetCatch ad engagers — 30d",
+            "id": "{{META_AD_ENGAGERS_30D_AUDIENCE_ID}}"
+          }
+        ],
+        "customer_list_upload": "PROHIBITED_FOR_PILOT",
+        "group_membership_targeting": "PROHIBITED_AND_UNAVAILABLE"
+      }
+    }
+  ],
+  "optional_partner_ad_set": {
+    "name": "AS3_PublicPartner",
+    "status": "DRAFT_BLOCKED_ON_PERMISSION",
+    "role": "authorized_public_partnership_ad",
+    "lifetime_budget_cents": 10000,
+    "billing_event": "IMPRESSIONS",
+    "optimization_goal": "LINK_CLICKS",
+    "destination_type": "WEBSITE",
+    "destination_link_key": "partner",
+    "creation_gate": [
+      "Written partner authorization is logged.",
+      "Content is public and eligible for partnership ads.",
+      "A valid partnership-ad code or equivalent permission is supplied.",
+      "The cold budget is reduced from $480 to $380 before this ad set is created.",
+      "The resulting total remains exactly $600."
+    ],
+    "targeting": "Use AS1 strict geo, age, language, device, and iOS controls; do not derive an audience from private group membership."
+  },
+  "creatives": [
+    {
+      "key": "V1_ScrollSearch",
+      "status": "DRAFT",
+      "format": "VIDEO",
+      "aspect_ratio": "9:16",
+      "duration_seconds_min": 7,
+      "duration_seconds_max": 12,
+      "angle": "pain_to_product_demo",
+      "primary_text": "Swab Summer photo drops can mean hours of scrolling. CadetCatch searches event photos for possible matches you review yourself. Free iPhone download; Family Monthly is $12.99/month. Independent; not affiliated with USCGA, USCG, or DHS.",
+      "headline": "Find Cadet Photos Faster",
+      "description": "One free preview search.",
+      "cta": "DOWNLOAD",
+      "on_asset_copy": "Hours of scrolling? Review possible matches faster.",
+      "destination_link_key": "cold"
+    },
+    {
+      "key": "S1_Outcome",
+      "status": "DRAFT",
+      "format": "STATIC_IMAGE",
+      "aspect_ratio": "4:5",
+      "angle": "outcome",
+      "primary_text": "Add one clear photo, run a search, and review possible matches yourself. CadetCatch helps USCGA families save likely finds to iPhone Photos. Free to download; Family Monthly is $12.99/month. Independent; not affiliated with USCGA, USCG, or DHS.",
+      "headline": "Search USCGA Event Photos",
+      "description": "You decide every match.",
+      "cta": "DOWNLOAD",
+      "on_asset_copy": "Search. Review. Save the finds you choose.",
+      "destination_link_key": "cold"
+    },
+    {
+      "key": "C1_HowItWorks",
+      "status": "DRAFT",
+      "format": "CAROUSEL",
+      "aspect_ratio": "1:1",
+      "card_count": 4,
+      "angle": "how_it_works",
+      "primary_text": "Add a clear photo. Search event photos. Review possible matches. Save only the photos you choose. CadetCatch is free to download with one preview search; Family Monthly is $12.99/month. Independent; not affiliated with USCGA, USCG, or DHS.",
+      "headline": "See How CadetCatch Works",
+      "description": "Four simple steps on iPhone.",
+      "cta": "DOWNLOAD",
+      "on_asset_copy": "Card 1: Add one clear photo | Card 2: Search event photos | Card 3: Review possible matches | Card 4: Save the photos you choose",
+      "destination_link_key": "cold"
+    },
+    {
+      "key": "T1_Transparency",
+      "status": "DRAFT",
+      "format": "STATIC_IMAGE",
+      "aspect_ratio": "4:5",
+      "angle": "transparency_and_control",
+      "primary_text": "Photo matching should stay transparent. Your reference photo runs the search, CadetCatch shows possible matches, and you decide what to save. Free iPhone download; Family Monthly is $12.99/month. Not affiliated with USCGA, USCG, or DHS.",
+      "headline": "Possible Matches. Your Call.",
+      "description": "One free preview search.",
+      "cta": "DOWNLOAD",
+      "on_asset_copy": "Possible matches. Your call.",
+      "destination_link_key": "cold"
+    },
+    {
+      "key": "W1_FreePreviewPrice",
+      "status": "DRAFT",
+      "format": "STATIC_IMAGE",
+      "aspect_ratio": "4:5",
+      "angle": "free_preview_and_price",
+      "primary_text": "Try one preview photo search in CadetCatch. Family Monthly is $12.99/month for continuous searches and unlocked matches. You review every possible match.",
+      "headline": "Try One Preview Search",
+      "description": "Free iPhone download.",
+      "cta": "DOWNLOAD",
+      "on_asset_copy": "One preview search free. Family Monthly $12.99/month.",
+      "destination_link_key": "warm"
+    },
+    {
+      "key": "G1_FreeGuide",
+      "status": "DRAFT",
+      "format": "STATIC_IMAGE",
+      "aspect_ratio": "4:5",
+      "angle": "free_educational_resource",
+      "on_asset_copy": "Free guide: Where Swab Summer photos get posted",
+      "destination_url": "https://cadetcatch.com/swab-summer-photos/",
+      "paid_media_eligible": false
+    },
+    {
+      "key": "G2_GuideVideo",
+      "status": "DRAFT",
+      "format": "VIDEO",
+      "aspect_ratio": "9:16",
+      "duration_seconds_min": 30,
+      "duration_seconds_max": 45,
+      "angle": "public_page_guide_walkthrough",
+      "script": "Swab Summer photos can show up across several public galleries and social pages. The free CadetCatch Swab Summer photo guide puts the major sources in one place, with practical tips for keeping track of new drops. No signup is required. CadetCatch is also an independent iPhone app that shows possible photo matches for families to review themselves. It is not affiliated with USCGA, USCG, or DHS.",
+      "destination_url": "https://cadetcatch.com/swab-summer-photos/",
+      "paid_media_eligible": false
+    }
+  ],
+  "ads": [
+    {
+      "name": "AD_V1_ScrollSearch_Cold_9x16",
+      "status": "PAUSED",
+      "ad_set_name": "AS1_Cold_US_iOS_40plus",
+      "creative_key": "V1_ScrollSearch",
+      "test_window": "DAYS_1_TO_7"
+    },
+    {
+      "name": "AD_S1_Outcome_Cold_4x5",
+      "status": "PAUSED",
+      "ad_set_name": "AS1_Cold_US_iOS_40plus",
+      "creative_key": "S1_Outcome",
+      "test_window": "DAYS_1_TO_7"
+    },
+    {
+      "name": "AD_C1_HowItWorks_Cold_Carousel",
+      "status": "PAUSED",
+      "ad_set_name": "AS1_Cold_US_iOS_40plus",
+      "creative_key": "C1_HowItWorks",
+      "test_window": "DAYS_8_TO_14_VS_PRIOR_WINNER"
+    },
+    {
+      "name": "AD_T1_Transparency_Cold_4x5",
+      "status": "PAUSED",
+      "ad_set_name": "AS1_Cold_US_iOS_40plus",
+      "creative_key": "T1_Transparency",
+      "test_window": "DAYS_15_TO_21_VS_PRIOR_WINNER"
+    },
+    {
+      "name": "AD_W1_FreePreviewPrice_Warm_4x5",
+      "status": "PAUSED",
+      "ad_set_name": "AS2_Warm_MetaEngagers",
+      "creative_key": "W1_FreePreviewPrice",
+      "test_window": "DAYS_22_TO_30_AFTER_WARM_AUDIENCE_GATE"
+    }
+  ],
+  "optional_partner_ad": {
+    "name": "AD_P1_PublicPartner_AuthorizedContent",
+    "status": "DRAFT_BLOCKED_ON_PERMISSION",
+    "ad_set_name": "AS3_PublicPartner",
+    "creative_key": "{{AUTHORIZED_PUBLIC_PARTNER_POST_ID_OR_CREATIVE_KEY}}",
+    "partnership_ad_code": "{{PARTNERSHIP_AD_CODE}}"
+  },
+  "testing_schedule": [
+    {
+      "days": "1-7",
+      "test": "V1_ScrollSearch versus S1_Outcome",
+      "rule": "One creative variable at a time; all other ads remain PAUSED."
+    },
+    {
+      "days": "8-14",
+      "test": "Prior winner versus C1_HowItWorks",
+      "rule": "Pause the prior loser before enabling the next challenger."
+    },
+    {
+      "days": "15-21",
+      "test": "Prior winner versus T1_Transparency",
+      "rule": "Pause the prior loser before enabling the next challenger."
+    },
+    {
+      "days": "22-30",
+      "test": "Winning cold creative plus W1 warm creative; authorized partner only if its gate passed",
+      "rule": "Warm and partner objects remain PAUSED until their individual gates pass."
+    }
+  ],
+  "optimization_rules": [
+    {
+      "id": "creative_stop_loss",
+      "evaluation_gate": "ad_spend_cents >= 5000 OR impressions >= 3000",
+      "condition": "outbound_ctr_percent < 0.8 OR outbound_cpc_cents > 250",
+      "action": "PAUSE_AD_AND_DIAGNOSE",
+      "exception": "Do not pause if verified Family Monthly subscriptions justify continued delivery; record the evidence."
+    },
+    {
+      "id": "download_stop_loss",
+      "evaluation_gate": "campaign_spend_cents >= 15000",
+      "condition": "attributable_first_time_downloads < 5",
+      "action": "PAUSE_CAMPAIGN_AND_DIAGNOSE_STOREFRONT_LINK_AND_CREATIVE"
+    },
+    {
+      "id": "subscription_stop_loss",
+      "evaluation_gate": "campaign_spend_cents >= 30000",
+      "condition": "family_monthly_subscriptions == 0",
+      "action": "PAUSE_CAMPAIGN"
+    },
+    {
+      "id": "cold_frequency_refresh",
+      "evaluation_gate": "rolling_window_days == 7",
+      "condition": "cold_frequency > 2.5",
+      "action": "PAUSE_FATIGUED_CREATIVE_AND_ROTATE_APPROVED_CHALLENGER"
+    },
+    {
+      "id": "warm_frequency_cap",
+      "evaluation_gate": "warm_ad_set_is_active",
+      "condition": "warm_frequency >= 5",
+      "action": "PAUSE_OR_REDUCE_WARM_DELIVERY"
+    },
+    {
+      "id": "scale_gate",
+      "evaluation_gate": "campaign_spend_cents <= 60000",
+      "condition": "family_monthly_subscriptions >= 5 AND cac_cents <= 0.5 * confirmed_90_day_net_contribution_cents",
+      "action": "DOCUMENT_ELIGIBILITY_ONLY; DO_NOT_INCREASE_ABOVE_60000_WITHOUT_A_NEW_APPROVED_BUDGET_DECISION"
+    },
+    {
+      "id": "absolute_spend_cap",
+      "evaluation_gate": "always",
+      "condition": "campaign_spend_cents >= 60000",
+      "action": "PAUSE_ALL_DELIVERY"
+    }
+  ],
+  "group_policy": {
+    "outreach_status": "DRAFT_NOT_SENT",
+    "priority_targets": [
+      "facebook.com/groups/uscga2030",
+      "facebook.com/groups/CGA.PA",
+      "legitimate USCGA class-year parent groups",
+      "eligible public photo and community publishers"
+    ],
+    "rules": [
+      "Contact administrators privately from Richard Ducat's authentic profile and disclose founder status in the first message.",
+      "Never post without explicit administrator permission.",
+      "Prefer an administrator-published resource post.",
+      "Never scrape members, upload group membership, or message members unsolicited.",
+      "Never answer membership questions dishonestly.",
+      "Private group posts remain organic and cannot be treated as partnership-ad assets.",
+      "One silent-target follow-up maximum after 5 to 7 days, then stand down.",
+      "A no is final for that channel."
+    ],
+    "guide_url": "https://cadetcatch.com/swab-summer-photos/",
+    "app_store_link_key": "groups",
+    "pilot_target_admin_requests": 8,
+    "pilot_target_approved_placements": 3
+  },
+  "activation_gates": [
+    "richard@eb28.co and required aliases pass inbound and outbound delivery tests with SPF and DKIM passing.",
+    "Meta business, Page, Instagram, ad account, owner roles, scoped automation access, and payment method are verified.",
+    "The corrected App Store version is Ready for Sale and its metadata matches the shipping product.",
+    "The free preview search, $12.99 Family Monthly subscription, $1.99 one-time products, and restore purchases are verified.",
+    "cadetcatch.com privacy, support, guide, and storefront URLs return the intended content.",
+    "GA4 guide_view, pricing_view, and app_store_click events are verified with campaign and creative parameters.",
+    "All four Apple campaign links resolve and preserve their campaign tokens.",
+    "Every creative uses only approved demo or consenting-adult media and passes claim and affiliation review.",
+    "Every selected placement has a reviewed preview with no cropping or unreadable disclosure.",
+    "Campaign, ad sets, and ads were first created PAUSED and total lifetime budget reconciles to exactly $600 or less.",
+    "The package validator passes and every mandatory launch-qa.md item is checked."
+  ]
+}

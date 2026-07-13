@@ -8,6 +8,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { injectSeoMarkup } from '../src/seo.js';
+import { injectCadetCatchNoscriptFallback } from './lib/cadetcatch-html.mjs';
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const docsDir = path.join(repoRoot, 'docs');
@@ -83,6 +84,8 @@ async function main() {
     ensureRemoved(path.join(targetDir, 'assets')),
     ensureRemoved(path.join(targetDir, 'img')),
     ensureRemoved(path.join(targetDir, 'favicon.svg')),
+    ensureRemoved(path.join(targetDir, 'analytics-config.json')),
+    ensureRemoved(path.join(targetDir, 'site-analytics.js')),
     ensureRemoved(path.join(targetDir, 'version.json')),
     ...STATIC_SUBPAGES.map((slug) => ensureRemoved(path.join(targetDir, slug))),
   ]);
@@ -90,7 +93,9 @@ async function main() {
   // SPA shell, SEO-stamped for the cadetcatch.com hostname → renders CadetCatch.
   // Rebase any absolute eb28.co/cc asset URLs (e.g. JSON-LD image) onto the domain root.
   const routeLocation = { pathname: '/', hostname: primaryHostname };
-  const indexHtml = injectBuildMarkup(injectSeoMarkup(htmlTemplate, routeLocation), buildId)
+  const indexHtml = injectCadetCatchNoscriptFallback(
+    injectBuildMarkup(injectSeoMarkup(htmlTemplate, routeLocation), buildId),
+  )
     .split(OLD_ORIGIN_CC)
     .join(NEW_ORIGIN);
   await writeFile('index.html', indexHtml);
@@ -106,6 +111,14 @@ async function main() {
     force: true,
   });
   await copyIfExists(path.join(docsDir, 'favicon.svg'), path.join(targetDir, 'favicon.svg'));
+  await fs.copyFile(
+    path.join(docsDir, 'analytics-config.json'),
+    path.join(targetDir, 'analytics-config.json'),
+  );
+  await fs.copyFile(
+    path.join(docsDir, 'site-analytics.js'),
+    path.join(targetDir, 'site-analytics.js'),
+  );
 
   // Static sub-pages: copy to the site root, rewriting absolute eb28.co/cc URLs.
   for (const slug of STATIC_SUBPAGES) {

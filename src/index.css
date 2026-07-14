@@ -324,6 +324,12 @@
   }
 }
 
+@media (max-width: 359px) {
+  .cc-brand-name {
+    display: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .cadetcatch-site *,
   .cadetcatch-site *::before,

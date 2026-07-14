@@ -524,9 +524,9 @@ const ROUTE_META = {
         ...BASE_ROUTE_META,
         key: 'cc',
         path: '/cc/',
-        title: 'CadetCatch — Find Your Cadet in Thousands of Event Photos',
+        title: 'CadetCatch — Find the Cadet Photo You Have Been Waiting For',
         description:
-            'Add one clear cadet photo, search the available indexed Academy event-photo collection with facial-similarity technology, and review likely matches on your iPhone.',
+            'CadetCatch helps Coast Guard Academy parents find a son or daughter in large event-photo collections using one clear reference photo, then review and save likely matches on iPhone.',
         image: CADETCATCH_IMAGE,
         siteName: 'CadetCatch',
         themeColor: '#061411',
@@ -551,7 +551,7 @@ const ROUTE_META = {
                 url: 'https://apps.apple.com/us/app/cadetcatch/id6769565852',
                 image: CADETCATCH_IMAGE,
                 description:
-                    'CadetCatch uses facial-similarity search to help Coast Guard Academy parents find likely matches in an indexed event-photo collection and review each result themselves.',
+                    'CadetCatch helps Coast Guard Academy parents search large event-photo collections with one clear cadet photo, review likely facial matches, and save the moments they recognize.',
                 provider: {
                     '@id': ORGANIZATION_ID,
                 },

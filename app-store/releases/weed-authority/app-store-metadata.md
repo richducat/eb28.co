@@ -21,18 +21,18 @@ What you can do:
 - Open official state cannabis portals and regulator resources
 - Store medical rec details locally on your iPhone
 - Track purchase entries against state-specific planning windows where limits are available
-- Compare flower, vapes, edibles, topicals, concentrates, tinctures, and pre-rolls
+- Compare flower, edibles, topicals, concentrates, tinctures, and pre-rolls
 - Learn how to verify licenses, read labels, and confirm eligibility before ordering
 
-Weed Authority does not require an account, does not run ads, and does not track users. Medical rec profile fields, saved products, saved retailers, and purchase ledger entries stay on the device unless the user chooses to open an external official state portal or retailer website.
+Weed Authority does not require an account. The app uses Google AdMob banner ads with in-app ad privacy choices, while medical rec profile fields, saved products, saved retailers, and purchase ledger entries stay on the device unless the user chooses to open an external official state portal or retailer website.
 
 The app does not provide medical advice, dosage recommendations, diagnosis, treatment, or legal advice. State registries, physicians, licensed retailers, and regulators remain the official source for eligibility, purchase limits, and compliance.
 
-Privacy Policy: https://weedauthority.eb28.co/privacy/
-Terms: https://weedauthority.eb28.co/terms/
+Privacy Policy: https://eb28.co/weedauthority/privacy/
+Terms: https://eb28.co/weedauthority/terms/
 
 ## Keywords
 cannabis,dispensary,weed,medical,marijuana,rec,allotment,delivery,deals,thc,cbd
 
 ## What's New
-Launch build with native retailer search, official state portal links, local rec vault, private purchase ledger, saved products, deals, and state cannabis education.
+Launch build with native retailer search, official state portal links, local rec vault, private purchase ledger, saved products, deals, state cannabis education, and AdMob banner support.

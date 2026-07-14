@@ -7,13 +7,19 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		122B05DF272B823D52995F6B /* AdMobManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E389713EDC0228F201668902 /* AdMobManager.swift */; };
 		1794426E42ADB86B7CA09D29 /* LearnView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ADC842CD77E34FE5091495A /* LearnView.swift */; };
 		1C87B3C2B6010B037F8FD8DB /* AccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FC28AC2CCF59457963B4CB7 /* AccountView.swift */; };
 		2577F781792E515BE05762DB /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9F7A630279321BEA3C34D4E /* Models.swift */; };
 		2B42E2FCA6E4241E82C96E3E /* AuthorityStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 536D02ECB2C5000F581BB5BD /* AuthorityStore.swift */; };
 		3E47E6D8C573E93CF4422132 /* DealsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411AAC1916AD12ADCEA97B77 /* DealsView.swift */; };
+		430A0A33B3E25EE7C1B6BBC0 /* AppConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 571652516B490A0725CCA1DE /* AppConfig.swift */; };
 		7550B033111BC6B8C570E0DE /* ExploreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B5B9F998081FA226CA4AD77 /* ExploreView.swift */; };
 		7D4C15D2D1058CFC9ACD66CA /* DesignSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75DF7FA64840BF87B3E1F60D /* DesignSystem.swift */; };
+		864F2512BD35C2D10A72650F /* GoogleUserMessagingPlatform in Frameworks */ = {isa = PBXBuildFile; productRef = CCC76C8EF344E2324642F7E8 /* GoogleUserMessagingPlatform */; };
+		9AF82A381DEEE97A2E86DDC7 /* PortalBrowserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFA92EAB7EFD1953A911B1DD /* PortalBrowserView.swift */; };
+		A94326029BC06B70A4ED3007 /* LocationGate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7629AFEAC139215FC79100F9 /* LocationGate.swift */; };
+		AA7AC32355811099481D154E /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = 69A2B29AAABE5CA36F60DCB0 /* GoogleMobileAds */; };
 		B5DEDA8AFEC7BE801C6A92CC /* RecCheckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9373F1F588528C6F4063493A /* RecCheckView.swift */; };
 		B61EC348354FACF8EA1B0D55 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ECB8785E13696C7ABA88D741 /* Assets.xcassets */; };
 		C18EF9BDBB22D890FF565371 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA730BDFF0E7E33995D94604 /* RootView.swift */; };
@@ -25,16 +31,32 @@
 		3724FF71374267D2CFECC5A5 /* WeedAuthority.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = WeedAuthority.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		411AAC1916AD12ADCEA97B77 /* DealsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DealsView.swift; sourceTree = "<group>"; };
 		536D02ECB2C5000F581BB5BD /* AuthorityStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorityStore.swift; sourceTree = "<group>"; };
+		571652516B490A0725CCA1DE /* AppConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConfig.swift; sourceTree = "<group>"; };
 		5ADC842CD77E34FE5091495A /* LearnView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LearnView.swift; sourceTree = "<group>"; };
 		6B5B9F998081FA226CA4AD77 /* ExploreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreView.swift; sourceTree = "<group>"; };
 		75DF7FA64840BF87B3E1F60D /* DesignSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignSystem.swift; sourceTree = "<group>"; };
+		7629AFEAC139215FC79100F9 /* LocationGate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationGate.swift; sourceTree = "<group>"; };
 		9373F1F588528C6F4063493A /* RecCheckView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecCheckView.swift; sourceTree = "<group>"; };
 		A1C0DD70B11B5E1E3C6EA639 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		D9F7A630279321BEA3C34D4E /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
+		DFA92EAB7EFD1953A911B1DD /* PortalBrowserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortalBrowserView.swift; sourceTree = "<group>"; };
+		E389713EDC0228F201668902 /* AdMobManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdMobManager.swift; sourceTree = "<group>"; };
 		EA730BDFF0E7E33995D94604 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		ECB8785E13696C7ABA88D741 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FC9338644C50913F786B1C76 /* WeedAuthorityApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeedAuthorityApp.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		490F4F12566E85C925ECF372 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA7AC32355811099481D154E /* GoogleMobileAds in Frameworks */,
+				864F2512BD35C2D10A72650F /* GoogleUserMessagingPlatform in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		0978FB668865CC458CD8A3FC = {
@@ -57,6 +79,8 @@
 			isa = PBXGroup;
 			children = (
 				2FC28AC2CCF59457963B4CB7 /* AccountView.swift */,
+				E389713EDC0228F201668902 /* AdMobManager.swift */,
+				571652516B490A0725CCA1DE /* AppConfig.swift */,
 				ECB8785E13696C7ABA88D741 /* Assets.xcassets */,
 				536D02ECB2C5000F581BB5BD /* AuthorityStore.swift */,
 				411AAC1916AD12ADCEA97B77 /* DealsView.swift */,
@@ -64,7 +88,9 @@
 				6B5B9F998081FA226CA4AD77 /* ExploreView.swift */,
 				A1C0DD70B11B5E1E3C6EA639 /* Info.plist */,
 				5ADC842CD77E34FE5091495A /* LearnView.swift */,
+				7629AFEAC139215FC79100F9 /* LocationGate.swift */,
 				D9F7A630279321BEA3C34D4E /* Models.swift */,
+				DFA92EAB7EFD1953A911B1DD /* PortalBrowserView.swift */,
 				9373F1F588528C6F4063493A /* RecCheckView.swift */,
 				EA730BDFF0E7E33995D94604 /* RootView.swift */,
 				FC9338644C50913F786B1C76 /* WeedAuthorityApp.swift */,
@@ -81,6 +107,7 @@
 			buildPhases = (
 				E87589F0AF2E5C73552B83DE /* Sources */,
 				0B3161EA19FB7E45943A345A /* Resources */,
+				490F4F12566E85C925ECF372 /* Frameworks */,
 			);
 			buildRules = (
 			);
@@ -88,6 +115,8 @@
 			);
 			name = WeedAuthority;
 			packageProductDependencies = (
+				69A2B29AAABE5CA36F60DCB0 /* GoogleMobileAds */,
+				CCC76C8EF344E2324642F7E8 /* GoogleUserMessagingPlatform */,
 			);
 			productName = WeedAuthority;
 			productReference = 3724FF71374267D2CFECC5A5 /* WeedAuthority.app */;
@@ -117,6 +146,10 @@
 			);
 			mainGroup = 0978FB668865CC458CD8A3FC;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				2754C233839E7E7F78FFDD57 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */,
+				9868F36C16DFC804B9855AAC /* XCRemoteSwiftPackageReference "swift-package-manager-google-user-messaging-platform" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 73482A7AFC224E4C25A5B137 /* Products */;
 			projectDirPath = "";
@@ -144,12 +177,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				1C87B3C2B6010B037F8FD8DB /* AccountView.swift in Sources */,
+				122B05DF272B823D52995F6B /* AdMobManager.swift in Sources */,
+				430A0A33B3E25EE7C1B6BBC0 /* AppConfig.swift in Sources */,
 				2B42E2FCA6E4241E82C96E3E /* AuthorityStore.swift in Sources */,
 				3E47E6D8C573E93CF4422132 /* DealsView.swift in Sources */,
 				7D4C15D2D1058CFC9ACD66CA /* DesignSystem.swift in Sources */,
 				7550B033111BC6B8C570E0DE /* ExploreView.swift in Sources */,
 				1794426E42ADB86B7CA09D29 /* LearnView.swift in Sources */,
+				A94326029BC06B70A4ED3007 /* LocationGate.swift in Sources */,
 				2577F781792E515BE05762DB /* Models.swift in Sources */,
+				9AF82A381DEEE97A2E86DDC7 /* PortalBrowserView.swift in Sources */,
 				B5DEDA8AFEC7BE801C6A92CC /* RecCheckView.swift in Sources */,
 				C18EF9BDBB22D890FF565371 /* RootView.swift in Sources */,
 				EB03ECD9C1250DB683354F28 /* WeedAuthorityApp.swift in Sources */,
@@ -176,6 +213,8 @@
 				PRODUCT_NAME = WeedAuthority;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				WEEDAUTHORITY_GAD_APPLICATION_IDENTIFIER = "ca-app-pub-3940256099942544~1458002511";
+				WEEDAUTHORITY_GAD_BANNER_AD_UNIT_ID = "ca-app-pub-3940256099942544/2435281174";
 			};
 			name = Debug;
 		};
@@ -196,6 +235,8 @@
 				PRODUCT_NAME = WeedAuthority;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
+				WEEDAUTHORITY_GAD_APPLICATION_IDENTIFIER = "ca-app-pub-9665484869013517~1395548152";
+				WEEDAUTHORITY_GAD_BANNER_AD_UNIT_ID = "ca-app-pub-9665484869013517/7769384812";
 			};
 			name = Release;
 		};
@@ -233,7 +274,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 5;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -292,7 +333,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 5;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -346,6 +387,38 @@
 			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		2754C233839E7E7F78FFDD57 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/googleads/swift-package-manager-google-mobile-ads.git";
+			requirement = {
+				kind = exactVersion;
+				version = 13.2.0;
+			};
+		};
+		9868F36C16DFC804B9855AAC /* XCRemoteSwiftPackageReference "swift-package-manager-google-user-messaging-platform" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/googleads/swift-package-manager-google-user-messaging-platform.git";
+			requirement = {
+				kind = exactVersion;
+				version = 3.1.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		69A2B29AAABE5CA36F60DCB0 /* GoogleMobileAds */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2754C233839E7E7F78FFDD57 /* XCRemoteSwiftPackageReference "swift-package-manager-google-mobile-ads" */;
+			productName = GoogleMobileAds;
+		};
+		CCC76C8EF344E2324642F7E8 /* GoogleUserMessagingPlatform */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9868F36C16DFC804B9855AAC /* XCRemoteSwiftPackageReference "swift-package-manager-google-user-messaging-platform" */;
+			productName = GoogleUserMessagingPlatform;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = B319B57262F6C934F4E36DD8 /* Project object */;
 }

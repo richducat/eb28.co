@@ -44,7 +44,6 @@ enum ProductKind: String, CaseIterable, Identifiable, Codable {
     case flower = "Flower"
     case preroll = "Pre-roll"
     case edible = "Edible"
-    case vape = "Vape"
     case concentrate = "Concentrate"
     case topical = "Topical"
     case tincture = "Tincture"
@@ -95,6 +94,11 @@ struct RecProfile: Codable, Equatable {
     var expirationDate: Date = Calendar.current.date(byAdding: .month, value: 7, to: .now) ?? .now
     var notes: String = ""
     var acceptedPrivacy: Bool = false
+    
+    // Synced medical allotment fields
+    var syncedFlowerGrams: Double? = nil
+    var syncedConcentrateGrams: Double? = nil
+    var lastSyncDate: Date? = nil
 
     var isStarted: Bool {
         !legalName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ||
@@ -238,7 +242,7 @@ enum AuthorityContent {
             limitSummary: "Florida recommendations are route-specific and recorded in the Medical Marijuana Use Registry. The official amount-available page is the source of truth.",
             officialCheckSummary: "Open the Florida MMUR to view your patient certifications, orders, and amount-available calculation page.",
             defaultWindowDays: 70,
-            flowerLimitGrams: nil,
+            flowerLimitGrams: 70.87,
             concentrateLimitGrams: nil,
             thcLimitMilligrams: nil,
             sourceTitle: "Florida Office of Medical Marijuana Use"
@@ -402,7 +406,7 @@ enum AuthorityContent {
 
     static let deals: [Deal] = [
         Deal(id: "daily-flower", title: "Fresh eighths under $28", retailer: "Greenline Reserve", city: "Los Angeles", expiresText: "Today", kind: .flower, medicalOnly: false, finePrint: "Availability and purchase limits vary by state and retailer."),
-        Deal(id: "patient-vape", title: "Medical vape cartridge bundle", retailer: "Coastal Patient Supply", city: "Tampa", expiresText: "This week", kind: .vape, medicalOnly: true, finePrint: "Requires active Florida MMUR eligibility and route availability."),
+        Deal(id: "patient-tincture", title: "Medical tincture starter bundle", retailer: "Coastal Patient Supply", city: "Tampa", expiresText: "This week", kind: .tincture, medicalOnly: true, finePrint: "Requires active Florida MMUR eligibility and route availability."),
         Deal(id: "edible-low-dose", title: "Low-dose edible sampler", retailer: "Hudson Licensed Cannabis", city: "New York", expiresText: "Weekend", kind: .edible, medicalOnly: false, finePrint: "Adults 21+ only unless a state medical program applies."),
         Deal(id: "terpene-topicals", title: "Topical relief set", retailer: "Sonoran Relief Market", city: "Phoenix", expiresText: "Ends soon", kind: .topical, medicalOnly: false, finePrint: "Confirm local availability before traveling.")
     ]
@@ -410,7 +414,7 @@ enum AuthorityContent {
     static let products: [Product] = [
         Product(id: "blue-citrus", name: "Blue Citrus Gelato", brand: "North Coast", kind: .flower, thc: "24% THC", cbd: "<1% CBD", effects: ["Calm", "Creative", "Even"], terpenes: ["Limonene", "Caryophyllene"], priceText: "$32 eighth", retailer: "Greenline Reserve"),
         Product(id: "ratio-mint", name: "Ratio Mint 5:1", brand: "Hudson Lab", kind: .edible, thc: "5 mg THC", cbd: "25 mg CBD", effects: ["Balanced", "Soft", "Low intensity"], terpenes: ["Myrcene"], priceText: "$18 pack", retailer: "Hudson Licensed Cannabis"),
-        Product(id: "desert-diesel", name: "Desert Diesel Live", brand: "Sonoran Extracts", kind: .vape, thc: "78% THC", cbd: "<1% CBD", effects: ["Bright", "Focused", "Social"], terpenes: ["Terpinolene", "Pinene"], priceText: "$42 cart", retailer: "Sonoran Relief Market"),
+        Product(id: "desert-diesel", name: "Desert Diesel Live Rosin", brand: "Sonoran Extracts", kind: .concentrate, thc: "78% THC", cbd: "<1% CBD", effects: ["Bright", "Focused", "Social"], terpenes: ["Terpinolene", "Pinene"], priceText: "$42 gram", retailer: "Sonoran Relief Market"),
         Product(id: "route-cream", name: "Relief Route Cream", brand: "Coastal Patient", kind: .topical, thc: "300 mg THC", cbd: "300 mg CBD", effects: ["Localized", "Non-inhaled"], terpenes: ["Linalool"], priceText: "$38 jar", retailer: "Coastal Patient Supply")
     ]
 

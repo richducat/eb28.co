@@ -3,6 +3,8 @@ import SwiftUI
 
 struct RootView: View {
     @Environment(AuthorityStore.self) private var store
+    @Environment(AdMobManager.self) private var ads
+    @Environment(LocationGate.self) private var gate
 
     var body: some View {
         @Bindable var store = store
@@ -10,37 +12,70 @@ struct RootView: View {
         ZStack {
             AuthorityBackground()
             TabView(selection: $store.selectedTab) {
-                ExploreView()
+                GeoGatedView(featureTitle: "Retailer discovery") {
+                    ExploreView()
+                }
+                    .safeAreaInset(edge: .bottom) {
+                        adBanner
+                    }
                     .tag(AuthorityTab.explore)
                     .tabItem {
                         Label(AuthorityTab.explore.title, systemImage: AuthorityTab.explore.icon)
                     }
 
                 RecCheckView()
+                    .safeAreaInset(edge: .bottom) {
+                        adBanner
+                    }
                     .tag(AuthorityTab.rec)
                     .tabItem {
                         Label(AuthorityTab.rec.title, systemImage: AuthorityTab.rec.icon)
                     }
 
-                DealsView()
+                GeoGatedView(featureTitle: "Deals and products") {
+                    DealsView()
+                }
+                    .safeAreaInset(edge: .bottom) {
+                        adBanner
+                    }
                     .tag(AuthorityTab.deals)
                     .tabItem {
                         Label(AuthorityTab.deals.title, systemImage: AuthorityTab.deals.icon)
                     }
 
                 LearnView()
+                    .safeAreaInset(edge: .bottom) {
+                        adBanner
+                    }
                     .tag(AuthorityTab.learn)
                     .tabItem {
                         Label(AuthorityTab.learn.title, systemImage: AuthorityTab.learn.icon)
                     }
 
                 AccountView()
+                    .safeAreaInset(edge: .bottom) {
+                        adBanner
+                    }
                     .tag(AuthorityTab.account)
                     .tabItem {
                         Label(AuthorityTab.account.title, systemImage: AuthorityTab.account.icon)
                     }
             }
             .tint(Color.authorityGreen)
+        }
+        .task {
+            gate.start()
+            ads.prepareConsent(from: UIApplication.shared.topMostViewController)
+        }
+    }
+
+    @ViewBuilder
+    private var adBanner: some View {
+        if !UserDefaults.standard.bool(forKey: "hideAds"), ads.hasConfiguredBanner && ads.canRequestAds {
+            AdBannerView()
+                .frame(height: 62)
+                .frame(maxWidth: .infinity)
+                .background(Color.authorityInk.opacity(0.96))
         }
     }
 }

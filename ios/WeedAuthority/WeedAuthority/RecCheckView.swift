@@ -4,6 +4,7 @@ import SwiftUI
 struct RecCheckView: View {
     @Environment(AuthorityStore.self) private var store
     @State private var webDestination: WebDestination?
+    @State private var portalSyncDestination: WebDestination?
     @State private var showingPurchaseSheet = false
     @State private var unlockMessage = "Your rec profile is stored locally on this iPhone."
 
@@ -26,6 +27,10 @@ struct RecCheckView: View {
             .toolbar(.hidden, for: .navigationBar)
             .sheet(item: $webDestination) { destination in
                 SafariSheet(url: destination.url)
+                    .ignoresSafeArea()
+            }
+            .sheet(item: $portalSyncDestination) { destination in
+                PortalBrowserView(url: destination.url, stateName: store.recState.name)
                     .ignoresSafeArea()
             }
             .sheet(isPresented: $showingPurchaseSheet) {
@@ -136,7 +141,7 @@ struct RecCheckView: View {
                     Pill(text: "Medical", systemImage: "cross.case.fill")
                 }
                 PrimaryActionButton(title: store.recState.portalTitle, systemImage: "safari") {
-                    webDestination = WebDestination(url: store.recState.portalURL)
+                    portalSyncDestination = WebDestination(url: store.recState.portalURL)
                 }
                 SecondaryActionButton(title: "Open regulator source", systemImage: "checkmark.seal") {
                     webDestination = WebDestination(url: store.recState.regulatorURL)
@@ -160,18 +165,90 @@ struct RecCheckView: View {
                     .foregroundStyle(Color.authorityMuted)
                     .lineSpacing(4)
 
+                // Portal Sync Connection Card
+                if let lastSync = store.recProfile.lastSyncDate {
+                    HStack {
+                        Image(systemName: "checkmark.shield.fill")
+                            .foregroundStyle(Color.authorityGreen)
+                            .font(.system(size: 14, weight: .bold))
+                        Text("Live Portal Synced")
+                            .font(.system(size: 12, weight: .bold, design: .rounded))
+                            .foregroundStyle(Color.authorityGreen)
+                        Spacer()
+                        Text("Last sync: \(lastSync.formatted(.relative(presentation: .numeric)))")
+                            .font(.system(size: 11, weight: .medium))
+                            .foregroundStyle(Color.authorityMuted)
+                        Button {
+                            portalSyncDestination = WebDestination(url: store.recState.portalURL)
+                        } label: {
+                            Text("Re-sync")
+                                .font(.system(size: 11, weight: .bold, design: .rounded))
+                                .foregroundStyle(Color.authorityGold)
+                                .padding(.horizontal, 10)
+                                .padding(.vertical, 5)
+                                .background(Color.authorityRaised, in: RoundedRectangle(cornerRadius: 8))
+                        }
+                        .buttonStyle(.plain)
+                    }
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 8)
+                    .background(Color.authorityGreen.opacity(0.08), in: RoundedRectangle(cornerRadius: 12))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 12)
+                            .stroke(Color.authorityGreen.opacity(0.18), lineWidth: 1)
+                    )
+                } else {
+                    HStack {
+                        Image(systemName: "bolt.shield.fill")
+                            .foregroundStyle(Color.authorityGold)
+                            .font(.system(size: 15))
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("Official Registry Connection")
+                                .font(.system(size: 13, weight: .bold, design: .rounded))
+                                .foregroundStyle(Color.authorityText)
+                            Text("Sync live allotments from your portal.")
+                                .font(.system(size: 11, weight: .medium))
+                                .foregroundStyle(Color.authorityMuted)
+                        }
+                        Spacer()
+                        Button {
+                            portalSyncDestination = WebDestination(url: store.recState.portalURL)
+                        } label: {
+                            Text("Connect")
+                                .font(.system(size: 12, weight: .bold, design: .rounded))
+                                .foregroundStyle(Color.authorityInk)
+                                .padding(.horizontal, 14)
+                                .padding(.vertical, 7)
+                                .background(Color.authorityGreen, in: RoundedRectangle(cornerRadius: 10))
+                        }
+                        .buttonStyle(.plain)
+                    }
+                    .padding(12)
+                    .background(Color.authorityRaised.opacity(0.5), in: RoundedRectangle(cornerRadius: 14))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 14)
+                            .stroke(Color.authorityGold.opacity(0.14), lineWidth: 1)
+                    )
+                }
+
                 HStack(spacing: 10) {
                     AllotmentGauge(
                         title: "Flower",
                         valueText: flowerRemainingText,
-                        detail: "\(store.recState.defaultWindowDays)-day window",
-                        tint: Color.authorityGreen
+                        detail: flowerRemainingText == "Portal" ? "Tap to open portal" : (store.recState.id == "FL" ? "35-day window" : "\(store.recState.defaultWindowDays)-day window"),
+                        tint: Color.authorityGreen,
+                        action: flowerRemainingText == "Portal" ? {
+                            portalSyncDestination = WebDestination(url: store.recState.portalURL)
+                        } : nil
                     )
                     AllotmentGauge(
                         title: "Concentrate",
                         valueText: concentrateRemainingText,
-                        detail: "where tracked",
-                        tint: Color.authorityGold
+                        detail: concentrateRemainingText == "Portal" ? "Tap to open portal" : "where tracked",
+                        tint: Color.authorityGold,
+                        action: concentrateRemainingText == "Portal" ? {
+                            portalSyncDestination = WebDestination(url: store.recState.portalURL)
+                        } : nil
                     )
                 }
 
@@ -261,23 +338,43 @@ private struct AllotmentGauge: View {
     let valueText: String
     let detail: String
     let tint: Color
+    var action: (() -> Void)? = nil
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 9) {
-            Text(title.uppercased())
-                .font(.system(size: 10, weight: .black, design: .rounded))
-                .foregroundStyle(Color.authorityMuted)
-            Text(valueText)
-                .font(.system(size: 24, weight: .black, design: .rounded))
-                .foregroundStyle(tint)
-                .minimumScaleFactor(0.7)
-            Text(detail)
-                .font(.system(size: 12, weight: .medium))
-                .foregroundStyle(Color.authorityMuted)
+        Button {
+            action?()
+        } label: {
+            VStack(alignment: .leading, spacing: 9) {
+                HStack(spacing: 4) {
+                    Text(title.uppercased())
+                        .font(.system(size: 10, weight: .black, design: .rounded))
+                        .foregroundStyle(Color.authorityMuted)
+                    Spacer()
+                    if action != nil {
+                        Image(systemName: "safari")
+                            .font(.system(size: 11, weight: .bold))
+                            .foregroundStyle(tint.opacity(0.8))
+                    }
+                }
+                Text(valueText)
+                    .font(.system(size: 24, weight: .black, design: .rounded))
+                    .foregroundStyle(tint)
+                    .minimumScaleFactor(0.7)
+                Text(detail)
+                    .font(.system(size: 12, weight: .medium))
+                    .foregroundStyle(Color.authorityMuted)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(14)
+            .background(Color.authorityRaised, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+            .overlay(
+                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    .stroke(action != nil ? tint.opacity(0.18) : Color.clear, lineWidth: 1)
+            )
+            .contentShape(Rectangle())
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(14)
-        .background(Color.authorityRaised, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+        .buttonStyle(.plain)
+        .disabled(action == nil)
     }
 }
 

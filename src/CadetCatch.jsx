@@ -32,7 +32,7 @@ function BrandLockup({ light = false }) {
         className="h-9 w-9 rounded-[9px] ring-1 ring-white/15"
       />
       <span
-        className={`cc-wordmark text-sm font-extrabold uppercase tracking-[0.11em] ${
+        className={`cc-wordmark cc-brand-name text-sm font-extrabold uppercase tracking-[0.11em] ${
           light ? 'text-[var(--cc-ivory)]' : 'text-[var(--cc-ink)]'
         }`}
       >
@@ -81,76 +81,76 @@ function AppStoreButton({ placement, className = '', compact = false, outline = 
 const GALLERY_MOMENTS = [
   {
     number: '01',
-    title: 'The collection keeps growing',
-    body: 'Swab Summer, training, athletics, and Academy events can put thousands of photos in front of a family.',
+    title: 'The waiting',
+    body: "Contact can be limited, letters take time, and a new photo may be the first glimpse you've had of your cadet in days.",
   },
   {
     number: '02',
-    title: 'One face is buried in the crowd',
-    body: 'Matching haircuts, uniforms, group shots, and background faces make photo-by-photo searching exhausting.',
+    title: 'The photo drop',
+    body: 'You open gallery after gallery, zooming into formations, training shots, and faces in the background, hoping not to scroll past yours.',
   },
   {
     number: '03',
-    title: 'CadetCatch builds the shortlist',
-    body: 'Facial-similarity search brings likely matches forward so you can review the photos that deserve your attention.',
+    title: 'The swab sighting',
+    body: "Then you recognize that face. It's one small piece of a week you couldn't see, ready to save and send to everyone waiting at home.",
   },
 ];
 
 const WORKFLOW = [
   {
     number: '01',
-    title: 'Add one clear cadet photo',
-    body: 'Open Roster and choose a clear, front-facing photo with only your cadet visible.',
+    title: 'Add the photo you know best',
+    body: 'Open Roster and choose a clear, front-facing photo of your cadet from your iPhone. One face, good light, and no crowd gives the search its best start.',
   },
   {
     number: '02',
-    title: 'Tap Search Photos',
-    body: 'CadetCatch compares that reference with faces in the available indexed event-photo collection and ranks likely matches.',
+    title: 'Let CadetCatch narrow the search',
+    body: 'Tap Search Photos. The app compares that reference with faces in the available indexed Academy and event-photo collection, then ranks the most likely matches.',
   },
   {
     number: '03',
-    title: 'Review, recognize, and save',
-    body: 'Open Photos, inspect the suggestions, and save the moments you recognize to your iPhone. You make the final call.',
+    title: 'Open the photos that look right',
+    body: 'Review the suggestions, save the photos you recognize, and share the sighting with family. You know your cadet, so you always make the final call.',
   },
 ];
 
 const SCREENS = [
   {
     src: IMG('find-cadet-photos.png'),
-    label: 'Start the search',
-    body: 'Choose your cadet and start a search from the Home screen.',
+    label: 'Choose who you want to find',
+    body: 'Create a private roster entry for your son, daughter, family member, or friend.',
     alt: 'CadetCatch home screen on iPhone with photo collections and saved photos',
   },
   {
     src: IMG('start-with-one-photo.png'),
-    label: 'Give it one clear reference',
-    body: 'Add a front-facing photo that shows only the cadet you want to find.',
+    label: 'Start with one clear photo',
+    body: 'Use a front-facing picture that shows only the cadet you want CadetCatch to look for.',
     alt: 'CadetCatch Add Cadet screen asking for one clear profile photo',
   },
   {
     src: IMG('review-photo-finds.png'),
-    label: 'Review the likely matches',
-    body: 'Inspect the focused results and save only the photos you recognize.',
+    label: 'Keep the moments you recognize',
+    body: 'Review the focused results and save the photos that really show your cadet.',
     alt: 'CadetCatch Photos screen with new and saved photo finds',
   },
 ];
 
 const TRUST_POINTS = [
   {
-    title: 'You choose the reference photo',
-    body: 'CadetCatch searches from the one clear cadet photo you deliberately select.',
+    title: 'Your photo starts the search',
+    body: 'CadetCatch searches from the one clear cadet photo you deliberately choose for your private roster.',
   },
   {
-    title: 'The search stays focused',
-    body: 'It compares against faces in the available indexed Academy and event-photo collection, not every photo on your phone.',
+    title: 'Only available photo sources are checked',
+    body: 'It checks photo pages and indexed Academy or event sources available to the app. It does not search every image online or scan your whole camera roll.',
   },
   {
-    title: 'Possible matches, not identity decisions',
-    body: 'You inspect every suggestion and decide which photos are really your cadet.',
+    title: 'You confirm every possible match',
+    body: 'Facial similarity makes the pile smaller. You inspect every suggestion and decide which photos really show your cadet.',
   },
   {
-    title: 'Apple-managed purchases',
-    body: 'Apple displays current prices and manages subscription cancellation.',
+    title: 'Apple handles every purchase',
+    body: 'Apple shows the current price before you buy and manages subscription cancellation from your App Store account.',
   },
 ];
 
@@ -174,29 +174,34 @@ const PRICE_ROWS = [
 
 const FAQS = [
   {
-    question: 'How do I use CadetCatch?',
+    question: 'What exactly is CadetCatch?',
     answer:
-      'Open Roster and add one clear, front-facing photo of your cadet. From Home, tap Search Photos. Then open Photos to review the likely matches and save the images you recognize to your iPhone.',
+      'CadetCatch is an iPhone app for families trying to find a cadet in large Academy and event-photo collections. You give it one clear reference photo, it brings forward likely matches from the available searchable collection, and you decide which photos really show your cadet.',
+  },
+  {
+    question: 'How do I use it?',
+    answer:
+      'Open Roster and add a clear, front-facing photo of your cadet. From Home, tap Search Photos. Then open Photos, review the likely matches, and save the images you recognize to your iPhone.',
   },
   {
     question: 'What does the facial-recognition technology do?',
     answer:
-      'CadetCatch uses advanced facial-similarity technology to compare the reference photo you choose with faces in the indexed event-photo collection. It ranks likely matches for your review; it does not make a final identity decision.',
+      'It compares facial features in the reference photo you choose with faces in the available indexed photo collection. The app ranks possible matches to give you a shorter list to review. It never makes the final identity decision for you.',
   },
   {
-    question: 'Does CadetCatch automatically identify my cadet?',
+    question: 'Does it search every photo online or on my phone?',
     answer:
-      'No. CadetCatch surfaces possible matches from its available indexed event-photo collection. You review every result and decide which photos actually show your cadet.',
+      'No. CadetCatch checks only the photo pages and indexed Academy or event sources available to the app. It does not search every image on the internet, and it does not scan your iPhone photo library for event photos.',
   },
   {
-    question: 'Which photos can CadetCatch search?',
+    question: 'Will it always find my cadet?',
     answer:
-      'CadetCatch searches the Academy and event photos that are available in its indexed search collection. It does not search every image on the internet, and it does not scan your iPhone photo library for event photos.',
+      'No app can promise that. Your cadet may not appear in a photo drop, or a face may be too small, turned away, or poorly lit. CadetCatch gives you a better place to begin, but you still review every possible match yourself.',
   },
   {
-    question: 'What if I do not see my cadet right away?',
+    question: 'What makes a good reference photo?',
     answer:
-      'That can happen. A gallery may not include your cadet, or the photo angle and image quality may not be clear enough for a useful suggestion. CadetCatch gives you a better place to start, but it cannot guarantee a match in every gallery.',
+      'Choose a recent, front-facing photo with good light, a clear view of the face, and no other people in the frame. A simple photo from your camera roll is usually the easiest place to start.',
   },
   {
     question: 'How much does it cost?',
@@ -238,7 +243,7 @@ export default function CadetCatch() {
           </a>
 
           <nav className="cc-primary-nav hidden items-center gap-8 text-sm font-semibold lg:flex" aria-label="Primary">
-            <a className="cc-text-link" href="#for-parents">For parents</a>
+            <a className="cc-text-link" href="#for-parents">Why it matters</a>
             <a className="cc-text-link" href="#how-it-works">How it works</a>
             <a className="cc-text-link" href="#privacy">Privacy</a>
             <a className="cc-text-link" href="#pricing">Pricing</a>
@@ -255,44 +260,51 @@ export default function CadetCatch() {
             <div className="cc-hero-copy relative z-10 max-w-[650px]">
               <p className="cc-kicker cc-reveal cc-reveal-1">
                 <span className="h-2 w-2 rounded-full bg-[var(--cc-gold)]" />
-                Thousands of event photos. One face you know.
+                Made for Coast Guard Academy parents
               </p>
               <h1 className="cc-display cc-reveal cc-reveal-2 mt-7 max-w-[720px] text-[3.45rem] font-semibold leading-[0.9] tracking-[-0.055em] sm:text-[5.1rem] lg:text-[5.8rem]">
-                Search thousands of cadet photos. Start with one face.
+                Find the face you&apos;ve been waiting to see.
               </h1>
-              <p className="cc-reveal cc-reveal-3 mt-8 max-w-[590px] text-lg leading-8 text-white/72 sm:text-xl sm:leading-9">
-                Choose one clear photo of your cadet. CadetCatch uses advanced facial recognition
-                to search the indexed event-photo collection and bring back likely matches for you
-                to review.
+              <p className="cc-reveal cc-reveal-3 mt-8 max-w-[610px] text-xl font-bold leading-8 text-white/90 sm:text-[1.35rem] sm:leading-9">
+                CadetCatch is the iPhone app that helps you find your son or daughter across
+                thousands of Academy event photos.
+              </p>
+              <p className="cc-reveal cc-reveal-3 mt-4 max-w-[600px] text-base leading-7 text-white/68 sm:text-lg sm:leading-8">
+                Add one clear photo. CadetCatch compares that face with the Academy and event
+                photos available to the app and brings likely matches together. You review a
+                shorter list instead of opening every image yourself, then save the moments you
+                recognize.
               </p>
 
               <div className="cc-reveal cc-reveal-4 mt-9 flex flex-col items-start gap-5 sm:flex-row sm:items-center">
                 <AppStoreButton placement="hero" className="w-full sm:w-auto" />
-                <a className="cc-inline-link" href="#how-it-works">
-                  See exactly how it works
-                  <span aria-hidden="true">↓</span>
-                </a>
+                <span className="hidden sm:block">
+                  <a className="cc-inline-link" href="#how-it-works">
+                    See exactly how it works
+                    <span aria-hidden="true">↓</span>
+                  </a>
+                </span>
               </div>
 
               <p className="cc-reveal cc-reveal-4 mt-6 max-w-lg text-sm leading-6 text-white/48">
                 <span className="sm:hidden">iPhone · Free to download</span>
-                <span className="hidden sm:inline">iPhone · Free to download · No account required for core search · You review every match</span>
+                <span className="hidden sm:inline">Free to download · You review every possible match · Save finds to your iPhone</span>
               </p>
             </div>
 
             <figure className="cc-product-stage cc-reveal cc-reveal-3 mx-auto w-full max-w-[650px]">
               <div className="cc-product-halo" aria-hidden="true" />
               <img
-                src={IMG('review-photo-finds.png')}
-                alt="CadetCatch iPhone screen for reviewing new and saved photo finds"
+                src={IMG('start-with-one-photo.png')}
+                alt="CadetCatch iPhone screen for adding one clear cadet reference photo"
                 width="400"
                 height="869"
                 loading="eager"
                 className="cc-product-screen"
               />
               <figcaption className="relative mt-6 flex flex-col gap-1 border-t border-white/16 pt-5 text-sm sm:flex-row sm:items-center sm:justify-between">
-                <strong className="font-bold text-[var(--cc-ivory)]">One reference photo in</strong>
-                <span className="text-white/48">Likely event-photo matches out.</span>
+                <strong className="font-bold text-[var(--cc-ivory)]">Give it the face you know best</strong>
+                <span className="text-white/48">Get a shorter list of photos to check.</span>
               </figcaption>
             </figure>
           </div>
@@ -301,13 +313,15 @@ export default function CadetCatch() {
         <section id="for-parents" className="scroll-mt-24 bg-[var(--cc-paper)] px-5 py-20 sm:px-8 sm:py-28 lg:px-10 lg:py-36">
           <div className="mx-auto grid max-w-[1220px] gap-14 lg:grid-cols-[0.7fr_1.3fr] lg:gap-24">
             <div>
-              <p className="cc-section-label">The real photo problem</p>
+              <p className="cc-section-label">Why these photos matter</p>
               <h2 className="cc-display mt-5 text-5xl font-semibold leading-[0.93] tracking-[-0.045em] sm:text-6xl">
-                Thousands of photos go up. You should not have to inspect every one.
+                The moment you finally say, “There they are.”
               </h2>
               <p className="mt-7 max-w-lg text-lg leading-8 text-[var(--cc-muted)]">
-                The photos are the connection. The endless scroll is the problem. CadetCatch turns
-                a growing collection into a focused set of likely matches.
+                Swab Summer asks families to let go while caring just as much. When contact is
+                limited, one photo can quiet a lot of worry. Parents know that small moment as a
+                swab sighting. CadetCatch is built to help you reach it without searching every
+                image one by one.
               </p>
             </div>
             <EditorialRows items={GALLERY_MOMENTS} />
@@ -318,15 +332,16 @@ export default function CadetCatch() {
           <div className="mx-auto max-w-[1220px]">
             <div className="grid gap-8 lg:grid-cols-[0.78fr_1.22fr] lg:items-end lg:gap-24">
               <div>
-                <p className="cc-section-label">How it works</p>
+                <p className="cc-section-label">What CadetCatch does for you</p>
                 <h2 className="cc-display mt-5 text-5xl font-semibold leading-[0.93] tracking-[-0.045em] sm:text-6xl">
-                  One clear photo starts the search. You make the match.
+                  It does the first pass. You spend your time on the photos most likely to matter.
                 </h2>
               </div>
               <p className="max-w-2xl text-lg leading-8 text-[var(--cc-muted)] lg:justify-self-end">
-                State-of-the-art facial-similarity methods compare the face you provide with faces
-                in the indexed photo collection. CadetCatch ranks the likely matches; your eye
-                confirms which moments are really yours.
+                CadetCatch uses facial-recognition technology to compare the face in your chosen
+                photo with faces in the available indexed collection. It returns a shortlist of
+                likely matches, not a final identification. You still decide which photos are
+                really them.
               </p>
             </div>
 
@@ -348,12 +363,12 @@ export default function CadetCatch() {
               <div>
                 <p className="cc-section-label text-[var(--cc-gold)]">Inside the app</p>
                 <h2 className="cc-display mt-5 text-5xl font-semibold leading-[0.93] tracking-[-0.045em] sm:text-6xl">
-                  From one reference photo to a reviewable shortlist.
+                  A simple path from one clear photo to the pictures worth checking.
                 </h2>
               </div>
               <p className="max-w-xl text-lg leading-8 text-white/58 lg:justify-self-end">
-                Add your cadet, start the search, then review and save likely matches without
-                opening thousands of images one by one.
+                No special setup and no technical know-how. Add your cadet, start the search, then
+                review and save the likely matches that feel familiar.
               </p>
             </div>
 
@@ -370,7 +385,7 @@ export default function CadetCatch() {
             </div>
 
             <div className="mt-16 flex flex-col items-start gap-4 border-t border-white/16 pt-8 sm:flex-row sm:items-center sm:justify-between">
-              <p className="max-w-xl text-sm leading-6 text-white/48">Real CadetCatch screens. No mock dashboard and no automatic identity decision.</p>
+              <p className="max-w-xl text-sm leading-6 text-white/48">Real CadetCatch screens. The app narrows the search; you recognize the person.</p>
               <AppStoreButton placement="screens" />
             </div>
           </div>
@@ -379,13 +394,13 @@ export default function CadetCatch() {
         <section id="privacy" className="scroll-mt-24 bg-[var(--cc-ivory)] px-5 py-20 sm:px-8 sm:py-28 lg:px-10 lg:py-36">
           <div className="mx-auto grid max-w-[1220px] gap-14 lg:grid-cols-[0.82fr_1.18fr] lg:gap-24">
             <div>
-              <p className="cc-section-label">Power with a clear boundary</p>
+              <p className="cc-section-label">A helpful search, with you in control</p>
               <h2 className="cc-display mt-5 text-5xl font-semibold leading-[0.93] tracking-[-0.045em] sm:text-6xl">
-                The technology finds similarities. You decide who is in the photo.
+                CadetCatch narrows the search. You decide which photos are really them.
               </h2>
               <p className="mt-7 max-w-xl text-lg leading-8 text-[var(--cc-muted)]">
-                Facial recognition is used to narrow the collection, not to make an identity
-                decision. You inspect every suggestion and save only what you recognize.
+                The technology makes the photo pile smaller. You inspect every suggestion and
+                save only the moments you recognize.
               </p>
               <a className="cc-plain-arrow mt-8" href={PRIVACY_URL}>
                 Read the privacy policy <ArrowRight className="h-4 w-4" aria-hidden="true" />
@@ -413,11 +428,11 @@ export default function CadetCatch() {
             <div>
               <p className="cc-section-label">App Store pricing</p>
               <h2 className="cc-display mt-5 text-5xl font-semibold leading-[0.93] tracking-[-0.045em] sm:text-6xl">
-                Free to download. Clear choices if you want more.
+                Start free. Choose one check or keep searching all month.
               </h2>
               <p className="mt-7 max-w-lg text-lg leading-8 text-[var(--cc-muted)]">
-                Put CadetCatch on your iPhone at no charge. Apple shows the current price before any
-                in-app purchase.
+                Put CadetCatch on your iPhone at no charge. If it fits your family, choose a
+                one-time option or Family Monthly. Apple shows the price before every purchase.
               </p>
               <div className="mt-8 hidden lg:block">
                 <AppStoreButton placement="pricing" />
@@ -451,7 +466,7 @@ export default function CadetCatch() {
           <div className="mx-auto max-w-[1000px]">
             <p className="cc-section-label">Straight answers</p>
             <h2 className="cc-display mt-5 max-w-3xl text-5xl font-semibold leading-[0.93] tracking-[-0.045em] sm:text-6xl">
-              What parents should know before downloading.
+              What a parent would want to know before downloading.
             </h2>
 
             <div className="mt-12 border-t border-[var(--cc-line-dark)]">
@@ -472,11 +487,12 @@ export default function CadetCatch() {
           <div className="mx-auto max-w-[1040px] text-center">
             <p className="cc-section-label text-[var(--cc-gold)]">Before the next photo drop</p>
             <h2 className="cc-display mx-auto mt-6 max-w-4xl text-6xl font-semibold leading-[0.88] tracking-[-0.05em] sm:text-7xl lg:text-8xl">
-              Search the next photo drop with CadetCatch.
+              Be ready for the next chance to see their face.
             </h2>
             <p className="mx-auto mt-7 max-w-2xl text-lg leading-8 text-white/58">
-              Download free, add one clear cadet photo, and let the app build the shortlist. Spend
-              your time finding the moments that matter instead of opening every image.
+              Download CadetCatch free and add one clear cadet photo now. When you search the
+              available collection, the app can bring the likely matches together so you can focus
+              on the moments you came to find.
             </p>
             <div className="mt-9 flex justify-center">
               <AppStoreButton placement="final" className="w-full sm:w-auto" />

@@ -77,7 +77,7 @@ components:
 
 ## Scope
 
-This contract is intentionally scoped to `src/CadetCatch.jsx` and the static pages under `public/cc/`. The repository contains unrelated brands; CadetCatch tokens and layout rules must not leak into those surfaces.
+This contract is intentionally scoped to `src/CadetCatch.jsx`, CadetCatch-prefixed rules in `src/index.css`, and the static pages under `public/cc/`. The repository contains unrelated brands; CadetCatch tokens and layout rules must not leak into those surfaces.
 
 ## Frontend direction
 
@@ -87,10 +87,11 @@ CadetCatch should feel like a quiet family field journal at night: deep ink, war
 
 ### Content plan
 
-1. **Hero:** lead with the thousands-of-photos problem, explain that one clear cadet photo starts the search, show one App Store action, and present one dominant real app screen.
-2. **Support:** show how photo drops and archives become an overwhelming collection, then connect facial-similarity search to a focused set of likely matches.
-3. **Detail:** explain the exact Roster → Search Photos → review/save workflow, the indexed event-photo collection, the human-review boundary, real app screens, and transparent pricing through rows and dividers rather than card grids.
-4. **Final action:** return to the next-gallery moment and offer one decisive App Store action.
+1. **Hero:** lead with the familiar face a parent is waiting to see, define CadetCatch as an iPhone app in the next sentence, explain that one clear cadet photo starts the search, show one App Store action, and present one dominant real app screen.
+2. **Emotional context:** validate the waiting, limited contact, repeated gallery checking, and relief of a “swab sighting” before discussing the technology.
+3. **Mechanism:** explain exactly how facial-similarity search does the first pass through the available indexed collection and creates a focused set of likely matches.
+4. **Detail:** show the Roster → Search Photos → review/save workflow, the human-review boundary, real app screens, and transparent pricing through rows and dividers rather than card grids.
+5. **Final action:** return to the next chance to see a familiar face and offer one decisive App Store action.
 
 ### Interaction thesis
 
@@ -100,9 +101,15 @@ CadetCatch should feel like a quiet family field journal at night: deep ink, war
 
 ## Product identity
 
-CadetCatch is the calm, capable photo-search companion for Coast Guard Academy parents. Write to one parent facing thousands of event photos and trying to find the few that show their cadet. Lead with the size of the photo-search problem, then explain the mechanism plainly: one clear reference photo, facial-similarity search across the available indexed event-photo collection, likely matches for the parent to review, and recognized photos saved to the iPhone.
+CadetCatch is the calm, capable photo-search companion for Coast Guard Academy parents. Write to one parent who has said goodbye, has limited contact with a son or daughter, and is checking a large photo drop for one reassuring glimpse. The product is not facial-recognition technology by itself. The product is a faster path to the photos that help a family feel connected: one clear reference photo, facial-similarity search across the available indexed event-photo collection, likely matches for the parent to review, and recognized moments saved to the iPhone.
 
 The shield icon identifies the product. It must not imply affiliation with the Academy, U.S. Coast Guard, or DHS.
+
+## Buyer and job to be done
+
+The acute buyer is a parent or guardian during the seven weeks of Swab Summer, when the separation is new, direct contact is limited, and posted photos can carry unusual emotional weight. The broader buyer is a family member of any current cadet who follows training, athletics, and Academy events through large photo collections.
+
+The functional job is to avoid opening every image and get a shorter review list. The emotional job is to find a reassuring glimpse, feel connected to a week the parent cannot witness, and preserve the moment. The social job is to send that “swab sighting” to grandparents, siblings, and friends waiting at home.
 
 ## Conversion hierarchy
 
@@ -110,11 +117,12 @@ The only visually dominant action is downloading CadetCatch from the App Store. 
 
 The first viewport must communicate, in order:
 
-1. Academy photo drops and archives can put thousands of images in front of a family.
-2. One clear cadet photo starts a facial-similarity search across the available indexed collection.
-3. CadetCatch returns likely matches so the parent can skip photo-by-photo searching.
-4. The parent reviews every possible match and makes the final identity decision.
-5. The iPhone app is free to download.
+1. CadetCatch is an iPhone app for Coast Guard Academy parents.
+2. It helps a parent find a son or daughter in large Academy photo drops.
+3. One clear cadet photo starts a facial-similarity search across the available indexed collection.
+4. CadetCatch returns likely matches so the parent can skip most photo-by-photo searching.
+5. The parent reviews every possible match, saves recognized photos, and makes the final identity decision.
+6. The iPhone app is free to download.
 
 ## Composition rules
 
@@ -134,7 +142,9 @@ Use multiple screens only when each advances the workflow. Do not put an app scr
 
 ## Parent voice
 
-Use plain, specific language: thousands of event photos, one clear cadet photo, an indexed photo collection, likely matches, and photos saved to the iPhone. Explain facial-similarity search in one sentence before using shorter language elsewhere. Avoid generic family claims, unexplained software jargon, military jargon, and repeated explanations.
+Sound like a calm parent who understands the pride, worry, and waiting, not a product engineer describing a search system. Use “your son or daughter,” “the face you know,” “the moment you recognize,” and “everyone waiting at home” when emotion is useful. Use plain, specific product language immediately afterward: one clear cadet photo, the available indexed photo collection, likely matches, and photos saved to the iPhone.
+
+Validate the parent without dramatizing the cadet’s experience. The warmest copy should connect the search to seeing that a cadet is okay, finding a moment from a week the family could not witness, and sharing it with loved ones. Explain facial-recognition or facial-similarity search once in everyday language, then call it “the search.” Avoid generic family claims, unexplained software jargon, military jargon beyond familiar audience terms, invented testimonials, and repeated explanations.
 
 ## Trust rules
 

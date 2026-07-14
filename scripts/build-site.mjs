@@ -40,6 +40,9 @@ async function main() {
   };
 
   run(process.execPath, ['scripts/generate-32940-growth-sites.mjs'], env);
+  run(process.execPath, ['scripts/generate-32940-premium-proposals.mjs'], env);
+  run(process.execPath, ['scripts/generate-32940-pilot-packs.mjs'], env);
+  run(process.execPath, ['scripts/generate-eb28-content-factory-page.mjs'], env);
   await fs.rm(path.join(repoRoot, 'docs', '32940'), { recursive: true, force: true });
   run('npx', ['vite', 'build'], env);
   await buildStaticSite('flavorfeed', env);

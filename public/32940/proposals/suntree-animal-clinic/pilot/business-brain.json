@@ -1,0 +1,97 @@
+{
+  "version": 2,
+  "orgId": "pilot_suntree-animal-clinic",
+  "businessName": "Suntree Animal Clinic",
+  "website": "https://www.suntreeanimalclinic.com/",
+  "category": "Veterinary care for local pets",
+  "services": [
+    "Wellness visit structure",
+    "Dental care information",
+    "Surgery information",
+    "Technician service overview",
+    "New-client orientation",
+    "Appointment request path"
+  ],
+  "serviceAreas": [
+    "Suntree",
+    "Viera",
+    "Melbourne"
+  ],
+  "audience": "A warm, five-page concept that gives established clients and new pet families a confident path to services, clinic information and appointment requests.",
+  "tone": "Warm navy, cream and coral; calm clinical trust with spacious pet photography and a new-client orientation.",
+  "primaryAction": "Owner-review CTA only until verified contact routing is enabled",
+  "approvalPolicy": "item",
+  "restrictedClaims": [
+    "Prices",
+    "Offers",
+    "Availability",
+    "Credentials",
+    "Testimonials",
+    "Guaranteed outcomes"
+  ],
+  "sourceClaims": [
+    {
+      "field": "business_name",
+      "value": "Suntree Animal Clinic",
+      "status": "supported",
+      "sourceType": "official_site",
+      "sourceUrl": "https://www.suntreeanimalclinic.com/"
+    },
+    {
+      "field": "category",
+      "value": "Veterinary care for local pets",
+      "status": "needs_review",
+      "sourceType": "public_profile",
+      "sourceUrl": "https://www.suntreeanimalclinic.com/"
+    },
+    {
+      "field": "phone",
+      "value": "(321) 259-0904",
+      "status": "supported",
+      "sourceType": "official_site",
+      "sourceUrl": "https://www.suntreeanimalclinic.com/"
+    },
+    {
+      "field": "service",
+      "value": "Wellness visit structure",
+      "status": "needs_review",
+      "sourceType": "official_site",
+      "sourceUrl": "https://www.suntreeanimalclinic.com/"
+    },
+    {
+      "field": "service",
+      "value": "Dental care information",
+      "status": "needs_review",
+      "sourceType": "official_site",
+      "sourceUrl": "https://www.suntreeanimalclinic.com/"
+    },
+    {
+      "field": "service",
+      "value": "Surgery information",
+      "status": "needs_review",
+      "sourceType": "official_site",
+      "sourceUrl": "https://www.suntreeanimalclinic.com/"
+    },
+    {
+      "field": "service",
+      "value": "Technician service overview",
+      "status": "needs_review",
+      "sourceType": "official_site",
+      "sourceUrl": "https://www.suntreeanimalclinic.com/"
+    },
+    {
+      "field": "service",
+      "value": "New-client orientation",
+      "status": "needs_review",
+      "sourceType": "official_site",
+      "sourceUrl": "https://www.suntreeanimalclinic.com/"
+    },
+    {
+      "field": "service",
+      "value": "Appointment request path",
+      "status": "needs_review",
+      "sourceType": "official_site",
+      "sourceUrl": "https://www.suntreeanimalclinic.com/"
+    }
+  ]
+}

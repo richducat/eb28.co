@@ -1,0 +1,53 @@
+[
+  {
+    "id": "draft_1",
+    "orgId": "pilot_suntree-animal-clinic",
+    "title": "Before the first visit",
+    "body": "A useful new-client page can explain which records and medication notes the clinic wants before arrival—after the clinic approves the checklist.",
+    "channels": [
+      "facebook",
+      "instagram",
+      "linkedin"
+    ],
+    "approvalRequired": true,
+    "publicationStatus": "draft_only",
+    "sourceClaimFields": [
+      "business_name",
+      "category"
+    ]
+  },
+  {
+    "id": "draft_2",
+    "orgId": "pilot_suntree-animal-clinic",
+    "title": "Appointment requests need a finish line",
+    "body": "A website request is not a confirmed appointment. The clearest experience tells pet owners what happens after they submit and who confirms the visit.",
+    "channels": [
+      "facebook",
+      "instagram",
+      "linkedin"
+    ],
+    "approvalRequired": true,
+    "publicationStatus": "draft_only",
+    "sourceClaimFields": [
+      "business_name",
+      "category"
+    ]
+  },
+  {
+    "id": "draft_3",
+    "orgId": "pilot_suntree-animal-clinic",
+    "title": "Clinical content stays human-reviewed",
+    "body": "Veterinary services and urgent guidance should remain under item-level clinic approval. That boundary is part of the production system, not fine print.",
+    "channels": [
+      "facebook",
+      "instagram",
+      "linkedin"
+    ],
+    "approvalRequired": true,
+    "publicationStatus": "draft_only",
+    "sourceClaimFields": [
+      "business_name",
+      "category"
+    ]
+  }
+]

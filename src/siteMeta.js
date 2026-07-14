@@ -524,9 +524,9 @@ const ROUTE_META = {
         ...BASE_ROUTE_META,
         key: 'cc',
         path: '/cc/',
-        title: 'CadetCatch — Find Coast Guard Academy cadet photos faster',
+        title: 'CadetCatch — Find Your Cadet in Thousands of Event Photos',
         description:
-            'For Coast Guard Academy parents checking each new gallery: add one clear cadet photo, choose the pages you follow, and review possible matches on your iPhone.',
+            'Add one clear cadet photo, search the available indexed Academy event-photo collection with facial-similarity technology, and review likely matches on your iPhone.',
         image: CADETCATCH_IMAGE,
         siteName: 'CadetCatch',
         themeColor: '#061411',
@@ -551,7 +551,7 @@ const ROUTE_META = {
                 url: 'https://apps.apple.com/us/app/cadetcatch/id6769565852',
                 image: CADETCATCH_IMAGE,
                 description:
-                    'CadetCatch helps Coast Guard Academy parents narrow each new gallery to possible cadet matches they can review themselves.',
+                    'CadetCatch uses facial-similarity search to help Coast Guard Academy parents find likely matches in an indexed event-photo collection and review each result themselves.',
                 provider: {
                     '@id': ORGANIZATION_ID,
                 },
@@ -562,9 +562,9 @@ const ROUTE_META = {
         ...BASE_ROUTE_META,
         key: 'ccswabsummer',
         path: '/cc/swab-summer-photos/',
-        title: 'Swab Summer 2026 Photo Guide for USCGA Families | CadetCatch',
+        title: 'Find Your Cadet in Thousands of Swab Summer Photos | CadetCatch',
         description:
-            'A plain-English guide for U.S. Coast Guard Academy (USCGA) families on finding Swab Summer 2026 event photos of your swab, from Day One through Family Weekend.',
+            'Find the Swab Summer sources families follow, then use one clear cadet photo to search the available indexed collection for likely matches to review and save.',
         image: CADETCATCH_IMAGE,
         siteName: 'CadetCatch',
         themeColor: '#f8fafc',

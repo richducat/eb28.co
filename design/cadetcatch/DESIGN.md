@@ -87,9 +87,9 @@ CadetCatch should feel like a quiet family field journal at night: deep ink, war
 
 ### Content plan
 
-1. **Hero:** brand, one parent promise, one App Store action, and one dominant real app screen.
-2. **Support:** name the exact gallery-search ritual and show why a shorter review matters.
-3. **Detail:** explain the three-step workflow, privacy boundary, real app screens, and transparent pricing through rows and dividers rather than card grids.
+1. **Hero:** lead with the thousands-of-photos problem, explain that one clear cadet photo starts the search, show one App Store action, and present one dominant real app screen.
+2. **Support:** show how photo drops and archives become an overwhelming collection, then connect facial-similarity search to a focused set of likely matches.
+3. **Detail:** explain the exact Roster → Search Photos → review/save workflow, the indexed event-photo collection, the human-review boundary, real app screens, and transparent pricing through rows and dividers rather than card grids.
 4. **Final action:** return to the next-gallery moment and offer one decisive App Store action.
 
 ### Interaction thesis
@@ -100,7 +100,7 @@ CadetCatch should feel like a quiet family field journal at night: deep ink, war
 
 ## Product identity
 
-CadetCatch is the calm, capable photo-search companion for Coast Guard Academy parents. Write to one parent who has opened a new gallery, zoomed into several group photos, and reached the end wondering whether they missed their cadet. Lead with the face and memory that parent wants to find, then explain the mechanism.
+CadetCatch is the calm, capable photo-search companion for Coast Guard Academy parents. Write to one parent facing thousands of event photos and trying to find the few that show their cadet. Lead with the size of the photo-search problem, then explain the mechanism plainly: one clear reference photo, facial-similarity search across the available indexed event-photo collection, likely matches for the parent to review, and recognized photos saved to the iPhone.
 
 The shield icon identifies the product. It must not imply affiliation with the Academy, U.S. Coast Guard, or DHS.
 
@@ -110,10 +110,11 @@ The only visually dominant action is downloading CadetCatch from the App Store. 
 
 The first viewport must communicate, in order:
 
-1. This is for a parent searching Academy photo drops.
-2. CadetCatch narrows the photos worth reviewing.
-3. The parent reviews every possible match.
-4. The iPhone app is free to download.
+1. Academy photo drops and archives can put thousands of images in front of a family.
+2. One clear cadet photo starts a facial-similarity search across the available indexed collection.
+3. CadetCatch returns likely matches so the parent can skip photo-by-photo searching.
+4. The parent reviews every possible match and makes the final identity decision.
+5. The iPhone app is free to download.
 
 ## Composition rules
 
@@ -133,14 +134,16 @@ Use multiple screens only when each advances the workflow. Do not put an app scr
 
 ## Parent voice
 
-Use plain, specific language: a new gallery, group photos, one familiar face, and the doubt that the parent may have missed it. Avoid generic family claims, software jargon, military jargon, and repeated explanations.
+Use plain, specific language: thousands of event photos, one clear cadet photo, an indexed photo collection, likely matches, and photos saved to the iPhone. Explain facial-similarity search in one sentence before using shorter language elsewhere. Avoid generic family claims, unexplained software jargon, military jargon, and repeated explanations.
 
 ## Trust rules
 
 - Say “possible matches” or “likely finds,” never guaranteed identification.
 - State that the parent reviews every suggestion.
+- Never imply that CadetCatch scans every photo on the internet, every private gallery, or the user's entire iPhone photo library.
+- Describe the searchable corpus as the available indexed Academy and event-photo collection unless a current, measured inventory supports a more specific claim.
 - State that CadetCatch is independent and not affiliated with USCGA, USCG, or DHS.
-- Never fabricate ratings, reviews, user counts, testimonials, or time-saved claims.
+- Never fabricate ratings, reviews, user counts, testimonials, corpus totals, search speed, or quantified time-saved claims.
 - Present current App Store pricing plainly: free download, $1.99 one-time options, and $12.99 Family Monthly.
 - Keep tap targets at least 44px and body text at least 16px on mobile.
 

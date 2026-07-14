@@ -1,0 +1,17 @@
+{
+  "checkedAt": "2026-07-14T14:00:00-04:00",
+  "status": "Official HTTPS service-area page reachable on July 14, 2026",
+  "sources": [
+    {
+      "url": "https://www.365pools.com/service-areas/suntree-pool-services/",
+      "type": "official_or_public_business_source",
+      "use": "Fact discovery only; owner approval required before publication"
+    },
+    {
+      "url": "https://www.365pools.com/service-areas/viera-pool-services/",
+      "type": "official_or_public_business_source",
+      "use": "Fact discovery only; owner approval required before publication"
+    }
+  ],
+  "publicationStatus": "draft_only"
+}

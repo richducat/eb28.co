@@ -10,6 +10,13 @@ const replacementProspectsPath = path.join(repoRoot, 'scripts', 'data', '32940-r
 const studioUrl = 'https://eb28.co/melbournewebstudio/';
 const intakeUrl = `${studioUrl}#quiz`;
 const claimReceivedUrl = 'https://eb28.co/32940/claim-received.html';
+const premiumProposalSlugs = new Set([
+  'martin-pest-control-brevard',
+  'suntree-animal-clinic',
+  'rubio-pet-hospital',
+  '365-pool-service-suntree',
+  'beachside-termite-pest-control-viera',
+]);
 
 const baseProspects = [
   {
@@ -985,8 +992,10 @@ function focusMarkup(items) {
 }
 
 function renderProspectPage(prospect, index) {
-  const title = `${prospect.name} free website concept | EB28 Growth Hosting`;
-  const description = `A free local website concept for ${prospect.name}. EB28 can host, optimize, and publish weekly local content for $98/month after owner approval.`;
+  const hasPremiumProposal = premiumProposalSlugs.has(prospect.slug);
+  const premiumProposalUrl = `/32940/proposals/${prospect.slug}/`;
+  const title = hasPremiumProposal ? `${prospect.name} premium website and content concept | EB28` : `${prospect.name} free website concept | EB28 Growth Hosting`;
+  const description = hasPremiumProposal ? `Open the five-page premium redesign and founding Content Factory pilot prepared by EB28 for ${prospect.name} owner review.` : `A free local website concept for ${prospect.name}. EB28 can host, optimize, and publish weekly local content for $98/month after owner approval.`;
   const accent = index % 3 === 0 ? '#0f766e' : index % 3 === 1 ? '#2563eb' : '#be123c';
 
   return `<!doctype html>
@@ -1368,7 +1377,7 @@ function renderProspectPage(prospect, index) {
   </head>
   <body>
     <div class="notice">
-      Unofficial free website concept prepared by EB28 for owner review. This is not the business's current official website.
+      ${hasPremiumProposal ? 'Unofficial EB28 sales wrapper linking to a five-page premium owner-review redesign. This is not the business’s current official website.' : "Unofficial free website concept prepared by EB28 for owner review. This is not the business's current official website."}
     </div>
     <header class="nav" aria-label="Page header">
       <div class="brand">
@@ -1377,7 +1386,8 @@ function renderProspectPage(prospect, index) {
       </div>
       <div class="nav-actions">
         <a class="btn" href="${attr(studioUrl)}">About EB28</a>
-        <a class="btn primary" href="#claim">Claim this free site</a>
+${hasPremiumProposal ? `        <a class="btn accent" href="${attr(premiumProposalUrl)}">Open premium redesign</a>
+` : ''}        <a class="btn primary" href="#claim">${hasPremiumProposal ? 'Review founding pilot' : 'Claim this free site'}</a>
       </div>
     </header>
 
@@ -1385,13 +1395,14 @@ function renderProspectPage(prospect, index) {
       <section class="hero">
         <div class="wrap hero-grid">
           <div>
-            <p class="eyebrow">Free website build + $98/mo Growth Hosting</p>
-            <h1>A sharper website concept for ${escapeHtml(prospect.name)}.</h1>
+            <p class="eyebrow">${hasPremiumProposal ? 'Five-page premium redesign + Content Factory pilot' : 'Free website build + $98/mo Growth Hosting'}</p>
+            <h1>${hasPremiumProposal ? 'A complete website and content concept' : 'A sharper website concept'} for ${escapeHtml(prospect.name)}.</h1>
             <p class="lead">
               Built to help ${escapeHtml(prospect.audience)} ${escapeHtml(prospect.action)} without hunting through clutter, slow pages, or unclear next steps.
             </p>
             <div class="hero-actions">
-              <a class="btn accent" href="#claim">Claim this free site</a>
+${hasPremiumProposal ? `              <a class="btn accent" href="${attr(premiumProposalUrl)}">Explore all five pages</a>
+` : ''}              <a class="btn accent" href="#claim">${hasPremiumProposal ? 'Review founding pilot' : 'Claim this free site'}</a>
               <a class="btn" href="${attr(intakeUrl)}">Open project brief</a>
             </div>
           </div>
@@ -1454,22 +1465,27 @@ function renderProspectPage(prospect, index) {
       <section class="offer" id="claim">
         <div class="wrap">
           <div>
-            <p class="eyebrow">EB28 Growth Hosting</p>
-            <h2 class="section-title">The website build is free. Hosting, SEO, and weekly content are $98/month.</h2>
+            <p class="eyebrow">${hasPremiumProposal ? 'Founding Full Growth pilot' : 'EB28 Growth Hosting'}</p>
+            <h2 class="section-title">${hasPremiumProposal ? 'Premium website, managed social and two articles for $499/month for three months.' : 'The website build is free. Hosting, SEO, and weekly content are $98/month.'}</h2>
             <p class="lead">
-              EB28 builds the first version at no upfront cost. If the owner wants to use it, EB28 hosts and improves it for $98/month with local SEO upkeep and weekly blog posts.
+              ${hasPremiumProposal ? 'The five invited businesses can launch Full Growth with the $1,000 launch fee waived. The pilot stops after 90 days unless the customer affirmatively renews at the standard $699/month.' : 'EB28 builds the first version at no upfront cost. If the owner wants to use it, EB28 hosts and improves it for $98/month with local SEO upkeep and weekly blog posts.'}
             </p>
             <ul class="offer-list">
-              <li>Managed website hosting, SSL, technical upkeep, and launch support.</li>
+${hasPremiumProposal ? `              <li>Premium website, hosting, SSL, analytics, local SEO and care.</li>
+              <li>12 social posts adapted across three approved channels.</li>
+              <li>Four vertical clips and two researched articles monthly.</li>
+              <li>Research, QA, exact-version approval, scheduling, readback and reporting.</li>
+              <li>The customer keeps the domain, customer data and approved content.</li>
+` : `              <li>Managed website hosting, SSL, technical upkeep, and launch support.</li>
               <li>Local SEO structure, page titles, descriptions, sitemap, and performance checks.</li>
               <li>One weekly local blog post or Google Business Profile content prompt.</li>
               <li>One monthly website update request included after launch.</li>
               <li>No ownership confusion: the owner keeps the business, domain, content rights, and customer relationships.</li>
-            </ul>
+`}            </ul>
           </div>
           <div class="claim-card">
             <p class="form-intro">Use the EB28 intake workflow to request review of this free site concept. No public inbox or third-party form endpoint is embedded on this page.</p>
-            <a class="btn accent" href="${attr(intakeUrl)}">Open the EB28 intake form</a>
+            <a class="btn accent" href="${hasPremiumProposal ? `/content-factory/?prospect=${attr(prospect.slug)}#pilot` : attr(intakeUrl)}">${hasPremiumProposal ? 'Review website + content pilot' : 'Open the EB28 intake form'}</a>
             <p class="fine">No obligation. EB28 can route approved site leads to the business's preferred inbox at launch.</p>
           </div>
         </div>

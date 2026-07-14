@@ -10,3 +10,10 @@ public/api/
 # Internal strategy docs for 32940 outreach (public repo - keep untracked)
 32940-rescue/
 output/lead-ops/
+
+# Environment secrets — never commit; keep only *.example templates
+.env
+.env.*
+*.env
+!.env.example
+!*.env.example

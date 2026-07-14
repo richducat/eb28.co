@@ -56,7 +56,7 @@
       "Weed Authority never receives portal usernames, passwords, MFA codes, session cookies, or Safari browsing data. It does not automate portal navigation, inject scripts, read the portal DOM, or perform background or live synchronization.",
       "A confirmed snapshot becomes stale after 24 hours and is invalidated after a recorded purchase. It is a convenience copy; the state portal and licensed dispensary remain authoritative.",
       "Google AdMob banners use Google User Messaging Platform consent and privacy choices and appear only on non-REC screens. The Rec tab is ad-free, and REC profile, screenshot-derived, allotment, and purchase-ledger values are not sent to Google.",
-      "The app contains no fake synchronized state values or demo state account. These notes do not indicate that build 6 has been uploaded or submitted."
+      "The app contains no fake synchronized state values or demo state account. Build 6 was uploaded and submitted to App Review on July 14, 2026; release remains manual."
     ]
   },
   "distribution": {
@@ -121,10 +121,12 @@
       "The private rec vault stays locked until device-owner authentication succeeds.",
       "Florida and Arizona exact-label parsers pass nine XCTest cases, including ambiguous, conflicting, missing-unit, zero-value, and stale-snapshot cases.",
       "REC screenshots were recaptured from build 6 at 1320x2868, 1284x2778, 2064x2752, and 2048x2732.",
-      "The live App Store privacy record was reconciled against AdMob, location, usage, identifier, and diagnostic collection; no REC, health, screenshot, allotment, or ledger data is collected."
+      "The live App Store privacy record was reconciled against AdMob, location, usage, identifier, and diagnostic collection; no REC, health, screenshot, allotment, or ledger data is collected.",
+      "The App Store distribution export passed signature, bundle, version, provisioning-profile, and entitlement checks; get-task-allow is false.",
+      "App Store Connect processed build 6, accepted the refreshed iPhone and iPad screenshots and metadata, and placed version 2.0.1 into Waiting for Review on July 14, 2026."
     ],
     "knownRisks": [
-      "Version 2.0.1 build 6 upload, TestFlight processing verification, and review submission are still pending.",
+      "Version 2.0.1 build 6 is Waiting for Review in App Store Connect; the App Review outcome and manual production release remain pending.",
       "The existing App Store listing is id1252265730 under DIGITAL SYNC, LLC, THE with bundle ID com.weedauthority.weedauthority.",
       "The public launch pages are served from https://eb28.co/weedauthority/ with root app-ads.txt at https://eb28.co/app-ads.txt. weedauthority.ed28.co is not managed in the connected Namecheap account."
     ]

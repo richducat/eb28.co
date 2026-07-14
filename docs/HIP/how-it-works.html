@@ -1,0 +1,544 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>How It Works — Inspector Gadgets · York Inspections</title>
+<meta name="description" content="A plain-English walkthrough of every step of a Florida 4-Point and wind mitigation inspection in Inspector Gadgets — from booking to signed report, and every option and outcome along the way." />
+<meta name="theme-color" content="#0B1D31" />
+<link rel="canonical" href="https://eb28.co/HIP/how-it-works.html" />
+<meta property="og:type" content="website" />
+<meta property="og:title" content="How It Works — Inspector Gadgets" />
+<meta property="og:description" content="Booking to signed report, step by step. Every option, every outcome — in plain English, on the official Florida forms." />
+<meta property="og:url" content="https://eb28.co/HIP/how-it-works.html" />
+<meta property="og:image" content="https://eb28.co/HIP/shots/workstation.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 44 44'%3E%3Crect width='44' height='44' fill='%230B1D31'/%3E%3Cpath d='M8 8h21l7 7v21H8z' fill='none' stroke='%23ffffff' stroke-width='2.5' stroke-linejoin='round'/%3E%3Cpath d='M14 23 22 15l8 8' fill='none' stroke='%23ffffff' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M17 25.5 21 29.5 29 21' fill='none' stroke='%23F5A300' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" />
+<style>
+  :root {
+    --ink: #0f2438; --muted: #52657b; --paper: #eff2f6; --white: #ffffff;
+    --line: #d5dde6; --line-strong: #adbbcb;
+    --navy: #0b1d31; --navy-deep: #071527; --navy-text: #b9c7d8;
+    --primary: #143c61; --amber: #f5a300; --amber-strong: #d88a00; --amber-soft: #fcefd3;
+    --success: #177342; --success-soft: #e1f2e8; --warn-text: #9a5b00;
+    --vellum: #fbfaf6; --blueprint: #1d5b93;
+    --font-ui: "Public Sans", -apple-system, "Segoe UI", sans-serif;
+    --font-display: "Archivo", "Public Sans", sans-serif;
+    --font-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+    --grid-navy:
+      linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px),
+      linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px);
+    --grid-navy-size: 96px 96px, 96px 96px, 24px 24px, 24px 24px;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; font-family: var(--font-ui); color: var(--ink); background: var(--paper); line-height: 1.55; font-size: 16px; -webkit-font-smoothing: antialiased; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+  .kicker { font-family: var(--font-mono); font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+  .kicker .no { color: var(--primary); }
+  .on-navy .kicker { color: var(--navy-text); }
+  .on-navy .kicker .no { color: var(--amber); }
+  h1, h2, h3 { font-family: var(--font-display); letter-spacing: -0.02em; line-height: 1.08; margin: 0; text-wrap: balance; }
+  section { padding: 84px 0; }
+  section + section { border-top: 1px solid var(--line); }
+  a { color: var(--primary); }
+
+  .cta {
+    display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+    background: var(--amber); color: var(--ink); font-family: var(--font-display);
+    font-size: 15px; font-weight: 700; padding: 15px 28px; border-radius: 4px;
+    text-decoration: none; box-shadow: inset 0 -2px 0 rgba(0,0,0,0.22); white-space: nowrap;
+  }
+  .cta:hover { background: var(--amber-strong); }
+  .cta-ghost {
+    display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+    background: transparent; color: #fff; border: 1px solid rgba(255,255,255,0.35);
+    font-family: var(--font-display); font-size: 15px; font-weight: 700;
+    padding: 14px 28px; border-radius: 4px; text-decoration: none; white-space: nowrap;
+  }
+  .cta-ghost:hover { border-color: rgba(255,255,255,0.7); }
+
+  .badge-row {
+    display: flex; flex-wrap: wrap; gap: 8px 22px;
+    font-family: var(--font-mono); font-size: 11px; font-weight: 600;
+    letter-spacing: 0.07em; text-transform: uppercase; color: var(--navy-text);
+  }
+  .badge-row span::before { content: "▪ "; color: var(--amber); }
+
+  /* ---------- top bar ---------- */
+  .topbar { background: var(--navy-deep); border-bottom: 1px solid rgba(255,255,255,0.10); }
+  .topbar .wrap { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px 24px; }
+  .topbar .brand { display: flex; align-items: center; gap: 11px; color: #fff; text-decoration: none; font-family: var(--font-display); font-weight: 800; font-size: 15px; letter-spacing: -0.01em; }
+  .topbar .navlinks { display: flex; gap: 22px; align-items: center; font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.05em; text-transform: uppercase; }
+  .topbar .navlinks a { color: var(--navy-text); text-decoration: none; }
+  .topbar .navlinks a:hover { color: #fff; }
+  .topbar .navlinks a.here { color: var(--amber); }
+  @media (max-width: 640px) { .topbar .navlinks a.hide-sm { display: none; } }
+
+  /* ---------- hero ---------- */
+  .hero {
+    background: radial-gradient(120% 90% at 50% 0%, var(--navy) 55%, var(--navy-deep) 100%);
+    background-color: var(--navy); position: relative; color: #fff; padding: 74px 0 66px; overflow: hidden;
+  }
+  .hero::before { content: ""; position: absolute; inset: 0; background-image: var(--grid-navy); background-size: var(--grid-navy-size); pointer-events: none; }
+  .hero .wrap { position: relative; }
+  .hero h1 { font-size: clamp(34px, 5.4vw, 58px); font-weight: 800; color: #fff; max-width: 18ch; margin: 16px 0 20px; }
+  .hero h1 em { font-style: normal; color: var(--amber); }
+  .hero .sub { font-size: 18px; color: var(--navy-text); max-width: 60ch; margin: 0 0 28px; }
+  .hero-ctas { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; margin-bottom: 26px; }
+  .hero .badge-row { padding-top: 22px; border-top: 1px solid rgba(255,255,255,0.14); }
+
+  /* ---------- flow rail (at a glance) ---------- */
+  .glance { background: var(--white); }
+  .sec-head { margin-bottom: 30px; }
+  .sec-head h2 { font-size: clamp(26px, 3.6vw, 36px); font-weight: 700; margin-top: 12px; max-width: 26ch; }
+  .sec-head p.lede { font-size: 17px; color: var(--muted); max-width: 64ch; margin: 12px 0 0; }
+  .on-navy .sec-head h2 { color: #fff; }
+  .on-navy .sec-head p.lede { color: var(--navy-text); }
+
+  .railscroll { overflow-x: auto; padding-bottom: 8px; -webkit-overflow-scrolling: touch; }
+  .flowrail { display: flex; align-items: stretch; gap: 0; list-style: none; margin: 0; padding: 0; min-width: min-content; }
+  .fnode {
+    display: flex; flex-direction: column; gap: 8px; min-width: 150px; flex: 1 0 150px;
+    background: var(--vellum); border: 1px solid var(--line-strong); border-radius: 6px; padding: 14px 15px;
+  }
+  .fnode .fn {
+    font-family: var(--font-mono); font-size: 12px; font-weight: 600; color: var(--primary);
+    border: 1px solid var(--line-strong); border-radius: 3px; background: var(--white);
+    width: 30px; height: 26px; display: grid; place-items: center;
+  }
+  .fnode .ft { font-family: var(--font-display); font-weight: 700; font-size: 14.5px; line-height: 1.2; }
+  .fnode .fd { font-size: 12.5px; color: var(--muted); }
+  .farrow { display: flex; align-items: center; color: var(--amber-strong); font-size: 20px; padding: 0 6px; flex: 0 0 auto; }
+
+  /* ---------- step sections ---------- */
+  .phase .sec-head { display: grid; grid-template-columns: 60px 1fr; gap: 18px; align-items: start; margin-bottom: 26px; }
+  .phase .pnum {
+    font-family: var(--font-mono); font-weight: 600; font-size: 18px; color: var(--primary);
+    border: 1px solid var(--line-strong); border-radius: 4px; background: var(--white);
+    width: 60px; height: 52px; display: grid; place-items: center;
+  }
+  .on-navy .phase .pnum { background: rgba(255,255,255,0.06); color: var(--amber); border-color: rgba(255,255,255,0.25); }
+  .phase h2 { font-size: clamp(24px, 3.2vw, 33px); font-weight: 700; }
+  .phase .lede { font-size: 16.5px; color: var(--muted); margin: 10px 0 0; max-width: 60ch; }
+  .on-navy .phase .lede { color: var(--navy-text); }
+
+  .dorow {
+    display: flex; align-items: flex-start; gap: 12px; margin: 0 0 20px;
+    background: var(--white); border: 1px solid var(--line); border-left: 3px solid var(--primary);
+    border-radius: 6px; padding: 15px 18px;
+  }
+  .on-navy .dorow { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.14); border-left-color: var(--amber); }
+  .dorow .lab { font-family: var(--font-mono); font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--primary); white-space: nowrap; padding-top: 2px; }
+  .on-navy .dorow .lab { color: var(--amber); }
+  .dorow p { margin: 0; font-size: 15px; }
+  .on-navy .dorow p { color: #eaf0f7; }
+
+  .paths-label { font-family: var(--font-mono); font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); margin: 0 0 12px; }
+  .on-navy .paths-label { color: var(--navy-text); }
+  .paths { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 14px; }
+  .path {
+    background: var(--white); border: 1px solid var(--line); border-left: 3px solid var(--line-strong);
+    border-radius: 6px; padding: 15px 17px;
+  }
+  .path .tag {
+    display: inline-block; font-family: var(--font-mono); font-size: 10px; font-weight: 600;
+    letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 8px;
+    padding: 3px 8px; border-radius: 999px; border: 1px solid var(--line-strong);
+  }
+  .path h4 { font-family: var(--font-display); font-size: 15.5px; font-weight: 700; margin: 0 0 5px; color: var(--ink); }
+  .path p { margin: 0; font-size: 14px; color: var(--muted); }
+  .path.go   { border-left-color: var(--success); }     .path.go .tag   { color: var(--success);    background: var(--success-soft); border-color: #bcdcc9; }
+  .path.warn { border-left-color: var(--amber-strong); } .path.warn .tag { color: var(--warn-text);  background: var(--amber-soft);  border-color: #e3c27e; }
+  .path.opt  { border-left-color: var(--primary); }      .path.opt .tag  { color: var(--primary);     background: #e7eef6;            border-color: #c3d3e6; }
+
+  .typechips { display: flex; flex-wrap: wrap; gap: 9px; }
+  .typechip { font-family: var(--font-mono); font-size: 12.5px; background: var(--white); border: 1px solid var(--line-strong); border-radius: 3px; padding: 8px 12px; color: var(--ink); }
+  .typechip.hot { background: var(--amber-soft); border-color: #e3c27e; }
+  .typechip .m { color: var(--muted); }
+
+  .term { font-family: var(--font-mono); font-size: 0.9em; background: var(--amber-soft); border: 1px solid #e6cd93; padding: 1px 5px; border-radius: 3px; color: var(--warn-text); white-space: nowrap; }
+
+  /* ---------- trust band ---------- */
+  .trust { background: var(--navy); position: relative; }
+  .trust::before { content: ""; position: absolute; inset: 0; background-image: var(--grid-navy); background-size: var(--grid-navy-size); pointer-events: none; }
+  .trust .wrap { position: relative; }
+  .trust-card { border: 1px solid rgba(255,255,255,0.16); border-radius: 8px; padding: 26px 28px; background: rgba(255,255,255,0.05); display: grid; grid-template-columns: auto 1fr; gap: 20px; align-items: start; }
+  .trust-card .seal { flex: none; }
+  .trust-card h3 { color: #fff; font-size: 20px; margin-bottom: 8px; }
+  .trust-card p { margin: 0; color: var(--navy-text); font-size: 15px; max-width: 74ch; }
+
+  /* ---------- final ---------- */
+  .final { background: var(--navy); position: relative; text-align: center; }
+  .final::before { content: ""; position: absolute; inset: 0; background-image: var(--grid-navy); background-size: var(--grid-navy-size); pointer-events: none; }
+  .final .wrap { position: relative; }
+  .final h2 { font-size: clamp(28px, 4vw, 40px); font-weight: 800; color: #fff; margin: 12px auto 16px; max-width: 20ch; }
+  .final p { color: var(--navy-text); font-size: 17px; max-width: 60ch; margin: 0 auto 26px; }
+  .final .badge-row { justify-content: center; margin-top: 26px; }
+
+  /* ---------- footer ---------- */
+  footer { background: var(--navy-deep); border-top: 3px solid var(--amber); color: var(--navy-text); padding: 44px 0 34px; }
+  .foot-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; font-family: var(--font-mono); font-size: 11.5px; line-height: 1.8; }
+  .foot-grid .brand-line { display: flex; gap: 12px; align-items: flex-start; }
+  .foot-grid strong { color: #fff; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; display: block; margin-bottom: 6px; }
+  .foot-bottom { margin-top: 34px; padding-top: 18px; border-top: 1px solid rgba(255,255,255,0.12); font-family: var(--font-mono); font-size: 11px; display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; }
+  footer a { color: var(--navy-text); }
+
+  @media (max-width: 720px) {
+    section { padding: 60px 0; }
+    .phase .sec-head { grid-template-columns: 46px 1fr; gap: 14px; }
+    .phase .pnum { width: 46px; height: 44px; font-size: 15px; }
+    .trust-card { grid-template-columns: 1fr; }
+    .trust-card .seal { display: none; }
+    .foot-grid { grid-template-columns: 1fr; gap: 22px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ======================= TOP BAR ======================= -->
+<div class="topbar">
+  <div class="wrap">
+    <a class="brand" href="./">
+      <svg width="26" height="26" viewBox="0 0 44 44" fill="none" aria-hidden="true">
+        <path d="M6 6h25l8 8v24H6z" stroke="#ffffff" stroke-width="2.5" stroke-linejoin="round" />
+        <path d="M13 23 22 14l9 9" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M16.5 25 21 29.5 30 20.5" stroke="#F5A300" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+      Inspector Gadgets
+    </a>
+    <nav class="navlinks">
+      <a href="./" class="hide-sm">Overview</a>
+      <a href="how-it-works.html" class="here">How it works</a>
+      <a href="./#pricing" class="hide-sm">Pricing</a>
+      <a href="app/">Open the app</a>
+    </nav>
+  </div>
+</div>
+
+<!-- ======================= HERO ======================= -->
+<header class="hero on-navy">
+  <div class="wrap">
+    <p class="kicker">For Florida home inspectors · a walk-through</p>
+    <h1>From the driveway to the <em>signed report</em>, step by step</h1>
+    <p class="sub">Here is exactly how an inspection moves through the app — every choice you make, and every result you get back. Plain enough to follow cold, on the official Florida 4-Point and wind mitigation forms.</p>
+    <div class="hero-ctas">
+      <a class="cta" href="app/">Start your trial inspection</a>
+      <a class="cta-ghost" href="./#pricing">See plans &amp; pricing</a>
+    </div>
+    <div class="badge-row">
+      <span>Official Florida forms</span><span>You approve every finding</span><span>AI drafts, you decide</span><span>Data stays on your device</span>
+    </div>
+  </div>
+</header>
+
+<!-- ======================= AT A GLANCE ======================= -->
+<section class="glance">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="kicker"><span class="no">The flow</span> — at a glance</p>
+      <h2>Six steps, booking to signed.</h2>
+      <p class="lede">Scroll the rail to see the whole path, then read each step below for the choices and outcomes at every stage.</p>
+    </div>
+    <div class="railscroll">
+      <ol class="flowrail">
+        <li class="fnode"><span class="fn">1</span><span class="ft">Book &amp; sign in</span><span class="fd">Trial or plan; paste the booking</span></li>
+        <li class="farrow" aria-hidden="true">→</li>
+        <li class="fnode"><span class="fn">2</span><span class="ft">Set up the property</span><span class="fd">Address &amp; inspection type</span></li>
+        <li class="farrow" aria-hidden="true">→</li>
+        <li class="fnode"><span class="fn">3</span><span class="ft">Research fills it in</span><span class="fd">Public records, autofilled</span></li>
+        <li class="farrow" aria-hidden="true">→</li>
+        <li class="fnode"><span class="fn">4</span><span class="ft">Walk the property</span><span class="fd">Fields &amp; guided photos</span></li>
+        <li class="farrow" aria-hidden="true">→</li>
+        <li class="fnode"><span class="fn">5</span><span class="ft">AI drafts, you decide</span><span class="fd">Wind-mit suggestions to confirm</span></li>
+        <li class="farrow" aria-hidden="true">→</li>
+        <li class="fnode"><span class="fn">6</span><span class="ft">Review, sign &amp; deliver</span><span class="fd">Official PDFs to your client</span></li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= STEP 1 ======================= -->
+<section class="phase" style="background: var(--paper);">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="pnum">01</div>
+      <div>
+        <p class="kicker"><span class="no">Step 01</span> — Get in</p>
+        <h2>Start your trial, or sign in</h2>
+        <p class="lede">Your first inspection is free with a card on file. After that you pick the plan that fits how much you work.</p>
+      </div>
+    </div>
+    <div class="dorow">
+      <span class="lab">You do</span>
+      <p>Open the app on your phone or laptop. New here? Enter your name, work email and a password, and choose a plan. Already a member? Sign in and your workstation opens on the last property you touched.</p>
+    </div>
+    <p class="paths-label">Your options &amp; what happens</p>
+    <div class="paths">
+      <div class="path go">
+        <span class="tag">Straight through</span>
+        <h4>Start the trial</h4>
+        <p>First inspection free with a card on file — then <span class="term">$20/mo</span> for 10, <span class="term">$98/yr</span> unlimited, or <span class="term">$5</span> per single records pull.</p>
+      </div>
+      <div class="path go">
+        <span class="tag">Straight through</span>
+        <h4>Sign in</h4>
+        <p>Existing members go straight to the workstation — every property stays saved to your account.</p>
+      </div>
+      <div class="path warn">
+        <span class="tag">Heads up</span>
+        <h4>Pending activation</h4>
+        <p>Signed up but billing isn't switched on yet? You'll see "pending activation," and access unlocks as soon as your plan is confirmed.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= STEP 2 ======================= -->
+<section class="phase" style="background: var(--white);">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="pnum">02</div>
+      <div>
+        <p class="kicker"><span class="no">Step 02</span> — Set up the job</p>
+        <h2>Add the property and pick the inspection type</h2>
+        <p class="lede">Drop in tomorrow's booking, then tell the app what kind of inspection this is — that choice decides which official forms and photos you'll need.</p>
+      </div>
+    </div>
+    <div class="dorow">
+      <span class="lab">You do</span>
+      <p>Create the property and fill the booking three ways: paste it from your Google&nbsp;Calendar, import an <span class="term">.ics</span> file, or type it. Set who's on the report once — your license, initials, signature and logo — and it rides on every job after.</p>
+    </div>
+    <p class="paths-label">Choose the inspection type</p>
+    <div class="typechips">
+      <span class="typechip hot">4-Point + Wind Mitigation <span class="m">· most common</span></span>
+      <span class="typechip">4-Point</span>
+      <span class="typechip">Wind Mitigation</span>
+      <span class="typechip">Roof Certification</span>
+      <span class="typechip">Full Home Inspection</span>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= STEP 3 ======================= -->
+<section class="phase" style="background: var(--paper);">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="pnum">03</div>
+      <div>
+        <p class="kicker"><span class="no">Step 03</span> — Research</p>
+        <h2>One tap fills in the public record</h2>
+        <p class="lede">Owner, parcel, year built, square footage, flood zone, design wind speed and permit history — pulled from official county and state sources, each with a link back to where it came from.</p>
+      </div>
+    </div>
+    <div class="dorow">
+      <span class="lab">You do</span>
+      <p>Tap <strong>Research + autofill</strong> (it also runs on its own when you pick an address). Anything you already typed is never overwritten — it's kept aside for you to compare.</p>
+    </div>
+    <p class="paths-label">What comes back — the app handles all of these</p>
+    <div class="paths">
+      <div class="path go">
+        <span class="tag">Straight through</span>
+        <h4>Records found</h4>
+        <p>The fields fill in automatically and each source is listed with a verification link. Review, adjust, move on.</p>
+      </div>
+      <div class="path go">
+        <span class="tag">Straight through</span>
+        <h4>Already pulled this address</h4>
+        <p>Loads instantly from your saved copy — no waiting on the server. Hit <strong>Refresh records</strong> any time you want the latest permits.</p>
+      </div>
+      <div class="path warn">
+        <span class="tag">Heads up</span>
+        <h4>Nothing on file</h4>
+        <p>No public record for this address? You get the official source links to check by hand, or just enter the details yourself.</p>
+      </div>
+      <div class="path warn">
+        <span class="tag">Heads up</span>
+        <h4>Server waking up</h4>
+        <p>If the records server is slow to wake, it tells you to try again in a moment and offers the manual links — it never just spins.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= STEP 4 ======================= -->
+<section class="phase" style="background: var(--white);">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="pnum">04</div>
+      <div>
+        <p class="kicker"><span class="no">Step 04</span> — Walk the property</p>
+        <h2>Fill the fields and capture the photos</h2>
+        <p class="lede">Plain dropdowns for roof, electrical, HVAC and plumbing — the app turns your picks into the correct boxes on the state form. Labeled photo slots make sure nothing gets forgotten in the driveway.</p>
+      </div>
+    </div>
+    <div class="dorow">
+      <span class="lab">You do</span>
+      <p>Work the guided fields, then snap each photo into its slot — take them one at a time, or import a batch and the app auto-sorts them into the right boxes. Rotate, crop or brighten any shot right there.</p>
+    </div>
+    <p class="paths-label">Optional shortcuts &amp; what they do</p>
+    <div class="paths">
+      <div class="path opt">
+        <span class="tag">Optional</span>
+        <h4>Scan a data plate</h4>
+        <p>Point it at an AC, water-heater or panel label — it reads the serial, works out the age, and drops it in as a suggestion for you to confirm.</p>
+      </div>
+      <div class="path warn">
+        <span class="tag">Heads up</span>
+        <h4>Couldn't read it</h4>
+        <p>If the label is too dark or blurry, it asks for a closer, glare-free shot rather than guessing. Nothing is ever invented.</p>
+      </div>
+      <div class="path opt">
+        <span class="tag">Optional</span>
+        <h4>Flag a defect</h4>
+        <p>Mark a defect photo and add a recommendation — it prints in its own section and pairs to the right 4-Point system.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= STEP 5 ======================= -->
+<section class="phase" style="background: var(--paper);">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="pnum">05</div>
+      <div>
+        <p class="kicker"><span class="no">Step 05</span> — AI drafts, you decide</p>
+        <h2>Optional photo analysis for the wind mitigation</h2>
+        <p class="lede">On wind-mit jobs you can opt in to AI photo analysis. It reviews your roof-to-wall, aerial and elevation photos and drafts the trickiest form answers — <span class="term">Q6</span> roof-to-wall, <span class="term">Q7</span> roof geometry, <span class="term">Q9</span> opening protection.</p>
+      </div>
+    </div>
+    <div class="dorow">
+      <span class="lab">You do</span>
+      <p>Tick "Use AI photo analysis" (it adds a few minutes) and run it. Every draft lands in your review queue marked <strong>Needs review</strong>, with a confidence score and the reasoning behind it. You approve, edit, or reject — nothing is ever filed on its own.</p>
+    </div>
+    <p class="paths-label">What it gives you back</p>
+    <div class="paths">
+      <div class="path go">
+        <span class="tag">Straight through</span>
+        <h4>A drafted answer</h4>
+        <p>When the photos clearly support one category, it suggests it with its confidence — ready for you to approve into the form.</p>
+      </div>
+      <div class="path warn">
+        <span class="tag">Heads up</span>
+        <h4>Not enough to be sure</h4>
+        <p>If a photo is ambiguous or missing, it says so and tells you what to add — on purpose. The form asks for the <em>weakest</em> connection, so it would rather flag it than over-credit and hand a carrier a reason to kick it back.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= STEP 6 ======================= -->
+<section class="phase" style="background: var(--white);">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="pnum">06</div>
+      <div>
+        <p class="kicker"><span class="no">Step 06</span> — Review, sign &amp; deliver</p>
+        <h2>Approve everything, sign, and hand it over</h2>
+        <p class="lede">A readiness gauge tells you the moment the report is complete. Sign it, and the finished documents are one tap from your client.</p>
+      </div>
+    </div>
+    <div class="dorow">
+      <span class="lab">You do</span>
+      <p>Work the "what's left" checklist, approve each finding and suggestion, then sign. Edit anything afterward and the report reopens for a fresh signature — so a signed report is always exactly what you approved.</p>
+    </div>
+    <p class="paths-label">How it goes out</p>
+    <div class="paths">
+      <div class="path go">
+        <span class="tag">Client deliverable</span>
+        <h4>Official 4-Point &amp; Wind-Mit PDFs</h4>
+        <p>Filled in on the real Florida 4-Point (2025) and OIR-B1-1802 (Rev. 04/26) templates, with your captioned photo pages attached.</p>
+      </div>
+      <div class="path go">
+        <span class="tag">Client deliverable</span>
+        <h4>Full Home report</h4>
+        <p>For full-home jobs — a Florida Standards-of-Practice report with per-system tables, photos and your certification.</p>
+      </div>
+      <div class="path go">
+        <span class="tag">Client deliverable</span>
+        <h4>Send it over</h4>
+        <p>Email the selected documents from your own template, or publish a private, view-only download link.</p>
+      </div>
+      <div class="path opt">
+        <span class="tag">Your file copy</span>
+        <h4>Kept for your records</h4>
+        <p>A full permit history and a complete backup stay in your files — labeled as your copy, never mixed into the client's report.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= TRUST ======================= -->
+<section class="trust on-navy">
+  <div class="wrap">
+    <div class="sec-head" style="margin-bottom: 28px;">
+      <p class="kicker"><span class="no">Always true</span> — the one rule that never bends</p>
+    </div>
+    <div class="trust-card">
+      <svg class="seal" width="86" height="86" viewBox="0 0 132 132" fill="none" aria-hidden="true">
+        <circle cx="66" cy="66" r="63" stroke="rgba(255,255,255,0.35)" stroke-width="1.5" />
+        <circle cx="66" cy="66" r="44" stroke="rgba(255,255,255,0.35)" stroke-width="1" />
+        <path d="M52 72 66 58l14 14" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+        <path d="M56 75.5 63 82.5 78 66" stroke="#F5A300" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+      <div>
+        <h3>The AI assists. A licensed inspector reviews and signs every report.</h3>
+        <p>Nothing the app suggests — from a records pull to a photo scan to a wind-mit draft — is ever applied on its own or filed automatically. Every suggestion waits in a review queue, carries its confidence and reasoning, and only becomes part of the report when you approve it and sign. When the AI isn't sure, it says so and asks for more, instead of guessing. That's what keeps your name on solid ground and your reports out of the kickback pile.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= FINAL CTA ======================= -->
+<section class="final on-navy">
+  <div class="wrap">
+    <p class="kicker"><span class="no">Ready when you are</span></p>
+    <h2>See it on your next inspection.</h2>
+    <p>Open it on your phone, paste in tomorrow's booking, and let the app carry the paperwork while you walk the property. Your first inspection is the trial.</p>
+    <a class="cta" href="app/">Start your trial inspection</a>
+    <div class="badge-row">
+      <span>Plans from $20/mo</span><span>Official Florida forms</span><span>You approve every finding</span><span>Data stays on your device</span>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= FOOTER ======================= -->
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="brand-line">
+        <svg width="40" height="40" viewBox="0 0 44 44" fill="none" aria-hidden="true">
+          <path d="M4 4h27l9 9v27H4z" stroke="#ffffff" stroke-width="2.5" stroke-linejoin="round" />
+          <path d="M12 22 22 12l10 10" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M16 24.5 20.5 29 31 18" stroke="#F5A300" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M13 34h18" stroke="#ffffff" stroke-width="2" stroke-linecap="round" opacity="0.55" />
+        </svg>
+        <div>
+          <strong>Built in Brevard</strong>
+          Created with York Home Inspections in Brevard County, Florida — built around the Melbourne, Viera, and Rockledge market.
+        </div>
+      </div>
+      <div>
+        <strong>The official forms</strong>
+        Exports complete the Florida 4-Point Inspection form (2025 edition) and the Uniform Mitigation Verification Inspection form OIR-B1-1802 (Rev. 04/26) on the official templates. Unverified fields are always left blank, never guessed.
+      </div>
+      <div>
+        <strong>Your data, your device</strong>
+        Inspections are stored on your own device, not on a company server. Save a complete backup of any inspection at any time.
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>Nothing to install. First inspection on the trial — plans from $20/mo or $98/yr unlimited.</span>
+      <span><a href="./">Overview</a> · <a href="terms.html">Terms &amp; Refunds</a> · <a href="privacy.html">Privacy</a> · <a href="mailto:richducat@gmail.com">Support</a> · Built by <a href="https://eb28.co/">EB28</a>, Melbourne FL</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

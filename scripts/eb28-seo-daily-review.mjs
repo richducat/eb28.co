@@ -11,16 +11,13 @@ import { spawnSync } from 'node:child_process';
 const ROOT = process.cwd();
 const SITE_ORIGIN = 'https://eb28.co';
 const MELBOURNE_WEB_STUDIO_ORIGIN = 'https://melbournewebstudio.eb28.co';
-const DEFAULT_GSC_SITE_URL = process.env.GSC_SITE_URL || 'https://eb28.co/';
-const DEFAULT_SITEMAP_URL = process.env.GSC_SITEMAP_URL || `${SITE_ORIGIN}/sitemap.xml`;
 const WEBMASTERS_SCOPE = 'https://www.googleapis.com/auth/webmasters';
 const GMAIL_SEND_SCOPE = 'https://www.googleapis.com/auth/gmail.send';
 const ARTICLES_FILE = path.join(ROOT, 'content', 'eb28', 'articles.json');
 const OUTPUT_DIR = path.join(ROOT, 'output', 'seo-daily');
-const REPORT_RECIPIENT = process.env.SEO_REPORT_TO || 'richducat@gmail.com';
 
 function loadEnvFile(filePath) {
-  if (!fs.existsSync(filePath)) return;
+  if (!filePath || !fs.existsSync(filePath)) return;
   const text = fs.readFileSync(filePath, 'utf8');
   for (const line of text.split(/\r?\n/)) {
     const trimmed = line.trim();
@@ -34,7 +31,13 @@ function loadEnvFile(filePath) {
   }
 }
 
+loadEnvFile(process.env.EB28_SEO_ENV_FILE);
 loadEnvFile(path.join(ROOT, '.env.seo.local'));
+loadEnvFile(path.join(os.homedir(), '.config', 'eb28', 'seo.env'));
+
+const DEFAULT_GSC_SITE_URL = process.env.GSC_SITE_URL || 'https://eb28.co/';
+const DEFAULT_SITEMAP_URL = process.env.GSC_SITEMAP_URL || `${SITE_ORIGIN}/sitemap.xml`;
+const REPORT_RECIPIENT = process.env.SEO_REPORT_TO || 'richducat@gmail.com';
 
 function parseArgs(argv) {
   const options = {
@@ -123,8 +126,7 @@ async function readArticles() {
   return JSON.parse(await fsp.readFile(ARTICLES_FILE, 'utf8'));
 }
 
-async function getNewestArticles(limit = 5) {
-  const articles = await readArticles();
+function getNewestArticles(articles, limit = 5) {
   return [...articles]
     .sort((a, b) => {
       const modified = String(b.dateModified || b.datePublished || '').localeCompare(
@@ -482,7 +484,42 @@ function getHighPerformingPages(rows, limit = 5) {
     .slice(0, limit);
 }
 
-function buildInternalLinkActions(newestArticles, pageAnalytics) {
+const RELATED_CLUSTERS = new Set([
+  'conversion:melbourne-web-design',
+  'lead-automation:private-ai',
+]);
+
+function getSourceCluster(page, articles) {
+  const sourceUrl = sourceUrlFromPage(page);
+  if (!sourceUrl) return null;
+  const { pathname } = new URL(sourceUrl);
+  if (pathname === '/melbournewebstudio/' || pathname === '/melbournewebstudio') {
+    return 'melbourne-web-design';
+  }
+  const slug = pathname.match(/^\/blog\/([^/]+)\/?$/)?.[1];
+  return slug ? articles.find((article) => article.slug === slug)?.cluster || null : null;
+}
+
+function clustersAreRelated(sourceCluster, targetCluster) {
+  if (!sourceCluster || !targetCluster) return false;
+  if (sourceCluster === targetCluster) return true;
+  return RELATED_CLUSTERS.has([sourceCluster, targetCluster].sort().join(':'));
+}
+
+function getRelevantTargets(sourcePage, targets, articles, { allowHub = false } = {}) {
+  const sourceUrl = sourceUrlFromPage(sourcePage);
+  if (!sourceUrl) return [];
+  const { pathname } = new URL(sourceUrl);
+  const isHub = pathname === '/' || pathname === '/blog/' || pathname === '/blog';
+  const sourceCluster = getSourceCluster(sourcePage, articles);
+  return targets.filter(
+    (target) =>
+      target.url !== sourceUrl &&
+      ((allowHub && isHub) || clustersAreRelated(sourceCluster, target.cluster)),
+  );
+}
+
+function buildInternalLinkActions(newestArticles, pageAnalytics, articles) {
   const highPages = getHighPerformingPages(pageAnalytics.rows || [], 5);
   const targets = newestArticles.slice(0, 3);
 
@@ -490,21 +527,22 @@ function buildInternalLinkActions(newestArticles, pageAnalytics) {
     return ['- No newest article targets found. Run the content engine before the SEO review.'];
   }
 
-  if (!highPages.length) {
-    return [
-      `- Search Console page rows are unavailable, so use owned authority pages as source links today: ${SITE_ORIGIN}/, ${SITE_ORIGIN}/melbournewebstudio/, and ${SITE_ORIGIN}/blog/.`,
-      ...targets.map((article) => `- Add or verify contextual links into ${article.url} from the homepage, Melbourne Web Studio page, and the blog hub.`),
-    ];
-  }
-
-  return highPages.flatMap((source) =>
-    targets.map((article) => {
+  const usingFallback = !highPages.length;
+  const sources = usingFallback
+    ? defaultInternalLinkSources().map((page) => ({ page, topQueries: [] }))
+    : highPages;
+  const actions = sources.flatMap((source) =>
+    getRelevantTargets(source.page, targets, articles, { allowHub: usingFallback }).map((article) => {
       const queryNote = source.topQueries.length
         ? ` Top query: "${source.topQueries[0].query}" at avg. position ${Number(source.topQueries[0].position).toFixed(1)}.`
         : '';
       return `- From ${source.page}, add a contextual link to ${article.url} using a natural anchor around "${article.primaryKeyword}".${queryNote}`;
     }),
   );
+
+  return actions.length
+    ? actions
+    : ['- No high-confidence internal-link candidates matched the current Search Console source pages and article clusters.'];
 }
 
 function targetHrefCandidates(targetUrl) {
@@ -523,17 +561,22 @@ function defaultInternalLinkSources() {
   return [`${SITE_ORIGIN}/`, `${SITE_ORIGIN}/melbournewebstudio/`, `${SITE_ORIGIN}/blog/`];
 }
 
-async function verifyInternalLinkCoverage(newestArticles, pageAnalytics) {
+async function verifyInternalLinkCoverage(newestArticles, pageAnalytics, articles) {
   const targets = newestArticles.slice(0, 3);
   if (!targets.length) return [];
 
-  const highPages = getHighPerformingPages(pageAnalytics.rows || [], 5)
-    .map((row) => sourceUrlFromPage(row.page))
-    .filter(Boolean);
-  const sourceUrls = [...new Set(highPages.length ? highPages : defaultInternalLinkSources())];
+  const highPages = getHighPerformingPages(pageAnalytics.rows || [], 5);
+  const usingFallback = !highPages.length;
+  const sourceUrls = [
+    ...new Set(
+      (usingFallback ? defaultInternalLinkSources() : highPages.map((row) => sourceUrlFromPage(row.page))).filter(Boolean),
+    ),
+  ];
   const coverage = [];
 
   for (const sourceUrl of sourceUrls) {
+    const relevantTargets = getRelevantTargets(sourceUrl, targets, articles, { allowHub: usingFallback });
+    if (!relevantTargets.length) continue;
     let html = '';
     let status = 0;
     let ok = false;
@@ -550,7 +593,7 @@ async function verifyInternalLinkCoverage(newestArticles, pageAnalytics) {
         ok: false,
         status,
         error: error.message,
-        links: targets.map((target) => ({ target, present: false })),
+        links: relevantTargets.map((target) => ({ target, present: false })),
       });
       continue;
     }
@@ -559,7 +602,7 @@ async function verifyInternalLinkCoverage(newestArticles, pageAnalytics) {
       sourceUrl,
       ok,
       status,
-      links: targets.map((target) => ({
+      links: relevantTargets.map((target) => ({
         target,
         present: targetHrefCandidates(target.url).some((candidate) => html.includes(`href="${candidate}"`) || html.includes(`href='${candidate}'`)),
       })),
@@ -724,7 +767,7 @@ async function updateBacklinkQueue(newestArticles, { queryAnalytics, pageAnalyti
           .join('; ')}.`
       : '- Search Console striking-distance rows unavailable or empty; use newest/highest-priority cluster.',
     sourcePages.length
-      ? `- High-performing internal-link sources: ${sourcePages
+      ? `- Highest-visibility internal-link sources: ${sourcePages
           .map((row) => `${row.page} (${row.clicks} clicks, ${row.impressions} impressions)`)
           .join('; ')}.`
       : '- High-performing page rows unavailable; default to homepage, Melbourne Web Studio, and blog hub as source links.',
@@ -732,20 +775,30 @@ async function updateBacklinkQueue(newestArticles, { queryAnalytics, pageAnalyti
     '',
   ].join('\n');
 
-  if (!queue.includes(`## Daily Queue Refresh ${stamp}`)) {
-    await fsp.mkdir(path.dirname(queuePath), { recursive: true });
-    await fsp.writeFile(queuePath, `${queue.trim()}\n${note}`, 'utf8');
-    return { ok: true, changed: true, path: queuePath };
-  }
+  const heading = `## Daily Queue Refresh ${stamp}`;
+  const sectionStart = queue.indexOf(heading);
+  const sectionEnd = sectionStart >= 0 ? queue.indexOf('\n## ', sectionStart + heading.length) : -1;
+  const renderedNote = note.trim();
+  const nextQueue =
+    sectionStart >= 0
+      ? [queue.slice(0, sectionStart).trimEnd(), renderedNote, sectionEnd >= 0 ? queue.slice(sectionEnd).trim() : '']
+          .filter(Boolean)
+          .join('\n\n') + '\n'
+      : `${queue.trim()}\n\n${renderedNote}\n`;
 
-  return { ok: true, changed: false, path: queuePath };
+  if (nextQueue === `${queue.trim()}\n`) return { ok: true, changed: false, path: queuePath };
+
+  await fsp.mkdir(path.dirname(queuePath), { recursive: true });
+  await fsp.writeFile(queuePath, nextQueue, 'utf8');
+  return { ok: true, changed: true, path: queuePath };
 }
 
 async function main() {
   const options = parseArgs(process.argv);
   await fsp.mkdir(OUTPUT_DIR, { recursive: true });
 
-  const newestArticles = await getNewestArticles(5);
+  const articles = await readArticles();
+  const newestArticles = getNewestArticles(articles, 5);
   const urlsToCheck = [
     `${SITE_ORIGIN}/sitemap.xml`,
     `${SITE_ORIGIN}/blog/`,
@@ -783,8 +836,8 @@ async function main() {
   const lighthouse = options.runLighthouse
     ? await runLighthouse([SITE_ORIGIN, `${SITE_ORIGIN}/blog/`])
     : [];
-  const internalLinkActions = buildInternalLinkActions(newestArticles, pageAnalytics);
-  const internalLinkCoverage = await verifyInternalLinkCoverage(newestArticles, pageAnalytics);
+  const internalLinkActions = buildInternalLinkActions(newestArticles, pageAnalytics, articles);
+  const internalLinkCoverage = await verifyInternalLinkCoverage(newestArticles, pageAnalytics, articles);
   const melbourneSubdomain = liveChecks.find((check) => check.url === `${MELBOURNE_WEB_STUDIO_ORIGIN}/`);
 
   const report = [

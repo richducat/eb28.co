@@ -25,3 +25,10 @@
 - Search Console striking-distance rows unavailable or empty; use newest/highest-priority cluster.
 - High-performing page rows unavailable; default to homepage, Melbourne Web Studio, and blog hub as source links.
 - Next authority action: pursue one legitimate local citation, one expert quote opportunity, and one partner resource mention. Avoid paid links and exact-match anchor spam.
+
+## Daily Queue Refresh 2026-07-14
+
+- Priority article for citations: [AI Appointment Setter for Small Business: What to Automate](https://eb28.co/blog/ai-appointment-setter-for-small-business-where-it-helps-and-where-it-hurts/) (lead-automation).
+- Search Console striking-distance rows to review: "eb28" at avg. position 10.2; "platform28" at avg. position 17.0.
+- Highest-visibility internal-link sources: https://eb28.co/blog/website-audit-checklist-for-melbourne-fl-businesses-losing-leads/ (0 clicks, 37 impressions); https://eb28.co/blog/best-website-builder-in-melbourne-fl-what-local-companies-should-look-for/ (0 clicks, 32 impressions); https://eb28.co/ (0 clicks, 21 impressions).
+- Next authority action: pursue one legitimate local citation, one expert quote opportunity, and one partner resource mention. Avoid paid links and exact-match anchor spam.

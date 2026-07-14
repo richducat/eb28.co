@@ -1,0 +1,163 @@
+[
+  {
+    "slug": "martin-pest-control-brevard",
+    "siteKey": "martin",
+    "name": "Martin Pest Control",
+    "monogram": "MPC",
+    "category": "Pest control across Brevard County",
+    "vertical": "pest_control",
+    "phone": "(321) 507-3089",
+    "email": "smartinpestcontrol@gmail.com",
+    "officialUrl": "https://smartinpestcontrol.com/",
+    "sourceStatus": "Official HTTPS site reachable on July 14, 2026",
+    "sourceUrls": ["https://smartinpestcontrol.com/"],
+    "artDirection": "Charcoal, field green and amber; systematic service diagnosis with urgent but trustworthy conversion paths.",
+    "hero": {
+      "eyebrow": "Merritt Island · Rockledge · Brevard County",
+      "title": "A calmer way to handle an unwelcome problem.",
+      "copy": "A premium owner-review concept that makes it easy to identify the service path, understand the inspection process and request the right next step.",
+      "note": "Concept structure based on services and contact details published on the official website. Final claims and imagery require owner approval."
+    },
+    "proof": ["Pest, termite, rodent and bed bug service", "Serving Merritt Island, Rockledge and Brevard County", "Weekday and Saturday hours published on the official site"],
+    "services": ["General pest control", "Termite control", "Rodent control", "Bed bug control", "WDO and inspection education", "Brevard service-area guidance"],
+    "areas": ["Merritt Island", "Rockledge", "Brevard County"],
+    "pages": [
+      { "slug": "", "label": "Home", "eyebrow": "Local pest control, made clearer", "title": "Start with what you are seeing. End with a defined next step.", "intro": "The home page routes urgent needs quickly while keeping service expectations grounded in owner-approved facts." },
+      { "slug": "pest-termite", "label": "Pest & Termite", "eyebrow": "Protection starts with the right diagnosis", "title": "Pest and termite paths that do not bury the next step.", "intro": "Separate education helps homeowners understand when to request general pest help and when a termite-focused conversation is more appropriate.", "cards": ["General pest service", "Termite education", "Inspection-first routing"] },
+      { "slug": "rodent-bed-bug", "label": "Rodent / Bed Bug", "eyebrow": "Different problems need different plans", "title": "Clear guidance for rodents and bed bugs.", "intro": "This concept avoids one-size-fits-all promises and instead explains the information a service team needs before recommending a path.", "cards": ["Signs to document", "Property access questions", "Service preparation"] },
+      { "slug": "inspections-service-areas", "label": "Inspections & Areas", "eyebrow": "Brevard County service context", "title": "Inspection education and local coverage in one place.", "intro": "A structured service-area page gives local customers useful context without creating thin, repetitive location pages.", "cards": ["Merritt Island", "Rockledge", "Brevard County"] },
+      { "slug": "request-service", "label": "Request Service", "eyebrow": "Owner-approved routing before launch", "title": "A short request path built around the problem.", "intro": "The production version can route verified calls and estimate requests. This owner-review concept intentionally keeps those customer actions disabled.", "cards": ["Problem type", "Property context", "Preferred follow-up"] }
+    ]
+  },
+  {
+    "slug": "suntree-animal-clinic",
+    "siteKey": "suntree",
+    "name": "Suntree Animal Clinic",
+    "monogram": "SAC",
+    "category": "Veterinary care for local pets",
+    "vertical": "veterinary",
+    "phone": "(321) 259-0904",
+    "email": "asimsskb@gmail.com",
+    "officialUrl": "https://www.suntreeanimalclinic.com/",
+    "sourceStatus": "HTTPS fetch returned a gateway failure on July 14, 2026; production TLS migration must be separately authorized",
+    "sourceUrls": ["https://www.suntreeanimalclinic.com/", "https://nextdoor.com/pages/suntree-animal-clinic-melbourne-fl/"],
+    "artDirection": "Warm navy, cream and coral; calm clinical trust with spacious pet photography and a new-client orientation.",
+    "heroImage": "suntree-vet",
+    "heroImageAlt": "A veterinarian caring for a small dog",
+    "heroCredit": "Alexander Mass / Unsplash",
+    "hero": {
+      "eyebrow": "Calm information for pet owners",
+      "title": "Care starts before the appointment.",
+      "copy": "A warm, five-page concept that gives established clients and new pet families a confident path to services, clinic information and appointment requests.",
+      "note": "Clinical services and team details remain placeholders until the owner confirms them. This concept does not provide medical advice or emergency triage."
+    },
+    "proof": ["Published clinic phone retained for owner review", "Item-level approval required for all veterinary content", "No medical claims or urgent-care availability invented"],
+    "services": ["Wellness visit structure", "Dental care information", "Surgery information", "Technician service overview", "New-client orientation", "Appointment request path"],
+    "areas": ["Suntree", "Viera", "Melbourne"],
+    "pages": [
+      { "slug": "", "label": "Home", "eyebrow": "For healthier visits and calmer humans", "title": "A clinic website that feels prepared for the questions pet owners bring.", "intro": "The home page balances appointment intent with reassuring, owner-approved clinic information." },
+      { "slug": "services", "label": "Services", "eyebrow": "Owner-confirmed services only", "title": "An organized view of care, without medical overstatement.", "intro": "The production page will use the clinic’s approved service list, preparation notes and professional boundaries.", "cards": ["Wellness care", "Dental information", "Procedure preparation"] },
+      { "slug": "new-clients", "label": "New Clients", "eyebrow": "Make the first visit easier", "title": "What new clients need before they arrive.", "intro": "A focused onboarding path can reduce uncertainty about records, arrival, forms and appointment requests.", "cards": ["Records checklist", "Visit preparation", "Appointment expectations"] },
+      { "slug": "team-facility", "label": "Team & Facility", "eyebrow": "Trust needs real people and real proof", "title": "A place for the team and facility—after the owner supplies approved assets.", "intro": "No names, credentials, biographies or facility claims are shown until the clinic confirms them.", "cards": ["Team profiles", "Facility tour", "Care philosophy"] },
+      { "slug": "appointment", "label": "Appointment", "eyebrow": "Request, do not promise", "title": "A clear appointment-request flow.", "intro": "The production form can route requests to the verified clinic inbox and state plainly that a request is not a confirmed appointment or emergency channel.", "cards": ["Pet and client details", "Visit reason", "Clinic confirmation"] }
+    ]
+  },
+  {
+    "slug": "rubio-pet-hospital",
+    "siteKey": "rubio",
+    "name": "Rubio Pet Hospital",
+    "monogram": "RPH",
+    "category": "Veterinary hospital",
+    "vertical": "veterinary",
+    "phone": "(321) 422-6900",
+    "officialUrl": "https://rubiopethospital.com/",
+    "sourceStatus": "HTTPS fetch returned a gateway failure on July 14, 2026; certificate and access must pass before any migration",
+    "sourceUrls": ["https://rubiopethospital.com/", "https://rubiopethospital.com/contact"],
+    "artDirection": "Calm teal, warm white and deep navy; location confidence, appointment clarity and a precise clinical information hierarchy.",
+    "heroImage": "rubio-vet",
+    "heroImageAlt": "A veterinarian performing diagnostic imaging for a dog",
+    "heroCredit": "Alexander Mass / Unsplash",
+    "hero": {
+      "eyebrow": "A clearer digital front door",
+      "title": "Find the right next step for your pet.",
+      "copy": "A calm owner-review concept centered on appointment requests, new-patient preparation and dependable location information.",
+      "note": "Service availability, emergency guidance, staff credentials and Spanish-language support require owner confirmation before launch."
+    },
+    "proof": ["Published hospital phone retained for owner review", "Veterinary content remains item-level approval", "Certificate and access failure treated as a launch blocker"],
+    "services": ["Appointment pathways", "New-patient information", "Wellness content structure", "Urgent guidance boundaries", "Location confidence", "Owner-approved bilingual expansion"],
+    "areas": ["Melbourne", "Suntree", "Viera"],
+    "pages": [
+      { "slug": "", "label": "Home", "eyebrow": "Pet care with a clearer next step", "title": "A hospital website organized around decisions pet owners actually make.", "intro": "The home page distinguishes routine appointments, new-patient questions and urgent guidance without claiming availability." },
+      { "slug": "services", "label": "Services", "eyebrow": "Precise, owner-approved service information", "title": "Services grouped for faster understanding.", "intro": "The final taxonomy will be confirmed by the hospital before any care claim is published.", "cards": ["Preventive care", "Diagnostics and procedures", "Ongoing care"] },
+      { "slug": "new-patients-urgent-guidance", "label": "New Patients / Urgent", "eyebrow": "Know what this channel can do", "title": "New-patient preparation and careful urgent guidance.", "intro": "The concept sets a strict boundary: a web request is not emergency care and availability is never assumed.", "cards": ["First-visit checklist", "Records and medication notes", "Emergency boundary"] },
+      { "slug": "about-location", "label": "About & Location", "eyebrow": "Reduce location uncertainty", "title": "Real people, verified credentials and a confident arrival path.", "intro": "Team, address, parking and facility details stay gated until the owner supplies and approves them.", "cards": ["Hospital story", "Team proof", "Arrival details"] },
+      { "slug": "appointment", "label": "Appointment", "eyebrow": "A request is not a confirmation", "title": "A concise appointment request built for follow-through.", "intro": "Production routing activates only after the exact inbox, phone and confirmation process are tested.", "cards": ["Client details", "Pet context", "Hospital confirmation"] }
+    ]
+  },
+  {
+    "slug": "365-pool-service-suntree",
+    "siteKey": "pool365",
+    "name": "365 Pool Service",
+    "monogram": "365",
+    "category": "Pool cleaning and repair in Suntree",
+    "vertical": "pool_service",
+    "phone": "(321) 576-8250",
+    "email": "info@365pools.com",
+    "officialUrl": "https://www.365pools.com/service-areas/suntree-pool-services/",
+    "sourceStatus": "Official HTTPS service-area page reachable on July 14, 2026",
+    "sourceUrls": ["https://www.365pools.com/service-areas/suntree-pool-services/", "https://www.365pools.com/service-areas/viera-pool-services/"],
+    "artDirection": "Cobalt, aqua, white and coral; water-first imagery, dependable utility and an immediate nonblank hero fallback.",
+    "heroImage": "pool-water",
+    "heroImageAlt": "Aerial view of a blue swimming pool",
+    "heroCredit": "Nathan Dumlao / Unsplash",
+    "hero": {
+      "eyebrow": "Suntree pool cleaning, repair and equipment",
+      "title": "Clear water. Clear service plan.",
+      "copy": "A water-led owner-review concept that preserves quick-estimate and phone intent while giving every first viewport a reliable image and color fallback.",
+      "note": "Service names, phone, email and license number are drawn from the official page; pricing and availability still require owner approval."
+    },
+    "proof": ["Cleaning, repair, pump, inspection and automation services published", "Brevard phone and quick-estimate intent retained", "Florida license CPC#1459268 published on official page"],
+    "services": ["Weekly pool cleaning", "Pool repair", "Pump repair and installation", "Heaters, heat pumps and chillers", "Pool inspections", "Pool automation"],
+    "areas": ["Suntree", "Viera", "Brevard County"],
+    "pages": [
+      { "slug": "", "label": "Home", "eyebrow": "Pool care without the first-screen wait", "title": "A fast, dependable path from pool problem to estimate request.", "intro": "Start with what the pool is doing, the equipment involved and where service is needed. The team confirms fit, timing and the next step." },
+      { "slug": "weekly-cleaning", "label": "Weekly Cleaning", "eyebrow": "Routine care, explained simply", "title": "What a consistent pool-care conversation should cover.", "intro": "The production page can describe the owner-approved weekly scope, water testing and service communication process.", "cards": ["Cleaning routine", "Water balance", "Service notes"] },
+      { "slug": "repair-equipment", "label": "Repair & Equipment", "eyebrow": "Start with the symptom", "title": "Repair and equipment routes that help customers give useful context.", "intro": "Pump, heater, automation and inspection paths are separated so each request reaches the right team.", "cards": ["Pump and plumbing", "Heating and chlorination", "Automation and inspection"] },
+      { "slug": "pricing-service-areas", "label": "Pricing & Areas", "eyebrow": "No invented package prices", "title": "Service-area confidence with owner-approved pricing.", "intro": "This concept keeps the pricing structure ready but does not publish unverified rates or service availability.", "cards": ["Suntree", "Viera", "Brevard County"] },
+      { "slug": "quick-estimate", "label": "Quick Estimate", "eyebrow": "A shorter estimate path", "title": "Enough context for a useful follow-up.", "intro": "The final estimate form can collect service address, pool need and contact consent after routing and privacy language are verified.", "cards": ["Service address", "Pool need", "Preferred response"] }
+    ]
+  },
+  {
+    "slug": "beachside-termite-pest-control-viera",
+    "siteKey": "beachside",
+    "name": "Beachside Termite & Pest Control",
+    "monogram": "BT",
+    "category": "Pest and termite service in Viera",
+    "vertical": "pest_control",
+    "phone": "(321) 750-4100",
+    "email": "paul@getbeachside.com",
+    "officialUrl": "https://www.getbeachside.com/viera.html",
+    "sourceStatus": "Official HTTPS Viera page reachable on July 14, 2026",
+    "sourceUrls": ["https://www.getbeachside.com/viera.html", "https://www.getbeachside.com/suntree.html"],
+    "artDirection": "Charcoal, sand, orange and aqua; strong Viera coverage, inspection proof and a modern map-led service index.",
+    "heroImage": "beachside-aerial",
+    "heroImageAlt": "Aerial view of the Florida coast and a swimming pool",
+    "heroCredit": "Josh G / Unsplash",
+    "hero": {
+      "eyebrow": "Residential and commercial · Viera",
+      "title": "Local coverage, without the dated maze.",
+      "copy": "A bold five-page owner-review concept that keeps Viera service intent, WDO education and free-estimate routing while replacing the fixed legacy layout.",
+      "note": "Published discounts and hours are deliberately withheld from this concept until the owner reconfirms them for launch."
+    },
+    "proof": ["Residential and commercial service published for Viera", "Termite, pest, rodent, wildlife and WDO services published", "Brevard-wide service coverage published on official page"],
+    "services": ["Pest control", "Termite service", "Rodent exclusion", "Wildlife trapping", "WDO inspection reports", "Residential and commercial service"],
+    "areas": ["Viera", "Suntree", "Brevard County"],
+    "pages": [
+      { "slug": "", "label": "Home", "eyebrow": "Viera coverage, made easy to navigate", "title": "A modern service path for pest, termite and inspection needs.", "intro": "The concept surfaces local coverage and inspection context before asking the customer to request an estimate." },
+      { "slug": "pest-termite", "label": "Pest & Termite", "eyebrow": "Route the problem before the pitch", "title": "Pest and termite services in a cleaner decision structure.", "intro": "The production page can use owner-approved treatment details without overwhelming customers with repetitive location copy.", "cards": ["Common pest path", "Termite path", "Recurring service questions"] },
+      { "slug": "rodent-wildlife-wdo", "label": "Rodent / Wildlife / WDO", "eyebrow": "Specialized needs, distinct routes", "title": "Rodent, wildlife and WDO information that does not blur the service boundaries.", "intro": "WDO report language and inspection qualifications remain tied to official sources and owner review.", "cards": ["Rodent exclusion", "Wildlife trapping", "WDO inspection reports"] },
+      { "slug": "areas-proof", "label": "Areas & Proof", "eyebrow": "Viera first, Brevard context", "title": "Local coverage and real proof in the same place.", "intro": "The final page can include owner-approved credentials, team photos and customer proof. This concept uses none that have not been verified for reuse.", "cards": ["Viera", "Suntree", "Brevard County"] },
+      { "slug": "free-estimate", "label": "Free Estimate", "eyebrow": "Owner-approved routing before launch", "title": "A focused estimate request for the service team.", "intro": "The production form activates only after inbox delivery, consent language and response ownership are tested.", "cards": ["Property and service type", "Problem context", "Preferred follow-up"] }
+    ]
+  }
+]

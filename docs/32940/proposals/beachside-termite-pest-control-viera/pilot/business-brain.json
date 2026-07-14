@@ -1,0 +1,97 @@
+{
+  "version": 2,
+  "orgId": "pilot_beachside-termite-pest-control-viera",
+  "businessName": "Beachside Termite & Pest Control",
+  "website": "https://www.getbeachside.com/viera.html",
+  "category": "Pest and termite service in Viera",
+  "services": [
+    "Pest control",
+    "Termite service",
+    "Rodent exclusion",
+    "Wildlife trapping",
+    "WDO inspection reports",
+    "Residential and commercial service"
+  ],
+  "serviceAreas": [
+    "Viera",
+    "Suntree",
+    "Brevard County"
+  ],
+  "audience": "A bold five-page owner-review concept that keeps Viera service intent, WDO education and free-estimate routing while replacing the fixed legacy layout.",
+  "tone": "Charcoal, sand, orange and aqua; strong Viera coverage, inspection proof and a modern map-led service index.",
+  "primaryAction": "Owner-review CTA only until verified contact routing is enabled",
+  "approvalPolicy": "monthly_after_successful_month",
+  "restrictedClaims": [
+    "Prices",
+    "Offers",
+    "Availability",
+    "Credentials",
+    "Testimonials",
+    "Guaranteed outcomes"
+  ],
+  "sourceClaims": [
+    {
+      "field": "business_name",
+      "value": "Beachside Termite & Pest Control",
+      "status": "supported",
+      "sourceType": "official_site",
+      "sourceUrl": "https://www.getbeachside.com/viera.html"
+    },
+    {
+      "field": "category",
+      "value": "Pest and termite service in Viera",
+      "status": "needs_review",
+      "sourceType": "public_profile",
+      "sourceUrl": "https://www.getbeachside.com/viera.html"
+    },
+    {
+      "field": "phone",
+      "value": "(321) 750-4100",
+      "status": "supported",
+      "sourceType": "official_site",
+      "sourceUrl": "https://www.getbeachside.com/viera.html"
+    },
+    {
+      "field": "service",
+      "value": "Pest control",
+      "status": "needs_review",
+      "sourceType": "official_site",
+      "sourceUrl": "https://www.getbeachside.com/viera.html"
+    },
+    {
+      "field": "service",
+      "value": "Termite service",
+      "status": "needs_review",
+      "sourceType": "official_site",
+      "sourceUrl": "https://www.getbeachside.com/viera.html"
+    },
+    {
+      "field": "service",
+      "value": "Rodent exclusion",
+      "status": "needs_review",
+      "sourceType": "official_site",
+      "sourceUrl": "https://www.getbeachside.com/viera.html"
+    },
+    {
+      "field": "service",
+      "value": "Wildlife trapping",
+      "status": "needs_review",
+      "sourceType": "official_site",
+      "sourceUrl": "https://www.getbeachside.com/viera.html"
+    },
+    {
+      "field": "service",
+      "value": "WDO inspection reports",
+      "status": "needs_review",
+      "sourceType": "official_site",
+      "sourceUrl": "https://www.getbeachside.com/viera.html"
+    },
+    {
+      "field": "service",
+      "value": "Residential and commercial service",
+      "status": "needs_review",
+      "sourceType": "official_site",
+      "sourceUrl": "https://www.getbeachside.com/viera.html"
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+[
+  {
+    "id": "draft_1",
+    "orgId": "pilot_beachside-termite-pest-control-viera",
+    "title": "Document the signs, not a diagnosis",
+    "body": "A few clear notes about what you saw, where and when can help a pest-control team prepare for the first conversation without promising a remote diagnosis.",
+    "channels": [
+      "facebook",
+      "instagram",
+      "linkedin"
+    ],
+    "approvalRequired": true,
+    "publicationStatus": "draft_only",
+    "sourceClaimFields": [
+      "business_name",
+      "category"
+    ]
+  },
+  {
+    "id": "draft_2",
+    "orgId": "pilot_beachside-termite-pest-control-viera",
+    "title": "Termite and general pest paths are not the same",
+    "body": "A useful service website keeps termite education and general pest requests separate so homeowners can reach the right conversation faster.",
+    "channels": [
+      "facebook",
+      "instagram",
+      "linkedin"
+    ],
+    "approvalRequired": true,
+    "publicationStatus": "draft_only",
+    "sourceClaimFields": [
+      "business_name",
+      "category"
+    ]
+  },
+  {
+    "id": "draft_3",
+    "orgId": "pilot_beachside-termite-pest-control-viera",
+    "title": "Local coverage should be easy to verify",
+    "body": "A focused service-area section can show where the business works without burying customers in dozens of repetitive location pages.",
+    "channels": [
+      "facebook",
+      "instagram",
+      "linkedin"
+    ],
+    "approvalRequired": true,
+    "publicationStatus": "draft_only",
+    "sourceClaimFields": [
+      "business_name",
+      "category"
+    ]
+  }
+]

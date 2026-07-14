@@ -1,0 +1,53 @@
+[
+  {
+    "id": "draft_1",
+    "orgId": "pilot_365-pool-service-suntree",
+    "title": "Start with the symptom",
+    "body": "Cloudy water, unusual noise and weak circulation are different starting points. A clear estimate form helps the service team receive useful context before follow-up.",
+    "channels": [
+      "facebook",
+      "instagram",
+      "linkedin"
+    ],
+    "approvalRequired": true,
+    "publicationStatus": "draft_only",
+    "sourceClaimFields": [
+      "business_name",
+      "category"
+    ]
+  },
+  {
+    "id": "draft_2",
+    "orgId": "pilot_365-pool-service-suntree",
+    "title": "A hero should never load blank",
+    "body": "The service message and quick-estimate path should appear immediately, with a dependable image fallback before any optional background video.",
+    "channels": [
+      "facebook",
+      "instagram",
+      "linkedin"
+    ],
+    "approvalRequired": true,
+    "publicationStatus": "draft_only",
+    "sourceClaimFields": [
+      "business_name",
+      "category"
+    ]
+  },
+  {
+    "id": "draft_3",
+    "orgId": "pilot_365-pool-service-suntree",
+    "title": "Separate cleaning from equipment requests",
+    "body": "Weekly care, pumps, heaters, automation and inspections deserve distinct routes so a pool owner can find the right next step quickly.",
+    "channels": [
+      "facebook",
+      "instagram",
+      "linkedin"
+    ],
+    "approvalRequired": true,
+    "publicationStatus": "draft_only",
+    "sourceClaimFields": [
+      "business_name",
+      "category"
+    ]
+  }
+]

@@ -1,0 +1,97 @@
+{
+  "version": 2,
+  "orgId": "pilot_365-pool-service-suntree",
+  "businessName": "365 Pool Service",
+  "website": "https://www.365pools.com/service-areas/suntree-pool-services/",
+  "category": "Pool cleaning and repair in Suntree",
+  "services": [
+    "Weekly pool cleaning",
+    "Pool repair",
+    "Pump repair and installation",
+    "Heaters, heat pumps and chillers",
+    "Pool inspections",
+    "Pool automation"
+  ],
+  "serviceAreas": [
+    "Suntree",
+    "Viera",
+    "Brevard County"
+  ],
+  "audience": "A water-led owner-review concept that preserves quick-estimate and phone intent while giving every first viewport a reliable image and color fallback.",
+  "tone": "Cobalt, aqua, white and coral; water-first imagery, dependable utility and an immediate nonblank hero fallback.",
+  "primaryAction": "Owner-review CTA only until verified contact routing is enabled",
+  "approvalPolicy": "monthly_after_successful_month",
+  "restrictedClaims": [
+    "Prices",
+    "Offers",
+    "Availability",
+    "Credentials",
+    "Testimonials",
+    "Guaranteed outcomes"
+  ],
+  "sourceClaims": [
+    {
+      "field": "business_name",
+      "value": "365 Pool Service",
+      "status": "supported",
+      "sourceType": "official_site",
+      "sourceUrl": "https://www.365pools.com/service-areas/suntree-pool-services/"
+    },
+    {
+      "field": "category",
+      "value": "Pool cleaning and repair in Suntree",
+      "status": "needs_review",
+      "sourceType": "public_profile",
+      "sourceUrl": "https://www.365pools.com/service-areas/suntree-pool-services/"
+    },
+    {
+      "field": "phone",
+      "value": "(321) 576-8250",
+      "status": "supported",
+      "sourceType": "official_site",
+      "sourceUrl": "https://www.365pools.com/service-areas/suntree-pool-services/"
+    },
+    {
+      "field": "service",
+      "value": "Weekly pool cleaning",
+      "status": "needs_review",
+      "sourceType": "official_site",
+      "sourceUrl": "https://www.365pools.com/service-areas/suntree-pool-services/"
+    },
+    {
+      "field": "service",
+      "value": "Pool repair",
+      "status": "needs_review",
+      "sourceType": "official_site",
+      "sourceUrl": "https://www.365pools.com/service-areas/suntree-pool-services/"
+    },
+    {
+      "field": "service",
+      "value": "Pump repair and installation",
+      "status": "needs_review",
+      "sourceType": "official_site",
+      "sourceUrl": "https://www.365pools.com/service-areas/suntree-pool-services/"
+    },
+    {
+      "field": "service",
+      "value": "Heaters, heat pumps and chillers",
+      "status": "needs_review",
+      "sourceType": "official_site",
+      "sourceUrl": "https://www.365pools.com/service-areas/suntree-pool-services/"
+    },
+    {
+      "field": "service",
+      "value": "Pool inspections",
+      "status": "needs_review",
+      "sourceType": "official_site",
+      "sourceUrl": "https://www.365pools.com/service-areas/suntree-pool-services/"
+    },
+    {
+      "field": "service",
+      "value": "Pool automation",
+      "status": "needs_review",
+      "sourceType": "official_site",
+      "sourceUrl": "https://www.365pools.com/service-areas/suntree-pool-services/"
+    }
+  ]
+}

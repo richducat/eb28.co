@@ -526,10 +526,10 @@ const ROUTE_META = {
         path: '/cc/',
         title: 'CadetCatch — Find Coast Guard Academy cadet photos faster',
         description:
-            'CadetCatch helps U.S. Coast Guard Academy (USCGA) families find cadet photos faster during Swab Summer and beyond. Add a clear photo of your cadet, search event photos, and review possible matches on your iPhone.',
+            'CadetCatch helps U.S. Coast Guard Academy families find cadet photos faster. Add one clear photo, enable the photo pages you follow, and review possible matches on your iPhone.',
         image: CADETCATCH_IMAGE,
         siteName: 'CadetCatch',
-        themeColor: '#f8fafc',
+        themeColor: '#061411',
         colorScheme: 'light',
         includeInSitemap: true,
         structuredData: [
@@ -551,7 +551,7 @@ const ROUTE_META = {
                 url: 'https://apps.apple.com/us/app/cadetcatch/id6769565852',
                 image: CADETCATCH_IMAGE,
                 description:
-                    'CadetCatch helps Coast Guard Academy families keep up with cadet photos without digging through every gallery by hand. Search event photos and review possible matches yourself.',
+                    'CadetCatch helps Coast Guard Academy families spend less time scrolling photo galleries. Add a clear photo, enable photo pages, and review possible matches yourself.',
                 provider: {
                     '@id': ORGANIZATION_ID,
                 },

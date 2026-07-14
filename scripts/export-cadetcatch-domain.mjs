@@ -92,7 +92,8 @@ async function main() {
   const routeLocation = { pathname: '/', hostname: primaryHostname };
   const indexHtml = injectBuildMarkup(injectSeoMarkup(htmlTemplate, routeLocation), buildId)
     .split(OLD_ORIGIN_CC)
-    .join(NEW_ORIGIN);
+    .join(NEW_ORIGIN)
+    .replace('/images/hero_bg_app.png', '/img/find-cadet-photos.png');
   await writeFile('index.html', indexHtml);
   await writeFile('404.html', indexHtml);
 

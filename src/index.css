@@ -29,6 +29,89 @@
   font-family: 'Manrope', 'Avenir Next', 'Segoe UI', sans-serif;
 }
 
+.cadetcatch-site {
+  --cc-night: #061411;
+  --cc-evergreen: #10241e;
+  --cc-shield-brown: #3a270b;
+  --cc-gold: #f9b21b;
+  --cc-orange: #c43a10;
+  --cc-cyan: #08c7d8;
+  --cc-cream: #fff8e8;
+  --cc-mist: #eaf5f3;
+  --cc-white: #ffffff;
+  --cc-ink: #0b1714;
+  --cc-muted: #5f6f6a;
+  --cc-line: #d8e6e1;
+  background: var(--cc-cream);
+  color: var(--cc-ink);
+  font-family: 'Space Grotesk', 'Helvetica Neue', sans-serif;
+}
+
+.cc-display {
+  font-family: 'Sora', 'Avenir Next', 'Segoe UI', sans-serif;
+}
+
+.cc-hero-field {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 82% 18%, rgba(8, 199, 216, 0.2), transparent 30%),
+    radial-gradient(circle at 16% 82%, rgba(249, 178, 27, 0.15), transparent 31%),
+    linear-gradient(145deg, #061411 0%, #0a1d18 58%, #10241e 100%);
+}
+
+.cc-hero-field::before {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background-image:
+    linear-gradient(rgba(8, 199, 216, 0.09) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(8, 199, 216, 0.09) 1px, transparent 1px);
+  background-size: 64px 64px;
+  content: '';
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.82), transparent 88%);
+}
+
+.cc-hero-field::after {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(90deg, rgba(6, 20, 17, 0.25), rgba(6, 20, 17, 0.02) 52%, rgba(6, 20, 17, 0.34));
+  content: '';
+  pointer-events: none;
+}
+
+.cc-screen-float {
+  animation: cc-screen-float 6s ease-in-out infinite;
+}
+
+.cc-screen-float-delayed {
+  animation: cc-screen-float 6s ease-in-out -2.5s infinite;
+}
+
+.cc-mobile-download {
+  padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+}
+
+@keyframes cc-screen-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cc-screen-float,
+  .cc-screen-float-delayed {
+    animation: none;
+  }
+}
+
 .eb28-appbuilder {
   background:
     radial-gradient(circle at 12% 16%, rgba(34, 211, 238, 0.18), transparent 44%),

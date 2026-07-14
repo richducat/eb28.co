@@ -34,7 +34,7 @@ body {
 }
 body[data-site="suntree"] {
   --ink: #17243a; --ink-soft: #617083; --paper: #fbf6ec; --surface: #fffdf8;
-  --line: rgba(23, 36, 58, .14); --brand: #a83e35; --brand-deep: #1d3150; --accent: #e16e5c;
+  --line: rgba(23, 36, 58, .14); --brand: #a83e35; --brand-deep: #1d3150; --accent: #ef806e;
   --display: "Trebuchet MS", Avenir, var(--sans);
 }
 body[data-site="rubio"] {

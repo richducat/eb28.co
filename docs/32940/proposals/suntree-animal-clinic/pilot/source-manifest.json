@@ -1,17 +1,86 @@
 {
-  "checkedAt": "2026-07-14T14:00:00-04:00",
+  "checkedAt": "2026-07-14T12:00:00-04:00",
+  "orgId": "pilot_suntree-animal-clinic",
   "status": "HTTPS fetch returned a gateway failure on July 14, 2026; production TLS migration must be separately authorized",
+  "versionHash": "bade0f498611c8acc51f8b79d562acdd13356296b9211f92d60e21e4c15b46ec",
+  "publicationStatus": "owner_review_only",
+  "artifacts": [
+    {
+      "path": "article/index.html",
+      "role": "full_seo_conversion_article",
+      "approvalRequired": true
+    },
+    {
+      "path": "static-sample.jpg",
+      "role": "article_derived_feed_creative",
+      "approvalRequired": true
+    },
+    {
+      "path": "motion-sample.mp4",
+      "role": "article_derived_vertical_motion",
+      "approvalRequired": true
+    }
+  ],
   "sources": [
+    {
+      "id": "suntree",
+      "order": 1,
+      "url": "https://www.suntreeanimalclinic.com/",
+      "label": "Suntree Animal Clinic official website",
+      "type": "Business source; technical access pending",
+      "use": "Claim support and reader reference; owner approval required before publication"
+    },
+    {
+      "id": "aaha-prepare",
+      "order": 2,
+      "url": "https://www.aaha.org/resources/preparing-your-pet-for-a-successful-veterinary-visit/",
+      "label": "AAHA: Preparing Your Pet for a Successful Veterinary Visit",
+      "type": "Veterinary association",
+      "use": "Claim support and reader reference; owner approval required before publication"
+    },
+    {
+      "id": "aaha-referral",
+      "order": 3,
+      "url": "https://www.aaha.org/resources/2025-aaha-referral-guidelines/section-3-responsibilities-before-referral/",
+      "label": "AAHA Referral Guidelines: Responsibilities Before Referral",
+      "type": "Veterinary guideline",
+      "use": "Claim support and reader reference; owner approval required before publication"
+    },
+    {
+      "id": "aaha-wellness",
+      "order": 4,
+      "url": "https://www.aaha.org/resources/life-stage-canine-2019/tips-for-efficient-wellness-visits/",
+      "label": "AAHA: Tips for Efficient Wellness Visits",
+      "type": "Veterinary guideline",
+      "use": "Claim support and reader reference; owner approval required before publication"
+    },
+    {
+      "id": "aaha-vcpr",
+      "order": 5,
+      "url": "https://www.aaha.org/vcpr/",
+      "label": "AAHA Position on the Veterinarian-Client-Patient Relationship",
+      "type": "Veterinary standard",
+      "use": "Claim support and reader reference; owner approval required before publication"
+    },
+    {
+      "id": "osu-kit",
+      "order": 6,
+      "url": "https://vmc.vet.osu.edu/resources/assembling-emergency-kit-your-pets",
+      "label": "Ohio State Veterinary Medical Center: Pet Record Checklist",
+      "type": "University veterinary center",
+      "use": "Claim support and reader reference; owner approval required before publication"
+    }
+  ],
+  "businessSources": [
     {
       "url": "https://www.suntreeanimalclinic.com/",
       "type": "official_or_public_business_source",
-      "use": "Fact discovery only; owner approval required before publication"
+      "use": "Business-fact discovery only; owner approval required"
     },
     {
       "url": "https://nextdoor.com/pages/suntree-animal-clinic-melbourne-fl/",
       "type": "official_or_public_business_source",
-      "use": "Fact discovery only; owner approval required before publication"
+      "use": "Business-fact discovery only; owner approval required"
     }
-  ],
-  "publicationStatus": "draft_only"
+  ]
 }

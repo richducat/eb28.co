@@ -19,15 +19,21 @@
   ],
   "audience": "A premium owner-review concept that makes it easy to identify the service path, understand the inspection process and request the right next step.",
   "tone": "Charcoal, field green and amber; systematic service diagnosis with urgent but trustworthy conversion paths.",
-  "primaryAction": "Owner-review CTA only until verified contact routing is enabled",
+  "primaryAction": "EB28 owner-review CTA only until verified contact routing is enabled",
   "approvalPolicy": "monthly_after_successful_month",
+  "campaign": {
+    "title": "Pest Inspection in Brevard County: A Homeowner Documentation Checklist",
+    "primaryKeyword": "pest inspection in Brevard County",
+    "versionHash": "a243aa50866ae29cc5f4b82d4d1087ea67df17c9288b6cd71be345447ebaded5"
+  },
   "restrictedClaims": [
     "Prices",
     "Offers",
     "Availability",
     "Credentials",
     "Testimonials",
-    "Guaranteed outcomes"
+    "Guaranteed outcomes",
+    "Diagnosis or treatment advice"
   ],
   "sourceClaims": [
     {
@@ -40,56 +46,56 @@
     {
       "field": "category",
       "value": "Pest control across Brevard County",
-      "status": "needs_review",
-      "sourceType": "public_profile",
+      "status": "owner_review_required",
+      "sourceType": "official_or_public_business_source",
       "sourceUrl": "https://smartinpestcontrol.com/"
     },
     {
       "field": "phone",
       "value": "(321) 507-3089",
-      "status": "supported",
+      "status": "supported_not_activated",
       "sourceType": "official_site",
       "sourceUrl": "https://smartinpestcontrol.com/"
     },
     {
       "field": "service",
       "value": "General pest control",
-      "status": "needs_review",
+      "status": "owner_review_required",
       "sourceType": "official_site",
       "sourceUrl": "https://smartinpestcontrol.com/"
     },
     {
       "field": "service",
       "value": "Termite control",
-      "status": "needs_review",
+      "status": "owner_review_required",
       "sourceType": "official_site",
       "sourceUrl": "https://smartinpestcontrol.com/"
     },
     {
       "field": "service",
       "value": "Rodent control",
-      "status": "needs_review",
+      "status": "owner_review_required",
       "sourceType": "official_site",
       "sourceUrl": "https://smartinpestcontrol.com/"
     },
     {
       "field": "service",
       "value": "Bed bug control",
-      "status": "needs_review",
+      "status": "owner_review_required",
       "sourceType": "official_site",
       "sourceUrl": "https://smartinpestcontrol.com/"
     },
     {
       "field": "service",
       "value": "WDO and inspection education",
-      "status": "needs_review",
+      "status": "owner_review_required",
       "sourceType": "official_site",
       "sourceUrl": "https://smartinpestcontrol.com/"
     },
     {
       "field": "service",
       "value": "Brevard service-area guidance",
-      "status": "needs_review",
+      "status": "owner_review_required",
       "sourceType": "official_site",
       "sourceUrl": "https://smartinpestcontrol.com/"
     }

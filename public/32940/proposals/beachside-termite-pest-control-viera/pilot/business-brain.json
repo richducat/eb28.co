@@ -19,15 +19,21 @@
   ],
   "audience": "A bold five-page owner-review concept that keeps Viera service intent, WDO education and free-estimate routing while replacing the fixed legacy layout.",
   "tone": "Charcoal, sand, orange and aqua; strong Viera coverage, inspection proof and a modern map-led service index.",
-  "primaryAction": "Owner-review CTA only until verified contact routing is enabled",
+  "primaryAction": "EB28 owner-review CTA only until verified contact routing is enabled",
   "approvalPolicy": "monthly_after_successful_month",
+  "campaign": {
+    "title": "WDO Inspection in Viera: What Property Owners Should Know Before Scheduling",
+    "primaryKeyword": "WDO inspection in Viera",
+    "versionHash": "f1219639ef2aa841e7df9b3ac9be54534d98e26eef992a11be5790ebab7ee1fc"
+  },
   "restrictedClaims": [
     "Prices",
     "Offers",
     "Availability",
     "Credentials",
     "Testimonials",
-    "Guaranteed outcomes"
+    "Guaranteed outcomes",
+    "Diagnosis or treatment advice"
   ],
   "sourceClaims": [
     {
@@ -40,56 +46,56 @@
     {
       "field": "category",
       "value": "Pest and termite service in Viera",
-      "status": "needs_review",
-      "sourceType": "public_profile",
+      "status": "owner_review_required",
+      "sourceType": "official_or_public_business_source",
       "sourceUrl": "https://www.getbeachside.com/viera.html"
     },
     {
       "field": "phone",
       "value": "(321) 750-4100",
-      "status": "supported",
+      "status": "supported_not_activated",
       "sourceType": "official_site",
       "sourceUrl": "https://www.getbeachside.com/viera.html"
     },
     {
       "field": "service",
       "value": "Pest control",
-      "status": "needs_review",
+      "status": "owner_review_required",
       "sourceType": "official_site",
       "sourceUrl": "https://www.getbeachside.com/viera.html"
     },
     {
       "field": "service",
       "value": "Termite service",
-      "status": "needs_review",
+      "status": "owner_review_required",
       "sourceType": "official_site",
       "sourceUrl": "https://www.getbeachside.com/viera.html"
     },
     {
       "field": "service",
       "value": "Rodent exclusion",
-      "status": "needs_review",
+      "status": "owner_review_required",
       "sourceType": "official_site",
       "sourceUrl": "https://www.getbeachside.com/viera.html"
     },
     {
       "field": "service",
       "value": "Wildlife trapping",
-      "status": "needs_review",
+      "status": "owner_review_required",
       "sourceType": "official_site",
       "sourceUrl": "https://www.getbeachside.com/viera.html"
     },
     {
       "field": "service",
       "value": "WDO inspection reports",
-      "status": "needs_review",
+      "status": "owner_review_required",
       "sourceType": "official_site",
       "sourceUrl": "https://www.getbeachside.com/viera.html"
     },
     {
       "field": "service",
       "value": "Residential and commercial service",
-      "status": "needs_review",
+      "status": "owner_review_required",
       "sourceType": "official_site",
       "sourceUrl": "https://www.getbeachside.com/viera.html"
     }

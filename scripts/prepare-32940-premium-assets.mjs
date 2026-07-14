@@ -10,8 +10,8 @@ const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..'
 // intentionally rebuilds that directory from scratch on every release.
 const outDir = path.join(repoRoot, 'scripts', 'assets', '32940-premium');
 const sources = [
-  { name: 'suntree-vet', url: 'https://images.unsplash.com/photo-1770836037275-38b44e4b101f?auto=format&fit=crop&w=2200&q=92', credit: 'Alexander Mass / Unsplash', sourcePage: 'https://unsplash.com/photos/veterinarian-gives-injection-to-a-small-dog-fQeLC7WlNm8' },
-  { name: 'rubio-vet', url: 'https://images.unsplash.com/photo-1770836037183-e0b4471fe2c0?auto=format&fit=crop&w=2200&q=92', credit: 'Alexander Mass / Unsplash', sourcePage: 'https://unsplash.com/photos/veterinarian-performing-ultrasound-on-a-dog-q-1iFFFN6ls' },
+  { name: 'suntree-vet', url: 'https://images.unsplash.com/photo-1770836037793-95bdbf190f71?auto=format&fit=crop&w=2200&q=92', credit: 'Alexander Mass / Unsplash', sourcePage: 'https://unsplash.com/photos/a-veterinarian-examines-a-black-and-tan-dachshund-e4f87NzUJsU' },
+  { name: 'rubio-vet', url: 'https://images.unsplash.com/photo-1770836037949-c5e8db65aa86?auto=format&fit=crop&w=2200&q=92', credit: 'Alexander Mass / Unsplash', sourcePage: 'https://unsplash.com/photos/veterinarian-examines-a-black-dachshunds-teeth-yme-xntjSKY' },
   { name: 'pool-water', url: 'https://images.unsplash.com/photo-1517374985980-5958a4b6677c?auto=format&fit=crop&w=2200&q=92', credit: 'Nathan Dumlao / Unsplash', sourcePage: 'https://unsplash.com/photos/swimming-pool-during-daytime-in-aerial-view-photography-yI46RxiFeQw' },
   { name: 'beachside-aerial', url: 'https://images.unsplash.com/photo-1502903111624-e54eb7c34ee4?auto=format&fit=crop&w=2200&q=92', credit: 'Josh G / Unsplash', sourcePage: 'https://unsplash.com/photos/aerial-photography-of-beach-and-swimming-pool-_c2rzUdpsso' },
 ];

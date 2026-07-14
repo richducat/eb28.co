@@ -1,53 +1,41 @@
 [
   {
-    "id": "draft_1",
+    "id": "article_feed_story",
     "orgId": "pilot_rubio-pet-hospital",
-    "title": "Before the first visit",
-    "body": "A useful new-client page can explain which records and medication notes the clinic wants before arrival—after the clinic approves the checklist.",
+    "format": "1080x1350_jpeg",
     "channels": [
-      "facebook",
       "instagram",
+      "facebook",
       "linkedin"
     ],
+    "title": "Give the new clinic a clean handoff.",
+    "hook": "New clinic? Build one page that connects the whole story.",
+    "body": "A better new pet patient visit in Suntree starts with a better handoff. History. Labels. Timeline. Priorities. Follow-up. Read the complete owner-review guide.",
+    "derivedFrom": "article/index.html",
+    "versionHash": "5470efdd874bd356625f2cc2b38063af56ea74216c38eadc0da34480fcbc21ec",
     "approvalRequired": true,
-    "publicationStatus": "draft_only",
-    "sourceClaimFields": [
-      "business_name",
-      "category"
-    ]
+    "publicationStatus": "owner_review_only"
   },
   {
-    "id": "draft_2",
+    "id": "article_vertical_reel",
     "orgId": "pilot_rubio-pet-hospital",
-    "title": "Appointment requests need a finish line",
-    "body": "A website request is not a confirmed appointment. The clearest experience tells pet owners what happens after they submit and who confirms the visit.",
+    "format": "1080x1920_h264_15s",
     "channels": [
-      "facebook",
-      "instagram",
-      "linkedin"
+      "instagram_reels",
+      "facebook_reels",
+      "tiktok"
     ],
-    "approvalRequired": true,
-    "publicationStatus": "draft_only",
-    "sourceClaimFields": [
-      "business_name",
-      "category"
-    ]
-  },
-  {
-    "id": "draft_3",
-    "orgId": "pilot_rubio-pet-hospital",
-    "title": "Clinical content stays human-reviewed",
-    "body": "Veterinary services and urgent guidance should remain under item-level clinic approval. That boundary is part of the production system, not fine print.",
-    "channels": [
-      "facebook",
-      "instagram",
-      "linkedin"
+    "title": "New clinic? Build one page that connects the whole story.",
+    "frames": [
+      "Article hook",
+      "Request prior records",
+      "Create the one-page handoff",
+      "Confirm receipt and arrival",
+      "Read the complete owner-review guide"
     ],
+    "derivedFrom": "article/index.html",
+    "versionHash": "5470efdd874bd356625f2cc2b38063af56ea74216c38eadc0da34480fcbc21ec",
     "approvalRequired": true,
-    "publicationStatus": "draft_only",
-    "sourceClaimFields": [
-      "business_name",
-      "category"
-    ]
+    "publicationStatus": "owner_review_only"
   }
 ]

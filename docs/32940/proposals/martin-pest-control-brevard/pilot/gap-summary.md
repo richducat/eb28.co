@@ -8,17 +8,17 @@ The official HTTPS source was reachable on July 14. Recheck it immediately befor
 
 ## Premium website opportunity
 
-Clarify pest, termite, rodent, bed bug and inspection routes while retaining published Brevard contact intent.
+Concept structure based on services and contact details published on the official website. Final claims and imagery require owner approval.
 
-## Content system opportunity
+## Article-led campaign opportunity
 
-- Encode owner-confirmed services, locations, contact routing and restricted claims in one Business Brain.
-- Build a Monday, Wednesday and Friday social cadence from approved facts.
-- Publish useful articles only after claim provenance and exact-version approval pass.
-- Keep customer-facing account verification, 2FA and OAuth with the customer.
+- Publish-ready owner-review article: **Pest Inspection in Brevard County: A Homeowner Documentation Checklist**
+- 1,481 words with anchored sections, quick answer, FAQ, source list and conversion checkpoint.
+- One 1080×1350 editorial feed creative and one 1080×1920 H.264 motion piece derived from the article.
+- No disconnected filler posts, invented business proof or unattended publication.
 
 ## Owner-review requirements
 
 - Confirm every service, credential, price, offer, testimonial, hour and location fact.
 - Confirm rights to logos, team photos, facility photos and customer proof.
-- Approve the exact website and content versions before staging or publication.
+- Approve the exact article, website and campaign versions before staging or publication.

@@ -1,142 +1,151 @@
 ---
-version: alpha
-name: CadetCatch Marketing Design System
-description: Conversion-focused brand system for the CadetCatch homepage and Coast Guard Academy family photo guides.
+version: beta
+name: CadetCatch Editorial Marketing System
+description: A restrained, parent-first marketing system for CadetCatch and its family photo guides.
 colors:
-  primary: "#F9B21B"
-  night: "#061411"
-  evergreen: "#10241E"
-  shieldBrown: "#3A270B"
-  actionOrange: "#C43A10"
-  searchCyan: "#08C7D8"
-  cream: "#FFF8E8"
-  mist: "#EAF5F3"
+  primary: "#F4B942"
+  night: "#0B0D0C"
+  forest: "#141A16"
+  ivory: "#F4EFE5"
+  paper: "#FBFAF6"
   white: "#FFFFFF"
-  ink: "#0B1714"
-  muted: "#5F6F6A"
-  line: "#D8E6E1"
+  ink: "#111512"
+  muted: "#626862"
+  line: "#D8D9D2"
 typography:
   display:
-    fontFamily: "Sora, Avenir Next, Segoe UI, sans-serif"
-    fontWeight: 800
-    lineHeight: 1.02
+    fontFamily: "Cormorant Garamond, Georgia, serif"
+    fontWeight: 600
+    lineHeight: 0.92
     letterSpacing: "-0.045em"
   heading:
-    fontFamily: "Sora, Avenir Next, Segoe UI, sans-serif"
+    fontFamily: "Manrope, Avenir Next, Segoe UI, sans-serif"
     fontWeight: 700
-    lineHeight: 1.12
-    letterSpacing: "-0.03em"
+    lineHeight: 1.1
+    letterSpacing: "-0.025em"
   body:
-    fontFamily: "Space Grotesk, Helvetica Neue, sans-serif"
+    fontFamily: "Manrope, Avenir Next, Segoe UI, sans-serif"
     fontWeight: 400
     lineHeight: 1.65
     letterSpacing: "0px"
   label:
-    fontFamily: "Space Grotesk, Helvetica Neue, sans-serif"
+    fontFamily: "Manrope, Avenir Next, Segoe UI, sans-serif"
     fontWeight: 700
     lineHeight: 1.2
-    letterSpacing: "0.12em"
+    letterSpacing: "0.14em"
 rounded:
-  sm: 10px
-  md: 16px
-  lg: 24px
-  xl: 32px
-  pill: 999px
+  sm: 4px
+  md: 10px
+  lg: 18px
 spacing:
   xs: 8px
   sm: 16px
   md: 24px
-  lg: 40px
-  xl: 64px
+  lg: 48px
+  xl: 88px
 components:
-  app-store-cta:
+  primary-action:
     backgroundColor: "{colors.primary}"
     textColor: "{colors.night}"
-    rounded: "{rounded.md}"
-    height: 52px
-  shield-badge:
-    backgroundColor: "{colors.shieldBrown}"
-    textColor: "{colors.white}"
-    rounded: "{rounded.md}"
-  search-status:
-    backgroundColor: "{colors.searchCyan}"
-    textColor: "{colors.night}"
-    rounded: "{rounded.pill}"
-  guide-kicker:
-    backgroundColor: "{colors.cream}"
-    textColor: "{colors.actionOrange}"
-    rounded: "{rounded.pill}"
-  cream-section:
-    backgroundColor: "{colors.cream}"
+    rounded: "{rounded.sm}"
+    height: 56px
+  dark-field:
+    backgroundColor: "{colors.night}"
+    textColor: "{colors.ivory}"
+  editorial-section:
+    backgroundColor: "{colors.paper}"
     textColor: "{colors.ink}"
-  proof-card:
-    backgroundColor: "{colors.white}"
-    textColor: "{colors.ink}"
-    rounded: "{rounded.lg}"
-  support-copy:
-    backgroundColor: "{colors.mist}"
-    textColor: "{colors.muted}"
-    rounded: "{rounded.md}"
   divider:
     backgroundColor: "{colors.line}"
     textColor: "{colors.ink}"
     rounded: "{rounded.sm}"
-  trust-panel:
-    backgroundColor: "{colors.evergreen}"
-    textColor: "{colors.white}"
-    rounded: "{rounded.xl}"
-  guide-source-card:
+  product-frame:
+    backgroundColor: "{colors.forest}"
+    textColor: "{colors.ivory}"
+    rounded: "{rounded.lg}"
+  support-copy:
+    backgroundColor: "{colors.paper}"
+    textColor: "{colors.muted}"
+    rounded: "{rounded.sm}"
+  footer:
     backgroundColor: "{colors.white}"
     textColor: "{colors.ink}"
-    rounded: "{rounded.md}"
+    rounded: "{rounded.sm}"
 ---
 
-# CadetCatch Marketing Design System
+# CadetCatch Editorial Marketing System
 
 ## Scope
 
-This contract is intentionally scoped to `src/CadetCatch.jsx` and the static pages under `public/cc/`. The repository contains unrelated brands; CadetCatch tokens must not leak into those surfaces.
+This contract is intentionally scoped to `src/CadetCatch.jsx` and the static pages under `public/cc/`. The repository contains unrelated brands; CadetCatch tokens and layout rules must not leak into those surfaces.
+
+## Frontend direction
+
+### Visual thesis
+
+CadetCatch should feel like a quiet family field journal at night: deep ink, warm paper, editorial serif type, one signal-gold action, and a real app screen presented with confidence and no decorative noise.
+
+### Content plan
+
+1. **Hero:** brand, one parent promise, one App Store action, and one dominant real app screen.
+2. **Support:** name the exact gallery-search ritual and show why a shorter review matters.
+3. **Detail:** explain the three-step workflow, privacy boundary, real app screens, and transparent pricing through rows and dividers rather than card grids.
+4. **Final action:** return to the next-gallery moment and offer one decisive App Store action.
+
+### Interaction thesis
+
+- The hero copy enters in one restrained sequence while the product image stays physically static.
+- A soft opacity-only halo gives the app screen presence without moving, rotating, or clipping it.
+- Links and actions use one fast underline or arrow shift; motion never competes with reading and is removed under `prefers-reduced-motion`.
 
 ## Product identity
 
-CadetCatch is the calm, capable photo-search companion for Coast Guard Academy parents. The experience should feel like a trusted family field kit: focused, protective, practical, and warm enough for the emotional reason a parent is searching for one familiar face.
+CadetCatch is the calm, capable photo-search companion for Coast Guard Academy parents. Write to one parent who has opened a new gallery, zoomed into several group photos, and reached the end wondering whether they missed their cadet. Lead with the face and memory that parent wants to find, then explain the mechanism.
 
-Write to one parent who has opened a new gallery, zoomed into several group photos, and reached the end wondering whether they missed their cadet. Name that moment plainly. Lead with the familiar face and the memory the parent wants to keep, then explain the product mechanism. Avoid generic “families save time” language when a more specific parent moment is available.
-
-Use the real CadetCatch shield icon, dark field-grid texture, signal gold, search cyan, and the orange already present in the iPhone app. The visual system should be unmistakably CadetCatch without mimicking an official U.S. Coast Guard or Academy website.
+The shield icon identifies the product. It must not imply affiliation with the Academy, U.S. Coast Guard, or DHS.
 
 ## Conversion hierarchy
 
-Every marketing page has one primary action: download CadetCatch from the App Store. The App Store action must appear in the header, above the fold, after meaningful product proof, at the final close, and in a persistent mobile bar. Secondary links may explain how the app works or open the Swab Summer guide, but they may not compete visually with the download action.
+The only visually dominant action is downloading CadetCatch from the App Store. A photo-guide link may appear as plain text. Do not place two filled or bordered actions beside each other in the hero.
 
-The first viewport must answer four questions in order:
+The first viewport must communicate, in order:
 
-1. Who is this for? The Coast Guard Academy parent checking each new photo drop for their cadet.
-2. What outcome does it create? A shorter, calmer path to the photos that deserve a closer look.
-3. How does it work? Add one clear reference photo, enable photo pages, and review suggested matches yourself.
-4. What should I do? Download the iPhone app free from the App Store.
+1. This is for a parent searching Academy photo drops.
+2. CadetCatch narrows the photos worth reviewing.
+3. The parent reviews every possible match.
+4. The iPhone app is free to download.
 
-## Typography
+## Composition rules
 
-Use Sora for display and headings and Space Grotesk for body copy. Headlines are compact, high-contrast, and parent-led. Body copy should sound like one parent talking to another: conversational, specific, and plainspoken. Avoid military jargon, generic SaaS phrasing, vague time-saving claims, and long centered paragraphs.
+- Treat the opening viewport as a poster, not a dashboard.
+- Use a full-bleed dark field with one text column and one dominant product screen.
+- No grid texture, gradient mesh, floating UI, hero card, pill cluster, stat strip, icon mosaic, or decorative dashboard.
+- Use only night, warm paper, neutral ink, and signal gold as the dominant system. Do not reintroduce cyan and orange as competing marketing accents.
+- Prefer editorial rows, rules, large numbers, and whitespace over cards.
+- Keep major section copy left aligned and short enough to scan in seconds.
+- Use Cormorant Garamond only for emotionally led display headlines; use Manrope for the brand, body, navigation, labels, and utility text.
 
-## Color and imagery
+## Imagery
 
-Dark `night` and `evergreen` fields establish the brand. `primary` gold owns App Store actions. `searchCyan` communicates search, scanning, and progress. `actionOrange` appears only where it connects the marketing site to controls already visible inside the app.
+Real CadetCatch screens are the product proof. In the hero, use one screen at a stable size with a simple device edge and an opacity-only halo. Never overlap, rotate, translate, or float screenshots. All product images must remain fully inside the viewport at every supported breakpoint.
 
-Use real app screens as product proof. In the hero, place one screen inside a stable, contained grid next to a parent outcome statement. Do not overlap or rotate screenshots, and do not animate a `transform` on any element whose layout also depends on `translate`, `rotate`, or absolute positioning. Do not use abstract dashboards, stock military imagery, official seals, uniforms as decoration, or fabricated family photos. The app shield is a brand identifier, not an implication of government affiliation.
+Use multiple screens only when each advances the workflow. Do not put an app screen inside another decorative card or fabricate family, military, or Academy imagery.
+
+## Parent voice
+
+Use plain, specific language: a new gallery, group photos, one familiar face, and the doubt that the parent may have missed it. Avoid generic family claims, software jargon, military jargon, and repeated explanations.
 
 ## Trust rules
 
 - Say “possible matches” or “likely finds,” never guaranteed identification.
-- Make clear that the family reviews every suggested match.
-- State that the app is independent and is not affiliated with USCGA, USCG, or DHS.
-- Never fabricate user counts, testimonials, ratings, or savings claims.
+- State that the parent reviews every suggestion.
+- State that CadetCatch is independent and not affiliated with USCGA, USCG, or DHS.
+- Never fabricate ratings, reviews, user counts, testimonials, or time-saved claims.
 - Present current App Store pricing plainly: free download, $1.99 one-time options, and $12.99 Family Monthly.
 - Keep tap targets at least 44px and body text at least 16px on mobile.
 
-## Layout and motion
+## Responsive and motion rules
 
-Use a compact parent-outcome hero, a specific gallery-search empathy section, visible product proof, a short three-step flow, privacy/trust proof, transparent pricing, and a decisive final CTA. On guide pages, preserve the usefulness of the article while placing a branded download module above the fold and in a sticky sidebar or mobile bar.
+The header and hero must fit naturally at common desktop sizes. On mobile, the headline, body, and App Store action must appear before the product image. The mobile download bar may remain, but it must be visually quiet and must not obscure page content.
 
-Motion should be subtle and functional. Small hover lifts are acceptable. Hero product graphics must stay static so the screenshots remain crisp, aligned, and fully inside the viewport at every breakpoint. Respect `prefers-reduced-motion`. Avoid parallax, autoplay video, scrolling marquees, or animations that delay the CTA.
+Respect `prefers-reduced-motion`. Never animate layout-critical transforms on product images. No parallax, autoplay video, marquee, scroll-jacking, or motion that delays the primary action.

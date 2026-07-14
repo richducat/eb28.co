@@ -3,13 +3,13 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Home Inspection Reports Done Before You Leave the Driveway</title>
-<meta name="description" content="Finish 4-Point and wind mitigation reports at the property, not at your kitchen table. Your first inspection is the trial — then $5 a pull, $20/month for 10, or $98/year unlimited." />
+<title>Inspector Gadgets — Type an Address, Get the Official Florida Inspection Forms Pre-Filled</title>
+<meta name="description" content="Type in an address and Inspector Gadgets scrapes the county and state records straight into the official Florida 4-Point and Wind Mitigation forms, then outputs the finished, signed PDF. First inspection free." />
 <meta name="theme-color" content="#0B1D31" />
 <link rel="canonical" href="https://eb28.co/HIP/" />
 <meta property="og:type" content="website" />
-<meta property="og:title" content="Home Inspection Reports Done Before You Leave the Driveway" />
-<meta property="og:description" content="Finish 4-Point and wind mitigation reports at the property, not at your kitchen table. Your first inspection is the trial — then $5 a pull, $20/month for 10, or $98/year unlimited." />
+<meta property="og:title" content="Type in the Address. The Official Florida Inspection Forms Pre-Fill Themselves." />
+<meta property="og:description" content="Type an address and Inspector Gadgets pulls the county and state records straight into the official Florida 4-Point and Wind Mitigation forms — then outputs the finished, signed PDF. First inspection free." />
 <meta property="og:url" content="https://eb28.co/HIP/" />
 <meta property="og:image" content="https://eb28.co/HIP/shots/workstation.png" />
 <meta name="twitter:card" content="summary_large_image" />
@@ -82,11 +82,11 @@
   }
   .hero .wrap { position: relative; }
   .hero-top { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 24px; align-items: start; }
-  .hero h1 { font-size: clamp(38px, 6vw, 64px); font-weight: 800; color: #fff; max-width: 17ch; margin: 18px 0 22px; }
+  .hero h1 { font-size: clamp(36px, 5.6vw, 60px); font-weight: 800; color: #fff; max-width: 18ch; margin: 18px 0 22px; }
   .hero h1 em { font-style: normal; color: var(--amber); }
   .hero .sub { font-size: 18px; color: var(--navy-text); max-width: 62ch; margin: 0 0 30px; }
   .hero-ctas { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; margin-bottom: 18px; }
-  .hero .micro { font-family: var(--font-mono); font-size: 11.5px; letter-spacing: 0.07em; text-transform: uppercase; color: var(--navy-text); margin: 0 0 26px; }
+  .hero .micro { font-family: var(--font-mono); font-size: 11.5px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--navy-text); margin: 0 0 26px; max-width: 60ch; line-height: 1.7; }
   .hero .badge-row { padding: 22px 0 46px; border-top: 1px solid rgba(255,255,255,0.14); }
 
   .seal { flex: 0 0 auto; transform: rotate(-8deg); opacity: 0.9; }
@@ -118,6 +118,22 @@
   .pain h3 { font-size: 18px; margin-bottom: 8px; }
   .pain p { margin: 0; color: var(--muted); font-size: 14.5px; }
 
+  /* ---------- before / after ---------- */
+  .ba-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .ba-col { border-radius: 6px; padding: 24px 22px; border: 1px solid var(--line); background: var(--white); }
+  .ba-col.after { background: var(--vellum); border-color: var(--amber-strong); outline: 1px solid var(--amber-strong); outline-offset: 3px; }
+  .ba-tag { display: inline-block; font-family: var(--font-mono); font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 4px 10px; border-radius: 999px; margin-bottom: 18px; }
+  .ba-col.before .ba-tag { color: var(--muted); background: var(--paper); border: 1px solid var(--line-strong); }
+  .ba-col.after .ba-tag { color: var(--warn-text); background: var(--amber-soft); border: 1px solid #e3c27e; }
+  .ba-list { display: grid; gap: 14px; }
+  .ba-item { display: flex; gap: 12px; align-items: flex-start; font-size: 14.5px; }
+  .ba-item .mk { flex: none; width: 20px; height: 20px; border-radius: 50%; display: grid; place-items: center; margin-top: 1px; }
+  .ba-item .mk svg { width: 12px; height: 12px; }
+  .ba-col.before .ba-item { color: var(--muted); }
+  .ba-col.before .ba-item .mk { background: #e7ebf0; color: #8ea0b1; }
+  .ba-col.after .ba-item { color: var(--ink); }
+  .ba-col.after .ba-item .mk { background: var(--success-soft); color: var(--success); }
+
   /* ---------- workflow ledger ---------- */
   .ledger { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 48px; align-items: start; }
   .steps { display: grid; gap: 0; }
@@ -133,15 +149,25 @@
   .ledger-shots { display: grid; gap: 22px; position: sticky; top: 32px; }
   .ledger-shots .sheet img { max-height: 400px; object-fit: cover; object-position: top; }
 
-  /* ---------- features ---------- */
+  /* ---------- features / pillars ---------- */
   .feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-  .feature { background: var(--white); border: 1px solid var(--line); border-radius: 6px; padding: 22px; }
+  .feature { background: var(--white); border: 1px solid var(--line); border-radius: 6px; padding: 24px; }
   .feature .icon {
     display: grid; place-items: center; width: 40px; height: 40px; margin-bottom: 14px;
     border: 1px solid var(--line-strong); border-radius: 3px; color: var(--primary); background: var(--paper);
   }
-  .feature h3 { font-size: 17px; margin-bottom: 8px; }
+  .feature h3 { font-size: 18px; margin-bottom: 8px; }
   .feature p { margin: 0; color: var(--muted); font-size: 14px; }
+
+  /* ---------- proof ---------- */
+  .proof { background: var(--white); }
+  .proof-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); gap: 44px; align-items: center; }
+  .proof-points { display: grid; gap: 18px; margin-top: 4px; }
+  .proof-point { display: flex; gap: 13px; align-items: flex-start; }
+  .proof-point .pn { flex: none; color: var(--primary); margin-top: 1px; }
+  .proof-point h4 { font-family: var(--font-display); font-size: 16px; margin: 0 0 3px; }
+  .proof-point p { margin: 0; color: var(--muted); font-size: 14px; }
+  .proof-note { font-family: var(--font-mono); font-size: 12px; color: var(--warn-text); background: var(--amber-soft); border: 1px solid #e3c27e; border-radius: 3px; padding: 10px 14px; margin-top: 24px; display: inline-block; }
 
   /* ---------- exports (money section) ---------- */
   .exports { background: var(--vellum); }
@@ -164,6 +190,16 @@
   .trust-card h3 { color: #fff; font-size: 17px; margin-bottom: 8px; }
   .trust-card p { margin: 0; color: var(--navy-text); font-size: 14.5px; }
 
+  /* ---------- roi band ---------- */
+  .roiband { background: radial-gradient(130% 130% at 0% 0%, var(--navy) 52%, var(--navy-deep) 100%); background-color: var(--navy); position: relative; color: #fff; }
+  .roiband::before { content: ""; position: absolute; inset: 0; background-image: var(--grid-navy); background-size: var(--grid-navy-size); pointer-events: none; }
+  .roiband .wrap { position: relative; display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 44px; align-items: center; }
+  .roiband h2 { color: #fff; font-size: clamp(26px, 3.6vw, 36px); font-weight: 800; max-width: 18ch; }
+  .roiband p { color: var(--navy-text); font-size: 16px; margin: 18px 0 0; max-width: 62ch; }
+  .anchor-card { border: 1px solid var(--amber); border-radius: 8px; background: rgba(245,163,0,0.09); padding: 26px 24px; }
+  .anchor-card .big { font-family: var(--font-display); font-weight: 800; font-size: 28px; color: var(--amber); line-height: 1.12; }
+  .anchor-card p { color: #fff; margin: 12px 0 0; font-size: 14.5px; }
+
   /* ---------- faq ---------- */
   .faq-list { display: grid; gap: 12px; max-width: 860px; }
   details { background: var(--white); border: 1px solid var(--line); border-radius: 6px; padding: 0 22px; }
@@ -177,8 +213,8 @@
   .final { background: radial-gradient(110% 100% at 50% 100%, var(--navy) 55%, var(--navy-deep) 100%); background-color: var(--navy); position: relative; text-align: center; }
   .final::before { content: ""; position: absolute; inset: 0; background-image: var(--grid-navy); background-size: var(--grid-navy-size); pointer-events: none; }
   .final .wrap { position: relative; }
-  .final h2 { color: #fff; font-size: clamp(30px, 4.6vw, 44px); font-weight: 800; margin: 14px 0 16px; }
-  .final p { color: var(--navy-text); font-size: 17px; max-width: 56ch; margin: 0 auto 30px; }
+  .final h2 { color: #fff; font-size: clamp(30px, 4.6vw, 44px); font-weight: 800; margin: 14px 0 16px; max-width: 20ch; margin-left: auto; margin-right: auto; }
+  .final p { color: var(--navy-text); font-size: 17px; max-width: 58ch; margin: 0 auto 30px; }
   .final .sub { font-family: var(--font-mono); font-size: 11.5px; letter-spacing: 0.07em; text-transform: uppercase; margin-top: 16px; }
   .final .badge-row { justify-content: center; margin-top: 40px; padding-top: 24px; border-top: 1px solid rgba(255,255,255,0.14); }
 
@@ -216,6 +252,20 @@
   }
   .price-note { font-family: var(--font-mono); font-size: 12px; color: var(--warn-text); background: var(--amber-soft); border: 1px solid #e3c27e; border-radius: 3px; padding: 10px 14px; margin-top: 22px; display: inline-block; }
 
+  /* ---------- speed + feature depth ---------- */
+  .speedstrip { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 40px; }
+  .speedchip { font-family: var(--font-mono); font-size: 12.5px; background: var(--white); border: 1px solid var(--line-strong); border-radius: 999px; padding: 9px 15px; color: var(--muted); }
+  .speedchip b { color: var(--amber-strong); }
+  .featgrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .featcard { background: var(--white); border: 1px solid var(--line); border-radius: 6px; padding: 22px; }
+  .featcard h3 { font-size: 16px; margin: 0 0 15px; display: flex; align-items: center; gap: 10px; }
+  .featcard h3 .fi { color: var(--primary); flex: none; }
+  .featcard ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+  .featcard li { font-size: 13.5px; color: var(--ink); padding-left: 20px; position: relative; line-height: 1.45; }
+  .featcard li::before { content: "✓"; position: absolute; left: 0; top: 0; color: var(--success); font-weight: 700; font-size: 13px; }
+  @media (max-width: 960px) { .featgrid { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 600px) { .featgrid { grid-template-columns: 1fr; } }
+
   /* ---------- footer ---------- */
   footer { background: var(--navy-deep); border-top: 3px solid var(--amber); color: var(--navy-text); padding: 44px 0 34px; }
   .foot-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; font-family: var(--font-mono); font-size: 11.5px; line-height: 1.8; }
@@ -230,13 +280,13 @@
     .seal { display: none; }
     .pain-grid, .feature-grid { grid-template-columns: 1fr 1fr; }
     .price-grid { grid-template-columns: 1fr 1fr; }
-    .ledger, .export-grid { grid-template-columns: 1fr; }
+    .ledger, .export-grid, .proof-grid, .roiband .wrap { grid-template-columns: 1fr; }
     .ledger-shots { position: static; }
     .trust-grid { grid-template-columns: 1fr; }
     .foot-grid { grid-template-columns: 1fr; gap: 22px; }
   }
   @media (max-width: 620px) {
-    .pain-grid, .feature-grid, .price-grid { grid-template-columns: 1fr; }
+    .pain-grid, .feature-grid, .price-grid, .ba-grid { grid-template-columns: 1fr; }
     .hero-ctas .cta, .hero-ctas .cta-ghost, .final .cta { width: 100%; }
   }
 </style>
@@ -248,14 +298,14 @@
   <div class="wrap">
     <div class="hero-top">
       <div>
-        <p class="kicker">For Florida home inspectors — built in Brevard County</p>
-        <h1>Finish the report <em>before you leave the driveway</em></h1>
-        <p class="sub">Paste tomorrow's booking, walk the property once, and sign before you pull out of the driveway — the county research, the photos, and the official forms are handled along the way. Dinner's at six, and you're actually there.</p>
+        <p class="kicker">Official Florida 4-Point &amp; Wind Mitigation — pre-filled from government records</p>
+        <h1>Type in the address. <em>The official inspection forms pre-fill themselves.</em></h1>
+        <p class="sub">Inspector Gadgets pulls the property's county and state records — owner, parcel, year built, flood zone, design wind speed, permit history — and drops them straight into the official Florida 4-Point and Wind Mitigation forms. Walk the house, shoot the guided photos, and it drafts the findings and outputs the finished, signed PDF, ready to email the client. You approve every line — you just never hand-type a parcel number again.</p>
         <div class="hero-ctas">
-          <a class="cta" href="app/">Start your trial inspection</a>
-          <a class="cta-ghost" href="#pricing">See plans &amp; pricing</a>
+          <a class="cta" href="app/">Run your first inspection free</a>
+          <a class="cta-ghost" href="how-it-works.html">See how it works</a>
         </div>
-        <p class="micro">First inspection on the trial · $5 a pull · $20/mo for 10 · $98/yr unlimited</p>
+        <p class="micro">Card on file, but the trial isn't charged. Run one complete job start to signed. Cancel anytime — your saved work stays yours.</p>
       </div>
       <svg class="seal" width="132" height="132" viewBox="0 0 132 132" fill="none" aria-hidden="true">
         <circle cx="66" cy="66" r="63" stroke="rgba(255,255,255,0.35)" stroke-width="1.5" />
@@ -269,47 +319,77 @@
       </svg>
     </div>
     <div class="badge-row">
-      <span>Plans from $20/mo</span><span>Official Florida forms</span><span>You approve every finding</span><span>Data stays on your device</span>
+      <span>Pre-filled from public records</span><span>Official FL state PDFs</span><span>First inspection free</span><span>Nothing to install</span>
     </div>
     <div class="hero-shot">
       <div class="sheet">
-        <div class="sheet-head"><span>Home Inspection Assistant · York Inspections</span><span>Sheet 1 of 1</span></div>
+        <div class="sheet-head"><span>Inspector Gadgets · York Inspections</span><span>Sheet 1 of 1</span></div>
         <img src="shots/workstation.png" alt="The inspection workstation: booking intake, county research, and readiness gauge" width="1440" height="625" />
       </div>
     </div>
   </div>
 </header>
 
-<!-- ======================= PAIN ======================= -->
+<!-- ======================= PROBLEM ======================= -->
 <section>
   <div class="wrap">
     <div class="sec-head">
-      <p class="kicker"><span class="no">Sec 01</span> — Sound familiar?</p>
-      <h2>The inspection takes two hours. The paperwork takes your evening.</h2>
+      <p class="kicker"><span class="no">Sec 01</span> — The job doesn't end when the inspection does</p>
+      <h2>You already worked today. Then the paperwork makes you work again.</h2>
     </div>
     <div class="pain-grid">
       <div class="pain">
-        <h3>The 9pm form session</h3>
-        <p>The last inspection wrapped at four. So why are you still filling in checkboxes at nine? Owner names, parcel numbers, flood zones, permit history — copied by hand, one browser tab at a time, after dinner. That's not inspecting. That's data entry.</p>
+        <h3>The second shift nobody pays you for</h3>
+        <p>You finished the walkthrough at 3. Then you got home, ate dinner, and sat back down at the kitchen table to type up the 4-Point and pencil in the wind-mit form. That's an evening — every evening you inspect — that your family doesn't get and nobody writes you a check for.</p>
       </div>
       <div class="pain">
-        <h3>The carrier kicked it back. Again.</h3>
-        <p>One blank field, one number that didn't match, and a finished job turns into three phone calls and a redo. Every kickback chips at the reputation you've spent years building.</p>
+        <h3>The drive-back that eats half a day</h3>
+        <p>You're already down the road when it hits you: you never got the clean shot of the panel label or the water-heater data plate. Now it's 40 minutes there, 40 back, and a job slot you could've sold — gone, over one photo you didn't leave with.</p>
       </div>
       <div class="pain">
-        <h3>The photo you didn't take</h3>
-        <p>One forgotten data plate and the whole report stalls. Now you're driving back across Viera for thirty seconds of camera work, on your own dime.</p>
+        <h3>The number that didn't match</h3>
+        <p>A year built is off, a field got guessed at 9pm because you were tired, and the carrier bounces the report. Now you're re-opening a closed job, making the awkward call, and doing free work on your own Saturday to fix something a second set of eyes would've caught.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= BEFORE / AFTER ======================= -->
+<section style="background: var(--white);">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="kicker"><span class="no">Sec 02</span> — The transformation</p>
+      <h2>Same inspection. The paperwork's the part that changes.</h2>
+    </div>
+    <div class="ba-grid">
+      <div class="ba-col before">
+        <span class="ba-tag">Before · the kitchen table</span>
+        <div class="ba-list">
+          <div class="ba-item"><span class="mk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></span><span>County research dug up by hand before you even leave, then typed up again after dinner.</span></div>
+          <div class="ba-item"><span class="mk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></span><span>Reports keyed at the kitchen table at 9pm, squinting at data plates you can barely read.</span></div>
+          <div class="ba-item"><span class="mk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></span><span>Driving back across the county for the one shot you forgot.</span></div>
+          <div class="ba-item"><span class="mk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></span><span>Guessing a blank to finish the form — and hoping the carrier doesn't catch it.</span></div>
+        </div>
+      </div>
+      <div class="ba-col after">
+        <span class="ba-tag">After · Inspector Gadgets</span>
+        <div class="ba-list">
+          <div class="ba-item"><span class="mk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5 10 17.5 19 7"/></svg></span><span>Records pulled in one tap, on-site, every value showing its source with a link.</span></div>
+          <div class="ba-item"><span class="mk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5 10 17.5 19 7"/></svg></span><span>Official forms filled during the walkthrough and signed in the driveway.</span></div>
+          <div class="ba-item"><span class="mk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5 10 17.5 19 7"/></svg></span><span>A guided checklist names every required shot before you pull away — no drive-back.</span></div>
+          <div class="ba-item"><span class="mk"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5 10 17.5 19 7"/></svg></span><span>Unverified fields left blank, never guessed, and you approve every finding yourself.</span></div>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
 <!-- ======================= WORKFLOW ======================= -->
-<section id="workflow" style="background: var(--white);">
+<section id="workflow">
   <div class="wrap">
     <div class="sec-head">
-      <p class="kicker"><span class="no">Sec 02</span> — How it works</p>
-      <h2>One visit. One walkthrough. Zero homework.</h2>
+      <p class="kicker"><span class="no">Sec 03</span> — The real workflow, in order</p>
+      <h2>Booking to signed report, without the kitchen table.</h2>
       <p class="lede">Want it choice by choice? <a href="how-it-works.html" style="color: var(--primary); font-family: var(--font-display); font-weight: 700; text-decoration: none; border-bottom: 2px solid var(--amber); padding-bottom: 1px;">See the full step-by-step walk-through &rarr;</a></p>
     </div>
     <div class="ledger">
@@ -317,46 +397,46 @@
         <div class="step">
           <span class="step-no">01</span>
           <div>
-            <h3>Drop in the booking</h3>
-            <p>Paste the appointment straight from your Google Calendar — or type it in. Everything else fills in from there, and the appointment lands right back on your calendar.</p>
+            <h3>Paste tomorrow's booking</h3>
+            <p>Drop it straight in from Google Calendar, import an .ics, or type it. The appointment syncs right back to your calendar.</p>
           </div>
         </div>
         <div class="step">
           <span class="step-no">02</span>
           <div>
-            <h3>Arrive already prepared</h3>
-            <p>One click researches the address: owner, parcel, flood zone, permit history — pulled from official public records, each with a link to the source. Override anything that doesn't look right.</p>
+            <h3>One tap pulls the county record</h3>
+            <p>Owner, parcel, year built, square footage, flood zone, design wind speed, and permit history — statewide FL from FDOR, county appraisers, and permit portals. Every value shows its source with a link, and you can override anything.</p>
           </div>
         </div>
         <div class="step">
           <span class="step-no">03</span>
           <div>
-            <h3>Shoot the eight that matter</h3>
-            <p>A guided photo checklist covers exactly what the 4-Point and wind mitigation need — panel label, HVAC data plate, water heater, roof, opening protection, and the rest. Nothing gets missed.</p>
+            <h3>Work the guided photo checklist</h3>
+            <p>It maps to exactly what the 4-Point and Wind Mit forms require — panel label, HVAC plate, water heater, roof, opening protection, elevations, roof-to-wall. Bulk-import auto-sorts your shots into the right slots, so you leave with every one.</p>
           </div>
         </div>
         <div class="step">
           <span class="step-no">04</span>
           <div>
-            <h3>Approve instead of typing</h3>
-            <p>The app reads each photo, drafts the finding, and pencils in the form answer on the spot. You review every one — approve it, tweak it, or toss it. You're the inspector; it's your call, every time.</p>
+            <h3>The app drafts, you decide</h3>
+            <p>It reads each photo, drafts the finding, and pencils in the form answer — OCR-decoding data plates into appliance age right on your device. You approve, edit, or reject every single suggestion. Nothing enters the report on its own.</p>
           </div>
         </div>
         <div class="step">
           <span class="step-no">05</span>
           <div>
-            <h3>Sign it in the driveway</h3>
-            <p>The report won't finalize until everything required is done and every suggestion is reviewed. Type your name, export the official forms, and drive home with nothing left to do.</p>
+            <h3>Sign in the driveway</h3>
+            <p>Export the official Florida 4-Point (2025) and Wind Mitigation OIR-B1-1802 (Rev. 04/26) PDFs on the real state templates, with captioned photo pages appended. Email the client from a saved template or share a view-only link — before you pull off the curb.</p>
           </div>
         </div>
       </div>
       <div class="ledger-shots">
         <div class="sheet">
-          <div class="sheet-head"><span>Step 02 — County research</span><span>One click</span></div>
+          <div class="sheet-head"><span>Step 02 — County research</span><span>One tap</span></div>
           <img src="shots/research.png" alt="County research panel pulling owner, parcel, and flood zone from official public records" loading="lazy" />
         </div>
         <div class="sheet">
-          <div class="sheet-head"><span>Step 03 — Photo checklist</span><span>8 guided shots</span></div>
+          <div class="sheet-head"><span>Step 03 — Photo checklist</span><span>Guided shots</span></div>
           <img src="shots/photo-evidence.png" alt="Guided photo checklist mapped to the 4-Point and wind mitigation forms" loading="lazy" />
         </div>
       </div>
@@ -364,43 +444,149 @@
   </div>
 </section>
 
-<!-- ======================= FEATURES ======================= -->
-<section>
+<!-- ======================= VALUE PILLARS ======================= -->
+<section style="background: var(--white);">
   <div class="wrap">
     <div class="sec-head">
-      <p class="kicker"><span class="no">Sec 03</span> — What you get</p>
-      <h2>Less typing. Fewer kickbacks. A report you're proud to sign.</h2>
+      <p class="kicker"><span class="no">Sec 04</span> — What you're actually getting</p>
+      <h2>The work happens on-site. Your evening stays yours.</h2>
     </div>
     <div class="feature-grid">
       <div class="feature">
-        <span class="icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></span>
-        <h3>Paste the booking, skip the retyping</h3>
-        <p>Take tomorrow's appointment straight from Google Calendar — or type it in — and the whole job is ready before you are. The appointment lands back on your calendar, so your schedule and your paperwork always agree.</p>
+        <span class="icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 7v5l3 2"/><circle cx="12" cy="12" r="9"/></svg></span>
+        <h3>Done during the walkthrough, not after dinner</h3>
+        <p>Paste the booking, tap once for the county records, shoot the guided checklist, and the app drafts the findings and pencils in the answers as you go. You approve each one and export the official PDFs before you leave. The state licensed your eye and your signature — not your typing speed. Spend the job inspecting, not keying parcel numbers after dark.</p>
       </div>
       <div class="feature">
-        <span class="icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14a9 3 0 0 0 18 0V5"/><path d="M3 12a9 3 0 0 0 18 0"/></svg></span>
-        <h3>County research, done before you park</h3>
-        <p>One click pulls the owner, parcel, flood zone, and permit history from official public records. What used to be an evening of tab-hopping is finished before you've opened the truck door.</p>
-      </div>
-      <div class="feature">
-        <span class="icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="m9 14 2 2 4-4"/></svg></span>
-        <h3>An answer for "where'd you get that?"</h3>
-        <p>Every records value shows exactly where it came from, with a link to the official source. When an agent or underwriter questions a number, you point once — and you can override anything you know better.</p>
-      </div>
-      <div class="feature">
-        <span class="icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg></span>
-        <h3>Never drive back for a photo</h3>
-        <p>Eight guided shots, mapped to what the 4-Point and wind mitigation actually require — panel label, HVAC data plate, water heater, roof, opening protection, and the rest. You leave every property with every shot.</p>
-      </div>
-      <div class="feature">
-        <span class="icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3L12 3Z"/></svg></span>
-        <h3>A first draft while you walk</h3>
-        <p>While you're still at the property, your photos turn into drafted findings with the form answers penciled in. Nothing enters the report until you say so.</p>
+        <span class="icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><path d="m9 13 2 2 4-4"/></svg></span>
+        <h3>Leave every property done — no drive-backs</h3>
+        <p>The checklist maps to exactly what the forms require, and the report can't be finalized until every required item is there. Bulk-import auto-sorts your shots into the right slots, so a forgotten panel label can't send you back across the county. Every required photo, checked off, before you pull out of the driveway.</p>
       </div>
       <div class="feature">
         <span class="icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg></span>
-        <h3>A signature that means something</h3>
-        <p>The report can't be finalized until every required item is complete and every suggestion is reviewed. Type your name to sign — and if anything changes after, it reopens for your review.</p>
+        <h3>Filled right, so fewer come back</h3>
+        <p>Every pulled value shows its official source with a link — when a carrier questions a number, you point to the record. Anything the app can't verify is left blank, never guessed, and when the AI isn't sure it says so and asks for a better photo instead of inventing one. Fewer kickbacks, fewer redos, fewer "the number didn't match" calls on your weekend.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= SPEED + FEATURES ======================= -->
+<section id="features" style="background: var(--vellum);">
+  <div class="wrap">
+    <div class="sec-head">
+      <p class="kicker"><span class="no">Sec 05</span> — Faster at every step</p>
+      <h2>The parts that used to eat your time? The app just does them.</h2>
+      <p class="lede">Every step that meant re-typing, tab-hopping, or a second trip across the county is handled for you now — so the whole job moves at the speed of the walkthrough.</p>
+    </div>
+    <div class="speedstrip">
+      <span class="speedchip"><b>Pasted</b> — not re-typed</span>
+      <span class="speedchip"><b>One tap</b> — not an evening of tabs</span>
+      <span class="speedchip"><b>Scanned</b> — not squinted at</span>
+      <span class="speedchip"><b>Pre-filled</b> — not hand-keyed</span>
+      <span class="speedchip"><b>One tap</b> to the official PDF</span>
+    </div>
+    <div class="featgrid">
+      <div class="featcard">
+        <h3><svg class="fi" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg> Booking &amp; scheduling</h3>
+        <ul>
+          <li>Paste a booking straight from Google Calendar — or import an .ics file</li>
+          <li>The appointment syncs right back to your calendar</li>
+          <li>Address autocomplete as you type</li>
+          <li>One dashboard of every upcoming inspection across your jobs</li>
+        </ul>
+      </div>
+      <div class="featcard">
+        <h3><svg class="fi" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14a9 3 0 0 0 18 0V5"/><path d="M3 12a9 3 0 0 0 18 0"/></svg> Records, pulled for you</h3>
+        <ul>
+          <li>One tap pulls owner, parcel, year built, square footage, flood zone, design wind speed &amp; permit history</li>
+          <li>Statewide Florida — FDOR, county appraisers &amp; permit portals</li>
+          <li>Every value shows its official source with a link</li>
+          <li>Pull an address once; it loads instantly next time — no re-fetch</li>
+          <li>Permit history imports roof, HVAC, electrical &amp; plumbing dates</li>
+        </ul>
+      </div>
+      <div class="featcard">
+        <h3><svg class="fi" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg> Photos that read themselves</h3>
+        <ul>
+          <li>A guided checklist maps to exactly what each form requires</li>
+          <li>Bulk-import auto-sorts your shots into the right slots</li>
+          <li>Scan a data plate — it decodes the serial into appliance age, on your device</li>
+          <li>Flag a defect photo and attach a recommendation</li>
+          <li>Rotate, crop &amp; brighten a shot right there</li>
+        </ul>
+      </div>
+      <div class="featcard">
+        <h3><svg class="fi" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="m9 15 2 2 4-4"/></svg> Forms that fill themselves</h3>
+        <ul>
+          <li>Dropdowns drop the correct letter code onto the official form — opening protection, roof geometry, deck attachment</li>
+          <li>It drafts findings and pencils in answers from your photos</li>
+          <li>Remembers your past answers and suggests them</li>
+          <li>Owner auto-fills as the insured and the client</li>
+          <li>Anything unverified stays blank — never guessed</li>
+        </ul>
+      </div>
+      <div class="featcard">
+        <h3><svg class="fi" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4 20-7z"/></svg> Sign &amp; send in one place</h3>
+        <ul>
+          <li>A readiness gauge tells you the moment it's done</li>
+          <li>Official FL 4-Point (2025) &amp; Wind-Mit (OIR-B1-1802) PDFs, with photo pages appended</li>
+          <li>Email the client from your saved template, or share a view-only link</li>
+          <li>A full Standards-of-Practice report for full-home jobs</li>
+          <li>View and export the PDF right in the app</li>
+        </ul>
+      </div>
+      <div class="featcard">
+        <h3><svg class="fi" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg> Set up once, then forget it</h3>
+        <ul>
+          <li>Your license, initials, signature &amp; logo saved and reused on every job</li>
+          <li>Keep multiple inspector profiles for a company</li>
+          <li>Runs in the browser — phone, tablet, or laptop, nothing to install</li>
+          <li>Always the latest version, no updates to chase</li>
+          <li>Your data lives on your device; back up any job anytime</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= PROOF ======================= -->
+<section class="proof" id="proof">
+  <div class="wrap">
+    <div class="proof-grid">
+      <div>
+        <div class="sec-head" style="margin-bottom: 26px;">
+          <p class="kicker"><span class="no">Sec 06</span> — Don't take it on faith</p>
+          <h2>The real tool, and the real forms it puts out.</h2>
+        </div>
+        <div class="proof-points">
+          <div class="proof-point">
+            <span class="pn"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></span>
+            <div>
+              <h4>You approve every finding</h4>
+              <p>The app drafts and pencils in answers, but nothing lands in the report on its own — you approve, edit, or reject each one, and it won't finalize until you have. Your license does the signing.</p>
+            </div>
+          </div>
+          <div class="proof-point">
+            <span class="pn"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 15h6M9 18h6"/></svg></span>
+            <div>
+              <h4>The official state forms — not look-alikes</h4>
+              <p>Exports are the real Florida 4-Point (2025) and Wind Mitigation OIR-B1-1802 (Rev. 04/26), filled on the actual state templates with your captioned photo pages appended.</p>
+            </div>
+          </div>
+          <div class="proof-point">
+            <span class="pn"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg></span>
+            <div>
+              <h4>Built on a job site, not in a boardroom</h4>
+              <p>Built with York Home Inspections in Brevard County, around the way inspections actually run in Melbourne, Viera, and Rockledge. No testimonials, no user counts, no star ratings — just the tool and what it produces.</p>
+            </div>
+          </div>
+        </div>
+        <span class="proof-note">A full recorded inspection — booking to signed report — is available on request.</span>
+      </div>
+      <div class="sheet">
+        <div class="sheet-head"><span>Review &amp; approve</span><span>You have the final say</span></div>
+        <img src="shots/review.png" alt="The review step where the inspector approves, edits, or rejects each drafted finding before signing" loading="lazy" />
       </div>
     </div>
   </div>
@@ -410,7 +596,7 @@
 <section class="exports">
   <div class="wrap">
     <div class="sec-head">
-      <p class="kicker"><span class="no">Sec 04</span> — What you hand over</p>
+      <p class="kicker"><span class="no">Sec 07</span> — What you hand over</p>
       <h2>Look as good on paper as you do on the roof.</h2>
       <p class="lede">No retyping into carrier portals, no lookalike templates. When the inspection is signed, everything the carrier, the agent, and your client expect is ready to send.</p>
     </div>
@@ -454,17 +640,17 @@
 <section class="trust on-navy">
   <div class="wrap">
     <div class="sec-head">
-      <p class="kicker"><span class="no">Sec 05</span> — Built to earn it</p>
+      <p class="kicker"><span class="no">Sec 08</span> — Built to earn it</p>
       <h2>Your name goes on the report. This tool treats that like it matters.</h2>
     </div>
     <div class="trust-grid">
       <div class="trust-card">
         <h3>You have the final say — always</h3>
-        <p>Every drafted finding and suggested answer comes to you first — approve it, change it, or throw it out. The tool suggests; the licensed inspector decides.</p>
+        <p>Every drafted finding and suggested answer comes to you first — approve it, change it, or throw it out. The report can't be finalized until you've reviewed each one. The tool suggests; the licensed inspector decides.</p>
       </div>
       <div class="trust-card">
         <h3>Blanks stay blank</h3>
-        <p>If the inspection didn't establish it, the form doesn't say it. Unverified fields are left blank on every export — never guessed, never filled in on your behalf.</p>
+        <p>If the inspection didn't establish it, the form doesn't say it. Unverified fields are left blank on every export — never guessed, never filled in on your behalf. And when the AI isn't sure, it says so and asks for a better photo.</p>
       </div>
       <div class="trust-card">
         <h3>Your clients' information stays with you</h3>
@@ -478,13 +664,28 @@
   </div>
 </section>
 
+<!-- ======================= ROI BAND ======================= -->
+<section class="roiband on-navy">
+  <div class="wrap">
+    <div>
+      <p class="kicker">Do the math your own way</p>
+      <h2 style="margin-top:12px;">It doesn't have to save an hour to be worth it.</h2>
+      <p>Skip one drive-back, or head off one carrier kickback and the redo that comes with it, and the year's already paid for. Mostly it buys back the one thing you can't get more of — the evening you'd have spent rebuilding forms at the kitchen table. Run even a handful of insurance jobs a month and it pays for itself the first night you get home done. Put honestly: the price isn't $20 versus $0 — it's your license doing clerk work versus doing the work only your license can do.</p>
+    </div>
+    <div class="anchor-card">
+      <div class="big">$98 / year, unlimited</div>
+      <p>Under $2 a week — less than one tank of gas a month, for every insurance inspection you run.</p>
+    </div>
+  </div>
+</section>
+
 <!-- ======================= PRICING ======================= -->
 <section id="pricing" style="background: var(--white);">
   <div class="wrap">
     <div class="sec-head">
-      <p class="kicker"><span class="no">Sec 06</span> — What it costs</p>
-      <h2>One evening of paperwork costs more than a month of this.</h2>
-      <p class="lede">Pick how you work: try it on one job, pay by the pull, or cover the whole year. No contracts, no per-seat games.</p>
+      <p class="kicker"><span class="no">Sec 09</span> — The offer</p>
+      <h2>First inspection free — start to signed.</h2>
+      <p class="lede">Sign up with your email and a card on file (not charged for the trial), then run one complete job from booking to signed report — so you feel the evening you get back before you ever pay a dime. After that, keep it however fits the way you work.</p>
     </div>
     <div class="price-grid">
       <div class="price-card">
@@ -532,12 +733,12 @@
         <ul>
           <li>Unlimited inspections</li>
           <li>Every feature, all year</li>
-          <li>Less than $2 a week</li>
+          <li>Under $2 a week</li>
         </ul>
         <a class="go" href="app/">Go unlimited</a>
       </div>
     </div>
-    <p class="price-note">Sign up in the app — your account unlocks as soon as your plan is confirmed. The trial requires a card on file so pull #2 is one tap, not another signup.</p>
+    <p class="price-note">Nothing to install. Cancel anytime. Your saved work stays yours — the trial's card on file just makes pull #2 one tap, not another signup.</p>
   </div>
 </section>
 
@@ -545,29 +746,37 @@
 <section>
   <div class="wrap">
     <div class="sec-head">
-      <p class="kicker"><span class="no">Sec 07</span> — Fair questions</p>
+      <p class="kicker"><span class="no">Sec 10</span> — Fair questions</p>
       <h2>Asked by inspectors, answered straight.</h2>
     </div>
     <div class="faq-list">
       <details>
-        <summary>What does it cost, and what do I have to install?</summary>
-        <p>Nothing to install — it runs in the browser on your phone, tablet, or computer. Your first inspection is the trial: sign up with your email, put a card on file, and run one full job on us. After that it's $5 per individual pull, $20/month for up to 10 inspections, or $98/year for unlimited. Cancel anytime; your saved work stays yours.</p>
+        <summary>Is the AI going to put wrong answers on a form I have to sign?</summary>
+        <p>The app drafts and pencils in answers, but it can't finalize a report without you — you approve, edit, or reject every single one, and it won't finalize until each has been reviewed. Unverified fields are left blank, never guessed, and when it isn't sure it says so and asks for a better photo. The AI never signs anything. Your license does.</p>
       </details>
       <details>
-        <summary>Does the AI write my report for me?</summary>
-        <p>It drafts; you decide. The app reads your photos, drafts findings, and pencils in form answers — and every single suggestion waits for you to approve, edit, or reject it. The report can't even be finalized until you've reviewed them all. You are, and stay, the inspector of record.</p>
+        <summary>$20 a month adds up — is it really worth it?</summary>
+        <p>Compare it to one evening, not to other apps. Skip a single drive-back or head off one bounced report and the year's already covered. If getting home to your family instead of the kitchen-table form even once a month is worth twenty bucks, it's already paid for. Run the unlimited year at $98 and it's under $2 a week — less than a tank of gas.</p>
       </details>
       <details>
-        <summary>Will carriers accept these forms?</summary>
-        <p>You export the official Florida 4-Point and the official OIR-B1-1802 wind mitigation, filled in on the real state and carrier templates — not lookalikes. Anything unverified is left blank rather than guessed. Acceptance is always the carrier's call, but your paperwork will never hand an underwriter an easy reason to kick it back.</p>
+        <summary>Do I have to install anything or learn new software?</summary>
+        <p>Nothing to install. It runs in your browser on the phone, tablet, or laptop you already carry to the job. Paste tomorrow's booking straight from Google Calendar and you're working — and the appointment syncs right back to your calendar.</p>
       </details>
       <details>
-        <summary>Where does my clients' data go?</summary>
-        <p>It stays with you. Inspections live on your own device — your subscription pays for the tool, not custody of your files. You can save a complete backup of any inspection whenever you like.</p>
+        <summary>Are these the actual forms carriers accept, or a look-alike?</summary>
+        <p>The real ones — the official Florida 4-Point (2025 edition) and Wind Mitigation OIR-B1-1802 (Rev. 04/26), filled on the real state templates with your captioned photo pages appended. What you email the client is the official document. A full Standards-of-Practice report is there for full-home jobs too.</p>
       </details>
       <details>
-        <summary>What if I need to change something after I've signed?</summary>
-        <p>Any edit after signing reopens the report, and you sign again. That's on purpose — it means a signed report is always exactly what you approved, nothing more and nothing less.</p>
+        <summary>Does it only work in Brevard County?</summary>
+        <p>It works statewide in Florida — records pull from FDOR plus the county appraisers and permit portals across the state. Every value shows its source with a link so you can verify it or override it. It was built in Brevard County with York Home Inspections, around the Melbourne, Viera, and Rockledge market.</p>
+      </details>
+      <details>
+        <summary>What if the public record is wrong?</summary>
+        <p>Every pulled value shows its source with a link, and you can override anything. You're never stuck with a number you don't trust — you confirm it against the property and correct it right there before it goes on the form.</p>
+      </details>
+      <details>
+        <summary>Where does my inspection data live, and am I locked in?</summary>
+        <p>On your own device. You can save a complete backup anytime, and if you ever cancel, your saved work stays yours.</p>
       </details>
     </div>
   </div>
@@ -576,13 +785,13 @@
 <!-- ======================= FINAL CTA ======================= -->
 <section class="final on-navy">
   <div class="wrap">
-    <p class="kicker"><span class="no">Sec 08</span> — Your evenings are waiting</p>
-    <h2>Make tonight's form session your last one.</h2>
-    <p>Open it on your phone and paste in tomorrow's booking — that's the whole setup. Walk the property once, approve what the camera found, sign in the driveway, and go home with nothing left to do.</p>
-    <a class="cta" href="app/">Start your trial inspection</a>
+    <p class="kicker"><span class="no">Ready when you are</span></p>
+    <h2>Your next inspection can end in the driveway.</h2>
+    <p>Run the first one free tonight — booking to signed report, on us. Sign in the driveway, email the client the official PDFs, and for once, drive home with nothing left to do. Nothing to install, card on file but not charged for the trial, cancel anytime.</p>
+    <a class="cta" href="app/">Run your first inspection free</a>
     <p class="sub" style="color: var(--navy-text);">First inspection on the trial · $5 a pull · $20/mo for 10 · $98/yr unlimited</p>
     <div class="badge-row">
-      <span>Plans from $20/mo</span><span>Official Florida forms</span><span>You approve every finding</span><span>Data stays on your device</span>
+      <span>Nothing to install</span><span>Official Florida forms</span><span>You approve every finding</span><span>Data stays on your device</span>
     </div>
   </div>
 </section>
@@ -609,12 +818,12 @@
       </div>
       <div>
         <strong>Your data, your device</strong>
-        Inspections are stored on your own device, not on a company server. No account required. Save a complete backup of any inspection at any time.
+        Inspections are stored on your own device, not on a company server. Save a complete backup of any inspection at any time.
       </div>
     </div>
     <div class="foot-bottom">
       <span>Nothing to install. First inspection on the trial — plans from $20/mo or $98/yr unlimited.</span>
-      <span><a href="terms.html">Terms &amp; Refunds</a> · <a href="privacy.html">Privacy</a> · <a href="mailto:richducat@gmail.com">Support</a> · Built by <a href="https://eb28.co/">EB28</a>, Melbourne FL</span>
+      <span><a href="how-it-works.html">How it works</a> · <a href="terms.html">Terms &amp; Refunds</a> · <a href="privacy.html">Privacy</a> · <a href="mailto:richducat@gmail.com">Support</a> · Built by <a href="https://eb28.co/">EB28</a>, Melbourne FL</span>
     </div>
   </div>
 </footer>

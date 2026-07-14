@@ -1,5 +1,6 @@
 {
-  "_instructions": "ga4MeasurementId activates site analytics. appleProviderToken enables Apple campaign parameters only on links that declare a campaign token; leave it empty until copied from App Store Connect.",
+  "_instructions": "ga4MeasurementId activates site analytics. appleProviderToken enables Apple campaign parameters. appleGoogleCampaignToken overrides a link's declared token only for paid Google traffic.",
   "ga4MeasurementId": "G-CTFMM8B2L2",
-  "appleProviderToken": ""
+  "appleProviderToken": "118693782",
+  "appleGoogleCampaignToken": "cc_google_search_2026"
 }

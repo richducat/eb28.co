@@ -37,17 +37,30 @@
 
     try {
       var params = new URLSearchParams(global.location.search);
+      var source = queryValue(params, ['utm_source']);
+      var medium = queryValue(params, ['utm_medium']);
+      var googleClickIdPresent = ['gclid', 'gbraid', 'wbraid'].some(function (key) {
+        return params.has(key);
+      });
       current = {
         campaign: queryValue(params, ['campaign', 'utm_campaign']),
         creative: queryValue(params, ['creative', 'utm_content']),
+        source: source,
+        medium: medium,
+        google_paid:
+          googleClickIdPresent ||
+          (source.toLowerCase() === 'google' && medium.toLowerCase() === 'cpc'),
       };
 
-      if (current.campaign || current.creative) {
+      if (current.campaign || current.creative || current.source || current.medium || current.google_paid) {
         global.sessionStorage.setItem('cadetcatch_attribution', JSON.stringify(current));
       } else {
         var stored = JSON.parse(global.sessionStorage.getItem('cadetcatch_attribution') || '{}');
         current.campaign = cleanValue(stored.campaign) || '';
         current.creative = cleanValue(stored.creative) || '';
+        current.source = cleanValue(stored.source) || '';
+        current.medium = cleanValue(stored.medium) || '';
+        current.google_paid = stored.google_paid === true;
       }
     } catch (_) {
       // URLSearchParams or sessionStorage can be unavailable in hardened browsers.
@@ -56,6 +69,9 @@
     return {
       campaign: current.campaign || 'unattributed',
       creative: current.creative || 'unattributed',
+      source: current.source || 'unattributed',
+      medium: current.medium || 'unattributed',
+      google_paid: current.google_paid === true,
     };
   }
 
@@ -77,11 +93,19 @@
 
   function configureAppleCampaignLinks(config) {
     var providerToken = cleanValue(config && config.appleProviderToken, 40);
+    var googleCampaignToken = cleanValue(config && config.appleGoogleCampaignToken, 40);
     if (!providerToken || !/^\d+$/.test(providerToken)) return;
 
-    var links = document.querySelectorAll('[data-cc-apple-campaign-token]');
+    var attribution = readAttribution();
+    var links = document.querySelectorAll('[data-cc-app-store]');
     Array.prototype.forEach.call(links, function (link) {
-      var campaignToken = cleanValue(link.getAttribute('data-cc-apple-campaign-token'), 40);
+      var declaredCampaignToken = cleanValue(
+        link.getAttribute('data-cc-apple-campaign-token'),
+        40,
+      );
+      var campaignToken = attribution.google_paid && googleCampaignToken
+        ? googleCampaignToken
+        : declaredCampaignToken;
       if (!campaignToken || !/^[A-Za-z0-9_-]+$/.test(campaignToken)) return;
 
       try {

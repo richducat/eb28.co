@@ -12,6 +12,8 @@
   var pendingEvents = [];
   var ga4Enabled = false;
   var configResolved = false;
+  var appleAttributionConfig = null;
+  var appleLinkObserver = null;
 
   global.dataLayer = global.dataLayer || [];
   global.gtag = global.gtag || function gtag() {
@@ -91,33 +93,62 @@
     global.gtag('event', event.name, event.parameters);
   }
 
-  function configureAppleCampaignLinks(config) {
+  function configureAppleCampaignLink(link, config) {
     var providerToken = cleanValue(config && config.appleProviderToken, 40);
     var googleCampaignToken = cleanValue(config && config.appleGoogleCampaignToken, 40);
     if (!providerToken || !/^\d+$/.test(providerToken)) return;
+    if (!link || typeof link.getAttribute !== 'function') return;
 
     var attribution = readAttribution();
+    var declaredCampaignToken = cleanValue(
+      link.getAttribute('data-cc-apple-campaign-token'),
+      40,
+    );
+    var campaignToken = attribution.google_paid && googleCampaignToken
+      ? googleCampaignToken
+      : declaredCampaignToken;
+    if (!campaignToken || !/^[A-Za-z0-9_-]+$/.test(campaignToken)) return;
+
+    try {
+      var url = new URL(link.href);
+      url.searchParams.set('pt', providerToken);
+      url.searchParams.set('ct', campaignToken);
+      url.searchParams.set('mt', '8');
+      link.href = url.toString();
+    } catch (_) {
+      // Keep the base App Store URL when URL parsing is unavailable.
+    }
+  }
+
+  function configureAppleCampaignLinks(config) {
+    appleAttributionConfig = config;
+
     var links = document.querySelectorAll('[data-cc-app-store]');
     Array.prototype.forEach.call(links, function (link) {
-      var declaredCampaignToken = cleanValue(
-        link.getAttribute('data-cc-apple-campaign-token'),
-        40,
-      );
-      var campaignToken = attribution.google_paid && googleCampaignToken
-        ? googleCampaignToken
-        : declaredCampaignToken;
-      if (!campaignToken || !/^[A-Za-z0-9_-]+$/.test(campaignToken)) return;
-
-      try {
-        var url = new URL(link.href);
-        url.searchParams.set('pt', providerToken);
-        url.searchParams.set('ct', campaignToken);
-        url.searchParams.set('mt', '8');
-        link.href = url.toString();
-      } catch (_) {
-        // Keep the base App Store URL when URL parsing is unavailable.
-      }
+      configureAppleCampaignLink(link, config);
     });
+
+    if (appleLinkObserver || typeof global.MutationObserver !== 'function') return;
+    var root = document.documentElement || document.body;
+    if (!root) return;
+
+    appleLinkObserver = new global.MutationObserver(function (mutations) {
+      Array.prototype.forEach.call(mutations, function (mutation) {
+        Array.prototype.forEach.call(mutation.addedNodes || [], function (node) {
+          if (!node || node.nodeType !== 1) return;
+          if (typeof node.matches === 'function' && node.matches('[data-cc-app-store]')) {
+            configureAppleCampaignLink(node, config);
+          }
+          if (typeof node.querySelectorAll === 'function') {
+            var nestedLinks = node.querySelectorAll('[data-cc-app-store]');
+            Array.prototype.forEach.call(nestedLinks, function (nestedLink) {
+              configureAppleCampaignLink(nestedLink, config);
+            });
+          }
+        });
+      });
+    });
+    appleLinkObserver.observe(root, { childList: true, subtree: true });
   }
 
   function trackCadetCatchEvent(name, parameters) {
@@ -149,6 +180,10 @@
         ? event.target.closest('[data-cc-app-store]')
         : null;
       if (!target) return;
+
+      if (appleAttributionConfig) {
+        configureAppleCampaignLink(target, appleAttributionConfig);
+      }
 
       trackCadetCatchEvent('app_store_click', {
         link_location: target.getAttribute('data-cc-link-location') || 'unknown',

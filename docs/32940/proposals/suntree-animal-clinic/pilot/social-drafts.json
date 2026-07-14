@@ -1,53 +1,41 @@
 [
   {
-    "id": "draft_1",
+    "id": "article_feed_story",
     "orgId": "pilot_suntree-animal-clinic",
-    "title": "Before the first visit",
-    "body": "A useful new-client page can explain which records and medication notes the clinic wants before arrival—after the clinic approves the checklist.",
+    "format": "1080x1350_jpeg",
     "channels": [
-      "facebook",
       "instagram",
+      "facebook",
       "linkedin"
     ],
+    "title": "A calmer first visit starts before the drive.",
+    "hook": "Bring the story your pet cannot tell in the exam room.",
+    "body": "A better veterinary appointment checklist in Melbourne starts with a better handoff. Records. Medications. Timeline. Questions. Confirmation. Read the complete owner-review guide.",
+    "derivedFrom": "article/index.html",
+    "versionHash": "bade0f498611c8acc51f8b79d562acdd13356296b9211f92d60e21e4c15b46ec",
     "approvalRequired": true,
-    "publicationStatus": "draft_only",
-    "sourceClaimFields": [
-      "business_name",
-      "category"
-    ]
+    "publicationStatus": "owner_review_only"
   },
   {
-    "id": "draft_2",
+    "id": "article_vertical_reel",
     "orgId": "pilot_suntree-animal-clinic",
-    "title": "Appointment requests need a finish line",
-    "body": "A website request is not a confirmed appointment. The clearest experience tells pet owners what happens after they submit and who confirms the visit.",
+    "format": "1080x1920_h264_15s",
     "channels": [
-      "facebook",
-      "instagram",
-      "linkedin"
+      "instagram_reels",
+      "facebook_reels",
+      "tiktok"
     ],
-    "approvalRequired": true,
-    "publicationStatus": "draft_only",
-    "sourceClaimFields": [
-      "business_name",
-      "category"
-    ]
-  },
-  {
-    "id": "draft_3",
-    "orgId": "pilot_suntree-animal-clinic",
-    "title": "Clinical content stays human-reviewed",
-    "body": "Veterinary services and urgent guidance should remain under item-level clinic approval. That boundary is part of the production system, not fine print.",
-    "channels": [
-      "facebook",
-      "instagram",
-      "linkedin"
+    "title": "Bring the story your pet cannot tell in the exam room.",
+    "frames": [
+      "Article hook",
+      "Gather the record packet",
+      "Photograph medication labels",
+      "Write a one-page timeline",
+      "Read the complete owner-review guide"
     ],
+    "derivedFrom": "article/index.html",
+    "versionHash": "bade0f498611c8acc51f8b79d562acdd13356296b9211f92d60e21e4c15b46ec",
     "approvalRequired": true,
-    "publicationStatus": "draft_only",
-    "sourceClaimFields": [
-      "business_name",
-      "category"
-    ]
+    "publicationStatus": "owner_review_only"
   }
 ]

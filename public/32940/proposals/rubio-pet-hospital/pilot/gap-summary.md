@@ -8,17 +8,17 @@ The official HTTPS surface did not complete the July 14 fetch. Treat certificate
 
 ## Premium website opportunity
 
-Create a calm appointment and new-client path while keeping every clinical statement under item-level approval.
+Service availability, emergency guidance, staff credentials and Spanish-language support require owner confirmation before launch.
 
-## Content system opportunity
+## Article-led campaign opportunity
 
-- Encode owner-confirmed services, locations, contact routing and restricted claims in one Business Brain.
-- Build a Monday, Wednesday and Friday social cadence from approved facts.
-- Publish useful articles only after claim provenance and exact-version approval pass.
-- Keep customer-facing account verification, 2FA and OAuth with the customer.
+- Publish-ready owner-review article: **New Pet Patient Visit in Suntree: What to Prepare Before You Request**
+- 1,290 words with anchored sections, quick answer, FAQ, source list and conversion checkpoint.
+- One 1080×1350 editorial feed creative and one 1080×1920 H.264 motion piece derived from the article.
+- No disconnected filler posts, invented business proof or unattended publication.
 
 ## Owner-review requirements
 
 - Confirm every service, credential, price, offer, testimonial, hour and location fact.
 - Confirm rights to logos, team photos, facility photos and customer proof.
-- Approve the exact website and content versions before staging or publication.
+- Approve the exact article, website and campaign versions before staging or publication.

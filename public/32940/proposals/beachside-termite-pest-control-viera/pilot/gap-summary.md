@@ -8,17 +8,17 @@ The official HTTPS source was reachable on July 14. Recheck it immediately befor
 
 ## Premium website opportunity
 
-Replace the fixed legacy layout; withhold published discounts and hours until the owner reconfirms them.
+Published discounts and hours are deliberately withheld from this concept until the owner reconfirms them for launch.
 
-## Content system opportunity
+## Article-led campaign opportunity
 
-- Encode owner-confirmed services, locations, contact routing and restricted claims in one Business Brain.
-- Build a Monday, Wednesday and Friday social cadence from approved facts.
-- Publish useful articles only after claim provenance and exact-version approval pass.
-- Keep customer-facing account verification, 2FA and OAuth with the customer.
+- Publish-ready owner-review article: **WDO Inspection in Viera: What Property Owners Should Know Before Scheduling**
+- 1,368 words with anchored sections, quick answer, FAQ, source list and conversion checkpoint.
+- One 1080×1350 editorial feed creative and one 1080×1920 H.264 motion piece derived from the article.
+- No disconnected filler posts, invented business proof or unattended publication.
 
 ## Owner-review requirements
 
 - Confirm every service, credential, price, offer, testimonial, hour and location fact.
 - Confirm rights to logos, team photos, facility photos and customer proof.
-- Approve the exact website and content versions before staging or publication.
+- Approve the exact article, website and campaign versions before staging or publication.

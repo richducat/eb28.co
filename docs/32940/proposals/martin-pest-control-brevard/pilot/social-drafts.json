@@ -1,53 +1,41 @@
 [
   {
-    "id": "draft_1",
+    "id": "article_feed_story",
     "orgId": "pilot_martin-pest-control-brevard",
-    "title": "Document the signs, not a diagnosis",
-    "body": "A few clear notes about what you saw, where and when can help a pest-control team prepare for the first conversation without promising a remote diagnosis.",
+    "format": "1080x1350_jpeg",
     "channels": [
-      "facebook",
       "instagram",
+      "facebook",
       "linkedin"
     ],
+    "title": "Document the signs. Skip the guesswork.",
+    "hook": "Five notes that make the first pest-control conversation more useful.",
+    "body": "A better pest inspection in Brevard County starts with a better handoff. Location. Timing. Photos. Property changes. Access. Read the complete owner-review guide.",
+    "derivedFrom": "article/index.html",
+    "versionHash": "a243aa50866ae29cc5f4b82d4d1087ea67df17c9288b6cd71be345447ebaded5",
     "approvalRequired": true,
-    "publicationStatus": "draft_only",
-    "sourceClaimFields": [
-      "business_name",
-      "category"
-    ]
+    "publicationStatus": "owner_review_only"
   },
   {
-    "id": "draft_2",
+    "id": "article_vertical_reel",
     "orgId": "pilot_martin-pest-control-brevard",
-    "title": "Termite and general pest paths are not the same",
-    "body": "A useful service website keeps termite education and general pest requests separate so homeowners can reach the right conversation faster.",
+    "format": "1080x1920_h264_15s",
     "channels": [
-      "facebook",
-      "instagram",
-      "linkedin"
+      "instagram_reels",
+      "facebook_reels",
+      "tiktok"
     ],
-    "approvalRequired": true,
-    "publicationStatus": "draft_only",
-    "sourceClaimFields": [
-      "business_name",
-      "category"
-    ]
-  },
-  {
-    "id": "draft_3",
-    "orgId": "pilot_martin-pest-control-brevard",
-    "title": "Local coverage should be easy to verify",
-    "body": "A focused service-area section can show where the business works without burying customers in dozens of repetitive location pages.",
-    "channels": [
-      "facebook",
-      "instagram",
-      "linkedin"
+    "title": "Five notes that make the first pest-control conversation more useful.",
+    "frames": [
+      "Article hook",
+      "Mark the exact location",
+      "Record timing and pattern",
+      "Photograph without disturbing",
+      "Read the complete owner-review guide"
     ],
+    "derivedFrom": "article/index.html",
+    "versionHash": "a243aa50866ae29cc5f4b82d4d1087ea67df17c9288b6cd71be345447ebaded5",
     "approvalRequired": true,
-    "publicationStatus": "draft_only",
-    "sourceClaimFields": [
-      "business_name",
-      "category"
-    ]
+    "publicationStatus": "owner_review_only"
   }
 ]

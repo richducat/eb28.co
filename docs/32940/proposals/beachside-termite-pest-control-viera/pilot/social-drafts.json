@@ -1,53 +1,41 @@
 [
   {
-    "id": "draft_1",
+    "id": "article_feed_story",
     "orgId": "pilot_beachside-termite-pest-control-viera",
-    "title": "Document the signs, not a diagnosis",
-    "body": "A few clear notes about what you saw, where and when can help a pest-control team prepare for the first conversation without promising a remote diagnosis.",
+    "format": "1080x1350_jpeg",
     "channels": [
-      "facebook",
       "instagram",
+      "facebook",
       "linkedin"
     ],
+    "title": "Know what the report covers—and what it cannot.",
+    "hook": "A WDO report is not a termite guess or a structural guarantee.",
+    "body": "A better WDO inspection in Viera starts with a better handoff. Purpose. Access. Evidence. Report. Limits. Follow-up. Read the complete owner-review guide.",
+    "derivedFrom": "article/index.html",
+    "versionHash": "f1219639ef2aa841e7df9b3ac9be54534d98e26eef992a11be5790ebab7ee1fc",
     "approvalRequired": true,
-    "publicationStatus": "draft_only",
-    "sourceClaimFields": [
-      "business_name",
-      "category"
-    ]
+    "publicationStatus": "owner_review_only"
   },
   {
-    "id": "draft_2",
+    "id": "article_vertical_reel",
     "orgId": "pilot_beachside-termite-pest-control-viera",
-    "title": "Termite and general pest paths are not the same",
-    "body": "A useful service website keeps termite education and general pest requests separate so homeowners can reach the right conversation faster.",
+    "format": "1080x1920_h264_15s",
     "channels": [
-      "facebook",
-      "instagram",
-      "linkedin"
+      "instagram_reels",
+      "facebook_reels",
+      "tiktok"
     ],
-    "approvalRequired": true,
-    "publicationStatus": "draft_only",
-    "sourceClaimFields": [
-      "business_name",
-      "category"
-    ]
-  },
-  {
-    "id": "draft_3",
-    "orgId": "pilot_beachside-termite-pest-control-viera",
-    "title": "Local coverage should be easy to verify",
-    "body": "A focused service-area section can show where the business works without burying customers in dozens of repetitive location pages.",
-    "channels": [
-      "facebook",
-      "instagram",
-      "linkedin"
+    "title": "A WDO report is not a termite guess or a structural guarantee.",
+    "frames": [
+      "Article hook",
+      "Confirm the inspection purpose",
+      "Open visible access routes",
+      "Read findings and limitations separately",
+      "Read the complete owner-review guide"
     ],
+    "derivedFrom": "article/index.html",
+    "versionHash": "f1219639ef2aa841e7df9b3ac9be54534d98e26eef992a11be5790ebab7ee1fc",
     "approvalRequired": true,
-    "publicationStatus": "draft_only",
-    "sourceClaimFields": [
-      "business_name",
-      "category"
-    ]
+    "publicationStatus": "owner_review_only"
   }
 ]

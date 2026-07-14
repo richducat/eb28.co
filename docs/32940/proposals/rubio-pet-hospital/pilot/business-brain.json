@@ -19,15 +19,21 @@
   ],
   "audience": "A calm owner-review concept centered on appointment requests, new-patient preparation and dependable location information.",
   "tone": "Calm teal, warm white and deep navy; location confidence, appointment clarity and a precise clinical information hierarchy.",
-  "primaryAction": "Owner-review CTA only until verified contact routing is enabled",
+  "primaryAction": "EB28 owner-review CTA only until verified contact routing is enabled",
   "approvalPolicy": "item",
+  "campaign": {
+    "title": "New Pet Patient Visit in Suntree: What to Prepare Before You Request",
+    "primaryKeyword": "new pet patient visit in Suntree",
+    "versionHash": "5470efdd874bd356625f2cc2b38063af56ea74216c38eadc0da34480fcbc21ec"
+  },
   "restrictedClaims": [
     "Prices",
     "Offers",
     "Availability",
     "Credentials",
     "Testimonials",
-    "Guaranteed outcomes"
+    "Guaranteed outcomes",
+    "Diagnosis or treatment advice"
   ],
   "sourceClaims": [
     {
@@ -40,56 +46,56 @@
     {
       "field": "category",
       "value": "Veterinary hospital",
-      "status": "needs_review",
-      "sourceType": "public_profile",
+      "status": "owner_review_required",
+      "sourceType": "official_or_public_business_source",
       "sourceUrl": "https://rubiopethospital.com/"
     },
     {
       "field": "phone",
       "value": "(321) 422-6900",
-      "status": "supported",
+      "status": "supported_not_activated",
       "sourceType": "official_site",
       "sourceUrl": "https://rubiopethospital.com/"
     },
     {
       "field": "service",
       "value": "Appointment pathways",
-      "status": "needs_review",
+      "status": "owner_review_required",
       "sourceType": "official_site",
       "sourceUrl": "https://rubiopethospital.com/"
     },
     {
       "field": "service",
       "value": "New-patient information",
-      "status": "needs_review",
+      "status": "owner_review_required",
       "sourceType": "official_site",
       "sourceUrl": "https://rubiopethospital.com/"
     },
     {
       "field": "service",
       "value": "Wellness content structure",
-      "status": "needs_review",
+      "status": "owner_review_required",
       "sourceType": "official_site",
       "sourceUrl": "https://rubiopethospital.com/"
     },
     {
       "field": "service",
       "value": "Urgent guidance boundaries",
-      "status": "needs_review",
+      "status": "owner_review_required",
       "sourceType": "official_site",
       "sourceUrl": "https://rubiopethospital.com/"
     },
     {
       "field": "service",
       "value": "Location confidence",
-      "status": "needs_review",
+      "status": "owner_review_required",
       "sourceType": "official_site",
       "sourceUrl": "https://rubiopethospital.com/"
     },
     {
       "field": "service",
       "value": "Owner-approved bilingual expansion",
-      "status": "needs_review",
+      "status": "owner_review_required",
       "sourceType": "official_site",
       "sourceUrl": "https://rubiopethospital.com/"
     }

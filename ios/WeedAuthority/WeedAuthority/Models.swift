@@ -94,11 +94,6 @@ struct RecProfile: Codable, Equatable {
     var expirationDate: Date = Calendar.current.date(byAdding: .month, value: 7, to: .now) ?? .now
     var notes: String = ""
     var acceptedPrivacy: Bool = false
-    
-    // Synced medical allotment fields
-    var syncedFlowerGrams: Double? = nil
-    var syncedConcentrateGrams: Double? = nil
-    var lastSyncDate: Date? = nil
 
     var isStarted: Bool {
         !legalName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ||
@@ -113,6 +108,7 @@ struct PurchaseEntry: Identifiable, Codable, Hashable {
     var unit: PurchaseUnit
     var purchasedAt: Date
     var retailerName: String
+    var stateID: String? = nil
 
     var formattedAmount: String {
         let formatted = amount.formatted(.number.precision(.fractionLength(0...2)))
@@ -224,7 +220,7 @@ enum AuthorityContent {
             portalURL: URL(string: "https://search.cannabis.ca.gov/")!,
             regulatorURL: URL(string: "https://www.cannabis.ca.gov/")!,
             limitSummary: "Adult-use daily sale limit: 28.5 g non-concentrated cannabis, 8 g concentrate, and 6 immature plants. Medicinal limits can be higher with physician recommendation.",
-            officialCheckSummary: "California does not provide one central patient allotment login in this app. Use licensed retailers and your physician recommendation for official medicinal limits.",
+            officialCheckSummary: "California does not publish a central patient balance. Use your physician recommendation and a licensed retailer for official medicinal limits.",
             defaultWindowDays: 1,
             flowerLimitGrams: 28.5,
             concentrateLimitGrams: 8,
@@ -240,7 +236,7 @@ enum AuthorityContent {
             portalURL: URL(string: "https://mmuregistry.flhealth.gov/")!,
             regulatorURL: URL(string: "https://knowthefactsmmj.com/registry/")!,
             limitSummary: "Florida recommendations are route-specific and recorded in the Medical Marijuana Use Registry. The official amount-available page is the source of truth.",
-            officialCheckSummary: "Open the Florida MMUR to view your patient certifications, orders, and amount-available calculation page.",
+            officialCheckSummary: "Sign in to Florida MMUR in Safari, open Amount Available or Orders, then import a screenshot for on-device review.",
             defaultWindowDays: 70,
             flowerLimitGrams: 70.87,
             concentrateLimitGrams: nil,
@@ -256,7 +252,7 @@ enum AuthorityContent {
             portalURL: URL(string: "https://individual-licensing.azdhs.gov/")!,
             regulatorURL: URL(string: "https://www.azdhs.gov/licensing/medical-marijuana/")!,
             limitSummary: "Arizona medical patients may purchase up to 2.5 oz of medical marijuana in a 14-day window.",
-            officialCheckSummary: "Use Arizona's individual licensing portal for card status. Retailers log medical allotment activity at sale.",
+            officialCheckSummary: "Sign in to Arizona's patient portal in Safari, open Remaining Allotment, then import a screenshot for on-device review.",
             defaultWindowDays: 14,
             flowerLimitGrams: 70.87,
             concentrateLimitGrams: nil,
@@ -269,10 +265,10 @@ enum AuthorityContent {
             adultUseAge: "21+",
             medicalAge: "Certified patient",
             portalTitle: "New York Medical Cannabis Data Management System",
-            portalURL: URL(string: "https://cannabis.ny.gov/patient-registration-instructions")!,
+            portalURL: URL(string: "https://cannabis.ny.gov/patients")!,
             regulatorURL: URL(string: "https://cannabis.ny.gov/")!,
             limitSummary: "New York patients use certification and state medical cannabis systems. Patients should confirm current dispensation rules in MCDMS or with a registered organization.",
-            officialCheckSummary: "Open New York patient registration instructions and MCDMS access to confirm card and certification details.",
+            officialCheckSummary: "New York does not publish a patient balance for import. Use the official patient page for certification and registration information.",
             defaultWindowDays: 60,
             flowerLimitGrams: nil,
             concentrateLimitGrams: nil,
@@ -288,7 +284,7 @@ enum AuthorityContent {
             portalURL: URL(string: "https://padohmmp.custhelp.com/app/login")!,
             regulatorURL: URL(string: "https://www.pa.gov/agencies/health/programs/medical-marijuana/medical-marijuana-patients.html")!,
             limitSummary: "Pennsylvania patients use the state registry and may obtain medical marijuana from approved dispensaries with a valid ID card.",
-            officialCheckSummary: "Use the Pennsylvania registry for profile, certification, card, and program status.",
+            officialCheckSummary: "Pennsylvania's patient registry covers profile, certification, and card status; it does not publish a patient remaining balance for import.",
             defaultWindowDays: 30,
             flowerLimitGrams: nil,
             concentrateLimitGrams: nil,
@@ -301,10 +297,10 @@ enum AuthorityContent {
             adultUseAge: "21+",
             medicalAge: "Registered patient",
             portalTitle: "Ohio Medical Marijuana Registry",
-            portalURL: URL(string: "https://medicalmarijuana.ohio.gov/")!,
+            portalURL: URL(string: "https://www.ohiomedicalmarijuanaregistry.com/")!,
             regulatorURL: URL(string: "https://com.ohio.gov/divisions-and-programs/cannabis-control")!,
-            limitSummary: "Ohio medical purchase limits and day-supply rules can change. Confirm current days-supply and purchase status in the registry.",
-            officialCheckSummary: "Open Ohio's medical marijuana resources and registry support for official remaining days and recommendation details.",
+            limitSummary: "Ohio replaced whole-day-unit tracking with daily transaction limits on March 24, 2026. Current product-specific limits are verified at the dispensary.",
+            officialCheckSummary: "Ohio does not provide one patient-facing remaining-days balance for import. Use the registry for patient status and current DCC guidance for product limits.",
             defaultWindowDays: 90,
             flowerLimitGrams: nil,
             concentrateLimitGrams: nil,
@@ -320,7 +316,7 @@ enum AuthorityContent {
             portalURL: URL(string: "https://ccb.nv.gov/")!,
             regulatorURL: URL(string: "https://ccb.nv.gov/")!,
             limitSummary: "Nevada purchase and possession limits vary by adult-use or medical status. Confirm cardholder status through Nevada state resources.",
-            officialCheckSummary: "Use Nevada Cannabis Compliance Board resources and your dispensary receipt history for official compliance.",
+            officialCheckSummary: "Nevada's patient system manages applications and cards; it does not publish a patient purchase balance for import.",
             defaultWindowDays: 14,
             flowerLimitGrams: 70.87,
             concentrateLimitGrams: nil,

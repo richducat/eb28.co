@@ -19,14 +19,14 @@
     }
   },
   "version": {
-    "marketingVersion": "2.0.0",
-    "buildNumber": "4",
+    "marketingVersion": "2.0.1",
+    "buildNumber": "6",
     "releaseType": "MANUAL",
     "phasedRelease": false,
-    "promotionalText": "Find legal retailers, open official state rec portals, track allotment privately, and compare cannabis products before checkout.",
-    "description": "Weed Authority is a premium iPhone app for legal cannabis customers and medical marijuana patients.\n\nUse it to find nearby cannabis retailers, verify official state sources, open medical cannabis portals, save products, compare deals, and keep a private local receipt ledger before checkout.\n\nWhat you can do:\n\n- Search nearby cannabis retailers through Apple Maps\n- Save retailers and products for a cleaner shopping trip\n- Open official state cannabis portals and regulator resources\n- Store medical rec details locally on your iPhone\n- Track purchase entries against state-specific planning windows where limits are available\n- Compare flower, edibles, topicals, concentrates, tinctures, and pre-rolls\n- Learn how to verify licenses, read labels, and confirm eligibility before ordering\n\nWeed Authority does not require an account. The app uses Google AdMob banner ads with in-app ad privacy choices, while medical rec profile fields, saved products, saved retailers, and purchase ledger entries stay on the device unless the user chooses to open an external official state portal or retailer website.\n\nThe app does not provide medical advice, dosage recommendations, diagnosis, treatment, or legal advice. State registries, physicians, licensed retailers, and regulators remain the official source for eligibility, purchase limits, and compliance.\n\nPrivacy Policy: https://eb28.co/weedauthority/privacy/\nTerms: https://eb28.co/weedauthority/terms/",
-    "keywords": ["cannabis", "dispensary", "weed", "medical", "marijuana", "rec", "allotment", "delivery", "deals", "thc", "cbd"],
-    "whatsNew": "Launch build with native retailer search, official state portal links, local rec vault, private purchase ledger, saved products, deals, state cannabis education, and AdMob banner support."
+    "promotionalText": "Open official state rec portals in Safari, privately confirm Florida or Arizona allotment snapshots, and find legal cannabis retailers.",
+    "description": "Weed Authority is an iPhone and iPad app for adults and qualified medical cannabis patients in supported U.S. states.\n\nUse official sources first: find nearby legal cannabis retailers, open state medical-cannabis portals in Safari, keep a private purchase ledger, and save an allotment snapshot you have reviewed and confirmed.\n\nWhat you can do:\n\n- Search nearby cannabis retailers through Apple Maps\n- Save retailers and informational product cards for a more organized shopping trip\n- Open official state cannabis portals and regulator resources in Safari\n- In Florida and Arizona, choose a portal screenshot for on-device text recognition\n- Review and explicitly confirm the value, unit, and route or category before saving\n- Keep confirmed normalized snapshots in the device-only Apple Keychain\n- Track private purchase entries and mark a saved snapshot stale after 24 hours or a new recorded purchase\n- Learn how to verify licenses, read labels, and confirm eligibility with official sources\n\nWeed Authority does not require an app account. It never receives your state portal username, password, MFA code, session cookies, or Safari browsing data. It does not automate portal navigation, inject scripts, read portal page content, or run background or live portal synchronization.\n\nFor supported Florida and Arizona screens, Apple Vision text recognition runs on the device. The selected screenshot is not persisted by Weed Authority. Only the normalized value and related details you explicitly confirm are saved in the device-only Keychain.\n\nGoogle AdMob banners appear only on non-REC screens and use in-app consent and privacy controls. The Rec tab is ad-free. Weed Authority does not send REC profile, screenshot-derived, allotment, or purchase-ledger values to Google.\n\nWeed Authority does not sell, reserve, facilitate the purchase of, or deliver cannabis. There is no cart, checkout, or payment flow. The app does not provide medical advice, dosage recommendations, diagnosis, treatment, or legal advice. Saved values can be incomplete, stale, or incorrect; the state portal and licensed dispensary remain authoritative.\n\nPrivacy Policy: https://eb28.co/weedauthority/privacy/\nTerms: https://eb28.co/weedauthority/terms/",
+    "keywords": ["cannabis", "dispensary", "weed", "medical", "marijuana", "rec", "allotment", "registry", "deals", "thc", "cbd"],
+    "whatsNew": "Adds a privacy-preserving REC snapshot workflow for supported Florida and Arizona portal screens. Choose a screenshot, run text recognition on device, review every value, and save only the confirmed snapshot in the device-only Keychain. Portal login remains in Safari, the Rec tab is ad-free, and there is no background or live state sync."
   },
   "urls": {
     "marketingUrl": "https://eb28.co/weedauthority/",
@@ -43,17 +43,20 @@
     "demoUsername": "",
     "demoPassword": "",
     "notes": [
-      "Version 2.0.0 build 4 is a new native SwiftUI iPhone and iPad app.",
-      "No login is required.",
+      "Version 2.0.1 build 6 is a native SwiftUI iPhone and iPad update with a user-directed local screenshot-import workflow for supported Florida and Arizona portal screens.",
+      "No Weed Authority account or app login is required. State portal login occurs only in the system Safari view with the user's own authorized account.",
       "Open Explore to search Apple Maps for cannabis retailers by city, state, or ZIP. The curated retailer cards include regulator source links.",
-      "Open Rec to unlock the local rec vault, store optional card details on device, open official state portals, and add purchase ledger entries.",
-      "Open Deals to filter products, save products, and review product details without checkout or payment.",
+      "Open Rec to unlock the device-protected local REC vault, store optional card details, open official state sources, and add private purchase-ledger entries.",
+      "For Florida or Arizona, the user can select a portal screenshot from Photos. Apple Vision text recognition runs on device, accepts only supported state labels with an explicit unit, and requires explicit confirmation before a normalized snapshot is saved in the device-only Keychain. The raw screenshot is not persisted by Weed Authority.",
+      "Other supported states provide official source links and private manual tracking without claiming a live state balance.",
+      "Open Deals to filter and save informational product cards. There is no cart, ordering, reservation, delivery, checkout, or payment flow.",
       "Open Learn to review official state source links and compliance education.",
       "Open Account to access privacy, terms, support, ad privacy choices, and local data deletion.",
-      "The app does not sell cannabis, does not collect payment, does not provide medical dosage guidance, and does not scrape state registry credentials.",
-      "State registry portals and regulator websites open in Safari. Those external services are the official source for eligibility and purchase limits.",
-      "The app stores user-entered rec profile and receipt data locally on the device.",
-      "The app uses a dedicated Weed Authority Google AdMob iOS app and banner ad unit with Google User Messaging Platform privacy choices. It has no account creation and does not store state registry credentials."
+      "The app does not sell or facilitate cannabis purchases, collect payment, or provide medical dosage guidance, diagnosis, treatment, or legal advice.",
+      "Weed Authority never receives portal usernames, passwords, MFA codes, session cookies, or Safari browsing data. It does not automate portal navigation, inject scripts, read the portal DOM, or perform background or live synchronization.",
+      "A confirmed snapshot becomes stale after 24 hours and is invalidated after a recorded purchase. It is a convenience copy; the state portal and licensed dispensary remain authoritative.",
+      "Google AdMob banners use Google User Messaging Platform consent and privacy choices and appear only on non-REC screens. The Rec tab is ad-free, and REC profile, screenshot-derived, allotment, and purchase-ledger values are not sent to Google.",
+      "The app contains no fake synchronized state values or demo state account. These notes do not indicate that build 6 has been uploaded or submitted."
     ]
   },
   "distribution": {
@@ -82,7 +85,7 @@
   "privacy": {
     "privacyPolicyLinkedInApp": true,
     "appPrivacyAnswersCurrent": true,
-    "trackingUsed": false,
+    "trackingUsed": true,
     "attFlowImplemented": false,
     "accountDeletionImplemented": false,
     "privacyManifestReviewed": true,
@@ -92,41 +95,36 @@
   "assets": {
     "appIconSource": "app-icon-1024.png",
     "iphoneScreenshots": [
-      "screenshots/iphone-65/01-find-legal-retailers.png",
-      "screenshots/iphone-65/02-check-your-rec.png",
-      "screenshots/iphone-65/03-compare-deals.png",
-      "screenshots/iphone-65/04-know-the-rules.png",
-      "screenshots/iphone-65/05-private-by-design.png"
+      "screenshots/iphone-69/01-explore.png",
+      "screenshots/iphone-69/02-rec.png",
+      "screenshots/iphone-69/03-deals.png",
+      "screenshots/iphone-69/04-learn.png",
+      "screenshots/iphone-69/05-account.png"
     ],
     "ipadScreenshots": [
-      "screenshots/ipad-129/01-cannabis-planning.png",
-      "screenshots/ipad-129/02-rec-tools.png",
-      "screenshots/ipad-129/03-shop-smarter.png"
+      "screenshots/ipad-13/01-explore.png",
+      "screenshots/ipad-13/02-rec.png",
+      "screenshots/ipad-13/03-deals.png"
     ],
     "appPreviewVideos": []
   },
   "verification": {
     "testedDevices": [
-      "iPhone 17 Pro simulator",
-      "iPad Pro 13-inch simulator"
+      "iPhone 16 Pro simulator, iOS 18.2",
+      "iPhone 16 Pro Max simulator, iOS 18.2",
+      "iPhone 13 Pro Max simulator, iOS 18.2",
+      "iPad Pro 13-inch simulator, iOS 18.2",
+      "iPad Pro 12.9-inch simulator, iOS 18.2"
     ],
     "testedFlows": [
-      "XcodeGen project generation",
-      "Swift 6 simulator build",
-      "iPhone simulator launch",
-      "Explore screen render",
-      "Rec tab navigation",
-      "Deals tab navigation",
-      "Learn tab navigation",
-      "Account tab navigation",
-      "App Store screenshot capture",
-      "iPad screenshot capture",
-      "Google AdMob SDK wiring",
-      "Google UMP ad privacy flow wiring",
-      "app-ads.txt publisher file verification",
-      "App Store metadata preflight"
+      "Native app compiles and launches with the Rec tab selected without initializing AdMob or requesting location.",
+      "The private rec vault stays locked until device-owner authentication succeeds.",
+      "Florida and Arizona exact-label parsers pass nine XCTest cases, including ambiguous, conflicting, missing-unit, zero-value, and stale-snapshot cases.",
+      "REC screenshots were recaptured from build 6 at 1320x2868, 1284x2778, 2064x2752, and 2048x2732.",
+      "The live App Store privacy record was reconciled against AdMob, location, usage, identifier, and diagnostic collection; no REC, health, screenshot, allotment, or ledger data is collected."
     ],
     "knownRisks": [
+      "Version 2.0.1 build 6 upload, TestFlight processing verification, and review submission are still pending.",
       "The existing App Store listing is id1252265730 under DIGITAL SYNC, LLC, THE with bundle ID com.weedauthority.weedauthority.",
       "The public launch pages are served from https://eb28.co/weedauthority/ with root app-ads.txt at https://eb28.co/app-ads.txt. weedauthority.ed28.co is not managed in the connected Namecheap account."
     ]

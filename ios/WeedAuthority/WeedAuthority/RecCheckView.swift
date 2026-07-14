@@ -3,10 +3,12 @@ import SwiftUI
 
 struct RecCheckView: View {
     @Environment(AuthorityStore.self) private var store
+    @Environment(\.openURL) private var openURL
+
     @State private var webDestination: WebDestination?
-    @State private var portalSyncDestination: WebDestination?
+    @State private var showingAllotmentImport = false
     @State private var showingPurchaseSheet = false
-    @State private var unlockMessage = "Your rec profile is stored locally on this iPhone."
+    @State private var unlockMessage = "Unlock to view or change private rec data stored in the device-only Keychain."
 
     var body: some View {
         @Bindable var store = store
@@ -29,20 +31,12 @@ struct RecCheckView: View {
                 SafariSheet(url: destination.url)
                     .ignoresSafeArea()
             }
-            .sheet(item: $portalSyncDestination) { destination in
-                PortalBrowserView(url: destination.url, stateName: store.recState.name)
-                    .ignoresSafeArea()
+            .sheet(isPresented: $showingAllotmentImport) {
+                AllotmentImportSheet(program: store.recState)
             }
             .sheet(isPresented: $showingPurchaseSheet) {
                 AddPurchaseSheet()
                     .presentationDetents([.medium, .large])
-            }
-            .onChange(of: store.recProfile) { _, _ in
-                store.persist()
-            }
-            .onChange(of: store.recProfile.stateId) { _, newValue in
-                store.selectedStateID = newValue
-                store.persist()
             }
         }
     }
@@ -54,7 +48,7 @@ struct RecCheckView: View {
                 Text("Rec Check")
                     .font(.system(size: 24, weight: .black, design: .rounded))
                     .foregroundStyle(Color.authorityText)
-                Text("Card, portal, and allotment in one private place.")
+                Text("Official portal values, confirmed and kept private.")
                     .font(.system(size: 13, weight: .medium))
                     .foregroundStyle(Color.authorityMuted)
             }
@@ -71,6 +65,11 @@ struct RecCheckView: View {
 
                 if store.hasUnlockedRecVault {
                     VStack(spacing: 12) {
+                        Label("Unlocked for this foreground session", systemImage: "lock.open.fill")
+                            .font(.system(size: 12, weight: .semibold))
+                            .foregroundStyle(Color.authorityGreen)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+
                         TextField("Legal name", text: $store.recProfile.legalName)
                             .textContentType(.name)
                             .textInputAutocapitalization(.words)
@@ -89,6 +88,7 @@ struct RecCheckView: View {
 
                         TextField("Card or registry number", text: $store.recProfile.cardNumber)
                             .textInputAutocapitalization(.characters)
+                            .privacySensitive()
                             .authorityField()
 
                         TextField("Practitioner or clinic", text: $store.recProfile.practitioner)
@@ -104,14 +104,8 @@ struct RecCheckView: View {
 
                         TextField("Private notes", text: $store.recProfile.notes, axis: .vertical)
                             .lineLimit(3...5)
+                            .privacySensitive()
                             .authorityField()
-
-                        Toggle(isOn: $store.recProfile.acceptedPrivacy) {
-                            Text("Keep this local-only vault on this iPhone")
-                                .font(.system(size: 13, weight: .semibold))
-                                .foregroundStyle(Color.authorityText)
-                        }
-                        .tint(Color.authorityGreen)
                     }
                 } else {
                     VStack(alignment: .leading, spacing: 13) {
@@ -119,6 +113,11 @@ struct RecCheckView: View {
                             .font(.system(size: 14))
                             .foregroundStyle(Color.authorityMuted)
                             .lineSpacing(4)
+                        if let storageError = store.storageErrorMessage {
+                            Label(storageError, systemImage: "exclamationmark.shield.fill")
+                                .font(.system(size: 12, weight: .semibold))
+                                .foregroundStyle(Color.authorityCoral)
+                        }
                         PrimaryActionButton(title: "Unlock rec vault", systemImage: "faceid") {
                             unlockVault()
                         }
@@ -141,7 +140,14 @@ struct RecCheckView: View {
                     Pill(text: "Medical", systemImage: "cross.case.fill")
                 }
                 PrimaryActionButton(title: store.recState.portalTitle, systemImage: "safari") {
-                    portalSyncDestination = WebDestination(url: store.recState.portalURL)
+                    openURL(store.recState.portalURL)
+                }
+                if store.recState.balanceCapability == .portalTextImport,
+                   store.recState.hasAllowedImportPortal,
+                   store.hasUnlockedRecVault {
+                    SecondaryActionButton(title: "Import portal screenshot", systemImage: "text.viewfinder") {
+                        showingAllotmentImport = true
+                    }
                 }
                 SecondaryActionButton(title: "Open regulator source", systemImage: "checkmark.seal") {
                     webDestination = WebDestination(url: store.recState.regulatorURL)
@@ -150,125 +156,122 @@ struct RecCheckView: View {
         }
     }
 
+    @ViewBuilder
     private var allotmentPanel: some View {
         AuthorityPanel {
             VStack(alignment: .leading, spacing: 16) {
                 SectionHeader(
                     eyebrow: "Allotment",
-                    title: "Private purchase ledger",
-                    actionTitle: "Add",
-                    action: { showingPurchaseSheet = true }
+                    title: "Confirmed portal snapshot",
+                    actionTitle: store.hasUnlockedRecVault ? "Add receipt" : nil,
+                    action: store.hasUnlockedRecVault ? { showingPurchaseSheet = true } : nil
                 )
 
-                Text(store.recState.limitSummary)
-                    .font(.system(size: 14))
-                    .foregroundStyle(Color.authorityMuted)
-                    .lineSpacing(4)
-
-                // Portal Sync Connection Card
-                if let lastSync = store.recProfile.lastSyncDate {
-                    HStack {
-                        Image(systemName: "checkmark.shield.fill")
-                            .foregroundStyle(Color.authorityGreen)
-                            .font(.system(size: 14, weight: .bold))
-                        Text("Live Portal Synced")
-                            .font(.system(size: 12, weight: .bold, design: .rounded))
-                            .foregroundStyle(Color.authorityGreen)
-                        Spacer()
-                        Text("Last sync: \(lastSync.formatted(.relative(presentation: .numeric)))")
-                            .font(.system(size: 11, weight: .medium))
-                            .foregroundStyle(Color.authorityMuted)
-                        Button {
-                            portalSyncDestination = WebDestination(url: store.recState.portalURL)
-                        } label: {
-                            Text("Re-sync")
-                                .font(.system(size: 11, weight: .bold, design: .rounded))
-                                .foregroundStyle(Color.authorityGold)
-                                .padding(.horizontal, 10)
-                                .padding(.vertical, 5)
-                                .background(Color.authorityRaised, in: RoundedRectangle(cornerRadius: 8))
-                        }
-                        .buttonStyle(.plain)
+                if !store.hasUnlockedRecVault {
+                    Label("Unlock the rec vault to view imported allotment values and purchase history.", systemImage: "lock.fill")
+                        .font(.system(size: 13, weight: .semibold))
+                        .foregroundStyle(Color.authorityMuted)
+                } else if let snapshot = store.allotmentSnapshot(for: store.recState.id) {
+                    snapshotContent(snapshot)
+                } else if store.recState.balanceCapability == .portalTextImport,
+                          store.recState.hasAllowedImportPortal {
+                    Text("No confirmed snapshot yet. Sign in to the official portal in Safari, then import a screenshot or copy a displayed value manually.")
+                        .font(.system(size: 14))
+                        .foregroundStyle(Color.authorityMuted)
+                        .lineSpacing(4)
+                    PrimaryActionButton(title: "Check official portal", systemImage: "safari") {
+                        showingAllotmentImport = true
                     }
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 8)
-                    .background(Color.authorityGreen.opacity(0.08), in: RoundedRectangle(cornerRadius: 12))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 12)
-                            .stroke(Color.authorityGreen.opacity(0.18), lineWidth: 1)
-                    )
                 } else {
-                    HStack {
-                        Image(systemName: "bolt.shield.fill")
-                            .foregroundStyle(Color.authorityGold)
-                            .font(.system(size: 15))
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text("Official Registry Connection")
-                                .font(.system(size: 13, weight: .bold, design: .rounded))
-                                .foregroundStyle(Color.authorityText)
-                            Text("Sync live allotments from your portal.")
-                                .font(.system(size: 11, weight: .medium))
-                                .foregroundStyle(Color.authorityMuted)
-                        }
-                        Spacer()
-                        Button {
-                            portalSyncDestination = WebDestination(url: store.recState.portalURL)
-                        } label: {
-                            Text("Connect")
-                                .font(.system(size: 12, weight: .bold, design: .rounded))
-                                .foregroundStyle(Color.authorityInk)
-                                .padding(.horizontal, 14)
-                                .padding(.vertical, 7)
-                                .background(Color.authorityGreen, in: RoundedRectangle(cornerRadius: 10))
-                        }
-                        .buttonStyle(.plain)
-                    }
-                    .padding(12)
-                    .background(Color.authorityRaised.opacity(0.5), in: RoundedRectangle(cornerRadius: 14))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 14)
-                            .stroke(Color.authorityGold.opacity(0.14), lineWidth: 1)
-                    )
+                    Text("\(store.recState.name) does not publish a patient-facing remaining balance that Weed Authority can import. Use the official program and your dispensary for current eligibility.")
+                        .font(.system(size: 14))
+                        .foregroundStyle(Color.authorityMuted)
+                        .lineSpacing(4)
                 }
 
-                HStack(spacing: 10) {
-                    AllotmentGauge(
-                        title: "Flower",
-                        valueText: flowerRemainingText,
-                        detail: flowerRemainingText == "Portal" ? "Tap to open portal" : (store.recState.id == "FL" ? "35-day window" : "\(store.recState.defaultWindowDays)-day window"),
-                        tint: Color.authorityGreen,
-                        action: flowerRemainingText == "Portal" ? {
-                            portalSyncDestination = WebDestination(url: store.recState.portalURL)
-                        } : nil
-                    )
-                    AllotmentGauge(
-                        title: "Concentrate",
-                        valueText: concentrateRemainingText,
-                        detail: concentrateRemainingText == "Portal" ? "Tap to open portal" : "where tracked",
-                        tint: Color.authorityGold,
-                        action: concentrateRemainingText == "Portal" ? {
-                            portalSyncDestination = WebDestination(url: store.recState.portalURL)
-                        } : nil
-                    )
-                }
-
-                Text("The state registry, retailer point-of-sale, or physician recommendation controls official eligibility. This ledger is for planning and receipt tracking.")
+                Divider().overlay(Color.white.opacity(0.08))
+                Text(store.recState.limitSummary)
                     .font(.system(size: 12))
                     .foregroundStyle(Color.authorityMuted)
+                    .lineSpacing(3)
+                Text("A saved value is a convenience copy, not authorization to purchase. The state registry and dispensary are authoritative.")
+                    .font(.system(size: 12, weight: .semibold))
+                    .foregroundStyle(Color.authorityGold)
                     .lineSpacing(3)
             }
         }
     }
 
+    @ViewBuilder
+    private func snapshotContent(_ snapshot: AllotmentSnapshot) -> some View {
+        let stale = snapshot.isStale()
+
+        HStack(spacing: 10) {
+            Image(systemName: stale ? "exclamationmark.arrow.triangle.2.circlepath" : "checkmark.shield.fill")
+                .foregroundStyle(stale ? Color.authorityGold : Color.authorityGreen)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(stale ? "Refresh required" : "User-confirmed snapshot")
+                    .font(.system(size: 13, weight: .bold, design: .rounded))
+                    .foregroundStyle(stale ? Color.authorityGold : Color.authorityGreen)
+                Text(snapshotStatus(snapshot))
+                    .font(.system(size: 11, weight: .medium))
+                    .foregroundStyle(Color.authorityMuted)
+            }
+            Spacer()
+        }
+        .padding(12)
+        .background((stale ? Color.authorityGold : Color.authorityGreen).opacity(0.08), in: RoundedRectangle(cornerRadius: 14))
+
+        ForEach(snapshot.measurements) { measurement in
+            VStack(alignment: .leading, spacing: 6) {
+                HStack(alignment: .firstTextBaseline) {
+                    VStack(alignment: .leading, spacing: 3) {
+                        Text(measurement.kind.displayTitle)
+                            .font(.system(size: 13, weight: .bold, design: .rounded))
+                            .foregroundStyle(Color.authorityText)
+                        if let route = measurement.route {
+                            Text(route)
+                                .font(.system(size: 11, weight: .semibold))
+                                .foregroundStyle(Color.authorityMuted)
+                        }
+                    }
+                    Spacer()
+                    Text("\(measurement.amount.formatted(.number.precision(.fractionLength(0...3)))) \(measurement.unit.abbreviation)")
+                        .font(.system(size: 21, weight: .black, design: .rounded))
+                        .foregroundStyle(stale ? Color.authorityGold : Color.authorityGreen)
+                }
+                Text(measurement.sourceLabel)
+                    .font(.system(size: 10, weight: .medium))
+                    .foregroundStyle(Color.authorityMuted)
+            }
+            .padding(13)
+            .background(Color.authorityRaised, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+            .privacySensitive()
+        }
+
+        PrimaryActionButton(title: "Refresh from official portal", systemImage: "arrow.clockwise") {
+            showingAllotmentImport = true
+        }
+        SecondaryActionButton(title: "Delete this snapshot", systemImage: "trash") {
+            store.removeAllotment(for: store.recState.id)
+        }
+    }
+
     private var purchaseHistory: some View {
         VStack(alignment: .leading, spacing: 14) {
-            SectionHeader(eyebrow: "History", title: "Recent purchases")
+            SectionHeader(eyebrow: "History", title: "Private purchase ledger")
 
-            if store.purchaseEntries.isEmpty {
+            if !store.hasUnlockedRecVault {
+                EmptyStateView(
+                    icon: "lock.fill",
+                    title: "Ledger locked",
+                    message: "Unlock the rec vault to view or add purchase entries."
+                )
+            } else if store.purchaseEntries.isEmpty {
                 EmptyStateView(
                     icon: "receipt",
                     title: "No purchases logged",
-                    message: "Add receipts manually to estimate your personal rolling window before visiting a retailer."
+                    message: "Add a receipt for your own records. New entries immediately mark a saved portal snapshot as stale."
                 )
             } else {
                 ForEach(store.purchaseEntries) { entry in
@@ -286,6 +289,11 @@ struct RecCheckView: View {
                                 Text("\(entry.formattedAmount) - \(entry.retailerName)")
                                     .font(.system(size: 13, weight: .medium))
                                     .foregroundStyle(Color.authorityMuted)
+                                if let stateID = entry.stateID {
+                                    Text(stateID)
+                                        .font(.system(size: 10, weight: .bold, design: .rounded))
+                                        .foregroundStyle(Color.authorityGold)
+                                }
                             }
                             Spacer()
                             Button {
@@ -296,85 +304,45 @@ struct RecCheckView: View {
                             }
                         }
                     }
+                    .privacySensitive()
                 }
             }
         }
     }
 
-    private var flowerRemainingText: String {
-        guard let remaining = store.remainingFlowerGrams(in: store.recState) else {
-            return "Portal"
+    private func snapshotStatus(_ snapshot: AllotmentSnapshot) -> String {
+        if snapshot.invalidatedAt != nil {
+            return "Out of date because a purchase was logged."
         }
-        return "\(remaining.formatted(.number.precision(.fractionLength(0...1)))) g"
-    }
-
-    private var concentrateRemainingText: String {
-        guard let remaining = store.remainingConcentrateGrams(in: store.recState) else {
-            return "Portal"
+        if snapshot.isStale() {
+            return "Saved more than 24 hours ago."
         }
-        return "\(remaining.formatted(.number.precision(.fractionLength(0...1)))) g"
+        return "Saved \(snapshot.capturedAt.formatted(.relative(presentation: .numeric)))."
     }
 
     private func unlockVault() {
         let context = LAContext()
         var error: NSError?
 
-        if context.canEvaluatePolicy(.deviceOwnerAuthentication, error: &error) {
-            context.evaluatePolicy(.deviceOwnerAuthentication, localizedReason: "Unlock your local Weed Authority rec vault.") { success, _ in
-                Task { @MainActor in
-                    store.hasUnlockedRecVault = success
-                    unlockMessage = success ? "Vault unlocked." : "Authentication was cancelled."
+        guard context.canEvaluatePolicy(.deviceOwnerAuthentication, error: &error) else {
+            store.hasUnlockedRecVault = false
+            unlockMessage = "Set a device passcode or biometric authentication in Settings before using the rec vault."
+            return
+        }
+
+        context.evaluatePolicy(
+            .deviceOwnerAuthentication,
+            localizedReason: "Unlock your private local Weed Authority rec vault."
+        ) { success, authenticationError in
+            Task { @MainActor in
+                store.hasUnlockedRecVault = success
+                if success {
+                    unlockMessage = "Vault unlocked."
+                } else if authenticationError != nil {
+                    unlockMessage = "Authentication did not complete. Your rec vault remains locked."
                 }
             }
-        } else {
-            store.hasUnlockedRecVault = true
-            unlockMessage = "Device authentication is not configured, so the local vault is unlocked for this session."
         }
-    }
-}
-
-private struct AllotmentGauge: View {
-    let title: String
-    let valueText: String
-    let detail: String
-    let tint: Color
-    var action: (() -> Void)? = nil
-
-    var body: some View {
-        Button {
-            action?()
-        } label: {
-            VStack(alignment: .leading, spacing: 9) {
-                HStack(spacing: 4) {
-                    Text(title.uppercased())
-                        .font(.system(size: 10, weight: .black, design: .rounded))
-                        .foregroundStyle(Color.authorityMuted)
-                    Spacer()
-                    if action != nil {
-                        Image(systemName: "safari")
-                            .font(.system(size: 11, weight: .bold))
-                            .foregroundStyle(tint.opacity(0.8))
-                    }
-                }
-                Text(valueText)
-                    .font(.system(size: 24, weight: .black, design: .rounded))
-                    .foregroundStyle(tint)
-                    .minimumScaleFactor(0.7)
-                Text(detail)
-                    .font(.system(size: 12, weight: .medium))
-                    .foregroundStyle(Color.authorityMuted)
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(14)
-            .background(Color.authorityRaised, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
-            .overlay(
-                RoundedRectangle(cornerRadius: 16, style: .continuous)
-                    .stroke(action != nil ? tint.opacity(0.18) : Color.clear, lineWidth: 1)
-            )
-            .contentShape(Rectangle())
-        }
-        .buttonStyle(.plain)
-        .disabled(action == nil)
     }
 }
 
@@ -391,6 +359,10 @@ private struct AddPurchaseSheet: View {
             ZStack {
                 AuthorityBackground()
                 VStack(spacing: 16) {
+                    Text("Saving a purchase marks the current \(store.recState.name) portal snapshot as stale so it cannot look current after activity.")
+                        .font(.system(size: 12, weight: .semibold))
+                        .foregroundStyle(Color.authorityGold)
+                        .lineSpacing(3)
                     TextField("Product", text: $productName)
                         .authorityField()
                     TextField("Retailer", text: $retailerName)
@@ -419,10 +391,8 @@ private struct AddPurchaseSheet: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("Done") {
-                        dismiss()
-                    }
-                    .foregroundStyle(Color.authorityGreen)
+                    Button("Done") { dismiss() }
+                        .foregroundStyle(Color.authorityGreen)
                 }
             }
         }
@@ -431,8 +401,7 @@ private struct AddPurchaseSheet: View {
 
 private extension View {
     func authorityField() -> some View {
-        self
-            .font(.system(size: 15, weight: .semibold))
+        font(.system(size: 15, weight: .semibold))
             .foregroundStyle(Color.authorityText)
             .padding(.horizontal, 12)
             .padding(.vertical, 13)

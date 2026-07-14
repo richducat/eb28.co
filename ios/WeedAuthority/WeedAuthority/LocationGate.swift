@@ -9,6 +9,7 @@ import SwiftUI
 @Observable
 final class LocationGate: NSObject {
     enum Status: Equatable {
+        case notStarted
         case checking
         case allowed(stateID: String)
         case outsideSupportedRegion(detail: String)
@@ -16,7 +17,7 @@ final class LocationGate: NSObject {
         case locationUnavailable
     }
 
-    var status: Status = .checking
+    var status: Status = .notStarted
 
     static let supportedStateIDs: Set<String> = Set(AuthorityContent.states.map(\.id))
 
@@ -38,6 +39,7 @@ final class LocationGate: NSObject {
     func start() {
         guard !hasStarted else { return }
         hasStarted = true
+        status = .checking
         evaluateAuthorization()
     }
 
@@ -123,6 +125,15 @@ struct GeoGatedView<Content: View>: View {
 
     var body: some View {
         switch gate.status {
+        case .notStarted:
+            RegionGateView(
+                icon: "location.circle.fill",
+                title: "Confirm your location",
+                message: "\(featureTitle) is only available in supported U.S. states with legal cannabis programs. Location stays off until you choose to check it.",
+                showsProgress: false,
+                actionTitle: "Check my location",
+                action: { gate.start() }
+            )
         case .allowed:
             content()
         case .checking:

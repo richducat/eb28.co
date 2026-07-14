@@ -7,32 +7,37 @@ Weed Authority
 Legal cannabis rec check
 
 ## Promotional Text
-Find legal retailers, open official state rec portals, track allotment privately, and compare cannabis products before checkout.
+Open official state rec portals in Safari, privately confirm Florida or Arizona allotment snapshots, and find legal cannabis retailers.
 
 ## Description
-Weed Authority is a premium iPhone app for legal cannabis customers and medical marijuana patients.
+Weed Authority is an iPhone and iPad app for adults and qualified medical cannabis patients in supported U.S. states.
 
-Use it to find nearby cannabis retailers, verify official state sources, open medical cannabis portals, save products, compare deals, and keep a private local receipt ledger before checkout.
+Use official sources first: find nearby legal cannabis retailers, open state medical-cannabis portals in Safari, keep a private purchase ledger, and save an allotment snapshot you have reviewed and confirmed.
 
 What you can do:
 
 - Search nearby cannabis retailers through Apple Maps
-- Save retailers and products for a cleaner shopping trip
-- Open official state cannabis portals and regulator resources
-- Store medical rec details locally on your iPhone
-- Track purchase entries against state-specific planning windows where limits are available
-- Compare flower, edibles, topicals, concentrates, tinctures, and pre-rolls
-- Learn how to verify licenses, read labels, and confirm eligibility before ordering
+- Save retailers and informational product cards for a more organized shopping trip
+- Open official state cannabis portals and regulator resources in Safari
+- In Florida and Arizona, choose a portal screenshot for on-device text recognition
+- Review and explicitly confirm the value, unit, and route or category before saving
+- Keep confirmed normalized snapshots in the device-only Apple Keychain
+- Track private purchase entries and mark a saved snapshot stale after 24 hours or a new recorded purchase
+- Learn how to verify licenses, read labels, and confirm eligibility with official sources
 
-Weed Authority does not require an account. The app uses Google AdMob banner ads with in-app ad privacy choices, while medical rec profile fields, saved products, saved retailers, and purchase ledger entries stay on the device unless the user chooses to open an external official state portal or retailer website.
+Weed Authority does not require an app account. It never receives your state portal username, password, MFA code, session cookies, or Safari browsing data. It does not automate portal navigation, inject scripts, read portal page content, or run background or live portal synchronization.
 
-The app does not provide medical advice, dosage recommendations, diagnosis, treatment, or legal advice. State registries, physicians, licensed retailers, and regulators remain the official source for eligibility, purchase limits, and compliance.
+For supported Florida and Arizona screens, Apple Vision text recognition runs on the device. The selected screenshot is not persisted by Weed Authority. Only the normalized value and related details you explicitly confirm are saved in the device-only Keychain.
+
+Google AdMob banners appear only on non-REC screens and use in-app consent and privacy controls. The Rec tab is ad-free. Weed Authority does not send REC profile, screenshot-derived, allotment, or purchase-ledger values to Google.
+
+Weed Authority does not sell, reserve, facilitate the purchase of, or deliver cannabis. There is no cart, checkout, or payment flow. The app does not provide medical advice, dosage recommendations, diagnosis, treatment, or legal advice. Saved values can be incomplete, stale, or incorrect; the state portal and licensed dispensary remain authoritative.
 
 Privacy Policy: https://eb28.co/weedauthority/privacy/
 Terms: https://eb28.co/weedauthority/terms/
 
 ## Keywords
-cannabis,dispensary,weed,medical,marijuana,rec,allotment,delivery,deals,thc,cbd
+cannabis,dispensary,weed,medical,marijuana,rec,allotment,registry,deals,thc,cbd
 
 ## What's New
-Launch build with native retailer search, official state portal links, local rec vault, private purchase ledger, saved products, deals, state cannabis education, and AdMob banner support.
+Adds a privacy-preserving REC snapshot workflow for supported Florida and Arizona portal screens. Choose a screenshot, run text recognition on device, review every value, and save only the confirmed snapshot in the device-only Keychain. Portal login remains in Safari, the Rec tab is ad-free, and there is no background or live state sync.

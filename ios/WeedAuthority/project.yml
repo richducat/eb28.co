@@ -8,8 +8,8 @@ settings:
   base:
     SWIFT_VERSION: "6.0"
     SWIFT_STRICT_CONCURRENCY: minimal
-    MARKETING_VERSION: "2.0.0"
-    CURRENT_PROJECT_VERSION: "5"
+    MARKETING_VERSION: "2.0.1"
+    CURRENT_PROJECT_VERSION: "6"
 packages:
   GoogleMobileAds:
     url: https://github.com/googleads/swift-package-manager-google-mobile-ads.git
@@ -112,6 +112,17 @@ targets:
           - SKAdNetworkIdentifier: wg4vff78zm.skadnetwork
           - SKAdNetworkIdentifier: wzmmz9fp6w.skadnetwork
           - SKAdNetworkIdentifier: y5ghdn5j9k.skadnetwork
+  WeedAuthorityTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: WeedAuthorityTests
+    dependencies:
+      - target: WeedAuthority
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.weedauthority.weedauthority.tests
+        GENERATE_INFOPLIST_FILE: true
 schemes:
   WeedAuthority:
     build:
@@ -119,5 +130,10 @@ schemes:
         WeedAuthority: all
     run:
       config: Debug
+    test:
+      config: Debug
+      gatherCoverageData: true
+      targets:
+        - WeedAuthorityTests
     archive:
       config: Release

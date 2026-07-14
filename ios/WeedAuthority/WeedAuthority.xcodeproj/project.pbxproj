@@ -8,42 +8,65 @@
 
 /* Begin PBXBuildFile section */
 		122B05DF272B823D52995F6B /* AdMobManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E389713EDC0228F201668902 /* AdMobManager.swift */; };
+		14BFD2C81BB03889486827B4 /* StateAllotmentTextParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3C460EC4A4F14F7A07F4DC7 /* StateAllotmentTextParser.swift */; };
 		1794426E42ADB86B7CA09D29 /* LearnView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5ADC842CD77E34FE5091495A /* LearnView.swift */; };
 		1C87B3C2B6010B037F8FD8DB /* AccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FC28AC2CCF59457963B4CB7 /* AccountView.swift */; };
 		2577F781792E515BE05762DB /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = D9F7A630279321BEA3C34D4E /* Models.swift */; };
 		2B42E2FCA6E4241E82C96E3E /* AuthorityStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 536D02ECB2C5000F581BB5BD /* AuthorityStore.swift */; };
 		3E47E6D8C573E93CF4422132 /* DealsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 411AAC1916AD12ADCEA97B77 /* DealsView.swift */; };
 		430A0A33B3E25EE7C1B6BBC0 /* AppConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 571652516B490A0725CCA1DE /* AppConfig.swift */; };
+		6DF22B4D0ACF942220F227F9 /* StateProgram+BalanceCapability.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51179097ED398E409B2D0CCC /* StateProgram+BalanceCapability.swift */; };
 		7550B033111BC6B8C570E0DE /* ExploreView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B5B9F998081FA226CA4AD77 /* ExploreView.swift */; };
 		7D4C15D2D1058CFC9ACD66CA /* DesignSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75DF7FA64840BF87B3E1F60D /* DesignSystem.swift */; };
 		864F2512BD35C2D10A72650F /* GoogleUserMessagingPlatform in Frameworks */ = {isa = PBXBuildFile; productRef = CCC76C8EF344E2324642F7E8 /* GoogleUserMessagingPlatform */; };
-		9AF82A381DEEE97A2E86DDC7 /* PortalBrowserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFA92EAB7EFD1953A911B1DD /* PortalBrowserView.swift */; };
 		A94326029BC06B70A4ED3007 /* LocationGate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7629AFEAC139215FC79100F9 /* LocationGate.swift */; };
 		AA7AC32355811099481D154E /* GoogleMobileAds in Frameworks */ = {isa = PBXBuildFile; productRef = 69A2B29AAABE5CA36F60DCB0 /* GoogleMobileAds */; };
+		B5A7E078274E9C5052BBD473 /* PortalAllotmentTextFixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 61266E527774D291C00002D6 /* PortalAllotmentTextFixtures.swift */; };
 		B5DEDA8AFEC7BE801C6A92CC /* RecCheckView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9373F1F588528C6F4063493A /* RecCheckView.swift */; };
 		B61EC348354FACF8EA1B0D55 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ECB8785E13696C7ABA88D741 /* Assets.xcassets */; };
 		C18EF9BDBB22D890FF565371 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA730BDFF0E7E33995D94604 /* RootView.swift */; };
+		D2ED554B59C679C9B08FDF30 /* AllotmentModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08B0EDD139331010F76A29DE /* AllotmentModels.swift */; };
+		E5BDCE51336C615F37DC0C82 /* StateAllotmentTextParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD14F0FE35BEAE7E64BA876D /* StateAllotmentTextParserTests.swift */; };
 		EB03ECD9C1250DB683354F28 /* WeedAuthorityApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC9338644C50913F786B1C76 /* WeedAuthorityApp.swift */; };
+		F693B3F9F6170B608DF9302C /* SecureStateStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCA68CE9C7540F78C5998C02 /* SecureStateStore.swift */; };
+		FABD31F737C6CA972619F06C /* AllotmentImportView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAFB10CE5C08117912409069 /* AllotmentImportView.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		5CD7779B84DC06B3E7DAF2BF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B319B57262F6C934F4E36DD8 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 6DD8CF7B08C8E0358B6C7E4F;
+			remoteInfo = WeedAuthority;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
+		08B0EDD139331010F76A29DE /* AllotmentModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllotmentModels.swift; sourceTree = "<group>"; };
 		2FC28AC2CCF59457963B4CB7 /* AccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountView.swift; sourceTree = "<group>"; };
 		3724FF71374267D2CFECC5A5 /* WeedAuthority.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = WeedAuthority.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		411AAC1916AD12ADCEA97B77 /* DealsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DealsView.swift; sourceTree = "<group>"; };
+		51179097ED398E409B2D0CCC /* StateProgram+BalanceCapability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StateProgram+BalanceCapability.swift"; sourceTree = "<group>"; };
 		536D02ECB2C5000F581BB5BD /* AuthorityStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthorityStore.swift; sourceTree = "<group>"; };
+		5631B97015B636D64451ED0D /* WeedAuthorityTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = WeedAuthorityTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		571652516B490A0725CCA1DE /* AppConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConfig.swift; sourceTree = "<group>"; };
 		5ADC842CD77E34FE5091495A /* LearnView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LearnView.swift; sourceTree = "<group>"; };
+		61266E527774D291C00002D6 /* PortalAllotmentTextFixtures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortalAllotmentTextFixtures.swift; sourceTree = "<group>"; };
 		6B5B9F998081FA226CA4AD77 /* ExploreView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreView.swift; sourceTree = "<group>"; };
 		75DF7FA64840BF87B3E1F60D /* DesignSystem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DesignSystem.swift; sourceTree = "<group>"; };
 		7629AFEAC139215FC79100F9 /* LocationGate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationGate.swift; sourceTree = "<group>"; };
 		9373F1F588528C6F4063493A /* RecCheckView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecCheckView.swift; sourceTree = "<group>"; };
 		A1C0DD70B11B5E1E3C6EA639 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		D9F7A630279321BEA3C34D4E /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
-		DFA92EAB7EFD1953A911B1DD /* PortalBrowserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortalBrowserView.swift; sourceTree = "<group>"; };
+		DAFB10CE5C08117912409069 /* AllotmentImportView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllotmentImportView.swift; sourceTree = "<group>"; };
 		E389713EDC0228F201668902 /* AdMobManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdMobManager.swift; sourceTree = "<group>"; };
+		E3C460EC4A4F14F7A07F4DC7 /* StateAllotmentTextParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateAllotmentTextParser.swift; sourceTree = "<group>"; };
 		EA730BDFF0E7E33995D94604 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		ECB8785E13696C7ABA88D741 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FC9338644C50913F786B1C76 /* WeedAuthorityApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeedAuthorityApp.swift; sourceTree = "<group>"; };
+		FCA68CE9C7540F78C5998C02 /* SecureStateStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureStateStore.swift; sourceTree = "<group>"; };
+		FD14F0FE35BEAE7E64BA876D /* StateAllotmentTextParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StateAllotmentTextParserTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,6 +86,7 @@
 			isa = PBXGroup;
 			children = (
 				76C66656D36D1AC63E331550 /* WeedAuthority */,
+				8E72C7111615298CEF3B044C /* WeedAuthorityTests */,
 				73482A7AFC224E4C25A5B137 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -71,6 +95,7 @@
 			isa = PBXGroup;
 			children = (
 				3724FF71374267D2CFECC5A5 /* WeedAuthority.app */,
+				5631B97015B636D64451ED0D /* WeedAuthorityTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -80,6 +105,8 @@
 			children = (
 				2FC28AC2CCF59457963B4CB7 /* AccountView.swift */,
 				E389713EDC0228F201668902 /* AdMobManager.swift */,
+				DAFB10CE5C08117912409069 /* AllotmentImportView.swift */,
+				08B0EDD139331010F76A29DE /* AllotmentModels.swift */,
 				571652516B490A0725CCA1DE /* AppConfig.swift */,
 				ECB8785E13696C7ABA88D741 /* Assets.xcassets */,
 				536D02ECB2C5000F581BB5BD /* AuthorityStore.swift */,
@@ -90,17 +117,46 @@
 				5ADC842CD77E34FE5091495A /* LearnView.swift */,
 				7629AFEAC139215FC79100F9 /* LocationGate.swift */,
 				D9F7A630279321BEA3C34D4E /* Models.swift */,
-				DFA92EAB7EFD1953A911B1DD /* PortalBrowserView.swift */,
 				9373F1F588528C6F4063493A /* RecCheckView.swift */,
 				EA730BDFF0E7E33995D94604 /* RootView.swift */,
+				FCA68CE9C7540F78C5998C02 /* SecureStateStore.swift */,
+				E3C460EC4A4F14F7A07F4DC7 /* StateAllotmentTextParser.swift */,
+				51179097ED398E409B2D0CCC /* StateProgram+BalanceCapability.swift */,
 				FC9338644C50913F786B1C76 /* WeedAuthorityApp.swift */,
 			);
 			path = WeedAuthority;
 			sourceTree = "<group>";
 		};
+		8E72C7111615298CEF3B044C /* WeedAuthorityTests */ = {
+			isa = PBXGroup;
+			children = (
+				61266E527774D291C00002D6 /* PortalAllotmentTextFixtures.swift */,
+				FD14F0FE35BEAE7E64BA876D /* StateAllotmentTextParserTests.swift */,
+			);
+			path = WeedAuthorityTests;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		3F1B84730AFEA955F2235941 /* WeedAuthorityTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 9E6C1313E9F7CBB0F686BBBB /* Build configuration list for PBXNativeTarget "WeedAuthorityTests" */;
+			buildPhases = (
+				BEA0995F9BB06C7F32DB8A9A /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				8210C880BAAF835109CF0398 /* PBXTargetDependency */,
+			);
+			name = WeedAuthorityTests;
+			packageProductDependencies = (
+			);
+			productName = WeedAuthorityTests;
+			productReference = 5631B97015B636D64451ED0D /* WeedAuthorityTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		6DD8CF7B08C8E0358B6C7E4F /* WeedAuthority */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 10AA82332A48A7C8F0B43375 /* Build configuration list for PBXNativeTarget "WeedAuthority" */;
@@ -156,6 +212,7 @@
 			projectRoot = "";
 			targets = (
 				6DD8CF7B08C8E0358B6C7E4F /* WeedAuthority */,
+				3F1B84730AFEA955F2235941 /* WeedAuthorityTests */,
 			);
 		};
 /* End PBXProject section */
@@ -172,12 +229,23 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		BEA0995F9BB06C7F32DB8A9A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B5A7E078274E9C5052BBD473 /* PortalAllotmentTextFixtures.swift in Sources */,
+				E5BDCE51336C615F37DC0C82 /* StateAllotmentTextParserTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		E87589F0AF2E5C73552B83DE /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				1C87B3C2B6010B037F8FD8DB /* AccountView.swift in Sources */,
 				122B05DF272B823D52995F6B /* AdMobManager.swift in Sources */,
+				FABD31F737C6CA972619F06C /* AllotmentImportView.swift in Sources */,
+				D2ED554B59C679C9B08FDF30 /* AllotmentModels.swift in Sources */,
 				430A0A33B3E25EE7C1B6BBC0 /* AppConfig.swift in Sources */,
 				2B42E2FCA6E4241E82C96E3E /* AuthorityStore.swift in Sources */,
 				3E47E6D8C573E93CF4422132 /* DealsView.swift in Sources */,
@@ -186,14 +254,24 @@
 				1794426E42ADB86B7CA09D29 /* LearnView.swift in Sources */,
 				A94326029BC06B70A4ED3007 /* LocationGate.swift in Sources */,
 				2577F781792E515BE05762DB /* Models.swift in Sources */,
-				9AF82A381DEEE97A2E86DDC7 /* PortalBrowserView.swift in Sources */,
 				B5DEDA8AFEC7BE801C6A92CC /* RecCheckView.swift in Sources */,
 				C18EF9BDBB22D890FF565371 /* RootView.swift in Sources */,
+				F693B3F9F6170B608DF9302C /* SecureStateStore.swift in Sources */,
+				14BFD2C81BB03889486827B4 /* StateAllotmentTextParser.swift in Sources */,
+				6DF22B4D0ACF942220F227F9 /* StateProgram+BalanceCapability.swift in Sources */,
 				EB03ECD9C1250DB683354F28 /* WeedAuthorityApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		8210C880BAAF835109CF0398 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 6DD8CF7B08C8E0358B6C7E4F /* WeedAuthority */;
+			targetProxy = 5CD7779B84DC06B3E7DAF2BF /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		534B66D5E097EE034374235A /* Debug */ = {
@@ -240,6 +318,23 @@
 			};
 			name = Release;
 		};
+		7EAC08369E3299AA0296AB8B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.weedauthority.weedauthority.tests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/WeedAuthority.app/WeedAuthority";
+			};
+			name = Debug;
+		};
 		99AAF9B7D54CFFFBD143EDC9 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -274,7 +369,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 6;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -287,7 +382,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				MARKETING_VERSION = 2.0.0;
+				MARKETING_VERSION = 2.0.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -296,6 +391,23 @@
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_STRICT_CONCURRENCY = minimal;
 				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		E09A99B153A30D14849152CB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.weedauthority.weedauthority.tests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/WeedAuthority.app/WeedAuthority";
 			};
 			name = Release;
 		};
@@ -333,7 +445,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 5;
+				CURRENT_PROJECT_VERSION = 6;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -352,7 +464,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
-				MARKETING_VERSION = 2.0.0;
+				MARKETING_VERSION = 2.0.1;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -382,6 +494,15 @@
 			buildConfigurations = (
 				FF09CACF24C4EF18F04BC095 /* Debug */,
 				99AAF9B7D54CFFFBD143EDC9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		9E6C1313E9F7CBB0F686BBBB /* Build configuration list for PBXNativeTarget "WeedAuthorityTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				7EAC08369E3299AA0296AB8B /* Debug */,
+				E09A99B153A30D14849152CB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;

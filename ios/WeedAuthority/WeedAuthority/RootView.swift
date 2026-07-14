@@ -4,7 +4,6 @@ import SwiftUI
 struct RootView: View {
     @Environment(AuthorityStore.self) private var store
     @Environment(AdMobManager.self) private var ads
-    @Environment(LocationGate.self) private var gate
 
     var body: some View {
         @Bindable var store = store
@@ -24,9 +23,6 @@ struct RootView: View {
                     }
 
                 RecCheckView()
-                    .safeAreaInset(edge: .bottom) {
-                        adBanner
-                    }
                     .tag(AuthorityTab.rec)
                     .tabItem {
                         Label(AuthorityTab.rec.title, systemImage: AuthorityTab.rec.icon)
@@ -64,8 +60,10 @@ struct RootView: View {
             .tint(Color.authorityGreen)
         }
         .task {
-            gate.start()
-            ads.prepareConsent(from: UIApplication.shared.topMostViewController)
+            prepareAdsIfNeeded(for: store.selectedTab)
+        }
+        .onChange(of: store.selectedTab) { _, selectedTab in
+            prepareAdsIfNeeded(for: selectedTab)
         }
     }
 
@@ -77,6 +75,11 @@ struct RootView: View {
                 .frame(maxWidth: .infinity)
                 .background(Color.authorityInk.opacity(0.96))
         }
+    }
+
+    private func prepareAdsIfNeeded(for tab: AuthorityTab) {
+        guard tab != .rec else { return }
+        ads.prepareConsent(from: UIApplication.shared.topMostViewController)
     }
 }
 

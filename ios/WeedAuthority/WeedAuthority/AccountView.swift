@@ -31,7 +31,7 @@ struct AccountView: View {
                 }
                 Button("Cancel", role: .cancel) {}
             } message: {
-                Text("This clears rec profile fields, saved retailers, saved products, and purchase entries from this iPhone.")
+                Text("This clears rec profile fields, imported allotment snapshots, saved retailers, saved products, and purchase entries from this device.")
             }
         }
     }
@@ -55,10 +55,15 @@ struct AccountView: View {
         AuthorityPanel {
             VStack(alignment: .leading, spacing: 14) {
                 SectionHeader(eyebrow: "Privacy", title: "Local-first data")
-                Text("Weed Authority does not require login. Rec profile fields, saved items, and purchase entries are stored with Apple local storage on this device.")
+                Text("Weed Authority does not require an app account. Rec details, confirmed allotment snapshots, and your purchase ledger are kept in the device-only Keychain. Portal passwords, cookies, and imported screenshots are never saved by Weed Authority.")
                     .font(.system(size: 14))
                     .foregroundStyle(Color.authorityMuted)
                     .lineSpacing(4)
+                if let storageError = store.storageErrorMessage {
+                    Label(storageError, systemImage: "exclamationmark.shield.fill")
+                        .font(.system(size: 12, weight: .semibold))
+                        .foregroundStyle(Color.authorityCoral)
+                }
                 HStack(spacing: 10) {
                     SecondaryActionButton(title: "Privacy", systemImage: "hand.raised.fill") {
                         webDestination = WebDestination(url: AppConfig.privacyURL)
@@ -78,7 +83,7 @@ struct AccountView: View {
         AuthorityPanel {
             VStack(alignment: .leading, spacing: 14) {
                 SectionHeader(eyebrow: "Ads", title: "Ad-supported banners")
-                Text("Weed Authority uses Google AdMob banner ads. Your rec profile, saved products, saved retailers, and purchase ledger stay local on this device.")
+                Text("Weed Authority uses Google AdMob banners outside the Rec tab. Rec details, allotment values, portal activity, and purchase-ledger data are not sent to Google or used to request ads.")
                     .font(.system(size: 14))
                     .foregroundStyle(Color.authorityMuted)
                     .lineSpacing(4)

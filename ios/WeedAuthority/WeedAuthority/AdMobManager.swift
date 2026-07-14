@@ -12,6 +12,7 @@ final class AdMobManager {
     var message: String?
 
     @ObservationIgnored private var didStart = false
+    @ObservationIgnored private var didPrepareConsent = false
 
     var adUnitID: String {
         AppConfig.bannerAdUnitID
@@ -22,7 +23,8 @@ final class AdMobManager {
     }
 
     func prepareConsent(from viewController: UIViewController?) {
-        guard hasConfiguredBanner else { return }
+        guard hasConfiguredBanner, !didPrepareConsent else { return }
+        didPrepareConsent = true
 
         let parameters = RequestParameters()
         parameters.isTaggedForUnderAgeOfConsent = false

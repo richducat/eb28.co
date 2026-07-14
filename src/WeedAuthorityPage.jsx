@@ -15,12 +15,13 @@ import {
 const appStoreUrl = 'https://apps.apple.com/us/app/weed-authority/id1252265730';
 
 const states = [
-  ['California', 'Daily adult-use limits plus medical recommendation support'],
-  ['Florida', 'MMUR portal links and route-aware patient tracking'],
-  ['Arizona', '14-day medical window planning'],
-  ['New York', 'OCM and MCDMS source links'],
-  ['Pennsylvania', 'Medical registry and patient card support'],
-  ['Ohio', 'Registry-first days-supply guidance'],
+  ['California', 'Official program resources plus private manual tracking'],
+  ['Florida', 'User-confirmed screenshot import for MMUR order and route values'],
+  ['Arizona', 'User-confirmed screenshot import for remaining allotment'],
+  ['New York', 'Official program sources plus private manual tracking'],
+  ['Pennsylvania', 'Official patient registry sources plus private manual tracking'],
+  ['Ohio', 'Current regulator guidance plus private manual tracking'],
+  ['Nevada', 'Official patient card sources plus private manual tracking'],
 ];
 
 const surfaces = [
@@ -32,7 +33,7 @@ const surfaces = [
   {
     icon: ShieldCheck,
     title: 'Check your rec',
-    copy: 'Keep card details local, open official state portals, and track your private receipt ledger in one place.',
+    copy: 'Open official portals in Safari. In Florida and Arizona, choose a screenshot for on-device reading, then review and confirm every value.',
   },
   {
     icon: Tag,
@@ -42,7 +43,7 @@ const surfaces = [
   {
     icon: BookOpen,
     title: 'Know the rules',
-    copy: 'State-by-state source links keep the app grounded in official regulators, not rumor or screenshots.',
+    copy: 'State-by-state source links keep rule guidance grounded in official regulators rather than third-party claims.',
   },
 ];
 
@@ -90,7 +91,7 @@ const WeedAuthorityPage = () => {
               WEED AUTHORITY
             </h1>
             <p className="mt-7 max-w-xl text-lg leading-8 text-[#b6c6b2] sm:text-xl">
-              A premium iPhone app for finding legal retailers, checking official medical rec portals, tracking allotment privately, and shopping smarter before checkout.
+              A premium iPhone app for finding legal retailers, opening official medical rec portals in Safari, keeping a private allotment snapshot, and shopping smarter before checkout.
             </p>
             <div className="mt-8 flex flex-wrap gap-3" id="download">
               <a
@@ -144,7 +145,7 @@ const WeedAuthorityPage = () => {
             <p className="text-xs font-black uppercase tracking-[0.2em] text-[#63f8ab]">Medical rec ready</p>
             <h2 className="mt-4 text-4xl font-black tracking-normal sm:text-6xl">Official source first. Private ledger second.</h2>
             <p className="mt-6 text-lg leading-8 text-[#aebead]">
-              Weed Authority does not scrape state registries or pretend to be the government. It opens official portals, keeps your rec profile local, and gives you a clean receipt ledger for planning.
+              Weed Authority never logs in for you, automates portal navigation, injects scripts, or reads portal page content. You sign in through Safari. For supported Florida and Arizona screens, you may select a screenshot, let on-device text recognition find exact allotment labels, and confirm the result before it is saved.
             </p>
           </div>
           <div className="grid gap-3">
@@ -173,9 +174,9 @@ const WeedAuthorityPage = () => {
             <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
               <div className="max-w-2xl">
                 <Sparkles className="mb-7 text-[#e7b35c]" size={32} />
-                <h2 className="text-4xl font-black tracking-normal sm:text-6xl">Launch-ready pages. Local-first privacy.</h2>
+                <h2 className="text-4xl font-black tracking-normal sm:text-6xl">No account. Local-first rec privacy.</h2>
                 <p className="mt-5 text-lg leading-8 text-[#aebead]">
-                  Support, privacy, terms, and App Store metadata are built for a regulated cannabis category with no ads, no tracking, and no required account.
+                  Weed Authority uses consent-managed Google AdMob banners on non-REC screens. REC and health values are not sent to Google, and the REC screen contains no ad banner.
                 </p>
               </div>
               <div className="flex flex-wrap gap-3">
@@ -189,7 +190,7 @@ const WeedAuthorityPage = () => {
             </div>
             <div className="mt-10 flex items-center gap-3 text-sm font-bold text-[#aebead]">
               <LockKeyhole size={18} className="text-[#63f8ab]" />
-              Rec profile and purchase ledger stay on the device unless the customer chooses an official state portal.
+              Portal login stays in Safari; confirmed snapshots are stored in the device-only Keychain and never treated as live state data.
             </div>
           </motion.div>
         </div>

@@ -21,7 +21,7 @@
   "version": {
     "marketingVersion": "2.0.1",
     "buildNumber": "6",
-    "releaseType": "MANUAL",
+    "releaseType": "AFTER_APPROVAL",
     "phasedRelease": false,
     "promotionalText": "Open official state rec portals in Safari, privately confirm Florida or Arizona allotment snapshots, and find legal cannabis retailers.",
     "description": "Weed Authority is an iPhone and iPad app for adults and qualified medical cannabis patients in supported U.S. states.\n\nUse official sources first: find nearby legal cannabis retailers, open state medical-cannabis portals in Safari, keep a private purchase ledger, and save an allotment snapshot you have reviewed and confirmed.\n\nWhat you can do:\n\n- Search nearby cannabis retailers through Apple Maps\n- Save retailers and informational product cards for a more organized shopping trip\n- Open official state cannabis portals and regulator resources in Safari\n- In Florida and Arizona, choose a portal screenshot for on-device text recognition\n- Review and explicitly confirm the value, unit, and route or category before saving\n- Keep confirmed normalized snapshots in the device-only Apple Keychain\n- Track private purchase entries and mark a saved snapshot stale after 24 hours or a new recorded purchase\n- Learn how to verify licenses, read labels, and confirm eligibility with official sources\n\nWeed Authority does not require an app account. It never receives your state portal username, password, MFA code, session cookies, or Safari browsing data. It does not automate portal navigation, inject scripts, read portal page content, or run background or live portal synchronization.\n\nFor supported Florida and Arizona screens, Apple Vision text recognition runs on the device. The selected screenshot is not persisted by Weed Authority. Only the normalized value and related details you explicitly confirm are saved in the device-only Keychain.\n\nGoogle AdMob banners appear only on non-REC screens and use in-app consent and privacy controls. The Rec tab is ad-free. Weed Authority does not send REC profile, screenshot-derived, allotment, or purchase-ledger values to Google.\n\nWeed Authority does not sell, reserve, facilitate the purchase of, or deliver cannabis. There is no cart, checkout, or payment flow. The app does not provide medical advice, dosage recommendations, diagnosis, treatment, or legal advice. Saved values can be incomplete, stale, or incorrect; the state portal and licensed dispensary remain authoritative.\n\nPrivacy Policy: https://eb28.co/weedauthority/privacy/\nTerms: https://eb28.co/weedauthority/terms/",
@@ -56,7 +56,7 @@
       "Weed Authority never receives portal usernames, passwords, MFA codes, session cookies, or Safari browsing data. It does not automate portal navigation, inject scripts, read the portal DOM, or perform background or live synchronization.",
       "A confirmed snapshot becomes stale after 24 hours and is invalidated after a recorded purchase. It is a convenience copy; the state portal and licensed dispensary remain authoritative.",
       "Google AdMob banners use Google User Messaging Platform consent and privacy choices and appear only on non-REC screens. The Rec tab is ad-free, and REC profile, screenshot-derived, allotment, and purchase-ledger values are not sent to Google.",
-      "The app contains no fake synchronized state values or demo state account. Build 6 was uploaded and submitted to App Review on July 14, 2026; release remains manual."
+      "The app contains no fake synchronized state values or demo state account. Build 6 was uploaded and submitted to App Review on July 14, 2026 and will release automatically after approval."
     ]
   },
   "distribution": {
@@ -126,7 +126,7 @@
       "App Store Connect processed build 6, accepted the refreshed iPhone and iPad screenshots and metadata, and placed version 2.0.1 into Waiting for Review on July 14, 2026."
     ],
     "knownRisks": [
-      "Version 2.0.1 build 6 is Waiting for Review in App Store Connect; the App Review outcome and manual production release remain pending.",
+      "Version 2.0.1 build 6 is Waiting for Review in App Store Connect; the App Review outcome and automatic production release remain pending.",
       "The existing App Store listing is id1252265730 under DIGITAL SYNC, LLC, THE with bundle ID com.weedauthority.weedauthority.",
       "The public launch pages are served from https://eb28.co/weedauthority/ with root app-ads.txt at https://eb28.co/app-ads.txt. weedauthority.ed28.co is not managed in the connected Namecheap account."
     ]

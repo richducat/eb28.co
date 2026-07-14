@@ -25,4 +25,4 @@ Compliance and privacy notes:
 - Google AdMob banners use Google User Messaging Platform consent and privacy choices and appear only on non-REC screens. The Rec tab is ad-free, and REC profile, screenshot-derived, allotment, and purchase-ledger values are not sent to Google.
 - The app contains no fake synchronized state values or demo state account.
 
-Build 6 was uploaded and submitted to App Review on July 14, 2026. The version is configured for manual release after approval.
+Build 6 was uploaded and submitted to App Review on July 14, 2026. The version is configured to release automatically after approval.

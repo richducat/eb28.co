@@ -91,18 +91,18 @@ function AppStoreButton({ placement, className = '', compact = false }) {
 const PROOF_POINTS = [
   {
     icon: LockKeyhole,
-    title: 'Your roster stays private',
-    body: 'Create the roster on your iPhone and choose the reference photo yourself.',
+    title: 'Your cadet stays on your private roster',
+    body: 'You choose the familiar photo CadetCatch uses as a reference.',
   },
   {
     icon: Search,
-    title: 'Search the pages you choose',
-    body: 'CadetCatch checks only the photo pages you add or enable.',
+    title: 'Check only the galleries you choose',
+    body: 'Add or enable the public Academy and event photo pages you already follow.',
   },
   {
     icon: Eye,
-    title: 'You review every result',
-    body: 'Possible matches are suggestions. You decide what is really your cadet.',
+    title: 'You make the final call',
+    body: 'Possible matches are suggestions. You decide which photos are really your cadet.',
   },
 ];
 
@@ -110,48 +110,48 @@ const HOW_IT_WORKS_STEPS = [
   {
     icon: UserRoundPlus,
     step: '01',
-    title: 'Add one clear cadet photo',
-    body: 'Create a private roster on your iPhone and choose a clear reference photo of your cadet.',
+    title: 'Start with the face you know best',
+    body: 'Choose one clear, front-facing photo of your cadet from your iPhone.',
   },
   {
     icon: Images,
     step: '02',
-    title: 'Enable the photo pages you follow',
-    body: 'Add or enable accessible Academy and event photo pages you want CadetCatch to check.',
+    title: 'Choose the galleries you follow',
+    body: 'Add or enable the accessible Academy and event photo pages you want checked.',
   },
   {
     icon: BookmarkCheck,
     step: '03',
-    title: 'Review and save likely finds',
-    body: 'Look through possible matches yourself, save the keepers, and keep simple family notes.',
+    title: 'Review with a parent’s eye',
+    body: 'Look through possible matches yourself and save the photos you recognize.',
   },
 ];
 
 const SCREENSHOTS = [
   {
     src: IMG('find-cadet-photos.png'),
-    label: 'Start from Home',
-    title: 'Your search hub',
+    label: 'Know where to start',
+    title: 'Your cadet search home',
     alt: 'CadetCatch home screen on iPhone with collections, saved photos, and a prompt to add a cadet',
   },
   {
     src: IMG('start-with-one-photo.png'),
-    label: 'Create the roster',
-    title: 'One clear photo',
+    label: 'Use one familiar face',
+    title: 'Set up your private roster',
     alt: 'CadetCatch Add Cadet screen prompting for one clear profile photo, name, and unit',
   },
   {
     src: IMG('review-photo-finds.png'),
-    label: 'Stay organized',
-    title: 'New and saved finds',
+    label: 'Review at your pace',
+    title: 'Keep likely finds together',
     alt: 'CadetCatch Photos screen with New and Saved tabs for reviewing possible photo matches',
   },
 ];
 
 const TRUST_POINTS = [
-  'No public family roster',
+  'Your cadet photo stays in a private roster',
   'No ads or cross-app tracking',
-  'Possible matches are reviewed by you',
+  'No automatic identity decision',
   'Purchases and cancellation are managed by Apple',
 ];
 
@@ -165,6 +165,11 @@ const FAQS = [
     question: 'Which photo pages does CadetCatch search?',
     answer:
       'CadetCatch checks only accessible photo pages you add or enable in the app. It does not search private albums unless you choose to provide an accessible link.',
+  },
+  {
+    question: 'What if I do not see my cadet right away?',
+    answer:
+      'That can happen. A gallery may not include your cadet, or the photo angle and image quality may not be clear enough for a useful suggestion. CadetCatch gives you a better place to start, but it cannot guarantee a match in every gallery.',
   },
   {
     question: 'How much does it cost?',
@@ -192,8 +197,8 @@ export default function CadetCatch() {
           </a>
 
           <nav className="hidden items-center gap-7 text-sm font-semibold text-white/70 lg:flex" aria-label="Primary">
-            <a className="transition hover:text-white" href="#how-it-works">
-              How it works
+            <a className="transition hover:text-white" href="#for-parents">
+              For parents
             </a>
             <a className="transition hover:text-white" href="#privacy">
               Privacy
@@ -223,14 +228,15 @@ export default function CadetCatch() {
               </a>
 
               <p className="mb-4 text-sm font-bold uppercase tracking-[0.16em] text-[var(--cc-cyan)]">
-                Built for Coast Guard Academy families
+                For Coast Guard Academy parents
               </p>
               <h1 className="cc-display max-w-3xl text-5xl font-extrabold leading-[0.98] tracking-[-0.05em] text-white sm:text-6xl lg:text-7xl">
-                Stop scrolling. Find your cadet faster.
+                Find the face you know by heart.
               </h1>
               <p className="mt-6 max-w-xl text-lg leading-8 text-white/72 sm:text-xl">
-                Add one clear photo, enable the photo pages you follow, and review possible matches
-                from your iPhone—without checking every image by hand.
+                A new gallery goes up. You zoom into group shots and still wonder if you missed
+                them. CadetCatch narrows the photos worth a closer look. You decide which ones are
+                really your cadet.
               </p>
 
               <div className="mt-8 flex flex-col gap-4 sm:flex-row sm:items-center">
@@ -239,17 +245,17 @@ export default function CadetCatch() {
                   href="#how-it-works"
                   className="inline-flex min-h-12 items-center justify-center gap-2 rounded-xl border border-white/20 px-5 py-3 text-sm font-bold text-white transition hover:border-white/40 hover:bg-white/5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--cc-cyan)]"
                 >
-                  See how it works
+                  See the parent workflow
                   <ChevronRight className="h-4 w-4" aria-hidden="true" />
                 </a>
               </div>
 
               <p className="mt-4 text-sm text-white/58">
-                iPhone · Free to download · In-app options from $1.99
+                iPhone · Free to download · Start with one clear photo
               </p>
 
               <div className="mt-8 grid gap-3 text-sm text-white/78 sm:grid-cols-3">
-                {['Private roster', 'You review matches', 'Save likely finds'].map((item) => (
+                {['Your cadet stays private', 'You choose the galleries', 'You make the final call'].map((item) => (
                   <div key={item} className="flex items-center gap-2">
                     <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[var(--cc-cyan)]/15 text-[var(--cc-cyan)]">
                       <Check className="h-3.5 w-3.5" aria-hidden="true" />
@@ -260,46 +266,59 @@ export default function CadetCatch() {
               </div>
             </div>
 
-            <div className="relative mx-auto min-h-[560px] w-full max-w-xl sm:min-h-[650px] lg:min-h-[680px]">
-              <div className="absolute inset-x-4 bottom-3 top-5 rounded-[2.5rem] border border-white/12 bg-white/[0.055] shadow-[0_40px_100px_rgba(0,0,0,0.45)] backdrop-blur-sm sm:inset-x-8" />
-              <div className="absolute right-0 top-0 z-20 flex items-center gap-3 rounded-2xl border border-white/15 bg-[var(--cc-evergreen)]/92 p-3.5 shadow-2xl backdrop-blur sm:right-4 sm:top-5">
-                <img
-                  src={IMG('cadetcatch-icon.png')}
-                  alt="CadetCatch app icon"
-                  width="56"
-                  height="56"
-                  className="h-14 w-14 rounded-2xl ring-1 ring-white/15"
-                />
-                <div>
-                  <p className="cc-display font-bold text-white">CadetCatch</p>
-                  <p className="text-xs text-white/58">Your gallery shortcut</p>
+            <div className="mx-auto w-full max-w-xl overflow-hidden rounded-[2rem] border border-white/14 bg-white/[0.065] shadow-[0_36px_90px_rgba(0,0,0,0.42)] backdrop-blur-sm">
+              <div className="flex items-center justify-between gap-4 border-b border-white/10 px-4 py-4 sm:px-6">
+                <div className="flex min-w-0 items-center gap-3">
+                  <img
+                    src={IMG('cadetcatch-icon.png')}
+                    alt="CadetCatch app icon"
+                    width="48"
+                    height="48"
+                    className="h-12 w-12 shrink-0 rounded-2xl ring-1 ring-white/15"
+                  />
+                  <div className="min-w-0">
+                    <p className="cc-display truncate font-bold text-white">A new gallery is up</p>
+                    <p className="truncate text-xs text-white/58">Start with one familiar face</p>
+                  </div>
                 </div>
+                <span className="hidden shrink-0 rounded-full border border-[var(--cc-cyan)]/35 bg-[var(--cc-cyan)]/10 px-3 py-1.5 text-xs font-bold text-[var(--cc-cyan)] sm:inline-flex">
+                  Parent review
+                </span>
               </div>
 
-              <img
-                src={IMG('review-photo-finds.png')}
-                alt="CadetCatch screen for reviewing new and saved photos"
-                width="400"
-                height="869"
-                loading="eager"
-                className="cc-screen-float-delayed absolute bottom-5 left-0 hidden w-48 -rotate-6 rounded-[1.8rem] shadow-[0_28px_70px_rgba(0,0,0,0.45)] ring-1 ring-white/20 sm:block lg:left-2 lg:w-52"
-              />
-              <img
-                src={IMG('find-cadet-photos.png')}
-                alt="CadetCatch app home screen on an iPhone"
-                width="400"
-                height="869"
-                loading="eager"
-                className="cc-screen-float absolute bottom-4 left-1/2 z-10 w-[270px] -translate-x-1/2 rounded-[2rem] shadow-[0_34px_80px_rgba(0,0,0,0.48)] ring-1 ring-white/20 sm:w-[310px] lg:left-[58%] lg:w-[320px]"
-              />
+              <div className="grid grid-cols-[0.82fr_1.18fr] items-center gap-4 p-4 sm:gap-7 sm:p-7">
+                <figure className="mx-auto w-full max-w-[220px] rounded-[1.7rem] border border-white/18 bg-white p-2 shadow-[0_24px_65px_rgba(0,0,0,0.32)]">
+                  <img
+                    src={IMG('review-photo-finds.png')}
+                    alt="CadetCatch iPhone screen for reviewing new and saved photo finds"
+                    width="400"
+                    height="869"
+                    loading="eager"
+                    className="block h-auto w-full rounded-[1.25rem]"
+                  />
+                </figure>
 
-              <div className="absolute bottom-14 right-0 z-20 flex max-w-[210px] items-center gap-3 rounded-2xl border border-[var(--cc-cyan)]/30 bg-[var(--cc-night)]/94 p-4 shadow-2xl backdrop-blur sm:bottom-20 sm:right-2">
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[var(--cc-cyan)]/15 text-[var(--cc-cyan)]">
-                  <Eye className="h-5 w-5" aria-hidden="true" />
-                </span>
-                <p className="text-sm font-semibold leading-snug text-white">
-                  You decide which matches are right
-                </p>
+                <div className="min-w-0 py-2">
+                  <p className="text-[10px] font-bold uppercase tracking-[0.14em] text-[var(--cc-gold)] sm:text-xs">
+                    The moment you want
+                  </p>
+                  <h2 className="cc-display mt-2 text-2xl font-extrabold tracking-[-0.04em] text-white sm:text-4xl">
+                    “There you are.”
+                  </h2>
+                  <p className="mt-3 text-sm leading-6 text-white/66 sm:text-base sm:leading-7">
+                    CadetCatch shortens the review. You recognize the face.
+                  </p>
+                  <div className="mt-5 space-y-2.5 text-xs font-semibold text-white/78 sm:text-sm">
+                    {['Choose your photo pages', 'Review possible matches', 'Save what you recognize'].map((item) => (
+                      <div key={item} className="flex items-start gap-2">
+                        <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[var(--cc-cyan)]/14 text-[var(--cc-cyan)]">
+                          <Check className="h-3 w-3" aria-hidden="true" />
+                        </span>
+                        <span>{item}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -324,7 +343,55 @@ export default function CadetCatch() {
           </div>
         </section>
 
-        <section id="how-it-works" className="scroll-mt-24 px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
+        <section id="for-parents" className="scroll-mt-24 px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
+          <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[0.88fr_1.12fr] lg:items-center lg:gap-16">
+            <div>
+              <p className="text-sm font-bold uppercase tracking-[0.16em] text-[var(--cc-orange)]">
+                For the parent checking every photo drop
+              </p>
+              <h2 className="cc-display mt-3 text-4xl font-extrabold tracking-[-0.04em] sm:text-5xl">
+                A gallery drops. You start looking for one familiar face.
+              </h2>
+              <p className="mt-6 max-w-xl text-lg leading-8 text-[var(--cc-muted)]">
+                You zoom into group shot after group shot. The haircuts look alike. The uniforms are
+                the same. You reach the end and still wonder if you skipped the photo you wanted.
+              </p>
+              <p className="mt-5 max-w-xl text-lg font-semibold leading-8 text-[var(--cc-evergreen)]">
+                You know your cadet’s posture, their glasses, and the way they stand in a crowd.
+                CadetCatch gets you closer to the photos where that knowledge matters.
+              </p>
+            </div>
+
+            <div className="overflow-hidden rounded-[2rem] border border-[var(--cc-line)] bg-white shadow-[0_24px_75px_rgba(6,20,17,0.1)]">
+              <div className="border-b border-[var(--cc-line)] bg-[var(--cc-mist)] px-6 py-5 sm:px-8">
+                <p className="text-xs font-bold uppercase tracking-[0.14em] text-[var(--cc-orange)]">The familiar routine</p>
+                <p className="cc-display mt-2 text-2xl font-bold">Open. Zoom. Scroll. Start over.</p>
+              </div>
+              <div className="grid gap-0 sm:grid-cols-3">
+                {[
+                  ['01', 'Open every photo'],
+                  ['02', 'Zoom into every group'],
+                  ['03', 'Wonder if you missed them'],
+                ].map(([step, text], index) => (
+                  <div key={step} className={`p-6 sm:p-7 ${index > 0 ? 'border-t border-[var(--cc-line)] sm:border-l sm:border-t-0' : ''}`}>
+                    <span className="cc-display text-sm font-bold text-[var(--cc-orange)]">{step}</span>
+                    <p className="cc-display mt-3 text-lg font-bold leading-snug">{text}</p>
+                  </div>
+                ))}
+              </div>
+              <div className="m-4 rounded-2xl bg-[var(--cc-night)] p-6 text-white sm:m-6 sm:flex sm:items-center sm:justify-between sm:gap-8 sm:p-8">
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-[0.14em] text-[var(--cc-gold)]">A shorter review with CadetCatch</p>
+                  <p className="cc-display mt-2 text-2xl font-bold">Start with the likely photos.</p>
+                  <p className="mt-3 max-w-xl leading-7 text-white/64">You still make the call. You just have a better place to begin.</p>
+                </div>
+                <Search className="mt-6 h-12 w-12 shrink-0 text-[var(--cc-cyan)] sm:mt-0" aria-hidden="true" />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="how-it-works" className="scroll-mt-24 bg-white px-4 py-20 sm:px-6 lg:px-8 lg:py-28">
           <div className="mx-auto max-w-7xl">
             <div className="grid gap-8 lg:grid-cols-[0.72fr_1.28fr] lg:items-end">
               <div>
@@ -332,12 +399,12 @@ export default function CadetCatch() {
                   Three simple steps
                 </p>
                 <h2 className="cc-display mt-3 text-4xl font-extrabold tracking-[-0.04em] sm:text-5xl">
-                  A calmer way through every photo drop.
+                  From “Did I miss them?” to photos worth reviewing.
                 </h2>
               </div>
               <p className="max-w-2xl text-lg leading-8 text-[var(--cc-muted)] lg:justify-self-end">
-                CadetCatch keeps the family workflow focused: you choose the cadet, you choose the
-                photo sources, and you review the results.
+                The app does not replace your eye. It gives your eye a better place to start: one
+                familiar face, the galleries you choose, and a shorter list to review.
               </p>
             </div>
 
@@ -365,13 +432,13 @@ export default function CadetCatch() {
           <div className="mx-auto max-w-7xl">
             <div className="mx-auto max-w-3xl text-center">
               <p className="text-sm font-bold uppercase tracking-[0.16em] text-[var(--cc-orange)]">
-                See the real app
+                See the parent workflow
               </p>
               <h2 className="cc-display mt-3 text-4xl font-extrabold tracking-[-0.04em] sm:text-5xl">
-                From one clear photo to organized finds.
+                Start with one photo. Keep the likely finds together.
               </h2>
               <p className="mx-auto mt-5 max-w-2xl text-lg leading-8 text-[var(--cc-muted)]">
-                No mystery dashboard. These are the iPhone screens your family will actually use.
+                The steps stay clear, even if you have never used a photo-matching app before.
               </p>
             </div>
 
@@ -414,11 +481,11 @@ export default function CadetCatch() {
                 Family trust comes first
               </p>
               <h2 className="cc-display relative mt-3 text-4xl font-extrabold tracking-[-0.04em] sm:text-5xl">
-                Helpful search. Human judgment.
+                Your family photo stays your family business.
               </h2>
               <p className="relative mt-5 max-w-lg text-lg leading-8 text-white/68">
-                CadetCatch narrows the gallery. It does not make identity decisions for you. Your
-                family stays in control of the photo, the sources, and every saved result.
+                CadetCatch helps you review. It does not decide who anyone is. You choose the photo
+                pages, inspect every suggestion, and keep only what you recognize.
               </p>
               <a
                 href={PRIVACY_URL}
@@ -455,11 +522,11 @@ export default function CadetCatch() {
                   Transparent App Store pricing
                 </p>
                 <h2 className="cc-display mt-3 text-4xl font-extrabold tracking-[-0.04em] sm:text-5xl">
-                  Download first. Choose what fits later.
+                  Start free. Choose only what your family needs.
                 </h2>
                 <p className="mt-5 max-w-xl text-lg leading-8 text-[var(--cc-muted)]">
-                  There is no charge to put CadetCatch on your iPhone. Any purchase happens inside
-                  the app through Apple.
+                  Put CadetCatch on your iPhone at no charge. If you want a paid search or ongoing
+                  access, Apple shows the price before you choose it.
                 </p>
                 <div className="mt-8 hidden lg:block">
                   <AppStoreButton placement="pricing" />
@@ -547,10 +614,10 @@ export default function CadetCatch() {
               className="mx-auto h-16 w-16 rounded-2xl ring-1 ring-white/15"
             />
             <h2 className="cc-display mx-auto mt-6 max-w-3xl text-4xl font-extrabold tracking-[-0.04em] sm:text-5xl">
-              Ready to spend less time scrolling?
+              When the next gallery drops, start with CadetCatch.
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-lg leading-8 text-white/68">
-              Download CadetCatch and start with one clear photo of your cadet.
+              Add one clear photo now, so your next search starts with a familiar face.
             </p>
             <div className="mt-8 flex justify-center">
               <AppStoreButton placement="final" className="w-full sm:w-auto" />

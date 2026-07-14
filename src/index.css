@@ -82,34 +82,8 @@
   pointer-events: none;
 }
 
-.cc-screen-float {
-  animation: cc-screen-float 6s ease-in-out infinite;
-}
-
-.cc-screen-float-delayed {
-  animation: cc-screen-float 6s ease-in-out -2.5s infinite;
-}
-
 .cc-mobile-download {
   padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
-}
-
-@keyframes cc-screen-float {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-
-  50% {
-    transform: translateY(-8px);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .cc-screen-float,
-  .cc-screen-float-delayed {
-    animation: none;
-  }
 }
 
 .eb28-appbuilder {

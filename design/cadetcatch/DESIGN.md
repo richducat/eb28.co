@@ -99,7 +99,9 @@ This contract is intentionally scoped to `src/CadetCatch.jsx` and the static pag
 
 ## Product identity
 
-CadetCatch is the calm, capable photo-search companion for Coast Guard Academy families. The experience should feel like a trusted family field kit: focused, protective, practical, and warm enough for the emotional reason families are searching.
+CadetCatch is the calm, capable photo-search companion for Coast Guard Academy parents. The experience should feel like a trusted family field kit: focused, protective, practical, and warm enough for the emotional reason a parent is searching for one familiar face.
+
+Write to one parent who has opened a new gallery, zoomed into several group photos, and reached the end wondering whether they missed their cadet. Name that moment plainly. Lead with the familiar face and the memory the parent wants to keep, then explain the product mechanism. Avoid generic “families save time” language when a more specific parent moment is available.
 
 Use the real CadetCatch shield icon, dark field-grid texture, signal gold, search cyan, and the orange already present in the iPhone app. The visual system should be unmistakably CadetCatch without mimicking an official U.S. Coast Guard or Academy website.
 
@@ -109,20 +111,20 @@ Every marketing page has one primary action: download CadetCatch from the App St
 
 The first viewport must answer four questions in order:
 
-1. Who is this for? Coast Guard Academy families.
-2. What outcome does it create? Less gallery scrolling and faster review of possible cadet matches.
+1. Who is this for? The Coast Guard Academy parent checking each new photo drop for their cadet.
+2. What outcome does it create? A shorter, calmer path to the photos that deserve a closer look.
 3. How does it work? Add one clear reference photo, enable photo pages, and review suggested matches yourself.
 4. What should I do? Download the iPhone app free from the App Store.
 
 ## Typography
 
-Use Sora for display and headings and Space Grotesk for body copy. Headlines are compact, high-contrast, and outcome-led. Body copy should be conversational and plainspoken. Avoid military jargon, generic SaaS phrasing, and long centered paragraphs.
+Use Sora for display and headings and Space Grotesk for body copy. Headlines are compact, high-contrast, and parent-led. Body copy should sound like one parent talking to another: conversational, specific, and plainspoken. Avoid military jargon, generic SaaS phrasing, vague time-saving claims, and long centered paragraphs.
 
 ## Color and imagery
 
 Dark `night` and `evergreen` fields establish the brand. `primary` gold owns App Store actions. `searchCyan` communicates search, scanning, and progress. `actionOrange` appears only where it connects the marketing site to controls already visible inside the app.
 
-Use real app screens as product proof. Do not use abstract dashboards, stock military imagery, official seals, uniforms as decoration, or fabricated family photos. The app shield is a brand identifier, not an implication of government affiliation.
+Use real app screens as product proof. In the hero, place one screen inside a stable, contained grid next to a parent outcome statement. Do not overlap or rotate screenshots, and do not animate a `transform` on any element whose layout also depends on `translate`, `rotate`, or absolute positioning. Do not use abstract dashboards, stock military imagery, official seals, uniforms as decoration, or fabricated family photos. The app shield is a brand identifier, not an implication of government affiliation.
 
 ## Trust rules
 
@@ -135,6 +137,6 @@ Use real app screens as product proof. Do not use abstract dashboards, stock mil
 
 ## Layout and motion
 
-Use a compact outcome-first hero, visible product proof, short three-step flow, privacy/trust proof, transparent pricing, and a decisive final CTA. On guide pages, preserve the usefulness of the article while placing a branded download module above the fold and in a sticky sidebar or mobile bar.
+Use a compact parent-outcome hero, a specific gallery-search empathy section, visible product proof, a short three-step flow, privacy/trust proof, transparent pricing, and a decisive final CTA. On guide pages, preserve the usefulness of the article while placing a branded download module above the fold and in a sticky sidebar or mobile bar.
 
-Motion should be subtle and functional: small hover lifts and a slow product-screen float are acceptable. Respect `prefers-reduced-motion`. Avoid parallax, autoplay video, scrolling marquees, or animations that delay the CTA.
+Motion should be subtle and functional. Small hover lifts are acceptable. Hero product graphics must stay static so the screenshots remain crisp, aligned, and fully inside the viewport at every breakpoint. Respect `prefers-reduced-motion`. Avoid parallax, autoplay video, scrolling marquees, or animations that delay the CTA.

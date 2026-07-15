@@ -1,12 +1,12 @@
 # Facebook group administrator outreach — DRAFT, NOT SENT
 
-Nothing in this file has been sent or approved by a group administrator. All outreach must come from Richard Ducat's authentic profile, disclose that he built CadetCatch, and be logged in `group-admin-log.csv` before and after sending.
+Nothing in this file has been sent or approved by a group administrator. All outreach must come from an authentic profile belonging to an authorized TYFYS/CadetCatch representative, state that person's truthful role, and be logged in `group-admin-log.csv` before and after sending. Richard's advertising-restricted profile must not be used to operate Meta ad assets.
 
 ## Non-negotiable rules
 
 1. Never cold-post in a group. No explicit administrator approval means no post.
 2. Never scrape members, upload group membership, message members unsolicited, or submit dishonest membership answers.
-3. Prefer an administrator-published resource post over a founder-published post.
+3. Prefer an administrator-published resource post over a company-published post.
 4. Do not ask for cadet names, companies, schedules, private photos, or other OPSEC-sensitive information.
 5. Use only “photo matching” and “possible matches you review.” Never use “facial recognition,” “AI recon,” or “biometric.”
 6. State `$12.99/month` plainly when the app is discussed.
@@ -17,7 +17,7 @@ Nothing in this file has been sent or approved by a group administrator. All out
 
 ## Generic administrator permission request
 
-> Hi [Admin first name] — I’m Richard Ducat, founder of CadetCatch, an independent iPhone app for Coast Guard Academy families. I’m contacting you privately because I will not post anything in [Group name] without your explicit permission.
+> Hi [Admin first name] — I'm [full name], an authorized representative of CadetCatch, an independent iPhone app for Coast Guard Academy families. I'm contacting you privately because I will not post anything in [Group name] without your explicit permission.
 >
 > We created a free Swab Summer photo-finding guide that lists where Academy photo drops commonly appear and practical ways to keep track of them: https://cadetcatch.com/swab-summer-photos/?campaign=cc_meta_groups_2026&creative=admin_permission_request. There is no signup required.
 >
@@ -25,7 +25,7 @@ Nothing in this file has been sent or approved by a group administrator. All out
 >
 > May the free guide be shared as a resource in [Group name]? I’m happy for you to review it first or publish it yourself, which I would prefer. If app discussion is not appropriate for the group, I will respect that completely.
 >
-> CadetCatch is not affiliated with, endorsed by, or connected to the U.S. Coast Guard Academy, the U.S. Coast Guard, or DHS. — Richard
+> CadetCatch is not affiliated with, endorsed by, or connected to the U.S. Coast Guard Academy, the U.S. Coast Guard, or DHS. — [full name], CadetCatch team
 
 ## Class of 2030 administrator personalization
 
@@ -57,7 +57,7 @@ Main resource link:
 
 If the administrator permits an App Store link in the first comment, use only:
 
-`https://apps.apple.com/us/app/cadetcatch/id6769565852?pt={{APPLE_PROVIDER_TOKEN}}&ct=cc_meta_groups_2026&mt=8`
+`https://apps.apple.com/app/apple-store/id6769565852?pt=118693782&ct=cc_meta_groups_2026&mt=8`
 
 If only one link is allowed, publish the guide link and use the aggregate group campaign link on the guide’s App Store CTA. Do not replace the resource link with the sales link without explicit permission.
 

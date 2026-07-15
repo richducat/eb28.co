@@ -5,7 +5,7 @@
   "generated_on": "2026-07-10",
   "owner": {
     "legal_entity": "TYFYS MANAGEMENT LLC",
-    "operating_owner": "Richard Ducat",
+    "operating_owner": "Karen Hallett",
     "portfolio_contact": "meta@eb28.co",
     "page_contact": "cadetcatch@eb28.co",
     "product": "CadetCatch",
@@ -18,7 +18,23 @@
     "default_meta_delivery_status": "PAUSED",
     "creative_status": "DRAFT",
     "outreach_status": "DRAFT_NOT_SENT",
-    "maximum_lifetime_spend_cents": 60000,
+    "financial_authorization_state": "AUTHORIZED_TERMS_SUSPENDED_PAYMENT_METHOD_UNUSABLE",
+    "payment_method_state": "SELECTED_GOLD_AMEX_ATTACHMENT_FAILED_PENDING_REPLACEMENT_AND_FRESH_EXACT_AUTHORIZATION",
+    "requested_hard_daily_spend_cap_cents": 2500,
+    "meta_daily_budget_delivery_note": "Meta treats a daily budget as an average and may spend up to 75 percent above it on a given day while limiting a week to seven times the daily setting.",
+    "planning_reference_meta_daily_budget_setting_cents": 1428,
+    "planning_reference_pilot_duration_days": 7,
+    "planning_reference_lifetime_cap_cents": 9996,
+    "meta_daily_budget_setting_cents": 1428,
+    "maximum_lifetime_spend_cents": 9996,
+    "maximum_possible_total_charge_cents": 9996,
+    "provider_tax_and_fee_state": "PENDING_PROVIDER_READBACK",
+    "provider_confirmed_tax_and_fee_cents": null,
+    "provider_tax_and_fee_evidence": null,
+    "provider_spend_limit_state": "PENDING_PROVIDER_READBACK",
+    "provider_enforced_account_spend_limit_cents": null,
+    "provider_spend_limit_evidence": null,
+    "activation_financial_gate": "BLOCKED_UNTIL_ZERO_ADDED_CHARGES_ARE_VERIFIED;_ANY_NONZERO_TAX_OR_FEE_REQUIRES_FRESH_EXACT_USER_AUTHORIZATION_FOR_REVISED_DELIVERY_AND_CHARGE_TERMS",
     "activation_requires_all_mandatory_qa": true,
     "forbid_group_member_scraping": true,
     "forbid_customer_list_upload_for_pilot": true,
@@ -33,7 +49,8 @@
     ]
   },
   "business_assets": {
-    "business_portfolio_name": "TYFYS MANAGEMENT LLC",
+    "legal_entity_name": "TYFYS MANAGEMENT LLC",
+    "business_portfolio_name": "TYFYS Management LLC",
     "facebook_page_name": "CadetCatch",
     "facebook_page_username_preference": [
       "CadetCatchApp",
@@ -46,38 +63,64 @@
     "ad_account_name": "CadetCatch | US | USD | ET",
     "ad_account_currency": "USD",
     "ad_account_timezone": "America/New_York",
-    "page_bio": "CadetCatch helps Coast Guard Academy families search event photos and review possible matches themselves. Independent; not affiliated with USCGA, USCG, or DHS.",
-    "business_id": "{{META_BUSINESS_ID}}",
-    "ad_account_id": "{{META_AD_ACCOUNT_ID}}",
-    "page_id": "{{META_PAGE_ID}}",
-    "instagram_user_id": "{{META_INSTAGRAM_USER_ID}}"
+    "page_bio": "Possible photo matches you review. Independent; not affiliated with USCGA, USCG or DHS.",
+    "page_bio_original_requested": "CadetCatch helps Coast Guard Academy families search event photos and review possible matches themselves. Independent; not affiliated with USCGA, USCG, or DHS.",
+    "business_id": "2513115945804036",
+    "ad_account_id": "1014191354819822",
+    "ads_manager_verified_ad_account_id": null,
+    "wrong_account_handoff_observed": "10152349167335880",
+    "page_id": "1252075751318222",
+    "page_url_identity": "61591738779360",
+    "page_username_state": "NOT_SET",
+    "portfolio_email_state": "PENDING_CONFIRMATION",
+    "portfolio_two_factor_requirement": "EVERYONE",
+    "portfolio_two_factor_enrollment_state": "KAREN_ACTION_REQUIRED_1_OF_1",
+    "instagram_user_id": null,
+    "instagram_state": "BLOCKED_ON_KAREN_OWNER_IDENTITY_FIELDS"
   },
   "apple_campaign_links": {
-    "provider_token": "{{APPLE_PROVIDER_TOKEN}}",
-    "url_template": "https://apps.apple.com/us/app/cadetcatch/id6769565852?pt={{APPLE_PROVIDER_TOKEN}}&ct={{CAMPAIGN_TOKEN}}&mt=8",
+    "provider_token": "118693782",
+    "provider_token_state": "VERIFIED_IN_APP_STORE_CONNECT_2026_07_15",
+    "url_template": "https://apps.apple.com/app/apple-store/id6769565852?pt=118693782&ct={{CAMPAIGN_TOKEN}}&mt=8",
     "links": [
       {
         "key": "cold",
         "campaign_token": "cc_meta_cold_2026",
-        "url": "https://apps.apple.com/us/app/cadetcatch/id6769565852?pt={{APPLE_PROVIDER_TOKEN}}&ct=cc_meta_cold_2026&mt=8"
+        "url": "https://apps.apple.com/app/apple-store/id6769565852?pt=118693782&ct=cc_meta_cold_2026&mt=8"
       },
       {
         "key": "warm",
         "campaign_token": "cc_meta_warm_2026",
-        "url": "https://apps.apple.com/us/app/cadetcatch/id6769565852?pt={{APPLE_PROVIDER_TOKEN}}&ct=cc_meta_warm_2026&mt=8"
+        "url": "https://apps.apple.com/app/apple-store/id6769565852?pt=118693782&ct=cc_meta_warm_2026&mt=8"
       },
       {
         "key": "groups",
         "campaign_token": "cc_meta_groups_2026",
-        "url": "https://apps.apple.com/us/app/cadetcatch/id6769565852?pt={{APPLE_PROVIDER_TOKEN}}&ct=cc_meta_groups_2026&mt=8"
+        "url": "https://apps.apple.com/app/apple-store/id6769565852?pt=118693782&ct=cc_meta_groups_2026&mt=8"
       },
       {
         "key": "partner",
         "campaign_token": "cc_meta_partner_2026",
-        "url": "https://apps.apple.com/us/app/cadetcatch/id6769565852?pt={{APPLE_PROVIDER_TOKEN}}&ct=cc_meta_partner_2026&mt=8"
+        "url": "https://apps.apple.com/app/apple-store/id6769565852?pt=118693782&ct=cc_meta_partner_2026&mt=8"
       }
     ],
     "group_reporting_policy": "Use the aggregate groups token for every approved group placement during the pilot; do not create per-group tokens until expected volume can clear Apple's reporting threshold."
+  },
+  "app_store_analytics_baseline": {
+    "provider": "App Store Connect",
+    "window": "90 days ending 2026-07-14",
+    "observed_at": "2026-07-15T17:20:40Z",
+    "first_time_downloads": 7,
+    "redownloads": 2,
+    "product_page_conversion_rate_percent": 4.44,
+    "impressions": 267,
+    "product_page_views": 23,
+    "proceeds_usd_displayed": 9,
+    "in_app_purchases": 1,
+    "active_subscription_plans": 1,
+    "paid_subscription_plans": 1,
+    "day_1_download_to_paid_percent": 11.1,
+    "reporting_note": "Apple displayed Not Enough Data for several lower-volume metrics; do not convert those labels to zero."
   },
   "campaign": {
     "name": "CC_US_iOS_Traffic_SwabSummer_2026-07",
@@ -86,32 +129,54 @@
     "objective": "OUTCOME_TRAFFIC",
     "special_ad_categories": [],
     "campaign_budget_optimization": false,
+    "budget_mode": "DAILY_AT_AD_SET",
     "bid_strategy": "LOWEST_COST_WITHOUT_CAP",
     "performance_goal": "LINK_CLICKS",
     "destination_link_type": "APPLE_APP_STORE_CAMPAIGN_LINK",
-    "duration_days": 30,
+    "duration_days": 7,
     "start_time": "{{START_AT_ISO8601_AMERICA_NEW_YORK}}",
-    "end_time": "{{END_AT_ISO8601_AMERICA_NEW_YORK_EXACTLY_30_DAYS_LATER}}",
-    "maximum_lifetime_spend_cents": 60000,
+    "end_time": "{{END_AT_ISO8601_AMERICA_NEW_YORK}}",
+    "maximum_lifetime_spend_cents": 9996,
     "spend_currency": "USD"
+  },
+  "small_market_delivery_plan": {
+    "market_context": "Approximately 1,200 total academy students; parent and family prospects are geographically dispersed and the directly relevant paid audience is small.",
+    "initial_structure": "Use one cold ad set only so the limited budget is not fragmented. Keep warm and partner ad sets PAUSED until their gates pass.",
+    "initial_creatives": [
+      "V1_ScrollSearch",
+      "S1_Outcome"
+    ],
+    "first_challenger": "C1_HowItWorks",
+    "reserve_creative": "T1_Transparency",
+    "audience_policy": "Use strict United States, age 40 plus, mobile and iOS controls with Advantage Plus audience. Treat relevant interests only as suggestions when Meta returns them; stay broad rather than force an undersized interest audience.",
+    "group_policy": "Named Facebook group membership is not targetable. Use permission-first organic resource posts and eligible public partnership ads only.",
+    "objective_policy": "Use Traffic optimized for link clicks until verified app-install or subscription events are available through an eligible SDK or measurement partner."
   },
   "budget_scenarios": {
     "base": {
-      "condition": "Use unless an eligible public partner supplies written permission and a valid partnership-ad code by pilot day 7.",
-      "ad_set_lifetime_budget_cents": {
-        "AS1_Cold_US_iOS_40plus": 48000,
-        "AS2_Warm_MetaEngagers": 12000
+      "condition": "Authorized one-time seven-day base pilot using an ad-set daily budget, never a lifetime-budget delivery path; cold only, with warm held at zero.",
+      "ad_set_daily_budget_cents": {
+        "AS1_Cold_US_iOS_40plus": 1428,
+        "AS2_Warm_MetaEngagers": 0
       },
-      "total_lifetime_budget_cents": 60000
+      "total_daily_budget_setting_cents": 1428,
+      "duration_days": 7,
+      "maximum_scheduled_ad_delivery_cents": 9996,
+      "maximum_total_card_charge_cents": 9996,
+      "activation_state": "BLOCKED_PENDING_PROVIDER_TAX_AND_FEE_READBACK"
     },
     "authorized_partner": {
-      "condition": "Use only when the partner gate passes by pilot day 7; reallocate $100 from AS1, never add budget.",
-      "ad_set_lifetime_budget_cents": {
-        "AS1_Cold_US_iOS_40plus": 38000,
-        "AS2_Warm_MetaEngagers": 12000,
-        "AS3_PublicPartner": 10000
+      "condition": "Blocked unless the partner gate passes and an explicit authorized total is reallocated without increasing it.",
+      "ad_set_daily_budget_cents": {
+        "AS1_Cold_US_iOS_40plus": 1428,
+        "AS2_Warm_MetaEngagers": 0,
+        "AS3_PublicPartner": 0
       },
-      "total_lifetime_budget_cents": 60000
+      "total_daily_budget_setting_cents": 1428,
+      "duration_days": 7,
+      "maximum_scheduled_ad_delivery_cents": 9996,
+      "maximum_total_card_charge_cents": 9996,
+      "activation_state": "BLOCKED_PENDING_PROVIDER_TAX_AND_FEE_AND_PARTNER_READBACK"
     }
   },
   "placements": {
@@ -152,8 +217,8 @@
       "name": "AS1_Cold_US_iOS_40plus",
       "status": "PAUSED",
       "role": "cold_prospecting",
-      "base_lifetime_budget_cents": 48000,
-      "partner_scenario_lifetime_budget_cents": 38000,
+      "base_daily_budget_cents": 1428,
+      "partner_scenario_daily_budget_cents": 1428,
       "billing_event": "IMPRESSIONS",
       "optimization_goal": "LINK_CLICKS",
       "destination_type": "WEBSITE",
@@ -199,8 +264,8 @@
       "name": "AS2_Warm_MetaEngagers",
       "status": "PAUSED",
       "role": "warm_engagement_retargeting",
-      "base_lifetime_budget_cents": 12000,
-      "partner_scenario_lifetime_budget_cents": 12000,
+      "base_daily_budget_cents": 0,
+      "partner_scenario_daily_budget_cents": 0,
       "billing_event": "IMPRESSIONS",
       "optimization_goal": "LINK_CLICKS",
       "destination_type": "WEBSITE",
@@ -248,7 +313,7 @@
     "name": "AS3_PublicPartner",
     "status": "DRAFT_BLOCKED_ON_PERMISSION",
     "role": "authorized_public_partnership_ad",
-    "lifetime_budget_cents": 10000,
+    "daily_budget_cents": 0,
     "billing_event": "IMPRESSIONS",
     "optimization_goal": "LINK_CLICKS",
     "destination_type": "WEBSITE",
@@ -257,8 +322,8 @@
       "Written partner authorization is logged.",
       "Content is public and eligible for partnership ads.",
       "A valid partnership-ad code or equivalent permission is supplied.",
-      "The cold budget is reduced from $480 to $380 before this ad set is created.",
-      "The resulting total remains exactly $600."
+      "The partner allocation is removed from the cold allocation before this ad set is created.",
+      "The resulting total does not exceed the separately approved lifetime cap."
     ],
     "targeting": "Use AS1 strict geo, age, language, device, and iOS controls; do not derive an audience from private group membership."
   },
@@ -349,6 +414,7 @@
       "duration_seconds_min": 30,
       "duration_seconds_max": 45,
       "angle": "public_page_guide_walkthrough",
+      "on_asset_copy": "Free Swab Summer photo guide — no signup required.",
       "script": "Swab Summer photos can show up across several public galleries and social pages. The free CadetCatch Swab Summer photo guide puts the major sources in one place, with practical tips for keeping track of new drops. No signup is required. CadetCatch is also an independent iPhone app that shows possible photo matches for families to review themselves. It is not affiliated with USCGA, USCG, or DHS.",
       "destination_url": "https://cadetcatch.com/swab-summer-photos/",
       "paid_media_eligible": false
@@ -360,35 +426,35 @@
       "status": "PAUSED",
       "ad_set_name": "AS1_Cold_US_iOS_40plus",
       "creative_key": "V1_ScrollSearch",
-      "test_window": "DAYS_1_TO_7"
+      "test_window": "DAYS_1_TO_3"
     },
     {
       "name": "AD_S1_Outcome_Cold_4x5",
       "status": "PAUSED",
       "ad_set_name": "AS1_Cold_US_iOS_40plus",
       "creative_key": "S1_Outcome",
-      "test_window": "DAYS_1_TO_7"
+      "test_window": "DAYS_1_TO_3"
     },
     {
       "name": "AD_C1_HowItWorks_Cold_Carousel",
       "status": "PAUSED",
       "ad_set_name": "AS1_Cold_US_iOS_40plus",
       "creative_key": "C1_HowItWorks",
-      "test_window": "DAYS_8_TO_14_VS_PRIOR_WINNER"
+      "test_window": "DAYS_4_TO_7_VS_PRIOR_WINNER"
     },
     {
       "name": "AD_T1_Transparency_Cold_4x5",
       "status": "PAUSED",
       "ad_set_name": "AS1_Cold_US_iOS_40plus",
       "creative_key": "T1_Transparency",
-      "test_window": "DAYS_15_TO_21_VS_PRIOR_WINNER"
+      "test_window": "RESERVE_ONLY_AFTER_A_PAUSE"
     },
     {
       "name": "AD_W1_FreePreviewPrice_Warm_4x5",
       "status": "PAUSED",
       "ad_set_name": "AS2_Warm_MetaEngagers",
       "creative_key": "W1_FreePreviewPrice",
-      "test_window": "DAYS_22_TO_30_AFTER_WARM_AUDIENCE_GATE"
+      "test_window": "PAUSED_UNTIL_WARM_AUDIENCE_GATE"
     }
   ],
   "optional_partner_ad": {
@@ -400,43 +466,38 @@
   },
   "testing_schedule": [
     {
-      "days": "1-7",
+      "days": "1-3",
       "test": "V1_ScrollSearch versus S1_Outcome",
       "rule": "One creative variable at a time; all other ads remain PAUSED."
     },
     {
-      "days": "8-14",
+      "days": "4-7",
       "test": "Prior winner versus C1_HowItWorks",
       "rule": "Pause the prior loser before enabling the next challenger."
     },
     {
-      "days": "15-21",
-      "test": "Prior winner versus T1_Transparency",
-      "rule": "Pause the prior loser before enabling the next challenger."
-    },
-    {
-      "days": "22-30",
-      "test": "Winning cold creative plus W1 warm creative; authorized partner only if its gate passed",
-      "rule": "Warm and partner objects remain PAUSED until their individual gates pass."
+      "days": "reserve",
+      "test": "T1_Transparency, W1 warm creative, and any authorized public-partner content",
+      "rule": "Use T1 only after another cold creative is paused. Warm and partner objects remain PAUSED until their individual gates pass and never add budget."
     }
   ],
   "optimization_rules": [
     {
       "id": "creative_stop_loss",
-      "evaluation_gate": "ad_spend_cents >= 5000 OR impressions >= 3000",
+      "evaluation_gate": "ad_spend_cents >= 1500 OR impressions >= 1500",
       "condition": "outbound_ctr_percent < 0.8 OR outbound_cpc_cents > 250",
       "action": "PAUSE_AD_AND_DIAGNOSE",
       "exception": "Do not pause if verified Family Monthly subscriptions justify continued delivery; record the evidence."
     },
     {
       "id": "download_stop_loss",
-      "evaluation_gate": "campaign_spend_cents >= 15000",
-      "condition": "attributable_first_time_downloads < 5",
+      "evaluation_gate": "campaign_spend_cents >= 5000",
+      "condition": "attributable_first_time_downloads < 2 AND verified_app_store_clicks < 15",
       "action": "PAUSE_CAMPAIGN_AND_DIAGNOSE_STOREFRONT_LINK_AND_CREATIVE"
     },
     {
       "id": "subscription_stop_loss",
-      "evaluation_gate": "campaign_spend_cents >= 30000",
+      "evaluation_gate": "campaign_spend_cents >= 7500",
       "condition": "family_monthly_subscriptions == 0",
       "action": "PAUSE_CAMPAIGN"
     },
@@ -454,14 +515,14 @@
     },
     {
       "id": "scale_gate",
-      "evaluation_gate": "campaign_spend_cents <= 60000",
+      "evaluation_gate": "campaign_spend_cents <= authorized_lifetime_spend_cents",
       "condition": "family_monthly_subscriptions >= 5 AND cac_cents <= 0.5 * confirmed_90_day_net_contribution_cents",
-      "action": "DOCUMENT_ELIGIBILITY_ONLY; DO_NOT_INCREASE_ABOVE_60000_WITHOUT_A_NEW_APPROVED_BUDGET_DECISION"
+      "action": "DOCUMENT_ELIGIBILITY_ONLY; DO_NOT_INCREASE_ABOVE_AUTHORIZED_LIFETIME_SPEND_CENTS_WITHOUT_NEW_EXACT_APPROVAL"
     },
     {
       "id": "absolute_spend_cap",
       "evaluation_gate": "always",
-      "condition": "campaign_spend_cents >= 60000",
+      "condition": "campaign_spend_cents >= authorized_lifetime_spend_cents",
       "action": "PAUSE_ALL_DELIVERY"
     }
   ],
@@ -474,7 +535,7 @@
       "eligible public photo and community publishers"
     ],
     "rules": [
-      "Contact administrators privately from Richard Ducat's authentic profile and disclose founder status in the first message.",
+      "Contact administrators only from an authentic profile of an authorized TYFYS/CadetCatch representative, disclose the representative's truthful role, and do not use Richard's restricted profile to operate Meta ad assets.",
       "Never post without explicit administrator permission.",
       "Prefer an administrator-published resource post.",
       "Never scrape members, upload group membership, or message members unsolicited.",
@@ -498,7 +559,7 @@
     "All four Apple campaign links resolve and preserve their campaign tokens.",
     "Every creative uses only approved demo or consenting-adult media and passes claim and affiliation review.",
     "Every selected placement has a reviewed preview with no cropping or unreadable disclosure.",
-    "Campaign, ad sets, and ads were first created PAUSED and total lifetime budget reconciles to exactly $600 or less.",
+    "Campaign, ad sets, and ads were first created PAUSED and total lifetime budget reconciles to the exact separately approved cap.",
     "The package validator passes and every mandatory launch-qa.md item is checked."
   ]
 }

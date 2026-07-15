@@ -1,0 +1,160 @@
+{
+  "schema_version": "task-capsule/v1",
+  "project_id": "cadetcatch",
+  "objective": "Complete TYFYS MANAGEMENT LLC Meta business setup under Karen's authentic owner profile, prepare the CadetCatch campaign PAUSED, verify it, and keep delivery blocked until a replacement card and exact transaction terms are freshly authorized and every provider gate passes.",
+  "canonical_checkout": "/Users/richardducat/GITHUB/cadetcatch-meta-launch-20260710",
+  "allowed_mutations": [
+    "Create or configure TYFYS MANAGEMENT LLC business assets through Karen's authentic Meta profile after confirming the active identity",
+    "Create CadetCatch Page, Instagram connection, ad account, and campaign objects only where they can be left non-delivering",
+    "Upload existing approved CadetCatch campaign assets and create ads in PAUSED state",
+    "Prepare all non-financial CadetCatch Meta objects and evidence while every payment and delivery action remains blocked",
+    "Update the local Meta launch package and execution receipt with verified external IDs and state"
+  ],
+  "forbidden_surfaces": [
+    "Opening, saving, or attaching the unselected Delta American Express",
+    "Opening, saving, attaching, or using any payment method unless that exact payment method and Meta transaction are freshly authorized in the current conversation",
+    "Retrying the unusable gold American Express or opening, saving, or attaching any replacement card before fresh exact current-conversation authorization for that specific card and transaction",
+    "Activating before mandatory provider QA or with a budget, duration, recurrence, tax, fee, or maximum total outside the exact authorization",
+    "Creating a fake or duplicate personal Facebook profile",
+    "Concealing or circumventing Richard's advertising restriction",
+    "Adding Richard as an ad-account owner or operator while his advertising access is restricted",
+    "App Store, TestFlight, AWS, backend, email DNS, or unrelated EB28 and TYFYS mutations",
+    "Scraping Facebook groups, targeting named group membership, or unsolicited member messaging"
+  ],
+  "selected_workers": [
+    "paid-media-measurement-team",
+    "platform-automation-team",
+    "commerce-risk-team"
+  ],
+  "publish_send_mode": "prepare_only_payment_method_blocked",
+  "deployment_target": "Meta Business portfolio and Ads Manager for CadetCatch",
+  "authentication_route": "SessionLoom service meta-business in the existing persistent Chrome profile",
+  "financial_authorization": {
+    "state": "authorized",
+    "execution_state": "suspended_selected_payment_method_unusable",
+    "authorization_kind": "exact_current_conversation",
+    "conversation_evidence": "On 2026-07-15 the user approved the stated Meta Platforms seven-day pilot terms, then selected the gold American Express and confirmed Karen's 2FA was done.",
+    "action": "Attach the selected gold American Express to the TYFYS MANAGEMENT LLC CadetCatch Meta ad account and run one fixed seven-day advertising pilot",
+    "platform_or_payee": "Meta Platforms",
+    "payment_method_label": "gold American Express",
+    "meta_daily_budget_setting_cents": 1428,
+    "currency": "USD",
+    "recurrence": "one-time",
+    "maximum_total_cents": 9996,
+    "hard_daily_maximum_cents": 2499,
+    "lifetime_cap_cents": 9996
+  },
+  "replacement_payment_method_authorization": {
+    "state": "unauthorized",
+    "conversation_evidence": null,
+    "payment_method_label": null,
+    "platform_or_payee": null,
+    "currency": null,
+    "recurrence": null,
+    "meta_daily_budget_setting_cents": null,
+    "hard_daily_maximum_cents": null,
+    "lifetime_cap_cents": null,
+    "maximum_total_cents": null
+  },
+  "required_preflight": [
+    "Confirm SessionLoom is healthy and meta-business is an approved service",
+    "Read the applicable repository AGENTS.md and preserve its unrelated worktree state",
+    "Confirm the active Facebook profile is Karen's authentic profile",
+    "Read back any existing business portfolios, Pages, Instagram accounts, ad accounts, restrictions, and billing state before creation",
+    "Validate the existing paused launch package"
+  ],
+  "required_acceptance_evidence": [
+    "Current readback proving Karen's authentic profile and TYFYS MANAGEMENT LLC ownership context",
+    "Verified Meta business, Page, Instagram, and ad-account IDs for assets actually created or connected",
+    "Verified campaign, ad-set, creative, and ad IDs with every delivery status PAUSED or inactive",
+    "Budget reconciliation and provider readback showing the exact payment, campaign, delivery, and spend-cap state before and after activation",
+    "Independent quality audit with zero unresolved P0 or P1 findings",
+    "Exact remaining lifetime-cap, card-selection, authentication, restriction, or payment blocker"
+  ],
+  "safety_boundaries": {
+    "blockers": [
+      "Karen's claimed completion of personal Meta two-factor enrollment must be verified by current provider readback before any payment or campaign mutation",
+      "The user reports the selected gold American Express cannot be attached; all payment and activation authority is suspended until a replacement card is identified and freshly authorized with exact transaction terms",
+      "The open Facebook security handoff targets ad account 10152349167335880, not the CadetCatch business ad account 1014191354819822; do not add payment or create campaign objects in the wrong account",
+      "Meta taxes and fees are unverified; do not activate unless the billing screen proves zero added charges. Any nonzero tax or fee requires fresh exact current-conversation authorization for the revised delivery setting, ad-delivery total, charge composition, and maximum total",
+      "meta@eb28.co remains pending confirmation; no Meta/Facebook confirmation message was present in the richard@eb28.co cPanel Inbox or Junk folder on July 15, and the connected Gmail recheck was rate-limited",
+      "Instagram requires Karen to personally supply owner identity and credential fields",
+      "Warm audience IDs and Meta creative/object IDs remain unresolved"
+    ],
+    "requirements": [
+      "Use Karen only as the legitimate authentic business owner, never as a ban-evasion proxy",
+      "Build every campaign object PAUSED and independently reconcile the approved Meta payee, USD daily setting, modeled hard-day maximum, seven-day schedule, lifetime cap, taxes and fees, and maximum total immediately before activation",
+      "Use Meta's 1428-cent daily-budget path with a fixed seven-day end time; never substitute a 9996-cent lifetime-budget delivery path",
+      "Do not expose or persist payment-card data in files, logs, chat, or screenshots",
+      "Do not retry the failed card or inspect a replacement card before fresh exact authorization",
+      "Treat prepared, provider configured, and public/live as separate external states"
+    ]
+  },
+  "external_state": "provider configured",
+  "external_state_dimensions": [
+    {
+      "dimension": "local Meta launch package",
+      "state": "prepared",
+      "evidence": [
+        "Existing campaign manifest, ads CSV, creative files, launch QA, and validation script are present in the task checkout"
+      ],
+      "observed_at": "2026-07-15T14:30:52Z"
+    },
+    {
+      "dimension": "Meta provider assets",
+      "state": "provider configured",
+      "evidence": [
+        "Karen Hallett is shown by Meta as creator and last updater of TYFYS Management LLC",
+        "Business portfolio ID 2513115945804036 exists with exact legal details saved and CadetCatch set as primary Page",
+        "Facebook Page asset ID 1252075751318222 exists under the portfolio",
+        "Ad account ID 1014191354819822 exists with USD and America/New_York",
+        "Portfolio 2FA requirement is Everyone; Meta reports Karen is the one remaining enrollee",
+        "No payment method, campaign, ad set, ad, or spend exists"
+      ],
+      "observed_at": "2026-07-15T14:49:28Z"
+    },
+    {
+      "dimension": "Meta Ads Manager access",
+      "state": "blocked",
+      "evidence": [
+        "SessionLoom meta-business is scoped to business.facebook.com and adsmanager.facebook.com",
+        "Fresh SessionLoom readback at 2026-07-15T18:01:44Z still redirected Karen to the business Two-factor authentication required page",
+        "SessionLoom blocked the Get started transition because Meta routes it to personal facebook.com outside the approved Meta Business origins; no fallback or bypass was used"
+      ],
+      "observed_at": "2026-07-15T18:01:44Z"
+    },
+    {
+      "dimension": "payment and delivery",
+      "state": "not configured",
+      "evidence": [
+        "Both originally supplied card images remained unopened and unattached",
+        "The user reports the selected gold American Express cannot be attached and will provide and authorize another card later",
+        "No replacement card is identified or authorized",
+        "No campaign objects or delivery were created"
+      ],
+      "observed_at": "2026-07-15T17:20:00Z"
+    },
+    {
+      "dimension": "Apple campaign-link measurement",
+      "state": "provider configured",
+      "evidence": [
+        "App Store Connect authenticated to DIGITAL SYNC, LLC, THE and opened CadetCatch Analytics Campaigns",
+        "Generate a Campaign Link returned provider token 118693782 for cc_meta_cold_2026",
+        "The canonical token and all four approved campaign tokens now produce operational App Store links with no placeholders"
+      ],
+      "observed_at": "2026-07-15T17:21:34Z"
+    }
+  ],
+  "current_conversation_authority": [
+    "Use Karen's authentic logged-in Facebook profile for legitimate TYFYS MANAGEMENT LLC business setup",
+    "Create the new Meta business portfolio, Page, ad account, and prepared campaign assets",
+    "Complete all non-financial Meta and Apple campaign preparation while payment and delivery remain off",
+    "Do not retry the failed gold American Express or use a replacement card until fresh exact authorization is supplied"
+  ],
+  "unresolved_ambiguities": [
+    "Current Meta readback confirming Karen's completed two-factor enrollment",
+    "A replacement payment card and fresh exact authorization for that specific Meta transaction",
+    "A working inbox for the meta@eb28.co confirmation message",
+    "Karen's personal completion of the Instagram identity and credential fields"
+  ]
+}

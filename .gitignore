@@ -17,3 +17,7 @@ output/lead-ops/
 *.env
 !.env.example
 !*.env.example
+
+# Ephemeral browser-automation artifacts — never commit
+.playwright-cli/
+.playwright-mcp/

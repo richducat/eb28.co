@@ -8,6 +8,10 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { injectSeoMarkup } from '../src/seo.js';
+import {
+  injectCadetCatchAnalyticsLoader,
+  injectCadetCatchNoscriptFallback,
+} from './lib/cadetcatch-html.mjs';
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const docsDir = path.join(repoRoot, 'docs');
@@ -71,6 +75,65 @@ async function copyIfExists(sourcePath, destinationPath) {
   }
 }
 
+function collectMatches(input, pattern) {
+  return Array.from(input.matchAll(pattern), (match) => match[1]);
+}
+
+function htmlAssetNames(html) {
+  return collectMatches(html, /(?:src|href)="\/assets\/([^"?]+)(?:\?[^"']*)?"/g);
+}
+
+function javascriptDependencies(source, includeCadetCatchDynamicImport) {
+  const dependencies = new Set([
+    ...collectMatches(source, /from\s*["']\.\/([^"']+)["']/g),
+    ...collectMatches(source, /import\s*["']\.\/([^"']+)["']/g),
+  ]);
+
+  const dynamicImports = collectMatches(source, /import\(\s*["']\.\/([^"']+)["']\s*\)/g);
+  for (const dependency of dynamicImports) {
+    if (!includeCadetCatchDynamicImport || dependency.startsWith('CadetCatch-')) {
+      dependencies.add(dependency);
+    }
+  }
+  return dependencies;
+}
+
+async function copyCadetCatchAssets(indexHtml) {
+  const sourceDir = path.join(docsDir, 'assets');
+  const destinationDir = path.join(targetDir, 'assets');
+  const required = new Set(htmlAssetNames(indexHtml));
+  const entryScripts = new Set(Array.from(required).filter((name) => name.endsWith('.js')));
+
+  for (const entryScript of entryScripts) {
+    const source = await fs.readFile(path.join(sourceDir, entryScript), 'utf8');
+    for (const dependency of javascriptDependencies(source, true)) required.add(dependency);
+  }
+
+  if (!Array.from(required).some((name) => name.startsWith('CadetCatch-') && name.endsWith('.js'))) {
+    throw new Error('Unable to locate the CadetCatch JavaScript chunk from the built entry point');
+  }
+
+  const inspected = new Set(entryScripts);
+  const queue = Array.from(required).filter((name) => name.endsWith('.js') && !inspected.has(name));
+  while (queue.length > 0) {
+    const assetName = queue.shift();
+    if (inspected.has(assetName)) continue;
+    inspected.add(assetName);
+    const source = await fs.readFile(path.join(sourceDir, assetName), 'utf8');
+    for (const dependency of javascriptDependencies(source, false)) {
+      if (!required.has(dependency)) {
+        required.add(dependency);
+        if (dependency.endsWith('.js')) queue.push(dependency);
+      }
+    }
+  }
+
+  await fs.mkdir(destinationDir, { recursive: true });
+  for (const assetName of Array.from(required).sort()) {
+    await fs.copyFile(path.join(sourceDir, assetName), path.join(destinationDir, assetName));
+  }
+}
+
 async function main() {
   const version = JSON.parse(await fs.readFile(path.join(docsDir, 'version.json'), 'utf8'));
   const buildId = process.env.BUILD_ID || version.buildId || 'development';
@@ -83,6 +146,8 @@ async function main() {
     ensureRemoved(path.join(targetDir, 'assets')),
     ensureRemoved(path.join(targetDir, 'img')),
     ensureRemoved(path.join(targetDir, 'favicon.svg')),
+    ensureRemoved(path.join(targetDir, 'analytics-config.json')),
+    ensureRemoved(path.join(targetDir, 'site-analytics.js')),
     ensureRemoved(path.join(targetDir, 'version.json')),
     ...STATIC_SUBPAGES.map((slug) => ensureRemoved(path.join(targetDir, slug))),
   ]);
@@ -90,23 +155,33 @@ async function main() {
   // SPA shell, SEO-stamped for the cadetcatch.com hostname → renders CadetCatch.
   // Rebase any absolute eb28.co/cc asset URLs (e.g. JSON-LD image) onto the domain root.
   const routeLocation = { pathname: '/', hostname: primaryHostname };
-  const indexHtml = injectBuildMarkup(injectSeoMarkup(htmlTemplate, routeLocation), buildId)
+  const indexHtml = injectCadetCatchNoscriptFallback(
+    injectCadetCatchAnalyticsLoader(
+      injectBuildMarkup(injectSeoMarkup(htmlTemplate, routeLocation), buildId),
+    ),
+  )
     .split(OLD_ORIGIN_CC)
     .join(NEW_ORIGIN)
     .replace('/images/hero_bg_app.png', '/img/start-with-one-photo.png');
   await writeFile('index.html', indexHtml);
   await writeFile('404.html', indexHtml);
 
-  // Built JS/CSS bundle and marketing images.
-  await fs.cp(path.join(docsDir, 'assets'), path.join(targetDir, 'assets'), {
-    recursive: true,
-    force: true,
-  });
+  // Copy only the current CadetCatch entry graph. The shared EB28 build retains
+  // thousands of historical hashed files that must not leak into this deploy.
+  await copyCadetCatchAssets(indexHtml);
   await fs.cp(path.join(docsDir, 'cc', 'img'), path.join(targetDir, 'img'), {
     recursive: true,
     force: true,
   });
   await copyIfExists(path.join(docsDir, 'favicon.svg'), path.join(targetDir, 'favicon.svg'));
+  await fs.copyFile(
+    path.join(docsDir, 'cc', 'analytics-config.json'),
+    path.join(targetDir, 'analytics-config.json'),
+  );
+  await fs.copyFile(
+    path.join(docsDir, 'site-analytics.js'),
+    path.join(targetDir, 'site-analytics.js'),
+  );
 
   // Static sub-pages: copy to the site root, rewriting absolute eb28.co/cc URLs.
   for (const slug of STATIC_SUBPAGES) {

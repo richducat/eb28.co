@@ -51,6 +51,9 @@ function AppStoreButton({ placement, className = '', compact = false, outline = 
         aria-label="Download CadetCatch free on the App Store"
         data-analytics-event="app_store_click"
         data-analytics-label={placement}
+        data-cc-app-store=""
+        data-cc-link-location={placement}
+        data-cc-apple-campaign-token="cc_meta_cold_2026"
       >
         <AppleMark className="h-5 w-5 shrink-0" />
         <span>{compact ? 'Download' : 'Download free'}</span>
@@ -65,6 +68,9 @@ function AppStoreButton({ placement, className = '', compact = false, outline = 
       aria-label="Download CadetCatch free on the App Store"
       data-analytics-event="app_store_click"
       data-analytics-label={placement}
+      data-cc-app-store=""
+      data-cc-link-location={placement}
+      data-cc-apple-campaign-token="cc_meta_cold_2026"
     >
       <AppleMark className="h-7 w-7 shrink-0" />
       <span className="text-left leading-none">
@@ -184,7 +190,7 @@ const FAQS = [
       'Open Roster and add a clear, front-facing photo of your cadet. From Home, tap Search Photos. Then open Photos, review the likely matches, and save the images you recognize to your iPhone.',
   },
   {
-    question: 'What does the facial-recognition technology do?',
+    question: 'What does the facial-similarity search do?',
     answer:
       'It compares facial features in the reference photo you choose with faces in the available indexed photo collection. The app ranks possible matches to give you a shorter list to review. It never makes the final identity decision for you.',
   },
@@ -338,7 +344,7 @@ export default function CadetCatch() {
                 </h2>
               </div>
               <p className="max-w-2xl text-lg leading-8 text-[var(--cc-muted)] lg:justify-self-end">
-                CadetCatch uses facial-recognition technology to compare the face in your chosen
+                CadetCatch uses facial-similarity methods to compare the face in your chosen
                 photo with faces in the available indexed collection. It returns a shortlist of
                 likely matches, not a final identification. You still decide which photos are
                 really them.
@@ -519,7 +525,17 @@ export default function CadetCatch() {
             <a className="inline-flex min-h-11 items-center hover:text-[var(--cc-ink)]" href={PRIVACY_URL}>Privacy</a>
             <a className="inline-flex min-h-11 items-center hover:text-[var(--cc-ink)]" href={TERMS_URL}>Terms</a>
             <a className="inline-flex min-h-11 items-center hover:text-[var(--cc-ink)]" href={SWAB_SUMMER_GUIDE_URL}>Photo guide</a>
-            <a className="inline-flex min-h-11 items-center font-bold text-[var(--cc-gold-deep)] hover:text-[var(--cc-ink)]" href={APP_STORE_URL}>App Store</a>
+            <a
+              className="inline-flex min-h-11 items-center font-bold text-[var(--cc-gold-deep)] hover:text-[var(--cc-ink)]"
+              href={APP_STORE_URL}
+              data-analytics-event="app_store_click"
+              data-analytics-label="footer"
+              data-cc-app-store=""
+              data-cc-link-location="footer"
+              data-cc-apple-campaign-token="cc_meta_cold_2026"
+            >
+              App Store
+            </a>
           </nav>
         </div>
       </footer>

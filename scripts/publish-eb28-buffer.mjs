@@ -112,6 +112,12 @@ function resolveSlot(slot) {
   return easternParts().hour < 12 ? 'am' : 'pm';
 }
 
+function inferRunIdFromPackagePath(packagePath) {
+  const basename = path.basename(packagePath);
+  const match = basename.match(/^eb28-content-(\d{4}-\d{2}-\d{2}-(?:am|pm))\.json$/);
+  return match?.[1] || '';
+}
+
 function resolvePackagePath(options) {
   const date = options.date || easternParts().date;
   const slot = resolveSlot(options.slot);
@@ -123,6 +129,34 @@ function resolvePackagePath(options) {
     packagePath: options.packagePath
       ? path.resolve(ROOT, options.packagePath)
       : path.join(OUTPUT_DIR, `eb28-content-${runId}.json`),
+  };
+}
+
+function resolvePackageContext(options, pkg) {
+  const context = resolvePackagePath(options);
+  if (!options.packagePath) return context;
+
+  const packageRunId = compact(pkg?.runId);
+  const pathRunId = inferRunIdFromPackagePath(context.packagePath);
+  if (packageRunId && pathRunId && packageRunId !== pathRunId) {
+    throw new Error(
+      `EB28 social package runId mismatch: package has ${packageRunId}, but filename implies ${pathRunId}. Refusing to prepare or publish mixed assets.`,
+    );
+  }
+  const runId = packageRunId || pathRunId;
+  if (!runId) {
+    throw new Error('Explicit EB28 social packages must declare runId or use output/eb28-social/eb28-content-YYYY-MM-DD-am|pm.json naming.');
+  }
+  const [date, slot] = runId.match(/^(\d{4}-\d{2}-\d{2})-(am|pm)$/)?.slice(1) || [];
+  if (!date || !slot) {
+    throw new Error(`Invalid EB28 social package runId: ${runId}`);
+  }
+
+  return {
+    ...context,
+    date,
+    slot,
+    runId,
   };
 }
 
@@ -637,9 +671,10 @@ async function main() {
     await verifyConnections();
     return;
   }
-  const context = resolvePackagePath(options);
-  const pkg = await readJson(context.packagePath, null);
-  if (!pkg) throw new Error(`EB28 social package not found: ${context.packagePath}`);
+  const initialContext = resolvePackagePath(options);
+  const pkg = await readJson(initialContext.packagePath, null);
+  if (!pkg) throw new Error(`EB28 social package not found: ${initialContext.packagePath}`);
+  const context = resolvePackageContext(options, pkg);
 
   if (options.mode === 'prepare') {
     await prepareAsset(pkg, context);

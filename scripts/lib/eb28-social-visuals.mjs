@@ -37,6 +37,12 @@ function truncate(value, maxLength) {
   return `${(boundary > maxLength * 0.55 ? shortened.slice(0, boundary) : shortened).replace(/[.,;:!?-]+$/, '')}…`;
 }
 
+function ctaDisplayLabel(creative, fallback = 'Read the guide') {
+  const label = compact(creative?.cta?.label);
+  if (label) return label;
+  return compact(String(creative?.cta?.url || fallback).replace(/^https?:\/\//i, '').replace(/\/$/, ''));
+}
+
 function wrapText(value, maxChars, maxLines) {
   const words = compact(value)
     .split(' ')
@@ -141,7 +147,7 @@ function coverSvg(creative, theme) {
   <rect x="116" y="955" width="848" height="142" rx="28" fill="#0f172a" stroke="#334155"/>
   <text x="150" y="1003" fill="#94a3b8" font-family="Arial, sans-serif" font-size="20" font-weight="800" letter-spacing="2">FEATURE SPOTLIGHT</text>
   ${textLines(wrapText(feature, 42, 2), { x: 150, y: 1060, size: 31, weight: 850, fill: '#f8fafc', lineHeight: 1.15 })}
-  ${footer({ width, height, theme, label: creative.cta?.url || 'eb28.co' })}
+  ${footer({ width, height, theme, label: ctaDisplayLabel(creative, 'eb28.co') })}
 </svg>`;
 }
 
@@ -174,7 +180,7 @@ function flowSvg(creative, theme) {
   ${brandHeader({ width, theme, eyebrow: creative.eyebrow })}
   <text x="92" y="235" fill="#f8fafc" font-family="Arial, sans-serif" font-size="48" font-weight="900">Build the path, not the pile of tools.</text>
   ${cards}
-  ${footer({ width, height, theme, label: creative.cta?.url || 'eb28.co' })}
+  ${footer({ width, height, theme, label: ctaDisplayLabel(creative, 'eb28.co') })}
 </svg>`;
 }
 
@@ -205,7 +211,7 @@ function featureSvg(creative, theme) {
   ${textLines(promise, { x: 116, y: 605, size: 30, weight: 600, fill: '#cbd5e1', lineHeight: 1.3 })}
   <line x1="116" y1="708" x2="964" y2="708" stroke="#334155"/>
   ${bulletRows}
-  ${footer({ width, height, theme, label: creative.cta?.url || 'eb28.co' })}
+  ${footer({ width, height, theme, label: ctaDisplayLabel(creative, 'eb28.co') })}
 </svg>`;
 }
 
@@ -225,7 +231,7 @@ function proofSvg(creative, theme) {
   ${textLines(metricValue, { x: 116, y: 410, size: 56, weight: 900, fill: theme.ink, lineHeight: 1.08 })}
   <rect x="116" y="760" width="848" height="170" rx="30" fill="${theme.accent}" fill-opacity="0.12" stroke="${theme.accent}" stroke-opacity="0.6"/>
   ${textLines(ctaLabel, { x: 540, y: 830, size: 38, weight: 900, fill: '#f8fafc', lineHeight: 1.16, anchor: 'middle' })}
-  <text x="540" y="900" text-anchor="middle" fill="${theme.accent}" font-family="monospace" font-size="24" font-weight="800">${escapeXml(truncate(creative.cta?.url || 'eb28.co', 55))}</text>
+  <text x="540" y="900" text-anchor="middle" fill="${theme.accent}" font-family="monospace" font-size="24" font-weight="800">${escapeXml(truncate(ctaDisplayLabel(creative, 'eb28.co'), 55))}</text>
   ${textLines(disclaimer, { x: 116, y: 1015, size: 25, weight: 600, fill: '#94a3b8', lineHeight: 1.28 })}
   ${footer({ width, height, theme, label: 'Save this field note' })}
 </svg>`;
@@ -257,7 +263,7 @@ function storySvg(creative, theme) {
   ${textLines(headline, { x: 116, y: 420, size: 70, weight: 900, fill: theme.ink, lineHeight: 1.06 })}
   ${textLines(wrapText(creative.subhead, 45, 4), { x: 116, y: 850, size: 30, weight: 600, fill: '#cbd5e1', lineHeight: 1.28 })}
   ${rows}
-  ${footer({ width, height, theme, label: creative.cta?.url || 'eb28.co' })}
+  ${footer({ width, height, theme, label: ctaDisplayLabel(creative, 'eb28.co') })}
 </svg>`;
 }
 
@@ -283,7 +289,7 @@ function landscapeSvg(creative, theme, proofDataUrl = '') {
   ${textLines(headline, { x: 86, y: 247, size: 48, weight: 900, fill: theme.ink, lineHeight: 1.08 })}
   <text x="86" y="465" fill="${theme.accent2}" font-family="Arial, sans-serif" font-size="23" font-weight="900">${escapeXml(truncate(creative.feature?.name || 'EB28 feature', 44))}</text>
   ${textLines(wrapText(creative.subhead, 46, 3), { x: 86, y: 515, size: 21, weight: 650, fill: '#cbd5e1', lineHeight: 1.2 })}
-  <text x="86" y="596" fill="${theme.accent}" font-family="monospace" font-size="19" font-weight="800">${escapeXml(truncate(String(creative.cta?.url || 'eb28.co').replace(/^https?:\/\//i, '').replace(/\/$/, ''), 48))}</text>
+  <text x="86" y="596" fill="${theme.accent}" font-family="monospace" font-size="19" font-weight="800">${escapeXml(truncate(ctaDisplayLabel(creative, 'eb28.co'), 48))}</text>
 </svg>`;
   }
   const steps = (creative.steps || []).slice(0, 3);
@@ -306,7 +312,7 @@ function landscapeSvg(creative, theme, proofDataUrl = '') {
   ${textLines(headline, { x: 70, y: 220, size: 55, weight: 900, fill: theme.ink, lineHeight: 1.08 })}
   ${textLines(wrapText(creative.subhead, 48, 3), { x: 70, y: 455, size: 24, weight: 600, fill: '#cbd5e1', lineHeight: 1.25 })}
   ${stepCards}
-  <text x="70" y="625" fill="${theme.accent}" font-family="monospace" font-size="20" font-weight="800">${escapeXml(truncate(creative.cta?.url || 'eb28.co', 60))}</text>
+  <text x="70" y="625" fill="${theme.accent}" font-family="monospace" font-size="20" font-weight="800">${escapeXml(truncate(ctaDisplayLabel(creative, 'eb28.co'), 60))}</text>
 </svg>`;
 }
 

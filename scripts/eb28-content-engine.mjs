@@ -691,7 +691,7 @@ function buildArticle(topic, { date, slot, runId, existingArticle = null }) {
         heading: 'Keep the system useful, safe, and accountable',
         body: [
           `${messaging.system} The system stays useful when every change has an owner, a reason, a validation step, and a rollback path. That discipline matters most when a workflow touches customer data, public claims, accessibility, search visibility, or automated communication, because a small error can travel farther than the original improvement.`,
-          `Review citations before publishing and remove any claim that the source does not support. Keep public contact paths intentional, keep retired client material out of the output, and do not publish social drafts without verifying the owned account and destination. If a credential or production surface is unavailable, preserve the last verified state and report the blocker rather than filling the gap with an assumption.`,
+          `Review citations before publishing and remove any claim that the source does not support. Keep public contact paths intentional, keep off-lane proof and unrelated project material out of the output, and do not publish social drafts without verifying the owned account and destination. If a credential or production surface is unavailable, preserve the last verified state and report the blocker rather than filling the gap with an assumption.`,
         ],
         bullets: details.boundaries,
       },

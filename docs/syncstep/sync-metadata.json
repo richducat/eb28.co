@@ -1,0 +1,17 @@
+{
+  "name": "SyncStep",
+  "symbol": "SYNC",
+  "description": "SYNC is the utility token of SyncStep, a real-world treasure hunt on Solana Mobile. Spend SYNC to open chests and stake digs; earn it back through streaks, referrals, and finds.",
+  "image": "https://eb28.co/syncstep/sync-icon.png",
+  "external_url": "https://eb28.co/syncstep",
+  "attributes": [],
+  "properties": {
+    "files": [
+      {
+        "uri": "https://eb28.co/syncstep/sync-icon.png",
+        "type": "image/png"
+      }
+    ],
+    "category": "image"
+  }
+}

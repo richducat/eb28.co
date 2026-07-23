@@ -1,0 +1,535 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>Command — A Private AI Chief of Staff. Know What Matters Now.</title>
+<meta name="description" content="Command watches your email, calendar, revenue, and messages, then sends one plain-English morning text with your top 3 moves. Reply by text. Approve real work with one tap. Now recruiting 10–50 design partners." />
+<meta name="theme-color" content="#0b0c0d" />
+<meta name="color-scheme" content="dark" />
+<link rel="canonical" href="https://eb28.co/command/" />
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="EB28" />
+<meta property="og:title" content="Command — A Private AI Chief of Staff" />
+<meta property="og:description" content="One morning text with your top 3 moves. Reply by text. Approve real work with one tap. Built by a solo founder running 50+ projects with it daily. Now recruiting design partners." />
+<meta property="og:url" content="https://eb28.co/command/" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:title" content="Command — A Private AI Chief of Staff" />
+<meta name="twitter:description" content="One morning text with your top 3 moves. Reply by text. Approve real work with one tap. Now recruiting design partners." />
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 44 44'%3E%3Crect width='44' height='44' rx='10' fill='%230b0c0d'/%3E%3Cpath d='M29 15.5A9 9 0 1 0 29 28.5' fill='none' stroke='%23c7f36b' stroke-width='3.5' stroke-linecap='round'/%3E%3C/svg%3E" />
+<style>
+  :root {
+    --bg: #0b0c0d;
+    --bg-raised: #121415;
+    --bg-card: #16181a;
+    --line: #24272a;
+    --line-soft: #1c1f21;
+    --ink: #f2f4f0;
+    --muted: #9aa19b;
+    --dim: #6d746e;
+    --lime: #c7f36b;
+    --lime-dim: #a8d84f;
+    --lime-ink: #10130a;
+    --font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: var(--font); font-size: 16px; line-height: 1.6;
+    -webkit-font-smoothing: antialiased; overflow-x: hidden;
+  }
+  .wrap { max-width: 960px; margin: 0 auto; padding: 0 22px; }
+  section { padding: 72px 0; }
+  section + section { border-top: 1px solid var(--line-soft); }
+  h1, h2, h3 { line-height: 1.15; letter-spacing: -0.025em; margin: 0; font-weight: 700; }
+  a { color: var(--lime); }
+  .kicker {
+    font-family: var(--mono); font-size: 11.5px; font-weight: 600;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--lime);
+  }
+  .cta {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    background: var(--lime); color: var(--lime-ink); font-weight: 700; font-size: 16px;
+    padding: 15px 30px; border-radius: 12px; text-decoration: none; border: 0; cursor: pointer;
+    font-family: var(--font);
+  }
+  .cta:hover { background: var(--lime-dim); }
+  .cta-ghost {
+    display: inline-flex; align-items: center; justify-content: center;
+    background: transparent; color: var(--ink); font-weight: 600; font-size: 16px;
+    padding: 14px 26px; border-radius: 12px; text-decoration: none;
+    border: 1px solid var(--line);
+  }
+  .cta-ghost:hover { border-color: var(--muted); }
+
+  /* header */
+  header.site {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 20px 0;
+  }
+  .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 17px; color: var(--ink); text-decoration: none; letter-spacing: -0.01em; }
+  .logo svg { display: block; }
+  header.site a.mini { color: var(--muted); text-decoration: none; font-size: 14px; }
+  header.site a.mini:hover { color: var(--ink); }
+
+  /* hero */
+  .hero { padding: 44px 0 72px; }
+  .hero h1 { font-size: clamp(38px, 7vw, 62px); font-weight: 800; max-width: 15ch; margin: 18px 0 20px; }
+  .hero h1 em { font-style: normal; color: var(--lime); }
+  .hero .sub { font-size: 18.5px; color: var(--muted); max-width: 56ch; margin: 0 0 30px; }
+  .hero-ctas { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; margin-bottom: 14px; }
+  .hero .micro { font-family: var(--mono); font-size: 12px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--dim); margin: 18px 0 0; }
+
+  /* phone mock */
+  .hero-grid { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 48px; align-items: center; }
+  .phone {
+    background: var(--bg-raised); border: 1px solid var(--line); border-radius: 28px;
+    padding: 18px 16px 22px; box-shadow: 0 30px 80px rgba(0,0,0,0.55);
+    max-width: 340px; width: 100%; margin: 0 auto;
+  }
+  .phone-top { display: flex; align-items: center; justify-content: center; gap: 8px; padding-bottom: 14px; border-bottom: 1px solid var(--line-soft); margin-bottom: 14px; }
+  .phone-top .dot { width: 26px; height: 26px; border-radius: 50%; background: var(--lime); color: var(--lime-ink); font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center; }
+  .phone-top span { font-size: 12.5px; color: var(--muted); font-weight: 600; }
+  .msg {
+    background: var(--bg-card); border: 1px solid var(--line-soft); border-radius: 16px 16px 16px 5px;
+    padding: 13px 15px; font-size: 13.5px; line-height: 1.55; color: var(--ink);
+    white-space: pre-line;
+  }
+  .msg b { color: var(--lime); font-weight: 700; }
+  .msg-out {
+    background: var(--lime); color: var(--lime-ink); border: 0; border-radius: 16px 16px 5px 16px;
+    padding: 10px 15px; font-size: 13.5px; font-weight: 600;
+    margin: 12px 0 0 auto; width: fit-content; max-width: 70%;
+  }
+  .msg-time { font-family: var(--mono); font-size: 10.5px; color: var(--dim); text-align: center; margin: 0 0 10px; letter-spacing: 0.06em; text-transform: uppercase; }
+
+  /* problem */
+  .prose { font-size: 17px; color: var(--muted); max-width: 62ch; }
+  .prose strong { color: var(--ink); }
+  .sec-head { margin-bottom: 40px; }
+  .sec-head h2 { font-size: clamp(28px, 4.5vw, 38px); margin-top: 12px; max-width: 24ch; }
+  .sec-head p.lede { font-size: 17px; color: var(--muted); max-width: 60ch; margin: 14px 0 0; }
+
+  /* how it works strip */
+  .steps { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+  .step { background: var(--bg-card); border: 1px solid var(--line-soft); border-radius: 14px; padding: 18px 16px; }
+  .step .n { font-family: var(--mono); font-size: 11px; color: var(--lime); letter-spacing: 0.1em; }
+  .step h3 { font-size: 16.5px; margin: 8px 0 6px; }
+  .step p { margin: 0; font-size: 13.5px; color: var(--muted); line-height: 1.5; }
+
+  /* features */
+  .features { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .feature {
+    background: var(--bg-card); border: 1px solid var(--line-soft); border-radius: 16px;
+    padding: 26px 24px;
+  }
+  .feature .tag { font-family: var(--mono); font-size: 11px; color: var(--lime); letter-spacing: 0.12em; text-transform: uppercase; }
+  .feature h3 { font-size: 20px; margin: 10px 0 10px; }
+  .feature p { margin: 0; font-size: 15px; color: var(--muted); }
+  .feature p + p { margin-top: 10px; }
+  .feature .ex {
+    margin-top: 14px; padding: 12px 14px; border-left: 2px solid var(--lime);
+    background: var(--bg-raised); border-radius: 0 10px 10px 0;
+    font-family: var(--mono); font-size: 12.5px; color: var(--muted); line-height: 1.6;
+  }
+
+  /* founder note */
+  .note {
+    background: var(--bg-card); border: 1px solid var(--line); border-radius: 18px;
+    padding: 36px 32px; max-width: 720px;
+  }
+  .note p { font-size: 17px; color: var(--ink); margin: 0 0 16px; }
+  .note p:last-of-type { margin-bottom: 0; }
+  .note .sig { margin-top: 22px; display: flex; align-items: center; gap: 14px; }
+  .note .sig .avatar {
+    width: 44px; height: 44px; border-radius: 50%; background: var(--lime); color: var(--lime-ink);
+    display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 16px; flex: 0 0 auto;
+  }
+  .note .sig div span { display: block; }
+  .note .sig .who { font-weight: 700; font-size: 15px; }
+  .note .sig .what { font-size: 13px; color: var(--muted); }
+
+  /* pricing */
+  .plans { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; max-width: 780px; }
+  .plan {
+    background: var(--bg-card); border: 1px solid var(--line-soft); border-radius: 18px;
+    padding: 30px 26px; display: flex; flex-direction: column;
+  }
+  .plan.featured { border-color: var(--lime); }
+  .plan .name { font-weight: 700; font-size: 18px; }
+  .plan .pill {
+    display: inline-block; margin-left: 8px; font-family: var(--mono); font-size: 10px;
+    letter-spacing: 0.1em; text-transform: uppercase; padding: 3px 8px; border-radius: 999px;
+    background: var(--bg-raised); border: 1px solid var(--line); color: var(--muted); vertical-align: middle;
+  }
+  .plan.featured .pill { background: var(--lime); color: var(--lime-ink); border-color: var(--lime); }
+  .plan .price { font-size: 40px; font-weight: 800; letter-spacing: -0.03em; margin: 14px 0 2px; }
+  .plan .price small { font-size: 15px; font-weight: 500; color: var(--muted); letter-spacing: 0; }
+  .plan .alt { font-size: 13.5px; color: var(--dim); margin: 0 0 18px; }
+  .plan ul { list-style: none; margin: 0 0 24px; padding: 0; }
+  .plan li { font-size: 14.5px; color: var(--muted); padding: 7px 0 7px 24px; position: relative; }
+  .plan li::before { content: "→"; position: absolute; left: 0; color: var(--lime); }
+  .plan .cta, .plan .cta-ghost { margin-top: auto; }
+
+  /* faq */
+  .faq details {
+    border: 1px solid var(--line-soft); border-radius: 14px; background: var(--bg-card);
+    padding: 0 22px; margin-bottom: 12px;
+  }
+  .faq summary {
+    cursor: pointer; font-weight: 600; font-size: 16px; padding: 18px 0;
+    list-style: none; position: relative; padding-right: 32px;
+  }
+  .faq summary::-webkit-details-marker { display: none; }
+  .faq summary::after { content: "+"; position: absolute; right: 4px; top: 15px; color: var(--lime); font-size: 20px; font-weight: 400; }
+  .faq details[open] summary::after { content: "–"; }
+  .faq details p { margin: 0 0 18px; color: var(--muted); font-size: 15px; }
+
+  /* form */
+  .apply-card {
+    background: var(--bg-card); border: 1px solid var(--line); border-radius: 18px;
+    padding: 34px 30px; max-width: 640px;
+  }
+  .apply-card label { display: block; font-weight: 600; font-size: 14px; margin: 18px 0 7px; }
+  .apply-card label:first-of-type { margin-top: 0; }
+  .apply-card input, .apply-card select, .apply-card textarea {
+    width: 100%; background: var(--bg-raised); border: 1px solid var(--line); border-radius: 10px;
+    color: var(--ink); font-family: var(--font); font-size: 15px; padding: 13px 14px; outline: none;
+  }
+  .apply-card input:focus, .apply-card select:focus, .apply-card textarea:focus { border-color: var(--lime); }
+  .apply-card textarea { resize: vertical; min-height: 90px; }
+  .apply-card .cta { width: 100%; margin-top: 24px; }
+  .apply-card .fine { font-size: 12.5px; color: var(--dim); margin: 14px 0 0; text-align: center; }
+  #applyStatus { margin: 14px 0 0; font-size: 14px; color: var(--lime); text-align: center; display: none; }
+
+  footer.site {
+    border-top: 1px solid var(--line-soft); padding: 36px 0 48px;
+    font-size: 13.5px; color: var(--dim);
+  }
+  footer.site a { color: var(--muted); text-decoration: none; }
+  footer.site a:hover { color: var(--ink); }
+
+  @media (max-width: 860px) {
+    section { padding: 56px 0; }
+    .hero-grid { grid-template-columns: 1fr; gap: 40px; }
+    .steps { grid-template-columns: 1fr 1fr; }
+    .step:last-child { grid-column: 1 / -1; }
+    .features { grid-template-columns: 1fr; }
+    .plans { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="site">
+    <a class="logo" href="#top" aria-label="Command home">
+      <svg width="26" height="26" viewBox="0 0 44 44" aria-hidden="true"><rect width="44" height="44" rx="10" fill="#16181a"/><path d="M29 15.5A9 9 0 1 0 29 28.5" fill="none" stroke="#c7f36b" stroke-width="3.5" stroke-linecap="round"/></svg>
+      Command
+    </a>
+    <a class="mini" href="#apply">Apply for early access</a>
+  </header>
+</div>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <span class="kicker">Private AI chief of staff · Early access</span>
+        <h1>Know what <em>matters now.</em></h1>
+        <p class="sub">Command watches your email, calendar, revenue, and messages — then sends you one plain-English text each morning with the three moves that actually matter. You reply by text. It handles the follow-through.</p>
+        <div class="hero-ctas">
+          <a class="cta" href="#apply">Become a design partner</a>
+          <a class="cta-ghost" href="#how">See how it works</a>
+        </div>
+        <p class="micro">10–50 seats · $29/mo · Your machines, your AI keys</p>
+      </div>
+
+      <div class="phone" role="img" aria-label="Example of the Command morning text: a summary of who is waiting on replies, a promise due today, and numbered reply options">
+        <div class="phone-top"><span class="dot">C</span><span>Command · Today 7:02 AM</span></div>
+        <p class="msg-time">Illustrative example</p>
+        <div class="msg"><b>EB28 — good morning.</b> Here's where things stand.
+
+You owe replies to:
+1. Beth — inspection report (2 days)
+2. Marcus — asked if Thursday still works
+3. Stripe — card dispute needs a response
+
+You told Beth you'd send the report by Friday — that's due today.
+
+Reply 1 = draft the Beth reply for approval
+Reply 2 = confirm Thursday with Marcus
+Reply 3 = show me the dispute</div>
+        <div class="msg-out">1</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROBLEM -->
+  <section>
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="kicker">The problem</span>
+        <h2>You don't need another inbox. You need to know what matters.</h2>
+      </div>
+      <p class="prose">If you run several projects or businesses at once, the work isn't the hard part — <strong>the tracking is</strong>. Who's waiting on you. What you promised, and when. What quietly broke while you were heads-down on something else. Every tool you add is one more place to check. Command inverts that: it checks everything, and interrupts you exactly once a day with what's actually urgent — in a text message, in plain English, with the reply options already numbered.</p>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section id="how">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="kicker">How it works</span>
+        <h2>Five steps. One text.</h2>
+      </div>
+      <div class="steps">
+        <div class="step"><span class="n">01</span><h3>Watch</h3><p>Command monitors your Gmail, Apple Mail, calendar, Stripe/CRM revenue, and messages — on your own machine.</p></div>
+        <div class="step"><span class="n">02</span><h3>Brief</h3><p>Every morning: one text with your top 3 moves — who's waiting, what's due, what broke.</p></div>
+        <div class="step"><span class="n">03</span><h3>Reply</h3><p>Text back a number. That's the whole interface. No app to open, no dashboard to check.</p></div>
+        <div class="step"><span class="n">04</span><h3>Approve</h3><p>Real tasks get proposed as real work. One tap to approve — nothing ever runs without it.</p></div>
+        <div class="step"><span class="n">05</span><h3>Done</h3><p>AI agents execute on your machine, report back what happened, and the loop closes.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section>
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="kicker">What you get</span>
+        <h2>A chief of staff that never loses the thread.</h2>
+      </div>
+      <div class="features">
+        <div class="feature">
+          <span class="tag">The morning brief</span>
+          <h3>One text. The top 3 moves.</h3>
+          <p>Not a digest of everything — a judgment call on what matters. Who's waiting on a reply and what they asked. Promises you made, with their deadlines. What broke overnight and how to fix it.</p>
+          <div class="ex">You owe replies to: Beth — inspection report (2 days) · Marcus — Thursday confirmation · You told Beth you'd send the report by Friday — that's due today.</div>
+        </div>
+        <div class="feature">
+          <span class="tag">Follow-through</span>
+          <h3>It escalates what you ignore.</h3>
+          <p>Snooze something and it comes back — louder. Deadlines you're about to blow get flagged before they're blown. And every Sunday you get a plain-English summary of the week: what moved, what stalled, what's coming.</p>
+        </div>
+        <div class="feature">
+          <span class="tag">Hermes chat</span>
+          <h3>An AI that proposes real work.</h3>
+          <p>Inside the app, Hermes isn't a chatbot that just talks about your business — it can propose actual tasks: draft that reply, chase that invoice, fix that broken page. You see exactly what it wants to do before anything happens.</p>
+        </div>
+        <div class="feature">
+          <span class="tag">Agent execution</span>
+          <h3>One tap, and it's actually done.</h3>
+          <p>Approve a task and AI agents (Claude, Codex) execute it on your own machine — with hard rails: nothing runs unapproved, no spending, ever, and everything is reported back to you when it's finished.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOUNDER NOTE -->
+  <section>
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="kicker">Why this exists</span>
+        <h2>Built by someone who was drowning.</h2>
+      </div>
+      <div class="note">
+        <p>I run more than fifty projects and businesses at once — apps, client sites, inspection software, a CRM. For years the bottleneck wasn't the work. It was the remembering. Who I owed a reply. What I'd promised by Friday. Which site had quietly gone down while I was shipping something else.</p>
+        <p>So I built Command for myself. Every morning it texts me the three things that matter, I text back a number, and the machinery takes it from there. It's how I stay on top of everything now — not a demo, not a pitch deck. The tool I actually run my life with, every single day.</p>
+        <p>I'm opening it to a small group of design partners: people running the same kind of overload, who want to shape what this becomes.</p>
+        <div class="sig">
+          <span class="avatar" aria-hidden="true">RD</span>
+          <div>
+            <span class="who">Richard Ducat</span>
+            <span class="what">Founder, EB28 — Melbourne, FL</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section id="pricing">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="kicker">Early access</span>
+        <h2>Two ways in. Both limited.</h2>
+        <p class="lede">This is a design-partner launch, not a mass release. 10–50 seats, onboarded personally, with a direct line to the founder and real influence over the roadmap.</p>
+      </div>
+      <div class="plans">
+        <div class="plan featured">
+          <div><span class="name">Design Partner</span><span class="pill">Open now</span></div>
+          <div class="price">$29<small>/mo</small></div>
+          <p class="alt">or $290/year (two months free)</p>
+          <ul>
+            <li>The daily morning brief, by text</li>
+            <li>Reply-by-text actions and escalation</li>
+            <li>Sunday week-in-review</li>
+            <li>Hermes AI chat in the app</li>
+            <li>Personal onboarding with the founder</li>
+            <li>Direct input on the roadmap</li>
+            <li>Bring your own OpenAI or Anthropic key</li>
+          </ul>
+          <a class="cta" href="#apply">Apply for a seat</a>
+        </div>
+        <div class="plan">
+          <div><span class="name">Agent Desk</span><span class="pill">Waitlist</span></div>
+          <div class="price">$99<small>/mo</small></div>
+          <p class="alt">coming after the design-partner phase</p>
+          <ul>
+            <li>Everything in Design Partner</li>
+            <li>One-tap agent execution on your machine</li>
+            <li>Claude and Codex doing real approved work</li>
+            <li>Hard rails: no unapproved runs, no spending</li>
+            <li>Full execution reports on every task</li>
+          </ul>
+          <a class="cta-ghost" href="#apply">Join the waitlist</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section>
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="kicker">Questions</span>
+        <h2>The honest answers.</h2>
+      </div>
+      <div class="faq" style="max-width:720px">
+        <details>
+          <summary>Where does my data live?</summary>
+          <p>On your machines. Command runs against your own accounts on your own hardware, and the AI calls use your own OpenAI or Anthropic API key. Your email, revenue, and messages are not pooled into someone else's cloud.</p>
+        </details>
+        <details>
+          <summary>What do I need to run it?</summary>
+          <p>A Mac and an iPhone, plus your own OpenAI or Anthropic API key. Command connects to Gmail, Apple Mail, your calendar, and Stripe or your CRM during onboarding.</p>
+        </details>
+        <details>
+          <summary>How does onboarding work?</summary>
+          <p>Personally, with the founder. Every design partner gets set up one-on-one — your accounts connected, your brief tuned to how you actually work. That's the point of keeping the group small.</p>
+        </details>
+        <details>
+          <summary>Can the AI do things without asking me?</summary>
+          <p>No. Nothing executes without your explicit approval, and spending money is off-limits entirely. Every approved task reports back exactly what it did.</p>
+        </details>
+        <details>
+          <summary>Is this proven, or am I the test?</summary>
+          <p>Both, honestly. The founder runs 50+ projects with Command every day — the morning brief, reply-by-text, escalation, and agent execution all work today, for him. Design partners are how it gets battle-tested beyond one person's setup. That's why the price is $29 and the seat count is small.</p>
+        </details>
+        <details>
+          <summary>Who is this for?</summary>
+          <p>Founders and solo operators juggling multiple projects or businesses — the kind of person processing 100+ emails a day who's tired of being their own project manager. If you have one job and one inbox, you probably don't need this yet.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- APPLY -->
+  <section id="apply">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="kicker">Apply</span>
+        <h2>Request a design-partner seat.</h2>
+        <p class="lede">Tell us a little about your workload. Submitting opens a pre-filled email to the founder — you'll hear back directly, usually within a day.</p>
+      </div>
+      <form class="apply-card" id="applyForm">
+        <label for="fName">Name</label>
+        <input id="fName" name="name" type="text" autocomplete="name" required />
+
+        <label for="fEmail">Email</label>
+        <input id="fEmail" name="email" type="email" autocomplete="email" required />
+
+        <label for="fRun">What do you run?</label>
+        <input id="fRun" name="run" type="text" placeholder="e.g. an agency, three SaaS apps, and a rental portfolio" required />
+
+        <label for="fVolume">Roughly how many emails hit you per day?</label>
+        <select id="fVolume" name="volume" required>
+          <option value="" selected disabled>Choose one</option>
+          <option>Under 50</option>
+          <option>50–100</option>
+          <option>100–250</option>
+          <option>250+</option>
+        </select>
+
+        <label for="fTier">Which seat are you interested in?</label>
+        <select id="fTier" name="tier" required>
+          <option>Design Partner — $29/mo</option>
+          <option>Design Partner — $290/yr</option>
+          <option>Agent Desk waitlist — $99/mo</option>
+        </select>
+
+        <label for="fNote">Anything else? (optional)</label>
+        <textarea id="fNote" name="note" placeholder="What's the thing you keep dropping?"></textarea>
+
+        <button class="cta" type="submit">Send my application</button>
+        <p id="applyStatus" role="status"></p>
+        <p class="fine">This opens your email app with everything pre-filled — nothing is sent until you hit send. Or just email <a href="mailto:richducat@gmail.com?subject=Command%20design%20partner%20application">richducat@gmail.com</a> directly.</p>
+      </form>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site">
+  <div class="wrap">
+    Command is a product of <a href="https://eb28.co/">EB28</a>, Melbourne FL · <a href="mailto:richducat@gmail.com">Contact</a>
+    <br />&copy; 2026 EB28. Nothing runs unapproved. No spending, ever.
+  </div>
+</footer>
+
+<script>
+  // Waitlist form: builds a pre-filled mailto (site convention — no backend on GitHub Pages).
+  (function () {
+    var form = document.getElementById('applyForm');
+    if (!form) return;
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var v = function (id) { return (document.getElementById(id).value || '').trim(); };
+      var subject = 'Command design partner application — ' + v('fName');
+      var body = [
+        'Source: command-waitlist',
+        '',
+        'Name: ' + v('fName'),
+        'Email: ' + v('fEmail'),
+        'What I run: ' + v('fRun'),
+        'Email volume/day: ' + v('fVolume'),
+        'Seat: ' + v('fTier'),
+        'Notes: ' + (v('fNote') || '—'),
+      ].join('\n');
+      window.location.href = 'mailto:richducat@gmail.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+      var status = document.getElementById('applyStatus');
+      status.style.display = 'block';
+      status.textContent = 'Your email app should have opened with the application pre-filled. Hit send and you’re in the queue.';
+      if (window.gtag) { window.gtag('event', 'generate_lead', { source: 'command-waitlist' }); }
+    });
+  })();
+
+  // Loads GA4 only when a measurement ID is set in /analytics-config.json,
+  // so analytics activates from config without a rebuild. (Site convention.)
+  (function () {
+    fetch('/analytics-config.json', { cache: 'no-store' })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (cfg) {
+        var id = cfg && String(cfg.ga4MeasurementId || '').trim();
+        if (!id) return;
+        var s = document.createElement('script');
+        s.async = true;
+        s.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(id);
+        document.head.appendChild(s);
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { window.dataLayer.push(arguments); }
+        window.gtag = gtag;
+        gtag('js', new Date());
+        gtag('config', id);
+      })
+      .catch(function () {});
+  })();
+</script>
+
+</body>
+</html>

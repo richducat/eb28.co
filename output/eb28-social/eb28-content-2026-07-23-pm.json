@@ -1,0 +1,347 @@
+{
+  "brand": "EB28",
+  "lane": "business-growth",
+  "generatedAt": "2026-07-23T22:01:56.497Z",
+  "runId": "2026-07-23-pm",
+  "slot": "pm",
+  "operation": "refresh",
+  "publishingPolicy": {
+    "externalPublishing": "not_authorized",
+    "requiredState": "draft_only",
+    "note": "Verify the exact EB28-owned account and channel in the publishing tool before any separate publishing action."
+  },
+  "creativeStandards": {
+    "version": "2026-07-social-v2",
+    "voice": "Specific, operator-led, plain English, evidence-aware, and free of unsupported guarantees.",
+    "visual": "Mobile-first 4:5 carousel plus 9:16 and 16:9 derivatives; bold type, one focal idea per slide, no generic stock imagery.",
+    "featureCoverage": "Every package selects one active EB28 feature from the central catalog and ties it to the article intent."
+  },
+  "article": {
+    "title": "Private AI for Small Business: Start Safe Without Overbuilding",
+    "url": "https://eb28.co/blog/private-ai-for-small-business-the-safe-way-to-start-without-overbuilding/",
+    "slug": "private-ai-for-small-business-the-safe-way-to-start-without-overbuilding",
+    "cluster": "private-ai",
+    "primaryKeyword": "private AI for small business"
+  },
+  "featureSpotlight": {
+    "id": "ai-agent-foundation",
+    "name": "AI Agent Foundation",
+    "lane": "business-growth",
+    "status": "active",
+    "newSince": "2026-06-12",
+    "audience": "small businesses that want to prove one useful AI workflow before funding a larger build",
+    "promise": "Start with one business task, a secure account, linked source material, and a custom system prompt for $10.",
+    "features": [
+      "One narrow workflow instead of a vague all-purpose chatbot",
+      "Secure account setup and basic knowledge-source connection",
+      "Custom operating prompt matched to the business task",
+      "Human handoff with an integration guide"
+    ],
+    "cta": {
+      "label": "Build the $10 proof of concept",
+      "url": "https://eb28.co/#packages"
+    },
+    "visualTheme": "violet"
+  },
+  "destinations": {
+    "canonicalGuide": "https://eb28.co/blog/private-ai-for-small-business-the-safe-way-to-start-without-overbuilding/",
+    "feature": "https://eb28.co/#packages"
+  },
+  "platformStrategy": {
+    "facebook": "Problem-to-plan post with a practical checklist and one feature proof point.",
+    "instagram": "Four-slide 4:5 carousel with a save-worthy diagnostic, first fix, feature spotlight, and measurable next step.",
+    "linkedin": "Operator lesson with a specific build sequence and a soft product connection.",
+    "x": "One concise operating insight plus the canonical guide.",
+    "shortFormVideo": "Thirty-to-forty-five-second vertical explainer with visible UI, workflow steps, and on-screen captions."
+  },
+  "creativeSystem": {
+    "version": "2026-07-social-v2",
+    "pillar": "Private Ai",
+    "objective": "qualified_attention",
+    "eyebrow": "PM FIELD NOTE",
+    "headline": "Private AI works when one safe workflow owns the answer.",
+    "subhead": "Start with one task, defined data boundaries, and a human review path.",
+    "theme": "violet",
+    "feature": {
+      "id": "ai-agent-foundation",
+      "name": "AI Agent Foundation",
+      "lane": "business-growth",
+      "status": "active",
+      "newSince": "2026-06-12",
+      "audience": "small businesses that want to prove one useful AI workflow before funding a larger build",
+      "promise": "Start with one business task, a secure account, linked source material, and a custom system prompt for $10.",
+      "features": [
+        "One narrow workflow instead of a vague all-purpose chatbot",
+        "Secure account setup and basic knowledge-source connection",
+        "Custom operating prompt matched to the business task",
+        "Human handoff with an integration guide"
+      ],
+      "cta": {
+        "label": "Build the $10 proof of concept",
+        "url": "https://eb28.co/#packages"
+      },
+      "visualTheme": "violet"
+    },
+    "steps": [
+      {
+        "label": "Find the constraint",
+        "value": "Choose one job. Define data, users, answer rules, and failure cost."
+      },
+      {
+        "label": "Build the first fix",
+        "value": "Build one private path before adding more tools."
+      },
+      {
+        "label": "Connect the feature",
+        "value": "Connect AI Agent Foundation to one approved source and handoff."
+      }
+    ],
+    "metric": {
+      "label": "What to measure",
+      "value": "Answer usefulness and citation accuracy on a representative evaluation set"
+    },
+    "cta": {
+      "label": "Read the full EB28 field guide",
+      "url": "https://eb28.co/blog/private-ai-for-small-business-the-safe-way-to-start-without-overbuilding/"
+    },
+    "disclaimer": "Do not place sensitive data into a workflow until access, retention, logging, and vendor boundaries are documented",
+    "requiredFormats": {
+      "instagramCarousel": {
+        "width": 1080,
+        "height": 1350,
+        "slides": 4
+      },
+      "vertical": {
+        "width": 1080,
+        "height": 1920
+      },
+      "landscape": {
+        "width": 1200,
+        "height": 675
+      }
+    }
+  },
+  "posts": {
+    "blog": {
+      "title": "Private AI for Small Business: Start Safe Without Overbuilding",
+      "url": "https://eb28.co/blog/private-ai-for-small-business-the-safe-way-to-start-without-overbuilding/",
+      "status": "draft_only"
+    },
+    "facebook": {
+      "caption": "Private AI starts with a narrow job, explicit data boundaries, cited answers, and a person who owns the exceptions.\n\nBefore adding another tool, inspect the path:\n\n1. Choose one narrow job and document the data, users, permissions, answer standard, and failure cost\n2. Start with one narrow workflow: documents, SOPs, client history, finance review, or staff search. Build the private path before adding more moving parts.\n3. Measure answer usefulness and citation accuracy on a representative evaluation set.\n\nActive feature: AI Agent Foundation\nStart with one business task, a secure account, linked source material, and a custom system prompt for $10.\n\nRead the field guide: https://eb28.co/blog/private-ai-for-small-business-the-safe-way-to-start-without-overbuilding/\nSee the feature: https://eb28.co/#packages",
+      "url": "https://eb28.co/blog/private-ai-for-small-business-the-safe-way-to-start-without-overbuilding/",
+      "status": "draft_only",
+      "media": {
+        "type": "image",
+        "mimeType": "image/jpeg",
+        "localPath": "output/eb28-social/assets/2026-07-23-pm/landscape-1200x675.jpg",
+        "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-23-pm/landscape-1200x675.jpg",
+        "width": 1200,
+        "height": 675,
+        "alt": "AI Agent Foundation — real EB28 product surface"
+      }
+    },
+    "instagram": {
+      "caption": "Private AI starts with a narrow job, explicit data boundaries, cited answers, and a person who owns the exceptions.\n\nIf “private AI for small business” is the goal, do not start with a software list.\n\n01 — Find the constraint\nChoose one narrow job and document the data, users, permissions, answer standard, and failure cost\n\n02 — Build one useful fix\nStart with one narrow workflow: documents, SOPs, client history, finance review, or staff search. Build the private path before adding more moving parts.\n\n03 — Connect a real EB28 feature\nAI Agent Foundation: One narrow workflow instead of a vague all-purpose chatbot\n\n04 — Prove the handoff\nTrack answer usefulness and citation accuracy on a representative evaluation set.\n\nSave this for the next audit. Full guide at https://eb28.co/blog/private-ai-for-small-business-the-safe-way-to-start-without-overbuilding/\n\n#PrivateAI #RAG #BusinessAutomation #EB28",
+      "creativeBrief": "Diagram a private-AI workflow from approved documents to retrieval, cited answer, human review, and logged correction. Use the generated four-slide carousel: decisive cover, diagnostic-to-fix flow, AI Agent Foundation spotlight, and measurement/CTA. Show documentary UI or a simple workflow diagram when a real screenshot is available; never use a generic office stock photo.",
+      "url": "https://eb28.co/blog/private-ai-for-small-business-the-safe-way-to-start-without-overbuilding/",
+      "status": "draft_only",
+      "media": {
+        "type": "carousel",
+        "items": [
+          {
+            "type": "image",
+            "mimeType": "image/jpeg",
+            "localPath": "output/eb28-social/assets/2026-07-23-pm/feed-01-cover.jpg",
+            "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-23-pm/feed-01-cover.jpg",
+            "width": 1080,
+            "height": 1350,
+            "alt": "Private AI works when one safe workflow owns the answer. — EB28 social cover"
+          },
+          {
+            "type": "image",
+            "mimeType": "image/jpeg",
+            "localPath": "output/eb28-social/assets/2026-07-23-pm/feed-02-path.jpg",
+            "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-23-pm/feed-02-path.jpg",
+            "width": 1080,
+            "height": 1350,
+            "alt": "Private AI works when one safe workflow owns the answer. — three-step operating path"
+          },
+          {
+            "type": "image",
+            "mimeType": "image/jpeg",
+            "localPath": "output/eb28-social/assets/2026-07-23-pm/feed-03-feature.jpg",
+            "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-23-pm/feed-03-feature.jpg",
+            "width": 1080,
+            "height": 1350,
+            "alt": "AI Agent Foundation — feature details"
+          },
+          {
+            "type": "image",
+            "mimeType": "image/jpeg",
+            "localPath": "output/eb28-social/assets/2026-07-23-pm/feed-04-proof.jpg",
+            "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-23-pm/feed-04-proof.jpg",
+            "width": 1080,
+            "height": 1350,
+            "alt": "Private AI works when one safe workflow owns the answer. — measurement and next step"
+          }
+        ]
+      }
+    },
+    "x": {
+      "caption": "Private AI starts with a narrow job, explicit data boundaries, cited answers, and a person who owns the exceptions. AI Agent Foundation: One narrow workflow instead of a vague…\nhttps://eb28.co/blog/private-ai-for-small-business-the-safe-way-to-start-without-overbuilding/",
+      "url": "https://eb28.co/blog/private-ai-for-small-business-the-safe-way-to-start-without-overbuilding/",
+      "status": "draft_only",
+      "media": {
+        "type": "image",
+        "mimeType": "image/jpeg",
+        "localPath": "output/eb28-social/assets/2026-07-23-pm/landscape-1200x675.jpg",
+        "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-23-pm/landscape-1200x675.jpg",
+        "width": 1200,
+        "height": 675,
+        "alt": "AI Agent Foundation — real EB28 product surface"
+      }
+    },
+    "linkedin": {
+      "caption": "Private AI starts with a narrow job, explicit data boundaries, cited answers, and a person who owns the exceptions.\n\nA useful private AI for small business project starts with a buyer constraint, not a software list.\n\nThe operating sequence:\n• Choose one narrow job and document the data, users, permissions, answer standard, and failure cost\n• Start with one narrow workflow: documents, SOPs, client history, finance review, or staff search. Build the private path before adding more moving parts.\n• Measure answer usefulness and citation accuracy on a representative evaluation set\n\nWhat EB28 has added: AI Agent Foundation. Start with one business task, a secure account, linked source material, and a custom system prompt for $10.\n\nThe full guide covers the 30-day build loop, safeguards, and evidence-based next step.\n\nhttps://eb28.co/blog/private-ai-for-small-business-the-safe-way-to-start-without-overbuilding/\n\n#PrivateAI #RAG #BusinessAutomation",
+      "url": "https://eb28.co/blog/private-ai-for-small-business-the-safe-way-to-start-without-overbuilding/",
+      "status": "draft_only",
+      "media": {
+        "type": "image",
+        "mimeType": "image/jpeg",
+        "localPath": "output/eb28-social/assets/2026-07-23-pm/landscape-1200x675.jpg",
+        "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-23-pm/landscape-1200x675.jpg",
+        "width": 1200,
+        "height": 675,
+        "alt": "AI Agent Foundation — real EB28 product surface"
+      }
+    },
+    "shortFormVideo": {
+      "hook": "Private AI starts with a narrow job, explicit data boundaries, cited answers, and a person who owns the exceptions.",
+      "durationSeconds": 40,
+      "format": "9:16 vertical, burned-in captions, screen recording or workflow diagram, no talking-head requirement",
+      "beats": [
+        {
+          "seconds": "0-3",
+          "visual": "Large hook over the live page or workflow map",
+          "voiceover": "Private AI starts with a narrow job, explicit data boundaries, cited answers, and a person who owns the exceptions."
+        },
+        {
+          "seconds": "3-12",
+          "visual": "Highlight the buyer constraint",
+          "voiceover": "Choose one narrow job and document the data, users, permissions, answer standard, and failure cost"
+        },
+        {
+          "seconds": "12-24",
+          "visual": "Animate the first-fix path",
+          "voiceover": "Start with one narrow workflow: documents, SOPs, client history, finance review, or staff search. Build the private path before adding more moving parts."
+        },
+        {
+          "seconds": "24-34",
+          "visual": "Show AI Agent Foundation with one real feature",
+          "voiceover": "Start with one business task, a secure account, linked source material, and a custom system prompt for $10."
+        },
+        {
+          "seconds": "34-40",
+          "visual": "Show the measurement and canonical URL",
+          "voiceover": "Measure answer usefulness and citation accuracy on a representative evaluation set. Read the full guide at EB28."
+        }
+      ],
+      "onScreenText": [
+        "Find the constraint",
+        "Build one useful fix",
+        "Feature: AI Agent Foundation",
+        "Measure the handoff"
+      ],
+      "caption": "Private AI starts with a narrow job, explicit data boundaries, cited answers, and a person who owns the exceptions. AI Agent Foundation: Start with one business task, a secure account, linked source material, and a custom system prompt for $10. https://eb28.co/blog/private-ai-for-small-business-the-safe-way-to-start-without-overbuilding/ #PrivateAI #RAG #BusinessAutomation #EB28",
+      "url": "https://eb28.co/blog/private-ai-for-small-business-the-safe-way-to-start-without-overbuilding/",
+      "status": "draft_only",
+      "media": {
+        "type": "image",
+        "mimeType": "image/jpeg",
+        "localPath": "output/eb28-social/assets/2026-07-23-pm/story-1080x1920.jpg",
+        "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-23-pm/story-1080x1920.jpg",
+        "width": 1080,
+        "height": 1920,
+        "alt": "Private AI works when one safe workflow owns the answer. — vertical story graphic"
+      }
+    }
+  },
+  "visualAssets": {
+    "version": "2026-07-social-v2",
+    "format": "jpeg-no-alpha",
+    "instagramCarousel": [
+      {
+        "type": "image",
+        "mimeType": "image/jpeg",
+        "localPath": "output/eb28-social/assets/2026-07-23-pm/feed-01-cover.jpg",
+        "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-23-pm/feed-01-cover.jpg",
+        "width": 1080,
+        "height": 1350,
+        "alt": "Private AI works when one safe workflow owns the answer. — EB28 social cover"
+      },
+      {
+        "type": "image",
+        "mimeType": "image/jpeg",
+        "localPath": "output/eb28-social/assets/2026-07-23-pm/feed-02-path.jpg",
+        "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-23-pm/feed-02-path.jpg",
+        "width": 1080,
+        "height": 1350,
+        "alt": "Private AI works when one safe workflow owns the answer. — three-step operating path"
+      },
+      {
+        "type": "image",
+        "mimeType": "image/jpeg",
+        "localPath": "output/eb28-social/assets/2026-07-23-pm/feed-03-feature.jpg",
+        "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-23-pm/feed-03-feature.jpg",
+        "width": 1080,
+        "height": 1350,
+        "alt": "AI Agent Foundation — feature details"
+      },
+      {
+        "type": "image",
+        "mimeType": "image/jpeg",
+        "localPath": "output/eb28-social/assets/2026-07-23-pm/feed-04-proof.jpg",
+        "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-23-pm/feed-04-proof.jpg",
+        "width": 1080,
+        "height": 1350,
+        "alt": "Private AI works when one safe workflow owns the answer. — measurement and next step"
+      }
+    ],
+    "vertical": {
+      "type": "image",
+      "mimeType": "image/jpeg",
+      "localPath": "output/eb28-social/assets/2026-07-23-pm/story-1080x1920.jpg",
+      "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-23-pm/story-1080x1920.jpg",
+      "width": 1080,
+      "height": 1920,
+      "alt": "Private AI works when one safe workflow owns the answer. — vertical story graphic"
+    },
+    "landscape": {
+      "type": "image",
+      "mimeType": "image/jpeg",
+      "localPath": "output/eb28-social/assets/2026-07-23-pm/landscape-1200x675.jpg",
+      "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-23-pm/landscape-1200x675.jpg",
+      "width": 1200,
+      "height": 675,
+      "alt": "AI Agent Foundation — real EB28 product surface"
+    },
+    "proofSource": {
+      "type": "public-page-capture",
+      "localPath": "output/eb28-social/proof-captures/ai-agent-foundation.jpg"
+    }
+  },
+  "bufferAsset": {
+    "type": "image",
+    "mimeType": "image/jpeg",
+    "localPath": "output/eb28-social/assets/2026-07-23-pm/feed-01-cover.jpg",
+    "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-23-pm/feed-01-cover.jpg",
+    "width": 1080,
+    "height": 1350,
+    "alt": "Private AI works when one safe workflow owns the answer. — EB28 social cover"
+  },
+  "socialPublishGuard": {
+    "status": "assets_ready_connection_unverified",
+    "note": "Assets are ready. External publishing still requires explicit package authorization plus a fresh read-only verification of the EB28 API account, organization, exact channel IDs, and channel state."
+  }
+}

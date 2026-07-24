@@ -57,14 +57,14 @@ assertCheck(
 );
 assertCheck(
   'page requests a concrete review window',
-  contains(pageSource, 'bestTime') && contains(pageSource, '10-minute review window'),
+  contains(pageSource, 'bestTime') && contains(pageSource, '15-minute review window'),
   'src/FreeWebsiteBuildPage.jsx',
 );
 assertCheck(
   'page offers preset Eastern review slots',
-  contains(pageSource, "REVIEW_TIMEZONE = 'America/New_York'") &&
+    contains(pageSource, "REVIEW_TIMEZONE = 'America/New_York'") &&
     contains(pageSource, 'getReviewWindowOptions') &&
-    contains(pageSource, 'Fast 10-minute review windows') &&
+    contains(pageSource, 'Choose a 15-minute review window') &&
     contains(pageSource, 'backupTime'),
   'src/FreeWebsiteBuildPage.jsx',
 );

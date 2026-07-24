@@ -1,11 +1,16 @@
+const LEAD_CAPTURE_EMAIL = 'social@eb28.co';
+const DEFAULT_LEAD_CAPTURE_ENDPOINT = `https://formsubmit.co/ajax/${LEAD_CAPTURE_EMAIL}`;
+
 function getLeadCaptureEndpoint() {
-  if (typeof window === 'undefined') return '';
+  if (typeof window === 'undefined') return DEFAULT_LEAD_CAPTURE_ENDPOINT;
   const configuredEndpoint = window.__EB28_LEAD_CAPTURE_ENDPOINT__;
   if (typeof configuredEndpoint === 'string' && configuredEndpoint.trim()) {
     return configuredEndpoint.trim();
   }
   const metaEndpoint = document.querySelector('meta[name="eb28-lead-capture-endpoint"]')?.content;
-  return typeof metaEndpoint === 'string' ? metaEndpoint.trim() : '';
+  return typeof metaEndpoint === 'string' && metaEndpoint.trim()
+    ? metaEndpoint.trim()
+    : DEFAULT_LEAD_CAPTURE_ENDPOINT;
 }
 
 export async function submitLeadCapture(payload, options = {}) {

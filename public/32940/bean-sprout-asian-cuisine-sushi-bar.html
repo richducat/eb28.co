@@ -13,7 +13,9 @@
         --muted: #5b6472;
         --line: #e5e7eb;
         --wash: #f6f7f9;
-        --accent: #be123c;
+        --accent: #b45309;
+        --accent-two: #f59e0b;
+        --surface: #fff7ed;
         --accent-soft: color-mix(in srgb, var(--accent) 11%, white);
       }
       * { box-sizing: border-box; }
@@ -85,8 +87,7 @@
       .hero {
         border-top: 1px solid var(--line);
         background:
-          radial-gradient(circle at 82% 20%, var(--accent-soft), transparent 31%),
-          linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+          linear-gradient(90deg, #fff 0 58%, var(--surface) 58% 100%);
       }
       .wrap {
         max-width: 1180px;
@@ -134,9 +135,9 @@
       }
       .preview {
         background: #fff;
-        border: 1px solid var(--line);
-        border-radius: 8px;
-        box-shadow: 0 24px 70px rgb(15 23 42 / 12%);
+        border: 2px solid var(--ink);
+        border-radius: 3px;
+        box-shadow: 18px 18px 0 color-mix(in srgb, var(--accent) 24%, white);
         overflow: hidden;
       }
       .preview-top {
@@ -163,9 +164,27 @@
       }
       .mock-strip span {
         min-height: 86px;
-        border-radius: 7px;
+        border-radius: 2px;
         background: var(--accent-soft);
         border: 1px solid color-mix(in srgb, var(--accent) 20%, white);
+      }
+      .preview-focus {
+        display: grid;
+        gap: 0;
+        margin: 22px 0;
+        border: 1px solid var(--line);
+        border-bottom: 0;
+      }
+      .preview-focus span {
+        min-height: 0;
+        padding: 12px 14px;
+        border: 0;
+        border-bottom: 1px solid var(--line);
+        border-radius: 0;
+        background: #fff;
+        color: var(--ink);
+        font-size: 13px;
+        font-weight: 800;
       }
       .mock-panel {
         display: grid;
@@ -192,9 +211,13 @@
       }
       .card {
         border: 1px solid var(--line);
-        border-radius: 8px;
+        border-radius: 3px;
         padding: 24px;
         background: #fff;
+      }
+      .card.featured {
+        border-top: 6px solid var(--accent);
+        background: var(--surface);
       }
       .card h3 {
         margin: 0 0 10px;
@@ -345,6 +368,31 @@
         color: #9ca3af;
         font-size: 12px;
       }
+      .research-note {
+        max-width: 760px;
+        margin: 0;
+        color: var(--muted);
+        font-size: 15px;
+        line-height: 1.7;
+      }
+      .research-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 18px;
+      }
+      .research-links a {
+        display: inline-flex;
+        min-height: 44px;
+        align-items: center;
+        border: 1px solid var(--line);
+        border-radius: 3px;
+        padding: 10px 14px;
+        background: #fff;
+        color: var(--ink);
+        font-weight: 800;
+        text-decoration: none;
+      }
       .index-list {
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -394,10 +442,10 @@
       <section class="hero">
         <div class="wrap hero-grid">
           <div>
-            <p class="eyebrow">Free website build + $98/mo Growth Hosting</p>
-            <h1>A sharper website concept for Bean Sprout Asian Cuisine &amp; Sushi Bar.</h1>
+            <p class="eyebrow">Menu-to-visit customer path</p>
+            <h1>Make it easy to browse sushi options and book a visit.</h1>
             <p class="lead">
-              Built to help sushi customers, dinner groups, and local takeout searches browse sushi options and book a visit without hunting through clutter, slow pages, or unclear next steps.
+              A researched website direction for Bean Sprout Asian Cuisine &amp; Sushi Bar, written around sushi customers, dinner groups, and local takeout searches and the real decision to browse sushi options and book a visit.
             </p>
             <div class="hero-actions">
               <a class="btn accent" href="#claim">Claim this free site</a>
@@ -409,9 +457,9 @@
             <div class="preview-body">
               <p class="eyebrow">Asian cuisine and sushi bar</p>
               <h2 class="mock-title">Bean Sprout Asian Cuisine &amp; Sushi Bar</h2>
-              <p>Clear service or menu highlights, fast contact paths, and local search content structured for customers nearby.</p>
-              <div class="mock-strip"><span></span><span></span><span></span></div>
-              <a class="btn primary" href="#claim">Owner approval needed</a>
+              <p>Three launch priorities, translated into a clearer customer journey:</p>
+              <div class="preview-focus"><span>Sushi and entree highlights</span><span>Reservation and takeout paths</span><span>Weekly content for nearby food searches</span></div>
+              <a class="btn primary" href="#claim">browse sushi options and book a visit</a>
               <div class="mock-panel"><div style="width: 92%"></div><div style="width: 74%"></div><div style="width: 58%"></div></div>
             </div>
           </aside>
@@ -422,17 +470,17 @@
         <div class="wrap">
           <h2 class="section-title">What this site would help customers do.</h2>
           <div class="cards">
-            <article class="card">
-              <h3>Act faster</h3>
-              <p>Put the highest-intent action near the top of every mobile screen: call, book, order, request service, or plan a visit.</p>
+            <article class="card featured">
+              <h3>browse sushi options and book a visit</h3>
+              <p>The primary mobile path is written for sushi customers, dinner groups, and local takeout searches, not a generic “learn more” click.</p>
             </article>
-            <article class="card">
-              <h3>Trust the business</h3>
-              <p>Use owner-approved photos, service details, hours, location cues, and proof where a customer naturally needs confidence.</p>
+            <article class="card featured">
+              <h3>Answer the decision questions</h3>
+              <p>Sushi and entree highlights and reservation and takeout paths give buyers useful context before they call, book, order, or visit.</p>
             </article>
-            <article class="card">
-              <h3>Find it on Google</h3>
-              <p>Publish search-friendly pages and weekly local content so more nearby customers can discover the business before choosing a competitor.</p>
+            <article class="card featured">
+              <h3>Build local discovery deliberately</h3>
+              <p>Weekly content for nearby food searches becomes the starting editorial direction after owner review and source verification.</p>
             </article>
           </div>
         </div>
@@ -451,14 +499,24 @@
               </ul>
             </article>
             <article class="card">
-              <h3>Owner approval needed</h3>
-              <p>Before public launch, EB28 confirms correct hours, phone number, domain access, photos, menu or service details, and any required legal or brand language.</p>
+              <h3>Proof required before launch</h3>
+              <ul><li>Current menu and ordering links</li>
+<li>Verified hours and location</li>
+<li>Owner-approved food, space, and team photography</li></ul>
             </article>
             <article class="card">
               <h3>Lead routing</h3>
               <p>Every claim path on this concept points to the EB28 intake workflow. EB28 can route approved site leads to the business's preferred inbox at launch.</p>
             </article>
           </div>
+        </div>
+      </section>
+
+      <section class="band">
+        <div class="wrap">
+          <p class="eyebrow">Research and claim boundary</p>
+          <h2 class="section-title">Specific enough to review. Honest enough to verify.</h2>
+          <p class="research-note">This concept starts from an EB28 planning brief for Bean Sprout Asian Cuisine &amp; Sushi Bar and its Asian cuisine and sushi bar customer journey. Every business fact, offer, image, hour, and contact route remains subject to owner verification before launch.</p>
         </div>
       </section>
 

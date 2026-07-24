@@ -17,6 +17,21 @@ const premiumProposalSlugs = new Set([
   '365-pool-service-suntree',
   'beachside-termite-pest-control-viera',
 ]);
+const chainOrFranchiseSlugs = new Set([
+  'escapology', 'trader-joes', 'j-crew-factory', 'tommy-bahama', 'kendra-scott', 'crumbl',
+  'southern-tide', 'american-eagle', 'aerie', 'nordstrom-rack', 'warby-parker', 'verizon-wireless',
+  'urban-air-adventure-park', 'talbots', 'sur-la-table', 'sunglass-hut', 'steak-n-shake',
+  'sport-clips', 'spectrum', 'soma', 'sola-salons', 'sleep-number-by-select-comfort',
+  'skin-laundry', 'sephora', 'sally-beauty-supply', 'playa-bowls', 'pearle-vision',
+  'panera-bread', 'old-navy', 'office-depot', 'nothing-bundt-cakes', 'moes-southwest-grill',
+  'mens-wearhouse', 'the-melting-pot', 'massage-envy', 'lululemon', 'longhorn-steakhouse',
+  'loft', 'lilly-pulitzer', 'lane-bryant', 'kohls', 'kirklands', 'kay-jewelers', 'j-mclaughlin',
+  'the-good-feet-store', 'gifts-more-at-the-paper-store', 'five-guys-burgers-and-fries',
+  'european-wax-center', 'ethan-allen', 'world-market', 'cold-stone-creamery', 'club-pilates',
+  'chilis', 'chicos', 'burn-boot-camp', 'books-a-million', 'bonefish-grill', 'belk',
+  'bath-body-works', 'att-wireless', 'amc-theatres',
+]);
+const duplicateConceptSlugs = new Set(['urban-prime', 'suntree-florist']);
 
 const baseProspects = [
   {
@@ -887,24 +902,26 @@ async function loadReplacementProspects() {
       audience: prospect.audience,
       action: prospect.action,
       focus: prospect.focus,
+      contact: prospect.contact || null,
     };
   });
 }
 
-function dedupeProspects(items) {
-  const seen = new Set();
-
-  return items.filter((prospect) => {
-    if (seen.has(prospect.slug)) {
-      return false;
+function mergeProspects(...groups) {
+  const merged = new Map();
+  for (const group of groups) {
+    for (const prospect of group) {
+      merged.set(prospect.slug, { ...(merged.get(prospect.slug) || {}), ...prospect });
     }
-    seen.add(prospect.slug);
-    return true;
-  });
+  }
+  return [...merged.values()];
 }
 
 const replacementProspects = await loadReplacementProspects();
-const prospects = dedupeProspects([...baseProspects, ...avenueProspects, ...replacementProspects]);
+const prospects = mergeProspects(baseProspects, avenueProspects, replacementProspects);
+const localProspects = prospects.filter(
+  (prospect) => !chainOrFranchiseSlugs.has(prospect.slug) && !duplicateConceptSlugs.has(prospect.slug),
+);
 
 const escapeHtml = (value = '') =>
   String(value)
@@ -991,12 +1008,86 @@ function focusMarkup(items) {
   return items.map((item) => `<li>${escapeHtml(item)}</li>`).join('\n');
 }
 
+function conceptProfile(prospect) {
+  const value = `${prospect.category} ${prospect.audience}`.toLowerCase();
+  if (/restaurant|cafe|coffee|bakery|brew|pizza|food|grill|steak|sushi|ice cream|dessert|bagel/.test(value)) {
+    return {
+      accent: '#b45309',
+      accentTwo: '#f59e0b',
+      surface: '#fff7ed',
+      label: 'Menu-to-visit customer path',
+      promise: `Make it easy to ${prospect.action}.`,
+      proof: ['Current menu and ordering links', 'Verified hours and location', 'Owner-approved food, space, and team photography'],
+    };
+  }
+  if (/clinic|dental|dentist|medical|therapy|orthodont|chiropr|animal|veter|health|med spa|wellness/.test(value)) {
+    return {
+      accent: '#0f766e',
+      accentTwo: '#14b8a6',
+      surface: '#f0fdfa',
+      label: 'Trust-to-appointment patient path',
+      promise: `Help the right patient understand the next step and ${prospect.action}.`,
+      proof: ['Verified services and provider credentials', 'Clear appointment and urgent-care boundaries', 'Owner-reviewed privacy and health language'],
+    };
+  }
+  if (/salon|nail|beauty|hair|wax|massage|spa|pilates|fitness|boot camp/.test(value)) {
+    return {
+      accent: '#9d174d',
+      accentTwo: '#ec4899',
+      surface: '#fdf2f8',
+      label: 'Service-to-booking client path',
+      promise: `Turn service interest into a confident decision to ${prospect.action}.`,
+      proof: ['Verified service menu and booking route', 'Owner-approved work and studio photography', 'Clear first-visit expectations'],
+    };
+  }
+  if (/pool|pest|hvac|plumb|electric|contractor|home service|repair|roof|title|escrow|account|cpa/.test(value)) {
+    return {
+      accent: '#1d4ed8',
+      accentTwo: '#60a5fa',
+      surface: '#eff6ff',
+      label: 'Problem-to-quote service path',
+      promise: `Show customers exactly when to call, what happens next, and how to ${prospect.action}.`,
+      proof: ['Verified service area and scope', 'Owner-approved licenses, warranties, and proof', 'Tested call and estimate routing'],
+    };
+  }
+  if (/store|retail|shop|apparel|jewel|furniture|wireless|book|gift|market/.test(value)) {
+    return {
+      accent: '#6d28d9',
+      accentTwo: '#a78bfa',
+      surface: '#f5f3ff',
+      label: 'Browse-to-visit shopping path',
+      promise: `Help nearby shoppers find the right category and ${prospect.action}.`,
+      proof: ['Verified local inventory and shopping links', 'Current store hours and location', 'Approved seasonal and event details'],
+    };
+  }
+  return {
+    accent: '#166534',
+    accentTwo: '#4ade80',
+    surface: '#f0fdf4',
+    label: 'Search-to-action local customer path',
+    promise: `Give ${prospect.audience} a clear reason and route to ${prospect.action}.`,
+    proof: ['Verified services and location details', 'Owner-approved proof and photography', 'Tested contact and follow-up routing'],
+  };
+}
+
+function researchMarkup(prospect) {
+  const sourceUrls = prospect.contact?.sourceUrls || [];
+  if (!sourceUrls.length) {
+    return `<p class="research-note">This concept starts from an EB28 planning brief for ${escapeHtml(prospect.name)} and its ${escapeHtml(prospect.category)} customer journey. Every business fact, offer, image, hour, and contact route remains subject to owner verification before launch.</p>`;
+  }
+  const links = sourceUrls
+    .map((url, index) => `<a href="${attr(url)}" target="_blank" rel="noreferrer">Research source ${index + 1}</a>`)
+    .join('');
+  return `<p class="research-note">The concept brief was checked against ${escapeHtml(prospect.contact.sourceType || 'public business sources')}. These links are the research basis, not permission to copy claims or branding.</p><div class="research-links">${links}</div>`;
+}
+
 function renderProspectPage(prospect, index) {
   const hasPremiumProposal = premiumProposalSlugs.has(prospect.slug);
   const premiumProposalUrl = `/32940/proposals/${prospect.slug}/`;
   const title = hasPremiumProposal ? `${prospect.name} premium website and content concept | EB28` : `${prospect.name} free website concept | EB28 Growth Hosting`;
   const description = hasPremiumProposal ? `Open the five-page premium redesign and founding Content Factory pilot prepared by EB28 for ${prospect.name} owner review.` : `A free local website concept for ${prospect.name}. EB28 can host, optimize, and publish weekly local content for $98/month after owner approval.`;
-  const accent = index % 3 === 0 ? '#0f766e' : index % 3 === 1 ? '#2563eb' : '#be123c';
+  const profile = conceptProfile(prospect);
+  const accent = profile.accent;
 
   return `<!doctype html>
 <html lang="en">
@@ -1014,6 +1105,8 @@ function renderProspectPage(prospect, index) {
         --line: #e5e7eb;
         --wash: #f6f7f9;
         --accent: ${accent};
+        --accent-two: ${profile.accentTwo};
+        --surface: ${profile.surface};
         --accent-soft: color-mix(in srgb, var(--accent) 11%, white);
       }
       * { box-sizing: border-box; }
@@ -1085,8 +1178,7 @@ function renderProspectPage(prospect, index) {
       .hero {
         border-top: 1px solid var(--line);
         background:
-          radial-gradient(circle at 82% 20%, var(--accent-soft), transparent 31%),
-          linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+          linear-gradient(90deg, #fff 0 58%, var(--surface) 58% 100%);
       }
       .wrap {
         max-width: 1180px;
@@ -1134,9 +1226,9 @@ function renderProspectPage(prospect, index) {
       }
       .preview {
         background: #fff;
-        border: 1px solid var(--line);
-        border-radius: 8px;
-        box-shadow: 0 24px 70px rgb(15 23 42 / 12%);
+        border: 2px solid var(--ink);
+        border-radius: 3px;
+        box-shadow: 18px 18px 0 color-mix(in srgb, var(--accent) 24%, white);
         overflow: hidden;
       }
       .preview-top {
@@ -1163,9 +1255,27 @@ function renderProspectPage(prospect, index) {
       }
       .mock-strip span {
         min-height: 86px;
-        border-radius: 7px;
+        border-radius: 2px;
         background: var(--accent-soft);
         border: 1px solid color-mix(in srgb, var(--accent) 20%, white);
+      }
+      .preview-focus {
+        display: grid;
+        gap: 0;
+        margin: 22px 0;
+        border: 1px solid var(--line);
+        border-bottom: 0;
+      }
+      .preview-focus span {
+        min-height: 0;
+        padding: 12px 14px;
+        border: 0;
+        border-bottom: 1px solid var(--line);
+        border-radius: 0;
+        background: #fff;
+        color: var(--ink);
+        font-size: 13px;
+        font-weight: 800;
       }
       .mock-panel {
         display: grid;
@@ -1192,9 +1302,13 @@ function renderProspectPage(prospect, index) {
       }
       .card {
         border: 1px solid var(--line);
-        border-radius: 8px;
+        border-radius: 3px;
         padding: 24px;
         background: #fff;
+      }
+      .card.featured {
+        border-top: 6px solid var(--accent);
+        background: var(--surface);
       }
       .card h3 {
         margin: 0 0 10px;
@@ -1345,6 +1459,31 @@ function renderProspectPage(prospect, index) {
         color: #9ca3af;
         font-size: 12px;
       }
+      .research-note {
+        max-width: 760px;
+        margin: 0;
+        color: var(--muted);
+        font-size: 15px;
+        line-height: 1.7;
+      }
+      .research-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 18px;
+      }
+      .research-links a {
+        display: inline-flex;
+        min-height: 44px;
+        align-items: center;
+        border: 1px solid var(--line);
+        border-radius: 3px;
+        padding: 10px 14px;
+        background: #fff;
+        color: var(--ink);
+        font-weight: 800;
+        text-decoration: none;
+      }
       .index-list {
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1395,10 +1534,10 @@ ${hasPremiumProposal ? `        <a class="btn accent" href="${attr(premiumPropos
       <section class="hero">
         <div class="wrap hero-grid">
           <div>
-            <p class="eyebrow">${hasPremiumProposal ? 'Five-page premium redesign + Content Factory pilot' : 'Free website build + $98/mo Growth Hosting'}</p>
-            <h1>${hasPremiumProposal ? 'A complete website and content concept' : 'A sharper website concept'} for ${escapeHtml(prospect.name)}.</h1>
+            <p class="eyebrow">${hasPremiumProposal ? 'Five-page premium redesign + Content Factory pilot' : escapeHtml(profile.label)}</p>
+            <h1>${escapeHtml(profile.promise)}</h1>
             <p class="lead">
-              Built to help ${escapeHtml(prospect.audience)} ${escapeHtml(prospect.action)} without hunting through clutter, slow pages, or unclear next steps.
+              A researched website direction for ${escapeHtml(prospect.name)}, written around ${escapeHtml(prospect.audience)} and the real decision to ${escapeHtml(prospect.action)}.
             </p>
             <div class="hero-actions">
 ${hasPremiumProposal ? `              <a class="btn accent" href="${attr(premiumProposalUrl)}">Explore all five pages</a>
@@ -1411,9 +1550,9 @@ ${hasPremiumProposal ? `              <a class="btn accent" href="${attr(premium
             <div class="preview-body">
               <p class="eyebrow">${escapeHtml(prospect.category)}</p>
               <h2 class="mock-title">${escapeHtml(prospect.name)}</h2>
-              <p>Clear service or menu highlights, fast contact paths, and local search content structured for customers nearby.</p>
-              <div class="mock-strip"><span></span><span></span><span></span></div>
-              <a class="btn primary" href="#claim">Owner approval needed</a>
+              <p>Three launch priorities, translated into a clearer customer journey:</p>
+              <div class="preview-focus">${prospect.focus.map((item) => `<span>${escapeHtml(item)}</span>`).join('')}</div>
+              <a class="btn primary" href="#claim">${escapeHtml(prospect.action)}</a>
               <div class="mock-panel"><div style="width: 92%"></div><div style="width: 74%"></div><div style="width: 58%"></div></div>
             </div>
           </aside>
@@ -1424,17 +1563,17 @@ ${hasPremiumProposal ? `              <a class="btn accent" href="${attr(premium
         <div class="wrap">
           <h2 class="section-title">What this site would help customers do.</h2>
           <div class="cards">
-            <article class="card">
-              <h3>Act faster</h3>
-              <p>Put the highest-intent action near the top of every mobile screen: call, book, order, request service, or plan a visit.</p>
+            <article class="card featured">
+              <h3>${escapeHtml(prospect.action)}</h3>
+              <p>The primary mobile path is written for ${escapeHtml(prospect.audience)}, not a generic “learn more” click.</p>
             </article>
-            <article class="card">
-              <h3>Trust the business</h3>
-              <p>Use owner-approved photos, service details, hours, location cues, and proof where a customer naturally needs confidence.</p>
+            <article class="card featured">
+              <h3>Answer the decision questions</h3>
+              <p>${escapeHtml(prospect.focus[0])} and ${escapeHtml(prospect.focus[1]).toLowerCase()} give buyers useful context before they call, book, order, or visit.</p>
             </article>
-            <article class="card">
-              <h3>Find it on Google</h3>
-              <p>Publish search-friendly pages and weekly local content so more nearby customers can discover the business before choosing a competitor.</p>
+            <article class="card featured">
+              <h3>Build local discovery deliberately</h3>
+              <p>${escapeHtml(prospect.focus[2])} becomes the starting editorial direction after owner review and source verification.</p>
             </article>
           </div>
         </div>
@@ -1451,14 +1590,22 @@ ${hasPremiumProposal ? `              <a class="btn accent" href="${attr(premium
               </ul>
             </article>
             <article class="card">
-              <h3>Owner approval needed</h3>
-              <p>Before public launch, EB28 confirms correct hours, phone number, domain access, photos, menu or service details, and any required legal or brand language.</p>
+              <h3>Proof required before launch</h3>
+              <ul>${focusMarkup(profile.proof)}</ul>
             </article>
             <article class="card">
               <h3>Lead routing</h3>
               <p>Every claim path on this concept points to the EB28 intake workflow. EB28 can route approved site leads to the business's preferred inbox at launch.</p>
             </article>
           </div>
+        </div>
+      </section>
+
+      <section class="band">
+        <div class="wrap">
+          <p class="eyebrow">Research and claim boundary</p>
+          <h2 class="section-title">Specific enough to review. Honest enough to verify.</h2>
+          ${researchMarkup(prospect)}
         </div>
       </section>
 
@@ -1628,10 +1775,10 @@ function renderClaimReceivedPage() {
 }
 
 function renderIndex() {
-  const links = prospects
+  const links = localProspects
     .map(
       (prospect) =>
-        `<a href="/32940/${attr(prospect.slug)}.html">${escapeHtml(prospect.name)}<br><small>${escapeHtml(prospect.category)}</small></a>`,
+        `<a href="/32940/${attr(prospect.slug)}.html"><span>${escapeHtml(prospect.name)}</span><small>${escapeHtml(prospect.category)}</small><b>Open concept →</b></a>`,
     )
     .join('\n');
 
@@ -1644,27 +1791,45 @@ function renderIndex() {
     <title>32940 Free Website Concepts | EB28 Growth Hosting</title>
     <meta name="description" content="Free website concepts for local 32940 businesses, prepared by EB28 with $98/month Growth Hosting available after owner approval." />
     <style>
-      body { margin: 0; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: #111827; background: #f8fafc; }
-      main { max-width: 1120px; margin: 0 auto; padding: 64px 22px; }
-      h1 { margin: 0; font-size: clamp(38px, 7vw, 70px); line-height: .96; letter-spacing: 0; }
-      p { color: #4b5563; font-size: 18px; max-width: 780px; line-height: 1.55; }
+      :root { --ink:#17191f; --muted:#62656d; --line:#17191f; --green:#2d9c67; --paper:#fafaf7; }
+      * { box-sizing: border-box; }
+      body { margin:0; font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; color:var(--ink); background:var(--paper); }
+      main { max-width:1380px; margin:0 auto; padding:0 22px 72px; }
+      .masthead { display:grid; grid-template-columns:1.1fr .9fr; border-bottom:2px solid var(--line); }
+      .masthead > div,.masthead > aside { padding:clamp(48px,8vw,100px) clamp(20px,4vw,56px); }
+      .masthead > div { border-right:2px solid var(--line); }
+      .masthead aside { display:flex; flex-direction:column; justify-content:flex-end; background:#eef3ed; }
+      .masthead strong { display:block; font-size:clamp(58px,8vw,110px); line-height:.85; letter-spacing:-.07em; }
+      .masthead small { display:block; margin-top:14px; color:var(--muted); font-weight:800; line-height:1.5; }
+      .eyebrow { color:#237e53; font-size:12px; font-weight:900; letter-spacing:.14em; text-transform:uppercase; }
+      h1 { margin:16px 0 0; max-width:11ch; font-size:clamp(46px,7vw,92px); line-height:.94; letter-spacing:-.055em; }
+      p { color:var(--muted); font-size:18px; max-width:780px; line-height:1.65; }
       .actions { display: flex; flex-wrap: wrap; gap: 12px; margin: 26px 0 40px; }
-      a.button { display: inline-flex; min-height: 44px; align-items: center; justify-content: center; padding: 12px 16px; border-radius: 8px; background: #111827; color: #fff; font-weight: 900; text-decoration: none; }
+      a.button { display:inline-flex; min-height:48px; align-items:center; justify-content:center; padding:12px 18px; border:1px solid var(--green); border-radius:4px; background:var(--green); color:#fff; font-weight:900; text-decoration:none; }
+      .directory-head { display:flex; align-items:end; justify-content:space-between; gap:24px; padding:72px 0 28px; }
+      .directory-head h2 { margin:8px 0 0; max-width:13ch; font-size:clamp(36px,5vw,64px); line-height:.98; letter-spacing:-.045em; }
       .index-list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
-      .index-list a { display: block; min-height: 92px; padding: 16px; border: 1px solid #e5e7eb; border-radius: 8px; background: #fff; text-decoration: none; color: #111827; font-weight: 900; box-shadow: 0 8px 30px rgb(15 23 42 / 5%); }
-      .index-list small { display: inline-block; margin-top: 7px; color: #6b7280; font-weight: 700; }
-      .notice { margin-top: 36px; padding: 16px; border: 1px solid #e5e7eb; border-radius: 8px; background: #fff; color: #6b7280; font-size: 14px; }
-      @media (max-width: 840px) { .index-list { grid-template-columns: 1fr; } main { padding: 42px 18px; } }
+      .index-list a { display:flex; min-height:170px; flex-direction:column; padding:22px; border:2px solid var(--line); border-radius:3px; background:#fff; text-decoration:none; color:var(--ink); font-weight:900; transition:transform .18s,background .18s; }
+      .index-list a:hover { transform:translateY(-3px); background:#f0fdf4; }
+      .index-list a span { font-size:20px; line-height:1.05; }
+      .index-list small { display:inline-block; margin-top:9px; color:var(--muted); font-weight:700; }
+      .index-list b { margin-top:auto; color:#237e53; font-size:13px; }
+      .notice { margin-top:36px; padding:18px; border:1px solid #d5d6d1; border-radius:3px; background:#fff; color:var(--muted); font-size:14px; }
+      @media (max-width:840px) { .masthead{grid-template-columns:1fr}.masthead>div{border-right:0;border-bottom:2px solid var(--line)}.index-list{grid-template-columns:1fr}main{padding:0 16px 42px}.directory-head{align-items:start;flex-direction:column} }
     </style>
   </head>
   <body>
     <main>
-      <h1>Free website concepts for 32940 local businesses.</h1>
-      <p>EB28 prepared these noindex owner-review pages as a lead-generation offer: the custom website build is free, and approved sites can be hosted, optimized, and supported for $98/month with weekly local content.</p>
-      <div class="actions">
-        <a class="button" href="${studioUrl}">View EB28 Growth Hosting</a>
-        <a class="button" href="${intakeUrl}">Open intake form</a>
-      </div>
+      <section class="masthead">
+        <div>
+          <p class="eyebrow">EB28 local business concept library</p>
+          <h1>See the first version before you pay for it.</h1>
+          <p>Each owner-review concept starts with a specific customer action, three launch priorities, and a clear verification boundary. The custom build is free. Approved sites can use EB28 Growth Hosting for $98/month.</p>
+          <div class="actions"><a class="button" href="${intakeUrl}">Claim a free website build</a><a class="button" href="${studioUrl}">How Growth Hosting works</a></div>
+        </div>
+        <aside><strong>${localProspects.length}</strong><small>locally controlled business candidates after removing obvious national chains and duplicate concepts</small></aside>
+      </section>
+      <div class="directory-head"><div><p class="eyebrow">Owner-review concepts</p><h2>Built around the business, not a template.</h2></div><p>Open any concept to see the researched customer path, tailored launch focus, proof still required, and exact claim offer.</p></div>
       <section class="index-list" aria-label="Business website concepts">
         ${links}
       </section>
@@ -1675,14 +1840,13 @@ function renderIndex() {
 `;
 }
 
-await fs.rm(outDir, { recursive: true, force: true });
 await fs.mkdir(outDir, { recursive: true });
 
-for (const [index, prospect] of prospects.entries()) {
+for (const [index, prospect] of localProspects.entries()) {
   await fs.writeFile(path.join(outDir, `${prospect.slug}.html`), renderProspectPage(prospect, index));
 }
 
 await fs.writeFile(path.join(outDir, 'index.html'), renderIndex());
 await fs.writeFile(path.join(outDir, 'claim-received.html'), renderClaimReceivedPage());
 
-console.log(`Generated ${prospects.length} 32940 growth site concepts in ${path.relative(repoRoot, outDir)}`);
+console.log(`Generated ${localProspects.length} local 32940 growth site concepts in ${path.relative(repoRoot, outDir)}`);

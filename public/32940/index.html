@@ -7,182 +7,137 @@
     <title>32940 Free Website Concepts | EB28 Growth Hosting</title>
     <meta name="description" content="Free website concepts for local 32940 businesses, prepared by EB28 with $98/month Growth Hosting available after owner approval." />
     <style>
-      body { margin: 0; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: #111827; background: #f8fafc; }
-      main { max-width: 1120px; margin: 0 auto; padding: 64px 22px; }
-      h1 { margin: 0; font-size: clamp(38px, 7vw, 70px); line-height: .96; letter-spacing: 0; }
-      p { color: #4b5563; font-size: 18px; max-width: 780px; line-height: 1.55; }
+      :root { --ink:#17191f; --muted:#62656d; --line:#17191f; --green:#2d9c67; --paper:#fafaf7; }
+      * { box-sizing: border-box; }
+      body { margin:0; font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; color:var(--ink); background:var(--paper); }
+      main { max-width:1380px; margin:0 auto; padding:0 22px 72px; }
+      .masthead { display:grid; grid-template-columns:1.1fr .9fr; border-bottom:2px solid var(--line); }
+      .masthead > div,.masthead > aside { padding:clamp(48px,8vw,100px) clamp(20px,4vw,56px); }
+      .masthead > div { border-right:2px solid var(--line); }
+      .masthead aside { display:flex; flex-direction:column; justify-content:flex-end; background:#eef3ed; }
+      .masthead strong { display:block; font-size:clamp(58px,8vw,110px); line-height:.85; letter-spacing:-.07em; }
+      .masthead small { display:block; margin-top:14px; color:var(--muted); font-weight:800; line-height:1.5; }
+      .eyebrow { color:#237e53; font-size:12px; font-weight:900; letter-spacing:.14em; text-transform:uppercase; }
+      h1 { margin:16px 0 0; max-width:11ch; font-size:clamp(46px,7vw,92px); line-height:.94; letter-spacing:-.055em; }
+      p { color:var(--muted); font-size:18px; max-width:780px; line-height:1.65; }
       .actions { display: flex; flex-wrap: wrap; gap: 12px; margin: 26px 0 40px; }
-      a.button { display: inline-flex; min-height: 44px; align-items: center; justify-content: center; padding: 12px 16px; border-radius: 8px; background: #111827; color: #fff; font-weight: 900; text-decoration: none; }
+      a.button { display:inline-flex; min-height:48px; align-items:center; justify-content:center; padding:12px 18px; border:1px solid var(--green); border-radius:4px; background:var(--green); color:#fff; font-weight:900; text-decoration:none; }
+      .directory-head { display:flex; align-items:end; justify-content:space-between; gap:24px; padding:72px 0 28px; }
+      .directory-head h2 { margin:8px 0 0; max-width:13ch; font-size:clamp(36px,5vw,64px); line-height:.98; letter-spacing:-.045em; }
       .index-list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
-      .index-list a { display: block; min-height: 92px; padding: 16px; border: 1px solid #e5e7eb; border-radius: 8px; background: #fff; text-decoration: none; color: #111827; font-weight: 900; box-shadow: 0 8px 30px rgb(15 23 42 / 5%); }
-      .index-list small { display: inline-block; margin-top: 7px; color: #6b7280; font-weight: 700; }
-      .notice { margin-top: 36px; padding: 16px; border: 1px solid #e5e7eb; border-radius: 8px; background: #fff; color: #6b7280; font-size: 14px; }
-      @media (max-width: 840px) { .index-list { grid-template-columns: 1fr; } main { padding: 42px 18px; } }
+      .index-list a { display:flex; min-height:170px; flex-direction:column; padding:22px; border:2px solid var(--line); border-radius:3px; background:#fff; text-decoration:none; color:var(--ink); font-weight:900; transition:transform .18s,background .18s; }
+      .index-list a:hover { transform:translateY(-3px); background:#f0fdf4; }
+      .index-list a span { font-size:20px; line-height:1.05; }
+      .index-list small { display:inline-block; margin-top:9px; color:var(--muted); font-weight:700; }
+      .index-list b { margin-top:auto; color:#237e53; font-size:13px; }
+      .notice { margin-top:36px; padding:18px; border:1px solid #d5d6d1; border-radius:3px; background:#fff; color:var(--muted); font-size:14px; }
+      @media (max-width:840px) { .masthead{grid-template-columns:1fr}.masthead>div{border-right:0;border-bottom:2px solid var(--line)}.index-list{grid-template-columns:1fr}main{padding:0 16px 42px}.directory-head{align-items:start;flex-direction:column} }
     </style>
   </head>
   <body>
     <main>
-      <h1>Free website concepts for 32940 local businesses.</h1>
-      <p>EB28 prepared these noindex owner-review pages as a lead-generation offer: the custom website build is free, and approved sites can be hosted, optimized, and supported for $98/month with weekly local content.</p>
-      <div class="actions">
-        <a class="button" href="https://eb28.co/melbournewebstudio/">View EB28 Growth Hosting</a>
-        <a class="button" href="https://eb28.co/melbournewebstudio/#quiz">Open intake form</a>
-      </div>
+      <section class="masthead">
+        <div>
+          <p class="eyebrow">EB28 local business concept library</p>
+          <h1>See the first version before you pay for it.</h1>
+          <p>Each owner-review concept starts with a specific customer action, three launch priorities, and a clear verification boundary. The custom build is free. Approved sites can use EB28 Growth Hosting for $98/month.</p>
+          <div class="actions"><a class="button" href="https://eb28.co/melbournewebstudio/#quiz">Claim a free website build</a><a class="button" href="https://eb28.co/melbournewebstudio/">How Growth Hosting works</a></div>
+        </div>
+        <aside><strong>91</strong><small>locally controlled business candidates after removing obvious national chains and duplicate concepts</small></aside>
+      </section>
+      <div class="directory-head"><div><p class="eyebrow">Owner-review concepts</p><h2>Built around the business, not a template.</h2></div><p>Open any concept to see the researched customer path, tailored launch focus, proof still required, and exact claim offer.</p></div>
       <section class="index-list" aria-label="Business website concepts">
-        <a href="/32940/arabesque-flavors-of-the-middle-east.html">Arabesque Flavors of the Middle East<br><small>Middle Eastern restaurant</small></a>
-<a href="/32940/asian-wok.html">Asian Wok<br><small>Asian restaurant</small></a>
-<a href="/32940/bean-sprout-asian-cuisine-sushi-bar.html">Bean Sprout Asian Cuisine &amp; Sushi Bar<br><small>Asian cuisine and sushi bar</small></a>
-<a href="/32940/bella-title-escrow.html">Bella Title &amp; Escrow<br><small>title and escrow office</small></a>
-<a href="/32940/bizzarro-s-pizza.html">Bizzarro&#39;s Pizza<br><small>pizza restaurant</small></a>
-<a href="/32940/bold-cup-coffee.html">Bold Cup Coffee<br><small>coffee shop</small></a>
-<a href="/32940/cedar-s-cafe.html">Cedar&#39;s Cafe<br><small>local cafe</small></a>
-<a href="/32940/diane-s-nails.html">Diane&#39;s Nails<br><small>nail salon</small></a>
-<a href="/32940/dynasty-nail-spa.html">Dynasty Nail Spa<br><small>nail spa</small></a>
-<a href="/32940/eatz.html">Eatz<br><small>local restaurant</small></a>
-<a href="/32940/el-tesoro-cocina-mexicana.html">El Tesoro Cocina Mexicana<br><small>Mexican restaurant</small></a>
-<a href="/32940/elegant-nail-spa.html">Elegant Nail Spa<br><small>nail spa</small></a>
-<a href="/32940/fairway-cigar-lounge.html">Fairway Cigar Lounge<br><small>cigar lounge</small></a>
-<a href="/32940/flying-burro.html">Flying Burro<br><small>local restaurant</small></a>
-<a href="/32940/fujiyama-japanese.html">Fujiyama Japanese<br><small>Japanese restaurant</small></a>
-<a href="/32940/gatto-s-tire-and-auto-services.html">Gatto&#39;s Tire &amp; Auto Services<br><small>auto repair and tire shop</small></a>
-<a href="/32940/genna-pizza-express.html">Genna Pizza Express<br><small>pizza restaurant</small></a>
-<a href="/32940/harbor-city-animal-hospital.html">Harbor City Animal Hospital<br><small>veterinary clinic</small></a>
-<a href="/32940/luxy-nail-spa.html">Luxy Nail Spa<br><small>nail spa</small></a>
-<a href="/32940/olive-tree-greek-grill.html">Olive Tree Greek Grill<br><small>Greek restaurant</small></a>
-<a href="/32940/botta-pizzeria-bakery.html">Botta Pizzeria &amp; Bakery<br><small>Neapolitan pizza and bakery</small></a>
-<a href="/32940/poke-fin-viera.html">Poke Fin Viera<br><small>poke and boba shop</small></a>
-<a href="/32940/pristine-spa.html">Pristine Spa<br><small>spa</small></a>
-<a href="/32940/realm-nails-spa.html">Realm Nails &amp; Spa<br><small>nail spa</small></a>
-<a href="/32940/revolutions-cyclery.html">Revolutions Cyclery<br><small>bike shop</small></a>
-<a href="/32940/suntree-florist.html">Suntree Florist<br><small>florist</small></a>
-<a href="/32940/suntree-flower-shop.html">Suntree Flower Shop<br><small>flower shop</small></a>
-<a href="/32940/the-salty-bagel.html">The Salty Bagel<br><small>bagel shop</small></a>
-<a href="/32940/the-shabby-loft.html">The Shabby Loft<br><small>boutique retail shop</small></a>
-<a href="/32940/urban-prime.html">Urban Prime<br><small>restaurant and market</small></a>
-<a href="/32940/clevens-face-and-body-specialist.html">Clevens Face and Body Specialist<br><small>aesthetic medicine and skincare practice</small></a>
-<a href="/32940/escapology.html">Escapology<br><small>escape room and entertainment venue</small></a>
-<a href="/32940/sirocco-station.html">Sirocco Station<br><small>Lebanese and Mediterranean restaurant</small></a>
-<a href="/32940/viera-discovery-center.html">Viera Discovery Center<br><small>community discovery center</small></a>
-<a href="/32940/nourish.html">Nourish<br><small>body care and home goods retailer</small></a>
-<a href="/32940/trader-joes.html">Trader Joe&#39;s<br><small>specialty grocery store</small></a>
-<a href="/32940/j-crew-factory.html">J.Crew Factory<br><small>apparel and fashion retailer</small></a>
-<a href="/32940/lets-plant-it.html">Let&#39;s Plant It<br><small>plant and gift shop</small></a>
-<a href="/32940/tommy-bahama.html">Tommy Bahama<br><small>apparel and lifestyle retailer</small></a>
-<a href="/32940/kendra-scott.html">Kendra Scott<br><small>jewelry and accessories shop</small></a>
-<a href="/32940/crumbl.html">Crumbl<br><small>cookie and dessert shop</small></a>
-<a href="/32940/southern-tide.html">Southern Tide<br><small>apparel and fashion retailer</small></a>
-<a href="/32940/air-anchor.html">Air &amp; Anchor<br><small>jewelry and accessories shop</small></a>
-<a href="/32940/american-eagle.html">American Eagle<br><small>apparel and fashion retailer</small></a>
-<a href="/32940/aerie.html">Aerie<br><small>apparel and fashion retailer</small></a>
-<a href="/32940/nordstrom-rack.html">Nordstrom Rack<br><small>apparel and home retailer</small></a>
-<a href="/32940/warby-parker.html">Warby Parker<br><small>eyewear shop</small></a>
-<a href="/32940/viera-dental.html">Viera Dental<br><small>dental practice</small></a>
-<a href="/32940/verizon-wireless.html">Verizon Wireless<br><small>wireless phone store</small></a>
-<a href="/32940/urban-air-adventure-park.html">Urban Air Adventure Park<br><small>indoor adventure park</small></a>
-<a href="/32940/tuscany-grill.html">Tuscany Grill<br><small>Italian restaurant</small></a>
-<a href="/32940/thai-hana.html">Thai Hana<br><small>Thai and sushi restaurant</small></a>
-<a href="/32940/talbots.html">Talbots<br><small>apparel and fashion retailer</small></a>
-<a href="/32940/sur-la-table.html">Sur La Table<br><small>kitchenware and cooking retailer</small></a>
-<a href="/32940/sunglass-hut.html">Sunglass Hut<br><small>eyewear and accessories shop</small></a>
-<a href="/32940/steak-n-shake.html">Steak &#39;n Shake<br><small>burger restaurant</small></a>
-<a href="/32940/sport-clips.html">Sport Clips<br><small>hair salon</small></a>
-<a href="/32940/spectrum.html">Spectrum<br><small>internet and mobile service store</small></a>
-<a href="/32940/soma.html">Soma<br><small>apparel and intimates retailer</small></a>
-<a href="/32940/sola-salons.html">Sola Salons<br><small>salon studio suites</small></a>
-<a href="/32940/sleep-number-by-select-comfort.html">Sleep Number by Select Comfort<br><small>mattress and sleep retailer</small></a>
-<a href="/32940/skin-laundry.html">Skin Laundry<br><small>skincare clinic</small></a>
-<a href="/32940/sephora.html">Sephora<br><small>beauty retailer</small></a>
-<a href="/32940/sally-beauty-supply.html">Sally Beauty Supply<br><small>beauty supply retailer</small></a>
-<a href="/32940/playa-bowls.html">Playa Bowls<br><small>acai bowl and smoothie shop</small></a>
-<a href="/32940/pizza-gallery-grill.html">Pizza Gallery &amp; Grill<br><small>pizza restaurant and grill</small></a>
-<a href="/32940/pearle-vision.html">Pearle Vision<br><small>eye care and eyewear office</small></a>
-<a href="/32940/paris-banh-mi.html">Paris Banh Mi<br><small>Vietnamese cafe and bakery</small></a>
-<a href="/32940/panera-bread.html">Panera Bread<br><small>bakery cafe</small></a>
-<a href="/32940/old-navy.html">Old Navy<br><small>apparel and fashion retailer</small></a>
-<a href="/32940/office-depot.html">Office Depot<br><small>office supply and print shop</small></a>
-<a href="/32940/nothing-bundt-cakes.html">Nothing Bundt Cakes<br><small>cake and dessert shop</small></a>
-<a href="/32940/moes-southwest-grill.html">Moe&#39;s Southwest Grill<br><small>Mexican fast-casual restaurant</small></a>
-<a href="/32940/mens-wearhouse.html">Men&#39;s Wearhouse<br><small>menswear and formalwear retailer</small></a>
-<a href="/32940/the-melting-pot.html">The Melting Pot<br><small>fondue restaurant</small></a>
-<a href="/32940/massage-envy.html">Massage Envy<br><small>massage and skincare studio</small></a>
-<a href="/32940/lululemon.html">lululemon<br><small>athletic apparel retailer</small></a>
-<a href="/32940/longhorn-steakhouse.html">Longhorn Steakhouse<br><small>steakhouse restaurant</small></a>
-<a href="/32940/loft.html">LOFT<br><small>apparel and fashion retailer</small></a>
-<a href="/32940/lilly-pulitzer.html">Lilly Pulitzer<br><small>apparel and fashion retailer</small></a>
-<a href="/32940/lane-bryant.html">Lane Bryant<br><small>apparel and fashion retailer</small></a>
-<a href="/32940/kohls.html">Kohl&#39;s<br><small>department store</small></a>
-<a href="/32940/kirklands.html">Kirkland&#39;s<br><small>home decor and gift retailer</small></a>
-<a href="/32940/kay-jewelers.html">Kay Jewelers<br><small>jewelry shop</small></a>
-<a href="/32940/j-mclaughlin.html">J.McLaughlin<br><small>apparel and fashion retailer</small></a>
-<a href="/32940/the-good-feet-store.html">The Good Feet Store<br><small>arch support and footwear store</small></a>
-<a href="/32940/gifts-more-at-the-paper-store.html">Gifts &amp; More at The Paper Store<br><small>gift and specialty retailer</small></a>
-<a href="/32940/five-guys-burgers-and-fries.html">Five Guys Burgers and Fries<br><small>burger restaurant</small></a>
-<a href="/32940/european-wax-center.html">European Wax Center<br><small>waxing and beauty studio</small></a>
-<a href="/32940/ethan-allen.html">Ethan Allen<br><small>furniture and interior design retailer</small></a>
-<a href="/32940/world-market.html">World Market<br><small>home, food, and gift retailer</small></a>
-<a href="/32940/cold-stone-creamery.html">Cold Stone Creamery<br><small>ice cream and dessert shop</small></a>
-<a href="/32940/club-pilates.html">Club Pilates<br><small>pilates studio</small></a>
-<a href="/32940/chilis.html">Chili&#39;s<br><small>casual dining restaurant</small></a>
-<a href="/32940/chicos.html">Chico&#39;s<br><small>apparel and fashion retailer</small></a>
-<a href="/32940/burn-boot-camp.html">Burn Boot Camp<br><small>fitness studio</small></a>
-<a href="/32940/books-a-million.html">Books-A-Million<br><small>bookstore and gift retailer</small></a>
-<a href="/32940/bonefish-grill.html">Bonefish Grill<br><small>seafood restaurant</small></a>
-<a href="/32940/belk.html">Belk<br><small>department store</small></a>
-<a href="/32940/bath-body-works.html">Bath &amp; Body Works<br><small>beauty and fragrance retailer</small></a>
-<a href="/32940/att-wireless.html">AT&amp;T Wireless<br><small>wireless phone store</small></a>
-<a href="/32940/amc-theatres.html">AMC Theatres<br><small>movie theater</small></a>
-<a href="/32940/addy-rose-hair-studio.html">Addy Rose Hair Studio<br><small>hair salon</small></a>
-<a href="/32940/7-senses-kids.html">7 Senses Kids<br><small>kids gift and toy shop</small></a>
-<a href="/32940/28-north-gastropub.html">28 North Gastropub<br><small>gastropub and restaurant</small></a>
-<a href="/32940/beachfly-brewing-company.html">BeachFly Brewing Company<br><small>local brewery</small></a>
-<a href="/32940/grecian-garden-cafe.html">Grecian Garden Cafe<br><small>family-owned cafe and Mediterranean restaurant</small></a>
-<a href="/32940/jacqueline-s-bakery.html">Jacqueline&#39;s Bakery<br><small>French bakery and cafe</small></a>
-<a href="/32940/pacha-kava-lounge.html">Pacha Kava Lounge<br><small>kava lounge and social hub</small></a>
-<a href="/32940/urban-prime-marketplace-restaurant.html">Urban Prime Marketplace &amp; Restaurant<br><small>restaurant and specialty food marketplace</small></a>
-<a href="/32940/bodyscapes-med-spa.html">Bodyscapes Med Spa<br><small>med spa and wellness services</small></a>
-<a href="/32940/essentials-medispa-salon.html">Essentials Medispa &amp; Salon<br><small>medical spa and salon</small></a>
-<a href="/32940/euphoria-day-spa-salon.html">Euphoria Day Spa &amp; Salon<br><small>day spa, hair salon, and med spa</small></a>
-<a href="/32940/fountain-of-you.html">Fountain of You<br><small>boutique medical spa</small></a>
-<a href="/32940/imperial-salon-spa-suntree.html">Imperial Salon &amp; Spa Suntree<br><small>full-service salon and spa</small></a>
-<a href="/32940/the-refinery-medspa-wellness.html">The Refinery Medspa &amp; Wellness<br><small>med spa and wellness clinic</small></a>
-<a href="/32940/family-practice-of-suntree-and-viera.html">Family Practice of Suntree and Viera<br><small>family medicine, concierge medicine, and aesthetics</small></a>
-<a href="/32940/kehoe-animal-clinic-of-viera.html">Kehoe Animal Clinic of Viera<br><small>veterinary clinic</small></a>
-<a href="/32940/periu-family-dentistry.html">Periu Family Dentistry<br><small>family dental practice</small></a>
-<a href="/32940/premier-veterinary-care.html">Premier Veterinary Care<br><small>veterinary clinic</small></a>
-<a href="/32940/suntree-chiropractic.html">Suntree Chiropractic<br><small>chiropractic clinic</small></a>
-<a href="/32940/valderrama-orthodontics.html">Valderrama Orthodontics<br><small>orthodontic practice</small></a>
-<a href="/32940/viera-dental-arts.html">Viera Dental Arts<br><small>cosmetic, restorative, and emergency dentistry</small></a>
-<a href="/32940/buds-bows-floral-design.html">Buds &amp; Bows Floral Design<br><small>floral design and wedding/event florist</small></a>
-<a href="/32940/suntree-florist-gifts.html">Suntree Florist &amp; Gifts<br><small>local florist and gift shop</small></a>
-<a href="/32940/barbara-j-braley-cpa.html">Barbara J Braley, CPA<br><small>CPA, tax, accounting, and bookkeeping office</small></a>
-<a href="/32940/supreme-title-closings.html">Supreme Title Closings<br><small>title agency</small></a>
-<a href="/32940/durham-sons.html">Durham &amp; Sons<br><small>HVAC company</small></a>
-<a href="/32940/sun-plumbing.html">Sun Plumbing<br><small>plumbing company</small></a>
-<a href="/32940/fuego-salt.html">Fuego &amp; Salt<br><small>chef-led catering and culinary experience company</small></a>
-<a href="/32940/hell-n-blazes-brewing-company.html">Hell &#39;n Blazes Brewing Company<br><small>craft brewery and gastropub</small></a>
-<a href="/32940/intracoastal-brewing-company.html">Intracoastal Brewing Company<br><small>craft brewery and taproom</small></a>
-<a href="/32940/river-rocks-restaurant.html">River Rocks Restaurant<br><small>waterfront dining and private-events restaurant</small></a>
-<a href="/32940/terra-craft-sandwiches.html">Terra Craft Sandwiches<br><small>craft sandwich shop</small></a>
-<a href="/32940/the-marked-pour-co.html">The Marked Pour Co.<br><small>mobile bar, coffee, and beverage experience company</small></a>
-<a href="/32940/yall-need-coffee.html">Y&#39;all Need Coffee LLC<br><small>coffee shop and coffee catering business</small></a>
-<a href="/32940/chef-stacy-maple-culinary-experiences.html">Chef Stacy Maple Culinary Experiences<br><small>private chef and culinary experience business</small></a>
-<a href="/32940/uncle-vitos-pizzeria.html">Uncle Vito&#39;s Pizzeria<br><small>local pizzeria and catering restaurant</small></a>
-<a href="/32940/for-your-best-self.html">For Your Best Self<br><small>dermatology, plastic surgery, and medical spa practice</small></a>
-<a href="/32940/dental-excellence-melbourne.html">Dental Excellence Melbourne<br><small>dental practice</small></a>
-<a href="/32940/suntree-animal-clinic.html">Suntree Animal Clinic<br><small>veterinary clinic</small></a>
-<a href="/32940/rubio-pet-hospital.html">Rubio Pet Hospital<br><small>veterinary hospital</small></a>
-<a href="/32940/island-animal-hospital-viera.html">Island Animal Hospital Viera<br><small>veterinary hospital</small></a>
-<a href="/32940/viera-east-veterinary-center.html">Viera East Veterinary Center<br><small>veterinary center</small></a>
-<a href="/32940/new-image-dentistry-suntree.html">New Image Dentistry Suntree<br><small>dental practice</small></a>
-<a href="/32940/climate-experts-air-plumbing-electrical.html">Climate Experts Air, Plumbing &amp; Electrical<br><small>HVAC, plumbing, and electrical services company</small></a>
-<a href="/32940/physical-therapy-professionals-viera.html">Physical Therapy Professionals Viera<br><small>physical therapy clinic</small></a>
-<a href="/32940/top-tier-sports-medicine-viera.html">Top Tier Sports Medicine Viera<br><small>sports medicine and physical therapy clinic</small></a>
-<a href="/32940/321-performance-pt-suntree.html">321 Performance PT Suntree<br><small>physical therapy and sports rehab clinic</small></a>
-<a href="/32940/365-pool-service-suntree.html">365 Pool Service Suntree<br><small>pool cleaning and repair company</small></a>
-<a href="/32940/beachside-termite-pest-control-viera.html">Beachside Termite &amp; Pest Control Viera<br><small>termite and pest control company</small></a>
-<a href="/32940/martin-pest-control-brevard.html">Martin Pest Control Brevard<br><small>pest, termite, rodent, and bed bug control company</small></a>
-<a href="/32940/tru-blue-pool-luxury-service.html">Tru-Blue Pool Luxury Service<br><small>pool service and pool repair company</small></a>
-<a href="/32940/happy-pool-and-spa-viera.html">Happy Pool and Spa Viera<br><small>pool cleaning and pool service company</small></a>
+        <a href="/32940/arabesque-flavors-of-the-middle-east.html"><span>Arabesque Flavors of the Middle East</span><small>Middle Eastern restaurant</small><b>Open concept →</b></a>
+<a href="/32940/asian-wok.html"><span>Asian Wok</span><small>Asian restaurant</small><b>Open concept →</b></a>
+<a href="/32940/bean-sprout-asian-cuisine-sushi-bar.html"><span>Bean Sprout Asian Cuisine &amp; Sushi Bar</span><small>Asian cuisine and sushi bar</small><b>Open concept →</b></a>
+<a href="/32940/bella-title-escrow.html"><span>Bella Title &amp; Escrow</span><small>title and escrow office</small><b>Open concept →</b></a>
+<a href="/32940/bizzarro-s-pizza.html"><span>Bizzarro&#39;s Pizza</span><small>pizza restaurant</small><b>Open concept →</b></a>
+<a href="/32940/bold-cup-coffee.html"><span>Bold Cup Coffee</span><small>coffee shop</small><b>Open concept →</b></a>
+<a href="/32940/cedar-s-cafe.html"><span>Cedar&#39;s Cafe</span><small>local cafe</small><b>Open concept →</b></a>
+<a href="/32940/diane-s-nails.html"><span>Diane&#39;s Nails</span><small>nail salon</small><b>Open concept →</b></a>
+<a href="/32940/dynasty-nail-spa.html"><span>Dynasty Nail Spa</span><small>nail spa</small><b>Open concept →</b></a>
+<a href="/32940/eatz.html"><span>Eatz</span><small>local restaurant</small><b>Open concept →</b></a>
+<a href="/32940/el-tesoro-cocina-mexicana.html"><span>El Tesoro Cocina Mexicana</span><small>Mexican restaurant</small><b>Open concept →</b></a>
+<a href="/32940/elegant-nail-spa.html"><span>Elegant Nail Spa</span><small>nail spa</small><b>Open concept →</b></a>
+<a href="/32940/fairway-cigar-lounge.html"><span>Fairway Cigar Lounge</span><small>cigar lounge</small><b>Open concept →</b></a>
+<a href="/32940/flying-burro.html"><span>Flying Burro</span><small>local restaurant</small><b>Open concept →</b></a>
+<a href="/32940/fujiyama-japanese.html"><span>Fujiyama Japanese</span><small>Japanese restaurant</small><b>Open concept →</b></a>
+<a href="/32940/gatto-s-tire-and-auto-services.html"><span>Gatto&#39;s Tire &amp; Auto Services</span><small>auto repair and tire shop</small><b>Open concept →</b></a>
+<a href="/32940/genna-pizza-express.html"><span>Genna Pizza Express</span><small>pizza restaurant</small><b>Open concept →</b></a>
+<a href="/32940/harbor-city-animal-hospital.html"><span>Harbor City Animal Hospital</span><small>veterinary clinic</small><b>Open concept →</b></a>
+<a href="/32940/luxy-nail-spa.html"><span>Luxy Nail Spa</span><small>nail spa</small><b>Open concept →</b></a>
+<a href="/32940/olive-tree-greek-grill.html"><span>Olive Tree Greek Grill</span><small>Greek restaurant</small><b>Open concept →</b></a>
+<a href="/32940/botta-pizzeria-bakery.html"><span>Botta Pizzeria &amp; Bakery</span><small>Neapolitan pizza and bakery</small><b>Open concept →</b></a>
+<a href="/32940/poke-fin-viera.html"><span>Poke Fin Viera</span><small>poke and boba shop</small><b>Open concept →</b></a>
+<a href="/32940/pristine-spa.html"><span>Pristine Spa</span><small>spa</small><b>Open concept →</b></a>
+<a href="/32940/realm-nails-spa.html"><span>Realm Nails &amp; Spa</span><small>nail spa</small><b>Open concept →</b></a>
+<a href="/32940/revolutions-cyclery.html"><span>Revolutions Cyclery</span><small>bike shop</small><b>Open concept →</b></a>
+<a href="/32940/suntree-flower-shop.html"><span>Suntree Flower Shop</span><small>flower shop</small><b>Open concept →</b></a>
+<a href="/32940/the-salty-bagel.html"><span>The Salty Bagel</span><small>bagel shop</small><b>Open concept →</b></a>
+<a href="/32940/the-shabby-loft.html"><span>The Shabby Loft</span><small>boutique retail shop</small><b>Open concept →</b></a>
+<a href="/32940/clevens-face-and-body-specialist.html"><span>Clevens Face and Body Specialist</span><small>aesthetic medicine and skincare practice</small><b>Open concept →</b></a>
+<a href="/32940/sirocco-station.html"><span>Sirocco Station</span><small>Lebanese and Mediterranean restaurant</small><b>Open concept →</b></a>
+<a href="/32940/viera-discovery-center.html"><span>Viera Discovery Center</span><small>community discovery center</small><b>Open concept →</b></a>
+<a href="/32940/nourish.html"><span>Nourish</span><small>body care and home goods retailer</small><b>Open concept →</b></a>
+<a href="/32940/lets-plant-it.html"><span>Let&#39;s Plant It</span><small>plant and gift shop</small><b>Open concept →</b></a>
+<a href="/32940/air-anchor.html"><span>Air &amp; Anchor</span><small>jewelry and accessories shop</small><b>Open concept →</b></a>
+<a href="/32940/viera-dental.html"><span>Viera Dental</span><small>dental practice</small><b>Open concept →</b></a>
+<a href="/32940/tuscany-grill.html"><span>Tuscany Grill</span><small>Italian restaurant</small><b>Open concept →</b></a>
+<a href="/32940/thai-hana.html"><span>Thai Hana</span><small>Thai and sushi restaurant</small><b>Open concept →</b></a>
+<a href="/32940/pizza-gallery-grill.html"><span>Pizza Gallery &amp; Grill</span><small>pizza restaurant and grill</small><b>Open concept →</b></a>
+<a href="/32940/paris-banh-mi.html"><span>Paris Banh Mi</span><small>Vietnamese cafe and bakery</small><b>Open concept →</b></a>
+<a href="/32940/addy-rose-hair-studio.html"><span>Addy Rose Hair Studio</span><small>hair salon</small><b>Open concept →</b></a>
+<a href="/32940/7-senses-kids.html"><span>7 Senses Kids</span><small>kids gift and toy shop</small><b>Open concept →</b></a>
+<a href="/32940/28-north-gastropub.html"><span>28 North Gastropub</span><small>gastropub and restaurant</small><b>Open concept →</b></a>
+<a href="/32940/beachfly-brewing-company.html"><span>BeachFly Brewing Company</span><small>local brewery</small><b>Open concept →</b></a>
+<a href="/32940/grecian-garden-cafe.html"><span>Grecian Garden Cafe</span><small>family-owned cafe and Mediterranean restaurant</small><b>Open concept →</b></a>
+<a href="/32940/jacqueline-s-bakery.html"><span>Jacqueline&#39;s Bakery</span><small>French bakery and cafe</small><b>Open concept →</b></a>
+<a href="/32940/pacha-kava-lounge.html"><span>Pacha Kava Lounge</span><small>kava lounge and social hub</small><b>Open concept →</b></a>
+<a href="/32940/urban-prime-marketplace-restaurant.html"><span>Urban Prime Marketplace &amp; Restaurant</span><small>restaurant and specialty food marketplace</small><b>Open concept →</b></a>
+<a href="/32940/bodyscapes-med-spa.html"><span>Bodyscapes Med Spa</span><small>med spa and wellness services</small><b>Open concept →</b></a>
+<a href="/32940/essentials-medispa-salon.html"><span>Essentials Medispa &amp; Salon</span><small>medical spa and salon</small><b>Open concept →</b></a>
+<a href="/32940/euphoria-day-spa-salon.html"><span>Euphoria Day Spa &amp; Salon</span><small>day spa, hair salon, and med spa</small><b>Open concept →</b></a>
+<a href="/32940/fountain-of-you.html"><span>Fountain of You</span><small>boutique medical spa</small><b>Open concept →</b></a>
+<a href="/32940/imperial-salon-spa-suntree.html"><span>Imperial Salon &amp; Spa Suntree</span><small>full-service salon and spa</small><b>Open concept →</b></a>
+<a href="/32940/the-refinery-medspa-wellness.html"><span>The Refinery Medspa &amp; Wellness</span><small>med spa and wellness clinic</small><b>Open concept →</b></a>
+<a href="/32940/family-practice-of-suntree-and-viera.html"><span>Family Practice of Suntree and Viera</span><small>family medicine, concierge medicine, and aesthetics</small><b>Open concept →</b></a>
+<a href="/32940/kehoe-animal-clinic-of-viera.html"><span>Kehoe Animal Clinic of Viera</span><small>veterinary clinic</small><b>Open concept →</b></a>
+<a href="/32940/periu-family-dentistry.html"><span>Periu Family Dentistry</span><small>family dental practice</small><b>Open concept →</b></a>
+<a href="/32940/premier-veterinary-care.html"><span>Premier Veterinary Care</span><small>veterinary clinic</small><b>Open concept →</b></a>
+<a href="/32940/suntree-chiropractic.html"><span>Suntree Chiropractic</span><small>chiropractic clinic</small><b>Open concept →</b></a>
+<a href="/32940/valderrama-orthodontics.html"><span>Valderrama Orthodontics</span><small>orthodontic practice</small><b>Open concept →</b></a>
+<a href="/32940/viera-dental-arts.html"><span>Viera Dental Arts</span><small>cosmetic, restorative, and emergency dentistry</small><b>Open concept →</b></a>
+<a href="/32940/buds-bows-floral-design.html"><span>Buds &amp; Bows Floral Design</span><small>floral design and wedding/event florist</small><b>Open concept →</b></a>
+<a href="/32940/suntree-florist-gifts.html"><span>Suntree Florist &amp; Gifts</span><small>local florist and gift shop</small><b>Open concept →</b></a>
+<a href="/32940/barbara-j-braley-cpa.html"><span>Barbara J Braley, CPA</span><small>CPA, tax, accounting, and bookkeeping office</small><b>Open concept →</b></a>
+<a href="/32940/supreme-title-closings.html"><span>Supreme Title Closings</span><small>title agency</small><b>Open concept →</b></a>
+<a href="/32940/durham-sons.html"><span>Durham &amp; Sons</span><small>HVAC company</small><b>Open concept →</b></a>
+<a href="/32940/sun-plumbing.html"><span>Sun Plumbing</span><small>plumbing company</small><b>Open concept →</b></a>
+<a href="/32940/fuego-salt.html"><span>Fuego &amp; Salt</span><small>chef-led catering and culinary experience company</small><b>Open concept →</b></a>
+<a href="/32940/hell-n-blazes-brewing-company.html"><span>Hell &#39;n Blazes Brewing Company</span><small>craft brewery and gastropub</small><b>Open concept →</b></a>
+<a href="/32940/intracoastal-brewing-company.html"><span>Intracoastal Brewing Company</span><small>craft brewery and taproom</small><b>Open concept →</b></a>
+<a href="/32940/river-rocks-restaurant.html"><span>River Rocks Restaurant</span><small>waterfront dining and private-events restaurant</small><b>Open concept →</b></a>
+<a href="/32940/terra-craft-sandwiches.html"><span>Terra Craft Sandwiches</span><small>craft sandwich shop</small><b>Open concept →</b></a>
+<a href="/32940/the-marked-pour-co.html"><span>The Marked Pour Co.</span><small>mobile bar, coffee, and beverage experience company</small><b>Open concept →</b></a>
+<a href="/32940/yall-need-coffee.html"><span>Y&#39;all Need Coffee LLC</span><small>coffee shop and coffee catering business</small><b>Open concept →</b></a>
+<a href="/32940/chef-stacy-maple-culinary-experiences.html"><span>Chef Stacy Maple Culinary Experiences</span><small>private chef and culinary experience business</small><b>Open concept →</b></a>
+<a href="/32940/uncle-vitos-pizzeria.html"><span>Uncle Vito&#39;s Pizzeria</span><small>local pizzeria and catering restaurant</small><b>Open concept →</b></a>
+<a href="/32940/for-your-best-self.html"><span>For Your Best Self</span><small>dermatology, plastic surgery, and medical spa practice</small><b>Open concept →</b></a>
+<a href="/32940/dental-excellence-melbourne.html"><span>Dental Excellence Melbourne</span><small>dental practice</small><b>Open concept →</b></a>
+<a href="/32940/suntree-animal-clinic.html"><span>Suntree Animal Clinic</span><small>veterinary clinic</small><b>Open concept →</b></a>
+<a href="/32940/rubio-pet-hospital.html"><span>Rubio Pet Hospital</span><small>veterinary hospital</small><b>Open concept →</b></a>
+<a href="/32940/island-animal-hospital-viera.html"><span>Island Animal Hospital Viera</span><small>veterinary hospital</small><b>Open concept →</b></a>
+<a href="/32940/viera-east-veterinary-center.html"><span>Viera East Veterinary Center</span><small>veterinary center</small><b>Open concept →</b></a>
+<a href="/32940/new-image-dentistry-suntree.html"><span>New Image Dentistry Suntree</span><small>dental practice</small><b>Open concept →</b></a>
+<a href="/32940/climate-experts-air-plumbing-electrical.html"><span>Climate Experts Air, Plumbing &amp; Electrical</span><small>HVAC, plumbing, and electrical services company</small><b>Open concept →</b></a>
+<a href="/32940/physical-therapy-professionals-viera.html"><span>Physical Therapy Professionals Viera</span><small>physical therapy clinic</small><b>Open concept →</b></a>
+<a href="/32940/top-tier-sports-medicine-viera.html"><span>Top Tier Sports Medicine Viera</span><small>sports medicine and physical therapy clinic</small><b>Open concept →</b></a>
+<a href="/32940/321-performance-pt-suntree.html"><span>321 Performance PT Suntree</span><small>physical therapy and sports rehab clinic</small><b>Open concept →</b></a>
+<a href="/32940/365-pool-service-suntree.html"><span>365 Pool Service Suntree</span><small>pool cleaning and repair company</small><b>Open concept →</b></a>
+<a href="/32940/beachside-termite-pest-control-viera.html"><span>Beachside Termite &amp; Pest Control Viera</span><small>termite and pest control company</small><b>Open concept →</b></a>
+<a href="/32940/martin-pest-control-brevard.html"><span>Martin Pest Control Brevard</span><small>pest, termite, rodent, and bed bug control company</small><b>Open concept →</b></a>
+<a href="/32940/tru-blue-pool-luxury-service.html"><span>Tru-Blue Pool Luxury Service</span><small>pool service and pool repair company</small><b>Open concept →</b></a>
+<a href="/32940/happy-pool-and-spa-viera.html"><span>Happy Pool and Spa Viera</span><small>pool cleaning and pool service company</small><b>Open concept →</b></a>
       </section>
       <p class="notice">These are unofficial concepts for owner review only. They are not the current official websites for the listed businesses.</p>
     </main>

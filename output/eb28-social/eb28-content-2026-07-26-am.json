@@ -1,0 +1,347 @@
+{
+  "brand": "EB28",
+  "lane": "business-growth",
+  "generatedAt": "2026-07-26T10:01:36.953Z",
+  "runId": "2026-07-26-am",
+  "slot": "am",
+  "operation": "refresh",
+  "publishingPolicy": {
+    "externalPublishing": "not_authorized",
+    "requiredState": "draft_only",
+    "note": "Verify the exact EB28-owned account and channel in the publishing tool before any separate publishing action."
+  },
+  "creativeStandards": {
+    "version": "2026-07-social-v2",
+    "voice": "Specific, operator-led, plain English, evidence-aware, and free of unsupported guarantees.",
+    "visual": "Mobile-first 4:5 carousel plus 9:16 and 16:9 derivatives; bold type, one focal idea per slide, no generic stock imagery.",
+    "featureCoverage": "Every package selects one active EB28 feature from the central catalog and ties it to the article intent."
+  },
+  "article": {
+    "title": "Website Audit Melbourne FL: Checklist for Lost Leads",
+    "url": "https://eb28.co/blog/website-audit-checklist-for-melbourne-fl-businesses-losing-leads/",
+    "slug": "website-audit-checklist-for-melbourne-fl-businesses-losing-leads",
+    "cluster": "conversion",
+    "primaryKeyword": "website audit Melbourne FL"
+  },
+  "featureSpotlight": {
+    "id": "eb28-app-builder",
+    "name": "EB28 App Builder",
+    "lane": "business-growth",
+    "status": "active",
+    "newSince": "2026-06-12",
+    "audience": "founders and operators who need to turn a rough product idea into an inspectable build brief and working source",
+    "promise": "Start with a short prompt, expand it into a real creative brief, compare distinct directions, and inspect the generated source.",
+    "features": [
+      "Prompt expansion into audience, goal, capabilities, and design fundamentals",
+      "Reference-screenshot direction for tone, spacing, and color mood",
+      "Three distinct visual directions for side-by-side review",
+      "Live preview, source inspection, version history, and ZIP export"
+    ],
+    "cta": {
+      "label": "Open the App Builder",
+      "url": "https://eb28.co/appbuilder/"
+    },
+    "visualTheme": "magenta"
+  },
+  "destinations": {
+    "canonicalGuide": "https://eb28.co/blog/website-audit-checklist-for-melbourne-fl-businesses-losing-leads/",
+    "feature": "https://eb28.co/appbuilder/"
+  },
+  "platformStrategy": {
+    "facebook": "Problem-to-plan post with a practical checklist and one feature proof point.",
+    "instagram": "Four-slide 4:5 carousel with a save-worthy diagnostic, first fix, feature spotlight, and measurable next step.",
+    "linkedin": "Operator lesson with a specific build sequence and a soft product connection.",
+    "x": "One concise operating insight plus the canonical guide.",
+    "shortFormVideo": "Thirty-to-forty-five-second vertical explainer with visible UI, workflow steps, and on-screen captions."
+  },
+  "creativeSystem": {
+    "version": "2026-07-social-v2",
+    "pillar": "Conversion",
+    "objective": "qualified_attention",
+    "eyebrow": "AM FIELD NOTE",
+    "headline": "Fix the lead leak before buying more traffic.",
+    "subhead": "A Melbourne website audit should find the first broken step, ship one fix, and measure the enquiry.",
+    "theme": "magenta",
+    "feature": {
+      "id": "eb28-app-builder",
+      "name": "EB28 App Builder",
+      "lane": "business-growth",
+      "status": "active",
+      "newSince": "2026-06-12",
+      "audience": "founders and operators who need to turn a rough product idea into an inspectable build brief and working source",
+      "promise": "Start with a short prompt, expand it into a real creative brief, compare distinct directions, and inspect the generated source.",
+      "features": [
+        "Prompt expansion into audience, goal, capabilities, and design fundamentals",
+        "Reference-screenshot direction for tone, spacing, and color mood",
+        "Three distinct visual directions for side-by-side review",
+        "Live preview, source inspection, version history, and ZIP export"
+      ],
+      "cta": {
+        "label": "Open the App Builder",
+        "url": "https://eb28.co/appbuilder/"
+      },
+      "visualTheme": "magenta"
+    },
+    "steps": [
+      {
+        "label": "Find the constraint",
+        "value": "Check whether a new buyer can see the offer, proof, and next step on the first screen."
+      },
+      {
+        "label": "Build the first fix",
+        "value": "Sharpen the headline, move proof closer, simplify the form, and name the follow-up."
+      },
+      {
+        "label": "Connect the feature",
+        "value": "EB28 App Builder turns a rough idea into directions, preview, source, and export."
+      }
+    ],
+    "metric": {
+      "label": "What to measure",
+      "value": "Completed qualified enquiries, not raw clicks."
+    },
+    "cta": {
+      "label": "Read the full EB28 field guide",
+      "url": "https://eb28.co/blog/website-audit-checklist-for-melbourne-fl-businesses-losing-leads/"
+    },
+    "disclaimer": "Do not manufacture urgency, testimonials, scarcity, or performance claims",
+    "requiredFormats": {
+      "instagramCarousel": {
+        "width": 1080,
+        "height": 1350,
+        "slides": 4
+      },
+      "vertical": {
+        "width": 1080,
+        "height": 1920
+      },
+      "landscape": {
+        "width": 1200,
+        "height": 675
+      }
+    }
+  },
+  "posts": {
+    "blog": {
+      "title": "Website Audit Melbourne FL: Checklist for Lost Leads",
+      "url": "https://eb28.co/blog/website-audit-checklist-for-melbourne-fl-businesses-losing-leads/",
+      "status": "draft_only"
+    },
+    "facebook": {
+      "caption": "Fix the lead leak before buying more traffic.\n\nBefore adding another tool, inspect the path:\n\n1. Can a new buyer see the offer, proof, and next step on the first screen?\n2. Is the headline sharp, the proof close, the form simple, and the follow-up clear?\n3. Are you measuring completed qualified enquiries instead of raw clicks?\n\nActive feature: EB28 App Builder\nTurn a rough idea into directions, preview, source, and export.\n\nRead the field guide: https://eb28.co/blog/website-audit-checklist-for-melbourne-fl-businesses-losing-leads/\nSee the feature: https://eb28.co/appbuilder/",
+      "url": "https://eb28.co/blog/website-audit-checklist-for-melbourne-fl-businesses-losing-leads/",
+      "status": "draft_only",
+      "media": {
+        "type": "image",
+        "mimeType": "image/jpeg",
+        "localPath": "output/eb28-social/assets/2026-07-26-am/landscape-1200x675.jpg",
+        "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-26-am/landscape-1200x675.jpg",
+        "width": 1200,
+        "height": 675,
+        "alt": "EB28 App Builder — real EB28 product surface"
+      }
+    },
+    "instagram": {
+      "caption": "Fix the lead leak before buying more traffic.\n\nIf “website audit Melbourne FL” is the goal, do not start with a software list.\n\n01 — Find the constraint\nCan a new buyer see the offer, proof, and next step on the first screen?\n\n02 — Build one useful fix\nSharpen the headline, move proof closer, simplify the form, and name the follow-up.\n\n03 — Connect a real EB28 feature\nEB28 App Builder turns a rough idea into directions, preview, source, and export.\n\n04 — Prove the handoff\nTrack completed qualified enquiries, not raw clicks.\n\nSave this for the next audit. Full guide at https://eb28.co/blog/website-audit-checklist-for-melbourne-fl-businesses-losing-leads/\n\n#ConversionRateOptimization #LeadGeneration #SmallBusiness #EB28",
+      "creativeBrief": "Map the conversion path as four panels: promise, proof, action, and response, with one friction point called out in each. Use the generated four-slide carousel: decisive cover, diagnostic-to-fix flow, EB28 App Builder spotlight, and measurement/CTA. Show documentary UI or a simple workflow diagram when a real screenshot is available; never use a generic office stock photo.",
+      "url": "https://eb28.co/blog/website-audit-checklist-for-melbourne-fl-businesses-losing-leads/",
+      "status": "draft_only",
+      "media": {
+        "type": "carousel",
+        "items": [
+          {
+            "type": "image",
+            "mimeType": "image/jpeg",
+            "localPath": "output/eb28-social/assets/2026-07-26-am/feed-01-cover.jpg",
+            "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-26-am/feed-01-cover.jpg",
+            "width": 1080,
+            "height": 1350,
+            "alt": "Fix the lead leak before buying more traffic. — EB28 social cover"
+          },
+          {
+            "type": "image",
+            "mimeType": "image/jpeg",
+            "localPath": "output/eb28-social/assets/2026-07-26-am/feed-02-path.jpg",
+            "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-26-am/feed-02-path.jpg",
+            "width": 1080,
+            "height": 1350,
+            "alt": "Fix the lead leak before buying more traffic. — three-step operating path"
+          },
+          {
+            "type": "image",
+            "mimeType": "image/jpeg",
+            "localPath": "output/eb28-social/assets/2026-07-26-am/feed-03-feature.jpg",
+            "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-26-am/feed-03-feature.jpg",
+            "width": 1080,
+            "height": 1350,
+            "alt": "EB28 App Builder — feature details"
+          },
+          {
+            "type": "image",
+            "mimeType": "image/jpeg",
+            "localPath": "output/eb28-social/assets/2026-07-26-am/feed-04-proof.jpg",
+            "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-26-am/feed-04-proof.jpg",
+            "width": 1080,
+            "height": 1350,
+            "alt": "Fix the lead leak before buying more traffic. — measurement and next step"
+          }
+        ]
+      }
+    },
+    "x": {
+      "caption": "Fix the lead leak before buying more traffic. EB28 App Builder turns a rough idea into directions, preview, source, and export.\nhttps://eb28.co/blog/website-audit-checklist-for-melbourne-fl-businesses-losing-leads/",
+      "url": "https://eb28.co/blog/website-audit-checklist-for-melbourne-fl-businesses-losing-leads/",
+      "status": "draft_only",
+      "media": {
+        "type": "image",
+        "mimeType": "image/jpeg",
+        "localPath": "output/eb28-social/assets/2026-07-26-am/landscape-1200x675.jpg",
+        "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-26-am/landscape-1200x675.jpg",
+        "width": 1200,
+        "height": 675,
+        "alt": "EB28 App Builder — real EB28 product surface"
+      }
+    },
+    "linkedin": {
+      "caption": "Fix the lead leak before buying more traffic.\n\nA useful website audit Melbourne FL project starts with a buyer constraint, not a software list.\n\nThe operating sequence:\n• Check whether a new buyer can see the offer, proof, and next step on the first screen\n• Sharpen the headline, move proof closer, simplify the form, and name the follow-up\n• Measure completed qualified enquiries instead of raw clicks\n\nWhat EB28 has added: EB28 App Builder. It turns a rough idea into directions, preview, source, and export.\n\nThe full guide covers the 30-day build loop, safeguards, and evidence-based next step.\n\nhttps://eb28.co/blog/website-audit-checklist-for-melbourne-fl-businesses-losing-leads/\n\n#ConversionRateOptimization #LeadGeneration #SmallBusiness",
+      "url": "https://eb28.co/blog/website-audit-checklist-for-melbourne-fl-businesses-losing-leads/",
+      "status": "draft_only",
+      "media": {
+        "type": "image",
+        "mimeType": "image/jpeg",
+        "localPath": "output/eb28-social/assets/2026-07-26-am/landscape-1200x675.jpg",
+        "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-26-am/landscape-1200x675.jpg",
+        "width": 1200,
+        "height": 675,
+        "alt": "EB28 App Builder — real EB28 product surface"
+      }
+    },
+    "shortFormVideo": {
+      "hook": "Fix the lead leak before buying more traffic.",
+      "durationSeconds": 40,
+      "format": "9:16 vertical, burned-in captions, screen recording or workflow diagram, no talking-head requirement",
+      "beats": [
+        {
+          "seconds": "0-3",
+          "visual": "Large hook over the live page or workflow map",
+          "voiceover": "Fix the lead leak before buying more traffic."
+        },
+        {
+          "seconds": "3-12",
+          "visual": "Highlight the buyer constraint",
+          "voiceover": "Check whether a new buyer can see the offer, proof, and next step on the first screen."
+        },
+        {
+          "seconds": "12-24",
+          "visual": "Animate the first-fix path",
+          "voiceover": "Sharpen the headline, move proof closer, simplify the form, and name the follow-up."
+        },
+        {
+          "seconds": "24-34",
+          "visual": "Show EB28 App Builder with one real feature",
+          "voiceover": "EB28 App Builder turns a rough idea into directions, preview, source, and export."
+        },
+        {
+          "seconds": "34-40",
+          "visual": "Show the measurement and canonical URL",
+          "voiceover": "Measure completed qualified enquiries, not raw clicks. Read the full guide at EB28."
+        }
+      ],
+      "onScreenText": [
+        "Find the constraint",
+        "Build one useful fix",
+        "Feature: EB28 App Builder",
+        "Measure the handoff"
+      ],
+      "caption": "Fix the lead leak before buying more traffic. EB28 App Builder turns a rough idea into directions, preview, source, and export. https://eb28.co/blog/website-audit-checklist-for-melbourne-fl-businesses-losing-leads/ #ConversionRateOptimization #LeadGeneration #SmallBusiness #EB28",
+      "url": "https://eb28.co/blog/website-audit-checklist-for-melbourne-fl-businesses-losing-leads/",
+      "status": "draft_only",
+      "media": {
+        "type": "image",
+        "mimeType": "image/jpeg",
+        "localPath": "output/eb28-social/assets/2026-07-26-am/story-1080x1920.jpg",
+        "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-26-am/story-1080x1920.jpg",
+        "width": 1080,
+        "height": 1920,
+        "alt": "Fix the lead leak before buying more traffic. — vertical story graphic"
+      }
+    }
+  },
+  "visualAssets": {
+    "version": "2026-07-social-v2",
+    "format": "jpeg-no-alpha",
+    "instagramCarousel": [
+      {
+        "type": "image",
+        "mimeType": "image/jpeg",
+        "localPath": "output/eb28-social/assets/2026-07-26-am/feed-01-cover.jpg",
+        "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-26-am/feed-01-cover.jpg",
+        "width": 1080,
+        "height": 1350,
+        "alt": "Fix the lead leak before buying more traffic. — EB28 social cover"
+      },
+      {
+        "type": "image",
+        "mimeType": "image/jpeg",
+        "localPath": "output/eb28-social/assets/2026-07-26-am/feed-02-path.jpg",
+        "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-26-am/feed-02-path.jpg",
+        "width": 1080,
+        "height": 1350,
+        "alt": "Fix the lead leak before buying more traffic. — three-step operating path"
+      },
+      {
+        "type": "image",
+        "mimeType": "image/jpeg",
+        "localPath": "output/eb28-social/assets/2026-07-26-am/feed-03-feature.jpg",
+        "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-26-am/feed-03-feature.jpg",
+        "width": 1080,
+        "height": 1350,
+        "alt": "EB28 App Builder — feature details"
+      },
+      {
+        "type": "image",
+        "mimeType": "image/jpeg",
+        "localPath": "output/eb28-social/assets/2026-07-26-am/feed-04-proof.jpg",
+        "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-26-am/feed-04-proof.jpg",
+        "width": 1080,
+        "height": 1350,
+        "alt": "Fix the lead leak before buying more traffic. — measurement and next step"
+      }
+    ],
+    "vertical": {
+      "type": "image",
+      "mimeType": "image/jpeg",
+      "localPath": "output/eb28-social/assets/2026-07-26-am/story-1080x1920.jpg",
+      "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-26-am/story-1080x1920.jpg",
+      "width": 1080,
+      "height": 1920,
+      "alt": "Fix the lead leak before buying more traffic. — vertical story graphic"
+    },
+    "landscape": {
+      "type": "image",
+      "mimeType": "image/jpeg",
+      "localPath": "output/eb28-social/assets/2026-07-26-am/landscape-1200x675.jpg",
+      "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-26-am/landscape-1200x675.jpg",
+      "width": 1200,
+      "height": 675,
+      "alt": "EB28 App Builder — real EB28 product surface"
+    },
+    "proofSource": {
+      "type": "public-page-capture",
+      "localPath": "output/eb28-social/proof-captures/eb28-app-builder.jpg"
+    }
+  },
+  "bufferAsset": {
+    "type": "image",
+    "mimeType": "image/jpeg",
+    "localPath": "output/eb28-social/assets/2026-07-26-am/feed-01-cover.jpg",
+    "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-26-am/feed-01-cover.jpg",
+    "width": 1080,
+    "height": 1350,
+    "alt": "Fix the lead leak before buying more traffic. — EB28 social cover"
+  },
+  "socialPublishGuard": {
+    "status": "assets_ready_connection_unverified",
+    "note": "Assets are ready. External publishing still requires explicit package authorization plus a fresh read-only verification of the EB28 API account, organization, exact channel IDs, and channel state."
+  }
+}

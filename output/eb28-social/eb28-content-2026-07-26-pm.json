@@ -1,0 +1,347 @@
+{
+  "brand": "EB28",
+  "lane": "business-growth",
+  "generatedAt": "2026-07-26T22:02:38.294Z",
+  "runId": "2026-07-26-pm",
+  "slot": "pm",
+  "operation": "refresh",
+  "publishingPolicy": {
+    "externalPublishing": "not_authorized",
+    "requiredState": "draft_only",
+    "note": "Verify the exact EB28-owned account and channel in the publishing tool before any separate publishing action."
+  },
+  "creativeStandards": {
+    "version": "2026-07-social-v2",
+    "voice": "Specific, operator-led, plain English, evidence-aware, and free of unsupported guarantees.",
+    "visual": "Mobile-first 4:5 carousel plus 9:16 and 16:9 derivatives; bold type, one focal idea per slide, no generic stock imagery.",
+    "featureCoverage": "Every package selects one active EB28 feature from the central catalog and ties it to the article intent."
+  },
+  "article": {
+    "title": "Small Business Homepage Optimization: The First 10 Seconds",
+    "url": "https://eb28.co/blog/small-business-homepage-optimization-the-first-10-seconds/",
+    "slug": "small-business-homepage-optimization-the-first-10-seconds",
+    "cluster": "conversion",
+    "primaryKeyword": "small business homepage optimization"
+  },
+  "featureSpotlight": {
+    "id": "lead-automation-system",
+    "name": "Revenue + Lead Automation",
+    "lane": "business-growth",
+    "status": "active",
+    "newSince": "2026-06-12",
+    "audience": "service businesses that lose qualified enquiries between the first click, the form, and a useful human response",
+    "promise": "Capture intent, acknowledge the lead quickly, preserve source context, and route the next step without automating away judgment.",
+    "features": [
+      "AI-assisted lead qualification with a visible human escalation",
+      "Source-aware confirmation, routing, and reminder flows",
+      "CRM handoff and lifecycle measurement",
+      "Consent, sender identity, opt-out, and recovery checks"
+    ],
+    "cta": {
+      "label": "Audit the lead path",
+      "url": "https://eb28.co/#contact"
+    },
+    "visualTheme": "orange"
+  },
+  "destinations": {
+    "canonicalGuide": "https://eb28.co/blog/small-business-homepage-optimization-the-first-10-seconds/",
+    "feature": "https://eb28.co/#contact"
+  },
+  "platformStrategy": {
+    "facebook": "Problem-to-plan post with a practical checklist and one feature proof point.",
+    "instagram": "Four-slide 4:5 carousel with a save-worthy diagnostic, first fix, feature spotlight, and measurable next step.",
+    "linkedin": "Operator lesson with a specific build sequence and a soft product connection.",
+    "x": "One concise operating insight plus the canonical guide.",
+    "shortFormVideo": "Thirty-to-forty-five-second vertical explainer with visible UI, workflow steps, and on-screen captions."
+  },
+  "creativeSystem": {
+    "version": "2026-07-social-v2",
+    "pillar": "Conversion",
+    "objective": "qualified_attention",
+    "eyebrow": "PM FIELD NOTE",
+    "headline": "More traffic will not repair a page that makes the offer, proof, form, or follow-up hard to trust.",
+    "subhead": "Small Business Homepage Optimization: The First 10 Seconds. Start with one constraint, ship one useful fix, and measure the handoff.",
+    "theme": "orange",
+    "feature": {
+      "id": "lead-automation-system",
+      "name": "Revenue + Lead Automation",
+      "lane": "business-growth",
+      "status": "active",
+      "newSince": "2026-06-12",
+      "audience": "service businesses that lose qualified enquiries between the first click, the form, and a useful human response",
+      "promise": "Capture intent, acknowledge the lead quickly, preserve source context, and route the next step without automating away judgment.",
+      "features": [
+        "AI-assisted lead qualification with a visible human escalation",
+        "Source-aware confirmation, routing, and reminder flows",
+        "CRM handoff and lifecycle measurement",
+        "Consent, sender identity, opt-out, and recovery checks"
+      ],
+      "cta": {
+        "label": "Audit the lead path",
+        "url": "https://eb28.co/#contact"
+      },
+      "visualTheme": "orange"
+    },
+    "steps": [
+      {
+        "label": "Find the constraint",
+        "value": "Read the first screen as a new buyer and identify the offer, audience, proof, and next step without using insider knowledge"
+      },
+      {
+        "label": "Build the first fix",
+        "value": "Start by removing friction: sharpen the headline, move proof closer to the CTA, simplify the form, and make the follow-up promise specific."
+      },
+      {
+        "label": "Connect the feature",
+        "value": "Revenue + Lead Automation: AI-assisted lead qualification with a visible human escalation"
+      }
+    ],
+    "metric": {
+      "label": "What to measure",
+      "value": "Completed qualified enquiries rather than button clicks or raw sessions alone"
+    },
+    "cta": {
+      "label": "Read the full EB28 field guide",
+      "url": "https://eb28.co/blog/small-business-homepage-optimization-the-first-10-seconds/"
+    },
+    "disclaimer": "Do not manufacture urgency, testimonials, scarcity, or performance claims",
+    "requiredFormats": {
+      "instagramCarousel": {
+        "width": 1080,
+        "height": 1350,
+        "slides": 4
+      },
+      "vertical": {
+        "width": 1080,
+        "height": 1920
+      },
+      "landscape": {
+        "width": 1200,
+        "height": 675
+      }
+    }
+  },
+  "posts": {
+    "blog": {
+      "title": "Small Business Homepage Optimization: The First 10 Seconds",
+      "url": "https://eb28.co/blog/small-business-homepage-optimization-the-first-10-seconds/",
+      "status": "draft_only"
+    },
+    "facebook": {
+      "caption": "More traffic will not repair a page that makes the offer, proof, form, or follow-up hard to trust.\n\nBefore adding another tool, inspect the path:\n\n1. Read the first screen as a new buyer and identify the offer, audience, proof, and next step without using insider knowledge\n2. Start by removing friction: sharpen the headline, move proof closer to the CTA, simplify the form, and make the follow-up promise specific.\n3. Measure completed qualified enquiries rather than button clicks or raw sessions alone.\n\nActive feature: Revenue + Lead Automation\nCapture intent, acknowledge the lead quickly, preserve source context, and route the next step without automating away judgment.\n\nRead the field guide: https://eb28.co/blog/small-business-homepage-optimization-the-first-10-seconds/\nSee the feature: https://eb28.co/#contact",
+      "url": "https://eb28.co/blog/small-business-homepage-optimization-the-first-10-seconds/",
+      "status": "draft_only",
+      "media": {
+        "type": "image",
+        "mimeType": "image/jpeg",
+        "localPath": "output/eb28-social/assets/2026-07-26-pm/landscape-1200x675.jpg",
+        "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-26-pm/landscape-1200x675.jpg",
+        "width": 1200,
+        "height": 675,
+        "alt": "Revenue + Lead Automation — real EB28 product surface"
+      }
+    },
+    "instagram": {
+      "caption": "More traffic will not repair a page that makes the offer, proof, form, or follow-up hard to trust.\n\nIf “small business homepage optimization” is the goal, do not start with a software list.\n\n01 — Find the constraint\nRead the first screen as a new buyer and identify the offer, audience, proof, and next step without using insider knowledge\n\n02 — Build one useful fix\nStart by removing friction: sharpen the headline, move proof closer to the CTA, simplify the form, and make the follow-up promise specific.\n\n03 — Connect a real EB28 feature\nRevenue + Lead Automation: AI-assisted lead qualification with a visible human escalation\n\n04 — Prove the handoff\nTrack completed qualified enquiries rather than button clicks or raw sessions alone.\n\nSave this for the next audit. Full guide at https://eb28.co/blog/small-business-homepage-optimization-the-first-10-seconds/\n\n#ConversionRateOptimization #LeadGeneration #SmallBusiness #EB28",
+      "creativeBrief": "Map the conversion path as four panels: promise, proof, action, and response, with one friction point called out in each. Use the generated four-slide carousel: decisive cover, diagnostic-to-fix flow, Revenue + Lead Automation spotlight, and measurement/CTA. Show documentary UI or a simple workflow diagram when a real screenshot is available; never use a generic office stock photo.",
+      "url": "https://eb28.co/blog/small-business-homepage-optimization-the-first-10-seconds/",
+      "status": "draft_only",
+      "media": {
+        "type": "carousel",
+        "items": [
+          {
+            "type": "image",
+            "mimeType": "image/jpeg",
+            "localPath": "output/eb28-social/assets/2026-07-26-pm/feed-01-cover.jpg",
+            "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-26-pm/feed-01-cover.jpg",
+            "width": 1080,
+            "height": 1350,
+            "alt": "More traffic will not repair a page that makes the offer, proof, form, or follow-up hard to trust. — EB28 social cover"
+          },
+          {
+            "type": "image",
+            "mimeType": "image/jpeg",
+            "localPath": "output/eb28-social/assets/2026-07-26-pm/feed-02-path.jpg",
+            "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-26-pm/feed-02-path.jpg",
+            "width": 1080,
+            "height": 1350,
+            "alt": "More traffic will not repair a page that makes the offer, proof, form, or follow-up hard to trust. — three-step operating path"
+          },
+          {
+            "type": "image",
+            "mimeType": "image/jpeg",
+            "localPath": "output/eb28-social/assets/2026-07-26-pm/feed-03-feature.jpg",
+            "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-26-pm/feed-03-feature.jpg",
+            "width": 1080,
+            "height": 1350,
+            "alt": "Revenue + Lead Automation — feature details"
+          },
+          {
+            "type": "image",
+            "mimeType": "image/jpeg",
+            "localPath": "output/eb28-social/assets/2026-07-26-pm/feed-04-proof.jpg",
+            "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-26-pm/feed-04-proof.jpg",
+            "width": 1080,
+            "height": 1350,
+            "alt": "More traffic will not repair a page that makes the offer, proof, form, or follow-up hard to trust. — measurement and next step"
+          }
+        ]
+      }
+    },
+    "x": {
+      "caption": "More traffic will not repair a page that makes the offer, proof, form, or follow-up hard to trust. Revenue + Lead Automation: AI-assisted lead qualification with a visible human escalation\nhttps://eb28.co/blog/small-business-homepage-optimization-the-first-10-seconds/",
+      "url": "https://eb28.co/blog/small-business-homepage-optimization-the-first-10-seconds/",
+      "status": "draft_only",
+      "media": {
+        "type": "image",
+        "mimeType": "image/jpeg",
+        "localPath": "output/eb28-social/assets/2026-07-26-pm/landscape-1200x675.jpg",
+        "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-26-pm/landscape-1200x675.jpg",
+        "width": 1200,
+        "height": 675,
+        "alt": "Revenue + Lead Automation — real EB28 product surface"
+      }
+    },
+    "linkedin": {
+      "caption": "More traffic will not repair a page that makes the offer, proof, form, or follow-up hard to trust.\n\nA useful small business homepage optimization project starts with a buyer constraint, not a software list.\n\nThe operating sequence:\n• Read the first screen as a new buyer and identify the offer, audience, proof, and next step without using insider knowledge\n• Start by removing friction: sharpen the headline, move proof closer to the CTA, simplify the form, and make the follow-up promise specific.\n• Measure completed qualified enquiries rather than button clicks or raw sessions alone\n\nWhat EB28 has added: Revenue + Lead Automation. Capture intent, acknowledge the lead quickly, preserve source context, and route the next step without automating away judgment.\n\nThe full guide covers the 30-day build loop, safeguards, and evidence-based next step.\n\nhttps://eb28.co/blog/small-business-homepage-optimization-the-first-10-seconds/\n\n#ConversionRateOptimization #LeadGeneration #SmallBusiness",
+      "url": "https://eb28.co/blog/small-business-homepage-optimization-the-first-10-seconds/",
+      "status": "draft_only",
+      "media": {
+        "type": "image",
+        "mimeType": "image/jpeg",
+        "localPath": "output/eb28-social/assets/2026-07-26-pm/landscape-1200x675.jpg",
+        "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-26-pm/landscape-1200x675.jpg",
+        "width": 1200,
+        "height": 675,
+        "alt": "Revenue + Lead Automation — real EB28 product surface"
+      }
+    },
+    "shortFormVideo": {
+      "hook": "More traffic will not repair a page that makes the offer, proof, form, or follow-up hard to trust.",
+      "durationSeconds": 40,
+      "format": "9:16 vertical, burned-in captions, screen recording or workflow diagram, no talking-head requirement",
+      "beats": [
+        {
+          "seconds": "0-3",
+          "visual": "Large hook over the live page or workflow map",
+          "voiceover": "More traffic will not repair a page that makes the offer, proof, form, or follow-up hard to trust."
+        },
+        {
+          "seconds": "3-12",
+          "visual": "Highlight the buyer constraint",
+          "voiceover": "Read the first screen as a new buyer and identify the offer, audience, proof, and next step without using insider knowledge"
+        },
+        {
+          "seconds": "12-24",
+          "visual": "Animate the first-fix path",
+          "voiceover": "Start by removing friction: sharpen the headline, move proof closer to the CTA, simplify the form, and make the follow-up promise specific."
+        },
+        {
+          "seconds": "24-34",
+          "visual": "Show Revenue + Lead Automation with one real feature",
+          "voiceover": "Capture intent, acknowledge the lead quickly, preserve source context, and route the next step without automating away judgment."
+        },
+        {
+          "seconds": "34-40",
+          "visual": "Show the measurement and canonical URL",
+          "voiceover": "Measure completed qualified enquiries rather than button clicks or raw sessions alone. Read the full guide at EB28."
+        }
+      ],
+      "onScreenText": [
+        "Find the constraint",
+        "Build one useful fix",
+        "Feature: Revenue + Lead Automation",
+        "Measure the handoff"
+      ],
+      "caption": "More traffic will not repair a page that makes the offer, proof, form, or follow-up hard to trust. Revenue + Lead Automation: Capture intent, acknowledge the lead quickly, preserve source context, and route the next step without automating away… https://eb28.co/blog/small-business-homepage-optimization-the-first-10-seconds/ #ConversionRateOptimization #LeadGeneration #SmallBusiness #EB28",
+      "url": "https://eb28.co/blog/small-business-homepage-optimization-the-first-10-seconds/",
+      "status": "draft_only",
+      "media": {
+        "type": "image",
+        "mimeType": "image/jpeg",
+        "localPath": "output/eb28-social/assets/2026-07-26-pm/story-1080x1920.jpg",
+        "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-26-pm/story-1080x1920.jpg",
+        "width": 1080,
+        "height": 1920,
+        "alt": "More traffic will not repair a page that makes the offer, proof, form, or follow-up hard to trust. — vertical story graphic"
+      }
+    }
+  },
+  "visualAssets": {
+    "version": "2026-07-social-v2",
+    "format": "jpeg-no-alpha",
+    "instagramCarousel": [
+      {
+        "type": "image",
+        "mimeType": "image/jpeg",
+        "localPath": "output/eb28-social/assets/2026-07-26-pm/feed-01-cover.jpg",
+        "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-26-pm/feed-01-cover.jpg",
+        "width": 1080,
+        "height": 1350,
+        "alt": "More traffic will not repair a page that makes the offer, proof, form, or follow-up hard to trust. — EB28 social cover"
+      },
+      {
+        "type": "image",
+        "mimeType": "image/jpeg",
+        "localPath": "output/eb28-social/assets/2026-07-26-pm/feed-02-path.jpg",
+        "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-26-pm/feed-02-path.jpg",
+        "width": 1080,
+        "height": 1350,
+        "alt": "More traffic will not repair a page that makes the offer, proof, form, or follow-up hard to trust. — three-step operating path"
+      },
+      {
+        "type": "image",
+        "mimeType": "image/jpeg",
+        "localPath": "output/eb28-social/assets/2026-07-26-pm/feed-03-feature.jpg",
+        "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-26-pm/feed-03-feature.jpg",
+        "width": 1080,
+        "height": 1350,
+        "alt": "Revenue + Lead Automation — feature details"
+      },
+      {
+        "type": "image",
+        "mimeType": "image/jpeg",
+        "localPath": "output/eb28-social/assets/2026-07-26-pm/feed-04-proof.jpg",
+        "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-26-pm/feed-04-proof.jpg",
+        "width": 1080,
+        "height": 1350,
+        "alt": "More traffic will not repair a page that makes the offer, proof, form, or follow-up hard to trust. — measurement and next step"
+      }
+    ],
+    "vertical": {
+      "type": "image",
+      "mimeType": "image/jpeg",
+      "localPath": "output/eb28-social/assets/2026-07-26-pm/story-1080x1920.jpg",
+      "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-26-pm/story-1080x1920.jpg",
+      "width": 1080,
+      "height": 1920,
+      "alt": "More traffic will not repair a page that makes the offer, proof, form, or follow-up hard to trust. — vertical story graphic"
+    },
+    "landscape": {
+      "type": "image",
+      "mimeType": "image/jpeg",
+      "localPath": "output/eb28-social/assets/2026-07-26-pm/landscape-1200x675.jpg",
+      "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-26-pm/landscape-1200x675.jpg",
+      "width": 1200,
+      "height": 675,
+      "alt": "Revenue + Lead Automation — real EB28 product surface"
+    },
+    "proofSource": {
+      "type": "public-page-capture",
+      "localPath": "output/eb28-social/proof-captures/lead-automation-system.jpg"
+    }
+  },
+  "bufferAsset": {
+    "type": "image",
+    "mimeType": "image/jpeg",
+    "localPath": "output/eb28-social/assets/2026-07-26-pm/feed-01-cover.jpg",
+    "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-26-pm/feed-01-cover.jpg",
+    "width": 1080,
+    "height": 1350,
+    "alt": "More traffic will not repair a page that makes the offer, proof, form, or follow-up hard to trust. — EB28 social cover"
+  },
+  "socialPublishGuard": {
+    "status": "assets_ready_connection_unverified",
+    "note": "Assets are ready. External publishing still requires explicit package authorization plus a fresh read-only verification of the EB28 API account, organization, exact channel IDs, and channel state."
+  }
+}

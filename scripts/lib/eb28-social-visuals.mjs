@@ -219,7 +219,7 @@ function proofSvg(creative, theme) {
   const width = 1080;
   const height = 1350;
   const metric = creative.metric || {};
-  const metricValue = wrapText(metric.value || 'Qualified next steps, not activity for activity’s sake.', 36, 5);
+  const metricValue = wrapText(metric.value || 'Qualified next steps, not activity for activity’s sake.', 29, 6);
   const ctaLabel = wrapText(creative.cta?.label || 'See the full operating guide', 34, 2);
   const disclaimer = wrapText(creative.disclaimer || 'Verify the live path and keep consequential decisions accountable to a person.', 58, 3);
   return `<?xml version="1.0" encoding="UTF-8"?>

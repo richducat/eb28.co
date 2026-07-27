@@ -876,19 +876,27 @@ async function writeFeedFiles(articles) {
 
   await fs.writeFile(path.join(DATA_DIR, 'eb28-blog-feed.json'), `${JSON.stringify(feed, null, 2)}\n`, 'utf8');
 
-  const rssItems = articles
+  const rssArticles = [...articles].sort((a, b) => {
+    const aDate = a.dateModified || a.datePublished || '';
+    const bDate = b.dateModified || b.datePublished || '';
+    const dateCompare = String(bDate).localeCompare(String(aDate));
+    if (dateCompare !== 0) return dateCompare;
+    return String(a.title).localeCompare(String(b.title));
+  });
+  const rssItems = rssArticles
     .slice(0, 20)
-    .map(
-      (article) => `
+    .map((article) => {
+      const rssDate = article.dateModified || article.datePublished;
+      return `
         <item>
           <title>${escapeXml(article.title)}</title>
           <link>${escapeXml(articleUrl(article))}</link>
           <guid>${escapeXml(articleUrl(article))}</guid>
           <description>${escapeXml(article.description)}</description>
-          <pubDate>${new Date(`${article.datePublished}T12:00:00Z`).toUTCString()}</pubDate>
+          <pubDate>${new Date(`${rssDate}T12:00:00Z`).toUTCString()}</pubDate>
         </item>
-      `,
-    )
+      `;
+    })
     .join('');
   const rss = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0">

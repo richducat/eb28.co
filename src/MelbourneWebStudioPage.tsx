@@ -3332,6 +3332,11 @@ const Resources = () => {
                 text: "The page elements that help nearby buyers understand the offer and take the next step.",
               },
               {
+                title: "Small Business Homepage Optimization",
+                href: "/blog/small-business-homepage-optimization-the-first-10-seconds/",
+                text: "What the first 10 seconds of a local homepage need to prove before a buyer keeps reading.",
+              },
+              {
                 title: "Local SEO Services in Melbourne FL",
                 href: "/blog/local-seo-services-in-melbourne-fl-what-should-be-fixed-before-you-pay-monthly/",
                 text: "What should already be correct before a business pays monthly for local SEO support.",

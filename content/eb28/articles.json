@@ -2570,7 +2570,7 @@
     "cluster": "conversion",
     "primaryKeyword": "website audit Melbourne FL",
     "datePublished": "2026-06-03",
-    "dateModified": "2026-07-26",
+    "dateModified": "2026-07-27",
     "author": "EB28",
     "heroLabel": "Practical growth guide",
     "sourceRunId": "2026-07-26-am",
@@ -2715,6 +2715,11 @@
         "label": "AI lead follow-up for local service businesses",
         "href": "/blog/ai-lead-follow-up-local-service-business/",
         "reason": "Connects page conversion improvements to faster lead handling after the form is submitted."
+      },
+      {
+        "label": "Small business homepage optimization",
+        "href": "/blog/small-business-homepage-optimization-the-first-10-seconds/",
+        "reason": "Focuses the audit on the first-screen clarity, proof, and CTA fixes most likely to reduce lead loss."
       },
       {
         "label": "Melbourne Web Studio lead leak quiz",
@@ -2908,7 +2913,7 @@
     "cluster": "melbourne-web-design",
     "primaryKeyword": "best website builder Melbourne FL",
     "datePublished": "2026-06-02",
-    "dateModified": "2026-07-24",
+    "dateModified": "2026-07-27",
     "author": "EB28",
     "heroLabel": "Practical growth guide",
     "sourceRunId": "2026-07-24-pm",
@@ -3053,6 +3058,11 @@
         "label": "Website conversion checklist for Melbourne FL",
         "href": "/blog/website-conversion-checklist-melbourne-fl/",
         "reason": "Links design decisions to calls, bookings, quote requests, and form completion."
+      },
+      {
+        "label": "Small business homepage optimization",
+        "href": "/blog/small-business-homepage-optimization-the-first-10-seconds/",
+        "reason": "Shows comparison-stage buyers what the first 10 seconds of a homepage need to prove."
       },
       {
         "label": "Melbourne Web Studio lead leak quiz",
@@ -3264,7 +3274,7 @@
     "cluster": "private-ai",
     "primaryKeyword": "private AI infrastructure for small business",
     "datePublished": "2026-06-02",
-    "dateModified": "2026-06-02",
+    "dateModified": "2026-07-27",
     "author": "EB28",
     "heroLabel": "Private AI Systems",
     "summary": "Private AI is not about chasing hype. It is about giving a business useful automation while protecting client lists, SOPs, financial details, and internal knowledge.",
@@ -3340,19 +3350,19 @@
         "reason": "Shows how a controlled AI workflow can support timely follow-up while preserving review boundaries."
       },
       {
+        "label": "Private AI vs ChatGPT for business",
+        "href": "/blog/private-ai-vs-chatgpt-for-business-how-to-choose-the-right-workflow/",
+        "reason": "Helps readers choose the right private, public, or hybrid AI workflow before buying infrastructure."
+      },
+      {
+        "label": "AI receptionist for local business",
+        "href": "/blog/ai-receptionist-for-local-business-what-to-automate-and-what-to-keep-human/",
+        "reason": "Connects private AI infrastructure to a practical front-desk automation use case."
+      },
+      {
         "label": "AI lead follow-up for local service businesses",
         "href": "/blog/ai-lead-follow-up-local-service-business/",
         "reason": "Shows a concrete revenue workflow where private AI can support lead handling."
-      },
-      {
-        "label": "Website conversion checklist for Melbourne FL",
-        "href": "/blog/website-conversion-checklist-melbourne-fl/",
-        "reason": "Connects AI infrastructure to the front-end experience that captures leads."
-      },
-      {
-        "label": "Recon Agent founder beta",
-        "href": "/reconcile/",
-        "reason": "Moves automation-minded readers into a concrete EB28 product path."
       },
       {
         "label": "EB28 private AI and app development homepage",

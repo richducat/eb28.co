@@ -17,6 +17,14 @@ const ROUTE_BOOT_LABELS = {
     cc: 'CadetCatch',
     weedauthority: 'Weed Authority',
 };
+const STATIC_ROUTE_FALLBACKS = {
+    melbournewebstudio: `
+    <noscript>
+      <nav aria-label="Melbourne Web Studio resources">
+        <a href="/blog/small-business-homepage-optimization-the-first-10-seconds/">Small business homepage optimization</a>
+      </nav>
+    </noscript>`,
+};
 
 function escapeAttribute(value) {
     return String(value)
@@ -62,6 +70,15 @@ function makeRouteFileFriendly(html, routeKey) {
     return html.replace(/(src|href)="\/assets\//g, '$1="../assets/');
 }
 
+function injectStaticFallback(html, routeKey) {
+    const fallback = STATIC_ROUTE_FALLBACKS[routeKey];
+    if (!fallback) {
+        return html;
+    }
+
+    return html.replace('<div id="root"></div>', `<div id="root"></div>${fallback}`);
+}
+
 async function writeFile(relativePath, contents) {
     const fullPath = path.join(docsDir, relativePath);
     await fs.mkdir(path.dirname(fullPath), { recursive: true });
@@ -75,7 +92,10 @@ async function main() {
         await writeFile(
             outputPath,
             makeRouteFileFriendly(
-                injectRouteBootLabel(injectBuildMarkup(injectSeoMarkup(htmlTemplate, routeKey)), routeKey),
+                injectStaticFallback(
+                    injectRouteBootLabel(injectBuildMarkup(injectSeoMarkup(htmlTemplate, routeKey)), routeKey),
+                    routeKey,
+                ),
                 routeKey,
             ),
         );

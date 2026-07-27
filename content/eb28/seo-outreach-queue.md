@@ -40,3 +40,10 @@
 - Organic watchlist for future content refreshes: "melbourne website builder" (29 impressions, avg. position 59.5), "website rankings loss audit" (45 impressions, avg. position 82.2), "melbourne web studio" (15 impressions, avg. position 66.1), and "private ai for business" (15 impressions, avg. position 80.7).
 - Highest-visibility internal-link sources: https://eb28.co/blog/website-audit-checklist-for-melbourne-fl-businesses-losing-leads/ (0 clicks, 45 impressions); https://eb28.co/blog/best-website-builder-in-melbourne-fl-what-local-companies-should-look-for/ (0 clicks, 43 impressions); https://eb28.co/blog/private-ai-infrastructure-small-business/ (0 clicks, 20 impressions).
 - Next authority action: pursue one legitimate local citation, one expert quote opportunity, and one partner resource mention. Avoid paid links and exact-match anchor spam.
+
+## Daily Queue Refresh 2026-07-27
+
+- Priority article for citations: [Private AI vs ChatGPT for Business: How to Choose the Right Workflow](https://eb28.co/blog/private-ai-vs-chatgpt-for-business-how-to-choose-the-right-workflow/) (private-ai).
+- Search Console source note: "eb28" is the only current position-4-to-20 row with more than one impression; exclude the one-impression "beeeee28" row from action because it is not a service-intent citation target.
+- Highest-visibility internal-link sources: https://eb28.co/blog/best-website-builder-in-melbourne-fl-what-local-companies-should-look-for/ (0 clicks, 42 impressions); https://eb28.co/blog/website-audit-checklist-for-melbourne-fl-businesses-losing-leads/ (0 clicks, 38 impressions); https://eb28.co/melbournewebstudio/ (0 clicks, 24 impressions).
+- Next authority action: pursue one legitimate local citation, one expert quote opportunity, and one partner resource mention. Avoid paid links and exact-match anchor spam.

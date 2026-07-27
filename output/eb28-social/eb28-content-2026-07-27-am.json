@@ -1,0 +1,347 @@
+{
+  "brand": "EB28",
+  "lane": "business-growth",
+  "generatedAt": "2026-07-27T10:03:00.054Z",
+  "runId": "2026-07-27-am",
+  "slot": "am",
+  "operation": "refresh",
+  "publishingPolicy": {
+    "externalPublishing": "not_authorized",
+    "requiredState": "draft_only",
+    "note": "Verify the exact EB28-owned account and channel in the publishing tool before any separate publishing action."
+  },
+  "creativeStandards": {
+    "version": "2026-07-social-v2",
+    "voice": "Specific, operator-led, plain English, evidence-aware, and free of unsupported guarantees.",
+    "visual": "Mobile-first 4:5 carousel plus 9:16 and 16:9 derivatives; bold type, one focal idea per slide, no generic stock imagery.",
+    "featureCoverage": "Every package selects one active EB28 feature from the central catalog and ties it to the article intent."
+  },
+  "article": {
+    "title": "AI Receptionist for Local Business: What to Automate and Keep Human",
+    "url": "https://eb28.co/blog/ai-receptionist-for-local-business-what-to-automate-and-what-to-keep-human/",
+    "slug": "ai-receptionist-for-local-business-what-to-automate-and-what-to-keep-human",
+    "cluster": "lead-automation",
+    "primaryKeyword": "AI receptionist for local business"
+  },
+  "featureSpotlight": {
+    "id": "lead-automation-system",
+    "name": "Revenue + Lead Automation",
+    "lane": "business-growth",
+    "status": "active",
+    "newSince": "2026-06-12",
+    "audience": "service businesses that lose qualified enquiries between the first click, the form, and a useful human response",
+    "promise": "Capture intent, acknowledge the lead quickly, preserve source context, and route the next step without automating away judgment.",
+    "features": [
+      "AI-assisted lead qualification with a visible human escalation",
+      "Source-aware confirmation, routing, and reminder flows",
+      "CRM handoff and lifecycle measurement",
+      "Consent, sender identity, opt-out, and recovery checks"
+    ],
+    "cta": {
+      "label": "Audit the lead path",
+      "url": "https://eb28.co/#contact"
+    },
+    "visualTheme": "orange"
+  },
+  "destinations": {
+    "canonicalGuide": "https://eb28.co/blog/ai-receptionist-for-local-business-what-to-automate-and-what-to-keep-human/",
+    "feature": "https://eb28.co/#contact"
+  },
+  "platformStrategy": {
+    "facebook": "Problem-to-plan post with a practical checklist and one feature proof point.",
+    "instagram": "Four-slide 4:5 carousel with a save-worthy diagnostic, first fix, feature spotlight, and measurable next step.",
+    "linkedin": "Operator lesson with a specific build sequence and a soft product connection.",
+    "x": "One concise operating insight plus the canonical guide.",
+    "shortFormVideo": "Thirty-to-forty-five-second vertical explainer with visible UI, workflow steps, and on-screen captions."
+  },
+  "creativeSystem": {
+    "version": "2026-07-social-v2",
+    "pillar": "Lead Automation",
+    "objective": "qualified_attention",
+    "eyebrow": "AM FIELD NOTE",
+    "headline": "Automate the wait. Keep judgment human.",
+    "subhead": "AI receptionist for local business: map the first five minutes, route the handoff, and measure response time.",
+    "theme": "orange",
+    "feature": {
+      "id": "lead-automation-system",
+      "name": "Revenue + Lead Automation",
+      "lane": "business-growth",
+      "status": "active",
+      "newSince": "2026-06-12",
+      "audience": "service businesses that lose qualified enquiries between the first click, the form, and a useful human response",
+      "promise": "Capture intent, acknowledge the lead quickly, preserve source context, and route the next step without automating away judgment.",
+      "features": [
+        "AI-assisted lead qualification with a visible human escalation",
+        "Source-aware confirmation, routing, and reminder flows",
+        "CRM handoff and lifecycle measurement",
+        "Consent, sender identity, opt-out, and recovery checks"
+      ],
+      "cta": {
+        "label": "Audit the lead path",
+        "url": "https://eb28.co/#contact"
+      },
+      "visualTheme": "orange"
+    },
+    "steps": [
+      {
+        "label": "Find the constraint",
+        "value": "Map the first five minutes after each enquiry."
+      },
+      {
+        "label": "Build the first fix",
+        "value": "Confirm, qualify, route, remind, then escalate."
+      },
+      {
+        "label": "Connect the feature",
+        "value": "AI-assisted qualification with human escalation."
+      }
+    ],
+    "metric": {
+      "label": "What to measure",
+      "value": "Time to acknowledgement and time to a useful human response for qualified leads"
+    },
+    "cta": {
+      "label": "Read the full EB28 field guide",
+      "url": "https://eb28.co/blog/ai-receptionist-for-local-business-what-to-automate-and-what-to-keep-human/"
+    },
+    "disclaimer": "Keep pricing exceptions, legal commitments, high-value qualification, and sensitive disputes with an accountable person",
+    "requiredFormats": {
+      "instagramCarousel": {
+        "width": 1080,
+        "height": 1350,
+        "slides": 4
+      },
+      "vertical": {
+        "width": 1080,
+        "height": 1920
+      },
+      "landscape": {
+        "width": 1200,
+        "height": 675
+      }
+    }
+  },
+  "posts": {
+    "blog": {
+      "title": "AI Receptionist for Local Business: What to Automate and Keep Human",
+      "url": "https://eb28.co/blog/ai-receptionist-for-local-business-what-to-automate-and-what-to-keep-human/",
+      "status": "draft_only"
+    },
+    "facebook": {
+      "caption": "Good lead automation shortens the wait while keeping consequential decisions and exceptions accountable to a person.\n\nBefore adding another tool, inspect the path:\n\n1. Map the first five minutes after an enquiry and identify where ownership or context is lost\n2. Start with the handoff after the form: confirmation, qualification, routing, reminders, and a fast human reply when the lead is worth it.\n3. Measure time to acknowledgement and time to a useful human response for qualified leads.\n\nActive feature: Revenue + Lead Automation\nCapture intent, acknowledge the lead quickly, preserve source context, and route the next step without automating away judgment.\n\nRead the field guide: https://eb28.co/blog/ai-receptionist-for-local-business-what-to-automate-and-what-to-keep-human/\nSee the feature: https://eb28.co/#contact",
+      "url": "https://eb28.co/blog/ai-receptionist-for-local-business-what-to-automate-and-what-to-keep-human/",
+      "status": "draft_only",
+      "media": {
+        "type": "image",
+        "mimeType": "image/jpeg",
+        "localPath": "output/eb28-social/assets/2026-07-27-am/landscape-1200x675.jpg",
+        "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-27-am/landscape-1200x675.jpg",
+        "width": 1200,
+        "height": 675,
+        "alt": "Revenue + Lead Automation — real EB28 product surface"
+      }
+    },
+    "instagram": {
+      "caption": "Good lead automation shortens the wait while keeping consequential decisions and exceptions accountable to a person.\n\nIf “AI receptionist for local business” is the goal, do not start with a software list.\n\n01 — Find the constraint\nMap the first five minutes after an enquiry and identify where ownership or context is lost\n\n02 — Build one useful fix\nStart with the handoff after the form: confirmation, qualification, routing, reminders, and a fast human reply when the lead is worth it.\n\n03 — Connect a real EB28 feature\nRevenue + Lead Automation: AI-assisted lead qualification with a visible human escalation\n\n04 — Prove the handoff\nTrack time to acknowledgement and time to a useful human response for qualified leads.\n\nSave this for the next audit. Full guide at https://eb28.co/blog/ai-receptionist-for-local-business-what-to-automate-and-what-to-keep-human/\n\n#LeadAutomation #AISystems #SmallBusiness #EB28",
+      "creativeBrief": "Use a lead-handoff timeline that separates automatic confirmation, routing, human review, and follow-up measurement. Use the generated four-slide carousel: decisive cover, diagnostic-to-fix flow, Revenue + Lead Automation spotlight, and measurement/CTA. Show documentary UI or a simple workflow diagram when a real screenshot is available; never use a generic office stock photo.",
+      "url": "https://eb28.co/blog/ai-receptionist-for-local-business-what-to-automate-and-what-to-keep-human/",
+      "status": "draft_only",
+      "media": {
+        "type": "carousel",
+        "items": [
+          {
+            "type": "image",
+            "mimeType": "image/jpeg",
+            "localPath": "output/eb28-social/assets/2026-07-27-am/feed-01-cover.jpg",
+            "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-27-am/feed-01-cover.jpg",
+            "width": 1080,
+            "height": 1350,
+            "alt": "Automate the wait. Keep judgment human. — EB28 social cover"
+          },
+          {
+            "type": "image",
+            "mimeType": "image/jpeg",
+            "localPath": "output/eb28-social/assets/2026-07-27-am/feed-02-path.jpg",
+            "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-27-am/feed-02-path.jpg",
+            "width": 1080,
+            "height": 1350,
+            "alt": "Automate the wait. Keep judgment human. — three-step operating path"
+          },
+          {
+            "type": "image",
+            "mimeType": "image/jpeg",
+            "localPath": "output/eb28-social/assets/2026-07-27-am/feed-03-feature.jpg",
+            "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-27-am/feed-03-feature.jpg",
+            "width": 1080,
+            "height": 1350,
+            "alt": "Revenue + Lead Automation — feature details"
+          },
+          {
+            "type": "image",
+            "mimeType": "image/jpeg",
+            "localPath": "output/eb28-social/assets/2026-07-27-am/feed-04-proof.jpg",
+            "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-27-am/feed-04-proof.jpg",
+            "width": 1080,
+            "height": 1350,
+            "alt": "Automate the wait. Keep judgment human. — measurement and next step"
+          }
+        ]
+      }
+    },
+    "x": {
+      "caption": "Good lead automation shortens the wait while keeping consequential decisions and exceptions accountable to a person. Revenue + Lead Automation: AI-assisted lead qualification with…\nhttps://eb28.co/blog/ai-receptionist-for-local-business-what-to-automate-and-what-to-keep-human/",
+      "url": "https://eb28.co/blog/ai-receptionist-for-local-business-what-to-automate-and-what-to-keep-human/",
+      "status": "draft_only",
+      "media": {
+        "type": "image",
+        "mimeType": "image/jpeg",
+        "localPath": "output/eb28-social/assets/2026-07-27-am/landscape-1200x675.jpg",
+        "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-27-am/landscape-1200x675.jpg",
+        "width": 1200,
+        "height": 675,
+        "alt": "Revenue + Lead Automation — real EB28 product surface"
+      }
+    },
+    "linkedin": {
+      "caption": "Good lead automation shortens the wait while keeping consequential decisions and exceptions accountable to a person.\n\nA useful AI receptionist for local business project starts with a buyer constraint, not a software list.\n\nThe operating sequence:\n• Map the first five minutes after an enquiry and identify where ownership or context is lost\n• Start with the handoff after the form: confirmation, qualification, routing, reminders, and a fast human reply when the lead is worth it.\n• Measure time to acknowledgement and time to a useful human response for qualified leads\n\nWhat EB28 has added: Revenue + Lead Automation. Capture intent, acknowledge the lead quickly, preserve source context, and route the next step without automating away judgment.\n\nThe full guide covers the 30-day build loop, safeguards, and evidence-based next step.\n\nhttps://eb28.co/blog/ai-receptionist-for-local-business-what-to-automate-and-what-to-keep-human/\n\n#LeadAutomation #AISystems #SmallBusiness",
+      "url": "https://eb28.co/blog/ai-receptionist-for-local-business-what-to-automate-and-what-to-keep-human/",
+      "status": "draft_only",
+      "media": {
+        "type": "image",
+        "mimeType": "image/jpeg",
+        "localPath": "output/eb28-social/assets/2026-07-27-am/landscape-1200x675.jpg",
+        "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-27-am/landscape-1200x675.jpg",
+        "width": 1200,
+        "height": 675,
+        "alt": "Revenue + Lead Automation — real EB28 product surface"
+      }
+    },
+    "shortFormVideo": {
+      "hook": "Good lead automation shortens the wait while keeping consequential decisions and exceptions accountable to a person.",
+      "durationSeconds": 40,
+      "format": "9:16 vertical, burned-in captions, screen recording or workflow diagram, no talking-head requirement",
+      "beats": [
+        {
+          "seconds": "0-3",
+          "visual": "Large hook over the live page or workflow map",
+          "voiceover": "Good lead automation shortens the wait while keeping consequential decisions and exceptions accountable to a person."
+        },
+        {
+          "seconds": "3-12",
+          "visual": "Highlight the buyer constraint",
+          "voiceover": "Map the first five minutes after an enquiry and identify where ownership or context is lost"
+        },
+        {
+          "seconds": "12-24",
+          "visual": "Animate the first-fix path",
+          "voiceover": "Start with the handoff after the form: confirmation, qualification, routing, reminders, and a fast human reply when the lead is worth it."
+        },
+        {
+          "seconds": "24-34",
+          "visual": "Show Revenue + Lead Automation with one real feature",
+          "voiceover": "Capture intent, acknowledge the lead quickly, preserve source context, and route the next step without automating away judgment."
+        },
+        {
+          "seconds": "34-40",
+          "visual": "Show the measurement and canonical URL",
+          "voiceover": "Measure time to acknowledgement and time to a useful human response for qualified leads. Read the full guide at EB28."
+        }
+      ],
+      "onScreenText": [
+        "Find the constraint",
+        "Build one useful fix",
+        "Feature: Revenue + Lead Automation",
+        "Measure the handoff"
+      ],
+      "caption": "Good lead automation shortens the wait while keeping consequential decisions and exceptions accountable to a person. Revenue + Lead Automation: Capture intent, acknowledge the lead quickly, preserve source context, and route the next step without automating away… https://eb28.co/blog/ai-receptionist-for-local-business-what-to-automate-and-what-to-keep-human/ #LeadAutomation #AISystems #SmallBusiness #EB28",
+      "url": "https://eb28.co/blog/ai-receptionist-for-local-business-what-to-automate-and-what-to-keep-human/",
+      "status": "draft_only",
+      "media": {
+        "type": "image",
+        "mimeType": "image/jpeg",
+        "localPath": "output/eb28-social/assets/2026-07-27-am/story-1080x1920.jpg",
+        "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-27-am/story-1080x1920.jpg",
+        "width": 1080,
+        "height": 1920,
+        "alt": "Automate the wait. Keep judgment human. — vertical story graphic"
+      }
+    }
+  },
+  "visualAssets": {
+    "version": "2026-07-social-v2",
+    "format": "jpeg-no-alpha",
+    "instagramCarousel": [
+      {
+        "type": "image",
+        "mimeType": "image/jpeg",
+        "localPath": "output/eb28-social/assets/2026-07-27-am/feed-01-cover.jpg",
+        "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-27-am/feed-01-cover.jpg",
+        "width": 1080,
+        "height": 1350,
+        "alt": "Automate the wait. Keep judgment human. — EB28 social cover"
+      },
+      {
+        "type": "image",
+        "mimeType": "image/jpeg",
+        "localPath": "output/eb28-social/assets/2026-07-27-am/feed-02-path.jpg",
+        "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-27-am/feed-02-path.jpg",
+        "width": 1080,
+        "height": 1350,
+        "alt": "Automate the wait. Keep judgment human. — three-step operating path"
+      },
+      {
+        "type": "image",
+        "mimeType": "image/jpeg",
+        "localPath": "output/eb28-social/assets/2026-07-27-am/feed-03-feature.jpg",
+        "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-27-am/feed-03-feature.jpg",
+        "width": 1080,
+        "height": 1350,
+        "alt": "Revenue + Lead Automation — feature details"
+      },
+      {
+        "type": "image",
+        "mimeType": "image/jpeg",
+        "localPath": "output/eb28-social/assets/2026-07-27-am/feed-04-proof.jpg",
+        "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-27-am/feed-04-proof.jpg",
+        "width": 1080,
+        "height": 1350,
+        "alt": "Automate the wait. Keep judgment human. — measurement and next step"
+      }
+    ],
+    "vertical": {
+      "type": "image",
+      "mimeType": "image/jpeg",
+      "localPath": "output/eb28-social/assets/2026-07-27-am/story-1080x1920.jpg",
+      "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-27-am/story-1080x1920.jpg",
+      "width": 1080,
+      "height": 1920,
+      "alt": "Automate the wait. Keep judgment human. — vertical story graphic"
+    },
+    "landscape": {
+      "type": "image",
+      "mimeType": "image/jpeg",
+      "localPath": "output/eb28-social/assets/2026-07-27-am/landscape-1200x675.jpg",
+      "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-27-am/landscape-1200x675.jpg",
+      "width": 1200,
+      "height": 675,
+      "alt": "Revenue + Lead Automation — real EB28 product surface"
+    },
+    "proofSource": {
+      "type": "public-page-capture",
+      "localPath": "output/eb28-social/proof-captures/lead-automation-system.jpg"
+    }
+  },
+  "bufferAsset": {
+    "type": "image",
+    "mimeType": "image/jpeg",
+    "localPath": "output/eb28-social/assets/2026-07-27-am/feed-01-cover.jpg",
+    "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-27-am/feed-01-cover.jpg",
+    "width": 1080,
+    "height": 1350,
+    "alt": "Automate the wait. Keep judgment human. — EB28 social cover"
+  },
+  "socialPublishGuard": {
+    "status": "assets_ready_connection_unverified",
+    "note": "Assets are ready. External publishing still requires explicit package authorization plus a fresh read-only verification of the EB28 API account, organization, exact channel IDs, and channel state."
+  }
+}

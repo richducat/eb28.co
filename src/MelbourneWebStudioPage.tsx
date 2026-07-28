@@ -180,8 +180,8 @@ const buildBlueprint = ({
         .map((item) => item.trim())
         .filter(Boolean)
     : [
-        "free custom website build",
-        "$98/month hosting, SEO, and weekly blog support",
+        "website build included with annual Growth Hosting",
+        "$1,176 upfront for 12 months of Growth Hosting ($98/month), SEO, and weekly blog support",
         "clear enquiry path",
         "mobile-first layout",
       ];
@@ -200,7 +200,7 @@ const buildBlueprint = ({
     "2. HERO DIRECTION",
     `Headline angle: Lead with the clearest promise ${businessName} can own in the local market.`,
     `Support line: Explain why prospects should trust the team quickly, with a direct CTA above the fold.`,
-    `Primary CTA: Claim the free website build / Request the $98 Growth Hosting plan.`,
+    `Primary CTA: Claim the included website build / Request the $1,176 annual Growth Hosting plan.`,
     "",
     "3. TRUST ARCHITECTURE",
     "Use owner-approved proof early: real photos, clear services, Google Business signals, and practical local credibility.",
@@ -288,7 +288,7 @@ const buildChatReply = (userMessage: string) => {
 
   if (selectedPackage) {
     return {
-      text: `${selectedPackage} sounds like the closest fit based on what you described. Start the project brief and we will follow up with the right scope, launch details, and $98/month Growth Hosting next step.`,
+      text: `${selectedPackage} sounds like the closest fit based on what you described. Start the project brief and we will follow up with the right scope and the $1,176 upfront Growth Hosting option ($98/month for 12 months).`,
       type: "onboarding" as const,
       data: { selectedPackage },
     };
@@ -316,19 +316,19 @@ const buildChatReply = (userMessage: string) => {
 
   if (lower.includes("seo") || lower.includes("google") || lower.includes("rank")) {
     return {
-      text: "If local SEO is the bottleneck, EB28 Growth Hosting is the right starting point. It includes managed hosting, technical SEO upkeep, and weekly local content for $98/month after the free website build is approved.",
+      text: "If local SEO is the bottleneck, EB28 Growth Hosting is the right starting point. The first 12 months are $1,176 paid upfront ($98/month) and include the website build, managed hosting, technical SEO upkeep, and weekly local content.",
     };
   }
 
   if (lower.includes("website") || lower.includes("design") || lower.includes("redesign")) {
     return {
-      text: "That starts with the free website build. The lead leak quiz is the quickest way to see what should be rebuilt first, then Growth Hosting keeps the site live, optimized, and updated for $98/month.",
+      text: "That starts with the included website build. The lead leak quiz shows what should be rebuilt first, then the first 12 months of Growth Hosting are $1,176 paid upfront ($98/month). Website-only is $800 one-time.",
     };
   }
 
   if (lower.includes("ads") || lower.includes("marketing") || lower.includes("lead")) {
     return {
-      text: "If you need more leads, start with the free website build and $98 Growth Hosting foundation. We can add AI or paid traffic later after the site has a clear offer, clean capture path, and weekly local content.",
+      text: "If you need more leads, start with the included website build and the $1,176 upfront Growth Hosting foundation ($98/month for 12 months). Website-only is $800 one-time. We can scope other growth work after the site has a clear offer and clean capture path.",
     };
   }
 
@@ -431,16 +431,16 @@ const Hero = () => {
               ))}
             </div>
             <span className="text-xs font-bold text-slate-500 uppercase tracking-widest">
-              Free build, $98/mo Growth Hosting
+              Website included with annual Growth Hosting
             </span>
           </div>
           <h2 className="text-5xl md:text-6xl font-bold text-slate-900 leading-[1.1] mb-6">
-            We Build the Website <span className="text-blue-600">Free</span>. You Host Growth for
-            $98/mo.
+            We Include the Website Build. You Prepay 12 Months at
+            <span className="text-blue-600"> $98/mo.</span>
           </h2>
           <p className="text-lg text-slate-600 mb-8 max-w-md leading-relaxed">
-            EB28 creates a custom local business website at no upfront cost. If you want to use it,
-            Growth Hosting keeps it live, optimized, and supported with weekly local content.
+            Pay $1,176 upfront for the first 12 months of Growth Hosting and the website build is
+            included. Or choose the website-only build for $800 one-time.
           </p>
           <div className="flex flex-wrap gap-4">
             <button
@@ -487,13 +487,13 @@ const TrustSignals = () => (
         {[
           {
             icon: Layout,
-            title: "Free custom build",
-            text: "EB28 builds the first website concept with no upfront design fee.",
+            title: "Included custom build",
+            text: "EB28 prepares a limited first direction before payment; the full build is included with annual Growth Hosting.",
           },
           {
             icon: ShieldCheck,
-            title: "$98/mo Growth Hosting",
-            text: "Hosting, SSL, technical upkeep, local SEO basics, and performance checks.",
+            title: "$1,176 upfront · first 12 months",
+            text: "$98/month equivalent. Includes the website build, hosting, SSL, technical upkeep, local SEO basics, and performance checks.",
           },
           {
             icon: BookOpen,
@@ -605,11 +605,11 @@ const Pricing = () => (
           <div className="w-px h-full bg-slate-100 mt-4 hidden md:block"></div>
         </div>
         <div className="md:col-span-7">
-          <h3 className="text-2xl font-bold text-slate-900 mb-4">Step 1: Free Website Build</h3>
+          <h3 className="text-2xl font-bold text-slate-900 mb-4">Step 1: Limited Website Direction</h3>
           <p className="text-slate-600 mb-6 leading-relaxed">
-            EB28 builds the first version of your local business website with no upfront design
-            fee. If it fits, you can launch it on Growth Hosting. If it does not, you do not owe a
-            build fee.
+            EB28 prepares a focused first direction with no payment on the intake form. Full
+            production begins after you choose $1,176 upfront for 12 months of Growth Hosting or
+            the $800 website-only build.
           </p>
           <div className="grid sm:grid-cols-2 gap-3">
             {[
@@ -682,10 +682,10 @@ const Pricing = () => (
         <div className="md:col-span-4 text-center md:text-right">
           <div className="inline-block bg-white px-8 py-6 rounded-3xl border border-blue-100 shadow-sm mb-4">
             <p className="text-sm font-bold text-blue-400 uppercase tracking-widest mb-1">
-              Monthly Growth Plan
+              First 12 Months
             </p>
             <p className="text-5xl font-black text-slate-900">
-              $98<span className="text-xl font-bold text-slate-400">/mo</span>
+              $1,176<span className="block text-sm font-bold text-slate-400 mt-2">$98/month · paid upfront</span>
             </p>
           </div>
           <button
@@ -914,7 +914,7 @@ const Pricing = () => (
           <div className="bg-white/60 backdrop-blur-sm p-4 rounded-2xl border border-orange-200 inline-flex items-center gap-3">
             <Sparkles className="w-5 h-5 text-orange-500" />
             <p className="text-sm font-bold text-orange-700">
-              The build stays free. Growth Hosting is $98/month only if you approve launch.
+              The website build is included with $1,176 upfront for the first 12 months of Growth Hosting. Website-only is $800 one-time.
             </p>
           </div>
         </div>
@@ -3469,16 +3469,17 @@ const GrowthContact = () => {
             Claim a Free Build
           </p>
           <h2 className="text-4xl md:text-5xl font-bold text-slate-900 tracking-tight mb-6">
-            Send one note and we will map the free website build.
+            Send one note and we will map the included website build.
           </h2>
           <p className="text-slate-600 text-lg leading-relaxed mb-8">
-            Use this form for the EB28 Growth Hosting offer. The build is free; approved hosting,
-            SEO upkeep, and weekly local content are $98/month.
+            Use this form for the EB28 Growth Hosting offer. The website build is included with
+            $1,176 upfront for 12 months ($98/month), or choose website-only for $800 one-time.
           </p>
           <div className="grid gap-4">
             {[
-              "No upfront website build fee",
-              "$98/month managed hosting and local SEO upkeep",
+              "Website build included with the annual Growth Hosting option",
+              "$1,176 upfront for 12 months ($98/month)",
+              "$800 one-time website-only alternative",
               "Weekly local blog or Google Business content prompt",
               "Inquiry routing checked through the EB28 intake workflow",
             ].map((item) => (
@@ -3574,8 +3575,8 @@ const Footer = () => (
           </a>
         </div>
         <p className="text-slate-400 max-w-xs mb-6">
-          Free custom website builds with $98/month Growth Hosting, SEO upkeep, and weekly local
-          content.
+          Website build included with $1,176 upfront for 12 months of Growth Hosting ($98/month),
+          or $800 one-time website-only.
         </p>
         <div className="flex gap-4">
           <Mail className="w-5 h-5 text-slate-400 cursor-pointer hover:text-white transition-colors" />
@@ -3997,7 +3998,7 @@ const Testimonials = () => {
   const testimonials = [
     {
       quote:
-        "The free website build is reviewed with the business owner before public launch, so copy, photos, hours, and calls-to-action can be corrected first.",
+        "A limited website direction is reviewed with the business owner before payment; full production begins after the owner chooses the annual hosting or website-only option.",
       author: "EB28 Growth Hosting",
       business: "Owner approval required",
       image:
@@ -4005,9 +4006,9 @@ const Testimonials = () => {
     },
     {
       quote:
-        "Growth Hosting is $98/month after approval and includes managed hosting, technical SEO upkeep, weekly local content, and one monthly update request.",
+        "The first 12 months of Growth Hosting are $1,176 paid upfront ($98/month) and include the website build, managed hosting, technical SEO upkeep, weekly local content, and one monthly update request.",
       author: "EB28 Growth Hosting",
-      business: "$98/month service plan",
+      business: "$1,176 upfront first-year plan",
       image:
         "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80&w=150",
     },
@@ -4034,8 +4035,8 @@ const Testimonials = () => {
             What the Offer Includes
           </h2>
           <p className="text-slate-400 max-w-2xl mx-auto text-lg">
-            The live offer is intentionally simple: a free owner-reviewed build, then a $98/month
-            hosting and growth plan if the business approves launch.
+            The website build is included with $1,176 paid upfront for the first 12 months of
+            Growth Hosting ($98/month). Website-only is $800 one-time.
           </p>
         </div>
 
@@ -4093,7 +4094,7 @@ const Chatbot = () => {
   >([
     {
       role: "model",
-      text: "Hi, this is EB28. What kind of business are you growing, and what should a free website build help customers do first?",
+      text: "Hi, this is EB28. What kind of business are you growing, and what should the included website build help customers do first?",
     },
   ]);
   const [input, setInput] = useState("");

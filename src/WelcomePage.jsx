@@ -8,6 +8,81 @@ import { submitLeadCapture } from './leadCapture.js';
 // collects everything needed to start fulfillment, so a paying customer is
 // onboarded without waiting on a human reply.
 const PRODUCTS = {
+    'growth-hosting-annual': {
+        name: 'Free Website Build + 12 Months Growth Hosting',
+        price: '$1,176 upfront ($98/month for 12 months)',
+        icon: <CheckCircle className="w-8 h-8 text-emerald-600" />,
+        deliverySla: 'project review within 1 business day',
+        steps: [
+            'Confirm the business and the result the website must produce.',
+            'EB28 reviews the project brief, current site, brand assets, and domain plan before production.',
+            'You receive the kickoff steps for the included website build and first-year Growth Hosting.',
+        ],
+        fields: [
+            {
+                id: 'business',
+                label: 'Business name and primary service *',
+                placeholder: 'Business name, what you sell, and the customer you most want...',
+                type: 'textarea',
+                required: true,
+            },
+            {
+                id: 'websiteGoal',
+                label: 'What should the website help customers do first? *',
+                placeholder: 'Call, book, request a quote, visit, apply, or buy...',
+                type: 'text',
+                required: true,
+            },
+            {
+                id: 'currentWebsite',
+                label: 'Current website or Google Business Profile',
+                placeholder: 'https://',
+                type: 'text',
+                required: false,
+            },
+            {
+                id: 'phone',
+                label: 'Phone for the kickoff',
+                placeholder: '(555) 000-0000',
+                type: 'text',
+                required: false,
+            },
+        ],
+    },
+    'website-build-only': {
+        name: 'Website Build Only',
+        price: '$800 one-time',
+        icon: <CheckCircle className="w-8 h-8 text-emerald-600" />,
+        deliverySla: 'project review within 1 business day',
+        steps: [
+            'Confirm the business, website goal, and current assets.',
+            'EB28 confirms the agreed build scope and handoff requirements.',
+            'The website build starts without EB28 hosting, SEO upkeep, weekly content, or ongoing lead-routing support.',
+        ],
+        fields: [
+            {
+                id: 'business',
+                label: 'Business name and primary service *',
+                placeholder: 'Business name, what you sell, and the customer you most want...',
+                type: 'textarea',
+                required: true,
+            },
+            {
+                id: 'websiteGoal',
+                label: 'What should the website help customers do first? *',
+                placeholder: 'Call, book, request a quote, visit, apply, or buy...',
+                type: 'text',
+                required: true,
+            },
+            {
+                id: 'handoff',
+                label: 'Where should the completed website be handed off?',
+                placeholder: 'Existing host, repository, or not sure yet...',
+                type: 'text',
+                required: false,
+            },
+        ],
+    },
     'diy-ai-foundation': {
         name: 'DIY AI Foundation Build',
         price: '$10 one-time',

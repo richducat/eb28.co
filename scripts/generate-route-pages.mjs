@@ -44,7 +44,7 @@ function injectBuildMarkup(html) {
     const viewportPattern = /(<meta\s+name="viewport"[^>]*>\s*)/i;
 
     if (viewportPattern.test(html)) {
-        return html.replace(viewportPattern, `$1${buildMarkup}\n`);
+        return html.replace(viewportPattern, (viewportTag) => `${viewportTag}${buildMarkup}\n`);
     }
 
     return html.replace('</head>', `${buildMarkup}\n</head>`);

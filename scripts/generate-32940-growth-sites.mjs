@@ -8,7 +8,7 @@ const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..'
 const outDir = path.join(repoRoot, 'public', '32940');
 const replacementProspectsPath = path.join(repoRoot, 'scripts', 'data', '32940-replacement-prospects.json');
 const studioUrl = 'https://eb28.co/melbournewebstudio/';
-const intakeUrl = `${studioUrl}#quiz`;
+const intakeUrl = 'https://eb28.co/get-started/?service=website&source=32940';
 const claimReceivedUrl = 'https://eb28.co/32940/claim-received.html';
 const premiumProposalSlugs = new Set([
   'martin-pest-control-brevard',
@@ -1084,8 +1084,9 @@ function researchMarkup(prospect) {
 function renderProspectPage(prospect, index) {
   const hasPremiumProposal = premiumProposalSlugs.has(prospect.slug);
   const premiumProposalUrl = `/32940/proposals/${prospect.slug}/`;
+  const prospectIntakeUrl = `${intakeUrl}&prospect=${encodeURIComponent(prospect.slug)}`;
   const title = hasPremiumProposal ? `${prospect.name} premium website and content concept | EB28` : `${prospect.name} free website concept | EB28 Growth Hosting`;
-  const description = hasPremiumProposal ? `Open the five-page premium redesign and founding Content Factory pilot prepared by EB28 for ${prospect.name} owner review.` : `A free local website concept for ${prospect.name}. EB28 can host, optimize, and publish weekly local content for $98/month after owner approval.`;
+  const description = hasPremiumProposal ? `Open the five-page premium redesign and founding Content Factory pilot prepared by EB28 for ${prospect.name} owner review.` : `A limited website direction for ${prospect.name}. The website build is included with $1,176 upfront for 12 months of EB28 Growth Hosting ($98/month), or $800 one-time website-only.`;
   const profile = conceptProfile(prospect);
   const accent = profile.accent;
 
@@ -1542,7 +1543,7 @@ ${hasPremiumProposal ? `        <a class="btn accent" href="${attr(premiumPropos
             <div class="hero-actions">
 ${hasPremiumProposal ? `              <a class="btn accent" href="${attr(premiumProposalUrl)}">Explore all five pages</a>
 ` : ''}              <a class="btn accent" href="#claim">${hasPremiumProposal ? 'Review founding pilot' : 'Claim this free site'}</a>
-              <a class="btn" href="${attr(intakeUrl)}">Open project brief</a>
+              <a class="btn" href="${attr(prospectIntakeUrl)}">Open project brief</a>
             </div>
           </div>
           <aside class="preview" aria-label="Website concept preview">
@@ -1612,27 +1613,24 @@ ${hasPremiumProposal ? `              <a class="btn accent" href="${attr(premium
       <section class="offer" id="claim">
         <div class="wrap">
           <div>
-            <p class="eyebrow">${hasPremiumProposal ? 'Founding Full Growth pilot' : 'EB28 Growth Hosting'}</p>
-            <h2 class="section-title">${hasPremiumProposal ? 'Premium website, managed social and two articles for $499/month for three months.' : 'The website build is free. Hosting, SEO, and weekly content are $98/month.'}</h2>
+            <p class="eyebrow">${hasPremiumProposal ? 'Founding Full Growth pilot + website offer' : 'EB28 Growth Hosting'}</p>
+            <h2 class="section-title">Website build included. Growth Hosting is $1,176 upfront for 12 months ($98/month).</h2>
             <p class="lead">
-              ${hasPremiumProposal ? 'The five invited businesses can launch Full Growth with the $1,000 launch fee waived. The pilot stops after 90 days unless the customer affirmatively renews at the standard $699/month.' : 'EB28 builds the first version at no upfront cost. If the owner wants to use it, EB28 hosts and improves it for $98/month with local SEO upkeep and weekly blog posts.'}
+              EB28 prepares a limited first direction at no upfront cost. The full website build is included when the owner prepays $1,176 for the first 12 months of Growth Hosting ($98/month). Website-only is $800 one-time and excludes hosting, SEO upkeep, weekly content, and ongoing lead-routing support.${hasPremiumProposal ? ' This business can also review the separate three-month Full Growth content pilot.' : ''}
             </p>
             <ul class="offer-list">
-${hasPremiumProposal ? `              <li>Premium website, hosting, SSL, analytics, local SEO and care.</li>
-              <li>12 social posts adapted across three approved channels.</li>
-              <li>Four vertical clips and two researched articles monthly.</li>
-              <li>Research, QA, exact-version approval, scheduling, readback and reporting.</li>
-              <li>The customer keeps the domain, customer data and approved content.</li>
-` : `              <li>Managed website hosting, SSL, technical upkeep, and launch support.</li>
+              <li>Managed website hosting, SSL, technical upkeep, and launch support.</li>
               <li>Local SEO structure, page titles, descriptions, sitemap, and performance checks.</li>
               <li>One weekly local blog post or Google Business Profile content prompt.</li>
               <li>One monthly website update request included after launch.</li>
               <li>No ownership confusion: the owner keeps the business, domain, content rights, and customer relationships.</li>
-`}            </ul>
+            </ul>
           </div>
           <div class="claim-card">
             <p class="form-intro">Use the EB28 intake workflow to request review of this free site concept. No public inbox or third-party form endpoint is embedded on this page.</p>
-            <a class="btn accent" href="${hasPremiumProposal ? `/content-factory/?prospect=${attr(prospect.slug)}#pilot` : attr(intakeUrl)}">${hasPremiumProposal ? 'Review website + content pilot' : 'Open the EB28 intake form'}</a>
+            <a class="btn accent" href="${attr(prospectIntakeUrl)}">Open the EB28 intake form</a>
+${hasPremiumProposal ? `            <a class="btn" href="/content-factory/?prospect=${attr(prospect.slug)}#pilot">Review the separate content pilot</a>
+` : ''}
             <p class="fine">No obligation. EB28 can route approved site leads to the business's preferred inbox at launch.</p>
           </div>
         </div>
@@ -1764,7 +1762,7 @@ function renderClaimReceivedPage() {
         <a class="button" href="/32940/">Back to concepts</a>
       </div>
       <div class="details">
-        <span><strong>Offer:</strong> free website build; Growth Hosting is $98/month after owner approval.</span>
+        <span><strong>Offer:</strong> website build included with $1,176 upfront for 12 months of Growth Hosting ($98/month); website-only is $800 one-time.</span>
         <span><strong>Includes:</strong> managed hosting, technical SEO upkeep, and weekly local blog or Google Business content prompts.</span>
         <span><strong>Routing:</strong> owner-review requests use the EB28 intake workflow.</span>
       </div>
@@ -1789,7 +1787,7 @@ function renderIndex() {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex,follow" />
     <title>32940 Free Website Concepts | EB28 Growth Hosting</title>
-    <meta name="description" content="Free website concepts for local 32940 businesses, prepared by EB28 with $98/month Growth Hosting available after owner approval." />
+    <meta name="description" content="Website directions for local 32940 businesses. Website build included with $1,176 upfront for 12 months of EB28 Growth Hosting ($98/month), or $800 one-time website-only." />
     <style>
       :root { --ink:#17191f; --muted:#62656d; --line:#17191f; --green:#2d9c67; --paper:#fafaf7; }
       * { box-sizing: border-box; }
@@ -1824,8 +1822,8 @@ function renderIndex() {
         <div>
           <p class="eyebrow">EB28 local business concept library</p>
           <h1>See the first version before you pay for it.</h1>
-          <p>Each owner-review concept starts with a specific customer action, three launch priorities, and a clear verification boundary. The custom build is free. Approved sites can use EB28 Growth Hosting for $98/month.</p>
-          <div class="actions"><a class="button" href="${intakeUrl}">Claim a free website build</a><a class="button" href="${studioUrl}">How Growth Hosting works</a></div>
+          <p>Each owner-review direction starts with a specific customer action, three launch priorities, and a clear verification boundary. The website build is included with $1,176 upfront for 12 months of EB28 Growth Hosting ($98/month), or $800 one-time website-only.</p>
+          <div class="actions"><a class="button" href="${intakeUrl}">Claim the included website build</a><a class="button" href="${studioUrl}">How Growth Hosting works</a></div>
         </div>
         <aside><strong>${localProspects.length}</strong><small>locally controlled business candidates after removing obvious national chains and duplicate concepts</small></aside>
       </section>
@@ -1841,6 +1839,11 @@ function renderIndex() {
 }
 
 await fs.mkdir(outDir, { recursive: true });
+
+const existingConceptFiles = (await fs.readdir(outDir, { withFileTypes: true }))
+  .filter((entry) => entry.isFile() && entry.name.endsWith('.html'))
+  .map((entry) => path.join(outDir, entry.name));
+await Promise.all(existingConceptFiles.map((filePath) => fs.unlink(filePath)));
 
 for (const [index, prospect] of localProspects.entries()) {
   await fs.writeFile(path.join(outDir, `${prospect.slug}.html`), renderProspectPage(prospect, index));

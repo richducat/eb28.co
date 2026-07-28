@@ -13,11 +13,11 @@ const jsonOutPath = path.join(outDir, '32940-lead-capture-verification.json');
 const mdOutPath = path.join(outDir, '32940-lead-capture-verification.md');
 const leadCapturePath = path.join(repoRoot, 'src', 'leadCapture.js');
 const expectedEmail = 'social@eb28.co';
-const expectedFormAction = `https://formsubmit.co/${expectedEmail}`;
 const expectedAjaxEndpoint = `https://formsubmit.co/ajax/${expectedEmail}`;
+const expectedIntakeBase = 'https://eb28.co/get-started/?service=website&source=32940';
 const expectedNextUrl = 'https://eb28.co/32940/claim-received.html';
 const liveTestConceptUrl = 'https://eb28.co/32940/arabesque-flavors-of-the-middle-east.html';
-const minimumExpectedPageCount = 129;
+const minimumExpectedPageCount = 90;
 const supportPages = new Set(['index.html', 'claim-received.html']);
 
 function parseArgs(argv) {
@@ -82,40 +82,16 @@ function checkPage(html, slug, sourceLabel) {
   const normalized = normalizeHtml(html);
   const failures = [];
   const formMatches = [...normalized.matchAll(/<form\b[\s\S]*?<\/form>/gi)].map((match) => match[0]);
-  const claimForm = formMatches.find((form) => form.includes(expectedFormAction));
+  const expectedProspectIntake = `${expectedIntakeBase}&prospect=${encodeURIComponent(slug)}`;
 
   if (!normalized.includes('id="claim"')) failures.push('missing #claim section');
-  if (formMatches.length !== 1) failures.push(`expected exactly 1 form, found ${formMatches.length}`);
-  if (!claimForm) failures.push(`missing form action ${expectedFormAction}`);
-
-  if (claimForm) {
-    const formOpen = claimForm.match(/<form\b[^>]*>/i)?.[0] || '';
-    if (attrValue(formOpen, 'action') !== expectedFormAction) failures.push('form action does not route to social@eb28.co');
-    if (attrValue(formOpen, 'method').toUpperCase() !== 'POST') failures.push('form method is not POST');
-    if (attrValue(formOpen, 'accept-charset').toUpperCase() !== 'UTF-8') failures.push('form accept-charset is not UTF-8');
-    if (!hiddenInputValue(claimForm, '_subject').startsWith('Booked review request: ')) failures.push('missing booked-review subject');
-    if (hiddenInputValue(claimForm, '_captcha') !== 'false') failures.push('captcha is not disabled');
-    if (hiddenInputValue(claimForm, '_template') !== 'table') failures.push('template is not table');
-    if (hiddenInputValue(claimForm, '_next') !== expectedNextUrl) failures.push('missing branded claim-received redirect');
-    if (hiddenInputValue(claimForm, 'source') !== `eb28-32940-${slug}`) failures.push('source hidden field does not match slug');
-    if (hiddenInputValue(claimForm, 'concept_url') !== `https://eb28.co/32940/${slug}.html`) failures.push('concept_url hidden field does not match public URL');
-    if (!hiddenInputValue(claimForm, 'offer').includes('$98/month')) failures.push('offer hidden field is missing $98/month');
-    if (!hiddenInputValue(claimForm, 'offer').includes('weekly blog posts')) failures.push('offer hidden field is missing weekly blog posts');
-    if (!hiddenInputValue(claimForm, 'requested_next_step').includes('confirm a 10-minute owner review call')) failures.push('requested_next_step is missing confirmed booking intent');
-    if (hiddenInputValue(claimForm, 'review_timezone') !== 'America/New_York') failures.push('review_timezone hidden field is missing America/New_York');
-    if (!claimForm.includes('data-review-slot-grid')) failures.push('missing quick review slot picker');
-    if (!hasRequiredInput(claimForm, 'name')) failures.push('name field is not required');
-    if (!hasRequiredInput(claimForm, 'email')) failures.push('email field is not required');
-    if (!hasRequiredInput(claimForm, 'reviewer_role')) failures.push('reviewer_role field is not required');
-    if (!hasRequiredInput(claimForm, 'phone')) failures.push('phone field is not required');
-    if (!hasRequiredInput(claimForm, 'preferred_review_time')) failures.push('preferred_review_time field is not required');
-    if (!hasRequiredInput(claimForm, 'backup_review_time')) failures.push('backup_review_time field is not required');
-    if (!hasRequiredInput(claimForm, 'confirm_review_intent')) failures.push('confirm_review_intent field is not required');
-  }
-
-  if (!normalized.includes(`mailto:${expectedEmail}?subject=`)) failures.push('missing social@eb28.co mailto fallback');
-  if (!normalized.includes('Reply "no thanks"') && !normalized.includes('Reply &quot;no thanks&quot;')) failures.push('missing opt-out text');
-  if (!normalized.includes('The website build is free. Hosting, SEO, and weekly content are $98/month.')) failures.push('missing headline offer');
+  if (formMatches.length !== 0) failures.push(`expected no public lead form, found ${formMatches.length}`);
+  if (normalized.includes('formsubmit.co')) failures.push('public page exposes a third-party form endpoint');
+  if (normalized.includes(`mailto:${expectedEmail}`)) failures.push('public page exposes the intake inbox');
+  if (!normalized.includes(expectedProspectIntake)) failures.push('missing prospect-specific structured intake link');
+  if (!normalized.includes('No public inbox or third-party form endpoint is embedded on this page.')) failures.push('missing privacy boundary');
+  if (!normalized.includes('Website build included. Growth Hosting is $1,176 upfront for 12 months ($98/month).')) failures.push('missing headline offer');
+  if (!normalized.includes('Website-only is $800 one-time')) failures.push('missing $800 website-only alternative');
   if (!normalized.includes('One weekly local blog post or Google Business Profile content prompt.')) failures.push('missing weekly content line');
 
   return { sourceLabel, slug, passed: failures.length === 0, failures };
@@ -125,10 +101,11 @@ function checkClaimReceivedHtml(html, sourceLabel) {
   const normalized = normalizeHtml(html);
   const failures = [];
   if (!normalized.includes('EB28 has your free website review request.')) failures.push('missing confirmation headline');
-  if (!normalized.includes(`sent to <strong>${expectedEmail}</strong>`)) failures.push('missing social@eb28.co receipt copy');
-  if (!normalized.includes('$98/month')) failures.push('missing $98/month offer copy');
+  if (!normalized.includes('$1,176 upfront')) failures.push('missing $1,176 upfront offer copy');
+  if (!normalized.includes('$98/month')) failures.push('missing $98/month equivalent offer copy');
+  if (!normalized.includes('$800')) failures.push('missing $800 website-only offer copy');
   if (!normalized.includes('weekly local blog or Google Business content prompts')) failures.push('missing weekly content copy');
-  if (!normalized.includes(`mailto:${expectedEmail}?subject=`)) failures.push('missing social@eb28.co follow-up mailto');
+  if (!normalized.includes(expectedIntakeBase)) failures.push('missing structured intake link');
   if (!normalized.includes('<meta name="robots" content="noindex,follow"')) failures.push('missing noindex robots meta');
   return { sourceLabel, slug: 'claim-received', passed: failures.length === 0, failures };
 }
@@ -247,7 +224,7 @@ async function submitLiveTestLead() {
     business: 'EB28 lead capture test - do not count',
     category: 'test',
     concept_url: liveTestConceptUrl,
-    offer: 'Free website build plus EB28 Growth Hosting at $98/month with SEO and weekly blog posts',
+    offer: 'Website build included with $1,176 upfront for 12 months of EB28 Growth Hosting ($98/month); $800 one-time website-only alternative',
     requested_next_step: 'Live FormSubmit acceptance test only - do not count as a booked call',
     name: 'EB28 live form test',
     email: expectedEmail,
@@ -330,8 +307,8 @@ function renderMarkdown(report) {
     '## Summary',
     '',
     `- Expected recipient: ${report.expectedEmail}`,
-    `- Expected form action: ${report.expectedFormAction}`,
-    `- Expected post-submit redirect: ${report.expectedNextUrl}`,
+    `- Expected structured intake: ${report.expectedIntakeBase}`,
+    `- Legacy receipt route: ${report.expectedNextUrl}`,
     `- Minimum expected concept pages: ${report.minimumExpectedPageCount}`,
     `- Public pages checked: ${report.summary.public.checked}`,
     `- Public support pages checked: ${report.summary.public.supportChecked}`,
@@ -347,7 +324,7 @@ function renderMarkdown(report) {
     '',
     '## Gate',
     '',
-    report.passed ? 'PASS: all checked lead-capture routes point to social@eb28.co.' : 'FAIL: one or more lead-capture checks failed.',
+    report.passed ? 'PASS: all checked concept pages route into the structured EB28 intake.' : 'FAIL: one or more lead-capture checks failed.',
   ];
 
   if (report.liveSubmission) {
@@ -420,7 +397,7 @@ async function main() {
   const report = {
     generatedAt: new Date().toISOString(),
     expectedEmail,
-    expectedFormAction,
+    expectedIntakeBase,
     expectedAjaxEndpoint,
     expectedNextUrl,
     expectedPageCount: publicVerification.files,

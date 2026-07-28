@@ -9,6 +9,10 @@ import {
     getThomasPageForLocation,
     isThomasPrimaryHostname,
 } from './thomasSeoPages.js';
+import {
+    GROWTH_HOSTING_UPFRONT_PRICE,
+    WEBSITE_ONLY_PRICE,
+} from './offerTerms.js';
 
 export const SITE_NAME = 'EB28';
 export const SITE_ORIGIN = 'https://eb28.co';
@@ -27,6 +31,7 @@ const THOMAS_CUSTOM_HOMES_IMAGE = `${SITE_ORIGIN}/tch/og-image.png`;
 const THOMAS_CUSTOM_HOMES_CUSTOM_DOMAIN_IMAGE = `${THOMAS_CUSTOM_HOMES_SITE_ORIGIN}/og-image.png`;
 const MELBOURNE_WEB_STUDIO_CANONICAL_URL = `${SITE_ORIGIN}/melbournewebstudio/`;
 const FREE_WEBSITE_BUILD_CANONICAL_URL = `${SITE_ORIGIN}/free-website-build/`;
+const GET_STARTED_CANONICAL_URL = `${SITE_ORIGIN}/get-started/`;
 const CADETCATCH_IMAGE = `${SITE_ORIGIN}/cc/img/find-cadet-photos.png`;
 const CADETCATCH_SITE_ORIGIN = 'https://cadetcatch.com';
 
@@ -174,9 +179,9 @@ const ROUTE_META = {
         ...BASE_ROUTE_META,
         key: 'home',
         path: '/',
-        title: 'EB28 | Free Website Build, Growth Hosting & Private AI Near Me',
+        title: 'EB28 | Websites, Marketing, Apps & Automation in Melbourne, FL',
         description:
-            'EB28 builds free local business website concepts, hosts approved sites for $98/month with SEO and weekly content, and engineers private AI, apps, RAG systems, and lead generation engines.',
+            'Start an EB28 website, marketing, app, SEO, lead-generation, or automation project with a guided client brief. Website offer: $1,176 upfront for 12 months of Growth Hosting, or $800 website-only.',
         image: DEFAULT_IMAGE,
         includeInSitemap: true,
         structuredData: [
@@ -385,9 +390,9 @@ const ROUTE_META = {
         key: 'melbournewebstudio',
         path: '/melbournewebstudio/',
         canonicalUrlOverride: MELBOURNE_WEB_STUDIO_CANONICAL_URL,
-        title: 'Melbourne Web Studio | Free Website Build + $98/mo Growth Hosting',
+        title: 'Melbourne Web Studio | Website Included + $98/mo Annual Hosting',
         description:
-            'EB28 builds custom local business websites for free, then hosts and improves approved sites for $98/month with SEO upkeep, weekly blog posts, and owner-approved lead routing.',
+            'EB28 includes the custom website build with 12 months of Growth Hosting paid upfront at $1,176 total ($98/month). Website-only is $800 one-time.',
         image: DEFAULT_IMAGE,
         siteName: 'Melbourne Web Studio',
         themeColor: '#ffffff',
@@ -400,7 +405,7 @@ const ROUTE_META = {
                 name: 'Melbourne Web Studio',
                 url: MELBOURNE_WEB_STUDIO_CANONICAL_URL,
                 description:
-                    'Melbourne Web Studio offers free custom website builds with $98/month Growth Hosting, local SEO upkeep, weekly content, and lead capture for local businesses.',
+                    'Melbourne Web Studio includes a custom website build with 12 months of Growth Hosting paid upfront at $1,176 total ($98/month), local SEO upkeep, weekly content, and lead capture.',
             },
             {
                 '@context': 'https://schema.org',
@@ -433,9 +438,9 @@ const ROUTE_META = {
         key: 'freewebsitebuild',
         path: '/free-website-build/',
         canonicalUrlOverride: FREE_WEBSITE_BUILD_CANONICAL_URL,
-        title: 'Free Website Build for Local Businesses | $98/mo Growth Hosting | EB28',
+        title: 'Free Website Build + Annual Growth Hosting | EB28',
         description:
-            'EB28 builds a free local business website concept before you pay. Approved sites can launch on $98/month Growth Hosting with managed hosting, SEO, weekly content, and owner-approved lead routing.',
+            'EB28 includes the website build when 12 months of Growth Hosting are paid upfront at $1,176 total ($98/month). Website-only is $800 one-time.',
         image: DEFAULT_IMAGE,
         siteName: 'EB28 Growth Hosting',
         themeColor: '#fafaf9',
@@ -453,15 +458,28 @@ const ROUTE_META = {
                 provider: {
                     '@id': ORGANIZATION_ID,
                 },
-                offers: {
-                    '@type': 'Offer',
-                    price: '98',
-                    priceCurrency: 'USD',
-                    description:
-                        'Free website concept build before approval; Growth Hosting is $98/month after owner approval.',
-                    availability: 'https://schema.org/InStock',
-                    url: FREE_WEBSITE_BUILD_CANONICAL_URL,
-                },
+                offers: [
+                    {
+                        '@type': 'Offer',
+                        name: 'Free Website Build + 12 Months Growth Hosting',
+                        price: String(GROWTH_HOSTING_UPFRONT_PRICE),
+                        priceCurrency: 'USD',
+                        description:
+                            'The website build is included when 12 months of Growth Hosting are paid upfront at $1,176 total, equivalent to $98 per month.',
+                        availability: 'https://schema.org/InStock',
+                        url: FREE_WEBSITE_BUILD_CANONICAL_URL,
+                    },
+                    {
+                        '@type': 'Offer',
+                        name: 'Website Build Only',
+                        price: String(WEBSITE_ONLY_PRICE),
+                        priceCurrency: 'USD',
+                        description:
+                            'Website build only. Hosting, SEO upkeep, weekly content, and ongoing lead-routing support are not included.',
+                        availability: 'https://schema.org/InStock',
+                        url: FREE_WEBSITE_BUILD_CANONICAL_URL,
+                    },
+                ],
             },
             {
                 '@context': 'https://schema.org',
@@ -473,7 +491,7 @@ const ROUTE_META = {
                         acceptedAnswer: {
                             '@type': 'Answer',
                             text:
-                                'EB28 prepares the first working website concept at no upfront cost. Hosting starts only if the owner approves the site for launch.',
+                                'EB28 can prepare a limited first direction before payment. The full website build is included when the owner chooses and prepays the 12-month Growth Hosting plan.',
                         },
                     },
                     {
@@ -482,10 +500,34 @@ const ROUTE_META = {
                         acceptedAnswer: {
                             '@type': 'Answer',
                             text:
-                                'Growth Hosting includes managed hosting, SSL, technical upkeep, local SEO structure, performance checks, and one weekly local blog post or Google Business content prompt.',
+                                'Growth Hosting costs $1,176 upfront for the first 12 months, equivalent to $98 per month. It includes managed hosting, SSL, technical upkeep, local SEO structure, performance checks, and one weekly local blog post or Google Business content prompt.',
                         },
                     },
                 ],
+            },
+        ],
+    },
+    getstarted: {
+        ...BASE_ROUTE_META,
+        key: 'getstarted',
+        path: '/get-started/',
+        canonicalUrlOverride: GET_STARTED_CANONICAL_URL,
+        title: 'Start an EB28 Project | Client Intake',
+        description:
+            'Choose the EB28 services you need and complete a guided project brief for websites, content, SEO, lead generation, automation, apps, and custom software.',
+        image: DEFAULT_IMAGE,
+        themeColor: '#fbfbf9',
+        colorScheme: 'light',
+        includeInSitemap: true,
+        structuredData: [
+            ORGANIZATION_SCHEMA,
+            {
+                '@context': 'https://schema.org',
+                '@type': 'WebPage',
+                name: 'Start an EB28 Project',
+                url: GET_STARTED_CANONICAL_URL,
+                description:
+                    'A guided client intake for EB28 website, marketing, content, SEO, lead-generation, automation, and software projects.',
             },
         ],
     },
@@ -647,6 +689,7 @@ export const STATIC_ROUTE_OUTPUTS = [
     { routeKey: 'melbournewebstudio', outputPath: 'melbournewebstudio/index.html' },
     { routeKey: 'freewebsitebuild', outputPath: 'free-website-build/index.html' },
     { routeKey: 'freewebsitebuild', outputPath: 'free-local-business-website/index.html' },
+    { routeKey: 'getstarted', outputPath: 'get-started/index.html' },
     { routeKey: 'weedauthority', outputPath: 'weedauthority/index.html' },
     { routeKey: 'cc', outputPath: 'cc/index.html' },
     { routeKey: 'dash', outputPath: 'dash/index.html' },
@@ -744,6 +787,10 @@ export function detectRouteKey({ pathname = '/', hostname = '' } = {}) {
         normalizedPathname === '/free-local-business-website'
     ) {
         return 'freewebsitebuild';
+    }
+
+    if (normalizedPathname === '/get-started') {
+        return 'getstarted';
     }
 
     if (

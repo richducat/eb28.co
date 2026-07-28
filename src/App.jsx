@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
-import { ArrowRight, Check, Menu, X } from 'lucide-react';
-import OnboardingQuiz from './components/OnboardingQuiz.jsx';
-import { useCheckoutConfig } from './useCheckoutConfig.js';
+import { ArrowRight, CalendarDays, Check, Menu, X } from 'lucide-react';
+import ConversionAssistant from './components/ConversionAssistant.jsx';
+import {
+  GROWTH_HOSTING_SHORT_LABEL,
+  WEBSITE_ONLY_LABEL,
+} from './offerTerms.js';
 
 const services = [
-  ['01', 'A website built for you, free', 'Designed by our software and app team around your business — not a template you have to wrestle with.'],
-  ['02', 'Customer & lead management', 'AI keeps track of everyone who reaches out and follows up fast, so good leads do not slip away.'],
-  ['03', 'Content & social, handled', 'Articles, posts, and useful updates planned around your customers and managed every week.'],
-  ['04', 'Get found on Google & AI', 'Search research, local signals, site structure, and useful content working from one practical plan.'],
-  ['05', 'Automation where it matters', 'Routine work runs in the background while decisions that need a person stay with you.'],
+  ['01', 'A website built around the next customer', 'A custom site with one clear offer, useful proof, and a direct path to call, book, request a quote, or buy.'],
+  ['02', 'Lead capture and faster follow-up', 'Forms, qualification, routing, CRM structure, and practical automation that help your team respond while the lead is still warm.'],
+  ['03', 'Social and content with a real job', 'Posts, articles, and short-form content planned around the audience, offer, proof, and business result you need.'],
+  ['04', 'Local search people can act on', 'Service pages, local signals, useful answers, and technical foundations working toward qualified traffic—not vanity rankings.'],
+  ['05', 'Apps and automation that remove friction', 'Focused software and repeatable workflows, with human approval kept around sensitive decisions.'],
 ];
 
 const process = [
@@ -40,7 +43,6 @@ const guideLinks = [
 
 function App() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const checkoutProducts = useCheckoutConfig();
 
   const closeAndScroll = (id) => {
     setMenuOpen(false);
@@ -58,7 +60,7 @@ function App() {
           <button onClick={() => closeAndScroll('work')}>Our work</button>
           <a href="/melbournewebstudio/">Web Studio</a>
           <a href="/blog/">Blog</a>
-          <button className="eb-button eb-button-small" onClick={() => closeAndScroll('contact')}>Let&apos;s talk</button>
+          <a className="eb-button eb-button-small" href="/get-started/">Get started</a>
         </nav>
         <button className="eb-menu" onClick={() => setMenuOpen(!menuOpen)} aria-expanded={menuOpen} aria-label={menuOpen ? 'Close navigation' : 'Open navigation'}>
           {menuOpen ? <X /> : <Menu />}
@@ -70,32 +72,48 @@ function App() {
           <div className="eb-hero-copy">
             <p className="eb-eyebrow"><span /> Web help for Melbourne, FL</p>
             <h1>A website that attracts customers — and services them for you, too.</h1>
-            <p className="eb-lede">We make you a real website at no cost. Look it over. If it is right, it is $98 a month to keep it online, help it show up on Google, add fresh content, and connect the busywork your team should not have to chase.</p>
+            <p className="eb-lede">
+              Tell us what needs to move: the website, social and content, search, lead follow-up,
+              automation, or an app. EB28 turns your answers into a focused project brief, then
+              gets you to the right build, proposal, or call without making you repeat the story.
+            </p>
             <div className="eb-actions">
-              <a href="/free-website-build/" className="eb-button">Build mine for free <ArrowRight /></a>
-              <button className="eb-text-link" onClick={() => closeAndScroll('how')}>See how the system works <ArrowRight /></button>
+              <a href="/get-started/" className="eb-button">Start my project <ArrowRight /></a>
+              <a className="eb-text-link" href="/get-started/?intent=call"><CalendarDays /> Book a 15-minute fit call</a>
             </div>
-            <p className="eb-micro"><Check /> No build fee. Review it before you decide.</p>
+            <div className="eb-hero-price">
+              <p><strong>$98/month</strong> <span>website offer</span></p>
+              <b>$1,176 paid upfront for the first 12 months</b>
+              <div>
+                <span><Check /> Website build included</span>
+                <span><Check /> Managed hosting and upkeep</span>
+                <span><Check /> SEO foundations and weekly content</span>
+                <span><Check /> Lead capture and routing support</span>
+              </div>
+              <small>Or {WEBSITE_ONLY_LABEL.toLowerCase()}. No payment is taken on the project-intake form.</small>
+            </div>
           </div>
-          <aside className="eb-hero-board" aria-label="Your connected growth system">
-            <p className="eb-board-label">One connected system</p>
-            <div className="eb-system-card eb-card-main"><span>01</span><strong>Your business brain</strong><small>Offers · customers · service areas · real answers</small></div>
-            <div className="eb-system-grid">
-              <div className="eb-system-card"><span>02</span><strong>Website</strong><small>Fast, useful, ready to convert</small></div>
-              <div className="eb-system-card"><span>03</span><strong>Search</strong><small>Google and AI discovery</small></div>
-              <div className="eb-system-card"><span>04</span><strong>Follow-up</strong><small>Leads routed while they are warm</small></div>
-              <div className="eb-system-card"><span>05</span><strong>Content</strong><small>Useful work published consistently</small></div>
-            </div>
+          <aside className="eb-hero-assistant-stage" aria-label="EB28 Project Assistant">
+            <ConversionAssistant source="home" />
           </aside>
         </section>
+
+        <div className="eb-audience">
+          <strong>BUILT FOR PEOPLE READY TO GET THE WORK MOVING</strong>
+          <span>Local operators</span>
+          <span>Professional services</span>
+          <span>Founders</span>
+          <span>Marketing teams</span>
+          <span>Referral clients</span>
+        </div>
 
         <section id="what" className="eb-section">
           <span id="services" className="eb-anchor-alias" aria-hidden="true" />
           <span id="packages" className="eb-anchor-alias" aria-hidden="true" />
           <div className="eb-section-head">
-            <p className="eb-kicker">All included · one system</p>
-            <h2>We take the whole thing off your plate.</h2>
-            <p>Your website is the front door. We build the useful system behind it around how your business actually runs.</p>
+            <p className="eb-kicker">Start with the bottleneck</p>
+            <h2>One team from first question to working system.</h2>
+            <p>You do not need to diagnose the project before contacting EB28. The guided intake asks the right questions for the services you select and turns the answers into a usable production brief.</p>
           </div>
           <div className="eb-service-grid">
             {services.map(([number, title, description]) => (
@@ -104,9 +122,10 @@ function App() {
               </article>
             ))}
             <article className="eb-service eb-service-cta">
-              <p className="eb-kicker">Simple starting point</p>
-              <h3>Built free.<br />$98 a month if you keep it.</h3>
-              <a href="/free-website-build/" className="eb-button eb-button-light">Start the free build <ArrowRight /></a>
+              <p className="eb-kicker">Clear website terms</p>
+              <h3>Build included.<br />{GROWTH_HOSTING_SHORT_LABEL}.</h3>
+              <p>Website-only is $800 one-time. Hosting and ongoing growth support are not included in that option.</p>
+              <a href="/get-started/?service=website" className="eb-button eb-button-light">Choose a website option <ArrowRight /></a>
             </article>
           </div>
         </section>
@@ -114,7 +133,7 @@ function App() {
         <section id="how" className="eb-section eb-process">
           <div className="eb-section-head">
             <p className="eb-kicker">The system behind it</p>
-            <h2>Nothing important left to chance.</h2>
+            <h2>Less sales theater. Better information.</h2>
           </div>
           <div className="eb-process-list">
             {process.map(([title, description], index) => (
@@ -151,20 +170,33 @@ function App() {
           <div>{guideLinks.map(([title, href]) => <a href={href} key={href}>{title}<ArrowRight /></a>)}</div>
         </section>
 
-        <section id="contact" className="eb-contact">
+        <section id="contact" className="eb-contact eb-contact-conversion">
           <div className="eb-contact-intro">
             <p className="eb-kicker">Your next useful step</p>
-            <h2>Find the right build in 60 seconds.</h2>
-            <p>Three quick questions. You end with a practical recommendation, a price, and the first step. No blank “tell us about your project” box.</p>
+            <h2>Start the project before the call.</h2>
+            <p>Select the services, answer the detailed questions, set a high-level design direction, and choose whether you want a call, a proposal, or the fastest path to production.</p>
           </div>
-          <div className="eb-quiz-wrap"><OnboardingQuiz checkoutProducts={checkoutProducts} /></div>
+          <div className="eb-contact-actions">
+            <div>
+              <span>01</span>
+              <h3>Build the project brief</h3>
+              <p>About 4–8 minutes. Your answers arrive together so the first conversation can focus on decisions.</p>
+              <a href="/get-started/" className="eb-button">Start my project <ArrowRight /></a>
+            </div>
+            <div>
+              <span>02</span>
+              <h3>Book a focused fit call</h3>
+              <p>Choose the call path inside the intake and tell us the best time. No blank calendar invite with no context.</p>
+              <a href="/get-started/?intent=call" className="eb-button eb-button-light">Book the call <CalendarDays /></a>
+            </div>
+          </div>
         </section>
       </main>
 
       <footer className="eb-footer">
         <a href="/" className="eb-logo">EB<span>28</span></a>
         <p>Websites, apps, and useful automation from Melbourne, Florida.</p>
-        <div><a href="/melbournewebstudio/">Web Studio</a><a href="/reconcile/">Recon Agent</a><a href="/appbuilder/">App Builder</a><a href="/blog/">Blog</a></div>
+        <div><a href="/get-started/">Get started</a><a href="/melbournewebstudio/">Web Studio</a><a href="/reconcile/">Recon Agent</a><a href="/appbuilder/">App Builder</a><a href="/blog/">Blog</a></div>
         <small>© {new Date().getFullYear()} EB28. All rights reserved.</small>
       </footer>
     </div>

@@ -1,7 +1,13 @@
 import React, { useState } from 'react';
-import { ArrowRight, ArrowUp, Check } from 'lucide-react';
+import { ArrowRight, Check } from 'lucide-react';
 
+import ConversionAssistant from './components/ConversionAssistant.jsx';
 import { submitLeadCapture } from './leadCapture.js';
+import {
+  GROWTH_HOSTING_FULL_LABEL,
+  WEBSITE_ONLY_LABEL,
+  WEBSITE_OFFER_DISCLOSURE,
+} from './offerTerms.js';
 
 const CLAIM_EMAIL = 'social@eb28.co';
 const REVIEW_TIMEZONE = 'America/New_York';
@@ -47,8 +53,6 @@ const inputClass = 'claim-field';
 
 export default function FreeWebsiteBuildPage() {
   const reviewWindowOptions = getReviewWindowOptions();
-  const [assistantInput, setAssistantInput] = useState('');
-  const [assistantReply, setAssistantReply] = useState('');
   const [formData, setFormData] = useState({
     name: '',
     role: '',
@@ -65,21 +69,6 @@ export default function FreeWebsiteBuildPage() {
   const [error, setError] = useState('');
 
   const scrollToClaim = () => document.querySelector('#claim')?.scrollIntoView({ behavior: 'smooth' });
-
-  const askAssistant = (question) => {
-    setAssistantReply(
-      question === 'examples'
-        ? 'You can browse the local concepts first, then come back here when you find a direction you like.'
-        : 'The build is free to review. If you approve it, $98 a month covers hosting, Google visibility foundations, a fresh weekly article, and direct lead delivery.',
-    );
-  };
-
-  const submitAssistantQuestion = (event) => {
-    event.preventDefault();
-    if (!assistantInput.trim()) return;
-    setAssistantReply('Tell us the business name and the best way customers should reach you. We will use that to shape the first build.');
-    setAssistantInput('');
-  };
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -104,7 +93,9 @@ export default function FreeWebsiteBuildPage() {
         ...formData,
         serviceNeed: 'free-website-build-growth-hosting-public-offer',
         sourcePage: 'https://eb28.co/free-website-build/',
-        offer: 'Free website build plus EB28 Growth Hosting at $98/month with SEO and weekly blog posts',
+        offer: GROWTH_HOSTING_FULL_LABEL,
+        websiteOnlyAlternative: WEBSITE_ONLY_LABEL,
+        offerDisclosure: WEBSITE_OFFER_DISCLOSURE,
         requestedNextStep: 'Confirm a 15-minute owner review call for the free website concept',
         reviewTimezone: REVIEW_TIMEZONE,
         _subject: `Free website build request: ${formData.businessName || formData.name}`,
@@ -139,62 +130,32 @@ export default function FreeWebsiteBuildPage() {
             <p className="claim-eyebrow"><span /> WEB HELP FOR MELBOURNE, FL</p>
             <h1>A website that<br />attracts customers —<br />and services them<br />for you, too.</h1>
             <p className="claim-lede">
-              Here's how it works, plainly: we make you a real website at no cost. Look it
-              over. If it's right, it's $98 a month to keep it online, help it show up on
-              Google, add a fresh article every week, and send anyone who reaches out
-              straight to your phone. No contracts, no tech headaches.
+              Here's how it works, plainly: we prepare a limited first direction at no cost.
+              Choose 12 months of Growth Hosting for $1,176 paid upfront ($98 a month) and
+              the full website build is included. Or choose the website-only build for $800
+              one-time.
             </p>
             <div className="claim-actions">
               <button type="button" className="claim-primary" onClick={scrollToClaim}>
-                Build mine for free <ArrowRight aria-hidden="true" />
+                Claim the included website build <ArrowRight aria-hidden="true" />
               </button>
               <a className="claim-secondary" href="/32940/">See what we'd fix first</a>
             </div>
 
             <div className="claim-price">
-              <p><strong>$98</strong> <span>a month covers all of it:</span></p>
+              <p><strong>$98</strong> <span>a month, paid as $1,176 upfront for 12 months:</span></p>
               <div className="claim-price-grid">
                 <span><Check /> We keep it online &amp; fast</span>
                 <span><Check /> We help you show up on Google</span>
                 <span><Check /> A fresh article every week</span>
                 <span><Check /> New leads go straight to you</span>
               </div>
-              <small>Cancel whenever you want. The site is yours to keep.</small>
+              <small>Website-only is $800 one-time and does not include hosting, SEO upkeep, weekly content, or ongoing lead-routing support.</small>
             </div>
           </div>
 
           <aside className="claim-assistant-stage" aria-label="EB28 Assistant">
-            <div className="claim-assistant">
-              <div className="claim-assistant-head">
-                <span className="claim-assistant-mark">EB</span>
-                <div><strong>EB28 Assistant</strong><small><i /> Here to help right now</small></div>
-              </div>
-              <div className="claim-chat">
-                <div className="claim-message claim-message-left">
-                  Hi 👋 Looking to get more customers? I can explain how the free build works — or grab a time that suits you.
-                </div>
-                <div className="claim-message claim-message-right">What's actually included for $98?</div>
-                <div className="claim-message claim-message-left">
-                  Hosting, getting you found on Google, a fresh article every week, and every new lead sent straight to you. Want me to book a quick call to walk through it?
-                </div>
-                {assistantReply && <div className="claim-message claim-message-left" role="status">{assistantReply}</div>}
-                <div className="claim-quick-actions">
-                  <button type="button" onClick={() => askAssistant('included')}>How does the free build work?</button>
-                  <a href="/32940/" onClick={() => askAssistant('examples')}>See examples</a>
-                </div>
-                <button type="button" className="claim-book" onClick={scrollToClaim}>📅 Book a 15-min call</button>
-              </div>
-              <form className="claim-chat-input" onSubmit={submitAssistantQuestion}>
-                <label className="sr-only" htmlFor="assistant-question">Ask the EB28 Assistant</label>
-                <input
-                  id="assistant-question"
-                  value={assistantInput}
-                  onChange={(event) => setAssistantInput(event.target.value)}
-                  placeholder="Ask me anything..."
-                />
-                <button type="submit" aria-label="Send question"><ArrowUp /></button>
-              </form>
-            </div>
+            <ConversionAssistant compact source="free-build" />
           </aside>
         </section>
 
@@ -210,15 +171,16 @@ export default function FreeWebsiteBuildPage() {
 
         <section id="claim" className="claim-form-section">
           <div className="claim-form-intro">
-            <p className="claim-eyebrow"><span /> BUILD MINE FOR FREE</p>
-            <h2>Show us the business. We'll show you the build.</h2>
+            <p className="claim-eyebrow"><span /> CLAIM THE INCLUDED WEBSITE BUILD</p>
+            <h2>Show us the business. We'll show you the direction.</h2>
             <p>
-              Send the basics and choose a 15-minute review window. Nothing goes live and
-              nothing is billed unless you approve the finished concept.
+              Send the basics and choose a 15-minute review window. No payment is taken on
+              this form. Full production begins after you choose the annual hosting plan or
+              the website-only build.
             </p>
             <div className="claim-form-price">
-              <strong>All of it,<br />for $98/mo.</strong>
-              <span>That's the whole deal. Build's free — you only pay once you love it.</span>
+              <strong>$1,176 upfront.<br />$98/mo equivalent.</strong>
+              <span>The full website build is included with the first 12 months of Growth Hosting. Website-only is $800 one-time.</span>
             </div>
           </div>
 
@@ -253,7 +215,7 @@ export default function FreeWebsiteBuildPage() {
             {error && <p className="claim-error" role="alert">{error}</p>}
             {status === 'sent' && <p className="claim-success" role="status">Sent. EB28 will email you to confirm the review.</p>}
             <button className="claim-primary claim-submit" type="submit" disabled={status === 'submitting'}>
-              {status === 'submitting' ? 'Sending...' : 'Build mine for free'} <ArrowRight />
+              {status === 'submitting' ? 'Sending...' : 'Request my website direction'} <ArrowRight />
             </button>
             <small>No obligation. Submitting this form does not approve hosting or billing.</small>
           </form>
@@ -262,7 +224,7 @@ export default function FreeWebsiteBuildPage() {
 
       <footer className="claim-footer">
         <a href="/" className="claim-logo">EB<span>28</span></a>
-        <p>Free website builds, $98/mo growth hosting, and private AI for local businesses on Florida's Space Coast.</p>
+        <p>Website build included with $1,176 upfront for 12 months of Growth Hosting ($98/month), or $800 one-time website-only.</p>
         <a href={`mailto:${CLAIM_EMAIL}`}>{CLAIM_EMAIL}</a>
       </footer>
     </div>

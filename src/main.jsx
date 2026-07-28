@@ -34,6 +34,7 @@ const isMelbourneWebStudioRoute =
 const isFreeWebsiteBuildRoute =
   pathname === '/free-website-build' ||
   pathname === '/free-local-business-website';
+const isGetStartedRoute = pathname === '/get-started';
 const isWeedAuthorityRoute =
   pathname === '/weedauthority' ||
   pathname.startsWith('/weedauthority/') ||
@@ -113,6 +114,11 @@ async function renderApp() {
 
   if (isFreeWebsiteBuildRoute) {
     await renderRoute(() => import('./FreeWebsiteBuildPage.jsx'));
+    return;
+  }
+
+  if (isGetStartedRoute) {
+    await renderRoute(() => import('./GetStartedPage.jsx'));
     return;
   }
 

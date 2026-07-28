@@ -104,7 +104,7 @@ export function injectSeoMarkup(html, routeOrLocation) {
     const viewportPattern = /(<meta\s+name="viewport"[^>]*>\s*)/i;
 
     if (viewportPattern.test(sanitizedHtml)) {
-        return sanitizedHtml.replace(viewportPattern, `$1${seoMarkup}`);
+        return sanitizedHtml.replace(viewportPattern, (viewportTag) => `${viewportTag}${seoMarkup}`);
     }
 
     return sanitizedHtml.replace('</head>', `${seoMarkup}</head>`);

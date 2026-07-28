@@ -1,51 +1,69 @@
-# Design QA: Free Website Build
+# Design QA: EB28 Conversion Homepage and Client Intake
 
 Source visual truth: `/var/folders/30/k7mjq62s6js2m01tck7py0380000gn/T/TemporaryItems/NSIRD_screencaptureui_r5GLmg/Screenshot 2026-07-23 at 10.07.10 PM.png`
 
 Supporting source: `/Users/richardducat/Desktop/Design.pdf`
 
-Implementation screenshot: `/Users/richardducat/GITHUB/eb28.co/output/playwright/free-build-reference-match-desktop.png`
+Homepage implementation: `/Users/richardducat/GITHUB/eb28.co/output/playwright/eb28-home-conversion-desktop-v4.png`
 
-Mobile implementation screenshot: `/Users/richardducat/GITHUB/eb28.co/output/playwright/free-build-reference-match-mobile.png`
+Homepage mobile: `/Users/richardducat/GITHUB/eb28.co/output/playwright/eb28-home-conversion-mobile.png`
 
-Side-by-side comparison: `/Users/richardducat/GITHUB/eb28.co/output/playwright/free-build-design-comparison.png`
+Reference comparison: `/Users/richardducat/GITHUB/eb28.co/output/playwright/eb28-home-reference-comparison-v4.png`
+
+Client intake desktop: `/Users/richardducat/GITHUB/eb28.co/output/playwright/eb28-get-started-desktop.png`
+
+Client intake mobile: `/Users/richardducat/GITHUB/eb28.co/output/playwright/eb28-get-started-mobile.png`
+
+Client intake final offer: `/Users/richardducat/GITHUB/eb28.co/output/playwright/eb28-get-started-offer-desktop.png`
+
+Client intake final offer mobile: `/Users/richardducat/GITHUB/eb28.co/output/playwright/eb28-get-started-offer-mobile.jpg`
+
+Free-build annual terms: `/Users/richardducat/GITHUB/eb28.co/output/playwright/eb28-free-build-annual-terms-desktop.png`
 
 ## Comparison setup
 
-- Desktop viewport and source pixels: 1445 x 1051.
-- Implementation CSS viewport and pixels: 1445 x 1051 at device scale factor 1.
-- Mobile implementation viewport: 390 x 844 at device scale factor 1.
-- State: initial page load with the assistant closed to follow-up content and the form untouched.
-- Density normalization: none required. Source and desktop implementation use identical pixel dimensions.
+- Desktop source and implementation: 1445 x 1051 CSS pixels at device scale factor 1.
+- Mobile implementation: 390 x 844 CSS pixels at device scale factor 1.
+- Homepage state: initial load with the EB28 assistant ready for input.
+- Intake states: initial service selection, mobile service selection, and final website-offer decision on both desktop and mobile.
+- Density normalization: none. The supplied source and desktop implementation use identical pixel dimensions.
 
-## Full-view comparison evidence
+## Full-view comparison
 
-The comparison image places the supplied screenshot and browser-rendered implementation side by side at identical dimensions. The implementation matches the 1320 px frame beginning at x=41, the 76 px navigation, the 731/589 px hero split, the 878 px hero height, the x=772 divider, the supplied headline wrapping, the dark assistant panel, the $98 checklist, and the operator strip.
+The homepage follows the supplied split-screen direction: a 1320 px frame, 76 px navigation, conversion copy on the left, and the assistant on the right. The final pass aligns the main frame, split, vertical rhythm, assistant position, CTA hierarchy, annual website offer, and lower operator strip with the reference.
 
-## Focused comparison evidence
+The content is intentionally adapted for the real EB28 offer. The prominent price is the $98 monthly equivalent, with the full $1,176 upfront requirement stated immediately beside it and the $800 one-time website-only alternative visible in the same decision area.
 
-The headline, lead paragraph, CTA group, pricing checklist, assistant header, three initial chat bubbles, quick actions, booking action, and assistant input are readable at full comparison size. No additional crop was needed. The assistant implementation measures x=818, y=277, 497 x 474; the supplied target is approximately x=818, y=278, 500 x 474.
+## Intake behavior
 
-## Findings
+- Multi-service selection works for website, social/content, SEO, lead generation, automation/CRM, and app/software work.
+- The question queue changes with the selected services.
+- Contact, business context, service-specific questions, design direction, website offer, next step, and consent are included in one structured brief.
+- Prospect links from the 32940 concept library preserve the local-business slug in the intake.
+- The public design conversation exposes only high-level direction. Final copy, offer architecture, page maps, content calendars, production assets, implementation files, and automation logic stay in the EB28 production workflow.
+- The final step presents the same website offer even when the client begins with a non-website service.
+- The mobile final-offer capture uses a social/content-only intake and proves the annual website offer is still presented at 390 x 844.
+- The intake discloses that FormSubmit processes form delivery to EB28 and limits the stated use to reviewing and replying to the project request.
+- No payment is taken and no Stripe checkout link is activated on the intake form.
 
-- P3: Assistant card is approximately 3 px narrower than the supplied screenshot because the responsive right-panel padding resolves against the exact split width. This does not change hierarchy, wrapping, or usability.
-- P3: Browser font rasterization produces small optical differences in some body copy. Font family, weight, scale, wrapping, and hierarchy remain faithful.
+## Findings and iterations
 
-## Required fidelity surfaces
+1. The first homepage pass was structurally correct but the hero padding was too large, the frame too wide, and the assistant too low.
+2. The second pass corrected the 1320 px frame, 76 px header, desktop hero geometry, assistant alignment, input treatment, and header CTA visibility.
+3. The pricing QA found a static metadata replacement bug affecting text beginning with `$1`; the route generator now inserts metadata with literal-safe callbacks.
+4. The 32940 verification found stale national-chain and duplicate concept files. The generator now removes stale generated HTML and publishes only the 91 current locally controlled concepts.
+5. The final desktop and mobile review found no actionable P0, P1, or P2 visual defects.
 
-- Fonts and typography: passed. Sora and Space Grotesk match the existing EB28 brand and reproduce the reference hierarchy and wrapping.
-- Spacing and layout rhythm: passed. Frame, split, hero height, major offsets, controls, borders, and strip align with the reference.
-- Colors and visual tokens: passed. Warm white, near-black, EB28 green, violet action, and navy/green/violet stage match.
-- Image quality and asset fidelity: passed. The target contains no photographic or illustrative hero assets. The EB28 mark and interface icons use existing brand text and the installed icon library.
-- Copy and content: passed. All visible hero, pricing, assistant, navigation, and operator-strip copy is verbatim.
-- Responsiveness: passed. The 390 px layout has no horizontal overflow; navigation, hero, assistant, form, and CTAs remain usable.
-- Accessibility and behavior: passed. Semantic landmarks, labels, focusable controls, quick assistant response, form validation, and zero console errors were verified. No lead form was submitted.
+## Verification
 
-## Comparison history
-
-1. Initial browser capture matched the structure but the frame was centered 21.5 px too far right, the hero expanded 10 px beyond the target, the assistant was 26 px too tall, and the booking/send icons differed.
-2. Fixed the frame origin, locked the desktop hero geometry, tightened assistant density, and matched the visible booking/send treatments.
-3. Post-fix comparison confirms the reference geometry and copy with no actionable P0, P1, or P2 differences.
+- Production build: passed.
+- SEO/content/social validation: passed.
+- Free-build offer gate: 13 of 13 checks passed.
+- Local-concept capture gate: 91 public and 91 deploy copies checked, with zero failures.
+- Generated metadata contains the literal `$1,176 total ($98/month)` copy and no embedded replacement markup.
+- Homepage assistant, mobile navigation, multi-service intake, and final offer screen were exercised in a real browser.
+- Browser console errors: none.
+- No test lead or payment was submitted.
 
 ## Final result
 

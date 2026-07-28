@@ -1,6 +1,16 @@
 {
   "_instructions": "Paste a Stripe Payment Link URL into checkoutUrl for each product. Buy buttons across the site activate automatically once a URL is present — no rebuild needed. In Stripe, set each payment link's after-payment confirmation to redirect to the matching welcomeUrl so customers land on automated onboarding.",
   "products": {
+    "growth-hosting-annual": {
+      "label": "Free Website Build + 12 Months Growth Hosting — $1,176 upfront ($98/month)",
+      "checkoutUrl": "",
+      "welcomeUrl": "https://eb28.co/welcome/?p=growth-hosting-annual"
+    },
+    "website-build-only": {
+      "label": "Website Build Only — $800 one-time",
+      "checkoutUrl": "",
+      "welcomeUrl": "https://eb28.co/welcome/?p=website-build-only"
+    },
     "diy-ai-foundation": {
       "label": "DIY AI Foundation Build — $10 one-time",
       "checkoutUrl": "",

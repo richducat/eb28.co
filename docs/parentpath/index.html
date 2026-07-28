@@ -17,7 +17,12 @@
       .card { border: 1px solid rgba(255,255,255,.12); background: rgba(255,255,255,.05); border-radius: 20px; padding: 22px; }
       .card h3 { margin: 0 0 8px; font-size: 17px; color: #8fe0d5; }
       .card p { margin: 0; font-size: 15px; color: #cfe6e2; }
-      .note { margin-top: 44px; border-left: 3px solid #2e828d; padding: 14px 18px; background: rgba(255,255,255,.04); border-radius: 0 14px 14px 0; font-size: 15px; color: #b9d8d3; }
+      .note { margin-top: 24px; border-left: 3px solid #2e828d; padding: 14px 18px; background: rgba(255,255,255,.04); border-radius: 0 14px 14px 0; font-size: 15px; color: #b9d8d3; }
+      .price { margin-top: 44px; display: flex; gap: 22px; align-items: center; flex-wrap: wrap; border: 1px solid rgba(111,211,199,.35); background: rgba(46,130,141,.16); border-radius: 22px; padding: 24px; }
+      .price .amount { font-size: clamp(44px, 9vw, 64px); font-weight: 800; line-height: 1; color: #8fe0d5; letter-spacing: -.02em; }
+      .price .terms { flex: 1 1 300px; }
+      .price .terms strong { display: block; margin-bottom: 6px; font-size: 17px; }
+      .price .terms p { margin: 0; font-size: 15px; color: #b9d8d3; }
       footer { margin-top: 56px; font-size: 14px; color: #9dbdb8; }
       ol { color: #cfe6e2; padding-left: 20px; }
       li { margin-bottom: 6px; }
@@ -36,6 +41,14 @@
         <div class="card"><h3>Practice Lab</h3><p>Rehearse the hardest texts before you send them. A simulated co-parent provokes; you reply; the app coaches you against the BIFF standard.</p></div>
         <div class="card"><h3>A certificate for the court</h3><p>A PDF with your name, case number, county, verified hours, date, and certificate ID — shareable straight to your attorney.</p></div>
         <div class="card"><h3>Private by design</h3><p>No account. No server. No tracking. Everything you enter stays on your iPhone.</p></div>
+      </div>
+
+      <div class="price">
+        <div class="amount">US$17</div>
+        <div class="terms">
+          <strong>One time. That's the whole cost.</strong>
+          <p>No subscription, no in-app purchases, no upsells, and no charge for your certificate. Buy it once on the App Store and the entire four-hour course is yours. Outside the US, Apple shows your local price on the App Store.</p>
+        </div>
       </div>
 
       <div class="note">

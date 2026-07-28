@@ -114,6 +114,7 @@ const CLUSTER_MESSAGING = {
       'The buyer is invisible until the moment they need help. If the business does not show up in local search, the job usually goes to whoever looks safest on Google first.',
     firstFix:
       'Start by lining up the Google Business Profile, homepage promise, service content, reviews, citations, and contact path so they all tell the same local story.',
+    visualFirstFix: 'Align profile, page, reviews, citations, and contact path.',
     system:
       'The compounding loop is simple: publish the useful page, submit it, inspect it, watch query movement, then strengthen the page that is already earning impressions.',
     bullets: [
@@ -128,6 +129,7 @@ const CLUSTER_MESSAGING = {
       'The buyer is not shopping for a prettier website. They are trying to avoid wasting money on another site that looks fine but does not bring in calls, quote requests, or bookings.',
     firstFix:
       'Start with the first screen: a clear offer, local relevance, visible proof, fast mobile loading, and one obvious next step.',
+    visualFirstFix: 'Fix the first screen: offer, proof, speed, next step.',
     system:
       'The durable build treats the website as the hub. Every article, Google profile signal, citation, and follow-up message should send buyers back to a page that can convert.',
     bullets: [
@@ -142,6 +144,7 @@ const CLUSTER_MESSAGING = {
       'The buyer may already be visiting the site. The leak happens when they cannot quickly understand the offer, trust the business, or see what to do next.',
     firstFix:
       'Start by removing friction: sharpen the headline, move proof closer to the CTA, simplify the form, and make the follow-up promise specific.',
+    visualFirstFix: 'Sharpen the promise, move proof up, simplify the form.',
     system:
       'Conversion work compounds when every page gets measured, linked, refreshed, and tied to a lead path that responds before the buyer cools off.',
     bullets: [
@@ -156,6 +159,7 @@ const CLUSTER_MESSAGING = {
       'The buyer does not only need more leads. They need fewer missed opportunities after someone asks for help.',
     firstFix:
       'Start with the handoff after the form: confirmation, qualification, routing, reminders, and a fast human reply when the lead is worth it.',
+    visualFirstFix: 'Map confirmation, routing, reminders, and human reply.',
     system:
       'Automation should support the sale without pretending to be the whole relationship. The best system captures intent, follows up quickly, and keeps the owner in control.',
     bullets: [
@@ -170,6 +174,7 @@ const CLUSTER_MESSAGING = {
       'The buyer wants AI speed without handing sensitive business data to tools they do not control.',
     firstFix:
       'Start with one narrow workflow: documents, SOPs, client history, finance review, or staff search. Build the private path before adding more moving parts.',
+    visualFirstFix: 'Build one narrow workflow before adding more moving parts.',
     system:
       'Private AI earns trust when access, data boundaries, retrieval quality, logging, and human review are planned before the first prompt is written.',
     bullets: [
@@ -191,6 +196,7 @@ const CLUSTER_QUALITY_DETAILS = {
       'Review whether local reviews, citations, and on-site location details agree instead of creating mixed signals',
       'Check the actual enquiry path on a phone before adding another directory listing or blog post',
     ],
+    visualDiagnostic: 'Match the profile, page promise, proof, and contact path.',
     metrics: [
       'Qualified calls, forms, bookings, and direction requests tied to the target service',
       'Search Console impressions, clicks, click-through rate, and average position for the target query and page',
@@ -218,6 +224,7 @@ const CLUSTER_QUALITY_DETAILS = {
       },
     ],
     socialHook: 'Local visibility improves when the profile, website, proof, and enquiry path tell the same story.',
+    visualHook: 'Align the profile, page, proof, and enquiry path.',
     visualDirection: 'Use a local-search diagnostic board: profile signal, landing page, proof, and enquiry path connected in one clear flow.',
   },
   'melbourne-web-design': {
@@ -229,6 +236,7 @@ const CLUSTER_QUALITY_DETAILS = {
       'Trace every primary call to action through confirmation and follow-up instead of stopping at the button',
       'Confirm the business controls its domain, analytics, content, forms, and source files before signing a rebuild contract',
     ],
+    visualDiagnostic: 'Check offer, local proof, speed, and next step on a phone.',
     metrics: [
       'Qualified project briefs, booked conversations, and completed forms by landing page',
       'Mobile conversion rate and form completion rate, reviewed with enough volume to avoid false conclusions',
@@ -256,6 +264,7 @@ const CLUSTER_QUALITY_DETAILS = {
       },
     ],
     socialHook: 'A website should make the next decision easier on a phone, not merely look impressive in a desktop mockup.',
+    visualHook: 'Make the phone view answer the buyer decision.',
     visualDirection: 'Show a mobile-first before-and-after with offer clarity, proof, one primary action, and a clean follow-up path.',
   },
   conversion: {
@@ -267,6 +276,7 @@ const CLUSTER_QUALITY_DETAILS = {
       'Test the full path on mobile, including validation, confirmation, routing, and response expectations',
       'Separate traffic problems from message, trust, usability, and follow-up problems before changing the page',
     ],
+    visualDiagnostic: 'Find where buyers lose trust before the enquiry completes.',
     metrics: [
       'Completed qualified enquiries rather than button clicks or raw sessions alone',
       'Form starts, validation failures, completions, and time to the first useful response',
@@ -294,6 +304,7 @@ const CLUSTER_QUALITY_DETAILS = {
       },
     ],
     socialHook: 'More traffic will not repair a page that makes the offer, proof, form, or follow-up hard to trust.',
+    visualHook: 'Fix the offer, proof, form, and follow-up together.',
     visualDirection: 'Map the conversion path as four panels: promise, proof, action, and response, with one friction point called out in each.',
   },
   'lead-automation': {
@@ -305,6 +316,7 @@ const CLUSTER_QUALITY_DETAILS = {
       'List every data field, system permission, failure mode, and human escalation before connecting tools',
       'Review consent, sender identity, opt-out handling, logs, and error recovery for every automated message',
     ],
+    visualDiagnostic: 'Map the first five minutes after each enquiry.',
     metrics: [
       'Time to acknowledgement and time to a useful human response for qualified leads',
       'Routing accuracy, duplicate-message rate, failed handoffs, and leads that required manual recovery',
@@ -332,6 +344,7 @@ const CLUSTER_QUALITY_DETAILS = {
       },
     ],
     socialHook: 'Good lead automation shortens the wait while keeping consequential decisions and exceptions accountable to a person.',
+    visualHook: 'Shorten the wait without hiding the human owner.',
     visualDirection: 'Use a lead-handoff timeline that separates automatic confirmation, routing, human review, and follow-up measurement.',
   },
   'private-ai': {
@@ -343,6 +356,7 @@ const CLUSTER_QUALITY_DETAILS = {
       'Test retrieval quality and citation traceability before adding actions or broader access',
       'Review model, hosting, logging, vendor, backup, and incident-response boundaries as one system',
     ],
+    visualDiagnostic: 'Define the job, data, users, permissions, and failure cost.',
     metrics: [
       'Answer usefulness and citation accuracy on a representative evaluation set',
       'Unsupported-answer rate, access-control failures, stale-document retrieval, and human correction rate',
@@ -370,6 +384,7 @@ const CLUSTER_QUALITY_DETAILS = {
       },
     ],
     socialHook: 'Private AI starts with a narrow job, explicit data boundaries, cited answers, and a person who owns the exceptions.',
+    visualHook: 'Private AI needs owned sources and cited answers.',
     visualDirection: 'Diagram a private-AI workflow from approved documents to retrieval, cited answer, human review, and logged correction.',
   },
 };
@@ -452,6 +467,44 @@ function slugify(value) {
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '')
     .slice(0, 82);
+}
+
+const KEYWORD_TITLE_IGNORED_TERMS = new Set(['a', 'an', 'and', 'for', 'in', 'of', 'the', 'to']);
+const KEYWORD_TITLE_ACRONYMS = new Map([
+  ['ai', 'AI'],
+  ['rag', 'RAG'],
+  ['crm', 'CRM'],
+  ['seo', 'SEO'],
+  ['fl', 'FL'],
+  ['gbp', 'GBP'],
+  ['eb28', 'EB28'],
+  ['chatgpt', 'ChatGPT'],
+]);
+
+function titleHasKeywordTerms(title, keyword) {
+  const titleTerms = new Set(normalizeKeyword(title).split(' ').filter(Boolean));
+  const keywordTerms = normalizeKeyword(keyword)
+    .split(' ')
+    .filter((term) => term && !KEYWORD_TITLE_IGNORED_TERMS.has(term));
+  return keywordTerms.length > 0 && keywordTerms.every((term) => titleTerms.has(term));
+}
+
+function titleCaseKeyword(keyword) {
+  return normalizeKeyword(keyword)
+    .split(' ')
+    .filter(Boolean)
+    .map((term, index) => {
+      const acronym = KEYWORD_TITLE_ACRONYMS.get(term);
+      if (acronym) return acronym;
+      if (index > 0 && KEYWORD_TITLE_IGNORED_TERMS.has(term)) return term;
+      return `${term.charAt(0).toUpperCase()}${term.slice(1)}`;
+    })
+    .join(' ');
+}
+
+function keywordLedTitle(keyword, fallbackTitle) {
+  const suffix = String(fallbackTitle || '').split(':').slice(1).join(':').trim();
+  return suffix ? `${titleCaseKeyword(keyword)}: ${suffix}` : titleCaseKeyword(keyword);
 }
 
 async function readJson(filePath, fallback) {
@@ -616,7 +669,11 @@ function buildArticle(topic, { date, slot, runId, existingArticle = null }) {
   const messaging = getClusterMessaging(cluster);
   const details = getClusterQualityDetails(cluster);
   const existingTitle = existingArticle?.title || '';
-  const title = normalizeKeyword(existingTitle).includes(normalizeKeyword(keyword)) ? existingTitle : topic.title;
+  const title = titleHasKeywordTerms(existingTitle, keyword)
+    ? existingTitle
+    : titleHasKeywordTerms(topic.title, keyword)
+      ? topic.title
+      : keywordLedTitle(keyword, topic.title || existingTitle);
   const slug = existingArticle?.slug || slugify(topic.title);
   const description = buildDescription(keyword);
   const article = {
@@ -807,8 +864,11 @@ function buildSocialPackage(article, { date, slot, runId, operation, featureCata
   const feature = selectFeatureSpotlight(featureCatalog, article.cluster, `${runId}:${article.slug}`);
   const hashtags = hashtagsForCluster(article.cluster);
   const diagnostic = details.diagnostics[0];
+  const visualDiagnostic = details.visualDiagnostic || diagnostic;
   const metric = details.metrics[0];
   const boundary = details.boundaries[0];
+  const visualHook = details.visualHook || details.socialHook;
+  const visualFirstFix = messaging.visualFirstFix || messaging.firstFix;
   const featureUrl = feature.cta?.url || 'https://eb28.co/';
   const featureStatus = feature.status === 'founder_beta' ? 'Founder beta' : 'Active feature';
   const featureSummary = {
@@ -835,13 +895,13 @@ function buildSocialPackage(article, { date, slot, runId, operation, featureCata
     pillar: clusterLabel(article.cluster),
     objective: 'qualified_attention',
     eyebrow: `${slot.toUpperCase()} FIELD NOTE`,
-    headline: details.socialHook,
-    subhead: `${article.title}. Start with one constraint, ship one useful fix, and measure the handoff.`,
+    headline: visualHook,
+    subhead: `${article.title.replace(/: .*/, '')}: one constraint, one useful fix, measured handoff.`,
     theme: feature.visualTheme || 'cobalt',
     feature: featureSummary,
     steps: [
-      { label: 'Find the constraint', value: diagnostic },
-      { label: 'Build the first fix', value: messaging.firstFix },
+      { label: 'Find the constraint', value: visualDiagnostic },
+      { label: 'Build the first fix', value: visualFirstFix },
       { label: 'Connect the feature', value: `${feature.name}: ${feature.features?.[0] || feature.promise}` },
     ],
     metric: {

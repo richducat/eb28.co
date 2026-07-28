@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-27T12:00:00.000Z",
+  "generatedAt": "2026-07-28T12:00:00.000Z",
   "site": "https://eb28.co",
   "blogUrl": "https://eb28.co/blog/",
   "articles": [
@@ -156,12 +156,12 @@
     {
       "slug": "local-rag-system-for-business-documents-a-plain-english-implementation-guide",
       "title": "Local RAG System for Business Documents: Implementation Guide",
-      "description": "A plain-English implementation guide for secure local RAG: document scope, access rules, source citations, review paths, and how to turn private document search into a scoped EB28 build.",
+      "description": "Learn local RAG system for business documents: the priorities, proof, measurements, and safeguards that create a clearer path from buyer interest to qualified enquiries.",
       "cluster": "private-ai",
       "primaryKeyword": "local RAG system for business documents",
       "url": "https://eb28.co/blog/local-rag-system-for-business-documents-a-plain-english-implementation-guide/",
       "datePublished": "2026-06-04",
-      "dateModified": "2026-07-07"
+      "dateModified": "2026-07-28"
     },
     {
       "slug": "ai-receptionist-for-local-business-what-to-automate-and-what-to-keep-human",

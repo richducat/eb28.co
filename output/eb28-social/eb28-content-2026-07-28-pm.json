@@ -1,0 +1,347 @@
+{
+  "brand": "EB28",
+  "lane": "business-growth",
+  "generatedAt": "2026-07-28T22:02:21.125Z",
+  "runId": "2026-07-28-pm",
+  "slot": "pm",
+  "operation": "refresh",
+  "publishingPolicy": {
+    "externalPublishing": "not_authorized",
+    "requiredState": "draft_only",
+    "note": "Verify the exact EB28-owned account and channel in the publishing tool before any separate publishing action."
+  },
+  "creativeStandards": {
+    "version": "2026-07-social-v2",
+    "voice": "Specific, operator-led, plain English, evidence-aware, and free of unsupported guarantees.",
+    "visual": "Mobile-first 4:5 carousel plus 9:16 and 16:9 derivatives; bold type, one focal idea per slide, no generic stock imagery.",
+    "featureCoverage": "Every package selects one active EB28 feature from the central catalog and ties it to the article intent."
+  },
+  "article": {
+    "title": "CRM Automation for Local Service Business: The Simple Stack That Works",
+    "url": "https://eb28.co/blog/crm-automation-for-local-service-businesses-the-simple-stack-that-works/",
+    "slug": "crm-automation-for-local-service-businesses-the-simple-stack-that-works",
+    "cluster": "lead-automation",
+    "primaryKeyword": "CRM automation for local service business"
+  },
+  "featureSpotlight": {
+    "id": "white-glove-onboarding",
+    "name": "White-Glove Onboarding",
+    "lane": "business-growth",
+    "status": "active",
+    "newSince": "2026-06-12",
+    "audience": "owners who need a working AI and lead-capture system without becoming their own implementation team",
+    "promise": "EB28 configures the agent, knowledge base, lead capture, and tool connections, then hands over a working system with a human owner.",
+    "features": [
+      "AI agent and knowledge base configured on approved business data",
+      "Lead capture connected to the site, inbox, and CRM",
+      "One-to-one kickoff and operating handoff",
+      "Thirty days of measured adjustments after launch"
+    ],
+    "cta": {
+      "label": "Architect the full system",
+      "url": "https://eb28.co/#packages"
+    },
+    "visualTheme": "amber"
+  },
+  "destinations": {
+    "canonicalGuide": "https://eb28.co/blog/crm-automation-for-local-service-businesses-the-simple-stack-that-works/",
+    "feature": "https://eb28.co/#packages"
+  },
+  "platformStrategy": {
+    "facebook": "Problem-to-plan post with a practical checklist and one feature proof point.",
+    "instagram": "Four-slide 4:5 carousel with a save-worthy diagnostic, first fix, feature spotlight, and measurable next step.",
+    "linkedin": "Operator lesson with a specific build sequence and a soft product connection.",
+    "x": "One concise operating insight plus the canonical guide.",
+    "shortFormVideo": "Thirty-to-forty-five-second vertical explainer with visible UI, workflow steps, and on-screen captions."
+  },
+  "creativeSystem": {
+    "version": "2026-07-social-v2",
+    "pillar": "Lead Automation",
+    "objective": "qualified_attention",
+    "eyebrow": "PM FIELD NOTE",
+    "headline": "Shorten the wait without hiding the human owner.",
+    "subhead": "CRM Automation for Local Service Business: one constraint, one useful fix, measured handoff.",
+    "theme": "amber",
+    "feature": {
+      "id": "white-glove-onboarding",
+      "name": "White-Glove Onboarding",
+      "lane": "business-growth",
+      "status": "active",
+      "newSince": "2026-06-12",
+      "audience": "owners who need a working AI and lead-capture system without becoming their own implementation team",
+      "promise": "EB28 configures the agent, knowledge base, lead capture, and tool connections, then hands over a working system with a human owner.",
+      "features": [
+        "AI agent and knowledge base configured on approved business data",
+        "Lead capture connected to the site, inbox, and CRM",
+        "One-to-one kickoff and operating handoff",
+        "Thirty days of measured adjustments after launch"
+      ],
+      "cta": {
+        "label": "Architect the full system",
+        "url": "https://eb28.co/#packages"
+      },
+      "visualTheme": "amber"
+    },
+    "steps": [
+      {
+        "label": "Find the constraint",
+        "value": "Map the first five minutes after each enquiry."
+      },
+      {
+        "label": "Build the first fix",
+        "value": "Map confirmation, routing, reminders, and human reply."
+      },
+      {
+        "label": "Connect the feature",
+        "value": "White-Glove Onboarding: AI agent and knowledge base configured on approved business data"
+      }
+    ],
+    "metric": {
+      "label": "What to measure",
+      "value": "Time to acknowledgement and time to a useful human response for qualified leads"
+    },
+    "cta": {
+      "label": "Read the full EB28 field guide",
+      "url": "https://eb28.co/blog/crm-automation-for-local-service-businesses-the-simple-stack-that-works/"
+    },
+    "disclaimer": "Keep pricing exceptions, legal commitments, high-value qualification, and sensitive disputes with an accountable person",
+    "requiredFormats": {
+      "instagramCarousel": {
+        "width": 1080,
+        "height": 1350,
+        "slides": 4
+      },
+      "vertical": {
+        "width": 1080,
+        "height": 1920
+      },
+      "landscape": {
+        "width": 1200,
+        "height": 675
+      }
+    }
+  },
+  "posts": {
+    "blog": {
+      "title": "CRM Automation for Local Service Business: The Simple Stack That Works",
+      "url": "https://eb28.co/blog/crm-automation-for-local-service-businesses-the-simple-stack-that-works/",
+      "status": "draft_only"
+    },
+    "facebook": {
+      "caption": "Good lead automation shortens the wait while keeping consequential decisions and exceptions accountable to a person.\n\nBefore adding another tool, inspect the path:\n\n1. Map the first five minutes after an enquiry and identify where ownership or context is lost\n2. Start with the handoff after the form: confirmation, qualification, routing, reminders, and a fast human reply when the lead is worth it.\n3. Measure time to acknowledgement and time to a useful human response for qualified leads.\n\nActive feature: White-Glove Onboarding\nEB28 configures the agent, knowledge base, lead capture, and tool connections, then hands over a working system with a human owner.\n\nRead the field guide: https://eb28.co/blog/crm-automation-for-local-service-businesses-the-simple-stack-that-works/\nSee the feature: https://eb28.co/#packages",
+      "url": "https://eb28.co/blog/crm-automation-for-local-service-businesses-the-simple-stack-that-works/",
+      "status": "draft_only",
+      "media": {
+        "type": "image",
+        "mimeType": "image/jpeg",
+        "localPath": "output/eb28-social/assets/2026-07-28-pm/landscape-1200x675.jpg",
+        "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-28-pm/landscape-1200x675.jpg",
+        "width": 1200,
+        "height": 675,
+        "alt": "White-Glove Onboarding — real EB28 product surface"
+      }
+    },
+    "instagram": {
+      "caption": "Good lead automation shortens the wait while keeping consequential decisions and exceptions accountable to a person.\n\nIf “CRM automation for local service business” is the goal, do not start with a software list.\n\n01 — Find the constraint\nMap the first five minutes after an enquiry and identify where ownership or context is lost\n\n02 — Build one useful fix\nStart with the handoff after the form: confirmation, qualification, routing, reminders, and a fast human reply when the lead is worth it.\n\n03 — Connect a real EB28 feature\nWhite-Glove Onboarding: AI agent and knowledge base configured on approved business data\n\n04 — Prove the handoff\nTrack time to acknowledgement and time to a useful human response for qualified leads.\n\nSave this for the next audit. Full guide at https://eb28.co/blog/crm-automation-for-local-service-businesses-the-simple-stack-that-works/\n\n#LeadAutomation #AISystems #SmallBusiness #EB28",
+      "creativeBrief": "Use a lead-handoff timeline that separates automatic confirmation, routing, human review, and follow-up measurement. Use the generated four-slide carousel: decisive cover, diagnostic-to-fix flow, White-Glove Onboarding spotlight, and measurement/CTA. Show documentary UI or a simple workflow diagram when a real screenshot is available; never use a generic office stock photo.",
+      "url": "https://eb28.co/blog/crm-automation-for-local-service-businesses-the-simple-stack-that-works/",
+      "status": "draft_only",
+      "media": {
+        "type": "carousel",
+        "items": [
+          {
+            "type": "image",
+            "mimeType": "image/jpeg",
+            "localPath": "output/eb28-social/assets/2026-07-28-pm/feed-01-cover.jpg",
+            "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-28-pm/feed-01-cover.jpg",
+            "width": 1080,
+            "height": 1350,
+            "alt": "Shorten the wait without hiding the human owner. — EB28 social cover"
+          },
+          {
+            "type": "image",
+            "mimeType": "image/jpeg",
+            "localPath": "output/eb28-social/assets/2026-07-28-pm/feed-02-path.jpg",
+            "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-28-pm/feed-02-path.jpg",
+            "width": 1080,
+            "height": 1350,
+            "alt": "Shorten the wait without hiding the human owner. — three-step operating path"
+          },
+          {
+            "type": "image",
+            "mimeType": "image/jpeg",
+            "localPath": "output/eb28-social/assets/2026-07-28-pm/feed-03-feature.jpg",
+            "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-28-pm/feed-03-feature.jpg",
+            "width": 1080,
+            "height": 1350,
+            "alt": "White-Glove Onboarding — feature details"
+          },
+          {
+            "type": "image",
+            "mimeType": "image/jpeg",
+            "localPath": "output/eb28-social/assets/2026-07-28-pm/feed-04-proof.jpg",
+            "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-28-pm/feed-04-proof.jpg",
+            "width": 1080,
+            "height": 1350,
+            "alt": "Shorten the wait without hiding the human owner. — measurement and next step"
+          }
+        ]
+      }
+    },
+    "x": {
+      "caption": "Lead automation should shorten the wait without hiding the owner. White-Glove Onboarding connects approved business data, lead capture, and CRM handoff with a human in charge.\nhttps://eb28.co/blog/crm-automation-for-local-service-businesses-the-simple-stack-that-works/",
+      "url": "https://eb28.co/blog/crm-automation-for-local-service-businesses-the-simple-stack-that-works/",
+      "status": "draft_only",
+      "media": {
+        "type": "image",
+        "mimeType": "image/jpeg",
+        "localPath": "output/eb28-social/assets/2026-07-28-pm/landscape-1200x675.jpg",
+        "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-28-pm/landscape-1200x675.jpg",
+        "width": 1200,
+        "height": 675,
+        "alt": "White-Glove Onboarding — real EB28 product surface"
+      }
+    },
+    "linkedin": {
+      "caption": "Good lead automation shortens the wait while keeping consequential decisions and exceptions accountable to a person.\n\nA useful CRM automation for local service business project starts with a buyer constraint, not a software list.\n\nThe operating sequence:\n• Map the first five minutes after an enquiry and identify where ownership or context is lost\n• Start with the handoff after the form: confirmation, qualification, routing, reminders, and a fast human reply when the lead is worth it.\n• Measure time to acknowledgement and time to a useful human response for qualified leads\n\nWhat EB28 has added: White-Glove Onboarding. EB28 configures the agent, knowledge base, lead capture, and tool connections, then hands over a working system with a human owner.\n\nThe full guide covers the 30-day build loop, safeguards, and evidence-based next step.\n\nhttps://eb28.co/blog/crm-automation-for-local-service-businesses-the-simple-stack-that-works/\n\n#LeadAutomation #AISystems #SmallBusiness",
+      "url": "https://eb28.co/blog/crm-automation-for-local-service-businesses-the-simple-stack-that-works/",
+      "status": "draft_only",
+      "media": {
+        "type": "image",
+        "mimeType": "image/jpeg",
+        "localPath": "output/eb28-social/assets/2026-07-28-pm/landscape-1200x675.jpg",
+        "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-28-pm/landscape-1200x675.jpg",
+        "width": 1200,
+        "height": 675,
+        "alt": "White-Glove Onboarding — real EB28 product surface"
+      }
+    },
+    "shortFormVideo": {
+      "hook": "Good lead automation shortens the wait while keeping consequential decisions and exceptions accountable to a person.",
+      "durationSeconds": 40,
+      "format": "9:16 vertical, burned-in captions, screen recording or workflow diagram, no talking-head requirement",
+      "beats": [
+        {
+          "seconds": "0-3",
+          "visual": "Large hook over the live page or workflow map",
+          "voiceover": "Good lead automation shortens the wait while keeping consequential decisions and exceptions accountable to a person."
+        },
+        {
+          "seconds": "3-12",
+          "visual": "Highlight the buyer constraint",
+          "voiceover": "Map the first five minutes after an enquiry and identify where ownership or context is lost"
+        },
+        {
+          "seconds": "12-24",
+          "visual": "Animate the first-fix path",
+          "voiceover": "Start with the handoff after the form: confirmation, qualification, routing, reminders, and a fast human reply when the lead is worth it."
+        },
+        {
+          "seconds": "24-34",
+          "visual": "Show White-Glove Onboarding with one real feature",
+          "voiceover": "EB28 configures the agent, knowledge base, lead capture, and tool connections, then hands over a working system with a human owner."
+        },
+        {
+          "seconds": "34-40",
+          "visual": "Show the measurement and canonical URL",
+          "voiceover": "Measure time to acknowledgement and time to a useful human response for qualified leads. Read the full guide at EB28."
+        }
+      ],
+      "onScreenText": [
+        "Find the constraint",
+        "Build one useful fix",
+        "Feature: White-Glove Onboarding",
+        "Measure the handoff"
+      ],
+      "caption": "Lead automation should shorten the wait without hiding the owner. White-Glove Onboarding connects approved business data, lead capture, and CRM handoff with a human in charge. Read the guide: https://eb28.co/blog/crm-automation-for-local-service-businesses-the-simple-stack-that-works/ #LeadAutomation #AISystems #SmallBusiness #EB28",
+      "url": "https://eb28.co/blog/crm-automation-for-local-service-businesses-the-simple-stack-that-works/",
+      "status": "draft_only",
+      "media": {
+        "type": "image",
+        "mimeType": "image/jpeg",
+        "localPath": "output/eb28-social/assets/2026-07-28-pm/story-1080x1920.jpg",
+        "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-28-pm/story-1080x1920.jpg",
+        "width": 1080,
+        "height": 1920,
+        "alt": "Shorten the wait without hiding the human owner. — vertical story graphic"
+      }
+    }
+  },
+  "visualAssets": {
+    "version": "2026-07-social-v2",
+    "format": "jpeg-no-alpha",
+    "instagramCarousel": [
+      {
+        "type": "image",
+        "mimeType": "image/jpeg",
+        "localPath": "output/eb28-social/assets/2026-07-28-pm/feed-01-cover.jpg",
+        "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-28-pm/feed-01-cover.jpg",
+        "width": 1080,
+        "height": 1350,
+        "alt": "Shorten the wait without hiding the human owner. — EB28 social cover"
+      },
+      {
+        "type": "image",
+        "mimeType": "image/jpeg",
+        "localPath": "output/eb28-social/assets/2026-07-28-pm/feed-02-path.jpg",
+        "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-28-pm/feed-02-path.jpg",
+        "width": 1080,
+        "height": 1350,
+        "alt": "Shorten the wait without hiding the human owner. — three-step operating path"
+      },
+      {
+        "type": "image",
+        "mimeType": "image/jpeg",
+        "localPath": "output/eb28-social/assets/2026-07-28-pm/feed-03-feature.jpg",
+        "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-28-pm/feed-03-feature.jpg",
+        "width": 1080,
+        "height": 1350,
+        "alt": "White-Glove Onboarding — feature details"
+      },
+      {
+        "type": "image",
+        "mimeType": "image/jpeg",
+        "localPath": "output/eb28-social/assets/2026-07-28-pm/feed-04-proof.jpg",
+        "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-28-pm/feed-04-proof.jpg",
+        "width": 1080,
+        "height": 1350,
+        "alt": "Shorten the wait without hiding the human owner. — measurement and next step"
+      }
+    ],
+    "vertical": {
+      "type": "image",
+      "mimeType": "image/jpeg",
+      "localPath": "output/eb28-social/assets/2026-07-28-pm/story-1080x1920.jpg",
+      "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-28-pm/story-1080x1920.jpg",
+      "width": 1080,
+      "height": 1920,
+      "alt": "Shorten the wait without hiding the human owner. — vertical story graphic"
+    },
+    "landscape": {
+      "type": "image",
+      "mimeType": "image/jpeg",
+      "localPath": "output/eb28-social/assets/2026-07-28-pm/landscape-1200x675.jpg",
+      "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-28-pm/landscape-1200x675.jpg",
+      "width": 1200,
+      "height": 675,
+      "alt": "White-Glove Onboarding — real EB28 product surface"
+    },
+    "proofSource": {
+      "type": "public-page-capture",
+      "localPath": "output/eb28-social/proof-captures/white-glove-onboarding.jpg"
+    }
+  },
+  "bufferAsset": {
+    "type": "image",
+    "mimeType": "image/jpeg",
+    "localPath": "output/eb28-social/assets/2026-07-28-pm/feed-01-cover.jpg",
+    "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-28-pm/feed-01-cover.jpg",
+    "width": 1080,
+    "height": 1350,
+    "alt": "Shorten the wait without hiding the human owner. — EB28 social cover"
+  },
+  "socialPublishGuard": {
+    "status": "assets_ready_connection_unverified",
+    "note": "Assets are ready. External publishing still requires explicit package authorization plus a fresh read-only verification of the EB28 API account, organization, exact channel IDs, and channel state."
+  }
+}

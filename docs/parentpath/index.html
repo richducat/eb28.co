@@ -178,6 +178,52 @@
     .features, .modules, .steps { grid-template-columns: 1fr; }
     section { padding: 56px 0; }
   }
+
+  /* ---------- editorial imagery ---------- */
+  .shot { position: relative; overflow: hidden; border-radius: 18px; background: var(--bg-card); }
+  .shot img { display: block; width: 100%; height: 100%; object-fit: cover; }
+  .shot::after { content: ""; position: absolute; inset: 0; box-shadow: inset 0 0 0 1px rgba(255,255,255,.06); border-radius: 18px; pointer-events: none; }
+
+  /* full-bleed hero */
+  .hero-full { position: relative; min-height: 86vh; display: flex; align-items: flex-end; overflow: hidden; padding: 0; border: 0; }
+  .hero-full .bg { position: absolute; inset: 0; }
+  .hero-full .bg img { width: 100%; height: 100%; object-fit: cover; object-position: 60% 45%; }
+  .hero-full .scrim {
+    position: absolute; inset: 0;
+    background:
+      linear-gradient(to top, var(--bg) 4%, rgba(11,12,13,.86) 34%, rgba(11,12,13,.42) 66%, rgba(11,12,13,.72) 100%),
+      linear-gradient(to right, rgba(11,12,13,.80) 0%, rgba(11,12,13,.30) 55%, rgba(11,12,13,0) 100%);
+  }
+  .hero-full .inner { position: relative; width: 100%; padding: 0 0 72px; }
+  .hero-full h1 { font-size: clamp(40px, 6.6vw, 74px); font-weight: 800; max-width: 17ch; margin: 20px 0 22px; }
+  .hero-full h1 em { font-style: normal; color: var(--teal); }
+  .hero-full .sub { font-size: clamp(17px, 2vw, 20px); color: #cfd6d1; max-width: 54ch; margin: 0 0 32px; }
+
+  /* editorial split */
+  .split { display: grid; grid-template-columns: 1fr 1fr; gap: 54px; align-items: center; }
+  .split.reverse .shot { order: 2; }
+  .split .shot { aspect-ratio: 4/3; }
+  .split h2 { font-size: clamp(26px, 3.6vw, 36px); margin: 12px 0 16px; max-width: 20ch; }
+  .split p { color: var(--muted); font-size: 16.5px; margin: 0; }
+  .split p + p { margin-top: 14px; }
+
+  /* statement band over an image */
+  .band { position: relative; overflow: hidden; padding: 0; border: 0; }
+  .band .bg { position: absolute; inset: 0; }
+  .band .bg img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 40%; }
+  .band .scrim { position: absolute; inset: 0; background: linear-gradient(to right, rgba(11,12,13,.94) 8%, rgba(11,12,13,.72) 52%, rgba(11,12,13,.55) 100%); }
+  .band .inner { position: relative; padding: 108px 0; }
+  .band blockquote { margin: 0; max-width: 24ch; font-size: clamp(26px, 4vw, 40px); font-weight: 700; letter-spacing: -.025em; line-height: 1.18; }
+  .band blockquote em { font-style: normal; color: var(--teal); }
+  .band .attrib { margin: 20px 0 0; font-family: var(--mono); font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--dim); }
+
+  @media (max-width: 860px) {
+    .split { grid-template-columns: 1fr; gap: 28px; }
+    .split.reverse .shot { order: 0; }
+    .hero-full { min-height: 78vh; }
+    .hero-full .inner { padding-bottom: 52px; }
+    .band .inner { padding: 76px 0; }
+  }
 </style>
 </head>
 <body>
@@ -199,42 +245,34 @@
 
 <main>
 
-  <section class="hero">
-    <div class="wrap">
-      <div class="hero-grid">
-        <div>
-          <span class="kicker">Parent education · iPhone · US$17</span>
-          <h1>The parenting course, <em>rebuilt for your phone.</em></h1>
-          <p class="sub">Florida courts order both parents through a four-hour parent education course before a divorce is final. ParentPath is that course — six modules, real quizzes, engagement time you can stand behind, and a certificate you can hand the clerk.</p>
-          <div class="hero-ctas">
-            <a class="cta" href="#price">US$17 · one time</a>
-            <a class="cta-ghost" href="#modules">See what's inside</a>
-          </div>
-          <p class="micro">No account · No server · Nothing leaves your phone</p>
+  <section class="hero-full">
+    <div class="bg"><img src="/parentpath/img/hero-park.jpg" alt="A parent and child playing in a park" fetchpriority="high" /></div>
+    <div class="scrim"></div>
+    <div class="inner">
+      <div class="wrap">
+        <span class="kicker">Parent education · iPhone · US$17</span>
+        <h1>The court says four hours. <em>Make them count.</em></h1>
+        <p class="sub">Florida orders both parents through a parent education course before a divorce is final. ParentPath is that course, rebuilt for the phone in your hand — six modules, honest engagement tracking, and a certificate you can hand the clerk.</p>
+        <div class="hero-ctas">
+          <a class="cta" href="#price">US$17 · one time</a>
+          <a class="cta-ghost" href="#modules">See what's inside</a>
         </div>
-
-        <div class="phone" aria-label="Practice Lab example conversation">
-          <div class="phone-top">
-            <div class="dot">PP</div>
-            <span>Practice Lab · The Late Pickup</span>
-          </div>
-          <p class="msg-time">Simulated co-parent</p>
-          <div class="msg">Running late, be there when I get there. Traffic. Don't start with me about the schedule, I don't want to hear it today.</div>
-          <div class="msg-out">Understood. We'll be ready at 6:40. Please confirm.</div>
-          <div class="biff"><span>Brief</span><span>Informative</span><span>Friendly</span><span>Firm</span></div>
-          <div class="coach">Textbook BIFF. Notice how little there is for them to argue with.</div>
-        </div>
+        <p class="micro">No account · No server · Nothing leaves your phone</p>
       </div>
     </div>
   </section>
 
   <section id="problem">
     <div class="wrap">
-      <div class="sec-head">
-        <span class="kicker">The problem</span>
-        <h2>The course is required. Most of them are a slideshow from 2009.</h2>
+      <div class="split">
+        <div class="shot"><img src="/parentpath/img/father-daughter.jpg" alt="A father and his daughter, foreheads together" loading="lazy" /></div>
+        <div>
+          <span class="kicker">The problem</span>
+          <h2>It was never the divorce. It's the conflict around it.</h2>
+          <p>You didn't choose this class, and you're taking it during the worst month of your life. But the research is blunt about what decides how your children come out of this, and it isn't the paperwork — it's how much of the fighting reaches them.</p>
+          <p>So a course worth four hours should teach the thing that actually matters: how to deal with someone you're furious with, for the next fifteen years, without your kids carrying it. ParentPath is built around that — and it tracks your time honestly enough that the certificate means something.</p>
+        </div>
       </div>
-      <p class="prose">You didn't choose this class, and you're taking it during the worst month of your life. The research is blunt about what actually decides how your kids come out of this: <strong>not the divorce — the conflict around it.</strong> So a course worth four hours should teach you the thing that matters, which is how to talk to someone you're furious with, for the next fifteen years, without your children absorbing it. ParentPath is built around that, and it tracks your time honestly enough that the certificate means something.</p>
     </div>
   </section>
 
@@ -301,6 +339,18 @@
         <h2>Nobody sees this but you.</h2>
       </div>
       <p class="prose">There is no account, no sign-in, and no server. Your name, your case number, your quiz scores and every practice conversation stay on your iPhone. The developer cannot read them, because there is nowhere for them to go. Settings lets you export everything or delete all of it in two taps. <strong>The App Store privacy label reads "Data Not Collected"</strong> — that's not positioning, it's the whole architecture.</p>
+    </div>
+  </section>
+
+  <section class="band">
+    <div class="bg"><img src="/parentpath/img/walking-forward.jpg" alt="A parent and child walking together" loading="lazy" /></div>
+    <div class="scrim"></div>
+    <div class="inner">
+      <div class="wrap">
+        <span class="kicker">What the research says</span>
+        <blockquote>Children don't need perfect parents. They need <em>peace.</em></blockquote>
+        <p class="attrib">Module 6 · Your family's next chapter</p>
+      </div>
     </div>
   </section>
 

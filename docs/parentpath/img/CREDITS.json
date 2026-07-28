@@ -1,0 +1,12 @@
+{
+  "source": "StockSnap.io via Openverse API",
+  "license": "CC0 1.0 Universal (public domain dedication) — no attribution required",
+  "retrieved": "2026-07-27",
+  "treatment": "Graded for this site: desaturated, shadows blended toward #0b0c0d, teal cast applied for palette cohesion.",
+  "images": [
+    { "file": "hero-park.jpg",        "stocksnap_id": "XO0AWJ8HKT", "subject": "parent and child in a park, backlit" },
+    { "file": "father-daughter.jpg",  "stocksnap_id": "NLM61BLVCW", "subject": "father and daughter, close portrait" },
+    { "file": "walking-forward.jpg",  "stocksnap_id": "ZULRSZD4R3", "subject": "parent and child walking, seen from behind" },
+    { "file": "child-sunset.jpg",     "stocksnap_id": "X2XRVZYTZ1", "subject": "child outdoors at golden hour" }
+  ]
+}

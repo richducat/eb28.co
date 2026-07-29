@@ -143,6 +143,46 @@ class AccessStoreTests(unittest.TestCase):
         self.assertFalse(status["desktop_add_on_active"])
         self.assertEqual(status["access_type"], "subscriber")
 
+    def test_desktop_password_requires_active_access(self) -> None:
+        store = self.make_store()
+
+        with self.assertRaises(PermissionError):
+            store.set_desktop_password(
+                email="unknown@example.com",
+                password="StrongDesktopPassword1!",
+            )
+
+    def test_desktop_login_issues_and_revokes_session(self) -> None:
+        store = self.make_store()
+        store.grant_access(
+            email="owner@example.com",
+            access_type="subscriber",
+            role="owner",
+            can_invite=True,
+        )
+        store.set_desktop_password(
+            email="owner@example.com",
+            password="StrongDesktopPassword1!",
+        )
+
+        with self.assertRaises(PermissionError):
+            store.authenticate_desktop(
+                email="owner@example.com",
+                password="WrongDesktopPassword1!",
+            )
+
+        token = store.authenticate_desktop(
+            email="owner@example.com",
+            password="StrongDesktopPassword1!",
+        )
+        session = store.desktop_session(token=token)
+        self.assertTrue(session["authenticated"])
+        self.assertEqual(session["email"], "owner@example.com")
+
+        store.revoke_desktop_session(token=token)
+        with self.assertRaises(PermissionError):
+            store.desktop_session(token=token)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -24,7 +24,7 @@ This service implements those endpoints and adds admin-only tester grants so Ric
 CADETCATCH_ACCESS_DB=/var/lib/cadetcatch/access.sqlite3
 CADETCATCH_ACCESS_ADMIN_TOKEN=replace-with-long-random-token
 CADETCATCH_PUBLIC_BASE_URL=https://api.cadetcatch.com
-CADETCATCH_ACCESS_ALLOWED_ORIGINS=https://eb28.co,https://www.eb28.co
+CADETCATCH_ACCESS_ALLOWED_ORIGINS=https://cadetcatch.com,https://www.cadetcatch.com,https://eb28.co,https://www.eb28.co
 CADETCATCH_AUTO_ADMIN_EMAILS=richard@thankyouforyourservice.co,karen@thankyouforyourservice.co,fishkn@upmc.edu
 CADETCATCH_INVITE_EMAIL_MODE=smtp
 CADETCATCH_INVITE_FROM_EMAIL=support@eb28.co

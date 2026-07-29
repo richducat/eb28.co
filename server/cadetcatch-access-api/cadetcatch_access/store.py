@@ -1,11 +1,12 @@
 from __future__ import annotations
 
 import hashlib
+import hmac
 import os
 import secrets
 import sqlite3
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 
@@ -69,6 +70,30 @@ def auto_admin_status(email: str) -> dict[str, Any]:
 
 def token_hash(token: str) -> str:
     return hashlib.sha256(token.encode("utf-8")).hexdigest()
+
+
+def password_hash(password: str, *, salt: bytes | None = None) -> str:
+    if len(password) < 12:
+        raise ValueError("Password must be at least 12 characters.")
+    actual_salt = salt or secrets.token_bytes(16)
+    digest = hashlib.pbkdf2_hmac("sha256", password.encode("utf-8"), actual_salt, 600_000)
+    return f"pbkdf2_sha256$600000${actual_salt.hex()}${digest.hex()}"
+
+
+def verify_password(password: str, encoded: str) -> bool:
+    try:
+        algorithm, rounds_text, salt_hex, expected_hex = encoded.split("$", 3)
+        if algorithm != "pbkdf2_sha256":
+            return False
+        digest = hashlib.pbkdf2_hmac(
+            "sha256",
+            password.encode("utf-8"),
+            bytes.fromhex(salt_hex),
+            int(rounds_text),
+        )
+        return hmac.compare_digest(digest.hex(), expected_hex)
+    except (TypeError, ValueError):
+        return False
 
 
 @dataclass(frozen=True)
@@ -137,6 +162,105 @@ class AccessStore:
                 CREATE UNIQUE INDEX IF NOT EXISTS idx_access_invite_owner_role
                 ON access_invitations(owner_email, role)
                 """
+            )
+            conn.execute(
+                """
+                CREATE TABLE IF NOT EXISTS desktop_credentials (
+                    email TEXT PRIMARY KEY,
+                    password_hash TEXT NOT NULL,
+                    created_at TEXT NOT NULL,
+                    updated_at TEXT NOT NULL
+                )
+                """
+            )
+            conn.execute(
+                """
+                CREATE TABLE IF NOT EXISTS desktop_sessions (
+                    token_hash TEXT PRIMARY KEY,
+                    email TEXT NOT NULL,
+                    expires_at TEXT NOT NULL,
+                    created_at TEXT NOT NULL
+                )
+                """
+            )
+            conn.execute(
+                """
+                CREATE INDEX IF NOT EXISTS idx_desktop_sessions_email
+                ON desktop_sessions(email)
+                """
+            )
+
+    def set_desktop_password(self, *, email: str, password: str) -> dict[str, Any]:
+        account_email = normalize_email(email)
+        if not self.status(email=account_email)["active"]:
+            raise PermissionError("Active CadetCatch access is required.")
+        timestamp = now_iso()
+        encoded = password_hash(password)
+        with self.connect() as conn:
+            conn.execute(
+                """
+                INSERT INTO desktop_credentials (email, password_hash, created_at, updated_at)
+                VALUES (?, ?, ?, ?)
+                ON CONFLICT(email) DO UPDATE SET
+                    password_hash = excluded.password_hash,
+                    updated_at = excluded.updated_at
+                """,
+                (account_email, encoded, timestamp, timestamp),
+            )
+            conn.execute("DELETE FROM desktop_sessions WHERE email = ?", (account_email,))
+        return {"email": account_email, "desktop_login_ready": True}
+
+    def authenticate_desktop(self, *, email: str, password: str) -> str:
+        account_email = normalize_email(email)
+        if not self.status(email=account_email)["active"]:
+            raise PermissionError("Invalid email or password.")
+        with self.connect() as conn:
+            row = conn.execute(
+                "SELECT password_hash FROM desktop_credentials WHERE email = ?",
+                (account_email,),
+            ).fetchone()
+        if row is None or not verify_password(password, row["password_hash"]):
+            raise PermissionError("Invalid email or password.")
+        raw_token = secrets.token_urlsafe(48)
+        created = datetime.now(timezone.utc).replace(microsecond=0)
+        expires = created + timedelta(hours=12)
+        with self.connect() as conn:
+            conn.execute(
+                "DELETE FROM desktop_sessions WHERE expires_at <= ?",
+                (created.isoformat().replace("+00:00", "Z"),),
+            )
+            conn.execute(
+                """
+                INSERT INTO desktop_sessions (token_hash, email, expires_at, created_at)
+                VALUES (?, ?, ?, ?)
+                """,
+                (
+                    token_hash(raw_token),
+                    account_email,
+                    expires.isoformat().replace("+00:00", "Z"),
+                    created.isoformat().replace("+00:00", "Z"),
+                ),
+            )
+        return raw_token
+
+    def desktop_session(self, *, token: str) -> dict[str, Any]:
+        with self.connect() as conn:
+            row = conn.execute(
+                "SELECT email, expires_at FROM desktop_sessions WHERE token_hash = ?",
+                (token_hash(token or ""),),
+            ).fetchone()
+        if row is None or is_expired(row["expires_at"]):
+            raise PermissionError("Desktop session is invalid or expired.")
+        account_status = self.status(email=row["email"])
+        if not account_status["active"]:
+            raise PermissionError("Desktop access is not active.")
+        return {**account_status, "authenticated": True}
+
+    def revoke_desktop_session(self, *, token: str) -> None:
+        with self.connect() as conn:
+            conn.execute(
+                "DELETE FROM desktop_sessions WHERE token_hash = ?",
+                (token_hash(token or ""),),
             )
 
     def grant_access(

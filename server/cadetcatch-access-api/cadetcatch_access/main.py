@@ -2,10 +2,12 @@ from __future__ import annotations
 
 import os
 import secrets
+import time
 from pathlib import Path
 from html import escape
 
-from fastapi import Depends, FastAPI, Form, Header, HTTPException, Query, Request, status
+import httpx
+from fastapi import Depends, FastAPI, File, Form, Header, HTTPException, Query, Request, UploadFile, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 from pydantic import BaseModel, EmailStr, Field
@@ -42,18 +44,13 @@ def build_store() -> AccessStore:
     return AccessStore(database_path())
 
 
-def desktop_page_html() -> str:
-    desktop_path = Path(__file__).with_name("desktop.html")
-    return desktop_path.read_text(encoding="utf-8")
-
-
 app = FastAPI(title="CadetCatch Access API", version="1.0")
 
 allowed_origins = [
     origin.strip()
     for origin in os.getenv(
         "CADETCATCH_ACCESS_ALLOWED_ORIGINS",
-        "https://eb28.co,https://www.eb28.co",
+        "https://cadetcatch.com,https://www.cadetcatch.com,https://eb28.co,https://www.eb28.co",
     ).split(",")
     if origin.strip()
 ]
@@ -105,6 +102,62 @@ class RedeemInviteRequest(BaseModel):
     invite_token: str = Field(min_length=16, max_length=240)
     recipient_email: EmailStr
     device_id: str = Field(min_length=1, max_length=160)
+
+
+class DesktopLoginRequest(BaseModel):
+    email: EmailStr
+    password: str = Field(min_length=12, max_length=256)
+
+
+class DesktopCredentialRequest(BaseModel):
+    email: EmailStr
+    password: str = Field(min_length=12, max_length=256)
+
+
+login_attempts: dict[str, list[float]] = {}
+
+
+def bearer_token(authorization: str | None) -> str:
+    if not authorization or not authorization.lower().startswith("bearer "):
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Desktop login required.")
+    token = authorization[7:].strip()
+    if not token:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Desktop login required.")
+    return token
+
+
+def enforce_login_rate_limit(request: Request) -> str:
+    key = request.client.host if request.client else "unknown"
+    now = time.time()
+    recent = [stamp for stamp in login_attempts.get(key, []) if stamp > now - 900]
+    if len(recent) >= 8:
+        raise HTTPException(status_code=status.HTTP_429_TOO_MANY_REQUESTS, detail="Try again in 15 minutes.")
+    login_attempts[key] = recent
+    return key
+
+
+def record_login_failure(key: str) -> None:
+    recent = login_attempts.get(key, [])
+    now = time.time()
+    recent.append(now)
+    login_attempts[key] = recent
+
+
+async def read_limited_upload(file: UploadFile, *, max_bytes: int = 15 * 1024 * 1024) -> bytes:
+    chunks: list[bytes] = []
+    total = 0
+    while True:
+        chunk = await file.read(1024 * 1024)
+        if not chunk:
+            break
+        total += len(chunk)
+        if total > max_bytes:
+            raise HTTPException(
+                status_code=413,
+                detail="Photo must be 15 MB or smaller.",
+            )
+        chunks.append(chunk)
+    return b"".join(chunks)
 
 
 def store() -> AccessStore:
@@ -310,6 +363,94 @@ def access_status(
     return response
 
 
+@app.post("/access/login")
+def desktop_login(
+    payload: DesktopLoginRequest,
+    request: Request,
+    access_store: AccessStore = Depends(store),
+) -> dict[str, object]:
+    rate_limit_key = enforce_login_rate_limit(request)
+    try:
+        token = access_store.authenticate_desktop(email=str(payload.email), password=payload.password)
+        session = access_store.desktop_session(token=token)
+    except (PermissionError, ValueError) as error:
+        record_login_failure(rate_limit_key)
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid email or password.",
+        ) from error
+    return {"token": token, "session": session}
+
+
+@app.get("/access/session")
+def desktop_session(
+    authorization: str | None = Header(default=None),
+    access_store: AccessStore = Depends(store),
+) -> dict[str, object]:
+    token = bearer_token(authorization)
+    try:
+        return access_store.desktop_session(token=token)
+    except PermissionError as error:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=str(error)) from error
+
+
+@app.post("/access/logout")
+def desktop_logout(
+    authorization: str | None = Header(default=None),
+    access_store: AccessStore = Depends(store),
+) -> dict[str, bool]:
+    token = bearer_token(authorization)
+    access_store.revoke_desktop_session(token=token)
+    return {"logged_out": True}
+
+
+@app.post("/access/desktop/search")
+async def desktop_search(
+    file: UploadFile = File(...),
+    top_k: int = Form(default=300),
+    min_score: float = Form(default=0.80),
+    face_index: int | None = Form(default=None),
+    authorization: str | None = Header(default=None),
+    access_store: AccessStore = Depends(store),
+) -> dict[str, object]:
+    token = bearer_token(authorization)
+    try:
+        access_store.desktop_session(token=token)
+    except PermissionError as error:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail=str(error)) from error
+    fields = {"top_k": str(top_k), "min_score": str(min_score)}
+    if face_index is not None:
+        fields["face_index"] = str(face_index)
+    try:
+        async with httpx.AsyncClient(timeout=100.0) as client:
+            response = await client.post(
+                "http://127.0.0.1:8000/search",
+                data=fields,
+            files={
+                "file": (
+                    file.filename or "photo.jpg",
+                    await read_limited_upload(file),
+                    file.content_type or "image/jpeg",
+                )
+                },
+            )
+    except httpx.HTTPError as error:
+        raise HTTPException(
+            status_code=status.HTTP_502_BAD_GATEWAY,
+            detail="CadetCatch search is temporarily unavailable.",
+        ) from error
+    try:
+        body = response.json()
+    except ValueError as error:
+        raise HTTPException(
+            status_code=status.HTTP_502_BAD_GATEWAY,
+            detail="CadetCatch search returned an invalid response.",
+        ) from error
+    if response.status_code >= 400:
+        raise HTTPException(status_code=response.status_code, detail=body)
+    return body
+
+
 @app.post("/access/subscription/link")
 def link_subscription(
     payload: SubscriptionLinkRequest,
@@ -481,12 +622,6 @@ def redeem_invite_page(token: str = Query(min_length=16, max_length=240)) -> HTM
     return HTMLResponse(redeem_page_html(token=token))
 
 
-@app.get("/access/desktop", response_class=HTMLResponse)
-@app.get("/access/desktop/", response_class=HTMLResponse)
-def desktop_page() -> HTMLResponse:
-    return HTMLResponse(desktop_page_html())
-
-
 @app.post("/access/redeem", response_class=HTMLResponse)
 def redeem_invite_form(
     invite_token: str = Form(min_length=16, max_length=240),
@@ -576,3 +711,18 @@ def admin_access_invitation(
         expires_at=payload.expires_at,
         note=payload.note,
     )
+
+
+@app.post("/admin/access-credentials")
+def admin_access_credentials(
+    payload: DesktopCredentialRequest,
+    _: None = Depends(require_admin),
+    access_store: AccessStore = Depends(store),
+) -> dict[str, object]:
+    try:
+        return access_store.set_desktop_password(
+            email=str(payload.email),
+            password=payload.password,
+        )
+    except (PermissionError, ValueError) as error:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(error)) from error

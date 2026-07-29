@@ -6,3 +6,4 @@ python-multipart
 app-store-server-library
 google-auth
 requests
+httpx

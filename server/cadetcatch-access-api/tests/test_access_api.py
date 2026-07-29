@@ -1,18 +1,20 @@
+import asyncio
 import tempfile
 import unittest
+from io import BytesIO
 from pathlib import Path
 from unittest.mock import patch
 
-from fastapi import HTTPException
+from fastapi import HTTPException, UploadFile
 
 from cadetcatch_access.mailer import InviteMailer
 from cadetcatch_access.main import (
     InvitationRequest,
     access_status,
     create_invitation,
-    desktop_page,
     redeem_invite_form,
     redeem_invite_page,
+    read_limited_upload,
 )
 from cadetcatch_access.store import AccessStore
 
@@ -80,6 +82,21 @@ class AccessAPITests(unittest.TestCase):
         self.assertEqual(payload["recipient_email"], "cadet@example.com")
         self.assertNotIn("invite_url", payload)
 
+    def test_desktop_upload_limit_rejects_oversized_photo(self) -> None:
+        upload = UploadFile(filename="large.jpg", file=BytesIO(b"12345"))
+
+        with self.assertRaises(HTTPException) as context:
+            asyncio.run(read_limited_upload(upload, max_bytes=4))
+
+        self.assertEqual(context.exception.status_code, 413)
+
+    def test_desktop_upload_limit_accepts_bounded_photo(self) -> None:
+        upload = UploadFile(filename="photo.jpg", file=BytesIO(b"1234"))
+
+        content = asyncio.run(read_limited_upload(upload, max_bytes=4))
+
+        self.assertEqual(content, b"1234")
+
     def test_invitation_endpoint_fails_closed_when_email_is_disabled(self) -> None:
         self.grant_owner()
 
@@ -108,15 +125,6 @@ class AccessAPITests(unittest.TestCase):
         self.assertIn('name="invite_token"', html)
         self.assertIn("a" * 32, html)
         self.assertIn("Email address", html)
-
-    def test_desktop_page_renders_packaged_desktop_app(self) -> None:
-        response = desktop_page()
-        html = response.body.decode("utf-8")
-
-        self.assertEqual(response.status_code, 200)
-        self.assertIn("CadetCatch Desktop", html)
-        self.assertIn("/access/status", html)
-        self.assertIn("/search", html)
 
     def test_auto_admin_status_enables_desktop_access(self) -> None:
         payload = access_status(

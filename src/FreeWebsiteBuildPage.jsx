@@ -9,7 +9,7 @@ import {
   WEBSITE_OFFER_DISCLOSURE,
 } from './offerTerms.js';
 
-const CLAIM_EMAIL = 'social@eb28.co';
+const CLAIM_EMAIL = 'richducat@gmail.com';
 const REVIEW_TIMEZONE = 'America/New_York';
 
 function getReviewWindowOptions(date = new Date()) {

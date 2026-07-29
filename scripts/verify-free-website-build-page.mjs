@@ -5,7 +5,8 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const expectedEmail = 'social@eb28.co';
+const expectedLeadCaptureEmail = 'social@eb28.co';
+const expectedPublicContactEmail = 'richducat@gmail.com';
 const canonicalUrl = 'https://eb28.co/free-website-build/';
 
 const checks = [];
@@ -42,12 +43,12 @@ const [
 
 assertCheck(
   'leadCapture routes to social mailbox',
-  contains(leadCaptureSource, `LEAD_CAPTURE_EMAIL = '${expectedEmail}'`),
+  contains(leadCaptureSource, `LEAD_CAPTURE_EMAIL = '${expectedLeadCaptureEmail}'`),
   'src/leadCapture.js',
 );
 assertCheck(
-  'page references social mailbox',
-  contains(pageSource, `const CLAIM_EMAIL = '${expectedEmail}'`),
+  'page references approved public contact mailbox',
+  contains(pageSource, `const CLAIM_EMAIL = '${expectedPublicContactEmail}'`),
   'src/FreeWebsiteBuildPage.jsx',
 );
 assertCheck(
@@ -111,8 +112,8 @@ for (const assetName of pageAssets) {
 }
 
 assertCheck(
-  'built page chunk contains mailbox',
-  contains(pageAssetText, expectedEmail),
+  'built page chunk contains approved public contact mailbox',
+  contains(pageAssetText, expectedPublicContactEmail),
   pageAssets.join(', ') || 'no page chunk found',
 );
 assertCheck(

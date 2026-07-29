@@ -244,12 +244,12 @@ function storySvg(creative, theme) {
   const steps = (creative.steps || []).slice(0, 3);
   const rows = steps
     .map((step, index) => {
-      const y = 1120 + index * 190;
+      const y = 1115 + index * 205;
       return `
-        <rect x="90" y="${y}" width="900" height="155" rx="28" fill="#020617" fill-opacity="0.82" stroke="#334155"/>
+        <rect x="90" y="${y}" width="900" height="175" rx="28" fill="#020617" fill-opacity="0.82" stroke="#334155"/>
         <text x="132" y="${y + 53}" fill="${theme.accent}" font-family="monospace" font-size="25" font-weight="900">0${index + 1}</text>
         <text x="190" y="${y + 52}" fill="${theme.accent2}" font-family="Arial, sans-serif" font-size="21" font-weight="900" letter-spacing="2">${escapeXml(truncate(step.label, 30).toUpperCase())}</text>
-        ${textLines(wrapText(step.value, 46, 2), { x: 190, y: y + 99, size: 27, weight: 650, fill: '#e2e8f0', lineHeight: 1.18 })}
+        ${textLines(wrapText(step.value, 44, 3), { x: 190, y: y + 99, size: 25, weight: 650, fill: '#e2e8f0', lineHeight: 1.14 })}
       `;
     })
     .join('\n');

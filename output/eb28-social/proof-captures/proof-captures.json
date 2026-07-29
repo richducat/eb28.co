@@ -1,15 +1,15 @@
 {
   "version": "2026-07-social-v2",
-  "capturedAt": "2026-07-29T10:04:32.105Z",
+  "capturedAt": "2026-07-29T22:02:00.176Z",
   "count": 1,
   "captures": [
     {
-      "featureId": "lead-automation-system",
-      "featureName": "Revenue + Lead Automation",
+      "featureId": "free-website-growth-hosting",
+      "featureName": "Free Website Build + Growth Hosting",
       "lane": "business-growth",
-      "sourceUrl": "https://eb28.co/#contact",
-      "capturedAt": "2026-07-29T10:04:32.105Z",
-      "localPath": "output/eb28-social/proof-captures/lead-automation-system.jpg",
+      "sourceUrl": "https://eb28.co/free-website-build/",
+      "capturedAt": "2026-07-29T22:02:00.176Z",
+      "localPath": "output/eb28-social/proof-captures/free-website-growth-hosting.jpg",
       "width": 1440,
       "height": 1000,
       "mimeType": "image/jpeg",

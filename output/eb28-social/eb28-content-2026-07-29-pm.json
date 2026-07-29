@@ -1,0 +1,347 @@
+{
+  "brand": "EB28",
+  "lane": "business-growth",
+  "generatedAt": "2026-07-29T22:01:33.950Z",
+  "runId": "2026-07-29-pm",
+  "slot": "pm",
+  "operation": "refresh",
+  "publishingPolicy": {
+    "externalPublishing": "not_authorized",
+    "requiredState": "draft_only",
+    "note": "Verify the exact EB28-owned account and channel in the publishing tool before any separate publishing action."
+  },
+  "creativeStandards": {
+    "version": "2026-07-social-v2",
+    "voice": "Specific, operator-led, plain English, evidence-aware, and free of unsupported guarantees.",
+    "visual": "Mobile-first 4:5 carousel plus 9:16 and 16:9 derivatives; bold type, one focal idea per slide, no generic stock imagery.",
+    "featureCoverage": "Every package selects one active EB28 feature from the central catalog and ties it to the article intent."
+  },
+  "article": {
+    "title": "Website Designer Near Me Melbourne FL: How to Choose Without Getting Burned",
+    "url": "https://eb28.co/blog/website-designer-near-me-in-melbourne-fl-how-to-choose-without-getting-burned/",
+    "slug": "website-designer-near-me-in-melbourne-fl-how-to-choose-without-getting-burned",
+    "cluster": "melbourne-web-design",
+    "primaryKeyword": "website designer near me Melbourne FL"
+  },
+  "featureSpotlight": {
+    "id": "free-website-growth-hosting",
+    "name": "Free Website Build + Growth Hosting",
+    "lane": "business-growth",
+    "status": "active",
+    "newSince": "2026-06-19",
+    "audience": "Melbourne and Space Coast businesses that need a clearer site, stronger local visibility, and a dependable lead path",
+    "promise": "See a custom website concept before paying a design fee; approve it, then Growth Hosting keeps the site live and improving for $98 per month.",
+    "features": [
+      "Custom first website concept with no upfront design fee",
+      "Hosting, SSL, technical upkeep, local SEO foundations, and performance checks",
+      "Weekly local content tied to the services customers actually search for",
+      "Lead capture, confirmation, and routing checks before launch"
+    ],
+    "cta": {
+      "label": "Claim a free website build",
+      "url": "https://eb28.co/free-website-build/"
+    },
+    "visualTheme": "cobalt"
+  },
+  "destinations": {
+    "canonicalGuide": "https://eb28.co/blog/website-designer-near-me-in-melbourne-fl-how-to-choose-without-getting-burned/",
+    "feature": "https://eb28.co/free-website-build/"
+  },
+  "platformStrategy": {
+    "facebook": "Problem-to-plan post with a practical checklist and one feature proof point.",
+    "instagram": "Four-slide 4:5 carousel with a save-worthy diagnostic, first fix, feature spotlight, and measurable next step.",
+    "linkedin": "Operator lesson with a specific build sequence and a soft product connection.",
+    "x": "One concise operating insight plus the canonical guide.",
+    "shortFormVideo": "Thirty-to-forty-five-second vertical explainer with visible UI, workflow steps, and on-screen captions."
+  },
+  "creativeSystem": {
+    "version": "2026-07-social-v2",
+    "pillar": "Melbourne Web Design",
+    "objective": "qualified_attention",
+    "eyebrow": "PM FIELD NOTE",
+    "headline": "Make the phone view answer the buyer decision.",
+    "subhead": "Website Designer Near Me Melbourne FL: one constraint, one useful fix, measured handoff.",
+    "theme": "cobalt",
+    "feature": {
+      "id": "free-website-growth-hosting",
+      "name": "Free Website Build + Growth Hosting",
+      "lane": "business-growth",
+      "status": "active",
+      "newSince": "2026-06-19",
+      "audience": "Melbourne and Space Coast businesses that need a clearer site, stronger local visibility, and a dependable lead path",
+      "promise": "See a custom website concept before paying a design fee; approve it, then Growth Hosting keeps the site live and improving for $98 per month.",
+      "features": [
+        "Custom first website concept with no upfront design fee",
+        "Hosting, SSL, technical upkeep, local SEO foundations, and performance checks",
+        "Weekly local content tied to the services customers actually search for",
+        "Lead capture, confirmation, and routing checks before launch"
+      ],
+      "cta": {
+        "label": "Claim a free website build",
+        "url": "https://eb28.co/free-website-build/"
+      },
+      "visualTheme": "cobalt"
+    },
+    "steps": [
+      {
+        "label": "Find the constraint",
+        "value": "Check offer, local proof, speed, and next step on a phone."
+      },
+      {
+        "label": "Build the first fix",
+        "value": "Fix the first screen: offer, proof, speed, next step."
+      },
+      {
+        "label": "Connect the feature",
+        "value": "Free Website Build + Growth Hosting: Custom first website concept with no upfront design fee"
+      }
+    ],
+    "metric": {
+      "label": "What to measure",
+      "value": "Qualified project briefs, booked conversations, and completed forms by landing page"
+    },
+    "cta": {
+      "label": "Read the full EB28 field guide",
+      "url": "https://eb28.co/blog/website-designer-near-me-in-melbourne-fl-how-to-choose-without-getting-burned/"
+    },
+    "disclaimer": "Do not hide ownership, hosting, analytics, or maintenance terms behind a design-only proposal",
+    "requiredFormats": {
+      "instagramCarousel": {
+        "width": 1080,
+        "height": 1350,
+        "slides": 4
+      },
+      "vertical": {
+        "width": 1080,
+        "height": 1920
+      },
+      "landscape": {
+        "width": 1200,
+        "height": 675
+      }
+    }
+  },
+  "posts": {
+    "blog": {
+      "title": "Website Designer Near Me Melbourne FL: How to Choose Without Getting Burned",
+      "url": "https://eb28.co/blog/website-designer-near-me-in-melbourne-fl-how-to-choose-without-getting-burned/",
+      "status": "draft_only"
+    },
+    "facebook": {
+      "caption": "A website should make the next decision easier on a phone, not merely look impressive in a desktop mockup.\n\nBefore adding another tool, inspect the path:\n\n1. Open the page on a real phone and ask whether the offer, location, proof, and next step are clear before scrolling\n2. Start with the first screen: a clear offer, local relevance, visible proof, fast mobile loading, and one obvious next step.\n3. Measure qualified project briefs, booked conversations, and completed forms by landing page.\n\nActive feature: Free Website Build + Growth Hosting\nSee a custom website concept before paying a design fee; approve it, then Growth Hosting keeps the site live and improving for $98 per month.\n\nRead the field guide: https://eb28.co/blog/website-designer-near-me-in-melbourne-fl-how-to-choose-without-getting-burned/\nSee the feature: https://eb28.co/free-website-build/",
+      "url": "https://eb28.co/blog/website-designer-near-me-in-melbourne-fl-how-to-choose-without-getting-burned/",
+      "status": "draft_only",
+      "media": {
+        "type": "image",
+        "mimeType": "image/jpeg",
+        "localPath": "output/eb28-social/assets/2026-07-29-pm/landscape-1200x675.jpg",
+        "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-29-pm/landscape-1200x675.jpg",
+        "width": 1200,
+        "height": 675,
+        "alt": "Free Website Build + Growth Hosting — real EB28 product surface"
+      }
+    },
+    "instagram": {
+      "caption": "A website should make the next decision easier on a phone, not merely look impressive in a desktop mockup.\n\nIf “website designer near me Melbourne FL” is the goal, do not start with a software list.\n\n01 — Find the constraint\nOpen the page on a real phone and ask whether the offer, location, proof, and next step are clear before scrolling\n\n02 — Build one useful fix\nStart with the first screen: a clear offer, local relevance, visible proof, fast mobile loading, and one obvious next step.\n\n03 — Connect a real EB28 feature\nFree Website Build + Growth Hosting: Custom first website concept with no upfront design fee\n\n04 — Prove the handoff\nTrack qualified project briefs, booked conversations, and completed forms by landing page.\n\nSave this for the next audit. Full guide at https://eb28.co/blog/website-designer-near-me-in-melbourne-fl-how-to-choose-without-getting-burned/\n\n#WebDesign #MelbourneFL #ConversionDesign #EB28",
+      "creativeBrief": "Show a mobile-first before-and-after with offer clarity, proof, one primary action, and a clean follow-up path. Use the generated four-slide carousel: decisive cover, diagnostic-to-fix flow, Free Website Build + Growth Hosting spotlight, and measurement/CTA. Show documentary UI or a simple workflow diagram when a real screenshot is available; never use a generic office stock photo.",
+      "url": "https://eb28.co/blog/website-designer-near-me-in-melbourne-fl-how-to-choose-without-getting-burned/",
+      "status": "draft_only",
+      "media": {
+        "type": "carousel",
+        "items": [
+          {
+            "type": "image",
+            "mimeType": "image/jpeg",
+            "localPath": "output/eb28-social/assets/2026-07-29-pm/feed-01-cover.jpg",
+            "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-29-pm/feed-01-cover.jpg",
+            "width": 1080,
+            "height": 1350,
+            "alt": "Make the phone view answer the buyer decision. — EB28 social cover"
+          },
+          {
+            "type": "image",
+            "mimeType": "image/jpeg",
+            "localPath": "output/eb28-social/assets/2026-07-29-pm/feed-02-path.jpg",
+            "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-29-pm/feed-02-path.jpg",
+            "width": 1080,
+            "height": 1350,
+            "alt": "Make the phone view answer the buyer decision. — three-step operating path"
+          },
+          {
+            "type": "image",
+            "mimeType": "image/jpeg",
+            "localPath": "output/eb28-social/assets/2026-07-29-pm/feed-03-feature.jpg",
+            "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-29-pm/feed-03-feature.jpg",
+            "width": 1080,
+            "height": 1350,
+            "alt": "Free Website Build + Growth Hosting — feature details"
+          },
+          {
+            "type": "image",
+            "mimeType": "image/jpeg",
+            "localPath": "output/eb28-social/assets/2026-07-29-pm/feed-04-proof.jpg",
+            "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-29-pm/feed-04-proof.jpg",
+            "width": 1080,
+            "height": 1350,
+            "alt": "Make the phone view answer the buyer decision. — measurement and next step"
+          }
+        ]
+      }
+    },
+    "x": {
+      "caption": "A useful website designer choice starts with the phone view: offer, local proof, speed, and one next step. Feature: Free Website Build + Growth Hosting.\nhttps://eb28.co/blog/website-designer-near-me-in-melbourne-fl-how-to-choose-without-getting-burned/",
+      "url": "https://eb28.co/blog/website-designer-near-me-in-melbourne-fl-how-to-choose-without-getting-burned/",
+      "status": "draft_only",
+      "media": {
+        "type": "image",
+        "mimeType": "image/jpeg",
+        "localPath": "output/eb28-social/assets/2026-07-29-pm/landscape-1200x675.jpg",
+        "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-29-pm/landscape-1200x675.jpg",
+        "width": 1200,
+        "height": 675,
+        "alt": "Free Website Build + Growth Hosting — real EB28 product surface"
+      }
+    },
+    "linkedin": {
+      "caption": "A website should make the next decision easier on a phone, not merely look impressive in a desktop mockup.\n\nA useful website designer near me Melbourne FL project starts with a buyer constraint, not a software list.\n\nThe operating sequence:\n• Open the page on a real phone and ask whether the offer, location, proof, and next step are clear before scrolling\n• Start with the first screen: a clear offer, local relevance, visible proof, fast mobile loading, and one obvious next step.\n• Measure qualified project briefs, booked conversations, and completed forms by landing page\n\nWhat EB28 has added: Free Website Build + Growth Hosting. See a custom website concept before paying a design fee; approve it, then Growth Hosting keeps the site live and improving for $98 per month.\n\nThe full guide covers the 30-day build loop, safeguards, and evidence-based next step.\n\nhttps://eb28.co/blog/website-designer-near-me-in-melbourne-fl-how-to-choose-without-getting-burned/\n\n#WebDesign #MelbourneFL #ConversionDesign",
+      "url": "https://eb28.co/blog/website-designer-near-me-in-melbourne-fl-how-to-choose-without-getting-burned/",
+      "status": "draft_only",
+      "media": {
+        "type": "image",
+        "mimeType": "image/jpeg",
+        "localPath": "output/eb28-social/assets/2026-07-29-pm/landscape-1200x675.jpg",
+        "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-29-pm/landscape-1200x675.jpg",
+        "width": 1200,
+        "height": 675,
+        "alt": "Free Website Build + Growth Hosting — real EB28 product surface"
+      }
+    },
+    "shortFormVideo": {
+      "hook": "A website should make the next decision easier on a phone, not merely look impressive in a desktop mockup.",
+      "durationSeconds": 40,
+      "format": "9:16 vertical, burned-in captions, screen recording or workflow diagram, no talking-head requirement",
+      "beats": [
+        {
+          "seconds": "0-3",
+          "visual": "Large hook over the live page or workflow map",
+          "voiceover": "A website should make the next decision easier on a phone, not merely look impressive in a desktop mockup."
+        },
+        {
+          "seconds": "3-12",
+          "visual": "Highlight the buyer constraint",
+          "voiceover": "Open the page on a real phone and ask whether the offer, location, proof, and next step are clear before scrolling"
+        },
+        {
+          "seconds": "12-24",
+          "visual": "Animate the first-fix path",
+          "voiceover": "Start with the first screen: a clear offer, local relevance, visible proof, fast mobile loading, and one obvious next step."
+        },
+        {
+          "seconds": "24-34",
+          "visual": "Show Free Website Build + Growth Hosting with one real feature",
+          "voiceover": "See a custom website concept before paying a design fee; approve it, then Growth Hosting keeps the site live and improving for $98 per month."
+        },
+        {
+          "seconds": "34-40",
+          "visual": "Show the measurement and canonical URL",
+          "voiceover": "Measure qualified project briefs, booked conversations, and completed forms by landing page. Read the full guide at EB28."
+        }
+      ],
+      "onScreenText": [
+        "Find the constraint",
+        "Build one useful fix",
+        "Feature: Free Website Build + Growth Hosting",
+        "Measure the handoff"
+      ],
+      "caption": "A website should make the next decision easier on a phone. Check the offer, local proof, speed, and next step before paying for a rebuild. Feature: Free Website Build + Growth Hosting. https://eb28.co/blog/website-designer-near-me-in-melbourne-fl-how-to-choose-without-getting-burned/ #WebDesign #MelbourneFL #EB28",
+      "url": "https://eb28.co/blog/website-designer-near-me-in-melbourne-fl-how-to-choose-without-getting-burned/",
+      "status": "draft_only",
+      "media": {
+        "type": "image",
+        "mimeType": "image/jpeg",
+        "localPath": "output/eb28-social/assets/2026-07-29-pm/story-1080x1920.jpg",
+        "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-29-pm/story-1080x1920.jpg",
+        "width": 1080,
+        "height": 1920,
+        "alt": "Make the phone view answer the buyer decision. — vertical story graphic"
+      }
+    }
+  },
+  "visualAssets": {
+    "version": "2026-07-social-v2",
+    "format": "jpeg-no-alpha",
+    "instagramCarousel": [
+      {
+        "type": "image",
+        "mimeType": "image/jpeg",
+        "localPath": "output/eb28-social/assets/2026-07-29-pm/feed-01-cover.jpg",
+        "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-29-pm/feed-01-cover.jpg",
+        "width": 1080,
+        "height": 1350,
+        "alt": "Make the phone view answer the buyer decision. — EB28 social cover"
+      },
+      {
+        "type": "image",
+        "mimeType": "image/jpeg",
+        "localPath": "output/eb28-social/assets/2026-07-29-pm/feed-02-path.jpg",
+        "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-29-pm/feed-02-path.jpg",
+        "width": 1080,
+        "height": 1350,
+        "alt": "Make the phone view answer the buyer decision. — three-step operating path"
+      },
+      {
+        "type": "image",
+        "mimeType": "image/jpeg",
+        "localPath": "output/eb28-social/assets/2026-07-29-pm/feed-03-feature.jpg",
+        "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-29-pm/feed-03-feature.jpg",
+        "width": 1080,
+        "height": 1350,
+        "alt": "Free Website Build + Growth Hosting — feature details"
+      },
+      {
+        "type": "image",
+        "mimeType": "image/jpeg",
+        "localPath": "output/eb28-social/assets/2026-07-29-pm/feed-04-proof.jpg",
+        "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-29-pm/feed-04-proof.jpg",
+        "width": 1080,
+        "height": 1350,
+        "alt": "Make the phone view answer the buyer decision. — measurement and next step"
+      }
+    ],
+    "vertical": {
+      "type": "image",
+      "mimeType": "image/jpeg",
+      "localPath": "output/eb28-social/assets/2026-07-29-pm/story-1080x1920.jpg",
+      "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-29-pm/story-1080x1920.jpg",
+      "width": 1080,
+      "height": 1920,
+      "alt": "Make the phone view answer the buyer decision. — vertical story graphic"
+    },
+    "landscape": {
+      "type": "image",
+      "mimeType": "image/jpeg",
+      "localPath": "output/eb28-social/assets/2026-07-29-pm/landscape-1200x675.jpg",
+      "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-29-pm/landscape-1200x675.jpg",
+      "width": 1200,
+      "height": 675,
+      "alt": "Free Website Build + Growth Hosting — real EB28 product surface"
+    },
+    "proofSource": {
+      "type": "public-page-capture",
+      "localPath": "output/eb28-social/proof-captures/free-website-growth-hosting.jpg"
+    }
+  },
+  "bufferAsset": {
+    "type": "image",
+    "mimeType": "image/jpeg",
+    "localPath": "output/eb28-social/assets/2026-07-29-pm/feed-01-cover.jpg",
+    "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-07-29-pm/feed-01-cover.jpg",
+    "width": 1080,
+    "height": 1350,
+    "alt": "Make the phone view answer the buyer decision. — EB28 social cover"
+  },
+  "socialPublishGuard": {
+    "status": "assets_ready_connection_unverified",
+    "note": "Assets are ready. External publishing still requires explicit package authorization plus a fresh read-only verification of the EB28 API account, organization, exact channel IDs, and channel state."
+  }
+}

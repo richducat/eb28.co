@@ -1,15 +1,15 @@
 {
   "version": "2026-07-social-v2",
-  "capturedAt": "2026-07-30T10:02:24.240Z",
+  "capturedAt": "2026-07-30T22:02:50.166Z",
   "count": 1,
   "captures": [
     {
-      "featureId": "eb28-app-builder",
-      "featureName": "EB28 App Builder",
+      "featureId": "free-website-growth-hosting",
+      "featureName": "Free Website Build + Growth Hosting",
       "lane": "business-growth",
-      "sourceUrl": "https://eb28.co/appbuilder/",
-      "capturedAt": "2026-07-30T10:02:24.240Z",
-      "localPath": "output/eb28-social/proof-captures/eb28-app-builder.jpg",
+      "sourceUrl": "https://eb28.co/free-website-build/",
+      "capturedAt": "2026-07-30T22:02:50.166Z",
+      "localPath": "output/eb28-social/proof-captures/free-website-growth-hosting.jpg",
       "width": 1440,
       "height": 1000,
       "mimeType": "image/jpeg",

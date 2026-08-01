@@ -43,6 +43,10 @@ function ctaDisplayLabel(creative, fallback = 'Read the guide') {
   return compact(String(creative?.cta?.url || fallback).replace(/^https?:\/\//i, '').replace(/\/$/, ''));
 }
 
+function ctaUrlDisplayLabel(creative, fallback = 'eb28.co') {
+  return compact(String(creative?.cta?.url || fallback).replace(/^https?:\/\//i, '').replace(/\/$/, ''));
+}
+
 function wrapText(value, maxChars, maxLines) {
   const words = compact(value)
     .split(' ')
@@ -231,7 +235,7 @@ function proofSvg(creative, theme) {
   ${textLines(metricValue, { x: 116, y: 410, size: 56, weight: 900, fill: theme.ink, lineHeight: 1.08 })}
   <rect x="116" y="760" width="848" height="170" rx="30" fill="${theme.accent}" fill-opacity="0.12" stroke="${theme.accent}" stroke-opacity="0.6"/>
   ${textLines(ctaLabel, { x: 540, y: 830, size: 38, weight: 900, fill: '#f8fafc', lineHeight: 1.16, anchor: 'middle' })}
-  <text x="540" y="900" text-anchor="middle" fill="${theme.accent}" font-family="monospace" font-size="24" font-weight="800">${escapeXml(truncate(ctaDisplayLabel(creative, 'eb28.co'), 55))}</text>
+  <text x="540" y="900" text-anchor="middle" fill="${theme.accent}" font-family="monospace" font-size="24" font-weight="800">${escapeXml(truncate(ctaUrlDisplayLabel(creative, 'eb28.co'), 55))}</text>
   ${textLines(disclaimer, { x: 116, y: 1015, size: 25, weight: 600, fill: '#94a3b8', lineHeight: 1.28 })}
   ${footer({ width, height, theme, label: 'Save this field note' })}
 </svg>`;

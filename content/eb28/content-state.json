@@ -1,6 +1,21 @@
 {
-  "updatedAt": "2026-08-01T10:03:24.070Z",
+  "updatedAt": "2026-08-01T22:02:11.874Z",
   "runs": [
+    {
+      "runId": "2026-08-01-pm",
+      "date": "2026-08-01",
+      "slot": "pm",
+      "operation": "refresh",
+      "createdAt": "2026-08-01T22:02:11.874Z",
+      "article": {
+        "slug": "automated-lead-follow-up-for-contractors-how-to-stop-losing-hot-enquiries",
+        "title": "Automated Lead Follow-Up for Contractors: Stop Losing Jobs",
+        "url": "https://eb28.co/blog/automated-lead-follow-up-for-contractors-how-to-stop-losing-hot-enquiries/",
+        "cluster": "lead-automation",
+        "primaryKeyword": "automated lead follow up for contractors"
+      },
+      "reportPath": "output/eb28-social/eb28-content-2026-08-01-pm.json"
+    },
     {
       "runId": "2026-08-01-am",
       "date": "2026-08-01",

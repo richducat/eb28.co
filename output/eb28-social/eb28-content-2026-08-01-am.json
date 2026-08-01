@@ -1,0 +1,347 @@
+{
+  "brand": "EB28",
+  "lane": "business-growth",
+  "generatedAt": "2026-08-01T10:03:24.069Z",
+  "runId": "2026-08-01-am",
+  "slot": "am",
+  "operation": "refresh",
+  "publishingPolicy": {
+    "externalPublishing": "not_authorized",
+    "requiredState": "draft_only",
+    "note": "Verify the exact EB28-owned account and channel in the publishing tool before any separate publishing action."
+  },
+  "creativeStandards": {
+    "version": "2026-07-social-v2",
+    "voice": "Specific, operator-led, plain English, evidence-aware, and free of unsupported guarantees.",
+    "visual": "Mobile-first 4:5 carousel plus 9:16 and 16:9 derivatives; bold type, one focal idea per slide, no generic stock imagery.",
+    "featureCoverage": "Every package selects one active EB28 feature from the central catalog and ties it to the article intent."
+  },
+  "article": {
+    "title": "Conversion-First Website Redesign Melbourne FL: Fix Lead Leaks",
+    "url": "https://eb28.co/blog/website-redesign-in-melbourne-fl-fix-the-leaks-before-you-rebuild-everything/",
+    "slug": "website-redesign-in-melbourne-fl-fix-the-leaks-before-you-rebuild-everything",
+    "cluster": "conversion",
+    "primaryKeyword": "website redesign Melbourne FL"
+  },
+  "featureSpotlight": {
+    "id": "ai-agent-foundation",
+    "name": "AI Agent Foundation",
+    "lane": "business-growth",
+    "status": "active",
+    "newSince": "2026-06-12",
+    "audience": "small businesses that want to prove one useful AI workflow before funding a larger build",
+    "promise": "Start with one business task, a secure account, linked source material, and a custom system prompt for $10.",
+    "features": [
+      "One narrow workflow instead of a vague all-purpose chatbot",
+      "Secure account setup and basic knowledge-source connection",
+      "Custom operating prompt matched to the business task",
+      "Human handoff with an integration guide"
+    ],
+    "cta": {
+      "label": "Build the $10 proof of concept",
+      "url": "https://eb28.co/#packages"
+    },
+    "visualTheme": "violet"
+  },
+  "destinations": {
+    "canonicalGuide": "https://eb28.co/blog/website-redesign-in-melbourne-fl-fix-the-leaks-before-you-rebuild-everything/",
+    "feature": "https://eb28.co/#packages"
+  },
+  "platformStrategy": {
+    "facebook": "Problem-to-plan post with a practical checklist and one feature proof point.",
+    "instagram": "Four-slide 4:5 carousel with a save-worthy diagnostic, first fix, feature spotlight, and measurable next step.",
+    "linkedin": "Operator lesson with a specific build sequence and a soft product connection.",
+    "x": "One concise operating insight plus the canonical guide.",
+    "shortFormVideo": "Thirty-to-forty-five-second vertical explainer with visible UI, workflow steps, and on-screen captions."
+  },
+  "creativeSystem": {
+    "version": "2026-07-social-v2",
+    "pillar": "Conversion",
+    "objective": "qualified_attention",
+    "eyebrow": "AM FIELD NOTE",
+    "headline": "Fix the offer, proof, form, and follow-up together.",
+    "subhead": "Conversion-First Website Redesign Melbourne FL: one constraint, one useful fix, measured handoff.",
+    "theme": "violet",
+    "feature": {
+      "id": "ai-agent-foundation",
+      "name": "AI Agent Foundation",
+      "lane": "business-growth",
+      "status": "active",
+      "newSince": "2026-06-12",
+      "audience": "small businesses that want to prove one useful AI workflow before funding a larger build",
+      "promise": "Start with one business task, a secure account, linked source material, and a custom system prompt for $10.",
+      "features": [
+        "One narrow workflow instead of a vague all-purpose chatbot",
+        "Secure account setup and basic knowledge-source connection",
+        "Custom operating prompt matched to the business task",
+        "Human handoff with an integration guide"
+      ],
+      "cta": {
+        "label": "Build the $10 proof of concept",
+        "url": "https://eb28.co/#packages"
+      },
+      "visualTheme": "violet"
+    },
+    "steps": [
+      {
+        "label": "Find the constraint",
+        "value": "Find where buyers lose trust before the enquiry completes."
+      },
+      {
+        "label": "Build the first fix",
+        "value": "Sharpen the promise, move proof up, simplify the form."
+      },
+      {
+        "label": "Connect the feature",
+        "value": "AI Agent Foundation: One narrow workflow instead of a vague all-purpose chatbot"
+      }
+    ],
+    "metric": {
+      "label": "What to measure",
+      "value": "Completed qualified enquiries rather than button clicks or raw sessions alone"
+    },
+    "cta": {
+      "label": "Read the full EB28 field guide",
+      "url": "https://eb28.co/blog/website-redesign-in-melbourne-fl-fix-the-leaks-before-you-rebuild-everything/"
+    },
+    "disclaimer": "Do not manufacture urgency, testimonials, scarcity, or performance claims",
+    "requiredFormats": {
+      "instagramCarousel": {
+        "width": 1080,
+        "height": 1350,
+        "slides": 4
+      },
+      "vertical": {
+        "width": 1080,
+        "height": 1920
+      },
+      "landscape": {
+        "width": 1200,
+        "height": 675
+      }
+    }
+  },
+  "posts": {
+    "blog": {
+      "title": "Conversion-First Website Redesign Melbourne FL: Fix Lead Leaks",
+      "url": "https://eb28.co/blog/website-redesign-in-melbourne-fl-fix-the-leaks-before-you-rebuild-everything/",
+      "status": "draft_only"
+    },
+    "facebook": {
+      "caption": "More traffic will not repair a page that makes the offer, proof, form, or follow-up hard to trust.\n\nBefore adding another tool, inspect the path:\n\n1. Read the first screen as a new buyer and identify the offer, audience, proof, and next step without using insider knowledge\n2. Start by removing friction: sharpen the headline, move proof closer to the CTA, simplify the form, and make the follow-up promise specific.\n3. Measure completed qualified enquiries rather than button clicks or raw sessions alone.\n\nActive feature: AI Agent Foundation\nStart with one business task, a secure account, linked source material, and a custom system prompt for $10.\n\nRead the field guide: https://eb28.co/blog/website-redesign-in-melbourne-fl-fix-the-leaks-before-you-rebuild-everything/\nSee the feature: https://eb28.co/#packages",
+      "url": "https://eb28.co/blog/website-redesign-in-melbourne-fl-fix-the-leaks-before-you-rebuild-everything/",
+      "status": "draft_only",
+      "media": {
+        "type": "image",
+        "mimeType": "image/jpeg",
+        "localPath": "output/eb28-social/assets/2026-08-01-am/landscape-1200x675.jpg",
+        "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-08-01-am/landscape-1200x675.jpg",
+        "width": 1200,
+        "height": 675,
+        "alt": "AI Agent Foundation — real EB28 product surface"
+      }
+    },
+    "instagram": {
+      "caption": "More traffic will not repair a page that makes the offer, proof, form, or follow-up hard to trust.\n\nIf “website redesign Melbourne FL” is the goal, do not start with a software list.\n\n01 — Find the constraint\nRead the first screen as a new buyer and identify the offer, audience, proof, and next step without using insider knowledge\n\n02 — Build one useful fix\nStart by removing friction: sharpen the headline, move proof closer to the CTA, simplify the form, and make the follow-up promise specific.\n\n03 — Connect a real EB28 feature\nAI Agent Foundation: One narrow workflow instead of a vague all-purpose chatbot\n\n04 — Prove the handoff\nTrack completed qualified enquiries rather than button clicks or raw sessions alone.\n\nSave this for the next audit. Full guide at https://eb28.co/blog/website-redesign-in-melbourne-fl-fix-the-leaks-before-you-rebuild-everything/\n\n#ConversionRateOptimization #LeadGeneration #SmallBusiness #EB28",
+      "creativeBrief": "Map the conversion path as four panels: promise, proof, action, and response, with one friction point called out in each. Use the generated four-slide carousel: decisive cover, diagnostic-to-fix flow, AI Agent Foundation spotlight, and measurement/CTA. Show documentary UI or a simple workflow diagram when a real screenshot is available; never use a generic office stock photo.",
+      "url": "https://eb28.co/blog/website-redesign-in-melbourne-fl-fix-the-leaks-before-you-rebuild-everything/",
+      "status": "draft_only",
+      "media": {
+        "type": "carousel",
+        "items": [
+          {
+            "type": "image",
+            "mimeType": "image/jpeg",
+            "localPath": "output/eb28-social/assets/2026-08-01-am/feed-01-cover.jpg",
+            "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-08-01-am/feed-01-cover.jpg",
+            "width": 1080,
+            "height": 1350,
+            "alt": "Fix the offer, proof, form, and follow-up together. — EB28 social cover"
+          },
+          {
+            "type": "image",
+            "mimeType": "image/jpeg",
+            "localPath": "output/eb28-social/assets/2026-08-01-am/feed-02-path.jpg",
+            "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-08-01-am/feed-02-path.jpg",
+            "width": 1080,
+            "height": 1350,
+            "alt": "Fix the offer, proof, form, and follow-up together. — three-step operating path"
+          },
+          {
+            "type": "image",
+            "mimeType": "image/jpeg",
+            "localPath": "output/eb28-social/assets/2026-08-01-am/feed-03-feature.jpg",
+            "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-08-01-am/feed-03-feature.jpg",
+            "width": 1080,
+            "height": 1350,
+            "alt": "AI Agent Foundation — feature details"
+          },
+          {
+            "type": "image",
+            "mimeType": "image/jpeg",
+            "localPath": "output/eb28-social/assets/2026-08-01-am/feed-04-proof.jpg",
+            "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-08-01-am/feed-04-proof.jpg",
+            "width": 1080,
+            "height": 1350,
+            "alt": "Fix the offer, proof, form, and follow-up together. — measurement and next step"
+          }
+        ]
+      }
+    },
+    "x": {
+      "caption": "More traffic will not repair a page that makes the offer, proof, form, or follow-up hard to trust. AI Agent Foundation: One narrow workflow instead of a vague all-purpose chatbot\nhttps://eb28.co/blog/website-redesign-in-melbourne-fl-fix-the-leaks-before-you-rebuild-everything/",
+      "url": "https://eb28.co/blog/website-redesign-in-melbourne-fl-fix-the-leaks-before-you-rebuild-everything/",
+      "status": "draft_only",
+      "media": {
+        "type": "image",
+        "mimeType": "image/jpeg",
+        "localPath": "output/eb28-social/assets/2026-08-01-am/landscape-1200x675.jpg",
+        "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-08-01-am/landscape-1200x675.jpg",
+        "width": 1200,
+        "height": 675,
+        "alt": "AI Agent Foundation — real EB28 product surface"
+      }
+    },
+    "linkedin": {
+      "caption": "More traffic will not repair a page that makes the offer, proof, form, or follow-up hard to trust.\n\nA useful website redesign Melbourne FL project starts with a buyer constraint, not a software list.\n\nThe operating sequence:\n• Read the first screen as a new buyer and identify the offer, audience, proof, and next step without using insider knowledge\n• Start by removing friction: sharpen the headline, move proof closer to the CTA, simplify the form, and make the follow-up promise specific.\n• Measure completed qualified enquiries rather than button clicks or raw sessions alone\n\nWhat EB28 has added: AI Agent Foundation. Start with one business task, a secure account, linked source material, and a custom system prompt for $10.\n\nThe full guide covers the 30-day build loop, safeguards, and evidence-based next step.\n\nhttps://eb28.co/blog/website-redesign-in-melbourne-fl-fix-the-leaks-before-you-rebuild-everything/\n\n#ConversionRateOptimization #LeadGeneration #SmallBusiness",
+      "url": "https://eb28.co/blog/website-redesign-in-melbourne-fl-fix-the-leaks-before-you-rebuild-everything/",
+      "status": "draft_only",
+      "media": {
+        "type": "image",
+        "mimeType": "image/jpeg",
+        "localPath": "output/eb28-social/assets/2026-08-01-am/landscape-1200x675.jpg",
+        "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-08-01-am/landscape-1200x675.jpg",
+        "width": 1200,
+        "height": 675,
+        "alt": "AI Agent Foundation — real EB28 product surface"
+      }
+    },
+    "shortFormVideo": {
+      "hook": "More traffic will not repair a page that makes the offer, proof, form, or follow-up hard to trust.",
+      "durationSeconds": 40,
+      "format": "9:16 vertical, burned-in captions, screen recording or workflow diagram, no talking-head requirement",
+      "beats": [
+        {
+          "seconds": "0-3",
+          "visual": "Large hook over the live page or workflow map",
+          "voiceover": "More traffic will not repair a page that makes the offer, proof, form, or follow-up hard to trust."
+        },
+        {
+          "seconds": "3-12",
+          "visual": "Highlight the buyer constraint",
+          "voiceover": "Read the first screen as a new buyer and identify the offer, audience, proof, and next step without using insider knowledge"
+        },
+        {
+          "seconds": "12-24",
+          "visual": "Animate the first-fix path",
+          "voiceover": "Start by removing friction: sharpen the headline, move proof closer to the CTA, simplify the form, and make the follow-up promise specific."
+        },
+        {
+          "seconds": "24-34",
+          "visual": "Show AI Agent Foundation with one real feature",
+          "voiceover": "Start with one business task, a secure account, linked source material, and a custom system prompt for $10."
+        },
+        {
+          "seconds": "34-40",
+          "visual": "Show the measurement and canonical URL",
+          "voiceover": "Measure completed qualified enquiries rather than button clicks or raw sessions alone. Read the full guide at EB28."
+        }
+      ],
+      "onScreenText": [
+        "Find the constraint",
+        "Build one useful fix",
+        "Feature: AI Agent Foundation",
+        "Measure the handoff"
+      ],
+      "caption": "More traffic will not repair a page that makes the offer, proof, form, or follow-up hard to trust. AI Agent Foundation: Start with one business task, a secure account, linked source material, and a custom system prompt for $10. https://eb28.co/blog/website-redesign-in-melbourne-fl-fix-the-leaks-before-you-rebuild-everything/ #ConversionRateOptimization #LeadGeneration #SmallBusiness #EB28",
+      "url": "https://eb28.co/blog/website-redesign-in-melbourne-fl-fix-the-leaks-before-you-rebuild-everything/",
+      "status": "draft_only",
+      "media": {
+        "type": "image",
+        "mimeType": "image/jpeg",
+        "localPath": "output/eb28-social/assets/2026-08-01-am/story-1080x1920.jpg",
+        "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-08-01-am/story-1080x1920.jpg",
+        "width": 1080,
+        "height": 1920,
+        "alt": "Fix the offer, proof, form, and follow-up together. — vertical story graphic"
+      }
+    }
+  },
+  "visualAssets": {
+    "version": "2026-07-social-v2",
+    "format": "jpeg-no-alpha",
+    "instagramCarousel": [
+      {
+        "type": "image",
+        "mimeType": "image/jpeg",
+        "localPath": "output/eb28-social/assets/2026-08-01-am/feed-01-cover.jpg",
+        "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-08-01-am/feed-01-cover.jpg",
+        "width": 1080,
+        "height": 1350,
+        "alt": "Fix the offer, proof, form, and follow-up together. — EB28 social cover"
+      },
+      {
+        "type": "image",
+        "mimeType": "image/jpeg",
+        "localPath": "output/eb28-social/assets/2026-08-01-am/feed-02-path.jpg",
+        "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-08-01-am/feed-02-path.jpg",
+        "width": 1080,
+        "height": 1350,
+        "alt": "Fix the offer, proof, form, and follow-up together. — three-step operating path"
+      },
+      {
+        "type": "image",
+        "mimeType": "image/jpeg",
+        "localPath": "output/eb28-social/assets/2026-08-01-am/feed-03-feature.jpg",
+        "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-08-01-am/feed-03-feature.jpg",
+        "width": 1080,
+        "height": 1350,
+        "alt": "AI Agent Foundation — feature details"
+      },
+      {
+        "type": "image",
+        "mimeType": "image/jpeg",
+        "localPath": "output/eb28-social/assets/2026-08-01-am/feed-04-proof.jpg",
+        "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-08-01-am/feed-04-proof.jpg",
+        "width": 1080,
+        "height": 1350,
+        "alt": "Fix the offer, proof, form, and follow-up together. — measurement and next step"
+      }
+    ],
+    "vertical": {
+      "type": "image",
+      "mimeType": "image/jpeg",
+      "localPath": "output/eb28-social/assets/2026-08-01-am/story-1080x1920.jpg",
+      "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-08-01-am/story-1080x1920.jpg",
+      "width": 1080,
+      "height": 1920,
+      "alt": "Fix the offer, proof, form, and follow-up together. — vertical story graphic"
+    },
+    "landscape": {
+      "type": "image",
+      "mimeType": "image/jpeg",
+      "localPath": "output/eb28-social/assets/2026-08-01-am/landscape-1200x675.jpg",
+      "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-08-01-am/landscape-1200x675.jpg",
+      "width": 1200,
+      "height": 675,
+      "alt": "AI Agent Foundation — real EB28 product surface"
+    },
+    "proofSource": {
+      "type": "public-page-capture",
+      "localPath": "output/eb28-social/proof-captures/ai-agent-foundation.jpg"
+    }
+  },
+  "bufferAsset": {
+    "type": "image",
+    "mimeType": "image/jpeg",
+    "localPath": "output/eb28-social/assets/2026-08-01-am/feed-01-cover.jpg",
+    "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-08-01-am/feed-01-cover.jpg",
+    "width": 1080,
+    "height": 1350,
+    "alt": "Fix the offer, proof, form, and follow-up together. — EB28 social cover"
+  },
+  "socialPublishGuard": {
+    "status": "assets_ready_connection_unverified",
+    "note": "Assets are ready. External publishing still requires explicit package authorization plus a fresh read-only verification of the EB28 API account, organization, exact channel IDs, and channel state."
+  }
+}

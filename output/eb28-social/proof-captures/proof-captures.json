@@ -1,15 +1,15 @@
 {
   "version": "2026-07-social-v2",
-  "capturedAt": "2026-07-31T22:02:36.397Z",
+  "capturedAt": "2026-08-01T10:03:54.220Z",
   "count": 1,
   "captures": [
     {
-      "featureId": "lead-automation-system",
-      "featureName": "Revenue + Lead Automation",
+      "featureId": "ai-agent-foundation",
+      "featureName": "AI Agent Foundation",
       "lane": "business-growth",
-      "sourceUrl": "https://eb28.co/#contact",
-      "capturedAt": "2026-07-31T22:02:36.397Z",
-      "localPath": "output/eb28-social/proof-captures/lead-automation-system.jpg",
+      "sourceUrl": "https://eb28.co/#packages",
+      "capturedAt": "2026-08-01T10:03:54.220Z",
+      "localPath": "output/eb28-social/proof-captures/ai-agent-foundation.jpg",
       "width": 1440,
       "height": 1000,
       "mimeType": "image/jpeg",

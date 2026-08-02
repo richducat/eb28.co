@@ -682,10 +682,10 @@
     "cluster": "lead-automation",
     "primaryKeyword": "AI appointment setter for small business",
     "datePublished": "2026-06-13",
-    "dateModified": "2026-07-12",
+    "dateModified": "2026-08-02",
     "author": "EB28",
     "heroLabel": "Practical growth guide",
-    "sourceRunId": "2026-07-12-am",
+    "sourceRunId": "2026-08-02-am",
     "summary": "AI appointment setter for small business works best when the page or workflow answers a real buyer question, removes one measurable source of friction, and keeps ownership clear. This guide is for service-business owners and operators who need faster lead handling without handing pricing, qualification, or relationship decisions to an unsupervised bot. It explains the first fixes, a 30-day implementation sequence, the measurements that matter, and the boundaries that protect trust.",
     "sections": [
       {
@@ -757,7 +757,7 @@
         "heading": "Keep the system useful, safe, and accountable",
         "body": [
           "Automation should support the sale without pretending to be the whole relationship. The best system captures intent, follows up quickly, and keeps the owner in control. The system stays useful when every change has an owner, a reason, a validation step, and a rollback path. That discipline matters most when a workflow touches customer data, public claims, accessibility, search visibility, or automated communication, because a small error can travel farther than the original improvement.",
-          "Support every automated touchpoint with a clear reason, a known destination, and a human fallback. If the business cannot verify the sender, route, permission, or required context, the safer move is to pause that step, keep the manual handoff visible, and fix the evidence gap before expanding the workflow."
+          "Review citations before publishing and remove any claim that the source does not support. Keep public contact paths intentional, keep off-lane proof and unrelated project material out of the output, and do not publish social drafts without verifying the owned account and destination. If a credential or production surface is unavailable, preserve the last verified state and report the blocker rather than filling the gap with an assumption."
         ],
         "bullets": [
           "Keep pricing exceptions, legal commitments, high-value qualification, and sensitive disputes with an accountable person",

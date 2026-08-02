@@ -1,0 +1,348 @@
+{
+  "brand": "EB28",
+  "lane": "business-growth",
+  "generatedAt": "2026-08-02T10:02:49.534Z",
+  "runId": "2026-08-02-am",
+  "slot": "am",
+  "operation": "refresh",
+  "publishingPolicy": {
+    "externalPublishing": "not_authorized",
+    "requiredState": "draft_only",
+    "note": "Verify the exact EB28-owned account and channel in the publishing tool before any separate publishing action."
+  },
+  "creativeStandards": {
+    "version": "2026-07-social-v2",
+    "voice": "Specific, operator-led, plain English, evidence-aware, and free of unsupported guarantees.",
+    "visual": "Mobile-first 4:5 carousel plus 9:16 and 16:9 derivatives; bold type, one focal idea per slide, no generic stock imagery.",
+    "featureCoverage": "Every package selects one active EB28 feature from the central catalog and ties it to the article intent."
+  },
+  "article": {
+    "title": "AI Appointment Setter for Small Business: What to Automate",
+    "url": "https://eb28.co/blog/ai-appointment-setter-for-small-business-where-it-helps-and-where-it-hurts/",
+    "slug": "ai-appointment-setter-for-small-business-where-it-helps-and-where-it-hurts",
+    "cluster": "lead-automation",
+    "primaryKeyword": "AI appointment setter for small business"
+  },
+  "featureSpotlight": {
+    "id": "recon-agent-founder-beta",
+    "name": "Recon Agent Founder Beta",
+    "lane": "business-growth",
+    "status": "founder_beta",
+    "newSince": "2026-06-12",
+    "audience": "operators who need a daily view of payout and reconciliation problems without digging through every transaction by hand",
+    "promise": "A focused operating summary that surfaces payout problems early and keeps the next review action visible.",
+    "features": [
+      "Daily operating summary",
+      "Fast identification of payout and reconciliation problems",
+      "Founder onboarding support",
+      "A narrow workflow with visible source evidence"
+    ],
+    "cta": {
+      "label": "See Recon Agent",
+      "url": "https://eb28.co/reconcile/"
+    },
+    "visualTheme": "cyan"
+  },
+  "destinations": {
+    "canonicalGuide": "https://eb28.co/blog/ai-appointment-setter-for-small-business-where-it-helps-and-where-it-hurts/",
+    "feature": "https://eb28.co/reconcile/"
+  },
+  "platformStrategy": {
+    "facebook": "Problem-to-plan post with a practical checklist and one feature proof point.",
+    "instagram": "Four-slide 4:5 carousel with a save-worthy diagnostic, first fix, feature spotlight, and measurable next step.",
+    "linkedin": "Operator lesson with a specific build sequence and a soft product connection.",
+    "x": "One concise operating insight plus the canonical guide.",
+    "shortFormVideo": "Thirty-to-forty-five-second vertical explainer with visible UI, workflow steps, and on-screen captions."
+  },
+  "creativeSystem": {
+    "version": "2026-07-social-v2",
+    "pillar": "Lead Automation",
+    "objective": "qualified_attention",
+    "eyebrow": "AM FIELD NOTE",
+    "headline": "Shorten the wait without hiding the human owner.",
+    "subhead": "AI Appointment Setter for Small Business: one constraint, one useful fix, measured handoff.",
+    "theme": "cyan",
+    "feature": {
+      "id": "recon-agent-founder-beta",
+      "name": "Recon Agent Founder Beta",
+      "lane": "business-growth",
+      "status": "founder_beta",
+      "newSince": "2026-06-12",
+      "audience": "operators who need a daily view of payout and reconciliation problems without digging through every transaction by hand",
+      "promise": "A focused operating summary that surfaces payout problems early and keeps the next review action visible.",
+      "features": [
+        "Daily operating summary",
+        "Fast identification of payout and reconciliation problems",
+        "Founder onboarding support",
+        "A narrow workflow with visible source evidence"
+      ],
+      "cta": {
+        "label": "See Recon Agent",
+        "url": "https://eb28.co/reconcile/"
+      },
+      "visualTheme": "cyan"
+    },
+    "steps": [
+      {
+        "label": "Find the constraint",
+        "value": "Map the first five minutes after each enquiry."
+      },
+      {
+        "label": "Build the first fix",
+        "value": "Map confirmation, routing, reminders, and human reply."
+      },
+      {
+        "label": "Connect the feature",
+        "value": "Recon Agent Founder Beta: Daily operating summary"
+      }
+    ],
+    "metric": {
+      "label": "What to measure",
+      "value": "Time to acknowledgement and time to a useful human response for qualified leads"
+    },
+    "cta": {
+      "label": "Read the full EB28 field guide",
+      "url": "https://eb28.co/blog/ai-appointment-setter-for-small-business-where-it-helps-and-where-it-hurts/"
+    },
+    "disclaimer": "Keep pricing exceptions, legal commitments, high-value qualification, and sensitive disputes with an accountable person",
+    "requiredFormats": {
+      "instagramCarousel": {
+        "width": 1080,
+        "height": 1350,
+        "slides": 4
+      },
+      "vertical": {
+        "width": 1080,
+        "height": 1920
+      },
+      "landscape": {
+        "width": 1200,
+        "height": 675
+      }
+    }
+  },
+  "posts": {
+    "blog": {
+      "title": "AI Appointment Setter for Small Business: What to Automate",
+      "url": "https://eb28.co/blog/ai-appointment-setter-for-small-business-where-it-helps-and-where-it-hurts/",
+      "caption": "Publish the refreshed field guide as the canonical reference for small-business appointment-setting automation: what to automate first, where human ownership must stay visible, how to measure the handoff, and how Recon Agent fits the operating-review layer.",
+      "status": "draft_only"
+    },
+    "facebook": {
+      "caption": "Good lead automation shortens the wait while keeping consequential decisions and exceptions accountable to a person.\n\nBefore adding another tool, inspect the path:\n\n1. Map the first five minutes after an enquiry and identify where ownership or context is lost\n2. Start with the handoff after the form: confirmation, qualification, routing, reminders, and a fast human reply when the lead is worth it.\n3. Measure time to acknowledgement and time to a useful human response for qualified leads.\n\nFounder beta: Recon Agent Founder Beta\nA focused operating summary that surfaces payout problems early and keeps the next review action visible.\n\nRead the field guide: https://eb28.co/blog/ai-appointment-setter-for-small-business-where-it-helps-and-where-it-hurts/\nSee the feature: https://eb28.co/reconcile/",
+      "url": "https://eb28.co/blog/ai-appointment-setter-for-small-business-where-it-helps-and-where-it-hurts/",
+      "status": "draft_only",
+      "media": {
+        "type": "image",
+        "mimeType": "image/jpeg",
+        "localPath": "output/eb28-social/assets/2026-08-02-am/landscape-1200x675.jpg",
+        "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-08-02-am/landscape-1200x675.jpg",
+        "width": 1200,
+        "height": 675,
+        "alt": "Recon Agent Founder Beta — real EB28 product surface"
+      }
+    },
+    "instagram": {
+      "caption": "Good lead automation shortens the wait while keeping consequential decisions and exceptions accountable to a person.\n\nIf “AI appointment setter for small business” is the goal, do not start with a software list.\n\n01 — Find the constraint\nMap the first five minutes after an enquiry and identify where ownership or context is lost\n\n02 — Build one useful fix\nStart with the handoff after the form: confirmation, qualification, routing, reminders, and a fast human reply when the lead is worth it.\n\n03 — Connect a real EB28 feature\nRecon Agent Founder Beta: Daily operating summary\n\n04 — Prove the handoff\nTrack time to acknowledgement and time to a useful human response for qualified leads.\n\nSave this for the next audit. Full guide at https://eb28.co/blog/ai-appointment-setter-for-small-business-where-it-helps-and-where-it-hurts/\n\n#LeadAutomation #AISystems #SmallBusiness #EB28",
+      "creativeBrief": "Use a lead-handoff timeline that separates automatic confirmation, routing, human review, and follow-up measurement. Use the generated four-slide carousel: decisive cover, diagnostic-to-fix flow, Recon Agent Founder Beta spotlight, and measurement/CTA. Show documentary UI or a simple workflow diagram when a real screenshot is available; never use a generic office stock photo.",
+      "url": "https://eb28.co/blog/ai-appointment-setter-for-small-business-where-it-helps-and-where-it-hurts/",
+      "status": "draft_only",
+      "media": {
+        "type": "carousel",
+        "items": [
+          {
+            "type": "image",
+            "mimeType": "image/jpeg",
+            "localPath": "output/eb28-social/assets/2026-08-02-am/feed-01-cover.jpg",
+            "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-08-02-am/feed-01-cover.jpg",
+            "width": 1080,
+            "height": 1350,
+            "alt": "Shorten the wait without hiding the human owner. — EB28 social cover"
+          },
+          {
+            "type": "image",
+            "mimeType": "image/jpeg",
+            "localPath": "output/eb28-social/assets/2026-08-02-am/feed-02-path.jpg",
+            "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-08-02-am/feed-02-path.jpg",
+            "width": 1080,
+            "height": 1350,
+            "alt": "Shorten the wait without hiding the human owner. — three-step operating path"
+          },
+          {
+            "type": "image",
+            "mimeType": "image/jpeg",
+            "localPath": "output/eb28-social/assets/2026-08-02-am/feed-03-feature.jpg",
+            "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-08-02-am/feed-03-feature.jpg",
+            "width": 1080,
+            "height": 1350,
+            "alt": "Recon Agent Founder Beta — feature details"
+          },
+          {
+            "type": "image",
+            "mimeType": "image/jpeg",
+            "localPath": "output/eb28-social/assets/2026-08-02-am/feed-04-proof.jpg",
+            "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-08-02-am/feed-04-proof.jpg",
+            "width": 1080,
+            "height": 1350,
+            "alt": "Shorten the wait without hiding the human owner. — measurement and next step"
+          }
+        ]
+      }
+    },
+    "x": {
+      "caption": "Good lead automation shortens the wait while keeping consequential decisions and exceptions accountable to a person. Recon Agent Founder Beta: Daily operating summary\nhttps://eb28.co/blog/ai-appointment-setter-for-small-business-where-it-helps-and-where-it-hurts/",
+      "url": "https://eb28.co/blog/ai-appointment-setter-for-small-business-where-it-helps-and-where-it-hurts/",
+      "status": "draft_only",
+      "media": {
+        "type": "image",
+        "mimeType": "image/jpeg",
+        "localPath": "output/eb28-social/assets/2026-08-02-am/landscape-1200x675.jpg",
+        "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-08-02-am/landscape-1200x675.jpg",
+        "width": 1200,
+        "height": 675,
+        "alt": "Recon Agent Founder Beta — real EB28 product surface"
+      }
+    },
+    "linkedin": {
+      "caption": "Good lead automation shortens the wait while keeping consequential decisions and exceptions accountable to a person.\n\nA useful AI appointment setter for small business project starts with a buyer constraint, not a software list.\n\nThe operating sequence:\n• Map the first five minutes after an enquiry and identify where ownership or context is lost\n• Start with the handoff after the form: confirmation, qualification, routing, reminders, and a fast human reply when the lead is worth it.\n• Measure time to acknowledgement and time to a useful human response for qualified leads\n\nWhat EB28 has added: Recon Agent Founder Beta. A focused operating summary that surfaces payout problems early and keeps the next review action visible.\n\nThe full guide covers the 30-day build loop, safeguards, and evidence-based next step.\n\nhttps://eb28.co/blog/ai-appointment-setter-for-small-business-where-it-helps-and-where-it-hurts/\n\n#LeadAutomation #AISystems #SmallBusiness",
+      "url": "https://eb28.co/blog/ai-appointment-setter-for-small-business-where-it-helps-and-where-it-hurts/",
+      "status": "draft_only",
+      "media": {
+        "type": "image",
+        "mimeType": "image/jpeg",
+        "localPath": "output/eb28-social/assets/2026-08-02-am/landscape-1200x675.jpg",
+        "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-08-02-am/landscape-1200x675.jpg",
+        "width": 1200,
+        "height": 675,
+        "alt": "Recon Agent Founder Beta — real EB28 product surface"
+      }
+    },
+    "shortFormVideo": {
+      "hook": "Good lead automation shortens the wait while keeping consequential decisions and exceptions accountable to a person.",
+      "durationSeconds": 40,
+      "format": "9:16 vertical, burned-in captions, screen recording or workflow diagram, no talking-head requirement",
+      "beats": [
+        {
+          "seconds": "0-3",
+          "visual": "Large hook over the live page or workflow map",
+          "voiceover": "Good lead automation shortens the wait while keeping consequential decisions and exceptions accountable to a person."
+        },
+        {
+          "seconds": "3-12",
+          "visual": "Highlight the buyer constraint",
+          "voiceover": "Map the first five minutes after an enquiry and identify where ownership or context is lost"
+        },
+        {
+          "seconds": "12-24",
+          "visual": "Animate the first-fix path",
+          "voiceover": "Start with the handoff after the form: confirmation, qualification, routing, reminders, and a fast human reply when the lead is worth it."
+        },
+        {
+          "seconds": "24-34",
+          "visual": "Show Recon Agent Founder Beta with one real feature",
+          "voiceover": "A focused operating summary that surfaces payout problems early and keeps the next review action visible."
+        },
+        {
+          "seconds": "34-40",
+          "visual": "Show the measurement and canonical URL",
+          "voiceover": "Measure time to acknowledgement and time to a useful human response for qualified leads. Read the full guide at EB28."
+        }
+      ],
+      "onScreenText": [
+        "Find the constraint",
+        "Build one useful fix",
+        "Feature: Recon Agent Founder Beta",
+        "Measure the handoff"
+      ],
+      "caption": "Good lead automation shortens the wait while keeping consequential decisions and exceptions accountable to a person. Recon Agent Founder Beta: A focused operating summary that surfaces payout problems early and keeps the next review action visible. https://eb28.co/blog/ai-appointment-setter-for-small-business-where-it-helps-and-where-it-hurts/ #LeadAutomation #AISystems #SmallBusiness #EB28",
+      "url": "https://eb28.co/blog/ai-appointment-setter-for-small-business-where-it-helps-and-where-it-hurts/",
+      "status": "draft_only",
+      "media": {
+        "type": "image",
+        "mimeType": "image/jpeg",
+        "localPath": "output/eb28-social/assets/2026-08-02-am/story-1080x1920.jpg",
+        "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-08-02-am/story-1080x1920.jpg",
+        "width": 1080,
+        "height": 1920,
+        "alt": "Shorten the wait without hiding the human owner. — vertical story graphic"
+      }
+    }
+  },
+  "visualAssets": {
+    "version": "2026-07-social-v2",
+    "format": "jpeg-no-alpha",
+    "instagramCarousel": [
+      {
+        "type": "image",
+        "mimeType": "image/jpeg",
+        "localPath": "output/eb28-social/assets/2026-08-02-am/feed-01-cover.jpg",
+        "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-08-02-am/feed-01-cover.jpg",
+        "width": 1080,
+        "height": 1350,
+        "alt": "Shorten the wait without hiding the human owner. — EB28 social cover"
+      },
+      {
+        "type": "image",
+        "mimeType": "image/jpeg",
+        "localPath": "output/eb28-social/assets/2026-08-02-am/feed-02-path.jpg",
+        "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-08-02-am/feed-02-path.jpg",
+        "width": 1080,
+        "height": 1350,
+        "alt": "Shorten the wait without hiding the human owner. — three-step operating path"
+      },
+      {
+        "type": "image",
+        "mimeType": "image/jpeg",
+        "localPath": "output/eb28-social/assets/2026-08-02-am/feed-03-feature.jpg",
+        "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-08-02-am/feed-03-feature.jpg",
+        "width": 1080,
+        "height": 1350,
+        "alt": "Recon Agent Founder Beta — feature details"
+      },
+      {
+        "type": "image",
+        "mimeType": "image/jpeg",
+        "localPath": "output/eb28-social/assets/2026-08-02-am/feed-04-proof.jpg",
+        "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-08-02-am/feed-04-proof.jpg",
+        "width": 1080,
+        "height": 1350,
+        "alt": "Shorten the wait without hiding the human owner. — measurement and next step"
+      }
+    ],
+    "vertical": {
+      "type": "image",
+      "mimeType": "image/jpeg",
+      "localPath": "output/eb28-social/assets/2026-08-02-am/story-1080x1920.jpg",
+      "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-08-02-am/story-1080x1920.jpg",
+      "width": 1080,
+      "height": 1920,
+      "alt": "Shorten the wait without hiding the human owner. — vertical story graphic"
+    },
+    "landscape": {
+      "type": "image",
+      "mimeType": "image/jpeg",
+      "localPath": "output/eb28-social/assets/2026-08-02-am/landscape-1200x675.jpg",
+      "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-08-02-am/landscape-1200x675.jpg",
+      "width": 1200,
+      "height": 675,
+      "alt": "Recon Agent Founder Beta — real EB28 product surface"
+    },
+    "proofSource": {
+      "type": "public-page-capture",
+      "localPath": "output/eb28-social/proof-captures/recon-agent-founder-beta.jpg"
+    }
+  },
+  "bufferAsset": {
+    "type": "image",
+    "mimeType": "image/jpeg",
+    "localPath": "output/eb28-social/assets/2026-08-02-am/feed-01-cover.jpg",
+    "publicUrl": "https://raw.githubusercontent.com/richducat/eb28.co/main/output/eb28-social/assets/2026-08-02-am/feed-01-cover.jpg",
+    "width": 1080,
+    "height": 1350,
+    "alt": "Shorten the wait without hiding the human owner. — EB28 social cover"
+  },
+  "socialPublishGuard": {
+    "status": "assets_ready_connection_unverified",
+    "note": "Assets are ready. External publishing still requires explicit package authorization plus a fresh read-only verification of the EB28 API account, organization, exact channel IDs, and channel state."
+  }
+}

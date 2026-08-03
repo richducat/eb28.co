@@ -47,3 +47,10 @@
 - Search Console source note: "eb28" is the only current position-4-to-20 row with more than one impression; exclude the one-impression "beeeee28" row from action because it is not a service-intent citation target.
 - Highest-visibility internal-link sources: https://eb28.co/blog/best-website-builder-in-melbourne-fl-what-local-companies-should-look-for/ (0 clicks, 42 impressions); https://eb28.co/blog/website-audit-checklist-for-melbourne-fl-businesses-losing-leads/ (0 clicks, 38 impressions); https://eb28.co/melbournewebstudio/ (0 clicks, 24 impressions).
 - Next authority action: pursue one legitimate local citation, one expert quote opportunity, and one partner resource mention. Avoid paid links and exact-match anchor spam.
+
+## Daily Queue Refresh 2026-08-03
+
+- Priority article for citations: [AI Appointment Setter for Small Business: What to Automate](https://eb28.co/blog/ai-appointment-setter-for-small-business-where-it-helps-and-where-it-hurts/) (lead-automation).
+- Search Console striking-distance rows to review: "eb28" at avg. position 8.0; "28bes" at avg. position 9.0; "local seo 30a" at avg. position 16.0; "beeeee28" at avg. position 20.0.
+- Highest-visibility internal-link sources: https://eb28.co/melbournewebstudio/ (0 clicks, 41 impressions); https://eb28.co/blog/best-website-builder-in-melbourne-fl-what-local-companies-should-look-for/ (0 clicks, 34 impressions); https://eb28.co/blog/website-audit-checklist-for-melbourne-fl-businesses-losing-leads/ (0 clicks, 24 impressions).
+- Next authority action: pursue one legitimate local citation, one expert quote opportunity, and one partner resource mention. Avoid paid links and exact-match anchor spam.

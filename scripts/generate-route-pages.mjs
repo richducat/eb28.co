@@ -22,6 +22,7 @@ const STATIC_ROUTE_FALLBACKS = {
     <noscript>
       <nav aria-label="Melbourne Web Studio resources">
         <a href="/blog/small-business-homepage-optimization-the-first-10-seconds/">Small business homepage optimization</a>
+        <a href="/blog/website-redesign-in-melbourne-fl-fix-the-leaks-before-you-rebuild-everything/">Website redesign Melbourne FL</a>
       </nav>
     </noscript>`,
 };

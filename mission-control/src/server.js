@@ -71,10 +71,7 @@ export function createServer({ orchestrator = new Orchestrator(), nativeNotify =
       await orchestrator.refreshBoard();
       return { ok: true };
     },
-    'POST /api/open': async (b) => {
-      openLocal(b);
-      return { ok: true };
-    },
+    'POST /api/open': async (b) => openLocal(b),
     'GET /api/workforce': async () => ({
       ...(await orchestrator.status()),
       proposals: store.get('proposals', []).filter((p) => p.status === 'pending'),
@@ -201,15 +198,41 @@ function transcriptTail(source, file) {
   return out.slice(-30);
 }
 
-function openLocal({ path: target, url, command }) {
-  const opener = process.platform === 'darwin' ? 'open' : process.platform === 'win32' ? 'start' : 'xdg-open';
-  if (url && /^https?:\/\//.test(url)) return execFile(opener, [url], () => {});
-  if (target && fs.existsSync(target)) return execFile(opener, [target], () => {});
-  if (command && process.platform === 'darwin') {
-    const script = `tell application "Terminal" to do script "${command.replace(/(["\\])/g, '\\$1')}"`;
-    return execFile('osascript', ['-e', 'tell application "Terminal" to activate', '-e', script], () => {});
+function run(bin, args) {
+  return new Promise((resolve) => {
+    execFile(bin, args, { timeout: 15000 }, (err, stdout, stderr) => {
+      if (err) resolve({ ok: false, error: (stderr || err.message || '').trim().split('\n').pop() });
+      else resolve({ ok: true, output: String(stdout || '').trim() });
+    });
+  });
+}
+
+/** A login-shell script Terminal can run, so PATH, nvm, and aliases all load first. */
+export function terminalScript(command) {
+  return `#!/bin/zsh -l\nclear\nprintf '» %s\\n' ${JSON.stringify(command)}\n${command}\n`;
+}
+
+/** Open a URL or folder, or run a command in a fresh terminal window. Always resolves. */
+export async function openLocal({ path: target, url, command }) {
+  const platform = process.platform;
+  const opener = platform === 'darwin' ? 'open' : platform === 'win32' ? 'cmd' : 'xdg-open';
+  if (url && /^https?:\/\//.test(url)) return run(opener, platform === 'win32' ? ['/c', 'start', '', url] : [url]);
+  if (target) return fs.existsSync(target) ? run(opener, platform === 'win32' ? ['/c', 'start', '', target] : [target]) : { ok: false, error: `folder not found: ${target}` };
+  if (!command) return { ok: false, error: 'nothing to open' };
+  if (platform === 'darwin') {
+    // Write the command to a script so quoting never breaks, then have Terminal run it.
+    const scriptPath = path.join(MC_HOME, 'last-run.command');
+    fs.writeFileSync(scriptPath, terminalScript(command), { mode: 0o755 });
+    const res = await run('osascript', ['-e', 'tell application "Terminal" to activate', '-e', `tell application "Terminal" to do script "${scriptPath.replace(/(["\\])/g, '\\$1')}"`]);
+    return res.ok ? { ok: true, opened: 'Terminal' } : { ok: false, error: `Terminal refused: ${res.error}. Copy the command instead.` };
   }
-  return null;
+  if (platform === 'win32') return run('cmd', ['/c', 'start', 'cmd', '/k', command]);
+  for (const term of ['x-terminal-emulator', 'gnome-terminal', 'konsole', 'xterm']) {
+    const args = term === 'gnome-terminal' ? ['--', 'bash', '-lc', `${command}; exec bash`] : ['-e', `bash -lc '${command.replace(/'/g, "'\\''")}; exec bash'`];
+    const res = await run(term, args);
+    if (res.ok) return { ok: true, opened: term };
+  }
+  return { ok: false, error: 'no terminal emulator found. Copy the command instead.' };
 }
 
 export function listen(server, port = PORT) {

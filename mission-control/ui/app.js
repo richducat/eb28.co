@@ -105,7 +105,7 @@ async function openJob(id) {
   ].filter(Boolean).join('');
   const resume = j.resumeCommand;
   $('#drawer-resume').innerHTML = resume
-    ? `<span>${esc(resume)}</span><span style="display:flex;gap:4px"><button class="small" id="copy-resume">Copy</button><button class="small" id="term-resume" title="macOS: open Terminal and run it">Run</button></span>`
+    ? `<span>${esc(resume)}</span><span style="display:flex;gap:4px"><button class="small" id="copy-resume">Copy</button><button class="small" id="term-resume" title="Open a Terminal window and run this">Run</button>${j.cwd ? '<button class="small" id="open-folder" title="Open the project folder">Folder</button>' : ''}</span>`
     : j.link ? `<span>${esc(j.link)}</span><button class="small" id="open-link">Open</button>` : '';
   $('#drawer-transcript').innerHTML = j.lastMessage ? `<div class="msg assistant"><div class="who">last message</div>${esc(j.lastMessage)}</div>` : '<div class="muted">No transcript available.</div>';
   $('#drawer').hidden = false;
@@ -284,8 +284,9 @@ document.addEventListener('click', async (ev) => {
     if (t.dataset.act) return override(JSON.parse(t.dataset.act));
     if (t.id === 'delete-manual') { await api('DELETE', `/api/job/manual?id=${encodeURIComponent(state.open.id)}`); closeDrawer(); return loadBoard(); }
     if (t.id === 'copy-resume') { await navigator.clipboard.writeText(state.open.resumeCommand); return toast('Copied'); }
-    if (t.id === 'term-resume') return api('POST', '/api/open', { command: state.open.resumeCommand });
-    if (t.id === 'open-link') return api('POST', '/api/open', { url: state.open.link });
+    if (t.id === 'term-resume') { const r = await api('POST', '/api/open', { command: state.open.resumeCommand }); return toast(r.ok ? `Opened in ${r.opened}` : r.error, r.ok ? 'ok' : 'bad'); }
+    if (t.id === 'open-folder') { const r = await api('POST', '/api/open', { path: state.open.cwd }); return r.ok ? null : toast(r.error, 'bad'); }
+    if (t.id === 'open-link') { const r = await api('POST', '/api/open', { url: state.open.link }); return r.ok ? null : toast(r.error, 'bad'); }
     if (t.dataset.runAgent) { toast(`Running ${t.dataset.runAgent}…`); await api('POST', '/api/workforce/agent', { id: t.dataset.runAgent, run: true }); return loadWorkforce(); }
     if (t.dataset.decide) { await api('POST', '/api/workforce/proposal', { id: t.dataset.decide, decision: t.dataset.decision, standing: Boolean(t.dataset.standing) }); return loadWorkforce(); }
     if (t.dataset.adopt) { await api('POST', '/api/workforce/scout/adopt', { id: t.dataset.adopt, tier: t.dataset.tier }); toast('Added to automations'); return loadWorkforce(); }

@@ -5,6 +5,7 @@ import { promisify } from 'node:util';
 import { PATHS } from '../config.js';
 import { makeJob } from '../jobs/model.js';
 import { exists } from './util.js';
+import { which } from '../paths.js';
 
 const execFileAsync = promisify(execFile);
 export const id = 'openclaw';
@@ -13,7 +14,7 @@ export const label = 'OpenClaw';
 const BIN_CANDIDATES = [process.env.OPENCLAW_BIN, '/opt/homebrew/bin/openclaw', '/usr/local/bin/openclaw', '/usr/bin/openclaw'].filter(Boolean);
 
 function findBin() {
-  return BIN_CANDIDATES.find((c) => exists(c)) || null;
+  return BIN_CANDIDATES.find((c) => exists(c)) || which('openclaw');
 }
 
 /** Normalise an OpenClaw cron job record (CLI json or jobs.json file) into a job. */

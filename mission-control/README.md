@@ -83,6 +83,12 @@ Pause the whole workforce, or any single agent, from the Workforce tab. `npm run
 
 Runs are logged with output; the latest run of each automation also appears on the board so a failing job is impossible to miss. The Scout proposes new entries; adopting one adds it to `~/.eb28-mission-control/custom-automations.json` with the tier you choose.
 
+## If a command "does not run"
+
+- Mission Control reads your login shell's PATH at startup (plus Homebrew, nvm, Volta, `~/.local/bin`), so `npm`, `node`, `claude`, `codex`, and `openclaw` resolve even when the app is launched from the Dock. If a tool still is not found, the run fails with a message naming it. Add its folder to your shell PATH and relaunch.
+- The **Run** button writes the resume command to `~/.eb28-mission-control/last-run.command` and asks Terminal to run it in a login shell. macOS will ask once to let Mission Control control Terminal. If that is denied, use **Copy**.
+- Every automation run keeps its full output under "Last output" on the Automations tab.
+
 ## Packaging
 
 `npm run dist` builds a DMG/zip (macOS), NSIS installer (Windows), or AppImage (Linux) with electron-builder.

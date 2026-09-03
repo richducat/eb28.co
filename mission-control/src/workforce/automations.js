@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { spawn } from 'node:child_process';
 import { APP_ROOT, repoRoots } from '../config.js';
+import { which } from '../paths.js';
 import { store } from '../store.js';
 
 /**
@@ -92,6 +93,10 @@ export function runAutomation(a, { trigger = 'manual', onEvent } = {}) {
   const startedAt = new Date().toISOString();
   const base = { automationId: a.id, title: a.title, tier: a.tier, trigger, cwd, startedAt, status: 'running' };
   if (!cwd) return Promise.resolve(record({ ...base, ok: false, status: 'finished', error: 'cwd is outside the allowed repo roots', finishedAt: startedAt }));
+  const bin = which(a.command[0]);
+  if (!bin) {
+    return Promise.resolve(record({ ...base, ok: false, status: 'finished', error: `"${a.command[0]}" was not found on PATH. Install it or add its folder to your shell PATH, then relaunch Mission Control.`, finishedAt: startedAt, durationMs: 0 }));
+  }
   running.set(a.id, base);
   store.append('automation-runs', base, 400);
   if (onEvent) onEvent({ type: 'automation:start', run: base });
@@ -100,7 +105,7 @@ export function runAutomation(a, { trigger = 'manual', onEvent } = {}) {
     let output = '';
     let child;
     try {
-      child = spawn(a.command[0], a.command.slice(1), { cwd, env: { ...process.env, ...(a.env || {}), MC_AUTOMATION: a.id }, shell: false });
+      child = spawn(bin, a.command.slice(1), { cwd, env: { ...process.env, ...(a.env || {}), MC_AUTOMATION: a.id }, shell: false });
     } catch (err) {
       running.delete(a.id);
       return resolve(record({ ...base, ok: false, status: 'finished', error: err.message, finishedAt: new Date().toISOString(), durationMs: 0 }));
@@ -112,11 +117,15 @@ export function runAutomation(a, { trigger = 'manual', onEvent } = {}) {
     };
     child.stdout.on('data', capture);
     child.stderr.on('data', capture);
-    child.on('error', (err) => capture(`\n${err.message}`));
+    let spawnError = '';
+    child.on('error', (err) => {
+      spawnError = err.message;
+      capture(`\n${err.message}`);
+    });
     child.on('close', (code) => {
       clearTimeout(timer);
       running.delete(a.id);
-      const run = record({ ...base, ok: code === 0, code, status: 'finished', output, finishedAt: new Date().toISOString(), durationMs: Date.now() - started });
+      const run = record({ ...base, ok: code === 0 && !spawnError, code, status: 'finished', output, error: spawnError || undefined, finishedAt: new Date().toISOString(), durationMs: Date.now() - started });
       if (onEvent) onEvent({ type: 'automation:finish', run });
       resolve(run);
     });

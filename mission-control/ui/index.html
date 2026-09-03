@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>EB28 Mission Control</title>
+<link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+<header class="topbar">
+  <div class="brand"><span class="dot"></span> Mission Control</div>
+  <nav class="tabs" id="tabs">
+    <button data-tab="board" class="active">Board</button>
+    <button data-tab="workforce">Workforce <span class="pill" id="pill-approvals" hidden></span></button>
+    <button data-tab="automations">Automations</button>
+    <button data-tab="briefing">Briefing</button>
+  </nav>
+  <div class="stats" id="stats"></div>
+  <div class="actions">
+    <input id="search" type="search" placeholder="Search jobs  ( / )" autocomplete="off" />
+    <button id="add-job" class="primary">+ Track a job</button>
+    <button id="refresh" title="Rescan now (r)">↻</button>
+  </div>
+</header>
+
+<main>
+  <section id="tab-board" class="tab active">
+    <div class="filters" id="filters"></div>
+    <div class="board" id="board"></div>
+    <div class="snoozed" id="snoozed"></div>
+  </section>
+
+  <section id="tab-workforce" class="tab">
+    <div class="two-col">
+      <div>
+        <div class="panel-head"><h2>Agents</h2><label class="switch"><input type="checkbox" id="pause-all" /> Pause the whole workforce</label></div>
+        <div id="agents" class="cards"></div>
+        <h2>Recent activity</h2>
+        <ul id="activity" class="feed"></ul>
+      </div>
+      <div>
+        <h2>Approvals <span class="muted" id="approvals-hint"></span></h2>
+        <div id="proposals" class="cards"></div>
+        <h2>Follow-ups the workforce queued</h2>
+        <div id="followups" class="cards"></div>
+        <h2>Automation Scout findings</h2>
+        <div id="scout" class="cards"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="tab-automations" class="tab">
+    <p class="lead">Three tiers. <b>Safe</b> runs by itself on schedule. <b>Approval</b> asks you first (or once, as standing approval). <b>Manual</b> only runs when you press the button and confirm, because it touches customers, money, or the public.</p>
+    <div id="automations" class="cards wide"></div>
+  </section>
+
+  <section id="tab-briefing" class="tab">
+    <div class="panel-head"><h2>Latest briefing</h2><button id="write-briefing">Write a fresh briefing now</button></div>
+    <article id="digest" class="digest"></article>
+  </section>
+</main>
+
+<aside id="drawer" class="drawer" hidden>
+  <div class="drawer-head">
+    <div>
+      <div class="chips" id="drawer-chips"></div>
+      <h2 id="drawer-title"></h2>
+      <div class="muted" id="drawer-sub"></div>
+    </div>
+    <button id="drawer-close" title="Close (esc)">✕</button>
+  </div>
+  <div class="drawer-body">
+    <div class="callout" id="drawer-reason"></div>
+    <div class="drawer-actions" id="drawer-actions"></div>
+    <label class="field">Note to self<textarea id="drawer-note" rows="2" placeholder="Why this matters, what to do next…"></textarea></label>
+    <div class="resume" id="drawer-resume"></div>
+    <h3>Latest exchange</h3>
+    <div id="drawer-transcript" class="transcript"></div>
+  </div>
+</aside>
+
+<dialog id="add-dialog">
+  <form method="dialog" id="add-form">
+    <h2>Track a job by hand</h2>
+    <p class="muted">For anything the scanners cannot see: a Claude.ai web chat, a ChatGPT thread, a Cursor task, a contractor.</p>
+    <label class="field">What is it<input name="title" required placeholder="e.g. Claude web: rewrite the pricing page copy" /></label>
+    <label class="field">Tool / who<input name="tool" placeholder="Claude web, ChatGPT, Cursor, Lovable, a person…" /></label>
+    <label class="field">Link<input name="link" placeholder="https://…" /></label>
+    <label class="field">Status<select name="status"><option value="working">Working</option><option value="needs_you">Needs me</option><option value="follow_up">Follow up</option><option value="done">Done</option></select></label>
+    <label class="field">Notes<textarea name="notes" rows="2"></textarea></label>
+    <menu><button value="cancel" type="button" id="add-cancel">Cancel</button><button value="ok" class="primary">Track it</button></menu>
+  </form>
+</dialog>
+
+<div id="toasts" class="toasts"></div>
+<script src="/app.js"></script>
+</body>
+</html>

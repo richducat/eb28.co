@@ -1,0 +1,34 @@
+{
+  "name": "eb28-mission-control",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Desktop command center for every AI job (Claude Code, Codex, OpenClaw, Gemini, GitHub PRs) plus a scheduled agent workforce.",
+  "type": "module",
+  "main": "electron/main.cjs",
+  "bin": { "mission-control": "bin/mission-control.mjs" },
+  "engines": { "node": ">=18" },
+  "scripts": {
+    "start": "electron .",
+    "web": "node bin/mission-control.mjs web",
+    "scan": "node bin/mission-control.mjs scan",
+    "digest": "node bin/mission-control.mjs digest",
+    "agents": "node bin/mission-control.mjs agents",
+    "test": "node --test test/*.test.mjs",
+    "dist": "electron-builder --publish never"
+  },
+  "optionalDependencies": {
+    "@anthropic-ai/sdk": "^0.123.0"
+  },
+  "devDependencies": {
+    "electron": "^44.1.1",
+    "electron-builder": "^26.0.12"
+  },
+  "build": {
+    "appId": "co.eb28.missioncontrol",
+    "productName": "EB28 Mission Control",
+    "files": ["electron/**", "src/**", "ui/**", "bin/**", "automations.json", "package.json"],
+    "mac": { "category": "public.app-category.productivity", "target": ["dmg", "zip"] },
+    "win": { "target": ["nsis"] },
+    "linux": { "target": ["AppImage"] }
+  }
+}

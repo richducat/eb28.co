@@ -1,0 +1,2 @@
+{"type":"user","message":{"role":"user","content":"Fix the failing build"},"timestamp":"2026-09-03T08:00:00.000Z","cwd":"/Users/richard/eb28.co","sessionId":"sess-m"}
+{"type":"assistant","message":{"role":"assistant","content":[{"type":"tool_use","id":"t1","name":"Bash","input":{"command":"npm run build"}}]},"timestamp":"2026-09-03T08:00:05.000Z","sessionId":"sess-m"}

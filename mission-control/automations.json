@@ -1,0 +1,114 @@
+[
+  {
+    "id": "checks:eb28-content",
+    "title": "Content quality check",
+    "description": "Lints the generated EB28 blog/content for quality issues. Read-only.",
+    "command": ["npm", "run", "--silent", "check:eb28-content"],
+    "tier": "safe",
+    "schedule": "every 6h",
+    "area": "Content"
+  },
+  {
+    "id": "checks:eb28-social",
+    "title": "Social package check",
+    "description": "Validates the drafted social packages before anything is published. Read-only.",
+    "command": ["npm", "run", "--silent", "check:eb28-social"],
+    "tier": "safe",
+    "schedule": "every 6h",
+    "area": "Social"
+  },
+  {
+    "id": "checks:fundmanager-runtime",
+    "title": "Fund Manager runtime validation",
+    "description": "Runs the fundmanager unit tests and runtime validator. Read-only.",
+    "command": ["python3", "-m", "ops.scripts.validate_runtime"],
+    "tier": "safe",
+    "schedule": "daily 07:00",
+    "area": "Fund Manager"
+  },
+  {
+    "id": "checks:free-website-build",
+    "title": "Free website build page check",
+    "description": "Verifies the free-website-build landing page still renders and captures leads. Read-only.",
+    "command": ["node", "scripts/verify-free-website-build-page.mjs"],
+    "tier": "safe",
+    "schedule": "daily 08:00",
+    "area": "Lead ops"
+  },
+  {
+    "id": "content:eb28-daily",
+    "title": "Generate EB28 blog content",
+    "description": "Runs the content engine and writes new posts into the repo. Writes files; costs model credits.",
+    "command": ["npm", "run", "--silent", "eb28:content"],
+    "tier": "approval",
+    "schedule": "daily 05:30",
+    "area": "Content"
+  },
+  {
+    "id": "content:eb28-blog",
+    "title": "Rebuild blog pages",
+    "description": "Regenerates the static blog from content JSON. Writes into docs/.",
+    "command": ["npm", "run", "--silent", "eb28:blog"],
+    "tier": "approval",
+    "area": "Content"
+  },
+  {
+    "id": "seo:daily-review",
+    "title": "SEO daily review",
+    "description": "Runs the SEO review, applies safe updates, submits the sitemap, and emails the report.",
+    "command": ["npm", "run", "--silent", "eb28:seo"],
+    "tier": "approval",
+    "schedule": "daily 06:30",
+    "area": "SEO"
+  },
+  {
+    "id": "social:prepare",
+    "title": "Prepare social posts",
+    "description": "Drafts the Buffer queue from today's content. Nothing is published.",
+    "command": ["npm", "run", "--silent", "eb28:social:prepare"],
+    "tier": "approval",
+    "schedule": "daily 07:30",
+    "area": "Social"
+  },
+  {
+    "id": "social:publish",
+    "title": "Publish social posts",
+    "description": "Pushes the prepared queue to Buffer. Public, external, irreversible.",
+    "command": ["npm", "run", "--silent", "eb28:social:publish"],
+    "tier": "manual",
+    "area": "Social"
+  },
+  {
+    "id": "leadops:refresh-32940",
+    "title": "Refresh 32940 lead ops workbench",
+    "description": "Regenerates the local outreach command center HTML. Local files only.",
+    "command": ["node", "scripts/generate-32940-lead-ops.mjs"],
+    "tier": "safe",
+    "schedule": "daily 06:00",
+    "area": "Lead ops"
+  },
+  {
+    "id": "leadops:send-drafts-32940",
+    "title": "Send 32940 outreach drafts",
+    "description": "Sends real emails to prospects. Customer-facing.",
+    "command": ["npm", "run", "--silent", "leadops:send-drafts:32940"],
+    "tier": "manual",
+    "area": "Lead ops"
+  },
+  {
+    "id": "site:build",
+    "title": "Build the site",
+    "description": "Runs the Vite build into docs/. Writes files; deploys once committed and pushed.",
+    "command": ["npm", "run", "--silent", "build"],
+    "tier": "approval",
+    "area": "Site"
+  },
+  {
+    "id": "fundmanager:publish",
+    "title": "Publish Fund Manager live data",
+    "description": "Pushes fund manager data to the live dashboard. External.",
+    "command": ["npm", "run", "--silent", "publish:fundmanager"],
+    "tier": "manual",
+    "area": "Fund Manager"
+  }
+]

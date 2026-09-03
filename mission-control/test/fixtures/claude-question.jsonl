@@ -1,0 +1,4 @@
+{"type":"user","message":{"role":"user","content":"Add a pricing page to the site"},"uuid":"u1","timestamp":"2026-09-03T10:00:00.000Z","cwd":"/Users/richard/eb28.co","sessionId":"sess-q","gitBranch":"claude/pricing","version":"2.1.0"}
+{"type":"assistant","message":{"role":"assistant","content":[{"type":"tool_use","id":"t1","name":"Read","input":{"file_path":"src/App.jsx"}}]},"timestamp":"2026-09-03T10:00:05.000Z","sessionId":"sess-q"}
+{"type":"user","message":{"role":"user","content":[{"type":"tool_result","tool_use_id":"t1","content":"..."}]},"timestamp":"2026-09-03T10:00:06.000Z","sessionId":"sess-q"}
+{"type":"assistant","message":{"role":"assistant","content":[{"type":"text","text":"I found two layouts. Do you want the pricing table above or below the FAQ?"}]},"timestamp":"2026-09-03T10:01:00.000Z","sessionId":"sess-q"}

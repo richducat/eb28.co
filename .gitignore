@@ -21,3 +21,11 @@ output/lead-ops/
 # Ephemeral browser-automation artifacts — never commit
 .playwright-cli/
 .playwright-mcp/
+
+# Mission Control desktop app
+mission-control/node_modules/
+mission-control/dist/
+
+# Python bytecode
+__pycache__/
+*.pyc

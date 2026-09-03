@@ -2,6 +2,13 @@
 
 This repo is a Vite + React site configured for GitHub Pages.
 
+## Mission Control (desktop app)
+
+- Folder: `mission-control/`
+- Shows every AI job (Claude Code, Codex, Gemini CLI, OpenClaw cron, Hermes open loops, GitHub PRs, hand-tracked) in five columns: Needs you, Working now, Follow up, Done, Failed.
+- Runs a scheduled agent workforce (triage, follow-up, reporter, automation scout, ops runner, PR steward, janitor) and a safety-tiered automation registry (`mission-control/automations.json`).
+- Run: `cd mission-control && npm install && npm start` (desktop) or `npm run web` (browser, no installs). Docs: `mission-control/README.md`.
+
 ## Fundmanager Ops
 
 - VPS install/runbook: `ops/systemd/README.md`

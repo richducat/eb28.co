@@ -87,7 +87,7 @@ struct MainTabView: View {
         }
         .tint(Theme.cyan)
         .safeAreaInset(edge: .bottom) {
-            if !purchases.hasUnlimited && ads.hasConfiguredBanner {
+            if !purchases.hasUnlimited && ads.hasConfiguredBanner && ads.canRequestAds {
                 AdBannerView()
                     .frame(height: 58)
                     .background(Theme.ink.opacity(0.96))

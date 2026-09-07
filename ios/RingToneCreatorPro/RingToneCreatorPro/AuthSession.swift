@@ -90,19 +90,45 @@ final class AuthSession {
         }
     }
 
-    func deleteAccount() async {
-        guard let user = Auth.auth().currentUser else {
+    func deleteAccount(password: String) async -> Bool {
+        guard !isBusy else { return false }
+        guard firebaseReady, let user = Auth.auth().currentUser, let email = user.email else {
             message = ToneError.accountRequired.localizedDescription
-            return
+            return false
         }
-
-        await runBusy { [self] in
-            let uid = user.uid
-            try await self.deleteProfile(uid: uid)
-            try await self.deleteFirebaseUser(user)
-            self.profile = nil
-            self.currentUserID = nil
-            self.message = "Account deleted."
+        guard !password.isEmpty else {
+            message = "Enter your password to confirm account deletion."
+            return false
+        }
+        isBusy = true
+        message = nil
+        defer { isBusy = false }
+        var profileDeleted = false
+        do {
+            let credential = EmailAuthProvider.credential(withEmail: email, password: password)
+            try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, Error>) in
+                user.reauthenticate(with: credential) { _, error in
+                    if let error { continuation.resume(throwing: error) }
+                    else { continuation.resume() }
+                }
+            }
+            // Reauthentication must succeed before any data is removed.
+            // Firestore and Auth are separate services; retain the UI on partial failure
+            // so the user can retry the idempotent profile deletion and finish Auth deletion.
+            try await deleteProfile(uid: user.uid)
+            profileDeleted = true
+            try await deleteFirebaseUser(user)
+            profileListener?.remove()
+            profileListener = nil
+            profile = nil
+            currentUserID = nil
+            message = "Account deleted."
+            return true
+        } catch {
+            message = profileDeleted
+                ? "Your cloud profile was removed, but account deletion could not finish. Please retry to remove your sign-in account. \(error.localizedDescription)"
+                : "Account deletion did not complete. \(error.localizedDescription)"
+            return false
         }
     }
 

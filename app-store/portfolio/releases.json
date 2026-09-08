@@ -17,7 +17,7 @@
     },
     {
       "appleAppId": "6769724031",
-      "name": "AI Reply Assistant \u2013 Business",
+      "name": "AI Reply Assistant – Business",
       "bundleId": "store.chatbotbuilder.ios",
       "liveVersion": "1.3.0",
       "listingUrl": "https://apps.apple.com/us/app/ai-reply-assistant-business/id6769724031?uo=4",
@@ -125,7 +125,9 @@
       "releasedCommit": null,
       "releasedBuildNumber": null,
       "archiveSha256": null,
-      "traceabilityStatus": "unverified"
+      "traceabilityStatus": "release_baseline_found_archive_unverified",
+      "candidateReleaseBranch": "codex/cadetcatch-1.0.2-build96",
+      "candidateReleaseBaseline": "3ed29ef9f769f060b6b989ed6bc61862e588dfd3"
     },
     {
       "appleAppId": "6793529030",
@@ -153,7 +155,9 @@
       "releasedCommit": null,
       "releasedBuildNumber": null,
       "archiveSha256": null,
-      "traceabilityStatus": "unverified"
+      "traceabilityStatus": "release_record_found_archive_unverified",
+      "candidateReleaseBranch": "codex/labstudio-booking-resubmission",
+      "candidateReleaseBaseline": "42b18c29768213be1cbbb8af1fa914e4bde85bcc"
     },
     {
       "appleAppId": "6789441976",

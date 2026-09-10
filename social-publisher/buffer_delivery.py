@@ -178,7 +178,10 @@ def record_post(package, post, root):
                   json.dumps({'provider': post, 'checkedAt': datetime.now(timezone.utc).isoformat()}), post['id'], root)
     result = {'state': state, 'providerId': post['id'], 'dueAt': post.get('dueAt'),
               'sentAt': post.get('sentAt'), 'externalLink': post.get('externalLink')}
-    write_health(root, package['brand'], package['channelId'], result)
+    try:
+        write_health(root, package['brand'], package['channelId'], result)
+    except (OSError, ValueError, KeyError):
+        result['healthSyncWarning'] = 'Provider receipt saved in ledger; status summary needs repair.'
     return result
 
 

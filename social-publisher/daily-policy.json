@@ -1,0 +1,65 @@
+{
+  "version": 1,
+  "timezone": "America/New_York",
+  "publishingAuthorized": true,
+  "authorization": {
+    "date": "2026-09-10",
+    "source": "Owner requested fresh daily creation and daily posting to each company\u2019s Buffer/social channels."
+  },
+  "schedulerOwner": "this_mac",
+  "productionTime": "06:00",
+  "reconciliationTimes": [
+    "11:00",
+    "18:00"
+  ],
+  "campaignsPerBrandPerDay": 1,
+  "maxPostsPerChannelPerDay": 1,
+  "brands": {
+    "tyfys": {
+      "enabled": true,
+      "channelIds": [
+        "69e2c7e7031bfa423c16bc3d",
+        "69f226ba5c4c051afaf16dc7"
+      ],
+      "preferredPublishTime": "10:30",
+      "delivery": "verified_account_specific_api",
+      "health": "Existing API key recovered and correct identity verified; live delivery preflight underway."
+    },
+    "eb28": {
+      "enabled": true,
+      "channelIds": [
+        "6a3de9b35ab6d2f106727271",
+        "6a3de6795ab6d2f106726af0"
+      ],
+      "preferredPublishTime": "11:30",
+      "delivery": "github_actions_existing_secret",
+      "health": "TikTok independently verified connected; Instagram independently verified disconnected Sep 10."
+    },
+    "inspection-rent": {
+      "enabled": true,
+      "channelIds": [
+        "6a62b49be2638b94d7c41aa6",
+        "6a62b4cbe2638b94d7c41b33"
+      ],
+      "preferredPublishTime": "16:30",
+      "delivery": "verified_browser_or_account_specific_api",
+      "health": "Correct account and organization still unverified"
+    }
+  },
+  "requirements": [
+    "fresh dated art and copy",
+    "source and editorial check",
+    "full-size and mobile visual check",
+    "exact account and channel verification",
+    "inspect current remote posts before submit",
+    "record intent before final publish action",
+    "save provider evidence",
+    "verify sent status separately"
+  ],
+  "uncertainWritePolicy": "Never resubmit until the provider state has been reconciled.",
+  "missedRunPolicy": "Complete one fresh campaign for the current local date; no historical catch-up burst.",
+  "media": "Upload actual validated JPG/PNG through Buffer, or use a verified stable public direct URL for the API. Never submit SVG as Instagram media.",
+  "updatedAt": "2026-09-10T15:05:46.346940+00:00",
+  "mediaBaseUrl": "https://richducat.github.io/social-publishing-assets",
+  "mediaRepository": "richducat/social-publishing-assets"
+}

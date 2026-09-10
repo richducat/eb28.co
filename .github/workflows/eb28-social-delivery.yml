@@ -1,0 +1,41 @@
+name: EB28 Verified Social Delivery
+on:
+  workflow_dispatch:
+    inputs:
+      package:
+        description: Current-day reviewed EB28 channel package as JSON
+        type: string
+        required: true
+      send:
+        description: Schedule after account, history, media and reservation checks
+        type: boolean
+        default: false
+permissions:
+  contents: write
+concurrency:
+  group: eb28-verified-social-delivery
+  cancel-in-progress: false
+jobs:
+  deliver:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+      - name: Verify and deliver the reviewed campaign
+        env:
+          EB28_BUFFER_API_KEY: ${{ secrets.BUFFER_API_KEY }}
+          GH_STATE_TOKEN: ${{ github.token }}
+          SOCIAL_PACKAGE: ${{ inputs.package }}
+          SOCIAL_SEND: ${{ inputs.send }}
+        run: python3 social-publisher/cloud_delivery.py
+      - name: Save provider receipt
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: eb28-social-delivery-receipt
+          path: social-publisher/cloud-result.json
+          if-no-files-found: warn
+          retention-days: 90

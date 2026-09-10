@@ -23,7 +23,7 @@
       ],
       "preferredPublishTime": "10:30",
       "delivery": "verified_account_specific_api",
-      "health": "Existing API key recovered and correct identity verified; live delivery preflight underway."
+      "health": "API verified; X scheduled. IG connected with 34 legacy drafts and 2 errors remaining; all legacy mutations blocked after unexpected shareNow side effect."
     },
     "eb28": {
       "enabled": true,

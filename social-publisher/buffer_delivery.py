@@ -5,6 +5,7 @@ No queue edits, backlog retries, account fallback, or browser publishing.
 An uncertain write stays reserved until a provider receipt is found.
 """
 import argparse
+import fcntl
 import hashlib
 import json
 import os
@@ -175,8 +176,32 @@ def record_post(package, post, root):
     state = mapping.get(post['status'], 'unknown')
     ledger.record(package['brand'], package['date'], package['channelId'], state,
                   json.dumps({'provider': post, 'checkedAt': datetime.now(timezone.utc).isoformat()}), post['id'], root)
-    return {'state': state, 'providerId': post['id'], 'dueAt': post.get('dueAt'),
-            'sentAt': post.get('sentAt'), 'externalLink': post.get('externalLink')}
+    result = {'state': state, 'providerId': post['id'], 'dueAt': post.get('dueAt'),
+              'sentAt': post.get('sentAt'), 'externalLink': post.get('externalLink')}
+    write_health(root, package['brand'], package['channelId'], result)
+    return result
+
+
+def write_health(root, brand, channel_id, result):
+    filename = root / 'LIVE_STATUS.json'
+    if not filename.is_file():
+        return
+    config = json.loads((root / 'connections.json').read_text())['brands'][brand]
+    platform = config['channels'][channel_id]['platform']
+    key = ('inspection' if brand == 'inspection-rent' else brand) + '_' + platform
+    with (root / '.live-status.lock').open('a') as lock:
+        fcntl.flock(lock, fcntl.LOCK_EX)
+        document = json.loads(filename.read_text())
+        entry = document.setdefault('channels', {}).setdefault(key, {})
+        if result['state'] in ('scheduled', 'sent'):
+            entry.pop('reason', None)
+            entry.pop('needs', None)
+        entry.update(result)
+        entry['checkedAt'] = datetime.now(timezone.utc).isoformat()
+        document['updatedAt'] = entry['checkedAt']
+        temporary = filename.with_suffix(f'.{os.getpid()}.tmp')
+        temporary.write_text(json.dumps(document, indent=2) + '\n')
+        temporary.replace(filename)
 
 
 def reconcile(prior, config, root=ROOT, api=None):

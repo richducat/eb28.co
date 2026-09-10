@@ -14,9 +14,10 @@ def connect(root=ROOT):
       content_hash TEXT NOT NULL, state TEXT NOT NULL, evidence TEXT NOT NULL,
       provider_id TEXT, updated_at TEXT NOT NULL,
       PRIMARY KEY(brand,day,channel))''')
+    db.execute('BEGIN IMMEDIATE')
     if 'package_json' not in {r['name'] for r in db.execute('PRAGMA table_info(deliveries)')}:
         db.execute("ALTER TABLE deliveries ADD COLUMN package_json TEXT NOT NULL DEFAULT '{}'")
-        db.commit()
+    db.commit()
     return db
 
 def reserve(brand,channel,package,root=ROOT,now=None):

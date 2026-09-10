@@ -50,9 +50,9 @@ def reserve(brand,channel,package,root=ROOT,now=None):
     return {'reserved':True,'brand':brand,'day':day,'channel':channel,'contentHash':digest}
 
 def record(brand,day,channel,state,evidence,provider_id=None,root=ROOT):
-    if state not in ('scheduled','sent','failed','unknown','cancelled') or not evidence.strip():
+    if state not in ('scheduled','sending','sent','failed','unknown','cancelled') or not evidence.strip():
         raise ValueError('A supported state and observed provider evidence are required.')
-    if state in ('scheduled','sent') and not provider_id:
+    if state in ('scheduled','sending','sent') and not provider_id:
         raise ValueError('A Buffer post ID or native post URL is required, not just a toast.')
     with connect(root) as db:
         prior=db.execute('SELECT * FROM deliveries WHERE brand=? AND day=? AND channel=?',(brand,day,channel)).fetchone()

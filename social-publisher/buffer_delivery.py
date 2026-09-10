@@ -172,7 +172,7 @@ def verify_identity(context, config, package):
 
 
 def record_post(package, post, root):
-    mapping = {'sent': 'sent', 'scheduled': 'scheduled', 'error': 'failed'}
+    mapping = {'sent': 'sent', 'scheduled': 'scheduled', 'sending': 'sending', 'error': 'failed'}
     state = mapping.get(post['status'], 'unknown')
     ledger.record(package['brand'], package['date'], package['channelId'], state,
                   json.dumps({'provider': post, 'checkedAt': datetime.now(timezone.utc).isoformat()}), post['id'], root)
@@ -196,7 +196,7 @@ def write_health(root, brand, channel_id, result):
         fcntl.flock(lock, fcntl.LOCK_EX)
         document = json.loads(filename.read_text())
         entry = document.setdefault('channels', {}).setdefault(key, {})
-        if result['state'] in ('scheduled', 'sent'):
+        if result['state'] in ('scheduled', 'sending', 'sent'):
             entry.pop('reason', None)
             entry.pop('needs', None)
         entry.update(result)

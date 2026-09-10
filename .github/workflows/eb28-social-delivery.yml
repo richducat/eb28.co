@@ -10,6 +10,10 @@ on:
         description: Schedule after account, history, media and reservation checks
         type: boolean
         default: false
+      reconcile:
+        description: Check existing receipts without creating a post
+        type: boolean
+        default: false
 permissions:
   contents: write
 concurrency:
@@ -30,6 +34,7 @@ jobs:
           GH_STATE_TOKEN: ${{ github.token }}
           SOCIAL_PACKAGE: ${{ inputs.package }}
           SOCIAL_SEND: ${{ inputs.send }}
+          SOCIAL_RECONCILE: ${{ inputs.reconcile }}
         run: python3 social-publisher/cloud_delivery.py
       - name: Save provider receipt
         if: always()

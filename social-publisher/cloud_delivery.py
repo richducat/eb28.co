@@ -32,7 +32,9 @@ class StateStore:
   if not branch:return
   result=self.request('contents/'+STATE+'?ref='+BRANCH)
   if result:
-   self.sha=result['sha'];(ROOT/'delivery.sqlite3').write_bytes(base64.b64decode(result['content']))
+   self.sha=result['sha']
+   blob=result if result.get('encoding')=='base64' else self.request('git/blobs/'+self.sha)
+   (ROOT/'delivery.sqlite3').write_bytes(base64.b64decode(blob['content']))
  def save(self):
   if not self.branch_exists:
    main=self.request('git/ref/heads/main')
@@ -49,6 +51,14 @@ def main():
  if package.get('brand')!='eb28':raise delivery.Blocked('Only EB28 packages run in this executor.')
  policy=json.loads((ROOT/'daily-policy.json').read_text())
  config=json.loads((ROOT/'connections.json').read_text())['brands']['eb28']
+ reconciled=[]
+ for prior in delivery.ledger.status(ROOT):
+  if prior['brand']=='eb28' and prior['state']!='sent':
+   reconciled.append({'day':prior['day'],'channelId':prior['channel'],**delivery.reconcile(prior,config,ROOT)})
+ if os.environ.get('SOCIAL_RECONCILE')=='true':
+  if delivery.ledger.status(ROOT):store.save()
+  result={'state':'reconciled','deliveries':reconciled}
+  (ROOT/'cloud-result.json').write_text(json.dumps(result,indent=2)+'\n');print(json.dumps(result,indent=2));return 0
  url=package.get('mediaUrl','');base=policy['mediaBaseUrl'].rstrip('/')+'/'
  parsed=urllib.parse.urlparse(url)
  if not url.startswith(base) or parsed.query or parsed.fragment:raise delivery.Blocked('Image must come from the approved permanent host.')
@@ -62,7 +72,7 @@ def main():
  except Exception as exc:result={'state':'blocked','reason':str(exc)}
  finally:
   if (ROOT/'delivery.sqlite3').is_file() and delivery.ledger.status(ROOT):store.save()
- (ROOT/'cloud-result.json').write_text(json.dumps({'brand':'eb28','channelId':package['channelId'],'date':package['date'],**result},indent=2)+'\n')
+ (ROOT/'cloud-result.json').write_text(json.dumps({'brand':'eb28','channelId':package['channelId'],'date':package['date'],'reconciled':reconciled,**result},indent=2)+'\n')
  print(json.dumps(result,indent=2))
  return 1 if result['state'] in ('failed','unknown','blocked') else 0
 

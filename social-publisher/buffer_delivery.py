@@ -176,7 +176,7 @@ def record_post(package, post, root):
     state = mapping.get(post['status'], 'unknown')
     ledger.record(package['brand'], package['date'], package['channelId'], state,
                   json.dumps({'provider': post, 'checkedAt': datetime.now(timezone.utc).isoformat()}), post['id'], root)
-    result = {'state': state, 'providerId': post['id'], 'dueAt': post.get('dueAt'),
+    result = {'date': package['date'], 'state': state, 'providerId': post['id'], 'dueAt': post.get('dueAt'),
               'sentAt': post.get('sentAt'), 'externalLink': post.get('externalLink')}
     try:
         write_health(root, package['brand'], package['channelId'], result)
@@ -196,10 +196,26 @@ def write_health(root, brand, channel_id, result):
         fcntl.flock(lock, fcntl.LOCK_EX)
         document = json.loads(filename.read_text())
         entry = document.setdefault('channels', {}).setdefault(key, {})
+        # Reconciliation visits several campaign dates. Older receipts belong in
+        # the ledger, but must not replace the newest campaign in this summary.
+        incoming_day = result.get('date') or result.get('day')
+        current_day = entry.get('date') or entry.get('day')
+        if current_day and not incoming_day:
+            raise ValueError('Campaign date required to update a dated channel summary.')
+        if incoming_day and current_day and incoming_day < current_day:
+            return
+        if incoming_day and current_day and incoming_day > current_day:
+            for field in ('providerId', 'dueAt', 'sentAt', 'externalLink', 'runUrl',
+                          'statusEvidence', 'reconciled', 'writePerformed', 'evidence',
+                          'reason', 'needs'):
+                entry.pop(field, None)
         if result['state'] in ('scheduled', 'sending', 'sent'):
             entry.pop('reason', None)
             entry.pop('needs', None)
         entry.update(result)
+        if incoming_day:
+            entry['date'] = incoming_day
+            entry.pop('day', None)
         entry['checkedAt'] = datetime.now(timezone.utc).isoformat()
         document['updatedAt'] = entry['checkedAt']
         temporary = filename.with_suffix(f'.{os.getpid()}.tmp')

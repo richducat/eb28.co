@@ -29,12 +29,15 @@ class StateStore:
    raise delivery.Blocked(f'Cloud state HTTP {exc.code}; no unrecorded Buffer writes.') from None
  def load(self):
   branch=self.request('git/ref/heads/'+BRANCH);self.branch_exists=bool(branch)
-  if not branch:return
+  if not branch:raise delivery.Blocked('Existing cloud state branch unavailable; restore it before publishing. No empty-ledger fallback.')
   result=self.request('contents/'+STATE+'?ref='+BRANCH)
-  if result:
-   self.sha=result['sha']
-   blob=result if result.get('encoding')=='base64' else self.request('git/blobs/'+self.sha)
-   (ROOT/'delivery.sqlite3').write_bytes(base64.b64decode(blob['content']))
+  if not result:raise delivery.Blocked('Existing cloud delivery ledger unavailable; no empty-ledger fallback.')
+  self.sha=result['sha']
+  blob=result if result.get('encoding')=='base64' else self.request('git/blobs/'+self.sha)
+  if not blob or not blob.get('content'):raise delivery.Blocked('Cloud ledger content unavailable; no Buffer write.')
+  data=base64.b64decode(blob['content'])
+  if not data.startswith(b'SQLite format 3\0'):raise delivery.Blocked('Cloud ledger format is invalid; no Buffer write.')
+  (ROOT/'delivery.sqlite3').write_bytes(data)
  def save(self):
   if not self.branch_exists:
    main=self.request('git/ref/heads/main')
@@ -76,4 +79,17 @@ def main():
  print(json.dumps(result,indent=2))
  return 1 if result['state'] in ('failed','unknown','blocked') else 0
 
-if __name__=='__main__':sys.exit(main())
+def run():
+ try:return main()
+ except Exception as exc:
+  # Early failures (state, identity or media) must also produce a durable
+  # diagnostic artifact. Missing receipts must never invite blind redispatch.
+  try:package=json.loads(os.environ.get('SOCIAL_PACKAGE','{}'))
+  except ValueError:package={}
+  result={'brand':'eb28','channelId':package.get('channelId'),'date':package.get('date'),
+          'state':'blocked','reason':str(exc),
+          'action':'Inspect saved state and reconcile existing reservations before any further send.'}
+  (ROOT/'cloud-result.json').write_text(json.dumps(result,indent=2)+'\n')
+  print(json.dumps(result,indent=2));return 1
+
+if __name__=='__main__':sys.exit(run())

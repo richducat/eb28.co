@@ -28,6 +28,10 @@ class Blocked(Exception):
     pass
 
 
+class MediaNotReady(Blocked):
+    """A read-only media check can be repeated; no social write was attempted."""
+
+
 class BufferAPI:
     def __init__(self, key):
         self.key = key
@@ -150,8 +154,13 @@ def verify_media(package, content, media_base):
         with urllib.request.build_opener(NoRedirect).open(request, timeout=25) as response:
             remote = response.read(len(content) + 1)
             mime = response.headers.get_content_type()
+    except urllib.error.HTTPError as exc:
+        exc.close()
+        if exc.code in (404, 408, 429) or 500 <= exc.code < 600:
+            raise MediaNotReady(f'Public media temporarily unavailable (HTTP {exc.code}); no social submission.') from None
+        raise Blocked(f'Public media HTTP {exc.code}; verify host access and direct URL.') from None
     except (urllib.error.URLError, TimeoutError):
-        raise Blocked('Public media is not directly reachable yet; preserve package and try preflight later.') from None
+        raise MediaNotReady('Public media is not directly reachable yet; no social submission.') from None
     if remote != content or mime != package['mimeType']:
         raise Blocked('Hosted media does not exactly match the reviewed export or MIME type.')
 

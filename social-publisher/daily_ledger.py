@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Single-Mac daily publishing reservations and evidence. Does not send posts."""
 import argparse, hashlib, json, sqlite3
+from contextlib import closing
 from datetime import datetime
 from pathlib import Path
 from zoneinfo import ZoneInfo
@@ -39,7 +40,7 @@ def reserve(brand,channel,package,root=ROOT,now=None):
     if not text or not image.is_relative_to(root.resolve()) or not image.is_file() or image.suffix.lower() not in ('.jpg','.jpeg','.png','.mp4'):
         raise ValueError('Caption and actual supported media are required.')
     digest=hashlib.sha256(text.encode()+image.read_bytes()).hexdigest()
-    with connect(root) as db:
+    with closing(connect(root)) as db, db:
         db.execute('BEGIN IMMEDIATE')
         prior=db.execute('SELECT * FROM deliveries WHERE brand=? AND day=? AND channel=?',(brand,day,channel)).fetchone()
         if prior:
@@ -54,7 +55,7 @@ def record(brand,day,channel,state,evidence,provider_id=None,root=ROOT):
         raise ValueError('A supported state and observed provider evidence are required.')
     if state in ('scheduled','sending','sent') and not provider_id:
         raise ValueError('A Buffer post ID or native post URL is required, not just a toast.')
-    with connect(root) as db:
+    with closing(connect(root)) as db, db:
         prior=db.execute('SELECT * FROM deliveries WHERE brand=? AND day=? AND channel=?',(brand,day,channel)).fetchone()
         if not prior:raise ValueError('Reserve before submitting; receipt has no reservation.')
         if prior['state']=='sent' and state!='sent':raise ValueError('A sent post cannot silently become unsent.')
@@ -64,7 +65,7 @@ def record(brand,day,channel,state,evidence,provider_id=None,root=ROOT):
     return {'state':state,'providerId':provider_id}
 
 def status(root=ROOT):
-    with connect(root) as db:return [dict(r) for r in db.execute('SELECT * FROM deliveries ORDER BY day DESC,brand,channel')]
+    with closing(connect(root)) as db, db:return [dict(r) for r in db.execute('SELECT * FROM deliveries ORDER BY day DESC,brand,channel')]
 
 if __name__=='__main__':
     p=argparse.ArgumentParser(description=__doc__);s=p.add_subparsers(dest='command',required=True)

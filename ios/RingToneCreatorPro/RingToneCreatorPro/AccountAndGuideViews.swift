@@ -4,6 +4,7 @@ struct AccountView: View {
     @Environment(AuthSession.self) private var auth
     @Environment(PurchaseManager.self) private var purchases
     @Environment(\.dismiss) private var dismiss
+    @State private var showingDeleteConfirmation = false
 
     var body: some View {
         NavigationStack {
@@ -37,10 +38,7 @@ struct AccountView: View {
                                     .tint(Theme.cyan)
 
                                     Button(role: .destructive) {
-                                        Task {
-                                            await auth.deleteAccount()
-                                            dismiss()
-                                        }
+                                        showingDeleteConfirmation = true
                                     } label: {
                                         Label("Delete Account", systemImage: "trash")
                                             .frame(maxWidth: .infinity)
@@ -69,6 +67,9 @@ struct AccountView: View {
                     }
                     .padding(16)
                 }
+            }
+            .sheet(isPresented: $showingDeleteConfirmation) {
+                DeleteAccountView { dismiss() }
             }
             .navigationTitle("Account")
             .navigationBarTitleDisplayMode(.inline)
@@ -244,6 +245,44 @@ struct GuideStep: View {
                     .foregroundStyle(Theme.muted)
                     .lineSpacing(2)
             }
+        }
+    }
+}
+
+
+struct DeleteAccountView: View {
+    @Environment(AuthSession.self) private var auth
+    @Environment(\.dismiss) private var dismiss
+    @State private var password = ""
+    var onDeleted: () -> Void = {}
+
+    var body: some View {
+        NavigationStack {
+            Form {
+                Text("Permanently delete your cloud profile and sign-in account. This cannot be undone. App Store subscriptions must be managed separately in Apple Settings.")
+                SecureField("Confirm your password", text: $password)
+                    .textContentType(.password)
+                    .disabled(auth.isBusy)
+                if let message = auth.message {
+                    Text(message).foregroundStyle(.red)
+                }
+                Button("Permanently Delete Account", role: .destructive) {
+                    Task {
+                        if await auth.deleteAccount(password: password) {
+                            password = ""
+                            dismiss()
+                            onDeleted()
+                        }
+                    }
+                }.disabled(auth.isBusy || password.isEmpty)
+            }
+            .navigationTitle("Delete Account")
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") { password = ""; dismiss() }.disabled(auth.isBusy)
+                }
+            }
+            .interactiveDismissDisabled(auth.isBusy)
         }
     }
 }

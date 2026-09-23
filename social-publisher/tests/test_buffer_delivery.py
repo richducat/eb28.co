@@ -87,6 +87,12 @@ class DeliveryTests(unittest.TestCase):
  def test_missing_review_cannot_send(self):
   self.package['visualChecked']=False
   with self.assertRaises(m.Blocked):self.run_delivery()
+ def test_tiktok_photo_ai_flag_is_rejected_before_reservation(self):
+  self.package['platform']='tiktok';self.package['metadata']={'tiktok':{'isAiGenerated':True}}
+  self.config['channels']['channel']['platform']='tiktok';self.api.channel['service']='tiktok'
+  with self.assertRaisesRegex(m.Blocked,'do not support'):
+   self.run_delivery()
+  self.assertEqual(self.api.writes,[]);self.assertEqual(m.ledger.status(self.root),[])
  def test_late_run_never_schedules_next_day(self):
   self.now=datetime(2026,9,11,3,55,tzinfo=timezone.utc)
   with self.assertRaises(m.Blocked):self.run_delivery()

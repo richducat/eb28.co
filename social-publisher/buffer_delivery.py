@@ -135,6 +135,11 @@ def validate_package(package, config, root, now, tz):
         raise Blocked('Media bytes do not match the declared image format.')
     if hashlib.sha256(content).hexdigest() != package.get('sha256'):
         raise Blocked('Artwork changed after review; refresh the verified package.')
+    # Buffer rejects the AI disclosure metadata flag for TikTok photo posts.
+    # Disclose AI use in the caption and stop before creating a reservation.
+    if (package.get('platform') == 'tiktok'
+            and package.get('metadata', {}).get('tiktok', {}).get('isAiGenerated') is True):
+        raise Blocked('TikTok photo posts do not support the AI disclosure metadata flag; disclose AI use in the caption and omit that field.')
     return channel, content
 
 

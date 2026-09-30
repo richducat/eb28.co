@@ -18,6 +18,7 @@ import com.solana.mobilewalletadapter.clientlib.MobileWalletAdapter
 import com.solana.mobilewalletadapter.clientlib.Solana
 import com.solana.mobilewalletadapter.clientlib.TransactionParams
 import com.solana.mobilewalletadapter.clientlib.TransactionResult
+import com.solana.mobilewalletadapter.clientlib.protocol.JsonRpc20Client
 import com.solana.mobilewalletadapter.clientlib.protocol.MobileWalletAdapterClient.AuthorizationResult
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -70,13 +71,25 @@ class MobileWalletAdapterPlugin : Plugin() {
 
     @PluginMethod
     fun authorize(call: PluginCall) {
-        val adapter = adapterFor(call)
-        adapter.authToken = call.getString("authToken")
-        runTransact(call, adapter, { auth -> auth }) { _, auth -> authJson(auth) }
+        try {
+            val adapter = adapterFor(call)
+            adapter.authToken = call.getString("authToken")
+            runTransact(call, adapter, { auth -> auth }) { _, auth -> authJson(auth) }
+        } catch (t: Throwable) {
+            rejectEarly(call, t)
+        }
     }
 
     @PluginMethod
     fun signMessages(call: PluginCall) {
+        try {
+            signMessagesImpl(call)
+        } catch (t: Throwable) {
+            rejectEarly(call, t)
+        }
+    }
+
+    private fun signMessagesImpl(call: PluginCall) {
         val adapter = adapterFor(call)
         adapter.authToken = call.getString("authToken")
         val payloads = decodeArray(call.getArray("payloads"), preferBase58 = false)
@@ -105,6 +118,14 @@ class MobileWalletAdapterPlugin : Plugin() {
 
     @PluginMethod
     fun signAndSendTransactions(call: PluginCall) {
+        try {
+            signAndSendImpl(call)
+        } catch (t: Throwable) {
+            rejectEarly(call, t)
+        }
+    }
+
+    private fun signAndSendImpl(call: PluginCall) {
         val adapter = adapterFor(call)
         adapter.authToken = call.getString("authToken")
         val txs = decodeArray(call.getArray("transactions"), preferBase58 = false)
@@ -126,6 +147,17 @@ class MobileWalletAdapterPlugin : Plugin() {
 
     @PluginMethod
     fun deauthorize(call: PluginCall) {
+        try {
+            deauthorizeImpl(call)
+        } catch (t: Throwable) {
+            Log.w(TAG, "deauthorize failed before launch", t)
+            val ok = JSObject()
+            ok.put("ok", true)
+            call.resolve(ok)
+        }
+    }
+
+    private fun deauthorizeImpl(call: PluginCall) {
         val adapter = adapterFor(call)
         val token = call.getString("authToken") ?: adapter.authToken
         val ok = JSObject()
@@ -187,6 +219,7 @@ class MobileWalletAdapterPlugin : Plugin() {
             return
         }
         busy = true
+        val hadToken = !adapter.authToken.isNullOrEmpty()
         scope.launch {
             try {
                 val result = adapter.transact(s, null) { auth -> block(auth) }
@@ -204,19 +237,37 @@ class MobileWalletAdapterPlugin : Plugin() {
                     }
                     is TransactionResult.Failure -> {
                         Log.w(TAG, "transact failed: ${result.message}", result.e)
-                        call.reject(result.message ?: "Wallet request failed", classify(result.e, result.message))
+                        call.reject(result.message ?: "Wallet request failed", classify(result.e, result.message, hadToken))
                     }
                 }
             } catch (t: Throwable) {
                 Log.e(TAG, "transact threw", t)
-                call.reject(t.message ?: "Wallet request failed", classify(t, t.message))
+                call.reject(t.message ?: "Wallet request failed", classify(t, t.message, hadToken))
             } finally {
                 busy = false
             }
         }
     }
 
-    private fun classify(e: Throwable?, message: String?): String {
+    private fun rejectEarly(call: PluginCall, t: Throwable) {
+        Log.e(TAG, "wallet call rejected before launch", t)
+        call.reject(t.message ?: "Invalid wallet request", "bad_request")
+    }
+
+    /** Wallets answer an unknown or revoked auth token with JSON-RPC error -1 (ERROR_AUTHORIZATION_FAILED). */
+    private fun isTokenRejected(e: Throwable?): Boolean {
+        var cur: Throwable? = e
+        var depth = 0
+        while (cur != null && depth < 6) {
+            if (cur is JsonRpc20Client.JsonRpc20RemoteException && cur.code == -1) return true
+            cur = cur.cause
+            depth++
+        }
+        return false
+    }
+
+    private fun classify(e: Throwable?, message: String?, hadToken: Boolean): String {
+        if (hadToken && isTokenRejected(e)) return "ERROR_AUTH_TOKEN_INVALID"
         val text = ((e?.message ?: "") + " " + (message ?: "")).lowercase()
         return when {
             e is CancellationException || text.contains("cancel") -> "ERROR_ASSOCIATION_CANCELLED"

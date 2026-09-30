@@ -13,8 +13,9 @@ Publish SyncStep 2.6 (versionCode 19) to the Solana dApp Store, signed with the 
 2. Find the release keystore used for SyncStep 1.7 to 2.5: `apps/syncstep/scripts/find-keystore.sh`
    (lists candidates, paths only). The right one is the file whose cert digest matches the
    value above; `release.sh` checks that for you and refuses any other key.
-3. Build, sign, verify (needs JDK 21 and the Android SDK; set `ANDROID_HOME` if not at
-   `~/Library/Android/sdk`):
+3. Run the tests, then build, sign and verify (needs JDK 21, Node 20+ and the Android SDK; set
+   `ANDROID_HOME` if not at `~/Library/Android/sdk`). `cd apps/syncstep && npm ci && npm test` must print
+   `native-mwa contract: all checks passed`. Then, from the repo root:
    ```
    export SYNCSTEP_KEYSTORE_PATH=/path/to/that.keystore
    export SYNCSTEP_KEYSTORE_PASSWORD='...'
@@ -23,8 +24,9 @@ Publish SyncStep 2.6 (versionCode 19) to the Solana dApp Store, signed with the 
    Expect `signing cert matches the 2.5 release key` and `OK .../dist/syncstep-2.6.apk`.
    If it prints `signing cert mismatch`, try the next keystore candidate. Do not bypass it.
 4. Before uploading, sideload `dist/syncstep-2.6.apk` on the Seeker and run: Wallet tab,
-   Connect Solana Wallet, approve in Seed Vault, see the 20 SYNC welcome airdrop, then
-   Disconnect. If Connect fails, stop and report the exact message; do not submit.
+   Connect Solana Wallet, approve in Seed Vault (connection, then the sign-in message), see
+   `Connected · ABCD…WXYZ` and the 20 SYNC welcome airdrop, then tap **Disconnect wallet** and
+   confirm it returns to `not connected`. If Connect fails, stop and report the exact message; do not submit.
 5. Check the server is no longer bot-blocked: `apps/syncstep/scripts/check-server.sh 10`
    must print `blocked=0`. If not, the Namecheap ticket (sent 2026-09-30 from
    richducat@gmail.com to support@namecheap.com) is still pending. Do not submit yet:

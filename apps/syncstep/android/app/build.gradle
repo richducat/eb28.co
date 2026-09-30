@@ -63,7 +63,11 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"
     implementation project(':capacitor-cordova-android-plugins')
     // Solana Mobile Wallet Adapter: official Kotlin client library, used by MobileWalletAdapterPlugin.
-    implementation "com.solanamobile:mobile-wallet-adapter-clientlib-ktx:$mwaClientlibKtxVersion"
+    implementation("com.solanamobile:mobile-wallet-adapter-clientlib-ktx:$mwaClientlibKtxVersion") {
+        // The published pom pulls androidx.test, which ships exported launcher test activities and REORDER_TASKS into the APK.
+        exclude group: 'androidx.test.ext', module: 'junit-ktx'
+        exclude group: 'androidx.test', module: 'core'
+    }
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinxCoroutinesVersion"
     implementation "androidx.activity:activity-ktx:$androidxActivityVersion"
 }

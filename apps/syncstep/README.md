@@ -26,15 +26,36 @@ source is available again, apply the same two changes there and rebuild `www/` w
    official Kotlin client (`com.solanamobile:mobile-wallet-adapter-clientlib-ktx:2.0.8`).
    The wallet is launched with an activity-result contract and the MWA session runs in the
    app process. `www/syncstep-native-mwa.js` exposes the same `transact(cb)` shape the game
-   already uses, so the only bundle change is one line in `ht()` that prefers the native
-   bridge when `Capacitor.isNativePlatform()`.
-2. **Bot-shield detection.** The HTTP client (`Rt()`) now recognises the Imunify360 challenge
-   page / 403 and reports `waf` with a clear "wait a few seconds and tap Connect again"
-   message instead of a generic outage. This does not fix the server; see below.
-3. Manifest: explicit `<queries>` for the `solana-wallet` scheme (Android 11+ package
-   visibility), location + notification permissions restored from the 2.5 manifest.
-4. `MainActivity` keeps the 2.5 back-button and focus/blur behaviour and drops the custom
-   `shouldOverrideUrlLoading` intent hack (no longer needed).
+   already uses. It calls the plugin through `Capacitor.nativePromise` and decides lazily at
+   call time, because Capacitor core (`registerPlugin`, `Capacitor.Plugins`) is not loaded
+   yet when that classic script runs. (The first version looked the plugin up at load time
+   and would have silently done nothing; an independent review caught it.)
+2. **Token handling.** One wallet session per action: sign-in and purchases reuse the
+   wallet's auth token. If the wallet no longer knows the token, the shim forgets it and asks
+   once from scratch. A user cancel is never retried.
+3. **Account state and Disconnect.** Wallet tab shows `Connected · ABCD…WXYZ` and a
+   **Disconnect wallet** button (clears wallet, token and saved session, no wallet launch).
+   This answers the last review finding: "make the connection, account state, and disconnect
+   behavior clear".
+4. **Server resilience.** The HTTP client retries up to three times with back-off on network
+   errors, 5xx gateways and the Imunify360 challenge, and reports a persistent challenge as a
+   clear "security check" message. Real API errors and 401 are never retried.
+5. **Connect flow polish.** The 15 s "abandoned" watchdog and the 6 s "close the wallet"
+   toast no longer fire during a legitimate two-step approval; the button shows "Connecting…";
+   failure toasts stay 5 s; if sign-in worked but the airdrop request failed, the UI shows the
+   connected state. A guest tapping a paid action is sent to Connect first; the SYNC pack list
+   is re-fetched if the launch-time request failed. Plugin errors ("no wallet installed",
+   timeout) reach the user instead of "Connection cancelled".
+6. **Manifest and dependencies.** `<queries>` for the `solana-wallet` scheme; the MWA library's
+   transitive `androidx.test` dependency is excluded, which removes three exported launcher test
+   activities and `REORDER_TASKS` from the APK. Location and notification permissions restored.
+7. **Reproducible bundle.** The original TypeScript source is not in any repository, so
+   `tools/patch-bundle.py` rebuilds `www/assets/index-DXPA_3cK.js` from the pristine 2.5 bundle
+   (`tools/original/`, byte-identical to the shipped APK) with 20 exact-match patches.
+
+`npm test` runs a contract test with real Ed25519 signatures, a real web3.js transaction and the
+game's own signature verifier under document-start conditions, and executes the patched server
+client against a fake flaky server. It fails against the first version of the shim.
 
 ## Server-side fix still required (owner action)
 
@@ -48,7 +69,7 @@ the app. Either:
 - move the Express API to a host without a bot shield (Render, Fly.io, Cloudflare Workers)
   and change `VITE_API_BASE` / `VITE_RPC_URL` in the game build.
 
-Until one of those is done, sign-in will still fail intermittently for reviewers.
+Until one of those is done, sign-in can still fail for reviewers (the client now retries three times, which helps, but does not remove the block).
 
 ## Build
 

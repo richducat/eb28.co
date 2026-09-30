@@ -1,5 +1,7 @@
 # Namecheap support ticket — disable Imunify360 anti-bot on an API subdomain
 
+**Status:** sent to support@namecheap.com from richducat@gmail.com on 2026-09-30 (a re-test that day: 2 of 16 sign-in requests blocked). Waiting on Namecheap.
+
 **Subject:** Imunify360 bot-protection is blocking legitimate JSON API traffic on sync.chatbotbuilder.store
 
 Hello,

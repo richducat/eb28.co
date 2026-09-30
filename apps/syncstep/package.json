@@ -6,7 +6,8 @@
   "scripts": {
     "sync": "npx cap sync android",
     "build:debug": "cd android && ./gradlew assembleDebug",
-    "build:release": "cd android && ./gradlew assembleRelease"
+    "build:release": "cd android && ./gradlew assembleRelease",
+    "test": "node test/native-mwa-shim.test.mjs"
   },
   "dependencies": {
     "@capacitor/android": "^7.6.9",

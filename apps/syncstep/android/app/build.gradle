@@ -20,10 +20,28 @@ android {
     kotlinOptions {
         jvmTarget = '21'
     }
+    // Release signing: the dApp Store only accepts updates signed with the key used for
+    // the previous release (cert SHA-256 2ad1ce68...). Point these at that keystore:
+    //   SYNCSTEP_KEYSTORE_PATH, SYNCSTEP_KEYSTORE_PASSWORD, SYNCSTEP_KEY_ALIAS, SYNCSTEP_KEY_PASSWORD
+    // Without them, assembleRelease produces app-release-unsigned.apk for apksigner.
+    def releaseKeystore = System.getenv("SYNCSTEP_KEYSTORE_PATH")
+    signingConfigs {
+        release {
+            if (releaseKeystore) {
+                storeFile file(releaseKeystore)
+                storePassword System.getenv("SYNCSTEP_KEYSTORE_PASSWORD")
+                keyAlias System.getenv("SYNCSTEP_KEY_ALIAS")
+                keyPassword System.getenv("SYNCSTEP_KEY_PASSWORD") ?: System.getenv("SYNCSTEP_KEYSTORE_PASSWORD")
+            }
+        }
+    }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            if (releaseKeystore) {
+                signingConfig signingConfigs.release
+            }
         }
     }
 }

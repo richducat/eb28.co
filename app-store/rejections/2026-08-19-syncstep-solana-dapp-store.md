@@ -87,6 +87,26 @@ Submission:
   the server may take a few seconds on first load.
 - Expect 3 to 5 business days; escalate in the Solana Mobile Discord `#dev-answers` after 5.
 
+## Update 2026-09-30: source located, root causes confirmed
+
+- The submitted binary was recovered from the on-chain release NFT (`rj7nKC5HTPCvRxnnEWKEwbdrFVsAYs4cLZuRPiyHmtC`,
+  metadata on r2.solanamobiledappstore.com). Package `com.richardducat.syncstep`, v2.5, versionCode 18,
+  a Capacitor 7 WebView app with the game bundled; publisher wallet `9o77AkThGHNhNDeowM943dNsCck71VTUeFwBxq3RaGjn`,
+  App NFT `4Ym8ZMfnUnCHX7bLeH4npm7gC9LjvfDGfGudrixq8sVr`, five release NFTs (1.7, 1.8, 1.9, 2.0, 2.5).
+- Backend: Express behind LiteSpeed on Namecheap shared hosting at `https://sync.chatbotbuilder.store`.
+- **Confirmed cause of "unable to connect server":** Imunify360 bot-protection on that host. Timed test,
+  six rounds: `POST /auth/nonce` returned `403 Access denied by Imunify360 bot-protection` twice, and the
+  CORS preflight `OPTIONS /auth/nonce` returned the HTML "One moment, please…" challenge (HTTP 200, no CORS
+  headers) twice. A WebView `fetch()` cannot pass a JavaScript splash challenge, so sign-in dies with
+  "Couldn't reach the server". Reviewer networks are exactly the kind of IP the shield challenges.
+- **Confirmed mechanism of "wallet connection failed":** MWA ran inside the WebView
+  (`mobile-wallet-adapter-protocol-web3js`): hidden-iframe `solana-wallet:` intent, synthetic `blur`,
+  then a page-level WebSocket to `ws://localhost:<port>`. Replaced by a native Kotlin plugin
+  (`apps/syncstep/android/.../MobileWalletAdapterPlugin.kt`, official `clientlib-ktx`).
+- Rebuild lives in `apps/syncstep/` (see its README). Signing must reuse the 2.5 key
+  (cert `2ad1ce68…`), which only exists on the Mac that built 1.7 to 2.5.
+- Server fix needs the hosting provider: ticket text in `apps/syncstep/NAMECHEAP-TICKET.md`.
+
 ## Blocker recorded 2026-09-01
 
 The SyncStep APK source and its backend are not in any GitHub repository this account exposes

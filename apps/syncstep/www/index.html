@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+<title>SyncStep — Move. Sync. Earn.</title>
+  <script src="/syncstep-native-mwa.js"></script>
+  <script type="module" crossorigin src="/assets/index-DXPA_3cK.js"></script>
+  <link rel="modulepreload" crossorigin href="/assets/rolldown-runtime-DAXXjFlN.js">
+  <link rel="stylesheet" crossorigin href="/assets/index-D2GIWNNS.css">
+</head>
+<body>
+<div id="app">
+
+  <!-- ============ MAP TAB ============ -->
+  <section class="tab-panel active" id="tab-map">
+    <div id="map"></div>
+
+    <header class="hud">
+      <div class="hud-pill balance-pill" id="balancePill">
+        <span class="sync-coin">⬢</span>
+        <span id="balanceValue">0</span>
+        <span class="pill-label">SYNC</span>
+        <button class="topup-btn" id="topupBtn" aria-label="Add SYNC">+</button>
+      </div>
+      <div class="hud-pill gps-pill" id="gpsPill">
+        <span class="gps-dot" id="gpsDot"></span>
+        <span id="gpsLabel">Locating…</span>
+      </div>
+    </header>
+
+    <button class="steps-chip" id="stepsChip">
+      <span class="steps-ico">👟</span>
+      <span id="stepsLabel">0</span>
+      <span class="steps-boost" id="stepsBoost">+0%</span>
+    </button>
+
+    <button class="streak-chip" id="streakChip">
+      <span class="streak-flame">🔥</span>
+      <span id="streakLabel">Day 1</span>
+      <span class="freeze-badge" id="freezeBadge" hidden>❄️<span id="freezeCount">1</span></span>
+    </button>
+
+    <div class="near-list" id="nearList" hidden></div>
+
+    <label class="autoclaim">
+      <input type="checkbox" id="autoClaim" /> Auto-collect
+    </label>
+
+    <nav class="action-bar">
+      <button class="action-btn" id="centerBtn" aria-label="Center on me">
+        <span class="action-ico">◎</span><span>Me</span>
+      </button>
+      <button class="action-btn primary" id="claimBtn" disabled>
+        <span class="action-ico" id="claimIco">◎</span><span id="claimLabel">Find a Sync</span>
+      </button>
+      <button class="action-btn" id="digBtn" aria-label="Dig">
+        <span class="action-ico">⛏️</span><span>Dig</span>
+      </button>
+    </nav>
+  </section>
+
+  <!-- ============ WALLET TAB ============ -->
+  <section class="tab-panel" id="tab-wallet">
+    <div class="scroll">
+      <h1 class="screen-title">Wallet</h1>
+
+      <div class="balance-card in-app">
+        <div class="bc-label">Your SYNC <span class="hint" id="walletAddr">not connected</span></div>
+        <div class="bc-value" id="inAppBalance">0 ⬢</div>
+        <div class="token-row" id="tokenRow"></div>
+      </div>
+
+      <button class="cta" id="buyBtn" hidden>Get SYNC</button>
+      <button class="cta" id="connectBtn">Connect Solana Wallet</button>
+      <p class="fineprint" id="walletNote">Connect to claim your 20 ⬢ welcome airdrop.</p>
+
+      <button class="swap-card" id="swapBtn" hidden>
+        <span class="swap-ico">⇄</span>
+        <span class="swap-copy"><b>Swap tokens</b><span>SOL · USDC · BONK — best price via Jupiter</span></span>
+      </button>
+
+      <h2 class="section-h">Activity</h2>
+      <div class="history" id="history"></div>
+
+      <!-- Reachable legal + the one line about SYNC that a player spending real
+           SOL has to be able to find from inside the app, not just the listing. -->
+      <p class="legal-note">
+        SYNC is a game currency. It's spent inside SyncStep and can't be cashed out,
+        withdrawn or transferred.<br />
+        <a href="https://eb28.co/syncstep/privacy.html" target="_blank" rel="noopener">Privacy</a>
+        · <a href="https://eb28.co/syncstep/terms.html" target="_blank" rel="noopener">Terms</a>
+        · <a href="https://eb28.co/syncstep" target="_blank" rel="noopener">Support</a>
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ EARN TAB ============ -->
+  <section class="tab-panel" id="tab-earn">
+    <div class="scroll">
+      <h1 class="screen-title">Earn</h1>
+
+      <div class="earn-card">
+        <div class="ec-head"><span class="ec-ico">🔥</span><b>Daily check-in</b></div>
+        <p class="ec-sub">Seven days in a row pays <b>100 ⬢</b> total.</p>
+        <div class="streak-row" id="streakRow"></div>
+        <div class="freeze-line" id="freezeLine"></div>
+        <button class="cta" id="checkinBtn">Check in</button>
+      </div>
+
+      <div class="earn-card">
+        <div class="ec-head"><span class="ec-ico">👥</span><b>Invite friends</b></div>
+        <p class="ec-sub">Earn <b id="refRewardLabel">25 ⬢</b> per friend who joins — with no cap. Your rate climbs as you invite more.</p>
+        <div class="ref-code" id="refCode">——————</div>
+        <div class="ref-tiers" id="refTiers"></div>
+        <button class="cta" id="shareRefBtn">Share my code</button>
+        <div class="ref-entry" id="refEntry">
+          <input id="refInput" placeholder="Got a code? Enter it" maxlength="6" autocapitalize="characters" />
+          <button class="mini-btn" id="refApplyBtn">Apply</button>
+        </div>
+        <p class="ec-note" id="refNote"></p>
+      </div>
+
+      <div class="earn-card">
+        <div class="ec-head"><span class="ec-ico">🎯</span><b>Campaigns</b></div>
+        <p class="ec-sub">Sponsored chests packed with partner tokens, dropped in real places.</p>
+        <div class="empty-state">No campaigns running right now — check back soon.</div>
+      </div>
+
+      <div class="earn-card">
+        <div class="ec-head"><span class="ec-ico">📊</span><b>Your run</b></div>
+        <div class="stat-grid" id="statGrid"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ STEPPERS TAB ============ -->
+  <section class="tab-panel" id="tab-crew">
+    <div class="scroll">
+      <h1 class="screen-title">Crew</h1>
+
+      <div class="active-card" id="activeCard"></div>
+
+      <h2 class="section-h">Your crew <span id="crewCount"></span></h2>
+      <div class="crew-grid" id="crewGrid"></div>
+
+      <div class="earn-card">
+        <div class="ec-head"><span class="ec-ico">👟</span><b>Today's steps</b></div>
+        <div class="step-meter" id="stepMeter"></div>
+        <p class="ec-note" id="stepNote"></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TAB BAR ============ -->
+  <nav class="tab-bar">
+    <button class="tab-btn active" data-tab="map"><span>🗺️</span>Map</button>
+    <button class="tab-btn" data-tab="crew"><span>🤖</span>Crew</button>
+    <button class="tab-btn" data-tab="wallet"><span>👛</span>Wallet</button>
+    <button class="tab-btn" data-tab="earn"><span>✨</span>Earn</button>
+  </nav>
+
+  <!-- ============ SHEETS ============ -->
+  <div class="sheet-backdrop" id="backdrop" hidden></div>
+
+  <section class="sheet" id="syncSheet" hidden>
+    <div class="sheet-handle"></div>
+    <div class="sync-art" id="syncArt"></div>
+    <h2 id="syncTitle">Spark Sync</h2>
+    <p class="sheet-sub" id="syncSub">Holds <b>SYNC</b></p>
+    <div class="boost-line" id="syncBoost" hidden></div>
+    <div class="cond-list" id="condList"></div>
+    <button class="cta" id="openSyncBtn">Say hi for 1 ⬢</button>
+    <button class="ghost" data-close>Not now</button>
+  </section>
+
+  <section class="sheet" id="digSheet" hidden>
+    <div class="sheet-handle"></div>
+    <h2>Dig</h2>
+    <p class="sheet-sub">Stake SYNC, reveal three tiles. Bigger stakes, bigger finds.</p>
+    <div class="dig-amounts" id="digAmounts"></div>
+    <div class="dig-grid" id="digGrid" hidden></div>
+    <p class="dig-status" id="digStatus" hidden></p>
+    <button class="cta" id="startDigBtn">Start digging</button>
+    <button class="ghost" data-close>Close</button>
+  </section>
+
+  <section class="sheet" id="buySheet" hidden>
+    <div class="sheet-handle"></div>
+    <div class="buy-coin">⬢</div>
+    <h2>Get SYNC</h2>
+    <p class="sheet-sub">Top up with SOL to keep playing. SYNC is spent in-game.</p>
+    <div class="buy-packs" id="buyPacks"></div>
+    <p class="fineprint" id="buyNote"></p>
+    <button class="ghost" id="oddsLink">See reward odds</button>
+    <button class="ghost" data-close>Close</button>
+  </section>
+
+  <section class="sheet" id="oddsSheet" hidden>
+    <div class="sheet-handle"></div>
+    <h2>Reward odds</h2>
+    <p class="sheet-sub">Opening a Sync and Dig give random rewards. Here's exactly how often each outcome lands.</p>
+    <div class="odds-list" id="oddsList"></div>
+    <button class="ghost" data-close>Close</button>
+  </section>
+
+  <section class="sheet" id="swapSheet" hidden>
+    <div class="sheet-handle"></div>
+    <h2>Swap</h2>
+    <div class="swap-box">
+      <div class="swap-row">
+        <button class="swap-token" id="swapFromBtn">◎ SOL</button>
+        <input id="swapAmount" type="number" min="0" step="any" inputmode="decimal" placeholder="0.0" />
+      </div>
+      <button class="swap-flip" id="swapFlipBtn" aria-label="Flip tokens">↓↑</button>
+      <div class="swap-row">
+        <button class="swap-token" id="swapToBtn">💵 USDC</button>
+        <div class="swap-out" id="swapOut">—</div>
+      </div>
+    </div>
+    <p class="swap-meta" id="swapMeta"></p>
+    <button class="cta" id="swapGoBtn" disabled>Enter an amount</button>
+    <p class="fineprint" id="swapNote"></p>
+    <button class="ghost" data-close>Close</button>
+  </section>
+
+  <section class="sheet" id="stepperSheet" hidden>
+    <div class="sheet-handle"></div>
+    <div class="stepper-hero" id="stepperHero"></div>
+    <h2 id="stepperName">Pip</h2>
+    <p class="sheet-sub" id="stepperMeta"></p>
+    <div class="xp-bar"><div class="xp-fill" id="xpFill"></div></div>
+    <p class="xp-text" id="xpText"></p>
+    <div class="stepper-actions" id="stepperActions"></div>
+    <div class="stake-terms" id="stakeTerms" hidden></div>
+    <button class="ghost" data-close>Close</button>
+  </section>
+
+  <!-- Full-screen reveal: the most repeated spend deserves the best beat -->
+  <div class="reveal" id="reveal" hidden>
+    <div class="reveal-burst" id="revealBurst"></div>
+    <div class="reveal-icon" id="revealIcon">🎁</div>
+    <div class="reveal-amount" id="revealAmount"></div>
+    <div class="reveal-label" id="revealLabel"></div>
+    <div class="reveal-meta" id="revealMeta"></div>
+    <button class="cta reveal-cta" id="revealClose">Nice</button>
+  </div>
+
+  <!-- Onboarding -->
+  <div class="onboard" id="onboard" hidden>
+    <div class="ob-slide" id="obSlide"></div>
+    <div class="ob-dots" id="obDots"></div>
+    <button class="cta" id="obNext">Next</button>
+    <button class="ghost" id="obSkip">Skip</button>
+  </div>
+
+  <div class="reward-toast" id="toast" hidden></div>
+</div>
+</body>
+</html>

@@ -1,0 +1,9 @@
+{
+  "appId": "com.richardducat.syncstep",
+  "appName": "SyncStep",
+  "webDir": "www",
+  "backgroundColor": "#07090f",
+  "android": {
+    "allowMixedContent": false
+  }
+}

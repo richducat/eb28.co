@@ -1,28 +1,28 @@
 {
-  "_instructions": "Paste a Stripe Payment Link URL into checkoutUrl for each product. Buy buttons across the site activate automatically once a URL is present — no rebuild needed. In Stripe, set each payment link's after-payment confirmation to redirect to the matching welcomeUrl so customers land on automated onboarding.",
+  "_instructions": "Paste a Stripe Payment Link URL into checkoutUrl for each product. Buy buttons across the site activate automatically once a URL is present \u2014 no rebuild needed. In Stripe, set each payment link's after-payment confirmation to redirect to the matching welcomeUrl so customers land on automated onboarding. NOTE (DRAFT \u2014 DO NOT MERGE TO GO-LIVE): growth-hosting-annual.checkoutUrl is Stripe TESTMODE only (TYFYS acct_1R1oQiByTro6FO6k). Replace with a LIVE Payment Link before merge/go-live.",
   "products": {
     "growth-hosting-annual": {
-      "label": "Free Website Build + 12 Months Growth Hosting — $1,176 upfront ($98/month)",
-      "checkoutUrl": "",
+      "label": "Free Website Build + 12 Months Growth Hosting \u2014 $1,176 upfront ($98/month)",
+      "checkoutUrl": "https://buy.stripe.com/test_fZuaEW64RaFubv2fv0bbG00",
       "welcomeUrl": "https://eb28.co/welcome/?p=growth-hosting-annual"
     },
     "website-build-only": {
-      "label": "Website Build Only — $800 one-time",
+      "label": "Website Build Only \u2014 $800 one-time",
       "checkoutUrl": "",
       "welcomeUrl": "https://eb28.co/welcome/?p=website-build-only"
     },
     "diy-ai-foundation": {
-      "label": "DIY AI Foundation Build — $10 one-time",
+      "label": "DIY AI Foundation Build \u2014 $10 one-time",
       "checkoutUrl": "",
       "welcomeUrl": "https://eb28.co/welcome/?p=diy-ai-foundation"
     },
     "recon-agent-beta": {
-      "label": "Recon Agent Founder Beta — $17/mo subscription",
+      "label": "Recon Agent Founder Beta \u2014 $17/mo subscription",
       "checkoutUrl": "",
       "welcomeUrl": "https://eb28.co/welcome/?p=recon-agent-beta"
     },
     "white-glove-onboarding": {
-      "label": "White-Glove Onboarding — $1,000 one-time",
+      "label": "White-Glove Onboarding \u2014 $1,000 one-time",
       "checkoutUrl": "",
       "welcomeUrl": "https://eb28.co/welcome/?p=white-glove-onboarding"
     }

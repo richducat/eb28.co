@@ -1,3 +1,4 @@
+import fs from 'node:fs';
 import path from 'node:path';
 import { PATHS, T } from '../config.js';
 import { deriveStatus, makeJob, titleFrom } from '../jobs/model.js';
@@ -6,7 +7,7 @@ import { exists, readHeadJsonl, readTailJsonl, textOf, walk } from './util.js';
 export const id = 'codex';
 export const label = 'Codex';
 
-const WRAPPER = /^\s*<(environment_context|user_instructions|permissions_instructions|collaboration_mode|turn_aborted|app_context)/i;
+const WRAPPER = /^\s*(<(environment_context|user_instructions|permissions_instructions|collaboration_mode|turn_aborted|app_context)|# AGENTS\.md instructions)/i;
 
 /** Normalize the two Codex rollout formats into a flat list of events. */
 function normalize(records) {
@@ -43,7 +44,7 @@ function normalize(records) {
   return { meta, events };
 }
 
-export function parseRollout(file, { now = Date.now(), mtime } = {}) {
+export function parseRollout(file, { now = Date.now(), mtime, names = new Map() } = {}) {
   const head = normalize(readHeadJsonl(file));
   const tail = normalize(readTailJsonl(file));
   const meta = head.meta || tail.meta || {};
@@ -85,7 +86,8 @@ export function parseRollout(file, { now = Date.now(), mtime } = {}) {
   return makeJob({
     id: `codex:${sessionId}`,
     source: id,
-    title: titleFrom(firstUser ? firstUser.text : ''),
+    // Background threads (no user prompt) are named after their project folder.
+    title: names.get(sessionId) || (firstUser ? titleFrom(firstUser.text) : cwd ? `Codex run in ${path.basename(cwd)}` : 'Untitled job'),
     status,
     reason,
     cwd,
@@ -104,15 +106,35 @@ function lastIndex(events, kind) {
   return -1;
 }
 
+/** Thread names the Codex app shows, from ~/.codex/session_index.jsonl (last entry per id wins). */
+export function threadNames(file = path.join(path.dirname(PATHS.codexSessions), 'session_index.jsonl')) {
+  const names = new Map();
+  try {
+    for (const line of fs.readFileSync(file, 'utf8').split('\n')) {
+      if (!line.trim()) continue;
+      try {
+        const r = JSON.parse(line);
+        if (r.id && r.thread_name) names.set(r.id, r.thread_name);
+      } catch {
+        /* skip */
+      }
+    }
+  } catch {
+    /* no index */
+  }
+  return names;
+}
+
 export async function collect({ now = Date.now() } = {}) {
   const root = PATHS.codexSessions;
   if (!exists(root)) return [];
+  const names = threadNames();
   const files = walk(root, (f) => f.endsWith('.jsonl'), { limit: 300 });
   const jobs = [];
   for (const { file, mtime } of files) {
     if (now - mtime > T.hideDoneAfter) continue;
     try {
-      const job = parseRollout(file, { now, mtime });
+      const job = parseRollout(file, { now, mtime, names });
       if (job.title === 'Untitled job' && !job.lastMessage) continue;
       jobs.push(job);
     } catch {

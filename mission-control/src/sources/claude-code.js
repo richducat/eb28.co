@@ -39,6 +39,9 @@ export function parseTranscript(file, { live = new Map(), now = Date.now(), mtim
   const anyMeta = head.find((r) => r.sessionId) || tail.find((r) => r.sessionId) || {};
   const sessionId = anyMeta.sessionId || path.basename(file, '.jsonl');
   const summary = tail.slice().reverse().find((r) => r.type === 'summary' && r.summary);
+  // Titles set in the app ("custom-title") win; they may sit anywhere, so fall back to a scan.
+  const named = [...head, ...tail].reverse().find((r) => r.type === 'custom-title' && r.customTitle);
+  const customTitle = named ? named.customTitle : scanCustomTitle(file);
 
   const records = tail.filter((r) => !isSkippable(r));
   const last = records[records.length - 1];
@@ -66,7 +69,7 @@ export function parseTranscript(file, { live = new Map(), now = Date.now(), mtim
   const cwd = (first && first.cwd) || (last && last.cwd) || (liveInfo && liveInfo.cwd) || '';
   const branch = (last && last.gitBranch) || (first && first.gitBranch) || '';
   const promptText = first ? textOf(first.message.content) : '';
-  const title = summary ? summary.summary : titleFrom(promptText);
+  const title = customTitle || (summary ? summary.summary : titleFrom(promptText));
 
   return makeJob({
     id: `claude-code:${sessionId}`,
@@ -90,6 +93,16 @@ export function parseTranscript(file, { live = new Map(), now = Date.now(), mtim
       version: first && first.version,
     },
   });
+}
+
+function scanCustomTitle(file, maxBytes = 16 * 1024 * 1024) {
+  try {
+    if (fs.statSync(file).size > maxBytes) return '';
+    const all = [...fs.readFileSync(file, 'utf8').matchAll(/"customTitle":"((?:[^"\\]|\\.)*)"/g)];
+    return all.length ? JSON.parse(`"${all[all.length - 1][1]}"`) : '';
+  } catch {
+    return '';
+  }
 }
 
 function isMeta(rec) {

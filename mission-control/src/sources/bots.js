@@ -266,6 +266,16 @@ export function parsePs(out, keywords = /grok|xai/i, selfPid = process.pid) {
     const [, pid, etime, command] = m;
     if (Number(pid) === selfPid || !keywords.test(command)) continue;
     if (/\b(ps|grep|rg|mission-control|Electron Helper|Google Chrome|Safari)\b/.test(command)) continue;
+    // Chromium/Electron child processes (renderers, GPU, crashpad) belong to their app, not separate bots.
+    if (/\s--type=|chrome_crashpad_handler|\bHelper\b|\((Renderer|Service|GPU|Plugin)\)/.test(command)) continue;
+    // A macOS app is one bot: "/Applications/Grok Bot.app/Contents/MacOS/Grok Bot" -> "Grok Bot".
+    const app = command.match(/^(.*?\/([^/]+)\.app)\/Contents\/MacOS\//);
+    if (app) {
+      if (!keywords.test(app[2])) continue;
+      if (rows.some((r) => r.app === app[1])) continue;
+      rows.push({ pid: Number(pid), etime, command, script: '', app: app[1], name: app[2] });
+      continue;
+    }
     const script = command.split(/\s+/).find((a) => /\.(m?js|cjs|ts|py|sh|rb)$/.test(a)) || '';
     rows.push({ pid: Number(pid), etime, command, script, name: path.basename(script || command.split(/\s+/)[0]) });
   }
@@ -276,14 +286,15 @@ async function fromProcesses() {
   const keywords = new RegExp(process.env.MC_BOT_KEYWORDS || 'grok|xai', 'i');
   const out = await run('ps', ['-axo', 'pid=,etime=,command=']);
   return parsePs(out, keywords).map((p) => ({
-    key: `proc:${p.script || p.command.slice(0, 80)}`,
+    key: `proc:${p.app || p.script || p.command.slice(0, 80)}`,
     name: p.name,
-    manager: 'process',
+    manager: p.app ? 'app' : 'process',
     state: 'running',
     pid: p.pid,
-    script: p.script,
-    provider: detectProvider(p.command, scriptHead(p.script)),
-    restart: null,
+    script: p.app || p.script,
+    provider: detectProvider(p.name, p.command, scriptHead(p.script)),
+    // Apps relaunch cleanly with `open -a`; quitting is left to the user.
+    restart: p.app ? ['open', '-a', p.app] : null,
   }));
 }
 

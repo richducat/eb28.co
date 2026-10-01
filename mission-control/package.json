@@ -13,7 +13,7 @@
     "scan": "node bin/mission-control.mjs scan",
     "digest": "node bin/mission-control.mjs digest",
     "agents": "node bin/mission-control.mjs agents",
-    "test": "node --test test/*.test.mjs",
+    "test": "node --import ./test/setup.mjs --test test/*.test.mjs",
     "dist": "electron-builder --publish never"
   },
   "optionalDependencies": {

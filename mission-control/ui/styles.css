@@ -128,3 +128,13 @@ dialog menu { display: flex; justify-content: flex-end; gap: 8px; padding: 0; ma
 .arcade-dot select { margin-left: 6px; }
 .arcade-frame { background: #14101f; border-radius: 10px; padding: 10px; box-shadow: inset 0 0 0 3px #3b2f5c, 0 6px 24px rgba(0,0,0,.25); }
 #arcade { display: block; width: 100%; max-width: 1440px; margin: 0 auto; image-rendering: pixelated; image-rendering: crisp-edges; }
+.legend { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 10px; margin-top: 12px; }
+.legend .place { border: 1px solid var(--line, #e5e7eb); border-radius: 10px; padding: 10px 12px; background: var(--card, #fff); scroll-margin: 80px; }
+.legend .place.flash { outline: 3px solid #f8d838; }
+.legend .place h3 { margin: 0 0 2px; font: 600 13px/1.3 system-ui, sans-serif; display: flex; justify-content: space-between; gap: 8px; }
+.legend .place h3 .n { font-family: "Press Start 2P", monospace; font-size: 10px; }
+.legend .place p { margin: 0 0 6px; color: #6b7280; font-size: 12px; }
+.legend .place ul { list-style: none; margin: 0; padding: 0; font-size: 12px; }
+.legend .place li { padding: 3px 0; border-top: 1px dashed #e5e7eb; cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.legend .place li:hover { color: #2563eb; }
+.legend .swatch { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }

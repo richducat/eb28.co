@@ -36,10 +36,11 @@
 
   <section id="tab-arcade" class="tab">
     <div class="arcade-bar">
-      <span class="muted">Live map. Every job, bot and agent is a sprite. Hover to see who, click a job to open it.</span>
+      <span class="muted">Your whole operation as a game map. Each building is a status, each little person is one job or agent. When a job changes status, its person walks to the new building. Hover anyone to see who they are, click to open.</span>
       <label class="arcade-dot">Who is Dot (OG Kush)? <select id="dot-target"><option value="codex-voice">Codex voice delegations</option></select></label>
     </div>
-    <div class="arcade-frame"><canvas id="arcade" width="480" height="372"></canvas></div>
+    <div class="arcade-frame"><canvas id="arcade" width="512" height="368"></canvas></div>
+    <div id="arcade-legend" class="legend"></div>
   </section>
 
   <section id="tab-bots" class="tab">

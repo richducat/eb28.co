@@ -1,430 +1,760 @@
-/* EB28 Mission Control — Arcade view.
- * A 16-bit style live map of every job, bot, and workforce agent. Pure canvas, no assets:
- * sprites are drawn from tiny pixel templates and tinted per source.
- * Usage: Arcade.mount(canvas, { onOpen(jobId) }); Arcade.update(board, workforce, events?)
+/* EB28 Mission Control — Arcade: a Super Mario World style overworld of every job, bot and agent.
+ * Everything is drawn procedurally (no image assets): an island with animated water, shoreline
+ * cliffs, dirt paths, eyed hills, trees and flowers, plus a landmark per status. Jobs are little
+ * characters standing at the landmark for their status; when a status changes they walk the
+ * path to the new landmark. Usage:
+ *   Arcade.mount(canvas, { onOpen(jobId), onPlace(placeId) });
+ *   Arcade.update(board, workforce, crew, dotCfg);  Arcade.start(); Arcade.stop();
  */
 (() => {
-  const W = 480;
-  const H = 372;
-  const HUD = 18;
+  const T = 16; // tile size
+  const COLS = 32;
+  const ROWS = 23;
+  const W = COLS * T; // 512
+  const H = ROWS * T; // 368
 
-  /* ---------- palette (SNES-ish, limited) ---------- */
-  const C = {
-    ink: '#14101f', night: '#1e1838', wall: '#3b2f5c', wallHi: '#5a4a8a', text: '#f8f4e3', dim: '#9d93c2',
-    gold: '#f7c843', red: '#e8434f', green: '#4fd06b', blue: '#4aa3ff', orange: '#ff9a3c', purple: '#a35cff', gray: '#7d7891', skin: '#f2c49b', skin2: '#c98d5e',
-  };
-  const SOURCE = {
-    'claude-code': { shirt: '#d97757', hair: '#5b3a29', label: 'CLAUDE' },
-    codex: { shirt: '#10a37f', hair: '#222034', label: 'CODEX' },
-    gemini: { shirt: '#4285f4', hair: '#e8d16a', label: 'GEMINI' },
-    openclaw: { shirt: '#e8434f', hair: '#2b2b2b', label: 'OPENCLAW' },
-    hermes: { shirt: '#c9a227', hair: '#ffffff', label: 'HERMES' },
-    github: { shirt: '#6e7681', hair: '#111111', label: 'PR' },
-    manual: { shirt: '#9d93c2', hair: '#3a2a1a', label: 'TASK' },
-    automation: { shirt: '#f7c843', hair: '#444444', label: 'AUTO' },
-    dot: { shirt: '#3fa34d', hair: '#7a4bd1', label: 'OG KUSH' },
+  /* ---------- palette: SNES-like 3–4 step ramps ---------- */
+  const P = {
+    ink: '#101018', white: '#f8f8f8',
+    sea: ['#1848a0', '#2860c8', '#4888e8', '#a8d0f8'],
+    grass: ['#185818', '#30902c', '#48b838', '#80e050', '#c0f080'],
+    dirt: ['#784818', '#a86830', '#d09048', '#f0c070', '#f8e0a0'],
+    cliff: ['#482810', '#704018', '#986028'],
+    stone: ['#383850', '#585878', '#8888a8', '#c0c0d8'],
+    red: ['#781018', '#c02028', '#f04838', '#f89878'],
+    wood: ['#482008', '#784018', '#a86028', '#d09048'],
+    gold: ['#886000', '#d8a000', '#f8d838', '#f8f8a0'],
+    purple: ['#382060', '#6038a0', '#9060d8', '#c8a0f8'],
+    ghost: ['#302838', '#504858', '#787088', '#b0a8c0'],
+    skin: ['#a85830', '#e09868', '#f8c8a0'],
   };
 
-  /* ---------- rooms ---------- */
-  // Two rows of rooms with a corridor between them. Status rooms + Bot Garage + HQ.
-  const ROW1 = HUD + 6;
-  const ROW_H = 110;
-  const CORR = ROW1 + ROW_H; // corridor top
-  const ROW2 = CORR + 18;
-  const ROW2_H = 104;
-  const CORR2 = ROW2 + ROW2_H;
-  const ROW3 = CORR2 + 18;
-  const ROOMS = {
-    needs_you: { x: 6, y: ROW1, w: 150, h: ROW_H, name: 'NEEDS YOU', floor: ['#5a2338', '#4c1d30'], accent: C.red },
-    working: { x: 162, y: ROW1, w: 170, h: ROW_H, name: 'WORKSHOP', floor: ['#264d3b', '#1f4031'], accent: C.green },
-    bots: { x: 338, y: ROW1, w: 136, h: ROW_H, name: 'BOT GARAGE', floor: ['#2f3442', '#272b37'], accent: C.blue },
-    follow_up: { x: 6, y: ROW2, w: 150, h: ROW2_H, name: 'FOLLOW-UP', floor: ['#5a4a23', '#4d3f1d'], accent: C.gold },
-    hq: { x: 162, y: ROW2, w: 170, h: ROW2_H, name: 'WORKFORCE HQ', floor: ['#3d2a5c', '#33234e'], accent: C.purple },
-    done: { x: 338, y: ROW2, w: 136, h: 62, name: 'DONE', floor: ['#22445a', '#1c394b'], accent: C.blue },
-    failed: { x: 338, y: ROW2 + 64, w: 136, h: ROW2_H - 64, name: 'INFIRMARY', floor: ['#4a2a2a', '#3d2222'], accent: C.red },
-    crew: { x: 6, y: ROW3, w: 468, h: H - ROW3 - 6, name: 'HERMES CREW', floor: ['#4a3a1c', '#3f3118'], accent: '#c9a227' },
+  /* ---------- places ---------- */
+  // door = tile the crowd gathers at; building drawn above it. route = path from the HQ door.
+  const HQD = [16, 13];
+  const PLACES = {
+    needs_you: { name: 'NEEDS YOU', blurb: 'Waiting on your answer or approval', door: [7, 7], route: [HQD, [16, 9], [7, 9], [7, 7]], cols: 5, kind: 'castle' },
+    working: { name: 'WORKSHOP', blurb: 'Agents busy right now', door: [16, 6], route: [HQD, [16, 9], [16, 6]], cols: 6, kind: 'workshop' },
+    bots: { name: 'BOT FORTRESS', blurb: 'Always-on bots (Grok, Hermes...)', door: [25, 7], route: [HQD, [16, 9], [25, 9], [25, 7]], cols: 4, kind: 'fortress' },
+    follow_up: { name: 'FOLLOW-UP', blurb: 'Idle, stale or needs a nudge', door: [6, 14], route: [HQD, [16, 15], [6, 15], [6, 14]], cols: 5, kind: 'post' },
+    hq: { name: 'HQ', blurb: 'Your workforce agents + Dot', door: HQD, route: [HQD], cols: 5, kind: 'house' },
+    done: { name: 'GOAL', blurb: 'Finished in the last day', door: [26, 14], route: [HQD, [16, 15], [26, 15], [26, 14]], cols: 6, kind: 'goal', max: 12 },
+    failed: { name: 'GHOST HOUSE', blurb: 'Crashed or errored. Check these', door: [23, 19], route: [HQD, [16, 15], [21, 15], [21, 19], [23, 19]], cols: 4, kind: 'ghost', max: 8 },
+    crew: { name: 'HERMES VILLAGE', blurb: 'Your Hermes profile agents', door: [10, 19], route: [HQD, [16, 15], [10, 15], [10, 19]], cols: 11, kind: 'village' },
   };
   const AGENT_TARGET = { triage: 'needs_you', 'follow-up': 'follow_up', 'bot-watchdog': 'bots', janitor: 'done', 'pr-steward': 'working', 'ops-runner': 'working', 'automation-scout': 'working', reporter: 'hq' };
-  const MAX_PER_ROOM = { done: 10, failed: 5 };
 
-  /* ---------- pixel templates (16x16) ---------- */
-  // K outline, H hair/hat, S skin, E eye, C shirt, P pants, B boots, L leaf, G gold, M metal, V visor
+  /* ---------- deterministic noise ---------- */
+  const hash = (x, y, s = 0) => {
+    let h = (Math.imul(x, 374761393) + Math.imul(y, 668265263) + Math.imul(s, 2246822519)) | 0;
+    h = Math.imul(h ^ (h >>> 13), 1274126177);
+    return ((h ^ (h >>> 16)) >>> 0) / 4294967295;
+  };
+
+  /* ---------- map generation ---------- */
+  const LAND = [];
+  const PATH = [];
+  const PLAZA = [];
+  const DECOR = [];
+  function buildMap() {
+    for (let y = 0; y < ROWS; y += 1) {
+      LAND[y] = []; PATH[y] = []; PLAZA[y] = [];
+      for (let x = 0; x < COLS; x += 1) {
+        const nx = (x + 0.5 - 16) / 15.2;
+        const ny = (y + 0.5 - 12) / 10.4;
+        const n = (hash(x >> 1, y >> 1, 7) - 0.5) * 0.22 + (hash(x, y, 3) - 0.5) * 0.08;
+        LAND[y][x] = y >= 2 && nx * nx + ny * ny + n < 1;
+        PATH[y][x] = false;
+        PLAZA[y][x] = false;
+      }
+    }
+    const mark = (x, y) => { if (y >= 0 && y < ROWS && x >= 0 && x < COLS) { PATH[y][x] = true; LAND[y][x] = true; } };
+    for (const p of Object.values(PLACES)) {
+      for (let i = 1; i < p.route.length; i += 1) {
+        const [x0, y0] = p.route[i - 1];
+        const [x1, y1] = p.route[i];
+        for (let x = Math.min(x0, x1); x <= Math.max(x0, x1); x += 1) mark(x, y0);
+        for (let y = Math.min(y0, y1); y <= Math.max(y0, y1); y += 1) mark(x1, y);
+      }
+      const [dx, dy] = p.door;
+      const half = (Math.ceil(p.cols / 2) * 14) / T + 0.5;
+      for (let y = dy - 3; y <= dy + 1; y += 1) for (let x = Math.floor(dx - half); x <= Math.ceil(dx + half); x += 1) if (y >= 0 && y < ROWS && x >= 0 && x < COLS) { PLAZA[y][x] = true; LAND[y][x] = true; }
+    }
+    for (let y = 2; y < ROWS - 1; y += 1) {
+      for (let x = 1; x < COLS - 1; x += 1) {
+        if (!LAND[y][x] || PATH[y][x] || PLAZA[y][x] || !LAND[y + 1][x]) continue;
+        const r = hash(x, y, 11);
+        // denser trees near the coast, open meadows inland
+        const coast = !LAND[y - 1][x] || !LAND[y][x - 1] || !LAND[y][x + 1] || !LAND[y + 2] || !LAND[y + 2][x];
+        const tree = coast ? 0.42 : 0.14;
+        if (r < tree) DECOR.push({ x, y, type: 'tree' });
+        else if (r < tree + 0.06) DECOR.push({ x, y, type: 'hill' });
+        else if (r < tree + 0.15) DECOR.push({ x, y, type: 'bush' });
+        else if (r < tree + 0.33) DECOR.push({ x, y, type: 'flower', c: hash(x, y, 5) < 0.5 ? P.red[2] : P.gold[2] });
+        else if (r < tree + 0.37) DECOR.push({ x, y, type: 'rock' });
+      }
+    }
+  }
+  const land = (x, y) => y >= 0 && y < ROWS && x >= 0 && x < COLS && LAND[y][x];
+  const isPath = (x, y) => y >= 0 && y < ROWS && x >= 0 && x < COLS && PATH[y][x];
+
+  /* ---------- low-level pixel helpers ---------- */
+  let g;
+  const px = (x, y, w, h, c) => { g.fillStyle = c; g.fillRect(Math.round(x), Math.round(y), Math.round(w), Math.round(h)); };
+  function text(str, x, y, color = P.white, size = 8, align = 'left', outline = P.ink) {
+    g.font = `${size}px "Press Start 2P", monospace`;
+    g.textAlign = align;
+    g.textBaseline = 'top';
+    g.fillStyle = outline;
+    for (const [ox, oy] of [[-1, 0], [1, 0], [0, -1], [0, 1], [1, 1]]) g.fillText(str, x + ox, y + oy);
+    g.fillStyle = color;
+    g.fillText(str, x, y);
+  }
+
+  /* ---------- tiles ---------- */
+  function drawWater(x, y, f) {
+    const X = x * T;
+    const Y = y * T;
+    px(X, Y, T, T, P.sea[1]);
+    for (let i = 0; i < 3; i += 1) {
+      const wx = (Math.floor(hash(x, y, i) * 12) + f * 2 + i * 5) % 16;
+      const wy = Math.floor(hash(x, y, i + 9) * 14);
+      px(X + wx, Y + wy, Math.min(4, 16 - wx), 1, P.sea[2]);
+      if (hash(x, y, i + 20) < 0.3) px(X + ((wx + 3) % 15), Y + wy + 1, 2, 1, P.sea[0]);
+    }
+    if ((f + x + y) % 8 === 0 && hash(x, y, 33) < 0.25) px(X + 7, Y + 7, 2, 1, P.sea[3]);
+  }
+
+  function drawShore(x, y, f) {
+    const X = x * T;
+    const Y = y * T;
+    const o = f % 4 < 2 ? 0 : 1;
+    if (land(x, y - 1)) { px(X, Y + 3 + o, T, 2, P.sea[3]); px(X + 2 + o * 3, Y + 7, 5, 1, P.sea[2]); }
+    if (land(x, y + 1)) px(X, Y + T - 3 - o, T, 2, P.sea[3]);
+    if (land(x - 1, y)) px(X + o, Y, 2, T, P.sea[3]);
+    if (land(x + 1, y)) px(X + T - 2 - o, Y, 2, T, P.sea[3]);
+  }
+
+  function drawGrass(x, y) {
+    const X = x * T;
+    const Y = y * T;
+    // big soft patches of lighter/darker meadow give the island depth
+    const patch = hash(x >> 2, y >> 2, 17) + (hash(x >> 1, y >> 1, 19) - 0.5) * 0.3;
+    px(X, Y, T, T, patch < 0.3 ? '#40a830' : patch > 0.8 ? '#58c440' : P.grass[2]);
+    for (let i = 0; i < 6; i += 1) {
+      const gx = Math.floor(hash(x, y, i + 40) * 15);
+      const gy = Math.floor(hash(x, y, i + 50) * 14);
+      px(X + gx, Y + gy, 1, 2, P.grass[1]);
+      px(X + gx + 1, Y + gy, 1, 1, P.grass[3]);
+    }
+    if (hash(x, y, 60) < 0.4) { const gx = Math.floor(hash(x, y, 61) * 12); px(X + gx, Y + 10, 1, 2, P.grass[1]); px(X + gx + 2, Y + 10, 1, 2, P.grass[1]); px(X + gx + 1, Y + 9, 1, 3, P.grass[1]); }
+    if (!land(x, y - 1)) { px(X, Y, T, 2, P.grass[4]); px(X, Y + 2, T, 1, P.grass[3]); }
+    if (!land(x - 1, y)) px(X, Y, 1, T, P.grass[1]);
+    if (!land(x + 1, y)) px(X + T - 1, Y, 1, T, P.grass[1]);
+    if (!land(x, y + 1)) {
+      px(X, Y + 10, T, 6, P.cliff[1]);
+      px(X, Y + 10, T, 1, P.grass[0]);
+      for (let i = 0; i < 4; i += 1) px(X + i * 4 + (y % 2), Y + 12 + (i % 2), 2, 3, P.cliff[0]);
+      px(X + 1, Y + 11, 3, 1, P.cliff[2]);
+      px(X + 9, Y + 11, 4, 1, P.cliff[2]);
+    }
+  }
+
+  function drawPlaza(x, y) {
+    // trampled lighter grass where crowds stand
+    const X = x * T;
+    const Y = y * T;
+    if (hash(x, y, 90) < 0.5) px(X + 3, Y + 5, 3, 1, P.grass[3]);
+    if (hash(x, y, 91) < 0.5) px(X + 10, Y + 11, 2, 1, P.dirt[3]);
+  }
+
+  function drawPath(x, y) {
+    const X = x * T;
+    const Y = y * T;
+    const n = isPath(x, y - 1);
+    const s = isPath(x, y + 1);
+    const w = isPath(x - 1, y);
+    const e = isPath(x + 1, y);
+    const x0 = w ? 0 : 3;
+    const x1 = e ? T : T - 3;
+    const y0 = n ? 0 : 3;
+    const y1 = s ? T : T - 3;
+    px(X + 3, Y + y0, 10, y1 - y0, P.dirt[2]);
+    px(X + x0, Y + 3, x1 - x0, 10, P.dirt[2]);
+    if (!n) px(X + 3, Y + 3, 10, 1, P.dirt[1]);
+    if (!s) px(X + 3, Y + 12, 10, 1, P.dirt[0]);
+    if (!w) px(X + 3, Y + 3, 1, 10, P.dirt[1]);
+    if (!e) px(X + 12, Y + 3, 1, 10, P.dirt[0]);
+    if (n && !w) px(X + 3, Y, 1, 3, P.dirt[1]);
+    if (n && !e) px(X + 12, Y, 1, 3, P.dirt[0]);
+    if (s && !w) px(X + 3, Y + 13, 1, 3, P.dirt[1]);
+    if (s && !e) px(X + 12, Y + 13, 1, 3, P.dirt[0]);
+    if (w && !n) px(X, Y + 3, 3, 1, P.dirt[1]);
+    if (e && !n) px(X + 13, Y + 3, 3, 1, P.dirt[1]);
+    if (w && !s) px(X, Y + 12, 3, 1, P.dirt[0]);
+    if (e && !s) px(X + 13, Y + 12, 3, 1, P.dirt[0]);
+    for (let i = 0; i < 3; i += 1) {
+      const gx = 4 + Math.floor(hash(x, y, i + 70) * 8);
+      const gy = 4 + Math.floor(hash(x, y, i + 80) * 8);
+      px(X + gx, Y + gy, 1, 1, i ? P.dirt[1] : P.dirt[4]);
+    }
+    px(X + 5, Y + 5, 2, 1, P.dirt[3]);
+  }
+
+  function drawDecor(d, f) {
+    const X = d.x * T;
+    const Y = d.y * T;
+    if (d.type === 'tree') {
+      px(X + 3, Y + 14, 10, 2, 'rgba(0,0,0,.25)');
+      px(X + 6, Y + 8, 4, 7, P.wood[1]);
+      px(X + 6, Y + 8, 1, 7, P.wood[2]);
+      px(X + 1, Y - 5, 14, 13, P.grass[0]);
+      px(X + 2, Y - 7, 12, 15, P.grass[0]);
+      px(X + 2, Y - 6, 12, 12, P.grass[1]);
+      px(X + 3, Y - 6, 9, 10, P.grass[2]);
+      px(X + 4, Y - 5, 4, 3, P.grass[3]);
+      px(X + 5, Y - 4, 2, 1, P.grass[4]);
+      px(X + 10, Y + 1, 2, 2, P.grass[1]);
+    } else if (d.type === 'hill') {
+      px(X + 1, Y + 4, 14, 12, P.grass[0]);
+      px(X + 3, Y + 1, 10, 3, P.grass[0]);
+      px(X + 2, Y + 4, 12, 11, P.grass[2]);
+      px(X + 4, Y + 2, 8, 2, P.grass[2]);
+      px(X + 4, Y + 3, 3, 2, P.grass[3]);
+      px(X + 12, Y + 6, 1, 8, P.grass[1]);
+      const blink = (f + d.x * 7) % 50 < 2;
+      px(X + 5, Y + 7, 1, blink ? 1 : 3, P.ink);
+      px(X + 10, Y + 7, 1, blink ? 1 : 3, P.ink);
+    } else if (d.type === 'bush') {
+      px(X + 1, Y + 8, 14, 7, P.grass[0]);
+      px(X + 2, Y + 7, 5, 8, P.grass[1]);
+      px(X + 8, Y + 6, 6, 8, P.grass[1]);
+      px(X + 3, Y + 8, 3, 2, P.grass[3]);
+      px(X + 9, Y + 7, 3, 2, P.grass[3]);
+    } else if (d.type === 'flower') {
+      // a little patch of three swaying flowers
+      for (const [ox, oy, k] of [[2, 6, 0], [9, 3, 1], [6, 10, 2]]) {
+        const sway = (f + d.x + k * 3) % 8 < 4 ? 0 : 1;
+        const col = k === 2 ? P.white : d.c;
+        px(X + ox + 1, Y + oy + 3, 1, 4, P.grass[0]);
+        px(X + ox + sway, Y + oy, 3, 3, col);
+        px(X + ox + 1 + sway, Y + oy + 1, 1, 1, k === 2 ? P.gold[2] : P.gold[3]);
+        px(X + ox + 2, Y + oy + 5, 2, 1, P.grass[3]);
+      }
+    } else if (d.type === 'rock') {
+      px(X + 4, Y + 9, 9, 6, P.stone[1]);
+      px(X + 5, Y + 8, 7, 2, P.stone[2]);
+      px(X + 6, Y + 9, 2, 1, P.stone[3]);
+      px(X + 4, Y + 14, 9, 1, P.stone[0]);
+    }
+  }
+
+  /* ---------- landmarks ---------- */
+  function gear(x, y, f, c) {
+    const a = f / 8;
+    for (let i = 0; i < 6; i += 1) {
+      const ang = a + (i * Math.PI) / 3;
+      px(Math.round(x + Math.cos(ang) * 5) - 1, Math.round(y + Math.sin(ang) * 5) - 1, 3, 3, c);
+    }
+    px(x - 3, y - 3, 6, 6, c);
+    px(x - 1, y - 1, 2, 2, P.wood[0]);
+  }
+
+  function star(x, y, f) {
+    const s = Math.floor(f / 4) % 2;
+    px(x - 1, y - 4 - s, 3, 9 + s * 2, P.gold[2]);
+    px(x - 4 - s, y - 1, 9 + s * 2, 3, P.gold[2]);
+    px(x, y, 1, 1, P.white);
+  }
+
+  function drawPlace(id, p, f, count) {
+    const cx = p.door[0] * T + 8;
+    const by = p.door[1] * T; // ground line
+    const k = p.kind;
+    px(cx - 28, by - 2, 56, 3, 'rgba(0,0,0,.2)');
+    if (k === 'castle') {
+      px(cx - 24, by - 30, 48, 30, P.stone[1]);
+      for (let r = 0; r < 6; r += 1) for (let c = 0; c < 6; c += 1) px(cx - 24 + c * 8 + (r % 2) * 4, by - 30 + r * 5, 7, 4, P.stone[2]);
+      px(cx - 24, by - 30, 48, 1, P.stone[3]);
+      for (let i = 0; i < 6; i += 1) px(cx - 24 + i * 8, by - 34, 5, 4, P.stone[2]);
+      for (const tx of [-30, 18]) {
+        px(cx + tx, by - 44, 12, 44, P.stone[1]);
+        px(cx + tx + 1, by - 44, 3, 44, P.stone[2]);
+        px(cx + tx + 10, by - 44, 2, 44, P.stone[0]);
+        px(cx + tx - 2, by - 52, 16, 8, P.red[1]);
+        px(cx + tx, by - 56, 12, 4, P.red[2]);
+        px(cx + tx + 3, by - 59, 6, 3, P.red[2]);
+        px(cx + tx + 4, by - 58, 2, 2, P.red[3]);
+        px(cx + tx + 4, by - 36, 4, 6, P.ink);
+      }
+      px(cx - 7, by - 16, 14, 16, P.wood[0]);
+      px(cx - 6, by - 15, 12, 15, P.wood[1]);
+      px(cx - 6, by - 15, 12, 2, P.wood[2]);
+      px(cx - 1, by - 15, 1, 15, P.wood[0]);
+      px(cx + 23, by - 72, 1, 14, P.ink);
+      const wave = Math.floor(f / 3) % 3;
+      px(cx + 24, by - 72 + (wave === 1 ? 1 : 0), 9, 5, P.red[2]);
+      px(cx + 24 + 9, by - 71 + (wave === 2 ? 1 : 0), 2, 3, P.red[2]);
+      px(cx + 24, by - 72, 9, 1, P.red[3]);
+      if (count) {
+        const on = Math.floor(f / 6) % 2;
+        px(cx - 6, by - 52, 12, 15, P.ink);
+        px(cx - 5, by - 51, 10, 13, on ? P.gold[2] : P.red[2]);
+        text('!', cx + 1, by - 49, P.ink, 8, 'center', on ? P.gold[2] : P.red[2]);
+      }
+    } else if (k === 'workshop') {
+      px(cx - 26, by - 26, 52, 26, P.wood[2]);
+      for (let i = 0; i < 6; i += 1) px(cx - 26, by - 24 + i * 4, 52, 1, P.wood[1]);
+      for (let i = 0; i < 12; i += 1) px(cx - 30 + i, by - 27 - i, 60 - i * 2, 1, i % 3 ? P.red[1] : P.red[0]);
+      px(cx - 18, by - 39, 36, 2, P.red[2]);
+      px(cx + 12, by - 46, 7, 14, P.stone[1]);
+      px(cx + 12, by - 46, 7, 2, P.stone[2]);
+      for (let i = 0; i < 3; i += 1) {
+        if (!count && i) break;
+        const tt = ((f + i * 10) % 30) / 30;
+        const r = 2 + tt * 5;
+        g.fillStyle = `rgba(240,240,248,${0.85 - tt * 0.75})`;
+        g.fillRect(Math.round(cx + 15 + Math.sin(tt * 6 + i) * 3 - r / 2), Math.round(by - 50 - tt * 24), Math.round(r), Math.round(r));
+      }
+      const glow = count ? (Math.floor(f / 4) % 2 ? P.gold[2] : P.gold[3]) : P.stone[0];
+      for (const wx of [-20, 12]) { px(cx + wx, by - 18, 8, 7, P.wood[0]); px(cx + wx + 1, by - 17, 6, 5, glow); px(cx + wx + 4, by - 17, 1, 5, P.wood[0]); }
+      px(cx - 6, by - 16, 12, 16, P.wood[0]);
+      px(cx - 5, by - 15, 10, 15, P.wood[1]);
+      px(cx + 2, by - 8, 2, 2, P.gold[2]);
+      gear(cx, by - 26, count ? f : 0, P.stone[3]);
+    } else if (k === 'fortress') {
+      px(cx - 22, by - 40, 44, 40, P.stone[0]);
+      for (let r = 0; r < 8; r += 1) for (let c = 0; c < 5; c += 1) px(cx - 22 + c * 9 + (r % 2) * 4, by - 40 + r * 5, 8, 4, P.stone[1]);
+      for (let i = 0; i < 5; i += 1) px(cx - 22 + i * 10, by - 45, 6, 5, P.stone[1]);
+      px(cx - 8, by - 18, 16, 18, P.ink);
+      for (let i = 0; i < 4; i += 1) px(cx - 7 + i * 4, by - 17, 2, 17, P.stone[0]);
+      px(cx, by - 64, 1, 19, P.stone[3]);
+      px(cx - 2, by - 66, 5, 3, Math.floor(f / 5) % 2 ? P.red[2] : P.red[0]);
+      for (let i = 0; i < 3; i += 1) {
+        const tt = ((f + i * 8) % 24) / 24;
+        g.strokeStyle = `rgba(140,210,255,${1 - tt})`;
+        g.lineWidth = 1;
+        g.beginPath();
+        g.arc(cx + 0.5, by - 64.5, 3 + tt * 12, Math.PI * 1.1, Math.PI * 1.9);
+        g.stroke();
+      }
+      const blink = Math.floor(f / 7) % 2;
+      px(cx - 18, by - 34, 6, 6, blink ? '#20c8e8' : '#108098');
+      px(cx + 12, by - 34, 6, 6, blink ? '#108098' : '#20c8e8');
+    } else if (k === 'post') {
+      px(cx - 22, by - 24, 44, 24, P.gold[1]);
+      px(cx - 22, by - 24, 44, 2, P.gold[2]);
+      for (let i = 0; i < 10; i += 1) px(cx - 25 + i, by - 25 - i, 50 - i * 2, 1, i % 3 ? P.sea[1] : P.sea[0]);
+      px(cx - 5, by - 15, 10, 15, P.wood[1]);
+      px(cx - 18, by - 17, 8, 7, P.white);
+      px(cx + 10, by - 17, 8, 7, P.white);
+      const bounce = count && Math.floor(f / 5) % 2 ? -2 : 0;
+      px(cx - 8, by - 46 + bounce, 16, 11, P.ink);
+      px(cx - 7, by - 45 + bounce, 14, 9, P.white);
+      for (let i = 0; i < 7; i += 1) { px(cx - 7 + i, by - 45 + bounce + Math.floor(i / 1.5), 1, 1, P.red[1]); px(cx + 6 - i, by - 45 + bounce + Math.floor(i / 1.5), 1, 1, P.red[1]); }
+      px(cx + 26, by - 13, 7, 6, P.red[1]);
+      px(cx + 26, by - 13, 7, 1, P.red[3]);
+      px(cx + 29, by - 7, 1, 7, P.wood[0]);
+    } else if (k === 'house') {
+      px(cx - 20, by - 22, 40, 22, P.wood[3]);
+      px(cx - 20, by - 22, 40, 2, P.white);
+      for (let i = 0; i < 11; i += 1) px(cx - 24 + i * 0.6, by - 23 - i, 48 - i * 1.2, 1, i < 2 ? P.red[0] : P.red[1 + (i % 2)]);
+      px(cx - 17, by - 34, 34, 2, P.red[3]);
+      px(cx - 6, by - 14, 12, 14, P.wood[0]);
+      px(cx + 10, by - 16, 7, 6, P.sea[2]);
+      px(cx - 17, by - 16, 7, 6, P.sea[2]);
+      const fx = cx + 32;
+      px(fx - 6, by - 2, 12, 3, P.wood[0]);
+      px(fx - 5, by - 3, 4, 2, P.wood[1]);
+      const fl = Math.floor(f / 2) % 3;
+      px(fx - 3, by - 7 - fl, 6, 5 + fl, P.red[2]);
+      px(fx - 2, by - 6 - fl, 4, 4, P.gold[2]);
+      px(fx - 1, by - 4, 2, 2, P.gold[3]);
+    } else if (k === 'goal') {
+      for (const gx of [-18, 16]) {
+        px(cx + gx, by - 50, 3, 50, P.ink);
+        px(cx + gx + 1, by - 50, 1, 50, P.stone[3]);
+        px(cx + gx - 1, by - 54, 5, 4, P.stone[2]);
+      }
+      const tapeY = by - 46 + Math.round((Math.sin(f / 10) + 1) * 20);
+      px(cx - 15, tapeY, 31, 3, P.gold[2]);
+      px(cx - 15, tapeY, 31, 1, P.gold[3]);
+      if (count) star(cx, by - 62, f);
+    } else if (k === 'ghost') {
+      px(cx - 20, by - 28, 40, 28, P.ghost[1]);
+      for (let i = 0; i < 5; i += 1) px(cx - 20 + i * 8, by - 28, 1, 28, P.ghost[0]);
+      for (let i = 0; i < 10; i += 1) px(cx - 23 + i, by - 29 - i, 46 - i * 2, 1, i % 2 ? P.ghost[0] : P.purple[0]);
+      px(cx - 14, by - 22, 7, 7, P.ink);
+      px(cx - 13, by - 21, 2, 2, P.gold[2]);
+      px(cx + 7, by - 22, 7, 7, P.ink);
+      px(cx + 11, by - 18, 2, 2, P.gold[2]);
+      px(cx - 5, by - 14, 10, 14, P.ink);
+      if (count) {
+        const bx = cx + 22 + Math.round(Math.sin(f / 8) * 3);
+        const byy = by - 42 + Math.round(Math.cos(f / 6) * 3);
+        px(bx, byy, 11, 9, P.white);
+        px(bx + 1, byy - 1, 9, 11, P.white);
+        px(bx + 3, byy + 2, 1, 3, P.ink);
+        px(bx + 7, byy + 2, 1, 3, P.ink);
+        px(bx + 3, byy + 6, 5, 2, P.red[1]);
+        px(bx - 1, byy + 3, 2, 2, P.white);
+      }
+    } else if (k === 'village') {
+      px(cx - 18, by - 22, 36, 22, P.wood[2]);
+      for (let i = 0; i < 10; i += 1) px(cx - 22 + i, by - 23 - i, 44 - i * 2, 1, i % 2 ? P.gold[1] : P.gold[2]);
+      px(cx - 5, by - 14, 10, 14, P.wood[0]);
+      px(cx - 14, by - 16, 6, 6, P.gold[3]);
+      px(cx + 8, by - 16, 6, 6, P.gold[3]);
+      for (const hx of [-56, -40, 30, 46]) {
+        px(cx + hx, by - 10, 12, 10, P.wood[3]);
+        for (let i = 0; i < 6; i += 1) px(cx + hx - 1 + i, by - 11 - i, 14 - i * 2, 1, P.red[1]);
+        px(cx + hx + 4, by - 6, 4, 6, P.wood[0]);
+      }
+    }
+  }
+
+  const signRects = {};
+  function sign(id, p, count) {
+    const cx = p.door[0] * T + 8;
+    const by = p.door[1] * T;
+    const label = `${p.name} ${count}`;
+    g.font = '6px "Press Start 2P", monospace';
+    const w = Math.max(30, Math.ceil(g.measureText(label).width) + 10);
+    const x = Math.round(cx - w / 2);
+    const rows = Math.ceil(Math.min(count, p.max || 99) / p.cols);
+    const y = Math.min(by + 8 + Math.max(1, rows) * 14, H - 28);
+    px(x - 1, y - 1, w + 2, 12, P.ink);
+    px(x, y, w, 10, P.wood[2]);
+    px(x, y, w, 1, P.wood[3]);
+    px(x, y + 9, w, 1, P.wood[1]);
+    text(label, cx, y + 2, count ? P.white : P.dirt[4], 6, 'center');
+    signRects[id] = { x, y, w, h: 10 };
+  }
+
+  /* ---------- characters (16x16, 3-tone) ---------- */
+  // K outline, H hair, h hair shade, S skin, s skin shade, E eye, C shirt, c shirt shade, W shirt light, P pants, B boots
   const PERSON = [
-    '................', '.....KKKKKK.....', '....KHHHHHHK....', '...KHHHHHHHHK...', '...KHSSSSSSHK...', '...KSESSSSESK...', '...KSSSSSSSSK...', '....KSSSSSSK....',
-    '...KCCCCCCCCK...', '..KSCCCCCCCCSK..', '..KSCCCCCCCCSK..', '...KCCCCCCCCK...', '...KPPPPPPPPK...', '...KPPK..KPPK...', '...KBBK..KBBK...', '....KK....KK....',
+    '.....KKKKK......', '....KHHHHHK.....', '...KHHHHHHhK....', '...KHSSSSShK....', '...KSESSESsK....', '...KSSSSSSsK....', '....KSsssSK.....', '...KKCCCCCKK....',
+    '..KSKCCWCCcKSK..', '..KsKCCCCCcKsK..', '...KKCCCCCcKK...', '....KPPPPPPK....', '....KPPKKPPK....', '...KBBK..KBBK...', '...KKKK..KKKK...', '................',
   ];
-  const PERSON_STEP = PERSON.slice(0, 13).concat(['...KPPK..KPPK...', '..KBBK....KBBK..', '..KK........KK..']);
+  const PERSON_STEP = PERSON.slice(0, 12).concat(['....KPPKKPPK....', '..KBBK....KBBK..', '..KKKK....KKKK..', '................']);
   const ROBOT = [
-    '.......G........', '.......K........', '....KKKKKKKK....', '...KMMMMMMMMK...', '...KMVVVVVVMK...', '...KMVEVVEVMK...', '...KMMMMMMMMK...', '....KKKKKKKK....',
-    '..KKCCCCCCCCKK..', '.KMKCCGGCCCCKMK.', '.KMKCCCCCCCCKMK.', '..KKCCCCCCCCKK..', '...KMMMMMMMMK...', '...KMMK..KMMK...', '...KKKK..KKKK...', '................',
+    '.......G........', '.......K........', '...KKKKKKKKKK...', '..KMMMMMMMMMmK..', '..KMVVVVVVVVmK..', '..KMVEVVVVEVmK..', '..KMMMMMMMMMmK..', '...KKKKKKKKKK...',
+    '..KKCCCCCCCcKK..', '.KMKCCGGGCCcKMK.', '.KmKCCCCCCCcKmK.', '..KKCCCCCCCcKK..', '...KMMMMMMMmK...', '...KMMK..KMmK...', '...KKKK..KKKK...', '................',
   ];
-  const LEAF_HAT = ['.......L........', '..L...LLL...L...', '...L..LLL..L....', '....LLLLLLL.....', '.....LLLLL......', '..KKKKKKKKKKKK..'];
-  const CROWN = ['....G..G..G.....', '....GGGGGGG.....'];
+  const LEAF_HAT = ['.......L........', '..L...LLL...L...', '...L..LlL..L....', '....LLLlLLL.....', '.....LLLLL......', '...KKKKKKKKK....'];
+  const CAP = ['....KKKKKKK.....', '...KCCCCCCCK....', '..KCCCWWCCcKK...'];
 
+  const shade = (hex, amt) => {
+    const n = parseInt(hex.slice(1), 16);
+    const f = (v) => Math.max(0, Math.min(255, Math.round(v * amt)));
+    return `rgb(${f(n >> 16)},${f((n >> 8) & 255)},${f(n & 255)})`;
+  };
   const spriteCache = new Map();
-  function sprite(template, pal, overlay) {
-    const key = template.join('') + JSON.stringify(pal) + (overlay ? overlay.join('') : '');
+  function sprite(template, pl, overlay) {
+    const key = template.join('') + JSON.stringify(pl) + (overlay ? overlay.join('') : '');
     if (spriteCache.has(key)) return spriteCache.get(key);
-    const cv = document.createElement('canvas');
-    cv.width = 16;
-    cv.height = 16;
-    const g = cv.getContext('2d');
+    const c = document.createElement('canvas');
+    c.width = 16;
+    c.height = 16;
+    const cg = c.getContext('2d');
     const paint = (rows, dy = 0) => rows.forEach((row, y) => [...row].forEach((ch, x) => {
-      const col = pal[ch];
-      if (col) { g.fillStyle = col; g.fillRect(x, y + dy, 1, 1); }
+      const col = pl[ch];
+      if (col && y + dy >= 0) { cg.fillStyle = col; cg.fillRect(x, y + dy, 1, 1); }
     }));
     paint(template);
-    if (overlay) paint(overlay, -1);
-    spriteCache.set(key, cv);
-    return cv;
+    if (overlay) paint(overlay, overlay === LEAF_HAT ? -1 : 0);
+    spriteCache.set(key, c);
+    return c;
   }
-  const basePal = (shirt, hair) => ({ K: C.ink, H: hair, S: C.skin, E: C.ink, C: shirt, P: '#2a2f4a', B: '#4a2d1a', L: '#3fa34d', G: C.gold, M: '#b9c2d6', V: '#2de2e6' });
+  const pal = (shirt, hair) => ({
+    K: P.ink, H: hair, h: shade(hair, 0.7), S: P.skin[2], s: P.skin[1], E: P.ink, C: shirt, c: shade(shirt, 0.7), W: shade(shirt, 1.3),
+    P: '#28305a', B: P.wood[0], L: '#40a848', l: '#287830', G: P.gold[2], M: '#b8c0d8', m: '#7880a0', V: '#28e0f0',
+  });
 
-  /* ---------- state ---------- */
-  let cv; let g; let opts = {};
-  const actors = new Map(); // id -> actor
+  const SOURCE = {
+    'claude-code': { shirt: '#e07850', hair: '#5a3020' },
+    codex: { shirt: '#10b088', hair: '#202038' },
+    gemini: { shirt: '#4880f0', hair: '#e8d068' },
+    openclaw: { shirt: '#e84850', hair: '#303030' },
+    hermes: { shirt: '#d8a828', hair: '#f0f0f0' },
+    github: { shirt: '#788090', hair: '#181818' },
+    manual: { shirt: '#a098c8', hair: '#3a2818' },
+    automation: { shirt: '#f0c838', hair: '#484848' },
+    dot: { shirt: '#40a848', hair: '#8050d8' },
+  };
+
+  /* ---------- actors ---------- */
+  let cv; let opts = {};
+  const actors = new Map();
   const particles = [];
   const ticker = [];
-  let hud = { needs: 0, working: 0, bots: 0, done: 0, failed: 0, agents: 0, crew: 0 };
+  let counts = {};
   let hover = null;
   let lastT = 0;
-  let frame = 0;
   let running = false;
+  let loaded = false;
+  let dotTarget = 'codex-voice';
+  let bgFrames = [];
 
-  function roomOf(job) {
-    if (job.source === 'bot') return 'bots';
-    return ROOMS[job.status] ? job.status : 'follow_up';
+  const tileXY = ([x, y]) => ({ x: x * T, y: y * T - 4 });
+  function slot(placeId, i) {
+    const p = PLACES[placeId];
+    const row = Math.floor(i / p.cols);
+    const col = i % p.cols;
+    return { x: Math.round(p.door[0] * T + (col - (p.cols - 1) / 2) * 14), y: p.door[1] * T + 4 + row * 14 };
   }
 
-  function isDot(job) {
-    if (dotTarget === 'codex-voice') return Boolean(job.meta && job.meta.agent === 'Dot');
-    return job.id === dotTarget;
+  function routeBetween(from, to) {
+    if (from === to) return [];
+    const back = PLACES[from].route.slice().reverse().map(tileXY);
+    const out = PLACES[to].route.map(tileXY);
+    return back.concat(out.slice(1));
   }
 
-  function slot(room, i) {
-    const r = ROOMS[room];
-    const cols = Math.max(1, Math.floor((r.w - 16) / 22));
-    const x = r.x + 10 + (i % cols) * 22;
-    const y = r.y + 22 + Math.floor(i / cols) * 26;
-    return { x, y: Math.min(y, r.y + r.h - 20) };
+  function walk(a, toPlace, dest) {
+    a.path = (a.place ? routeBetween(a.place, toPlace) : []).concat([dest]);
   }
 
-  function pathTo(a, from, to) {
-    // Walk out to the corridor, along it, then into the destination room.
-    const corrY = (Math.max(from.y, to.y) > CORR2 ? CORR2 : CORR) + 3;
-    const pts = [];
-    if (Math.abs(from.y - to.y) > 30 || Math.abs(from.x - to.x) > 60) {
-      pts.push({ x: from.x, y: corrY }, { x: to.x, y: corrY });
-    }
-    pts.push(to);
-    a.path = pts;
-  }
-
-  function say(text, color = C.text) {
-    ticker.unshift({ text, color, t: performance.now() });
-    ticker.length = Math.min(ticker.length, 4);
+  function say(msg, color = P.white) {
+    ticker.unshift({ text: msg, color, t: performance.now() });
+    ticker.length = Math.min(ticker.length, 5);
   }
 
   function burst(x, y, color, n = 10) {
-    for (let i = 0; i < n; i += 1) particles.push({ x, y, vx: (Math.random() - 0.5) * 60, vy: -Math.random() * 60 - 10, life: 0.8, color });
+    for (let i = 0; i < n; i += 1) particles.push({ x, y, vx: (Math.random() - 0.5) * 70, vy: -Math.random() * 70 - 10, life: 0.9, color });
   }
 
-  /* ---------- data in ---------- */
-  let dotTarget = 'codex-voice';
-  let loaded = false;
+  const placeOf = (j) => (j.source === 'bot' ? 'bots' : PLACES[j.status] ? j.status : 'follow_up');
+  const isDot = (j) => (dotTarget === 'codex-voice' ? Boolean(j.meta && j.meta.agent === 'Dot') : j.id === dotTarget);
+
   function update(board, workforce, crew = [], dotCfg) {
     if (!board) return;
     if (dotCfg && dotCfg.target) dotTarget = dotCfg.target;
-    const jobs = board.columns.flatMap((c) => c.jobs);
     const firstLoad = !loaded;
     loaded = true;
+    const jobs = board.columns.flatMap((c) => c.jobs);
     const seen = new Set();
-    const perRoom = {};
-    hud = { needs: 0, working: 0, bots: 0, done: 0, failed: 0, agents: 0, crew: 0 };
+    const idx = {};
+    counts = {};
     for (const j of jobs) {
-      const room = roomOf(j);
-      perRoom[room] = (perRoom[room] || 0) + 1;
-      if (room === 'needs_you') hud.needs += 1;
-      if (room === 'working') hud.working += 1;
-      if (room === 'bots') hud.bots += 1;
-      if (room === 'done') hud.done += 1;
-      if (room === 'failed') hud.failed += 1;
-      const idx = perRoom[room] - 1;
-      if (MAX_PER_ROOM[room] && idx >= MAX_PER_ROOM[room]) continue; // overflow shown as +N
+      const place = placeOf(j);
+      counts[place] = (counts[place] || 0) + 1;
+      const i = (idx[place] = (idx[place] || 0) + 1) - 1;
+      if (PLACES[place].max && i >= PLACES[place].max) continue;
       const id = `job:${j.id}`;
       seen.add(id);
-      const dest = slot(room, idx);
-      const dot = isDot(j);
-      const style = dot ? SOURCE.dot : SOURCE[j.source] || SOURCE.manual;
+      const dest = slot(place, i);
       let a = actors.get(id);
       if (!a) {
-        const start = { x: ROOMS.hq.x + ROOMS.hq.w / 2, y: ROOMS.hq.y + 30 };
-        // Jobs already there when the map opens stand in place; new ones walk in from HQ.
-        a = { id, kind: j.source === 'bot' ? 'bot' : 'job', x: firstLoad ? dest.x : start.x, y: firstLoad ? dest.y : start.y, path: [], room, jobId: j.id, phase: Math.random() * 6 };
-        if (!firstLoad) {
-          pathTo(a, start, dest);
-          say(`New: ${(j.title || '').slice(0, 30)}`, C.gold);
-        }
+        const hq = tileXY(HQD);
+        a = { id, kind: j.source === 'bot' ? 'bot' : 'job', x: firstLoad ? dest.x : hq.x, y: firstLoad ? dest.y : hq.y, path: [], place: firstLoad ? place : 'hq', jobId: j.id, phase: Math.random() * 6 };
         actors.set(id, a);
-      } else if (a.room !== room) {
-        say(`${(j.title || '').slice(0, 28)} → ${ROOMS[room].name}`, ROOMS[room].accent);
-        burst(a.x + 8, a.y, ROOMS[room].accent);
-        pathTo(a, { x: a.x, y: a.y }, dest);
-      } else if (!a.path.length && (a.x !== dest.x || a.y !== dest.y)) {
+        if (!firstLoad) { say(`NEW  ${(j.title || '').slice(0, 34)}`, P.gold[3]); walk(a, place, dest); a.place = place; }
+      } else if (a.place !== place) {
+        say(`${(j.title || '').slice(0, 26)} -> ${PLACES[place].name}`, place === 'failed' ? P.red[3] : place === 'needs_you' ? P.gold[2] : P.grass[4]);
+        burst(a.x + 8, a.y, P.gold[2]);
+        walk(a, place, dest);
+        a.place = place;
+      } else if (a.path.length) {
+        a.path[a.path.length - 1] = dest;
+      } else if (a.x !== dest.x || a.y !== dest.y) {
         a.path = [dest];
       }
-      Object.assign(a, { room, job: j, title: j.title, style, dot, status: j.status, dest });
-      if (a.path.length) a.path[a.path.length - 1] = dest;
+      const dot = isDot(j);
+      Object.assign(a, { job: j, title: j.title, status: j.status, dest, dot, style: dot ? SOURCE.dot : SOURCE[j.source] || SOURCE.manual });
     }
-    for (const room of Object.keys(MAX_PER_ROOM)) ROOMS[room].overflow = Math.max(0, (perRoom[room] || 0) - MAX_PER_ROOM[room]);
 
-    // Workforce agents live in HQ and walk to the room they work on while running.
     const agents = (workforce && workforce.agents) || [];
+    counts.hq = agents.length + (dotTarget === 'codex-voice' ? 1 : 0);
     agents.forEach((ag, i) => {
       const id = `agent:${ag.id}`;
       seen.add(id);
       const home = slot('hq', i);
       let a = actors.get(id);
-      if (!a) {
-        a = { id, kind: 'agent', x: home.x, y: home.y, path: [], room: 'hq', phase: Math.random() * 6 };
-        actors.set(id, a);
+      if (!a) { a = { id, kind: 'agent', x: home.x, y: home.y, path: [], place: 'hq', target: 'hq', phase: Math.random() * 6 }; actors.set(id, a); }
+      const busy = ag.running || (ag.lastRunAt && Date.now() - Date.parse(ag.lastRunAt) < 90e3);
+      const target = busy && ag.enabled ? AGENT_TARGET[ag.id] || 'hq' : 'hq';
+      if (a.target !== target) {
+        if (target !== 'hq') say(`${ag.name.toUpperCase()} heads to ${PLACES[target].name}`, P.purple[3]);
+        const d = PLACES[target].door;
+        walk(a, target, target === 'hq' ? home : { x: d[0] * T + 30, y: d[1] * T - 6 });
+        a.place = target;
+        a.target = target;
       }
-      const recent = ag.lastRunAt && Date.now() - Date.parse(ag.lastRunAt) < 90e3;
-      const busy = ag.running || recent;
-      if (ag.enabled) hud.agents += 1;
-      const target = busy ? AGENT_TARGET[ag.id] || 'hq' : 'hq';
-      if (a.targetRoom !== target) {
-        if (target !== 'hq') say(`${ag.name} heads to ${ROOMS[target].name}`, C.purple);
-        const r = ROOMS[target];
-        const dest = target === 'hq' ? home : { x: r.x + r.w - 26, y: r.y + r.h - 22 };
-        pathTo(a, { x: a.x, y: a.y }, dest);
-        a.targetRoom = target;
-      }
-      Object.assign(a, { title: `${ag.name}: ${ag.lastSummary || ag.role || ''}`, agent: ag, home, busy, enabled: ag.enabled });
+      Object.assign(a, { title: `${ag.name} (workforce) · ${ag.lastSummary || ag.role || ''}`, busy, enabled: ag.enabled });
     });
 
-    // Hermes crew: one desk each on the bottom floor; busy members type and show a spark.
+    counts.crew = crew.length;
     crew.forEach((m, i) => {
-      const id = m.id;
-      seen.add(id);
-      const desk = slot('crew', i);
-      let a = actors.get(id);
-      if (!a) {
-        a = { id, kind: 'crew', x: desk.x, y: desk.y, path: [], room: 'crew', phase: Math.random() * 6 };
-        actors.set(id, a);
-      }
-      if (m.busy) hud.crew += 1;
-      const isKush = dotTarget === m.id;
-      Object.assign(a, { title: `${isKush ? 'OG Kush · ' : ''}${m.title} (${m.name}) · ${m.busy ? 'working' : 'idle'}`, busy: m.busy, crewName: m.name, dest: desk, dotSkin: isKush });
+      seen.add(m.id);
+      const d = slot('crew', i);
+      let a = actors.get(m.id);
+      if (!a) { a = { id: m.id, kind: 'crew', x: d.x, y: d.y, path: [], place: 'crew', phase: Math.random() * 6 }; actors.set(m.id, a); }
+      Object.assign(a, { title: `${m.title} (Hermes ${m.name}) · ${m.busy ? 'working' : 'idle'}`, busy: m.busy, dotSkin: dotTarget === m.id });
     });
+    for (const a of actors.values()) if (a.kind === 'job' || a.kind === 'bot') a.dotSkin = a.jobId === dotTarget;
 
-    // Dot (OG Kush) is a permanent resident of HQ, and visits any Dot-delegated job.
-    for (const a of actors.values()) if (a.kind === 'bot' || a.kind === 'job') a.dotSkin = a.jobId === dotTarget;
-    const dotJob = dotTarget === 'codex-voice' ? jobs.find((j) => isDot(j) && j.status !== 'done') : null;
-    if (dotTarget === 'codex-voice') seen.add('agent:dot');
-    let dot = actors.get('agent:dot');
-    const dotHome = { x: ROOMS.hq.x + ROOMS.hq.w - 26, y: ROOMS.hq.y + 18 };
-    if (!dot) {
-      dot = { id: 'agent:dot', kind: 'dot', x: dotHome.x, y: dotHome.y, path: [], room: 'hq', phase: 0 };
-      actors.set('agent:dot', dot);
+    if (dotTarget === 'codex-voice') {
+      seen.add('agent:dot');
+      let dot = actors.get('agent:dot');
+      const home = slot('hq', agents.length);
+      if (!dot) { dot = { id: 'agent:dot', kind: 'dot', x: home.x, y: home.y, path: [], place: 'hq', target: 'hq', phase: 0 }; actors.set('agent:dot', dot); }
+      const dj = jobs.find((j) => isDot(j) && j.status !== 'done');
+      const target = dj ? placeOf(dj) : 'hq';
+      if (dot.target !== target) {
+        if (dj) say(`OG KUSH is on: ${(dj.title || '').slice(0, 26)}`, '#90f090');
+        const d = PLACES[target].door;
+        walk(dot, target, target === 'hq' ? home : { x: d[0] * T - 34, y: d[1] * T - 4 });
+        dot.place = target;
+        dot.target = target;
+      }
+      dot.title = dj ? `Dot · OG Kush · on "${dj.title}"` : 'Dot · OG Kush · chilling at HQ';
     }
-    const dotKey = dotJob ? `job:${dotJob.id}` : 'home';
-    if (dot.targetKey !== dotKey) {
-      const tgt = dotJob && actors.get(`job:${dotJob.id}`);
-      pathTo(dot, { x: dot.x, y: dot.y }, tgt ? { x: tgt.dest.x + 14, y: tgt.dest.y } : dotHome);
-      if (dotJob) say(`OG Kush is on: ${(dotJob.title || '').slice(0, 26)}`, '#7ee07e');
-      dot.targetKey = dotKey;
-    }
-    dot.title = dotJob ? `Dot (OG Kush) · working on ${dotJob.title}` : 'Dot (OG Kush) · chilling in HQ, ready for work';
-    dot.style = SOURCE.dot;
-    if (dotTarget !== 'codex-voice') actors.delete('agent:dot');
-
     for (const id of [...actors.keys()]) if (!seen.has(id)) actors.delete(id);
   }
 
-  /* ---------- drawing ---------- */
-  function text(str, x, y, color = C.text, size = 8, align = 'left') {
-    g.font = `${size}px "Press Start 2P", "Silkscreen", monospace`;
-    g.textAlign = align;
-    g.textBaseline = 'top';
-    g.fillStyle = C.ink;
-    g.fillText(str, x + 1, y + 1);
-    g.fillStyle = color;
-    g.fillText(str, x, y);
-  }
-
-  function drawRoom(key, r) {
-    // floor tiles
-    for (let ty = r.y; ty < r.y + r.h; ty += 8) {
-      for (let tx = r.x; tx < r.x + r.w; tx += 8) {
-        g.fillStyle = ((tx - r.x) / 8 + (ty - r.y) / 8) % 2 ? r.floor[0] : r.floor[1];
-        g.fillRect(tx, ty, Math.min(8, r.x + r.w - tx), Math.min(8, r.y + r.h - ty));
-      }
-    }
-    // back wall
-    g.fillStyle = C.wall;
-    g.fillRect(r.x, r.y, r.w, 13);
-    g.fillStyle = C.wallHi;
-    g.fillRect(r.x, r.y + 12, r.w, 1);
-    // border
-    g.strokeStyle = C.ink;
-    g.lineWidth = 2;
-    g.strokeRect(r.x + 1, r.y + 1, r.w - 2, r.h - 2);
-    // door into the corridor
-    g.fillStyle = C.night;
-    const doorY = r.y < CORR ? r.y + r.h - 2 : r.y > CORR2 ? r.y - 1 : r.y + r.h - 2;
-    g.fillRect(r.x + r.w / 2 - 8, doorY, 16, 3);
-    // sign
-    g.fillStyle = r.accent;
-    g.fillRect(r.x + 4, r.y + 3, 3, 7);
-    text(r.name, r.x + 10, r.y + 3, C.text, 6);
-    if (r.overflow) text(`+${r.overflow}`, r.x + r.w - 4, r.y + 3, C.gold, 6, 'right');
-
-    // props
-    if (key === 'working') {
-      for (let i = 0; i < 6; i += 1) {
-        const s = slot('working', i);
-        g.fillStyle = '#6b4a2b';
-        g.fillRect(s.x - 1, s.y + 12, 18, 5);
-        g.fillStyle = '#20303f';
-        g.fillRect(s.x + 3, s.y + 6, 10, 7);
-        g.fillStyle = frame % 20 < 10 ? '#4fd06b' : '#39a554';
-        g.fillRect(s.x + 4, s.y + 7, 8, 5);
-      }
-    }
-    if (key === 'crew') {
-      for (let i = 0; i < 40; i += 1) {
-        const s2 = slot('crew', i);
-        if (s2.y > r.y + r.h - 20) break;
-        g.fillStyle = '#7a5530';
-        g.fillRect(s2.x - 1, s2.y + 12, 18, 4);
-      }
-    }
-    if (key === 'bots') {
-      g.fillStyle = '#ffd23f';
-      for (let x = r.x + 4; x < r.x + r.w - 4; x += 10) g.fillRect(x, r.y + r.h - 6, 5, 2);
-    }
-    if (key === 'hq') {
-      // a big board on the wall showing the live counts
-      g.fillStyle = '#10131f';
-      g.fillRect(r.x + r.w - 72, r.y + 2, 68, 9);
-      text(`${hud.needs}!  ${hud.working}*  ${hud.done}v`, r.x + r.w - 68, r.y + 3, C.gold, 6);
-    }
-    if (key === 'done') {
-      g.fillStyle = C.gold;
-      g.fillRect(r.x + r.w - 14, r.y + 18, 8, 6);
-      g.fillRect(r.x + r.w - 12, r.y + 24, 4, 4);
-    }
+  /* ---------- per-frame ---------- */
+  function bubble(x, y, s, color, t) {
+    const dy = Math.round(Math.sin(t * 4));
+    px(x, y + dy, 9, 9, P.ink);
+    px(x + 1, y + dy + 1, 7, 7, P.white);
+    px(x + 2, y + dy + 9, 2, 2, P.ink);
+    text(s, x + 5, y + dy + 2, color, 5, 'center', P.white);
   }
 
   function drawActor(a, t) {
     const moving = a.path.length > 0;
-    const step = moving && Math.floor(t * 8 + a.phase) % 2;
+    const stepping = moving && Math.floor(t * 8 + a.phase) % 2;
     let img;
     let bob = 0;
+    const hat = a.dot || a.dotSkin || a.kind === 'dot' ? LEAF_HAT : null;
     if (a.kind === 'bot') {
-      const p = basePal(a.status === 'failed' ? C.gray : (a.job && a.job.meta && a.job.meta.providerColor) || '#555', C.gray);
-      if (a.job && a.job.meta && a.job.meta.provider === 'grok') p.C = '#222';
-      img = sprite(ROBOT, p, a.dotSkin ? LEAF_HAT : null);
-      bob = a.status === 'working' ? Math.round(Math.sin(t * 6 + a.phase)) : 0;
+      const m = (a.job && a.job.meta) || {};
+      const body = a.status === 'failed' ? P.ghost[2] : m.provider === 'grok' ? '#383848' : m.provider === 'hermes' ? '#d8a828' : m.providerColor || '#606878';
+      img = sprite(ROBOT, pal(body, '#000000'), hat);
+      bob = a.status === 'working' ? Math.round(Math.sin(t * 5 + a.phase)) : 0;
     } else if (a.kind === 'agent') {
-      img = sprite(step ? PERSON_STEP : PERSON, basePal(a.enabled ? C.purple : C.gray, '#2a1a4a'), CROWN);
-      bob = a.busy && !moving ? Math.round(Math.sin(t * 10 + a.phase)) : 0;
-    } else if (a.kind === 'crew') {
-      img = sprite(PERSON, a.dotSkin ? basePal(SOURCE.dot.shirt, SOURCE.dot.hair) : basePal(a.busy ? '#c9a227' : '#6d5a2e', '#3a2a10'), a.dotSkin ? LEAF_HAT : null);
-      bob = a.busy ? Math.floor(t * 8 + a.phase) % 2 : 0;
+      img = sprite(stepping ? PERSON_STEP : PERSON, pal(a.enabled ? P.purple[2] : P.ghost[2], '#402060'), CAP);
+      bob = a.busy && !moving ? Math.floor(t * 8 + a.phase) % 2 : 0;
     } else if (a.kind === 'dot') {
-      img = sprite(step ? PERSON_STEP : PERSON, basePal(SOURCE.dot.shirt, SOURCE.dot.hair), LEAF_HAT);
-      bob = Math.round(Math.sin(t * 3)) ;
+      img = sprite(stepping ? PERSON_STEP : PERSON, pal(SOURCE.dot.shirt, SOURCE.dot.hair), LEAF_HAT);
+      bob = moving ? 0 : Math.round(Math.sin(t * 2.5));
+    } else if (a.kind === 'crew') {
+      img = sprite(PERSON, a.dotSkin ? pal(SOURCE.dot.shirt, SOURCE.dot.hair) : pal(a.busy ? P.gold[2] : P.gold[1], '#e8e8f0'), hat);
+      bob = a.busy ? Math.floor(t * 6 + a.phase) % 2 : 0;
     } else {
       const st = a.style || SOURCE.manual;
-      const pal = basePal(st.shirt, st.hair);
-      if (a.status === 'failed') Object.assign(pal, { C: C.gray, S: '#b7b2c9' });
-      img = sprite(step ? PERSON_STEP : PERSON, pal, a.dot || a.dotSkin ? LEAF_HAT : null);
-      if (a.status === 'working' && !moving) bob = Math.floor(t * 8 + a.phase) % 2; // typing
-      if (a.status === 'needs_you' && !moving) bob = -Math.abs(Math.round(Math.sin(t * 5 + a.phase) * 2));
+      const p2 = pal(st.shirt, st.hair);
+      if (a.status === 'failed') Object.assign(p2, { C: P.ghost[2], c: P.ghost[1], W: P.ghost[3], S: P.ghost[3], s: P.ghost[2] });
+      img = sprite(stepping ? PERSON_STEP : PERSON, p2, hat);
+      if (!moving && a.status === 'working') bob = Math.floor(t * 8 + a.phase) % 2;
+      if (!moving && a.status === 'needs_you') bob = -Math.abs(Math.round(Math.sin(t * 5 + a.phase) * 2));
     }
     const x = Math.round(a.x);
     const y = Math.round(a.y) + bob;
-    // shadow
-    g.fillStyle = 'rgba(0,0,0,.35)';
-    g.fillRect(x + 3, Math.round(a.y) + 15, 10, 2);
+    if (a.status === 'needs_you' && !moving) {
+      g.fillStyle = `rgba(248,64,56,${0.25 + 0.2 * Math.sin(t * 6 + a.phase)})`;
+      g.fillRect(x, Math.round(a.y) + 12, 16, 5);
+      g.fillRect(x + 2, Math.round(a.y) + 11, 12, 7);
+    }
+    g.fillStyle = 'rgba(0,0,0,.3)';
+    g.fillRect(x + 3, Math.round(a.y) + 14, 10, 2);
     if (a.status === 'failed' && a.kind === 'job' && !moving) {
-      g.save();
-      g.translate(x + 8, y + 12);
-      g.rotate(-Math.PI / 2);
-      g.drawImage(img, -8, -8);
-      g.restore();
+      g.save(); g.translate(x + 8, y + 10); g.rotate(-Math.PI / 2); g.drawImage(img, -8, -8); g.restore();
     } else {
       g.drawImage(img, x, y);
     }
-    // status bubbles
     if (!moving) {
-      if (a.status === 'needs_you') bubble(x + 10, y - 9, '!', C.red, t);
-      else if (a.status === 'follow_up') bubble(x + 10, y - 9, '...', C.gold, t);
-      else if (a.status === 'done' && Math.floor(t * 2 + a.phase) % 4 === 0) spark(x + 12, y - 2);
-      else if (a.status === 'working' && a.kind === 'job' && Math.random() < 0.04) particles.push({ x: x + 8, y: y + 4, vx: (Math.random() - 0.5) * 20, vy: -25, life: 0.7, color: '#7dffa1', ch: Math.random() < 0.5 ? '1' : '0' });
-      else if (a.kind === 'agent' && a.busy) bubble(x + 10, y - 9, '*', C.purple, t);
-      else if (a.kind === 'crew' && a.busy && Math.floor(t + a.phase) % 3 === 0) spark(x + 13, y - 1);
+      if (a.status === 'needs_you') bubble(x + 9, y - 10, '!', P.red[1], t);
+      else if (a.status === 'follow_up' && a.kind === 'job') bubble(x + 9, y - 10, '?', P.gold[0], t);
+      else if (a.status === 'done' && Math.floor(t * 2 + a.phase) % 5 === 0) star(x + 13, y, Math.floor(t * 10));
+      else if (a.status === 'working' && a.kind === 'job' && Math.random() < 0.03) particles.push({ x: x + 8, y: y + 2, vx: (Math.random() - 0.5) * 20, vy: -28, life: 0.8, color: '#90ffb0', ch: Math.random() < 0.5 ? '1' : '0' });
+      else if ((a.kind === 'agent' || a.kind === 'crew') && a.busy && Math.floor(t + a.phase) % 3 === 0) star(x + 13, y - 1, Math.floor(t * 10));
     }
-    if (a.kind === 'dot' || a.dotSkin) text('OG KUSH', x + 8, y - 8, '#7ee07e', 5, 'center');
-    if (hover === a) {
-      g.strokeStyle = C.gold;
-      g.lineWidth = 1;
-      g.strokeRect(x - 1.5, y - 1.5, 19, 19);
+    if (a.kind === 'dot' || a.dotSkin) text('OG KUSH', x + 8, y - 9, '#90f090', 5, 'center');
+    if (hover === a) { g.strokeStyle = P.gold[2]; g.lineWidth = 1; g.strokeRect(x - 1.5, y - 1.5, 19, 19); }
+  }
+
+  function renderBackground(f) {
+    const off = document.createElement('canvas');
+    off.width = W;
+    off.height = H;
+    const prev = g;
+    g = off.getContext('2d');
+    for (let y = 0; y < ROWS; y += 1) {
+      for (let x = 0; x < COLS; x += 1) {
+        if (land(x, y)) {
+          drawGrass(x, y);
+          if (isPath(x, y)) drawPath(x, y);
+          else if (PLAZA[y][x]) drawPlaza(x, y);
+        } else {
+          drawWater(x, y, f);
+          drawShore(x, y, f);
+        }
+      }
+    }
+    g = prev;
+    return off;
+  }
+
+  function fish(t) {
+    // a cheep-cheep style fish hops out of the sea now and then
+    const cycle = 7;
+    const k = Math.floor(t / cycle);
+    const ph = (t % cycle) / 1.2;
+    if (ph > 1) return;
+    const spots = [[1, 6], [30, 9], [2, 18], [29, 20], [20, 1]];
+    const [sx, sy] = spots[k % spots.length];
+    const x = sx * T + ph * 24;
+    const y = sy * T - Math.sin(ph * Math.PI) * 18;
+    px(x, y, 8, 6, P.red[2]);
+    px(x + 1, y + 1, 3, 2, P.red[3]);
+    px(x + 6, y + 1, 1, 1, P.ink);
+    px(x - 3, y, 3, 6, P.red[1]);
+    px(x + 2, y - 2, 3, 2, P.white);
+  }
+
+  function clouds(t) {
+    for (let i = 0; i < 4; i += 1) {
+      const cx = ((t * (4 + i) + i * 160) % (W + 80)) - 60;
+      const cy = 30 + i * 80 + Math.sin(t / 3 + i) * 3;
+      g.fillStyle = 'rgba(255,255,255,.5)';
+      g.fillRect(Math.round(cx), Math.round(cy), 40, 8);
+      g.fillRect(Math.round(cx + 6), Math.round(cy - 5), 22, 6);
+      g.fillRect(Math.round(cx + 14), Math.round(cy - 9), 12, 5);
+      g.fillStyle = 'rgba(150,180,230,.3)';
+      g.fillRect(Math.round(cx + 2), Math.round(cy + 7), 36, 2);
     }
   }
 
-  function bubble(x, y, s, color, t) {
-    const w = Math.max(9, s.length * 5 + 4);
-    const dy = Math.round(Math.sin(t * 4) * 1);
-    g.fillStyle = C.text;
-    g.fillRect(x, y + dy, w, 8);
-    g.fillRect(x + 2, y + dy + 8, 2, 2);
-    g.strokeStyle = C.ink;
-    g.lineWidth = 1;
-    g.strokeRect(x + 0.5, y + dy + 0.5, w - 1, 7);
-    text(s, x + w / 2, y + dy + 1, color, 6, 'center');
-  }
-
-  function spark(x, y) {
-    g.fillStyle = C.gold;
-    g.fillRect(x, y - 2, 1, 5);
-    g.fillRect(x - 2, y, 5, 1);
-  }
-
-  function drawHud(t) {
-    g.fillStyle = C.ink;
-    g.fillRect(0, 0, W, HUD);
-    g.fillStyle = C.wallHi;
-    g.fillRect(0, HUD - 2, W, 1);
-    text('MISSION CONTROL', 6, 5, C.gold, 7);
-    const items = [['!', hud.needs, C.red], ['WORK', hud.working, C.green], ['BOTS', hud.bots, C.blue], ['DONE', hud.done, C.text], ['KO', hud.failed, C.red], ['CREW', hud.agents, C.purple], ['HERMES', hud.crew, '#c9a227']];
-    let x = 112;
-    for (const [k, v, col] of items) {
-      text(`${k} ${String(v).padStart(2, '0')}`, x, 6, col, 6);
-      x += 48;
-    }
-    // ticker on the corridor
-    g.fillStyle = C.night;
-    g.fillRect(0, CORR, W, ROW2 - CORR);
-    g.fillStyle = '#2a2350';
-    for (let x2 = (-Math.floor(t * 20) % 16); x2 < W; x2 += 16) g.fillRect(x2, CORR + 8, 8, 1);
-    g.fillStyle = C.night;
-    g.fillRect(0, CORR2, W, ROW3 - CORR2);
-    g.fillStyle = '#2a2350';
-    for (let x3 = (Math.floor(t * 20) % 16) - 16; x3 < W; x3 += 16) g.fillRect(x3, CORR2 + 8, 8, 1);
+  function hud() {
+    px(0, 0, W, 20, 'rgba(16,16,24,.9)');
+    px(0, 20, W, 1, P.gold[1]);
+    text('MISSION CONTROL', 8, 7, P.gold[2], 7);
+    const items = [['!', counts.needs_you, P.red[3]], ['WORK', counts.working, P.grass[3]], ['BOTS', counts.bots, P.sea[3]], ['GOAL', counts.done, P.gold[3]], ['BOO', counts.failed, P.ghost[3]], ['CREW', counts.crew, P.gold[2]]];
+    let x = 132;
+    for (const [k, v, c] of items) { text(`${k}x${String(v || 0).padStart(2, '0')}`, x, 7, c, 6); x += 63; }
     const msg = ticker[0];
-    if (msg) {
-      const age = (performance.now() - msg.t) / 1000;
-      if (age < 12) text(`> ${msg.text}`, 8, CORR + 5, msg.color, 6);
-    } else {
-      text('> all quiet. the crew is on watch.', 8, CORR + 5, C.dim, 6);
-    }
+    const age = msg ? (performance.now() - msg.t) / 1000 : 99;
+    px(0, H - 14, W, 14, 'rgba(16,16,24,.85)');
+    px(0, H - 14, W, 1, P.gold[1]);
+    text(age < 14 ? `> ${msg.text}` : '> all quiet. hover anyone to see who they are, click to open.', 8, H - 9, age < 14 ? msg.color : P.stone[3], 6);
+  }
+
+  function tooltip(a) {
+    const s = (a.title || '').slice(0, 64);
+    g.font = '5px "Press Start 2P", monospace';
+    const w = Math.min(W - 8, Math.ceil(g.measureText(s).width) + 12);
+    const x = Math.max(4, Math.min(W - w - 4, Math.round(a.x + 8 - w / 2)));
+    const y = a.y > H / 2 ? Math.round(a.y) - 18 : Math.round(a.y) + 20;
+    px(x, y, w, 12, P.ink);
+    px(x + 1, y + 1, w - 2, 10, '#283058');
+    px(x + 1, y + 1, w - 2, 1, P.gold[2]);
+    text(s, x + 6, y + 4, P.white, 5);
   }
 
   function step(dt) {
-    const speed = 70;
     for (const a of actors.values()) {
       if (!a.path.length) continue;
       const p = a.path[0];
@@ -432,22 +762,17 @@
       const dy = p.y - a.y;
       const d = Math.hypot(dx, dy);
       if (d < 1.5) {
-        a.x = p.x;
-        a.y = p.y;
-        a.path.shift();
-        if (!a.path.length && a.kind === 'job' && a.status === 'done') burst(a.x + 8, a.y, C.gold, 14);
+        a.x = p.x; a.y = p.y; a.path.shift();
+        if (!a.path.length && a.status === 'done') burst(a.x + 8, a.y, P.gold[2], 14);
       } else {
-        const m = Math.min(d, speed * dt);
+        const m = Math.min(d, 64 * dt);
         a.x += (dx / d) * m;
         a.y += (dy / d) * m;
       }
     }
     for (let i = particles.length - 1; i >= 0; i -= 1) {
       const p = particles[i];
-      p.life -= dt;
-      p.x += p.vx * dt;
-      p.y += p.vy * dt;
-      p.vy += 90 * dt;
+      p.life -= dt; p.x += p.vx * dt; p.y += p.vy * dt; p.vy += 90 * dt;
       if (p.life <= 0) particles.splice(i, 1);
     }
   }
@@ -457,43 +782,36 @@
     const t = ts / 1000;
     const dt = Math.min(0.05, lastT ? t - lastT : 0.016);
     lastT = t;
-    frame += 1;
+    const f = Math.floor(t * 10);
     step(dt);
-    g.fillStyle = C.night;
-    g.fillRect(0, 0, W, H);
-    for (const [k, r] of Object.entries(ROOMS)) drawRoom(k, r);
-    drawHud(t);
-    const list = [...actors.values()].sort((a, b) => a.y - b.y);
-    for (const a of list) drawActor(a, t);
+    g.drawImage(bgFrames[Math.floor(t * 3) % bgFrames.length], 0, 0);
+    const layers = [];
+    for (const d of DECOR) layers.push({ y: d.y * T + 15, draw: () => drawDecor(d, f) });
+    for (const [id, p] of Object.entries(PLACES)) layers.push({ y: p.door[1] * T - 2, draw: () => drawPlace(id, p, f, counts[id] || 0) });
+    for (const a of actors.values()) layers.push({ y: a.y + 14, draw: () => drawActor(a, t) });
+    layers.sort((a, b) => a.y - b.y);
+    for (const l of layers) l.draw();
+    for (const [id, p] of Object.entries(PLACES)) sign(id, p, counts[id] || 0);
     for (const p of particles) {
       if (p.ch) text(p.ch, p.x, p.y, p.color, 5);
-      else { g.fillStyle = p.color; g.fillRect(Math.round(p.x), Math.round(p.y), 2, 2); }
+      else px(p.x, p.y, 2, 2, p.color);
     }
+    fish(t);
+    clouds(t);
+    hud();
     if (hover) tooltip(hover);
     requestAnimationFrame(render);
   }
 
-  function tooltip(a) {
-    const s = (a.title || '').slice(0, 52);
-    const w = Math.min(W - 8, s.length * 5 + 10);
-    let x = Math.round(a.x + 8 - w / 2);
-    x = Math.max(4, Math.min(W - w - 4, x));
-    const y = a.y > H / 2 ? Math.round(a.y) - 16 : Math.round(a.y) + 20;
-    g.fillStyle = C.ink;
-    g.fillRect(x, y, w, 11);
-    g.strokeStyle = C.gold;
-    g.lineWidth = 1;
-    g.strokeRect(x + 0.5, y + 0.5, w - 1, 10);
-    text(s, x + 5, y + 3, C.text, 5);
-  }
-
   function hit(ev) {
-    const rect = cv.getBoundingClientRect();
-    const x = ((ev.clientX - rect.left) / rect.width) * W;
-    const y = ((ev.clientY - rect.top) / rect.height) * H;
+    const r = cv.getBoundingClientRect();
+    const x = ((ev.clientX - r.left) / r.width) * W;
+    const y = ((ev.clientY - r.top) / r.height) * H;
     let best = null;
     for (const a of actors.values()) if (x >= a.x && x <= a.x + 16 && y >= a.y && y <= a.y + 16) best = !best || a.y > best.y ? a : best;
-    return best;
+    if (best) return best;
+    for (const [id, s] of Object.entries(signRects)) if (x >= s.x && x <= s.x + s.w && y >= s.y && y <= s.y + s.h) return { sign: id };
+    return null;
   }
 
   function mount(canvas, options = {}) {
@@ -503,27 +821,23 @@
     cv.height = H;
     g = cv.getContext('2d');
     g.imageSmoothingEnabled = false;
+    buildMap();
+    bgFrames = [0, 1, 2, 3].map((f) => renderBackground(f * 2));
     cv.addEventListener('mousemove', (ev) => {
-      hover = hit(ev);
-      cv.style.cursor = hover && hover.jobId ? 'pointer' : 'default';
+      const h = hit(ev);
+      hover = h && !h.sign ? h : null;
+      cv.style.cursor = h && (h.jobId || h.sign) ? 'pointer' : 'default';
     });
     cv.addEventListener('mouseleave', () => { hover = null; });
     cv.addEventListener('click', (ev) => {
-      const a = hit(ev);
-      if (a && a.jobId && opts.onOpen) opts.onOpen(a.jobId);
+      const h = hit(ev);
+      if (h && h.jobId && opts.onOpen) opts.onOpen(h.jobId);
+      else if (h && h.sign && opts.onPlace) opts.onPlace(h.sign);
     });
   }
 
-  function start() {
-    if (running || !cv) return;
-    running = true;
-    lastT = 0;
-    requestAnimationFrame(render);
-  }
+  const start = () => { if (running || !cv) return; running = true; lastT = 0; requestAnimationFrame(render); };
+  const stop = () => { running = false; };
 
-  function stop() {
-    running = false;
-  }
-
-  window.Arcade = { mount, update, start, stop, say, _actors: actors };
+  window.Arcade = { mount, update, start, stop, say, PLACES, _actors: actors };
 })();

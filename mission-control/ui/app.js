@@ -333,7 +333,16 @@ function showTab(id) {
 const arcade = { crew: [], dot: { target: 'codex-voice' }, mounted: false };
 async function loadArcade() {
   if (!arcade.mounted) {
-    window.Arcade.mount($('#arcade'), { onOpen: (id) => openJob(id) });
+    window.Arcade.mount($('#arcade'), {
+      onOpen: (id) => openJob(id),
+      onPlace: (id) => {
+        const el = document.getElementById(`place-${id}`);
+        if (!el) return;
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        el.classList.add('flash');
+        setTimeout(() => el.classList.remove('flash'), 1600);
+      },
+    });
     arcade.mounted = true;
   }
   const [board, workforce, crew, dot] = await Promise.all([
@@ -347,7 +356,32 @@ async function loadArcade() {
   Object.assign(arcade, { crew, dot });
   renderDotPicker();
   window.Arcade.update(board, workforce, crew, dot);
+  renderLegend(board, workforce, crew);
 }
+
+const PLACE_COLOR = { needs_you: '#f04838', working: '#48b838', bots: '#585878', follow_up: '#d8a000', hq: '#9060d8', done: '#f8d838', failed: '#787088', crew: '#d8a828' };
+function renderLegend(board, workforce, crew) {
+  const P = window.Arcade.PLACES;
+  const jobs = board.columns.flatMap((c) => c.jobs);
+  const at = (id) => jobs.filter((j) => (j.source === 'bot' ? 'bots' : P[j.status] ? j.status : 'follow_up') === id);
+  const items = (id) => {
+    if (id === 'hq') return (workforce.agents || []).map((a) => ({ label: `${a.name}: ${a.lastSummary || a.role}` }));
+    if (id === 'crew') return crew.map((m) => ({ label: `${m.busy ? '● ' : '○ '}${m.title} (${m.name})` }));
+    return at(id).map((j) => ({ id: j.id, label: `${j.title} · ${j.reason || ''}` }));
+  };
+  const order = ['needs_you', 'working', 'follow_up', 'bots', 'failed', 'done', 'hq', 'crew'];
+  $('#arcade-legend').innerHTML = order.map((id) => {
+    const list = items(id);
+    return `<div class="place" id="place-${id}"><h3><span><span class="swatch" style="background:${PLACE_COLOR[id]}"></span>${esc(P[id].name)}</span><span class="n">${list.length}</span></h3>
+      <p>${esc(P[id].blurb)}</p>
+      <ul>${list.slice(0, 6).map((it) => `<li ${it.id ? `data-open-job="${esc(it.id)}"` : ''} title="${esc(it.label)}">${esc(it.label)}</li>`).join('')}${list.length > 6 ? `<li class="muted">+${list.length - 6} more</li>` : ''}</ul></div>`;
+  }).join('');
+}
+
+document.addEventListener('click', (ev) => {
+  const li = ev.target.closest('[data-open-job]');
+  if (li) openJob(li.dataset.openJob);
+});
 
 function renderDotPicker() {
   const jobs = state.board ? state.board.columns.flatMap((c) => c.jobs) : [];

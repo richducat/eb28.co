@@ -127,11 +127,12 @@ Runs are logged with output; the latest run of each automation also appears on t
 
 ## Arcade
 
-A live 16-bit style map of everything at once. Each status is a room (Needs You, Workshop,
-Follow-up, Done, Infirmary), bots live in the Bot Garage, the Mission Control workforce sits in
-HQ, and every Hermes profile (`~/.hermes/profiles/*`) has a desk on the Hermes Crew floor.
-When a job changes status its sprite walks to the new room; agents walk out to the room they
-are working on. Hover for details, click a job to open it.
+A live Super Mario World style overworld of everything at once, drawn in code (no image assets).
+Each status is a landmark on the island: the Needs You castle, the Workshop, the Bot Fortress,
+the Follow-up post office, the Goal posts (done), the Ghost House (failed), HQ for the workforce
+agents, and Hermes Village for every Hermes profile (`~/.hermes/profiles/*`). Each person on the
+map is one job or agent; when a status changes they walk the path to the new landmark. Hover for
+details, click a person to open the job, click a signpost to jump to its list in the legend.
 
 **Dot (OG Kush)** wears the leaf hat. By default Dot is any Codex thread handed over by voice
 (`<realtime_delegation>`). Pick a different bot or Hermes profile with "Who is Dot?" on the tab.

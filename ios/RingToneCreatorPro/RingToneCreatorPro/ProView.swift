@@ -6,6 +6,7 @@ struct ProView: View {
     @Environment(LibraryStore.self) private var library
     @Environment(AdMobManager.self) private var ads
     @State private var isWorking = false
+    @State private var showingDeleteConfirmation = false
 
     var body: some View {
         ScrollView {
@@ -81,7 +82,7 @@ struct ProView: View {
                         .tint(Theme.cyan)
 
                         Button("Delete Account") {
-                            Task { await auth.deleteAccount() }
+                            showingDeleteConfirmation = true
                         }
                         .buttonStyle(.bordered)
                         .tint(.red)
@@ -97,6 +98,7 @@ struct ProView: View {
             }
             .padding(16)
         }
+        .sheet(isPresented: $showingDeleteConfirmation) { DeleteAccountView() }
     }
 
     private func purchase() async {

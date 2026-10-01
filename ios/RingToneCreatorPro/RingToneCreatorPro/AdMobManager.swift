@@ -22,7 +22,7 @@ final class AdMobManager {
     }
 
     func startIfPossible() {
-        guard hasConfiguredBanner, !didStart else { return }
+        guard hasConfiguredBanner, canRequestAds, ConsentInformation.shared.canRequestAds, !didStart else { return }
         didStart = true
         MobileAds.shared.start()
     }
@@ -39,6 +39,7 @@ final class AdMobManager {
                     self?.message = error.localizedDescription
                     self?.canRequestAds = ConsentInformation.shared.canRequestAds
                     self?.privacyOptionsRequired = ConsentInformation.shared.privacyOptionsRequirementStatus == .required
+                    self?.startIfPossible()
                     return
                 }
 
@@ -60,6 +61,7 @@ final class AdMobManager {
                 self?.message = error?.localizedDescription ?? "Ad privacy choices updated."
                 self?.canRequestAds = ConsentInformation.shared.canRequestAds
                 self?.privacyOptionsRequired = ConsentInformation.shared.privacyOptionsRequirementStatus == .required
+                self?.startIfPossible()
             }
         }
     }
@@ -71,17 +73,31 @@ struct AdBannerView: UIViewControllerRepresentable {
     func makeUIViewController(context: Context) -> BannerHostController {
         let controller = BannerHostController()
         controller.adUnitID = ads.adUnitID
+        controller.consentAllowsAds = ads.canRequestAds
         return controller
+    }
+
+    static func dismantleUIViewController(_ uiViewController: BannerHostController, coordinator: ()) {
+        uiViewController.stopAds()
     }
 
     func updateUIViewController(_ uiViewController: BannerHostController, context: Context) {
         uiViewController.adUnitID = ads.adUnitID
+        uiViewController.consentAllowsAds = ads.canRequestAds
         uiViewController.loadIfNeeded()
     }
 }
 
 final class BannerHostController: UIViewController, BannerViewDelegate {
     var adUnitID: String = ""
+    var consentAllowsAds = false
+
+    func stopAds() {
+        bannerView?.delegate = nil
+        bannerView?.removeFromSuperview()
+        bannerView = nil
+        didLoad = false
+    }
     private var bannerView: BannerView?
     private var didLoad = false
 
@@ -91,7 +107,10 @@ final class BannerHostController: UIViewController, BannerViewDelegate {
     }
 
     func loadIfNeeded() {
-        guard AppConfig.hasProductionAdMobIDs else { return }
+        guard AppConfig.hasProductionAdMobIDs, consentAllowsAds, ConsentInformation.shared.canRequestAds else {
+            stopAds()
+            return
+        }
         guard !didLoad else { return }
         didLoad = true
 

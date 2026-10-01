@@ -5,7 +5,9 @@
     "subtitle": "Find cadet photos faster",
     "bundleId": "co.eb28.cadetcatch",
     "sku": "cadetcatch-ios",
-    "platforms": ["iOS"],
+    "platforms": [
+      "iOS"
+    ],
     "primaryCategory": "Lifestyle",
     "secondaryCategory": "Lifestyle",
     "copyright": "2026 EB28",
@@ -25,7 +27,15 @@
     "phasedRelease": false,
     "promotionalText": "Private cadet rosters, public-source photo checks, covered previews, saved finds, review notes, and a plain-English academy terms decoder.",
     "description": "CadetCatch helps Coast Guard Academy families keep up with public cadet photos without digging through every gallery by hand.\n\nCreate a private roster on your iPhone, add approved public photo sources, scan those sources for possible face matches, review match confidence, unlock covered results, save likely finds, and keep simple notes for family follow-up.\n\nCadetCatch only checks public HTTPS sources that you add or enable. It does not scan private social accounts, private photo libraries, or non-public websites unless a future connected-source version explicitly asks for that access.",
-    "keywords": ["cadet", "military", "academy", "photos", "family", "parents", "coast"],
+    "keywords": [
+      "cadet",
+      "military",
+      "academy",
+      "photos",
+      "family",
+      "parents",
+      "coast"
+    ],
     "whatsNew": "Adds StoreKit purchase gates for one-time checks, one-photo unlocks, monthly access, covered result previews, and restore purchases."
   },
   "urls": {
@@ -93,7 +103,7 @@
   },
   "privacy": {
     "privacyPolicyLinkedInApp": true,
-    "appPrivacyAnswersCurrent": true,
+    "appPrivacyAnswersCurrent": false,
     "trackingUsed": false,
     "attFlowImplemented": false,
     "accountDeletionImplemented": false,
@@ -114,7 +124,9 @@
     "appPreviewVideos": []
   },
   "verification": {
-    "testedDevices": ["iPhone 17 Pro Max simulator"],
+    "testedDevices": [
+      "iPhone 17 Pro Max simulator"
+    ],
     "testedFlows": [
       "fresh launch with EAGLE background",
       "add cadet with selected profile photo",
@@ -128,7 +140,9 @@
     "knownRisks": [
       "Public websites may change markup or block automated image access; the app surfaces empty/no-match states when a source cannot provide usable public images.",
       "Private social account scanning is intentionally not included in this build.",
-      "StoreKit products must exist in App Store Connect before TestFlight purchase flows can return live products."
+      "StoreKit products must exist in App Store Connect before TestFlight purchase flows can return live products.",
+      "2026-09-07 audit: live version 1.0.1 mentions build 95, while this release manifest and Xcode project describe older builds. Do not submit or overwrite the live build from this source until its release commit/archive is identified.",
+      "App Store Connect privacy URL must be https://eb28.co/cc/privacy/. Published Data Not Collected answers conflict with retained account/access/invitation email records."
     ]
   }
 }

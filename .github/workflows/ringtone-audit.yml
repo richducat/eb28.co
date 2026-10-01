@@ -1,0 +1,16 @@
+name: Ringtone audit build
+on:
+  pull_request:
+    paths:
+      - 'ios/RingToneCreatorPro/**'
+      - '.github/workflows/ringtone-audit.yml'
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - run: xcodebuild -project ios/RingToneCreatorPro/RingToneCreatorPro.xcodeproj -scheme RingToneCreatorPro -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' CODE_SIGNING_ALLOWED=NO build

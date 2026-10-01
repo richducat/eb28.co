@@ -51,17 +51,49 @@ Click a card for the last exchange, the exact resume command (`claude --resume â
 - OpenClaw: `openclaw cron list --json` (falls back to `~/.openclaw/cron/jobs.json`)
 - Hermes: `~/.hermes/personal-assistant/working-context/OPEN_LOOPS.md` (or `OPEN_LOOPS_PATH`)
 - GitHub: open PRs when `GITHUB_TOKEN` and `MC_GITHUB_REPOS=owner/repo,owner/repo2` are set
+- Bots and always-on agents (Grok/xAI bots, Dot, trading bots, schedulers): see **Bots** below
 - Anything else: "+ Track a job" (Claude web chats, ChatGPT, Cursor, a contractor)
 
 Override any path with `MC_CLAUDE_DIR`, `MC_CODEX_DIR`, `MC_GEMINI_DIR`, `MC_OPENCLAW_HOME`.
 
+## Bots
+
+The **Bots** tab shows every long-running bot or agent, with its AI provider, whether it is up, its last log lines, and a Restart button. It finds them on its own from:
+
+- **pm2**: every process in `pm2 jlist`, with its logs and restart count
+- **launchd** (macOS): your `~/Library/LaunchAgents/*.plist` jobs that use an AI provider
+- **Docker**: containers whose name, image, or command points at an AI provider
+- **Running processes** whose command line matches `MC_BOT_KEYWORDS` (default `grok|xai`)
+
+The provider (Grok, Claude, OpenAI, Gemini) is detected from the name, the command line, and the bot's own script (for example `api.x.ai` or `XAI_API_KEY` means Grok). Set `MC_BOTS_ALL=1` to also list launchd/Docker jobs with no AI provider.
+
+Anything it cannot see (Dot, a bot on another machine, a hosted bot with a health URL) you add with **+ Add a bot**. That writes `~/.eb28-mission-control/bots.json`:
+
+```json
+[
+  { "name": "Dot", "provider": "dot", "process": "dot-agent\\.py", "log": "~/agents/dot/out.log", "expected": true },
+  { "name": "Grok X reply bot", "provider": "grok", "match": "pm2:grok-reply", "autoRestart": true },
+  { "name": "Grok trend API", "provider": "grok", "health": "https://example.com/health", "restart": ["pm2", "restart", "grok-trend"] }
+]
+```
+
+| Status | When |
+|---|---|
+| Working | Running and logging |
+| Needs you | Running, but its newest log line is an error (401, 429, a Python tracebackâ€¦) |
+| Follow up | Running but silent longer than `staleAfterMin` (default 60), or stopped with no expectation set |
+| Failed | Crashed, crash-looping, health check failing, or marked `expected` and not running |
+
+Restarts only use pm2, launchctl, docker, systemctl, node, python3, bash, or npm, and always as an argv list.
+
 ## The workforce
 
-Seven agents run on an in-process scheduler. Each is a plain module in `src/workforce/agents/` with `run(ctx)`.
+Eight agents run on an in-process scheduler. Each is a plain module in `src/workforce/agents/` with `run(ctx)`.
 
 | Agent | Tier | Cadence | Job |
 |---|---|---|---|
 | Triage | observe | 2 min | Detects status changes, fires notifications, writes the one-line "what this needs from you" |
+| Bot Watchdog | act | 5 min | Restarts down bots you allowed (max 3 an hour); asks before restarting the rest |
 | Ops Runner | act | 1 min | Runs safe automations on schedule, files approval requests for approval-tier ones |
 | Follow-up | propose | 15 min | Lists stalled work with the exact resume command |
 | PR Steward | observe | 10 min | Flags conflicts and stale AI-authored PRs |
@@ -77,7 +109,7 @@ Pause the whole workforce, or any single agent, from the Workforce tab. `npm run
 
 `automations.json` is the allow-list. Every entry is an argv array (never a shell string), a working directory inside the repo, and a tier:
 
-- **safe**: read-only or idempotent local work. Runs unattended on its schedule. The seeded ones are the repo's `check:*` scripts, the fund manager validator, the lead-ops workbench refresh.
+- **safe**: read-only or idempotent local work. Runs unattended on its schedule. The seeded ones are the repo's `check:*` scripts, the social delivery test suite, the fund manager validator, the lead-ops workbench refresh.
 - **approval**: writes files, commits, or spends credits (content engine, SEO review, blog rebuild, site build, social prepare). Ops Runner asks in the Approvals panel. "Approve once" runs it now; "Approve as standing" lets it run on schedule from then on.
 - **manual**: touches customers, money, email, or the public (social publish, outreach send, fund manager publish). Only the button runs it, after a confirmation, or the CLI with `--yes`.
 

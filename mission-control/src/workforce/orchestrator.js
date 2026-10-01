@@ -10,8 +10,11 @@ import * as scout from './agents/automation-scout.js';
 import * as opsRunner from './agents/ops-runner.js';
 import * as prSteward from './agents/pr-steward.js';
 import * as janitor from './agents/janitor.js';
+import * as botWatchdog from './agents/bot-watchdog.js';
+import { restartBot } from './bot-control.js';
+import { loadRegistry as loadBots, saveRegistry as saveBots } from '../sources/bots.js';
 
-export const AGENTS = [triage, opsRunner, followUp, prSteward, reporter, scout, janitor];
+export const AGENTS = [triage, botWatchdog, opsRunner, followUp, prSteward, reporter, scout, janitor];
 
 /**
  * The workforce: a single in-process scheduler that wakes every `tick` ms, rebuilds the
@@ -126,6 +129,19 @@ export class Orchestrator extends EventEmitter {
       }),
     );
     if (!proposal) throw new Error('proposal not found');
+    if (decision === 'approved' && proposal.botJobId) {
+      const board = this.board || (await this.refreshBoard());
+      const bot = board.columns.flatMap((c) => c.jobs).find((j) => j.id === proposal.botJobId);
+      if (!bot) throw new Error('that bot is no longer on the board');
+      if (standing && bot.meta.registryId) {
+        saveBots(loadBots().map((b) => ((b.id || b.name) === bot.meta.registryId ? { ...b, autoRestart: true } : b)));
+      } else if (standing) {
+        saveBots([...loadBots(), { name: bot.title, match: bot.id.replace(/^bot:/, ''), provider: bot.meta.provider, autoRestart: true, expected: true }]);
+      }
+      const res = await restartBot(bot, { trigger: standing ? 'standing-approval' : 'approved' });
+      this.emitEvent({ type: 'bot:restart', name: bot.title, ok: res.ok });
+      await this.refreshBoard();
+    }
     if (decision === 'approved' && proposal.automationId) {
       const a = loadRegistry().find((x) => x.id === proposal.automationId);
       if (!a) throw new Error('automation not found');

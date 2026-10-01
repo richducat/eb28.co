@@ -18,6 +18,7 @@ export const SOURCES = {
   hermes: { label: 'Hermes', color: '#f59e0b' },
   github: { label: 'GitHub PR', color: '#24292f' },
   automation: { label: 'Automation', color: '#0891b2' },
+  bot: { label: 'Bots & agents', color: '#111827' },
   manual: { label: 'Tracked', color: '#64748b' },
 };
 

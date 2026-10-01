@@ -11,6 +11,8 @@ import { AGENTS, Orchestrator } from './workforce/orchestrator.js';
 import { explanationFor } from './workforce/agents/triage.js';
 import { notify, messageFor } from './notify.js';
 import { readTailJsonl, textOf } from './sources/util.js';
+import { loadRegistry as loadBots, saveRegistry as saveBots, PROVIDERS } from './sources/bots.js';
+import { restartBot } from './workforce/bot-control.js';
 
 const UI_DIR = path.join(APP_ROOT, 'ui');
 const MIME = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.svg': 'image/svg+xml', '.png': 'image/png' };
@@ -118,6 +120,36 @@ export function createServer({ orchestrator = new Orchestrator(), nativeNotify =
     },
     'GET /api/automations/runs': async (_b, q) => store.get('automation-runs', []).filter((r) => !q.get('id') || r.automationId === q.get('id')).slice(-50).reverse(),
     'GET /api/digests': async () => store.get('digests', []),
+    'GET /api/bots': async () => {
+      const board = orchestrator.board || (await orchestrator.refreshBoard());
+      const bots = board.columns.flatMap((c) => c.jobs).concat(board.snoozed || []).filter((j) => j.source === 'bot');
+      return { bots, registry: loadBots(), providers: PROVIDERS.map(({ id, label, color }) => ({ id, label, color })), restarts: store.get('bot-restarts', []).slice(-30).reverse() };
+    },
+    'POST /api/bots/restart': async (b) => {
+      const board = orchestrator.board || (await orchestrator.refreshBoard());
+      const bot = board.columns.flatMap((c) => c.jobs).concat(board.snoozed || []).find((j) => j.id === b.id);
+      if (!bot) throw new Error('bot not found');
+      const res = await restartBot(bot, { trigger: 'manual' });
+      orchestrator.emitEvent({ type: 'bot:restart', name: bot.title, ok: res.ok });
+      setTimeout(() => orchestrator.refreshBoard(), 2000);
+      return res;
+    },
+    'POST /api/bots/registry': async (b) => {
+      if (!b.name) throw new Error('name required');
+      const entry = cleanBotEntry(b);
+      const list = loadBots();
+      const idx = list.findIndex((x) => (x.id || x.name) === (b.originalName || entry.name));
+      if (idx >= 0) list[idx] = { ...list[idx], ...entry };
+      else list.push(entry);
+      saveBots(list);
+      await orchestrator.refreshBoard();
+      return entry;
+    },
+    'DELETE /api/bots/registry': async (_b, q) => {
+      saveBots(loadBots().filter((x) => (x.id || x.name) !== q.get('name')));
+      await orchestrator.refreshBoard();
+      return { ok: true };
+    },
     'GET /api/health': async () => ({ ok: true, home: MC_HOME, pid: process.pid }),
   };
 
@@ -149,6 +181,29 @@ export function createServer({ orchestrator = new Orchestrator(), nativeNotify =
 
   server.orchestrator = orchestrator;
   return server;
+}
+
+/** Keep only known bots.json fields, split command strings into argv. */
+export function cleanBotEntry(b) {
+  const argv = (v) => (Array.isArray(v) ? v.filter(Boolean) : String(v || '').trim() ? String(v).trim().split(/\s+/) : undefined);
+  const entry = {
+    name: String(b.name).trim(),
+    provider: String(b.provider || '').trim().toLowerCase() || undefined,
+    description: b.description || undefined,
+    match: b.match || undefined,
+    process: b.process || undefined,
+    log: b.log || undefined,
+    heartbeat: b.heartbeat || undefined,
+    health: b.health || undefined,
+    link: b.link || undefined,
+    restart: argv(b.restart),
+    expected: b.expected === undefined || b.expected === '' ? undefined : b.expected === true || b.expected === 'true',
+    autoRestart: b.autoRestart === true || b.autoRestart === 'true' || undefined,
+    staleAfterMin: b.staleAfterMin ? Number(b.staleAfterMin) : undefined,
+    hidden: b.hidden === true || undefined,
+  };
+  for (const k of Object.keys(entry)) if (entry[k] === undefined) delete entry[k];
+  return entry;
 }
 
 function jobDetail(id) {

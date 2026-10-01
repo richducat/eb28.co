@@ -22,6 +22,7 @@ export function messageFor(event) {
     const what = { needs_you: 'needs you', done: 'is done', failed: 'failed' }[event.to] || event.to;
     return { title: `${event.title.slice(0, 60)} ${what}`, body: event.reason || event.source };
   }
+  if (event.type === 'bot:restart') return { title: `${event.auto ? 'Auto-restarted' : 'Restarted'} ${event.name}`, body: event.ok ? 'Back up.' : 'Restart failed. Check its log.' };
   if (event.type === 'proposal:new') return { title: 'Approval needed', body: `Run "${event.title}"?` };
   if (event.type === 'automation:finish' && !event.run.ok) return { title: `Automation failed: ${event.run.title}`, body: event.run.error || `exit ${event.run.code}` };
   return null;

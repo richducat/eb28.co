@@ -11,6 +11,7 @@
   <div class="brand"><span class="dot"></span> Mission Control</div>
   <nav class="tabs" id="tabs">
     <button data-tab="board" class="active">Board</button>
+    <button data-tab="bots">Bots <span class="pill" id="pill-bots" hidden></span></button>
     <button data-tab="workforce">Workforce <span class="pill" id="pill-approvals" hidden></span></button>
     <button data-tab="automations">Automations</button>
     <button data-tab="briefing">Briefing</button>
@@ -28,6 +29,13 @@
     <div class="filters" id="filters"></div>
     <div class="board" id="board"></div>
     <div class="snoozed" id="snoozed"></div>
+  </section>
+
+  <section id="tab-bots" class="tab">
+    <div class="panel-head"><p class="lead" style="margin:0">Your always-on bots and agents. Found automatically from pm2, launchd, Docker, and any running process with "grok" or "xai" in its command. Add anything else by hand.</p><button id="add-bot" class="primary">+ Add a bot</button></div>
+    <div id="bots" class="cards wide" style="margin-top:14px"></div>
+    <h2>Recent restarts</h2>
+    <ul id="bot-restarts" class="feed"></ul>
   </section>
 
   <section id="tab-workforce" class="tab">
@@ -89,6 +97,26 @@
     <label class="field">Status<select name="status"><option value="working">Working</option><option value="needs_you">Needs me</option><option value="follow_up">Follow up</option><option value="done">Done</option></select></label>
     <label class="field">Notes<textarea name="notes" rows="2"></textarea></label>
     <menu><button value="cancel" type="button" id="add-cancel">Cancel</button><button value="ok" class="primary">Track it</button></menu>
+  </form>
+</dialog>
+
+<dialog id="bot-dialog">
+  <form method="dialog" id="bot-form">
+    <h2 id="bot-dialog-title">Add a bot</h2>
+    <p class="muted">Tell Mission Control how to recognise it. Fill in what you know; one of process, log, or health URL is enough.</p>
+    <input type="hidden" name="originalName" />
+    <label class="field">Name<input name="name" required placeholder="e.g. Dot, Grok X reply bot" /></label>
+    <label class="field">Runs on<select name="provider" id="bot-provider"></select></label>
+    <label class="field">What it does<input name="description" placeholder="Replies to mentions on X every 10 min" /></label>
+    <label class="field">Process match (regex on its command line)<input name="process" placeholder="grok-reply-bot\.js" /></label>
+    <label class="field">Log file<input name="log" placeholder="~/bots/grok/out.log" /></label>
+    <label class="field">Health URL<input name="health" placeholder="http://127.0.0.1:3000/health" /></label>
+    <label class="field">Restart command<input name="restart" placeholder="pm2 restart grok-reply-bot" /></label>
+    <label class="field">Link (dashboard, chat, repo)<input name="link" placeholder="https://…" /></label>
+    <label class="field">Quiet for this many minutes means stuck<input name="staleAfterMin" type="number" min="1" placeholder="60" /></label>
+    <label class="switch"><input type="checkbox" name="expected" value="true" checked /> Should always be running</label>
+    <label class="switch"><input type="checkbox" name="autoRestart" value="true" /> Let the watchdog restart it by itself (max 3 an hour)</label>
+    <menu><button type="button" id="bot-delete" class="danger" hidden>Remove</button><button value="cancel" type="button" id="bot-cancel">Cancel</button><button value="ok" class="primary">Save</button></menu>
   </form>
 </dialog>
 

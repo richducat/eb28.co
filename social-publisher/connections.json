@@ -1,0 +1,21 @@
+{
+  "brands": {
+    "eb28": {
+      "brand": "eb28",
+      "accountEmail": "social@eb28.co",
+      "organizationId": "6a3dbc258e598baaea4fd2d4",
+      "keyEnv": "EB28_BUFFER_API_KEY",
+      "channels": {
+        "6a3de9b35ab6d2f106727271": {
+          "platform": "instagram",
+          "handle": "eb28co"
+        },
+        "6a3de6795ab6d2f106726af0": {
+          "platform": "tiktok",
+          "handle": "eb28co"
+        }
+      },
+      "executor": "github_actions:richducat/eb28.co"
+    }
+  }
+}

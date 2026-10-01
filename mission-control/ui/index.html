@@ -4,6 +4,8 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>EB28 Mission Control</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" />
 <link rel="stylesheet" href="/styles.css" />
 </head>
 <body>
@@ -11,6 +13,7 @@
   <div class="brand"><span class="dot"></span> Mission Control</div>
   <nav class="tabs" id="tabs">
     <button data-tab="board" class="active">Board</button>
+    <button data-tab="arcade">Arcade</button>
     <button data-tab="bots">Bots <span class="pill" id="pill-bots" hidden></span></button>
     <button data-tab="workforce">Workforce <span class="pill" id="pill-approvals" hidden></span></button>
     <button data-tab="automations">Automations</button>
@@ -29,6 +32,14 @@
     <div class="filters" id="filters"></div>
     <div class="board" id="board"></div>
     <div class="snoozed" id="snoozed"></div>
+  </section>
+
+  <section id="tab-arcade" class="tab">
+    <div class="arcade-bar">
+      <span class="muted">Live map. Every job, bot and agent is a sprite. Hover to see who, click a job to open it.</span>
+      <label class="arcade-dot">Who is Dot (OG Kush)? <select id="dot-target"><option value="codex-voice">Codex voice delegations</option></select></label>
+    </div>
+    <div class="arcade-frame"><canvas id="arcade" width="480" height="372"></canvas></div>
   </section>
 
   <section id="tab-bots" class="tab">
@@ -121,6 +132,7 @@
 </dialog>
 
 <div id="toasts" class="toasts"></div>
+<script src="/arcade.js"></script>
 <script src="/app.js"></script>
 </body>
 </html>

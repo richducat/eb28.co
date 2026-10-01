@@ -1,4 +1,5 @@
 import http from 'node:http';
+import { listCrew } from './sources/hermes-crew.js';
 import fs from 'node:fs';
 import path from 'node:path';
 import { execFile } from 'node:child_process';
@@ -149,6 +150,14 @@ export function createServer({ orchestrator = new Orchestrator(), nativeNotify =
       saveBots(loadBots().filter((x) => (x.id || x.name) !== q.get('name')));
       await orchestrator.refreshBoard();
       return { ok: true };
+    },
+    'GET /api/crew': async () => listCrew(),
+    // Who "Dot" (OG Kush) is: Codex voice delegations by default, or any job/bot/crew id.
+    'GET /api/dot': async () => store.get('dot', { target: 'codex-voice' }),
+    'POST /api/dot': async (b) => {
+      const dot = { target: String(b.target || 'codex-voice') };
+      store.set('dot', dot);
+      return dot;
     },
     'GET /api/health': async () => ({ ok: true, home: MC_HOME, pid: process.pid }),
   };

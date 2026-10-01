@@ -50,6 +50,8 @@ export function parseRollout(file, { now = Date.now(), mtime, names = new Map() 
   const meta = head.meta || tail.meta || {};
   const sessionId = meta.id || path.basename(file, '.jsonl').replace(/^rollout-[\dT:-]+-/, '');
   const firstUser = head.events.find((e) => e.kind === 'user' && e.text);
+  // Threads Dot (the voice assistant, "OG Kush") hands to Codex start with <realtime_delegation>.
+  const viaDot = head.events.some((e) => e.kind === 'user' && /<realtime_delegation>/.test(e.text || ''));
   const events = tail.events;
   const lastMeaningful = events.slice().reverse().find((e) => ['user', 'assistant', 'tool_use', 'tool_result'].includes(e.kind));
   const lastAssistant = events.slice().reverse().find((e) => e.kind === 'assistant' && e.text);
@@ -97,7 +99,8 @@ export function parseRollout(file, { now = Date.now(), mtime, names = new Map() 
     lastMessage: lastAssistant ? lastAssistant.text : firstUser ? firstUser.text : '',
     resumeCommand: `codex resume ${sessionId}`,
     alive,
-    meta: { sessionId, file, model: meta.model, cliVersion: meta.cli_version, originator: meta.originator },
+    meta: { sessionId, file, model: meta.model, cliVersion: meta.cli_version, originator: meta.originator, ...(viaDot ? { agent: 'Dot', alias: 'OG Kush' } : {}) },
+    tags: viaDot ? ['dot'] : [],
   });
 }
 

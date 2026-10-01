@@ -124,3 +124,14 @@ Runs are logged with output; the latest run of each automation also appears on t
 ## Packaging
 
 `npm run dist` builds a DMG/zip (macOS), NSIS installer (Windows), or AppImage (Linux) with electron-builder.
+
+## Arcade
+
+A live 16-bit style map of everything at once. Each status is a room (Needs You, Workshop,
+Follow-up, Done, Infirmary), bots live in the Bot Garage, the Mission Control workforce sits in
+HQ, and every Hermes profile (`~/.hermes/profiles/*`) has a desk on the Hermes Crew floor.
+When a job changes status its sprite walks to the new room; agents walk out to the room they
+are working on. Hover for details, click a job to open it.
+
+**Dot (OG Kush)** wears the leaf hat. By default Dot is any Codex thread handed over by voice
+(`<realtime_delegation>`). Pick a different bot or Hermes profile with "Who is Dot?" on the tab.

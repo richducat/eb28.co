@@ -23,6 +23,7 @@ export const PROVIDERS = [
   { id: 'grok', label: 'Grok', color: '#000000', markers: [/api\.x\.ai/i, /XAI_API_KEY/, /\bgrok-[\w.-]+/i, /\bxai\b/i, /\bgrok\b/i] },
   { id: 'claude', label: 'Claude', color: '#d97757', markers: [/api\.anthropic\.com/i, /ANTHROPIC_API_KEY/, /@anthropic-ai\//, /\bclaude-[\w.-]+/i] },
   { id: 'openai', label: 'OpenAI', color: '#10a37f', markers: [/api\.openai\.com/i, /OPENAI_API_KEY/, /\bgpt-[\w.-]+/i] },
+  { id: 'hermes', label: 'Hermes', color: '#c9a227', markers: [/\bhermes[-_ ]?(agent|gateway|cli)\b/i, /\.hermes\//] },
   { id: 'gemini', label: 'Gemini', color: '#4285f4', markers: [/generativelanguage\.googleapis/i, /GEMINI_API_KEY|GOOGLE_API_KEY/, /@google\/genai/] },
 ];
 

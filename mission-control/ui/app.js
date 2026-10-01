@@ -304,7 +304,7 @@ function connectEvents() {
   const es = new EventSource('/api/events');
   es.onmessage = (ev) => {
     const e = JSON.parse(ev.data);
-    if (e.type === 'board:refresh') loadBoard();
+    if (e.type === 'board:refresh') loadBoard().then(() => { if (state.tab === 'arcade') loadArcade(); });
     if (e.type === 'job:transition') toast(`${e.title.slice(0, 70)} → ${STATUS_LABEL[e.to] || e.to}`, e.to === 'failed' ? 'bad' : e.to === 'needs_you' ? 'you' : 'ok');
     if (e.type === 'proposal:new') { toast(`Approval needed: ${e.title}`, 'you'); loadWorkforce(); }
     if (e.type === 'automation:finish') { toast(`${e.run.title}: ${e.run.ok ? 'finished' : 'failed'}`, e.run.ok ? 'ok' : 'bad'); if (state.tab === 'automations') loadAutomations(); }
@@ -325,7 +325,45 @@ function showTab(id) {
   if (id === 'bots') loadBots();
   if (id === 'automations') loadAutomations();
   if (id === 'briefing') loadBriefing();
+  if (id === 'arcade') loadArcade().then(() => window.Arcade.start());
+  else if (window.Arcade) window.Arcade.stop();
 }
+
+/* ---------- arcade ---------- */
+const arcade = { crew: [], dot: { target: 'codex-voice' }, mounted: false };
+async function loadArcade() {
+  if (!arcade.mounted) {
+    window.Arcade.mount($('#arcade'), { onOpen: (id) => openJob(id) });
+    arcade.mounted = true;
+  }
+  const [board, workforce, crew, dot] = await Promise.all([
+    state.board ? state.board : api('GET', '/api/board'),
+    api('GET', '/api/workforce'),
+    api('GET', '/api/crew').catch(() => []),
+    api('GET', '/api/dot').catch(() => ({ target: 'codex-voice' })),
+  ]);
+  state.board = board;
+  state.workforce = workforce;
+  Object.assign(arcade, { crew, dot });
+  renderDotPicker();
+  window.Arcade.update(board, workforce, crew, dot);
+}
+
+function renderDotPicker() {
+  const jobs = state.board ? state.board.columns.flatMap((c) => c.jobs) : [];
+  const opts = [['codex-voice', 'Codex voice delegations']]
+    .concat(jobs.filter((j) => j.source === 'bot').map((j) => [j.id, `Bot: ${j.title}`]))
+    .concat(arcade.crew.map((m) => [m.id, `Hermes: ${m.title} (${m.name})`]));
+  if (!opts.some(([v]) => v === arcade.dot.target)) opts.push([arcade.dot.target, arcade.dot.target]);
+  $('#dot-target').innerHTML = opts.map(([v, l]) => `<option value="${esc(v)}" ${v === arcade.dot.target ? 'selected' : ''}>${esc(l)}</option>`).join('');
+}
+
+document.addEventListener('change', async (ev) => {
+  if (ev.target.id !== 'dot-target') return;
+  arcade.dot = await api('POST', '/api/dot', { target: ev.target.value });
+  toast(`OG Kush is now ${ev.target.selectedOptions[0].textContent}`, 'ok');
+  loadArcade();
+});
 
 document.addEventListener('click', async (ev) => {
   const t = ev.target.closest('button, .card, .tile[data-open]');
@@ -432,3 +470,4 @@ loadBots().catch(() => {});
 if (params.get('tab')) showTab(params.get('tab'));
 connectEvents();
 setInterval(() => { if (state.tab === 'board') loadBoard().catch(() => {}); }, 30000);
+setInterval(() => { if (state.tab === 'arcade') loadArcade().catch(() => {}); }, 15000);

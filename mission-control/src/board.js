@@ -3,6 +3,7 @@ import { store } from './store.js';
 import { STATUSES, SOURCES } from './jobs/model.js';
 import { T } from './config.js';
 import { askOf, businessOf, loadBusinesses, OTHER } from './businesses.js';
+import { appOf, loadApps } from './apps.js';
 
 export const COLUMNS = [
   { id: 'needs_you', title: 'Needs you', hint: 'Answer, approve, or decide' },
@@ -60,8 +61,9 @@ export async function buildBoard({ now = Date.now(), only } = {}) {
   let jobs = applyOverrides(raw, overrides, now);
   jobs = jobs.filter((j) => !(j.status === 'done' && j.lastActivity && now - Date.parse(j.lastActivity) > T.staleAfter));
   const businesses = loadBusinesses();
+  const apps = loadApps();
   jobs = jobs.map((j) => {
-    const job = { ...j, business: businessOf(j, businesses) };
+    const job = { ...j, business: businessOf(j, businesses), app: j.source === 'bot' ? '' : appOf(j, apps) };
     return { ...job, ask: askOf(job) };
   });
   const visible = jobs.filter((j) => !j.snoozedUntil);
@@ -73,6 +75,7 @@ export async function buildBoard({ now = Date.now(), only } = {}) {
     snoozed: snoozed.sort(sortJobs),
     summary: summarize(visible),
     businesses: [...businesses, OTHER].map(({ id, name, full, color }) => ({ id, name, full, color })),
+    apps: apps.map(({ id, name, color }) => ({ id, name, color })),
     sources: Object.entries(SOURCES).map(([id, s]) => ({ id, ...s })),
     errors,
     timings,

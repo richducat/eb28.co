@@ -13,9 +13,9 @@
  */
 (() => {
   const T = 16; // tile size
-  const COLS = 160;
-  const ROWS = 92;
-  const W = COLS * T; // 2560
+  const COLS = 172;
+  const ROWS = 128;
+  const W = COLS * T; // 2752
   const H = ROWS * T; // 1472
   const GAP = 18; // spacing between characters in a crowd
 
@@ -39,7 +39,8 @@
   const ISLANDS = [
     { id: 'main', name: 'MISSION CONTROL', c: [80, 46], r: [25, 17], theme: 'main' },
     { id: 'backrooms', name: 'THE BACKROOMS', c: [26, 46], r: [22, 30], theme: 'backrooms', color: '#c8b45a' },
-    { id: 'funpark', name: 'FUN PARK', c: [134, 46], r: [22, 30], theme: 'funpark', color: '#ff5a7a' },
+    { id: 'funpark', name: 'FUN PARK', c: [140, 48], r: [28, 36], theme: 'funpark', color: '#ff5a7a' },
+    { id: 'cyber', name: 'MECH ISLAND', c: [80, 104], r: [30, 19], theme: 'cyber', color: '#ff2a3a' },
   ];
   // Companies are departments in the Backrooms and rides in the Fun Park.
   const ZONES = [
@@ -51,16 +52,20 @@
   ];
   const ZONE_OF = {};
   for (const z of ZONES) for (const b of z.biz) ZONE_OF[b] = z.id;
-  const RIDE_NAME = { coaster: 'COASTER', ferris: 'FERRIS WHEEL', carousel: 'CAROUSEL', tagdome: 'LASER TAG', slides: 'SLIDES' };
+  const RIDE_NAME = { coaster: 'COASTER', ferris: 'FERRIS WHEEL', carousel: 'CAROUSEL', tagdome: 'LASER TAG', slides: 'SLIDES', drop: 'DROP TOWER', teacups: 'TEACUPS', bumper: 'BUMPER CARS', pirate: 'PIRATE SHIP' };
+  const RIDE_TYPES = ['coaster', 'ferris', 'carousel', 'tagdome', 'drop', 'teacups', 'bumper', 'pirate', 'slides'];
 
   /* ---------- road network (tile coords); every edge is axis-aligned ---------- */
   const NODES = {
-    HQ: [80, 48], N1: [80, 43], S1: [80, 52], NYC: [67, 43], NY: [67, 40], WK: [80, 39], BC: [93, 43], BT: [93, 40],
+    HQ: [80, 48], N1: [80, 43], S1: [80, 52], NYC: [67, 43], NY: [67, 40], WK: [80, 39], BC: [93, 43],
     FUC: [66, 52], FU: [66, 49], DC: [94, 52], DN: [94, 49], FC1: [86, 52], FC2: [86, 56], FL: [90, 56], CC: [71, 52], CR: [71, 56],
     W1: [61, 43], E1: [99, 43],
+    // Mech Island: dock, ring road, Bot Fortress (west), Mech Hangar (east); the pyramid sits in the middle
+    MB: [80, 88], MC: [80, 92], MW: [60, 92], ME: [100, 92], BT: [60, 104], HG: [100, 104],
   };
   const EDGES = [
-    ['HQ', 'N1'], ['HQ', 'S1'], ['N1', 'NYC'], ['NYC', 'NY'], ['N1', 'WK'], ['N1', 'BC'], ['BC', 'BT'], ['NYC', 'W1'], ['BC', 'E1'],
+    ['HQ', 'N1'], ['HQ', 'S1'], ['N1', 'NYC'], ['NYC', 'NY'], ['N1', 'WK'], ['N1', 'BC'], ['NYC', 'W1'], ['BC', 'E1'],
+    ['S1', 'MB'], ['MB', 'MC'], ['MC', 'MW'], ['MC', 'ME'], ['MW', 'BT'], ['ME', 'HG'],
     ['S1', 'CC'], ['CC', 'FUC'], ['FUC', 'FU'], ['CC', 'CR'], ['S1', 'FC1'], ['FC1', 'DC'], ['DC', 'DN'], ['FC1', 'FC2'], ['FC2', 'FL'],
   ];
   // Each themed island: two hallways (y=43 and y=68), a spine, five zone doors, one bridge.
@@ -78,14 +83,27 @@
     }
   }
   islandRoads('backrooms', 26, false, 'W1'); // dock faces east, toward the main island
-  islandRoads('funpark', 134, true, 'E1'); // mirrored: dock faces west
+  // Fun Park: five avenues of rides (one per app), a central spine, the dock on the west.
+  const RIDE_COLS = [126, 140, 154];
+  const RIDE_ROWS = [26, 38, 50, 62, 74];
+  NODES.fp_dock = [114, 43];
+  EDGES.push(['E1', 'fp_dock']);
+  RIDE_ROWS.forEach((door, r) => {
+    const ave = door + 5;
+    RIDE_COLS.forEach((x, c) => { NODES[`fp_${r}_${c}`] = [x, ave]; if (c) EDGES.push([`fp_${r}_${c - 1}`, `fp_${r}_${c}`]); });
+    if (r) EDGES.push([`fp_${r - 1}_1`, `fp_${r}_1`]);
+  });
+  EDGES.push(['fp_dock', 'fp_1_0']);
+  const RIDE_SLOTS = [];
+  for (const r of [1, 0, 2, 3, 4]) for (const c of [0, 1, 2]) RIDE_SLOTS.push([r, c]);
 
   /* ---------- places ---------- */
   // node = road node at the door; the building is drawn above it, the crowd below.
   const PLACES = {
     needs_you: { name: 'NEEDS YOU', blurb: 'Waiting on your answer or approval', node: 'NY', cols: 5, kind: 'castle' },
     working: { name: 'WORKSHOP', blurb: 'Agents busy right now', node: 'WK', cols: 6, kind: 'workshop' },
-    bots: { name: 'BOT FORTRESS', blurb: 'Always-on bots (Grok, Hermes...) and the Watchdog', node: 'BT', cols: 4, kind: 'fortress' },
+    bots: { name: 'BOT FORTRESS', blurb: 'Always-on bots (Grok, Hermes...)', node: 'BT', cols: 4, kind: 'fortress', island: 'cyber' },
+    hangar: { name: 'MECH HANGAR', blurb: 'Home of the mech overlords', node: 'HG', cols: 3, kind: 'hangar', island: 'cyber' },
     follow_up: { name: 'FOLLOW-UP', blurb: 'Idle, stale or needs a nudge', node: 'FU', cols: 5, kind: 'post' },
     hq: { name: 'HQ', blurb: 'Your workforce agents + Dot', node: 'HQ', cols: 5, kind: 'house' },
     done: { name: 'GOAL', blurb: 'Finished in the last day', node: 'DN', cols: 6, kind: 'goal', max: 12 },
@@ -94,12 +112,26 @@
   };
   for (const z of ZONES) {
     PLACES[`backrooms:${z.id}`] = { name: `${z.name} DEPT`, blurb: `The Backrooms: ${z.name} coders and office work`, node: `backrooms_${z.id}`, cols: 5, kind: 'dept', zone: z, island: 'backrooms', max: 12 };
-    PLACES[`funpark:${z.id}`] = { name: `${z.name} ${RIDE_NAME[z.ride]}`, blurb: `Fun Park: ${z.name} content, social and creative`, node: `funpark_${z.id}`, cols: 5, kind: 'ride', zone: z, island: 'funpark', max: 12 };
   }
-  for (const p of Object.values(PLACES)) p.door = NODES[p.node];
   const ADJ = {};
-  for (const [a, b] of EDGES) { (ADJ[a] ||= []).push(b); (ADJ[b] ||= []).push(a); }
+  /** One ride per app (plus the Content Studio), laid out on the Fun Park grid. Called once with board.apps. */
+  function setupRides(apps = []) {
+    const list = [...apps, { id: 'content', name: 'CONTENT STUDIO', color: '#ff5a7a' }].slice(0, RIDE_SLOTS.length);
+    list.forEach((app, i) => {
+      const [r, c] = RIDE_SLOTS[i];
+      const node = `ride_${app.id}`;
+      NODES[node] = [RIDE_COLS[c], RIDE_ROWS[r]];
+      EDGES.push([`fp_${r}_${c}`, node]);
+      const z = { id: app.id, name: app.name, label: app.name, color: app.color || '#ff5a7a', ride: RIDE_TYPES[i % RIDE_TYPES.length] };
+      PLACES[`ride:${app.id}`] = { name: app.name, blurb: `Fun Park ride: ${app.name} (${RIDE_NAME[z.ride].toLowerCase()})`, node, cols: 3, kind: 'ride', zone: z, island: 'funpark', max: 6 };
+    });
+    for (const p of Object.values(PLACES)) p.door = NODES[p.node];
+    for (const k of Object.keys(ADJ)) delete ADJ[k];
+    for (const [a, b] of EDGES) { (ADJ[a] ||= []).push(b); (ADJ[b] ||= []).push(a); }
+  }
 
+  // The all-seeing eye: a golden pyramid in the middle of Mech Island (tile coords of its base).
+  const PYRAMID = { x: 80, base: 113 };
   // The clock tower is a landmark, not a status: it shows when scheduled agents run next.
   const CLOCK = { door: [73, 47] };
   // Hermes chief-of-staff profiles -> the realm (business) each one oversees on the map.
@@ -160,6 +192,7 @@
       p.id = id;
     }
     for (let y = CLOCK.door[1] - 3; y <= CLOCK.door[1]; y += 1) for (let x = CLOCK.door[0] - 1; x <= CLOCK.door[0] + 1; x += 1) PLAZA[y][x] = true;
+    for (let y = PYRAMID.base - 9; y <= PYRAMID.base + 1; y += 1) for (let x = PYRAMID.x - 7; x <= PYRAMID.x + 7; x += 1) PLAZA[y][x] = true;
     for (let y = 2; y < ROWS - 2; y += 1) {
       for (let x = 1; x < COLS - 1; x += 1) {
         if (!LAND[y][x] || PATH[y][x] || PLAZA[y][x] || !LAND[y + 1][x]) continue;
@@ -173,6 +206,12 @@
           else if (!coast && y % 7 === 3 && x % 4 === 1 && r < 0.8) DECOR.push({ x, y, type: 'hwall' });
           else if (r > 0.94) DECOR.push({ x, y, type: hash(x, y, 13) < 0.5 ? 'cooler' : 'plant' });
           else if (r > 0.9) DECOR.push({ x, y, type: 'chair' });
+          continue;
+        }
+        if (theme === 'cyber') {
+          if (!coast && r < 0.07) DECOR.push({ x, y, type: 'tower', h: 2 + Math.floor(hash(x, y, 19) * 4) });
+          else if (r < 0.12) DECOR.push({ x, y, type: 'server' });
+          else if (r > 0.95) DECOR.push({ x, y, type: hash(x, y, 13) < 0.5 ? 'antenna' : 'billboard' });
           continue;
         }
         if (theme === 'funpark') {
@@ -482,6 +521,93 @@
     if (!land(x, y - 1)) px(X, Y, T, 2, '#fff8e8');
   }
 
+  function drawCyberTile(x, y) {
+    const X = x * T;
+    const Y = y * T;
+    px(X, Y, T, T, '#07090f');
+    px(X, Y, T, 1, '#0f2a24'); px(X, Y, 1, T, '#0f2a24');
+    if (hash(x, y, 61) < 0.18) { px(X + 3, Y + 7, 9, 1, '#0aff9d33'); px(X + 11, Y + 3, 1, 5, '#0aff9d33'); px(X + 11, Y + 3, 2, 2, '#0aff9d'); }
+    if (isPath(x, y)) { px(X, Y + 6, T, 4, '#0b1626'); px(X, Y + 7, T, 1, '#2affd0'); px(X + 7, Y, 1, T, isPath(x, y - 1) || isPath(x, y + 1) ? '#2affd0' : '#0b1626'); }
+    if (!land(x, y + 1)) { px(X, Y + 10, T, 6, '#1a0a14'); px(X, Y + 10, T, 1, '#ff2a6a'); for (let i = 0; i < 4; i += 1) px(X + i * 4 + 1, Y + 12, 1, 3, '#ff2a6a55'); }
+    if (!land(x, y - 1)) px(X, Y, T, 1, '#2affd0');
+    if (!land(x - 1, y)) px(X, Y, 1, T, '#ff2a6a88');
+    if (!land(x + 1, y)) px(X + 15, Y, 1, T, '#ff2a6a88');
+  }
+
+  function drawCyberDecor(d, f) {
+    const X = d.x * T;
+    const Y = d.y * T;
+    if (d.type === 'tower') {
+      const h = d.h * 14;
+      px(X + 1, Y + 14 - h, 14, h, '#10131f'); px(X + 13, Y + 14 - h, 2, h, '#07090f'); px(X + 1, Y + 14 - h, 14, 1, '#2affd0');
+      for (let r = 0; r < d.h * 3; r += 1) for (let c = 0; c < 3; c += 1) if (hash(d.x * 7 + c, r, Math.floor(f / 25)) < 0.45) px(X + 3 + c * 4, Y + 16 - h + r * 4, 2, 2, (r + c) % 3 ? '#ff2a6a' : '#2affd0');
+      if (d.h > 3) { px(X + 7, Y + 6 - h, 1, 8, '#a0a0b0'); if (Math.floor(f / 6) % 2) px(X + 6, Y + 5 - h, 3, 2, '#ff2a3a'); }
+    } else if (d.type === 'server') {
+      px(X + 2, Y + 2, 12, 12, '#151a28'); px(X + 2, Y + 2, 12, 1, '#2a3248');
+      for (let i = 0; i < 4; i += 1) { px(X + 4, Y + 4 + i * 3, 6, 1, '#0b0f19'); px(X + 11, Y + 4 + i * 3, 1, 1, (Math.floor(f / 2) + i + d.x) % 4 ? '#2aff6a' : '#0a3a1a'); }
+    } else if (d.type === 'antenna') {
+      px(X + 7, Y - 10, 2, 24, '#5a6278'); px(X + 3, Y - 6, 10, 1, '#5a6278'); px(X + 4, Y - 2, 8, 1, '#5a6278');
+      if (Math.floor(f / 5 + d.x) % 2) px(X + 6, Y - 12, 4, 3, '#ff2a3a');
+    } else if (d.type === 'billboard') {
+      px(X - 4, Y - 8, 24, 14, '#0b0f19'); px(X - 3, Y - 7, 22, 12, Math.floor(f / 8 + d.x) % 3 ? '#1a0a2a' : '#2a0a1a');
+      for (let i = 0; i < 4; i += 1) px(X - 1 + i * 5, Y - 5 + ((f + i * 3) % 8), 3, 2, i % 2 ? '#ff2a6a' : '#2affd0');
+      px(X + 6, Y + 6, 2, 8, '#3a4258');
+    }
+  }
+
+  function drawHangar(cx, by, f, count) {
+    px(cx - 36, by - 46, 72, 46, '#141824'); px(cx - 36, by - 46, 72, 2, '#2affd0');
+    for (let i = 0; i < 9; i += 1) px(cx - 34 + i * 8, by - 44, 1, 44, '#1e2434');
+    px(cx - 26, by - 34, 52, 34, '#07090f');
+    for (let i = 0; i < 6; i += 1) px(cx - 26, by - 34 + i * 6, 52, 2, '#1a2030');
+    px(cx - 26, by - 34, 52, 2, Math.floor(f / 4) % 2 ? '#ffb000' : '#5a3a00');
+    for (let i = 0; i < 6; i += 1) px(cx - 34 + i * 12, by - 4, 6, 4, i % 2 ? '#ffb000' : '#14100a');
+    text('MECH HANGAR', cx, by - 56, '#2affd0', 5, 'center');
+  }
+
+  /** The golden pyramid with the all-seeing red eye; the pupil looks at (lx, ly). */
+  const eyePos = { x: 0, y: 0 };
+  function drawPyramid(f, t, lx, ly) {
+    const cx = PYRAMID.x * T + 8;
+    const by = PYRAMID.base * T;
+    const H = 132;
+    const steps = 11;
+    // glow under the pyramid
+    g.fillStyle = 'rgba(255,40,40,.12)';
+    g.beginPath(); g.ellipse(cx, by - 4, 120, 18, 0, 0, Math.PI * 2); g.fill();
+    for (let i = 0; i < steps; i += 1) {
+      const w = 220 - i * 18;
+      const y = by - (i + 1) * (H / steps);
+      px(cx - w / 2, y, w, H / steps + 1, i % 2 ? '#c8961e' : '#dcaa2a');
+      px(cx - w / 2, y, w, 2, '#f8d860');
+      px(cx + w / 2 - 6, y, 6, H / steps + 1, '#9a7010');
+      for (let k = 0; k < w; k += 14) px(cx - w / 2 + k, y + 4, 1, H / steps - 4, '#b8861a');
+    }
+    // the floating capstone with the eye
+    const fy = Math.round(Math.sin(t * 1.3) * 3);
+    const ey = by - H - 30 + fy;
+    for (let i = 0; i < 12; i += 1) px(cx - 22 + i * 2, ey + 22 - i * 2, 44 - i * 4, 2, '#f8d860');
+    for (let i = 0; i < 8; i += 1) {
+      const a = (i / 8) * Math.PI * 2 + t * 0.4;
+      g.strokeStyle = `rgba(255,60,40,${0.25 + 0.15 * Math.sin(t * 3 + i)})`; g.lineWidth = 2;
+      g.beginPath(); g.moveTo(cx + Math.cos(a) * 26, ey + 10 + Math.sin(a) * 26); g.lineTo(cx + Math.cos(a) * 44, ey + 10 + Math.sin(a) * 44); g.stroke();
+    }
+    g.fillStyle = '#ffffff'; g.beginPath(); g.ellipse(cx, ey + 10, 18, 9, 0, 0, Math.PI * 2); g.fill();
+    g.fillStyle = '#e8102a'; g.beginPath(); g.arc(cx, ey + 10, 8, 0, Math.PI * 2); g.fill();
+    g.fillStyle = '#ff6a3a'; g.beginPath(); g.arc(cx, ey + 10, 5, 0, Math.PI * 2); g.fill();
+    const dx = lx - cx;
+    const dy = ly - (ey + 10);
+    const dist = Math.hypot(dx, dy) || 1;
+    const pxx = cx + (dx / dist) * 4;
+    const pyy = ey + 10 + (dy / dist) * 2.5;
+    px(pxx - 1, pyy - 4, 2, 8, '#000000');
+    px(cx - 12, ey + 5, 4, 2, 'rgba(255,255,255,.7)');
+    if (Math.floor(t * 0.5) % 9 === 0 && (t * 10) % 5 < 2) px(cx - 18, ey + 6, 36, 8, '#dcaa2a'); // blink
+    eyePos.x = cx;
+    eyePos.y = ey + 10;
+    text('THE EYE', cx, by + 6, '#ff3a3a', 6, 'center');
+  }
+
   /* ---------- Backrooms decor ---------- */
   function drawBackroomsDecor(d, f) {
     const X = d.x * T;
@@ -587,6 +713,42 @@
         g.beginPath(); g.moveTo(cx - 20 + i * 20, by - 6); g.lineTo(cx + Math.cos(a) * 30, by - 4 + Math.sin(a) * 30); g.stroke();
       }
       px(cx - 8, by - 14, 16, 10, '#0a0614'); text('LASER', cx, by - 30, '#2affd0', 5, 'center', '#2a1a4a');
+    } else if (z.ride === 'drop') {
+      const h = 62;
+      px(cx - 4, by - h, 8, h, P.stone[2]); px(cx - 2, by - h, 2, h, P.stone[3]); px(cx - 8, by - h - 6, 16, 6, z.color);
+      const ph = (t * 0.25 * speed) % 1;
+      const ry = ph < 0.7 ? by - 12 - (ph / 0.7) * (h - 20) : by - h + 8 + ((ph - 0.7) / 0.3) * (h - 20);
+      px(cx - 12, ry, 24, 6, '#ffe45c'); for (let i = 0; i < 4; i += 1) px(cx - 10 + i * 6, ry - 3, 3, 3, i % 2 ? P.skin[2] : P.skin[1]);
+      px(cx - 14, by - 2, 28, 2, P.stone[1]);
+    } else if (z.ride === 'teacups') {
+      g.fillStyle = '#ffe0f0'; g.beginPath(); g.ellipse(cx, by - 8, 34, 9, 0, 0, Math.PI * 2); g.fill();
+      for (let i = 0; i < 4; i += 1) {
+        const a = t * 0.8 * speed + (i * Math.PI) / 2;
+        const ux = cx + Math.cos(a) * 22;
+        const uy = by - 10 + Math.sin(a) * 5;
+        px(ux - 6, uy - 8, 12, 8, RAINBOW[i]); px(ux - 6, uy - 8, 12, 2, '#ffffff'); px(ux + 6, uy - 6, 3, 3, RAINBOW[i]);
+        px(ux - 3, uy - 11, 3, 3, P.skin[2]);
+      }
+      px(cx - 1, by - 40, 2, 30, P.stone[2]); px(cx - 18, by - 44, 36, 6, z.color);
+    } else if (z.ride === 'bumper') {
+      px(cx - 34, by - 22, 68, 22, '#3a3a4a'); px(cx - 34, by - 22, 68, 2, '#6a6a7a');
+      for (let i = 0; i < 18; i += 1) px(cx - 34 + i * 4, by - 30, 2, 8, '#a0a0b0');
+      px(cx - 36, by - 32, 72, 3, z.color);
+      for (let i = 0; i < 4; i += 1) {
+        const bx = cx - 26 + ((i * 17 + Math.floor(t * 12 * speed) * (i % 2 ? 1 : -1)) % 50 + 50) % 50;
+        const byy = by - 18 + (i % 2) * 8;
+        px(bx, byy, 10, 7, RAINBOW[i + 1]); px(bx + 3, byy - 3, 3, 3, P.skin[2]); px(bx + 4, byy - 10, 1, 7, '#a0a0b0');
+        if (Math.floor(t * 5 + i) % 7 === 0) px(bx + 9, byy - 2, 3, 3, '#ffffff');
+      }
+    } else if (z.ride === 'pirate') {
+      px(cx - 20, by - 50, 3, 50, P.wood[1]); px(cx + 17, by - 50, 3, 50, P.wood[1]); px(cx - 22, by - 52, 44, 4, P.wood[0]);
+      const sw = Math.sin(t * 1.4 * speed) * 0.7;
+      g.save(); g.translate(cx, by - 50); g.rotate(sw);
+      px(-1, 0, 2, 26, P.wood[0]);
+      px(-26, 26, 52, 10, P.wood[2]); px(-30, 22, 8, 8, P.wood[2]); px(22, 22, 8, 8, P.wood[2]); px(-26, 26, 52, 2, P.wood[3]);
+      for (let i = 0; i < 6; i += 1) px(-22 + i * 8, 22, 3, 4, i % 2 ? P.skin[2] : P.skin[1]);
+      px(-4, 4, 1, 18, P.ink); px(-3, 4, 12, 9, '#1a1a1a'); px(1, 6, 4, 4, '#f4f4f4');
+      g.restore();
     } else {
       // slide tower + ball pit
       px(cx - 26, by - 44, 12, 44, '#4ab8ff'); px(cx - 28, by - 48, 16, 5, '#ff5a7a');
@@ -596,7 +758,7 @@
     }
     // ride sign in the company color
     g.font = '5px "Press Start 2P", monospace';
-    const label = `${z.name} ${RIDE_NAME[z.ride]}`;
+    const label = z.label || `${z.name} ${RIDE_NAME[z.ride]}`;
     const w = Math.ceil(g.measureText(label).width) + 8;
     px(cx - w / 2 - 1, by - 74, w + 2, 10, P.ink); px(cx - w / 2, by - 73, w, 8, z.color);
     text(label, cx, by - 72, P.white, 5, 'center', Sprites.shade(z.color, 0.5));
@@ -893,6 +1055,8 @@
       return { kind: 'bot', robot: true, suit: failed ? P.ghost[2] : m.providerColor || '#606878', label: 'Bot', scene: 'gears', bg: '#20283a', ...leaf };
     }
     if (a.kind === 'mech') return { kind: 'mech', robot: true, label: 'Watchdog', scene: 'gears', bg: '#2a1a1a' };
+    if (a.kind === 'warden') return { kind: 'mech', robot: true, label: 'Warden', scene: 'gears', bg: a.island === 'cyber' ? '#07090f' : a.island === 'funpark' ? '#3a1028' : '#3a3010' };
+    if (a.kind === 'npc') return a.spec;
     if (a.kind === 'overlord') return a.spec;
     if (a.kind === 'agent') {
       const [kind, extra] = AGENT_LOOK[a.id.replace(/^agent:/, '')] || ['operator', {}];
@@ -976,9 +1140,95 @@
   function placeOf(j) {
     if (j.source === 'bot') return 'bots';
     if (j.status === 'needs_you' || j.status === 'done' || j.status === 'failed') return j.status;
-    const zone = ZONE_OF[j.business] || 'other';
-    return districtOf(j) === 'funpark' ? `funpark:${zone}` : `backrooms:${zone}`;
+    // anyone working on an app rides that app's ride; other creative work goes to the Content Studio
+    if (j.app && PLACES[`ride:${j.app}`]) return `ride:${j.app}`;
+    if (districtOf(j) === 'funpark' && PLACES['ride:content']) return 'ride:content';
+    return `backrooms:${ZONE_OF[j.business] || 'other'}`;
   }
+
+  /* ---------- island life: crowds that wander, and an overlord mech per island ---------- */
+  let built = false;
+  const islandNodes = (isl) => Object.keys(NODES).filter((n) => {
+    const [x, y] = NODES[n];
+    return ISLE[y] && ISLE[y][x] === isl && (ADJ[n] || []).length;
+  });
+  const NPC_LOOKS = {
+    funpark: () => { const k = ['creative', 'clerk', 'builder', 'analyst']; return (i) => Sprites.specFor(k[i % 4], `tourist${i}`, { shirt: ['#ff5a7a', '#4ab8ff', '#ffe45c', '#5ad07a', '#a070ff', '#ffb43c'][i % 6], suit: undefined, tie: undefined, prop: i % 3 ? undefined : 'mug' }); },
+    backrooms: () => (i) => ({ skin: '#e8dca0', hair: '#d8cc90', hairStyle: 'bald', suit: '#c8b878', shirt: '#e8dca0', tie: '#a89848', label: 'Drone' }),
+    cyber: () => (i) => ({ skin: '#2a2e3a', hair: '#151a28', hairStyle: 'long', shirt: '#151a28', tie: i % 2 ? '#2affd0' : '#ff2a6a', glasses: true, label: 'Netrunner' }),
+  };
+  function spawnLife() {
+    const plan = { funpark: 22, backrooms: 10, cyber: 9 };
+    for (const [isl, n] of Object.entries(plan)) {
+      const nodes = islandNodes(isl);
+      const look = NPC_LOOKS[isl]();
+      for (let i = 0; i < n && nodes.length; i += 1) {
+        const node = nodes[Math.floor(hash(i, n, 71) * nodes.length)];
+        const p = nodeXY(node);
+        actors.set(`npc:${isl}:${i}`, { id: `npc:${isl}:${i}`, kind: 'npc', island: isl, node, x: p.x + ((i * 7) % 20) - 10, y: p.y + ((i * 5) % 12), path: [], phase: Math.random() * 6, until: Math.random() * 4, spec: look(i) });
+      }
+    }
+    const skins = { backrooms: 'The Backrooms Warden', funpark: 'The Fun Park Warden', cyber: 'The Mech Island Warden' };
+    for (const [isl, title] of Object.entries(skins)) {
+      const h = nodeXY('HG');
+      actors.set(`warden:${isl}`, { id: `warden:${isl}`, kind: 'warden', island: isl, skin: isl, title, node: 'HG', x: h.x - 30 + Object.keys(skins).indexOf(isl) * 30, y: h.y + 20, path: [], phase: 0, pauseUntil: 2 + Math.random() * 3, cursor: 0, log: [], pose: 'idle' });
+    }
+  }
+
+  function npcStep(a, now) {
+    if (a.path.length || now < a.until) return;
+    const nodes = islandNodes(a.island);
+    if (!nodes.length) return;
+    const n = nodes[Math.floor(Math.random() * nodes.length)];
+    const p = nodeXY(n);
+    walkTo(a, n, { x: p.x + Math.round(Math.random() * 40 - 20), y: p.y + Math.round(Math.random() * 16) });
+    a.until = now + 2 + Math.random() * 6;
+  }
+
+  function wardenStep(a, now) {
+    if (a.path.length) { a.pose = 'walk'; a.scanning = false; return; }
+    if (now < a.pauseUntil) return;
+    if (a.target && !a.arrived) {
+      a.arrived = true;
+      a.scanning = true;
+      a.pose = 'idle';
+      a.pauseUntil = now + 2.6;
+      const place = Object.values(PLACES).find((p) => p.node === a.target);
+      const here = [...actors.values()].filter((x) => (x.kind === 'job' || x.kind === 'bot') && x.node === a.target);
+      for (const x of here) if (x.status === 'follow_up') x.scolded = now + 2;
+      a.log.unshift({ at: Date.now(), what: place ? place.name : a.target, n: here.length });
+      a.log.length = Math.min(a.log.length, 8);
+      return;
+    }
+    a.scanning = false;
+    const nodes = a.island === 'cyber' ? ['MW', 'BT', 'MC', 'ME', 'HG'] : Object.values(PLACES).filter((p) => p.island === a.island).map((p) => p.node);
+    if (!nodes.length) return;
+    const n = nodes[(a.cursor += 1) % nodes.length];
+    const p = nodeXY(n);
+    walkTo(a, n, { x: p.x + 28, y: p.y - 18 });
+    a.target = n;
+    a.arrived = false;
+  }
+
+  /* ---------- the Eye: always looking at whatever matters most ---------- */
+  const beams = [];
+  let nextBeam = 0;
+  function eyeTarget() {
+    if (hover && hover.kind !== 'npc') return hover;
+    const urgent = [...actors.values()].filter((x) => x.status === 'needs_you' && !x.carriedBy);
+    if (urgent.length) return urgent[Math.floor(performance.now() / 4000) % urgent.length];
+    return actors.get('agent:bot-watchdog') || null;
+  }
+  function eyeStep(now) {
+    if (now < nextBeam) return;
+    nextBeam = now + 2.8 + Math.random() * 2;
+    const pool = [...actors.values()].filter((x) => (x.kind === 'job' || x.kind === 'bot' || x.kind === 'overlord' || x.kind === 'warden') && !x.carriedBy);
+    if (!pool.length) return;
+    const urgent = pool.filter((x) => x.status === 'needs_you' || x.status === 'failed');
+    const t = urgent.length && Math.random() < 0.6 ? urgent[Math.floor(Math.random() * urgent.length)] : pool[Math.floor(Math.random() * pool.length)];
+    beams.push({ id: t.id, life: 1.6 });
+  }
+
   const isDot = (j) => (dotTarget === 'codex-voice' ? Boolean(j.meta && j.meta.agent === 'Dot') : j.id === dotTarget);
 
   /* ---------- the Watchdog mech ---------- */
@@ -1054,6 +1304,14 @@
   /* ---------- data in ---------- */
   function update(board, workforce, crew = [], dotCfg, sched = []) {
     if (!board) return;
+    if (!built) {
+      setupRides(board.apps || []);
+      buildMap();
+      buildLayers();
+      frameIsland('main', true);
+      spawnLife();
+      built = true;
+    }
     schedule = sched.filter((x) => x.nextRunAt).sort((a, b) => Date.parse(a.nextRunAt) - Date.parse(b.nextRunAt));
     if (dotCfg && dotCfg.target) dotTarget = dotCfg.target;
     const firstLoad = !loaded;
@@ -1181,11 +1439,17 @@
       }
       dot.title = dj ? `Dot · OG Kush · on "${dj.title}"` : 'Dot · OG Kush · chilling at HQ';
     }
-    for (const id of [...actors.keys()]) if (!seen.has(id)) actors.delete(id);
+    for (const id of [...actors.keys()]) if (!seen.has(id) && !id.startsWith('npc:') && !id.startsWith('warden:')) actors.delete(id);
   }
   /* ---------- drawing actors ---------- */
   function drawActor(a, t) {
-    if (a.kind === 'mech') return drawMech(a, t);
+    if (a.kind === 'mech' || a.kind === 'warden') return drawMech(a, t);
+    if (a.kind === 'npc') {
+      const step = a.path.length > 0 && Math.floor(t * 8 + a.phase) % 2;
+      g.fillStyle = 'rgba(0,0,0,.25)'; g.fillRect(Math.round(a.x) + 3, Math.round(a.y) + 14, 10, 2);
+      g.drawImage(Sprites.person(a.spec, step ? 1 : 0), Math.round(a.x), Math.round(a.y) - 12);
+      return;
+    }
     const moving = a.path.length > 0 || Boolean(a.carriedBy);
     const stepping = a.path.length > 0 && Math.floor(t * 8 + a.phase) % 2;
     let bob = 0;
@@ -1240,7 +1504,13 @@
     const y = Math.round(m.y);
     g.fillStyle = 'rgba(0,0,0,.35)';
     g.beginPath(); g.ellipse(x + 24, y + 50, 20, 5, 0, 0, Math.PI * 2); g.fill();
-    g.drawImage(Sprites.mech(m.pose || 'idle', frame), x, y - 6);
+    g.drawImage(Sprites.mech(m.pose || 'idle', frame, m.skin || 'watchdog'), x, y - 6);
+    if (m.scanning) {
+      // visor scan cone sweeping the ground in front of it
+      const sweep = Math.sin(t * 3) * 0.6;
+      g.fillStyle = m.skin === 'funpark' ? 'rgba(74,255,208,.16)' : m.skin === 'backrooms' ? 'rgba(255,246,160,.16)' : 'rgba(255,42,58,.16)';
+      g.beginPath(); g.moveTo(x + 24, y + 8); g.lineTo(x + 24 + Math.cos(1.2 + sweep) * 70 - 30, y + 60); g.lineTo(x + 24 + Math.cos(1.2 + sweep) * 70 + 30, y + 60); g.closePath(); g.fill();
+    }
     // whatever it is hauling rides above its raised claws
     for (const a of actors.values()) {
       if (a.carriedBy !== m.id) continue;
@@ -1254,7 +1524,7 @@
     }
     if (m.pose === 'stomp' && Math.random() < 0.3) burst(x + 24, y + 48, '#c8b078', 3);
     if (hover === m) { g.strokeStyle = 'rgba(248,216,56,.8)'; g.lineWidth = 1; g.strokeRect(x - 1.5, y - 7.5, 51, 61); }
-    text('WATCHDOG', x + 24, y + 56, '#ff9f43', 5, 'center');
+    text(m.kind === 'warden' ? `${m.island === 'cyber' ? 'MECH ISLE' : m.island === 'funpark' ? 'FUN PARK' : 'BACKROOMS'} WARDEN` : 'WATCHDOG', x + 24, y + 56, m.kind === 'warden' ? '#2affd0' : '#ff9f43', 5, 'center');
   }
 
   /* ---------- static land layer + animated sea ---------- */
@@ -1269,6 +1539,7 @@
         if (land(x, y)) {
           const theme = ISLE[y][x];
           if (theme === 'backrooms') { drawBackroomsTile(x, y); continue; }
+          if (theme === 'cyber') { drawCyberTile(x, y); continue; }
           if (theme === 'funpark') { if (FLOOR[y][x] && !isPath(x, y)) drawFloor(x, y, FLOOR[y][x]); else drawParkTile(x, y); continue; }
           drawGrass(x, y);
           if (FLOOR[y][x]) drawFloor(x, y, FLOOR[y][x]);
@@ -1289,6 +1560,68 @@
       return c;
     });
     g = prev;
+  }
+
+  /** Green code rain over Mech Island (only where it is on screen). */
+  function matrixRain(t, vis) {
+    const isl = ISLANDS.find((i) => i.id === 'cyber');
+    const x0 = (isl.c[0] - isl.r[0]) * T;
+    const y0 = (isl.c[1] - isl.r[1]) * T;
+    if (!vis(isl.c[0] * T, isl.c[1] * T, isl.r[0] * T + 200)) return;
+    for (let k = 0; k < 70; k += 1) {
+      const x = x0 + ((k * 137) % (isl.r[0] * 2 * T));
+      const fall = (t * (40 + (k % 7) * 12) + k * 53) % (isl.r[1] * 2 * T);
+      for (let j = 0; j < 6; j += 1) {
+        const y = y0 + fall - j * 7;
+        const tx = Math.floor(x / T);
+        const ty = Math.floor(y / T);
+        if (!ISLE[ty] || ISLE[ty][tx] !== 'cyber') continue;
+        g.fillStyle = j === 0 ? 'rgba(200,255,220,.9)' : `rgba(10,255,120,${0.55 - j * 0.08})`;
+        g.fillRect(Math.round(x), Math.round(y), 2, 4);
+      }
+    }
+  }
+
+  function eyeBeams(dt) {
+    for (let i = beams.length - 1; i >= 0; i -= 1) {
+      const b = beams[i];
+      b.life -= dt;
+      const a = actors.get(b.id);
+      if (!a || b.life <= 0) { beams.splice(i, 1); continue; }
+      const alpha = Math.min(1, b.life);
+      g.strokeStyle = `rgba(255,30,40,${0.25 * alpha})`; g.lineWidth = 6;
+      g.beginPath(); g.moveTo(eyePos.x, eyePos.y); g.lineTo(a.x + 8, a.y + 2); g.stroke();
+      g.strokeStyle = `rgba(255,90,80,${0.9 * alpha})`; g.lineWidth = 1.5; g.stroke();
+      g.strokeStyle = `rgba(255,40,40,${alpha})`; g.lineWidth = 1;
+      g.beginPath(); g.arc(a.x + 8, a.y + 2, 9 + (1 - alpha) * 6, 0, Math.PI * 2); g.stroke();
+    }
+  }
+
+  function boats(t) {
+    const lanes = [[3, 1], [124, -1], [50, 1], [110, -1]];
+    lanes.forEach(([row, dir], i) => {
+      const span = W + 200;
+      const x = dir > 0 ? ((t * 14 + i * 600) % span) - 100 : W + 100 - ((t * 12 + i * 400) % span);
+      const y = row * T + Math.sin(t * 2 + i) * 2;
+      const tx = Math.floor(x / T);
+      if (ISLE[row] && ISLE[row][tx]) return;
+      px(x - 12, y + 6, 24, 5, P.wood[1]); px(x - 10, y + 10, 20, 2, P.wood[0]);
+      px(x - 1, y - 16, 2, 22, P.wood[0]);
+      px(x + (dir > 0 ? 1 : -11), y - 15, 10, 14, ['#ffffff', '#ffe45c', '#ff5a7a', '#4ab8ff'][i]);
+      px(x - 14, y + 11, 28, 1, 'rgba(255,255,255,.5)');
+    });
+  }
+
+  function gulls(t) {
+    for (let i = 0; i < 6; i += 1) {
+      const x = ((t * (30 + i * 4) + i * 470) % (W + 200)) - 100;
+      const y = 120 + i * 230 + Math.sin(t + i) * 30;
+      const flap = Math.floor(t * 6 + i) % 2;
+      g.fillStyle = '#f8f8f8';
+      g.fillRect(Math.round(x - 4), Math.round(y - flap), 4, 1);
+      g.fillRect(Math.round(x + 1), Math.round(y - flap), 4, 1);
+      g.fillRect(Math.round(x), Math.round(y), 1, 1);
+    }
   }
 
   function fish(t) {
@@ -1452,6 +1785,8 @@
     for (const a of actors.values()) {
       if (a.kind === 'overlord') patrol(a, now);
       if (a.kind === 'mech') mechStep(a, now);
+      else if (a.kind === 'warden') wardenStep(a, now);
+      else if (a.kind === 'npc') npcStep(a, now);
       if (a.carriedBy || !a.path.length) continue;
       const p = a.path[0];
       const dx = p.x - a.x;
@@ -1461,7 +1796,7 @@
         a.x = p.x; a.y = p.y; a.path.shift();
         if (!a.path.length && a.status === 'done') burst(a.x + 8, a.y, P.gold[2], 14);
       } else {
-        const speed = a.kind === 'overlord' ? 80 : a.kind === 'mech' ? 56 : 64;
+        const speed = a.kind === 'overlord' ? 80 : a.kind === 'mech' || a.kind === 'warden' ? 56 : a.kind === 'npc' ? 34 : 64;
         const m = Math.min(d, speed * dt);
         a.x += (dx / d) * m;
         a.y += (dy / d) * m;
@@ -1473,6 +1808,7 @@
       if (p.life <= 0) particles.splice(i, 1);
     }
     shake = Math.max(0, shake - dt);
+    eyeStep(now);
     // ease the camera toward its target
     const k = Math.min(1, dt * 10);
     cam.x += (cam.tx - cam.x) * k;
@@ -1484,6 +1820,7 @@
   let lastDraw = 0;
   function render(ts) {
     if (!running) return;
+    if (!landLayer) { requestAnimationFrame(render); return; }
     if (ts - lastDraw < (document.hidden ? 2000 : FRAME_MS - 1)) { requestAnimationFrame(render); return; }
     lastDraw = ts;
     const t = ts / 1000;
@@ -1509,37 +1846,45 @@
     for (const d of DECOR) {
       if (!vis(d.x * T, d.y * T)) continue;
       const th = ISLE[d.y][d.x];
-      layers.push({ y: d.y * T + 15, draw: th === 'backrooms' ? () => drawBackroomsDecor(d, f) : th === 'funpark' ? () => drawParkDecor(d, f) : () => drawThemeDecor(d, f) });
+      layers.push({ y: d.y * T + 15, draw: th === 'backrooms' ? () => drawBackroomsDecor(d, f) : th === 'funpark' ? () => drawParkDecor(d, f) : th === 'cyber' ? () => drawCyberDecor(d, f) : () => drawThemeDecor(d, f) });
     }
     for (const [id, p] of Object.entries(PLACES)) {
       if (!vis(p.door[0] * T, p.door[1] * T, 120)) continue;
       const isl = p.island && ISLANDS.find((i) => i.id === p.island);
-      const n = id === 'hq' ? counts.hq : id === 'crew' ? counts.crew : placeCounts[id] || 0;
+      const n = id === 'hq' ? counts.hq : id === 'crew' ? counts.crew : id === 'hangar' ? 4 : placeCounts[id] || 0;
       layers.push({ y: p.door[1] * T - 2, draw: () => {
         const cx = p.door[0] * T + 8;
         const by = p.door[1] * T;
         if (p.kind === 'dept') drawDept(cx, by, f, p.zone, n);
         else if (p.kind === 'ride') drawRide(cx, by, f, p.zone, n);
+        else if (p.kind === 'hangar') drawHangar(cx, by, f, n);
         else drawPlace(id, p, f, n);
       } });
     }
     for (const isl of ISLANDS) if (vis(isl.c[0] * T, (isl.c[1] - isl.r[1]) * T, 200)) layers.push({ y: (isl.c[1] - isl.r[1] + 2) * T, draw: () => drawIslandBanner(isl, f) });
     if (vis(CLOCK.door[0] * T, CLOCK.door[1] * T)) layers.push({ y: CLOCK.door[1] * T - 2, draw: () => drawClock(f) });
+    const look = eyeTarget();
+    layers.push({ y: PYRAMID.base * T, draw: () => drawPyramid(f, t, look ? look.x + 8 : PYRAMID.x * T, look ? look.y : 0) });
     for (const a of actors.values()) if (!a.carriedBy && vis(a.x, a.y)) layers.push({ y: a.y + (a.kind === 'mech' ? 44 : 14), draw: () => drawActor(a, t) });
     layers.sort((a, b) => a.y - b.y);
     for (const l of layers) l.draw();
     for (const [id, p] of Object.entries(PLACES)) {
       if (!vis(p.door[0] * T, p.door[1] * T, 120)) continue;
-      sign(id, p, id === 'hq' ? counts.hq || 0 : id === 'crew' ? counts.crew || 0 : placeCounts[id] || 0);
+      sign(id, p, id === 'hq' ? counts.hq || 0 : id === 'crew' ? counts.crew || 0 : id === 'hangar' ? 4 : placeCounts[id] || 0);
     }
     for (const p of particles) {
       if (p.ch) text(p.ch, p.x, p.y, p.color, 5);
       else px(p.x, p.y, 2, 2, p.color);
     }
+    matrixRain(t, vis);
+    eyeBeams(dt);
+    boats(t);
     fish(t);
+    gulls(t);
     clouds(t);
     const sel = selected && selected.type === 'actor' && actors.get(selected.id);
-    if (sel) cursor(sel.x + (sel.kind === 'mech' ? 16 : 0), sel.y - (sel.kind === 'mech' ? 20 : sel.kind === 'bot' ? 24 : 12), t);
+    const big = sel && (sel.kind === 'mech' || sel.kind === 'warden');
+    if (sel) cursor(sel.x + (big ? 16 : 0), sel.y - (big ? 20 : sel.kind === 'bot' ? 24 : 12), t);
     else if (selected && selected.type === 'place') {
       const p = selected.id === 'clock' ? { door: CLOCK.door } : PLACES[selected.id];
       if (p) cursor(p.door[0] * T, p.door[1] * T - (selected.id === 'clock' ? 66 : 62), t);
@@ -1553,7 +1898,8 @@
     const { x, y } = toWorld(sx, sy);
     let best = null;
     for (const a of actors.values()) {
-      const big = a.kind === 'mech';
+      if (a.kind === 'npc') continue;
+      const big = a.kind === 'mech' || a.kind === 'warden';
       const x0 = a.x - (a.kind === 'bot' ? 4 : 0);
       const w = big ? 48 : a.kind === 'bot' ? 24 : 16;
       const y0 = a.y - (big ? 6 : a.kind === 'bot' ? 22 : 10);
@@ -1564,6 +1910,7 @@
     for (const [id, r] of Object.entries(signRects)) if (x >= r.x && x <= r.x + r.w && y >= r.y && y <= r.y + r.h) return { sign: id };
     for (const [id, r] of Object.entries(bannerRects)) if (x >= r.x && x <= r.x + r.w && y >= r.y && y <= r.y + r.h) return { island: id };
     if (x >= clockRect.x && x <= clockRect.x + clockRect.w && y >= clockRect.y && y <= clockRect.y + clockRect.h) return { sign: 'clock' };
+    if (Math.abs(x - (PYRAMID.x * T + 8)) < 100 && y > PYRAMID.base * T - 190 && y < PYRAMID.base * T) return { sign: 'eye' };
     for (const [id, p] of Object.entries(PLACES)) {
       const cx = p.door[0] * T + 8;
       const by = p.door[1] * T;
@@ -1582,6 +1929,7 @@
     if (a.kind === 'job' || a.kind === 'bot') return { type: 'job', id: a.jobId };
     if (a.kind === 'agent') return { type: 'agent', id: a.id.replace(/^agent:/, '') };
     if (a.kind === 'mech') return { type: 'agent', id: 'bot-watchdog' };
+    if (a.kind === 'warden') return { type: 'warden', id: a.id };
     if (a.kind === 'crew') return { type: 'crew', id: a.id };
     if (a.kind === 'dot') return { type: 'dot', id: 'dot' };
     if (a.kind === 'overlord') return { type: 'overlord', id: a.id };
@@ -1591,7 +1939,7 @@
   function select(sel) {
     if (sel && sel.type === 'job') selected = { type: 'actor', id: `job:${sel.id}` };
     else if (sel && sel.type === 'agent') selected = { type: 'actor', id: `agent:${sel.id}` };
-    else if (sel && (sel.type === 'crew' || sel.type === 'overlord')) selected = { type: 'actor', id: sel.id };
+    else if (sel && (sel.type === 'crew' || sel.type === 'overlord' || sel.type === 'warden')) selected = { type: 'actor', id: sel.id };
     else if (sel && sel.type === 'dot') selected = { type: 'actor', id: 'agent:dot' };
     else if (sel && sel.type === 'place') selected = { type: 'place', id: sel.id };
     else if (sel && sel.type === 'island') { selected = sel; frameIsland(sel.id); }
@@ -1604,10 +1952,7 @@
   function mount(canvas, options = {}) {
     cv = canvas;
     opts = options;
-    buildMap();
-    buildLayers();
     resize();
-    frameIsland('main', true);
     new ResizeObserver(() => resize()).observe(cv);
     let drag = null;
     cv.addEventListener('pointerdown', (ev) => {
@@ -1700,10 +2045,10 @@
     const id = sel.type === 'job' ? `job:${sel.id}` : sel.type === 'agent' ? `agent:${sel.id}` : sel.type === 'dot' ? 'agent:dot' : sel.id;
     const a = actors.get(id);
     if (!a) return null;
-    return { spec: specOf(a), kind: a.kind, realm: a.realm, businessName: a.businessName, log: a.log || [], checking: a.checking, title: a.title, island: a.island };
+    return { spec: specOf(a), kind: a.kind, realm: a.realm, businessName: a.businessName, log: a.log || [], checking: a.checking || a.scanning, title: a.title, island: a.island };
   }
   function team() {
-    return [...actors.values()].filter((a) => a.kind === 'overlord' || a.kind === 'agent' || a.kind === 'crew' || a.kind === 'dot' || a.kind === 'mech').map((a) => ({ id: a.id, kind: a.kind, spec: specOf(a), name: a.kind === 'overlord' ? a.realm.label : a.kind === 'mech' ? 'Watchdog Mech' : (a.title || '').split(' · ')[0].split(' (')[0], sel: describe({ type: 'actor', id: a.id }) }));
+    return [...actors.values()].filter((a) => ['overlord', 'agent', 'crew', 'dot', 'mech', 'warden'].includes(a.kind)).map((a) => ({ id: a.id, kind: a.kind, spec: specOf(a), name: a.kind === 'overlord' ? a.realm.label : a.kind === 'mech' ? 'Watchdog Mech' : a.kind === 'warden' ? a.title.replace('The ', '') : (a.title || '').split(' · ')[0].split(' (')[0], sel: describe({ type: 'actor', id: a.id }) }));
   }
 
   window.Arcade = { mount, update, start, stop, say, select, info, team, camera, placeOf, enterIsland, PLACES, ISLANDS, ZONES, _actors: actors };

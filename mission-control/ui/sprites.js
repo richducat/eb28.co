@@ -347,13 +347,17 @@
 
   /* ---------- the Watchdog: a big war mech (48 x 56) ---------- */
   // pose: 'idle' | 'walk' | 'grab' | 'carry' | 'stomp'
-  function drawMech(c, pose, frame) {
+  // armor palettes: the main-island Watchdog and one overlord mech per island
+  const MECH_SKINS = {
+    watchdog: { armor: '#4a5568', armorL: '#718096', armorD: '#2d3748', hazard: '#f6c90e', red: '#e53e3e', visor: '#ff9f43' },
+    backrooms: { armor: '#8a7a3a', armorL: '#c8b45a', armorD: '#5a4e22', hazard: '#1a1a1a', red: '#f6c90e', visor: '#fff6a0' },
+    funpark: { armor: '#d0508a', armorL: '#ff8ac0', armorD: '#8a2a5a', hazard: '#4ab8ff', red: '#ffe45c', visor: '#4affd0' },
+    cyber: { armor: '#161a26', armorL: '#2a3248', armorD: '#07090f', hazard: '#2affd0', red: '#ff2a3a', visor: '#ff2a3a' },
+  };
+  function drawMech(c, pose, frame, skin = 'watchdog') {
     const p = (x, y, w, h, col) => { c.fillStyle = col; c.fillRect(x, y, w, h); };
-    const armor = '#4a5568';
-    const armorL = '#718096';
-    const armorD = '#2d3748';
-    const hazard = '#f6c90e';
-    const red = '#e53e3e';
+    const K = MECH_SKINS[skin] || MECH_SKINS.watchdog;
+    const { armor, armorL, armorD, hazard, red } = K;
     const step = pose === 'walk' || pose === 'carry' ? frame : 0;
     // legs (heavy, digitigrade)
     const lx = step ? 2 : 0;
@@ -366,7 +370,7 @@
     for (let i = 0; i < 4; i += 1) p(10 + i * 7, 27, 4, 3, i % 2 ? hazard : '#1a202c');
     // cockpit with glowing visor
     p(16, 4, 16, 11, armorD); p(17, 5, 14, 3, armorL);
-    p(18, 9, 12, 4, '#0b0f19'); p(19, 10, 10, 2, pose === 'stomp' ? red : frame ? '#ff6b6b' : '#ff9f43');
+    p(18, 9, 12, 4, '#0b0f19'); p(19, 10, 10, 2, pose === 'stomp' ? red : frame ? shade(K.visor, 1.2) : K.visor);
     p(23, 0, 2, 5, '#a0aec0'); p(22, -2, 4, 2, frame ? red : '#9b2c2c');
     // shoulder cannons
     p(2, 10, 8, 8, armorD); p(0, 12, 4, 4, '#1a202c'); p(38, 10, 8, 8, armorD); p(44, 12, 4, 4, '#1a202c');
@@ -386,15 +390,15 @@
     p(28, 17, 6, 6, red); p(29, 18, 4, 4, '#fff5f5'); p(30, 19, 2, 2, red);
   }
 
-  function mech(pose = 'idle', frame = 0) {
-    const key = `mech|${pose}|${frame}`;
+  function mech(pose = 'idle', frame = 0, skin = 'watchdog') {
+    const key = `mech|${pose}|${frame}|${skin}`;
     if (cache.has(key)) return cache.get(key);
     const cv = document.createElement('canvas');
     cv.width = 48;
     cv.height = 60;
     const c = cv.getContext('2d');
     c.translate(0, 6);
-    drawMech(c, pose, frame);
+    drawMech(c, pose, frame, skin);
     c.setTransform(1, 0, 0, 1, 0, 0);
     outline(c);
     cache.set(key, cv);

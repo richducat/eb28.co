@@ -135,8 +135,14 @@ buttons and minimap.
   Goal, Ghost House), HQ for the workforce, the clock tower, the Bot Fortress and Hermes Village.
 - **The Backrooms** (west): one big liminal-office island where all coders and office work
   live, with a department per company (TYFYS, EB28, Inspection, Apps, General).
-- **The Fun Park** (east): one big theme-park island for content, social and creative work,
-  with a ride per company (coaster, ferris wheel, carousel, laser tag, slides).
+- **The Fun Park** (east): a theme park with **one ride per app** (LabStudio, SnapGrid,
+  ParentPath, CadetCatch, SyncStep, MicroFit, TeslaHelper, CosmicChat, Inspection Rent, the
+  TYFYS app, Tech Kombat, Content Factory, Day Trading Bot) plus the Content Studio for social
+  and creative work. Apps come from `src/apps.js`, overridable in `~/.eb28-mission-control/apps.json`.
+- **Mech Island** (south): a cyberpunk machine city with code rain, the Bot Fortress, the mech
+  hangar, and **the Eye** on a golden pyramid that tracks whatever needs you and beams across
+  every island. Each island has a **warden mech** that patrols and scans it.
+- Tourists, office drones and netrunners wander their islands; boats and gulls cross the sea.
 - Agents walk the bridges to the main island when they need you, finish or fail. Click an
   island's sign (or double-click the island) to fly in and get its directory in the sidebar.
 - **Overlords:** each Hermes chief-of-staff profile patrols its realm and checks in on every job;

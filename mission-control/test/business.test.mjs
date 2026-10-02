@@ -29,3 +29,11 @@ test('setOverride: fields not mentioned are kept', () => {
   assert.equal(o.snoozedUntil, '2099-01-01T00:00:00Z');
   assert.equal(setOverride('job:1', { status: null }).status, undefined);
 });
+
+test('appOf: jobs map to the app they work on', async () => {
+  const { appOf } = await import('../src/apps.js');
+  assert.equal(appOf({ cwd: '/Users/r/Documents/ChatGPT/TYFYS APP', title: 'x' }), 'tyfys-app');
+  assert.equal(appOf({ cwd: '/tmp', title: 'Lab Studio weekday blocker scan' }), 'labstudio');
+  assert.equal(appOf({ cwd: '/Users/r/Synccstep', title: 'Local session' }), 'syncstep');
+  assert.equal(appOf({ cwd: '/tmp', title: 'Review TYFYS website copy' }), '');
+});

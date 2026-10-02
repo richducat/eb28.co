@@ -1,5 +1,5 @@
 /* Electron shell: starts the local server in-process, opens the window, tray, and native notifications. */
-const { app, BrowserWindow, Tray, Menu, Notification, nativeImage, shell } = require('electron');
+const { app, BrowserWindow, Tray, Menu, Notification, nativeImage, shell, screen } = require('electron');
 const path = require('node:path');
 
 let win = null;
@@ -28,10 +28,24 @@ async function boot() {
   });
 }
 
+// Open big: fill the screen's work area the first time, then remember where Richard left it.
+const boundsFile = () => path.join(require('node:os').homedir(), '.eb28-mission-control', 'window.json');
+function savedBounds() {
+  try {
+    const b = JSON.parse(require('node:fs').readFileSync(boundsFile(), 'utf8'));
+    const area = screen.getDisplayMatching(b).workArea;
+    if (b.width >= 980 && b.height >= 600 && b.x >= area.x - 50 && b.y >= area.y - 50) return b;
+  } catch {
+    /* first run */
+  }
+  const { x, y, width, height } = screen.getPrimaryDisplay().workArea;
+  return { x, y, width, height };
+}
+
 function createWindow() {
+  const bounds = savedBounds();
   win = new BrowserWindow({
-    width: 1480,
-    height: 920,
+    ...bounds,
     minWidth: 980,
     minHeight: 600,
     title: 'EB28 Mission Control',
@@ -40,6 +54,17 @@ function createWindow() {
     webPreferences: { preload: path.join(__dirname, 'preload.cjs'), contextIsolation: true, nodeIntegration: false },
   });
   win.loadURL(`http://127.0.0.1:${port}/`);
+  const remember = () => {
+    try {
+      if (win.isMinimized() || win.isFullScreen()) return;
+      require('node:fs').mkdirSync(path.dirname(boundsFile()), { recursive: true });
+      require('node:fs').writeFileSync(boundsFile(), JSON.stringify(win.getBounds()));
+    } catch {
+      /* not critical */
+    }
+  };
+  win.on('resized', remember);
+  win.on('moved', remember);
   win.webContents.setWindowOpenHandler(({ url }) => {
     shell.openExternal(url);
     return { action: 'deny' };

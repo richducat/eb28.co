@@ -360,7 +360,7 @@ async function loadArcade() {
   renderSide();
 }
 
-const TEAM_ORDER = { overlord: 0, dot: 1, agent: 2, crew: 3 };
+const TEAM_ORDER = { warden: 0, mech: 0, overlord: 1, dot: 2, agent: 3, crew: 4 };
 function renderTeam() {
   const el = $('#arcade-team');
   if (!el || !window.Arcade.team) return;
@@ -368,7 +368,7 @@ function renderTeam() {
   el.innerHTML = list.map((m) => {
     const key = JSON.stringify(m.spec);
     if (!portraitCache.has(key)) portraitCache.set(key, window.Sprites.portrait(m.spec).toDataURL());
-    const role = m.kind === 'overlord' ? 'Overlord' : m.kind === 'agent' ? 'Workforce' : m.kind === 'dot' ? 'OG Kush' : 'Hermes';
+    const role = m.kind === 'overlord' ? 'Overlord' : m.kind === 'warden' || m.kind === 'mech' ? 'Mech' : m.kind === 'agent' ? 'Workforce' : m.kind === 'dot' ? 'OG Kush' : 'Hermes';
     return `<div class="pcard" data-team="${esc(JSON.stringify(m.sel))}"><img src="${portraitCache.get(key)}" alt=""><div class="plate">${esc(m.name.toUpperCase().slice(0, 22))}<span>(${role.toUpperCase()})</span></div></div>`;
   }).join('');
 }
@@ -744,13 +744,34 @@ function renderSide() {
       <h2>HANDED TO CODEX</h2>${mine.length ? `<ul>${mine.map(jobLi).join('')}</ul>` : '<div class="empty">No voice-started threads in the last day.</div>'}`;
     return;
   }
+  if (sel.type === 'warden') {
+    const info = window.Arcade.info(sel);
+    if (!info) { el.innerHTML = back; return; }
+    const isl = (window.Arcade.ISLANDS || []).find((i) => i.id === info.island);
+    el.innerHTML = `${back}${portraitHtml(sel, info.title.replace('The ', ''), 'Mech overlord')}
+      <div class="chips"><span class="chip">🤖 Rules ${esc(isl ? isl.name : info.island)}</span>${info.checking ? '<span class="chip working">scanning</span>' : '<span class="chip">on patrol</span>'}</div>
+      <div class="why">Patrols every corner of its island, scans each department or ride, and leans on anyone who has gone quiet.</div>
+      <h2>RECENT SCANS</h2>${info.log.length ? `<ul>${info.log.map((l) => `<li>🔍 ${esc(l.what)}<span class="sub">${ago(new Date(l.at).toISOString())} · ${l.n} agent${l.n === 1 ? '' : 's'} there</span></li>`).join('')}</ul>` : '<div class="empty">Just left the hangar.</div>'}
+      <div class="btns">${btn('Enter this island', `data-side-island="${esc(info.island)}"`, 'go')}</div>`;
+    return;
+  }
+  if (sel.type === 'place' && sel.id === 'eye') {
+    const jobs = allJobs();
+    const isls = (window.Arcade.ISLANDS || []).map((i) => ({ i, n: jobs.filter((j) => (window.Arcade.PLACES[placeOfJob(j)] || {}).island === i.id || (i.id === 'main' && !(window.Arcade.PLACES[placeOfJob(j)] || {}).island)).length }));
+    const urgent = jobs.filter((j) => j.status === 'needs_you' || j.status === 'failed');
+    el.innerHTML = `${back}<h2>THE EYE</h2><div class="why">Sees every agent on every island at once. Its beam lands on whatever needs you most.</div>
+      <div class="doing"><span class="k">Watching</span>${jobs.length} jobs and bots across ${isls.length} islands</div>
+      ${isls.map(({ i, n }) => `<div class="isl-row" data-side-island="${esc(i.id)}"><b>${esc(i.name)}</b><span class="n">${n}</span></div>`).join('')}
+      <h2>IN ITS SIGHT</h2>${urgent.length ? `<ul>${urgent.map(jobLi).join('')}</ul>` : '<div class="empty">Nothing needs you. The Eye rests.</div>'}`;
+    return;
+  }
   if (sel.type === 'island') {
     const isl = (window.Arcade.ISLANDS || []).find((i) => i.id === sel.id);
     const P = window.Arcade.PLACES;
     const places = Object.entries(P).filter(([, p]) => (sel.id === 'main' ? !p.island : p.island === sel.id));
     const jobsAt = (id) => allJobs().filter((j) => placeOfJob(j) === id);
     const total = places.reduce((n, [id]) => n + jobsAt(id).length, 0);
-    const intro = sel.id === 'backrooms' ? 'Where the coders and office work live: one department per company.' : sel.id === 'funpark' ? 'Content, social and creative work: one ride per company.' : 'Status landmarks: anyone who needs you, finished or failed comes here.';
+    const intro = sel.id === 'backrooms' ? 'Where the coders and office work live: one department per company.' : sel.id === 'funpark' ? 'One ride per app. Anyone working on an app rides it; social and creative work is at the Content Studio.' : sel.id === 'cyber' ? 'The machine city: the Bot Fortress, the mech hangar, and the Eye on its golden pyramid watching every island.' : 'Status landmarks: anyone who needs you, finished or failed comes here.';
     el.innerHTML = `${back}<h2>${esc(isl ? isl.name : sel.id)}</h2><div class="why">${intro}</div>
       <div class="doing"><span class="k">On this island</span>${total} agents working here</div>
       ${places.map(([id, p]) => {
@@ -797,7 +818,7 @@ function renderSide() {
 const refreshViews = () => (state.tab === 'home' ? loadHome() : state.tab === 'arcade' ? loadArcade() : loadBoard());
 
 document.addEventListener('click', async (ev) => {
-  const t = ev.target.closest('[data-side-place],[data-side-realm],[data-side-clear],[data-side-select],[data-side-act],[data-side-run],[data-side-copy],[data-side-path],[data-side-url],[data-side-drawer],[data-side-decide],[data-side-run-agent],[data-side-agent-toggle],[data-side-agent],[data-side-crew],[data-side-dot]');
+  const t = ev.target.closest('[data-side-island],[data-side-place],[data-side-realm],[data-side-clear],[data-side-select],[data-side-act],[data-side-run],[data-side-copy],[data-side-path],[data-side-url],[data-side-drawer],[data-side-decide],[data-side-run-agent],[data-side-agent-toggle],[data-side-agent],[data-side-crew],[data-side-dot]');
   if (!t) return;
   const d = t.dataset;
   const job = (id) => allJobs().concat(state.board.snoozed || []).find((x) => x.id === id);
@@ -805,6 +826,7 @@ document.addEventListener('click', async (ev) => {
     if ('sideClear' in d) return selectInArcade(null);
     if (d.sideRealm) { state.biz = d.sideRealm; return showTab('home'); }
     if (d.sidePlace) return selectInArcade({ type: 'place', id: d.sidePlace });
+    if (d.sideIsland) { window.Arcade.enterIsland(d.sideIsland); return; }
     if (d.sideSelect) return selectInArcade({ type: 'job', id: d.sideSelect });
     if (d.sideAgent) return selectInArcade({ type: 'agent', id: d.sideAgent });
     if (d.sideCrew) return selectInArcade({ type: 'crew', id: d.sideCrew });

@@ -35,6 +35,9 @@ const isFreeWebsiteBuildRoute =
   pathname === '/free-website-build' ||
   pathname === '/free-local-business-website';
 const isGetStartedRoute = pathname === '/get-started';
+const isLocalAiRoute =
+  pathname === '/local-ai' ||
+  pathname === '/ai';
 const isWeedAuthorityRoute =
   pathname === '/weedauthority' ||
   pathname.startsWith('/weedauthority/') ||
@@ -119,6 +122,11 @@ async function renderApp() {
 
   if (isGetStartedRoute) {
     await renderRoute(() => import('./GetStartedPage.jsx'));
+    return;
+  }
+
+  if (isLocalAiRoute) {
+    await renderRoute(() => import('./LocalAIPage.jsx'));
     return;
   }
 

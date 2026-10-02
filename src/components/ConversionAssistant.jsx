@@ -1,7 +1,15 @@
 import React, { useState } from 'react';
 import { ArrowRight, ArrowUp, CalendarDays } from 'lucide-react';
+import { LOCAL_AI_PACKAGES, formatUsd } from '../localAiOffer.js';
+
+const AI_PACKAGE_SUMMARY = LOCAL_AI_PACKAGES.map((pkg) => (
+  pkg.monthly
+    ? `${pkg.name} is ${formatUsd(pkg.setup)} setup + ${formatUsd(pkg.monthly)}/mo`
+    : `${pkg.name} is ${formatUsd(pkg.setup)} flat`
+)).join(', ');
 
 const ROUTES = {
+  ai: '/local-ai/#packages',
   website: '/get-started/?service=website',
   marketing: '/get-started/?service=social',
   call: '/get-started/?intent=call',
@@ -9,6 +17,14 @@ const ROUTES = {
 
 function replyFor(message) {
   const normalized = message.toLowerCase();
+
+  if (/\bai\b|automat|missed call|follow.?up|review|invoice|chatbot|answer/.test(normalized)) {
+    return {
+      text: `Our AI packages are fixed-price: ${AI_PACKAGE_SUMMARY}. Start with a free 20-minute checkup.`,
+      href: ROUTES.ai,
+      label: 'See AI packages',
+    };
+  }
 
   if (normalized.includes('website') || normalized.includes('redesign') || normalized.includes('hosting')) {
     return {
@@ -69,7 +85,7 @@ export default function ConversionAssistant({ compact = false, source = 'home' }
 
       <div className="conversion-chat">
         <div className="conversion-message conversion-message-left">
-          Tell me what you need help with: a website, social and content, more leads, or automation. I’ll point you to the right first step.
+          Tell me what you need help with: AI for your business, a website, marketing, or more leads. I’ll point you to the right first step.
         </div>
         <div className="conversion-message conversion-message-right">
           Can I get a clear plan before a sales call?
@@ -86,6 +102,7 @@ export default function ConversionAssistant({ compact = false, source = 'home' }
         )}
 
         <div className="conversion-quick-actions" aria-label="Common project needs">
+          <button type="button" onClick={() => choose('ai')}>I want AI help</button>
           <button type="button" onClick={() => choose('website')}>I need a website</button>
           <button type="button" onClick={() => choose('social marketing')}>I need marketing</button>
         </div>

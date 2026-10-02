@@ -1,4 +1,4 @@
-const CORE_PAGE_HREFS = new Set(['/', '/melbournewebstudio/', '/melbournewebstudio/#quiz', '/reconcile/']);
+const CORE_PAGE_HREFS = new Set(['/', '/melbournewebstudio/', '/melbournewebstudio/#quiz', '/reconcile/', '/local-ai/', '/local-ai/#checkup', '/local-ai/#packages']);
 
 export const CONTENT_QUALITY_VERSION = 2;
 export const MIN_ARTICLE_WORDS = 800;

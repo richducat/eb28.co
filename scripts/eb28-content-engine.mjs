@@ -84,9 +84,9 @@ const CLUSTER_INTERNAL_LINKS = {
       reason: 'Shows how the page and follow-up path need to work together.',
     },
     {
-      label: 'Recon Agent founder beta',
-      href: '/reconcile/',
-      reason: 'Links operational automation readers into a concrete EB28 product path.',
+      label: 'AI setup packages for Brevard businesses',
+      href: '/local-ai/',
+      reason: 'Gives local readers fixed-price, done-for-you versions of the follow-up ideas in the article.',
     },
   ],
   'private-ai': [
@@ -101,9 +101,9 @@ const CLUSTER_INTERNAL_LINKS = {
       reason: 'Shows where private AI can support lead intake without replacing human judgment.',
     },
     {
-      label: 'EB28 private AI and app development homepage',
-      href: '/',
-      reason: 'Moves technical readers toward the core EB28 service path.',
+      label: 'AI setup packages for Brevard businesses',
+      href: '/local-ai/',
+      reason: 'Moves readers toward a fixed-price, plain-English AI setup and a free checkup.',
     },
   ],
 };

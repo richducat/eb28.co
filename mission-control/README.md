@@ -151,9 +151,37 @@ buttons and minimap.
   bots that are down.
 - Characters are original pixel archetypes in the style of the Fund Manager agents grid; Grok bots
   are aliens and the Hermes gateway is a gold messenger. Click anyone for a portrait card.
+- **Wall Street** (north): a New York trading island reached by a bridge from the main island:
+  the NYSE facade with its columns and flag, an LED ticker with your watched totals, the Charging
+  Bull, yellow cabs, hot-dog carts and steam vents. Every trading desk (bot or agent) stands on
+  the floor in a jacket colored by its kill-switch state, and **the opening bell is the master kill
+  switch**: green "HALTED · SAFE" while trading is off, flashing red if it is ever on. A
+  compliance mech patrols the island. Nothing on this island can trade.
 
 **Dot (OG Kush)** wears the leaf hat. By default Dot is any Codex thread handed over by voice
 (`<realtime_delegation>`). Pick a different bot or Hermes profile with "Who is Dot?" on the tab.
+
+## Trading (watch-only)
+
+The **Trading** tab and Wall Street island show trading bots, wallets and prediction-market
+positions. They are **read-only by design**:
+
+- No buy, sell, swap, send, redeem or "enable live" control exists. Wallets are added by public
+  address only; Mission Control never holds private keys or seed phrases and never signs anything.
+- **Kill switches** are visible and ON by default. A desk whose state can't be confirmed counts as
+  unsafe. Turning the master switch off needs Touch ID plus a typed phrase and is refused in a
+  plain browser. Turning it back on is one click (also from the bell's sidebar card).
+- Trading bots are on a denylist in `src/workforce/bot-control.js`: Mission Control and the
+  watchdog will not restart them.
+- Data comes from public Solana/Polygon RPCs (read methods only, allowlisted), the public
+  Polymarket data API, Jupiter prices, and local bot ledgers opened read-only.
+- Secrets (RPC URLs with keys, API keys) live only in the macOS Keychain under the service
+  `co.eb28.missioncontrol.trading`; the tab shows which names are present and the command to add
+  one. They never appear in JSON state, logs, events or error messages.
+- Personal settings (watched addresses, account names, checklist) live in
+  `~/.eb28-mission-control/trading.json`, never in this repo.
+- The approvals queue only **records** decisions about risky changes (Touch ID + typed phrase for
+  risky ones); it executes nothing.
 
 ## More
 

@@ -41,6 +41,7 @@
     { id: 'backrooms', name: 'THE BACKROOMS', c: [26, 46], r: [22, 30], theme: 'backrooms', color: '#c8b45a' },
     { id: 'funpark', name: 'FUN PARK', c: [140, 48], r: [28, 36], theme: 'funpark', color: '#ff5a7a' },
     { id: 'cyber', name: 'MECH ISLAND', c: [80, 104], r: [30, 19], theme: 'cyber', color: '#ff2a3a' },
+    { id: 'wallst', name: 'WALL STREET', c: [80, 13], r: [26, 12], theme: 'nyc', color: '#d4af37' },
   ];
   // Companies are departments in the Backrooms and rides in the Fun Park.
   const ZONES = [
@@ -59,12 +60,14 @@
   const NODES = {
     HQ: [80, 48], N1: [80, 43], S1: [80, 52], NYC: [67, 43], NY: [67, 40], WK: [80, 39], BC: [93, 43],
     FUC: [66, 52], FU: [66, 49], DC: [94, 52], DN: [94, 49], FC1: [86, 52], FC2: [86, 56], FL: [90, 56], CC: [71, 52], CR: [71, 56],
-    W1: [61, 43], E1: [99, 43],
+    W1: [61, 43], E1: [99, 43], NB: [74, 43],
+    // Wall Street: the bridge lands on Wall St; the NYSE floor in the middle, the bell to the east
+    WSD: [74, 22], WSW: [60, 22], WSC: [80, 22], WSE: [100, 22], NYSE: [80, 18], BELL: [100, 18],
     // Mech Island: dock, ring road, Bot Fortress (west), Mech Hangar (east); the pyramid sits in the middle
     MB: [80, 88], MC: [80, 92], MW: [60, 92], ME: [100, 92], BT: [60, 104], HG: [100, 104],
   };
   const EDGES = [
-    ['HQ', 'N1'], ['HQ', 'S1'], ['N1', 'NYC'], ['NYC', 'NY'], ['N1', 'WK'], ['N1', 'BC'], ['NYC', 'W1'], ['BC', 'E1'],
+    ['HQ', 'N1'], ['HQ', 'S1'], ['N1', 'NB'], ['NB', 'NYC'], ['NB', 'WSD'], ['WSW', 'WSD'], ['WSD', 'WSC'], ['WSC', 'WSE'], ['WSC', 'NYSE'], ['WSE', 'BELL'], ['NYC', 'NY'], ['N1', 'WK'], ['N1', 'BC'], ['NYC', 'W1'], ['BC', 'E1'],
     ['S1', 'MB'], ['MB', 'MC'], ['MC', 'MW'], ['MC', 'ME'], ['MW', 'BT'], ['ME', 'HG'],
     ['S1', 'CC'], ['CC', 'FUC'], ['FUC', 'FU'], ['CC', 'CR'], ['S1', 'FC1'], ['FC1', 'DC'], ['DC', 'DN'], ['FC1', 'FC2'], ['FC2', 'FL'],
   ];
@@ -104,6 +107,8 @@
     working: { name: 'WORKSHOP', blurb: 'Agents busy right now', node: 'WK', cols: 6, kind: 'workshop' },
     bots: { name: 'BOT FORTRESS', blurb: 'Always-on bots (Grok, Hermes...)', node: 'BT', cols: 4, kind: 'fortress', island: 'cyber' },
     hangar: { name: 'MECH HANGAR', blurb: 'Home of the mech overlords', node: 'HG', cols: 3, kind: 'hangar', island: 'cyber' },
+    nyse: { name: 'TRADING FLOOR', blurb: 'Your trading bots and agents (watch-only)', node: 'NYSE', cols: 6, kind: 'nyse', island: 'wallst' },
+    bell: { name: 'KILL SWITCH', blurb: 'The opening bell: green while trading is halted (safe)', node: 'BELL', cols: 1, kind: 'bell', island: 'wallst' },
     follow_up: { name: 'FOLLOW-UP', blurb: 'Idle, stale or needs a nudge', node: 'FU', cols: 5, kind: 'post' },
     hq: { name: 'HQ', blurb: 'Your workforce agents + Dot', node: 'HQ', cols: 5, kind: 'house' },
     done: { name: 'GOAL', blurb: 'Finished in the last day', node: 'DN', cols: 6, kind: 'goal', max: 12 },
@@ -136,6 +141,7 @@
   const YACHT = { x: 104, y: 60 };
   // Mech Island fuel depot: one tank per AI (tile coords of the middle of the row).
   const FUEL = { x: 98, y: 117 };
+  const BULL = { x: 64, y: 19 };
   // The all-seeing eye: a golden pyramid in the middle of Mech Island (tile coords of its base).
   const PYRAMID = { x: 80, base: 113 };
   // The clock tower is a landmark, not a status: it shows when scheduled agents run next.
@@ -202,6 +208,8 @@
     for (let y = TEMPLE.base - 5; y <= TEMPLE.base + 1; y += 1) for (let x = TEMPLE.x - 4; x <= TEMPLE.x + 4; x += 1) PLAZA[y][x] = true;
     for (let y = HELIPAD.y - 2; y <= HELIPAD.y + 2; y += 1) for (let x = HELIPAD.x - 2; x <= HELIPAD.x + 2; x += 1) PLAZA[y][x] = true;
     for (let y = FUEL.y - 4; y <= FUEL.y + 1; y += 1) for (let x = FUEL.x - 6; x <= FUEL.x + 6; x += 1) PLAZA[y][x] = true;
+    for (let y = BULL.y - 3; y <= BULL.y + 1; y += 1) for (let x = BULL.x - 3; x <= BULL.x + 3; x += 1) PLAZA[y][x] = true;
+    for (let y = 5; y <= 21; y += 1) for (let x = 71; x <= 89; x += 1) if (PLAZA[y]) PLAZA[y][x] = true; // the NYSE block
     for (let y = 2; y < ROWS - 2; y += 1) {
       for (let x = 1; x < COLS - 1; x += 1) {
         if (!LAND[y][x] || PATH[y][x] || PLAZA[y][x] || !LAND[y + 1][x]) continue;
@@ -215,6 +223,13 @@
           else if (!coast && y % 7 === 3 && x % 4 === 1 && r < 0.8) DECOR.push({ x, y, type: 'hwall' });
           else if (r > 0.94) DECOR.push({ x, y, type: hash(x, y, 13) < 0.5 ? 'cooler' : 'plant' });
           else if (r > 0.9) DECOR.push({ x, y, type: 'chair' });
+          continue;
+        }
+        if (theme === 'nyc') {
+          // keep the towers off the NYSE square, the bull and the bell so the landmarks stay readable
+          const square = (x >= 62 && x <= 98 && y >= 4 && y <= 28) || (x >= 96 && x <= 106 && y >= 12 && y <= 24);
+          if (!square && r < (coast ? 0.08 : 0.14)) DECOR.push({ x, y, type: 'skyscraper', h: 3 + Math.floor(hash(x, y, 19) * 6), c: ['#6a6a78', '#7a5a48', '#4a5a72', '#8a8a92'][Math.floor(hash(x, y, 23) * 4)] });
+          else if (r > 0.93) DECOR.push({ x, y, type: ['hydrant', 'streetlamp', 'hotdog', 'vent', 'streetlamp'][Math.floor(hash(x, y, 13) * 5)] });
           continue;
         }
         if (theme === 'cyber') {
@@ -674,6 +689,113 @@
     px(x - 6, y - 22, 14, 8, '#e8e8f0'); px(x + 4, y - 30, 2, 8, '#888');
     px(x + 6, y - 30, 7, 4, '#f8d838');
     text('M/Y TYCOON', x - 4, y + 2, '#1a2a4a', 4, 'center', '#f8f8f8');
+  }
+
+  /* ---------- Wall Street (New York) ---------- */
+  function drawNycTile(x, y) {
+    const X = x * T;
+    const Y = y * T;
+    if (isPath(x, y)) {
+      px(X, Y, T, T, '#2a2a30');
+      const h = isPath(x - 1, y) || isPath(x + 1, y);
+      if (h && x % 2 === 0) px(X + 4, Y + 7, 8, 2, '#f2c418');
+      if (!h && y % 2 === 0) px(X + 7, Y + 4, 2, 8, '#f2c418');
+      px(X, Y, T, 1, '#3a3a42');
+    } else {
+      px(X, Y, T, T, '#a8a8b0');
+      px(X, Y, T, 1, '#c0c0c8'); px(X, Y, 1, T, '#c0c0c8'); px(X + 15, Y, 1, T, '#8a8a92'); px(X, Y + 15, T, 1, '#8a8a92');
+      if (hash(x, y, 81) < 0.08) px(X + 5, Y + 9, 2, 2, '#6a6a72'); // gum
+    }
+    if (!land(x, y + 1)) { px(X, Y + 10, T, 6, '#5a5a62'); px(X, Y + 10, T, 1, '#3a3a42'); }
+    if (!land(x, y - 1)) px(X, Y, T, 2, '#d8d8e0');
+  }
+
+  function drawNycDecor(d, f) {
+    const X = d.x * T;
+    const Y = d.y * T;
+    if (d.type === 'skyscraper') {
+      const h = d.h * 14;
+      px(X - 2, Y + 14 - h, 20, h, d.c); px(X + 14, Y + 14 - h, 4, h, Sprites.shade(d.c, 0.7)); px(X - 2, Y + 14 - h, 20, 2, Sprites.shade(d.c, 1.25));
+      for (let r = 0; r < d.h * 3; r += 1) for (let c = 0; c < 4; c += 1) px(X + c * 4, Y + 17 - h + r * 4, 2, 2, hash(d.x * 5 + c, r, Math.floor(f / 30)) < 0.55 ? '#ffe9a0' : '#3a4258');
+      if (d.h > 6) { px(X + 7, Y + 4 - h, 2, 10, '#c0c0c8'); if (Math.floor(f / 6) % 2) px(X + 6, Y + 2 - h, 4, 2, '#ff3a3a'); }
+    } else if (d.type === 'hydrant') { px(X + 6, Y + 6, 5, 8, '#d02020'); px(X + 5, Y + 8, 7, 2, '#d02020'); px(X + 7, Y + 4, 3, 2, '#a01010'); }
+    else if (d.type === 'streetlamp') { px(X + 7, Y - 10, 2, 24, '#2a3a2a'); px(X + 4, Y - 12, 8, 3, '#2a3a2a'); px(X + 5, Y - 9, 6, 2, Math.floor(f / 10 + d.x) % 7 ? '#fff0a0' : '#8a8060'); }
+    else if (d.type === 'hotdog') { px(X, Y + 4, 16, 9, '#d0d0d8'); px(X - 2, Y - 4, 20, 4, '#f2c418'); px(X + 2, Y - 8, 12, 4, '#1a5ab0'); px(X + 2, Y + 13, 3, 3, '#2a2a30'); px(X + 11, Y + 13, 3, 3, '#2a2a30'); px(X + 4, Y + 6, 8, 2, '#c84a2a'); }
+    else if (d.type === 'vent') {
+      px(X + 3, Y + 10, 10, 3, '#4a4a52');
+      for (let i = 0; i < 3; i += 1) { const tt = ((f + i * 9 + d.x) % 28) / 28; g.fillStyle = `rgba(240,240,248,${0.7 - tt * 0.6})`; g.fillRect(Math.round(X + 6 + Math.sin(tt * 5 + i) * 3), Math.round(Y + 8 - tt * 26), Math.round(4 + tt * 6), Math.round(4 + tt * 4)); }
+    }
+  }
+
+  /** The New York Stock Exchange facade: six columns, pediment, the flag, an LED ticker. */
+  function drawNyse(cx, by, f, ticker) {
+    const w = 150;
+    px(cx - w / 2 - 6, by - 4, w + 12, 4, '#c8c0b0');
+    px(cx - w / 2, by - 92, w, 88, '#e8e0d0');
+    px(cx - w / 2, by - 92, w, 3, '#f8f4ea');
+    // the giant flag across the columns
+    for (let i = 0; i < 9; i += 1) px(cx - 54, by - 84 + i * 6, 108, 6, i % 2 ? '#ffffff' : '#c8102e');
+    px(cx - 54, by - 84, 44, 30, '#1d3a8a');
+    for (let r = 0; r < 4; r += 1) for (let c = 0; c < 6; c += 1) px(cx - 50 + c * 7 + (r % 2) * 3, by - 80 + r * 7, 2, 2, '#ffffff');
+    const wave = Math.floor(f / 4) % 2;
+    if (wave) px(cx - 54, by - 30, 108, 2, 'rgba(0,0,0,.12)');
+    // six Corinthian columns in front of the flag
+    for (let i = 0; i < 6; i += 1) {
+      const x = cx - 66 + i * 26;
+      px(x, by - 86, 10, 82, '#f4f0e6'); px(x + 2, by - 86, 2, 82, '#ffffff'); px(x + 8, by - 86, 2, 82, '#d0c8b8');
+      px(x - 2, by - 90, 14, 4, '#d8d0c0'); px(x - 2, by - 8, 14, 4, '#d8d0c0');
+    }
+    // entablature + pediment with the gold name
+    px(cx - w / 2 - 4, by - 104, w + 8, 12, '#ddd5c4'); px(cx - w / 2 - 4, by - 104, w + 8, 2, '#ffffff');
+    for (let i = 0; i < 18; i += 1) px(cx - w / 2 - 4 + i * 1, by - 105 - i, w + 8 - i * 2, 1, i % 4 ? '#e8e0d0' : '#c8c0b0');
+    text('NEW YORK STOCK EXCHANGE', cx, by - 101, '#a07818', 5, 'center', '#f4f0e6');
+    // LED ticker band
+    px(cx - w / 2, by - 4, w, 10, '#05060a');
+    g.save(); g.beginPath(); g.rect(cx - w / 2, by - 4, w, 10); g.clip();
+    const tx = cx + w / 2 - ((f * 3) % (ticker.length * 5 + w));
+    text(ticker, tx, by - 2, '#ffcf4a', 5, 'left', '#05060a');
+    g.restore();
+  }
+
+  /** The opening bell doubles as the master kill switch. */
+  function drawBell(cx, by, f, master) {
+    px(cx - 14, by - 6, 28, 6, '#5a4a2a'); px(cx - 2, by - 40, 4, 34, '#8a7a5a');
+    const swing = master ? 0 : Math.sin(f / 2) * 3;
+    g.fillStyle = master ? '#2fd17a' : (Math.floor(f / 3) % 2 ? '#ff3a3a' : '#a01020');
+    g.beginPath(); g.moveTo(cx - 12 + swing, by - 30); g.quadraticCurveTo(cx + swing, by - 58, cx + 12 + swing, by - 30); g.closePath(); g.fill();
+    px(cx - 13 + swing, by - 31, 26, 3, master ? '#1a8a4a' : '#701010');
+    px(cx - 2 + swing, by - 29, 4, 4, '#3a3a42');
+    text(master ? 'HALTED · SAFE' : 'LIVE · UNSAFE', cx, by - 72, master ? '#2fd17a' : '#ff5a5a', 5, 'center');
+  }
+
+  /** The Charging Bull, in bronze. */
+  function drawBull(f) {
+    const x = BULL.x * T;
+    const y = BULL.y * T;
+    px(x - 18, y + 8, 40, 4, 'rgba(0,0,0,.25)');
+    px(x - 14, y - 6, 30, 14, '#8a5a2a'); px(x - 14, y - 6, 30, 3, '#b07a3a');
+    px(x + 14, y - 10, 10, 12, '#8a5a2a'); px(x + 22, y - 6, 4, 6, '#7a4a20');
+    px(x + 16, y - 14, 2, 5, '#e8d8b0'); px(x + 22, y - 14, 2, 5, '#e8d8b0');
+    px(x + 20, y - 7, 2, 2, '#1a0a00');
+    px(x - 12, y + 8, 4, 6, '#7a4a20'); px(x - 4, y + 8, 4, 6, '#7a4a20'); px(x + 6, y + 8, 4, 6, '#7a4a20'); px(x + 12, y + 8, 4, 6, '#7a4a20');
+    px(x - 18, y - 6 + (Math.floor(f / 5) % 2), 5, 2, '#7a4a20');
+    text('CHARGING BULL', x + 4, y + 18, '#b07a3a', 4, 'center');
+  }
+
+  /** Yellow cabs cruising the avenues. */
+  function drawCabs(t) {
+    const lanes = [[22, 1, 58, 102], [22, -1, 58, 102]];
+    lanes.forEach(([row, dir, x0, x1], i) => {
+      for (let k = 0; k < 2; k += 1) {
+        const span = (x1 - x0) * T;
+        const off = (t * 40 + k * span / 2 + i * 90) % span;
+        const x = dir > 0 ? x0 * T + off : x1 * T - off;
+        const y = row * T + (dir > 0 ? 2 : 9);
+        px(x - 9, y, 18, 6, '#f2c418'); px(x - 6, y - 3, 12, 4, '#f2c418'); px(x - 5, y - 2, 4, 2, '#7ab0e0'); px(x + 1, y - 2, 4, 2, '#7ab0e0');
+        px(x - 2, y - 5, 4, 2, '#1a1a1a'); px(x - 7, y + 5, 3, 2, '#1a1a1a'); px(x + 4, y + 5, 3, 2, '#1a1a1a');
+        px(dir > 0 ? x + 8 : x - 9, y + 1, 1, 2, '#fff6a0');
+      }
+    });
   }
 
   /* ---------- Backrooms decor ---------- */
@@ -1207,6 +1329,7 @@
   function placeOf(j) {
     if (j.source === 'bot') return 'bots';
     if (j.status === 'needs_you' || j.status === 'done' || j.status === 'failed') return j.status;
+    if (j.source === 'trading' && PLACES.nyse) return 'nyse';
     // anyone working on an app rides that app's ride; other creative work goes to the Content Studio
     if (j.app && PLACES[`ride:${j.app}`]) return `ride:${j.app}`;
     if (districtOf(j) === 'funpark' && PLACES['ride:content']) return 'ride:content';
@@ -1223,9 +1346,11 @@
     funpark: () => { const k = ['creative', 'clerk', 'builder', 'analyst']; return (i) => Sprites.specFor(k[i % 4], `tourist${i}`, { shirt: ['#ff5a7a', '#4ab8ff', '#ffe45c', '#5ad07a', '#a070ff', '#ffb43c'][i % 6], suit: undefined, tie: undefined, prop: i % 3 ? undefined : 'mug' }); },
     backrooms: () => (i) => ({ skin: '#e8dca0', hair: '#d8cc90', hairStyle: 'bald', suit: '#c8b878', shirt: '#e8dca0', tie: '#a89848', label: 'Drone' }),
     cyber: () => (i) => ({ skin: '#2a2e3a', hair: '#151a28', hairStyle: 'long', shirt: '#151a28', tie: i % 2 ? '#2affd0' : '#ff2a6a', glasses: true, label: 'Netrunner' }),
+    // New Yorkers in a hurry: suits, trench coats, the odd tourist in an I-heart-NY tee
+    wallst: () => (i) => Sprites.specFor(['operator', 'analyst', 'clerk', 'creative'][i % 4], `nyer${i}`, { suit: ['#2a2a34', '#4a3a2a', '#1a2a4a', '#5a5a62', undefined][i % 5], shirt: i % 5 === 4 ? '#ffffff' : undefined, tie: ['#c8102e', '#1d3a8a', '#d4af37'][i % 3], prop: i % 3 ? 'mug' : 'laptop' }),
   };
   function spawnLife() {
-    const plan = { funpark: 22, backrooms: 10, cyber: 9 };
+    const plan = { funpark: 22, backrooms: 10, cyber: 9, wallst: 14 };
     for (const [isl, n] of Object.entries(plan)) {
       const nodes = islandNodes(isl);
       const look = NPC_LOOKS[isl]();
@@ -1235,7 +1360,7 @@
         actors.set(`npc:${isl}:${i}`, { id: `npc:${isl}:${i}`, kind: 'npc', island: isl, node, x: p.x + ((i * 7) % 20) - 10, y: p.y + ((i * 5) % 12), path: [], phase: Math.random() * 6, until: Math.random() * 4, spec: look(i) });
       }
     }
-    const skins = { backrooms: 'The Backrooms Warden', funpark: 'The Fun Park Warden', cyber: 'The Mech Island Warden' };
+    const skins = { backrooms: 'The Backrooms Warden', funpark: 'The Fun Park Warden', cyber: 'The Mech Island Warden', wallst: 'The Wall Street Compliance Mech' };
     for (const [isl, title] of Object.entries(skins)) {
       const h = nodeXY('HG');
       actors.set(`warden:${isl}`, { id: `warden:${isl}`, kind: 'warden', island: isl, skin: isl, title, node: 'HG', x: h.x - 30 + Object.keys(skins).indexOf(isl) * 30, y: h.y + 20, path: [], phase: 0, pauseUntil: 2 + Math.random() * 3, cursor: 0, log: [], pose: 'idle' });
@@ -1268,7 +1393,7 @@
       return;
     }
     a.scanning = false;
-    const nodes = a.island === 'cyber' ? ['MW', 'BT', 'MC', 'ME', 'HG'] : Object.values(PLACES).filter((p) => p.island === a.island).map((p) => p.node);
+    const nodes = a.island === 'cyber' ? ['MW', 'BT', 'MC', 'ME', 'HG'] : a.island === 'wallst' ? ['NYSE', 'BELL', 'WSE', 'WSW', 'WSC'] : Object.values(PLACES).filter((p) => p.island === a.island).map((p) => p.node);
     if (!nodes.length) return;
     const n = nodes[(a.cursor += 1) % nodes.length];
     const p = nodeXY(n);
@@ -1508,7 +1633,7 @@
       }
       dot.title = dj ? `Dot · OG Kush · on "${dj.title}"` : 'Dot · OG Kush · chilling at HQ';
     }
-    for (const id of [...actors.keys()]) if (!seen.has(id) && !id.startsWith('npc:') && !id.startsWith('warden:') && id !== 'tycoon') actors.delete(id);
+    for (const id of [...actors.keys()]) if (!seen.has(id) && !id.startsWith('npc:') && !id.startsWith('warden:') && !id.startsWith('trader:') && id !== 'tycoon') actors.delete(id);
   }
   /* ---------- the Tycoon (main island overlord) ---------- */
   const TYCOON_LINES = ['Excellent.', 'Status report!', 'Mwahaha.', 'Faster, minions.', 'My island. My rules.', 'Release the mech.', 'Someone fetch my cat.'];
@@ -1554,11 +1679,11 @@
   }
 
   /* ---------- weather: each island's sky shows how its work is going ---------- */
-  const weather = { main: 'sun', backrooms: 'sun', funpark: 'sun', cyber: 'sun' };
-  const homeIsland = (j) => (j.source === 'bot' ? 'cyber' : j.app && PLACES[`ride:${j.app}`] ? 'funpark' : districtOf(j) === 'funpark' ? 'funpark' : 'backrooms');
+  const weather = { main: 'sun', backrooms: 'sun', funpark: 'sun', cyber: 'sun', wallst: 'sun' };
+  const homeIsland = (j) => (j.source === 'trading' ? 'wallst' : j.source === 'bot' ? 'cyber' : j.app && PLACES[`ride:${j.app}`] ? 'funpark' : districtOf(j) === 'funpark' ? 'funpark' : 'backrooms');
   function computeWeather(jobs) {
-    const bad = { main: 0, backrooms: 0, funpark: 0, cyber: 0 };
-    const wait = { main: 0, backrooms: 0, funpark: 0, cyber: 0 };
+    const bad = { main: 0, backrooms: 0, funpark: 0, cyber: 0, wallst: 0 };
+    const wait = { main: 0, backrooms: 0, funpark: 0, cyber: 0, wallst: 0 };
     for (const j of jobs) {
       const isl = homeIsland(j);
       if (j.status === 'failed') { bad[isl] += 1; bad.main += 1; }
@@ -1720,9 +1845,73 @@
     text('FUEL DEPOT', cx, by - 72, '#2affd0', 6, 'center');
     Object.assign(fuelRect, { x: cx - 92, y: by - 76, w: 184, h: 86 });
   }
+
+  /* ---------- Wall Street: the trading floor (watch-only) ---------- */
+  let trading = null;
+  const money = (n) => (n == null ? '—' : `${n < 0 ? '-' : ''}$${Math.abs(n) >= 1000 ? `${(Math.abs(n) / 1000).toFixed(1)}K` : Math.abs(n).toFixed(2)}`);
+  // classic floor-trader jackets: the color tells you how the desk is doing
+  const JACKET = { safe: '#2a7ad8', unknown: '#e0a020', unsafe: '#d02838' };
+  function tickerText() {
+    if (!trading) return 'MARKET DATA LOADING ···';
+    const s = trading;
+    const parts = [s.killSwitch && s.killSwitch.master ? '■ KILL SWITCH ON · TRADING HALTED · WATCH-ONLY' : '▲ KILL SWITCH OFF'];
+    if (s.totals) parts.push(`WATCHED ${money(s.totals.usd)}`, `PNL ${money(s.totals.pnl)}`);
+    for (const w of s.wallets || []) if (w.ok) parts.push(`${(w.label || w.chain).toUpperCase()} ${money(w.usd)}`);
+    for (const p of s.polymarket || []) if (p.ok) parts.push(`POLYMARKET ${p.open}/${p.count} OPEN ${money(p.cashPnl)}`);
+    if (s.stepn && s.stepn.snapshot) parts.push(`GST ${Math.round(s.stepn.snapshot.GST)}`, `GMT ${Math.round(s.stepn.snapshot.GMT)}`);
+    const open = (s.checklist || []).filter((c) => c.status !== 'done').length;
+    if (open) parts.push(`${open} SAFETY ITEMS OPEN`);
+    return parts.join('   ·   ');
+  }
+  function setTrading(snap) {
+    trading = snap || null;
+    if (!PLACES.nyse) return;
+    const desks = ((snap && snap.killSwitch && snap.killSwitch.projects) || []).slice(0, 10);
+    const seen = new Set();
+    const door = nodeXY('NYSE');
+    desks.forEach((d, i) => {
+      const id = `trader:${d.id}`;
+      seen.add(id);
+      const robot = /bot|daytrading/i.test(d.id);
+      const spec = robot
+        ? { robot: true, suit: JACKET[d.state] || JACKET.unknown, label: d.name, scene: 'gears', bg: '#141a2a' }
+        : Sprites.specFor(['analyst', 'operator', 'clerk', 'engineer'][i % 4], id, { suit: JACKET[d.state] || JACKET.unknown, shirt: '#ffffff', tie: '#1a1a22', prop: 'clipboard', label: d.name, scene: 'chart', bg: '#141a2a' });
+      const prev = actors.get(id);
+      // desks flank the trading floor on both sides so the ticker and the crowd stay visible
+      const side = i % 2 ? 1 : -1;
+      const row = Math.floor(i / 2);
+      const home = { x: door.x + side * (70 + (row % 2) * 22) - 8, y: door.y + 14 + row * 14 };
+      actors.set(id, { ...(prev || { x: home.x, y: home.y, path: [], phase: Math.random() * 6 }), id, kind: 'trader', island: 'wallst', node: 'NYSE', home, desk: d, robot, spec, title: `${d.name} · ${d.state}` });
+    });
+    for (const id of [...actors.keys()]) if (id.startsWith('trader:') && !seen.has(id)) actors.delete(id);
+  }
+  function traderStep(a, now) {
+    if (a.path.length || now < (a.until || 0)) return;
+    // traders shuffle around their spot on the floor
+    a.path = [{ x: a.home.x + Math.round(Math.random() * 12 - 6), y: a.home.y + Math.round(Math.random() * 6 - 3) }];
+    a.until = now + 1.5 + Math.random() * 4;
+  }
+  function drawTrader(a, t) {
+    const x = Math.round(a.x);
+    const y = Math.round(a.y);
+    const st = a.desk.state;
+    g.fillStyle = 'rgba(0,0,0,.3)'; g.fillRect(x + 3, y + 14, 10, 2);
+    if (a.robot) g.drawImage(Sprites.bot(a.spec, Math.floor(t * 4 + a.phase) % 2), x - 4, y - 24);
+    else g.drawImage(Sprites.person(a.spec, a.path.length && Math.floor(t * 8 + a.phase) % 2 ? 1 : 0), x, y - 12);
+    // open-outcry hand signals (only when the desk is live; halted desks keep their hands down)
+    const top = a.robot ? y - 24 : y - 12;
+    if (st !== 'safe' && Math.floor(t * 3 + a.phase) % 2) { px(x + 14, top - 2, 2, 6, a.spec.skin || '#f0c8a0'); px(x + 13, top - 4, 4, 3, a.spec.skin || '#f0c8a0'); }
+    // badge with the desk status
+    px(x + 2, top + (a.robot ? 18 : 14), 4, 3, '#ffffff');
+    const tag = st === 'safe' ? 'HALT' : st === 'unsafe' ? 'LIVE!' : '?';
+    text(tag, x + 8, top - 9 + Math.round(Math.sin(t * 2 + a.phase)), st === 'safe' ? '#2fd17a' : st === 'unsafe' ? '#ff5a5a' : '#ffcf4a', 5, 'center');
+    text((a.desk.name || '').toUpperCase().slice(0, 14), x + 8, y + 18, '#d4af37', 4, 'center');
+    if (hover === a) { g.strokeStyle = 'rgba(248,216,56,.8)'; g.lineWidth = 1; g.strokeRect(x - 1.5, top + 1.5, a.robot ? 23 : 19, a.robot ? 39 : 27); }
+  }
   /* ---------- drawing actors ---------- */
   function drawActor(a, t) {
     if (a.kind === 'tycoon') return drawTycoon(a, t);
+    if (a.kind === 'trader') return drawTrader(a, t);
     if (a.kind === 'mech' || a.kind === 'warden') return drawMech(a, t);
     if (a.kind === 'npc') {
       const step = a.path.length > 0 && Math.floor(t * 8 + a.phase) % 2;
@@ -1804,7 +1993,7 @@
     }
     if (m.pose === 'stomp' && Math.random() < 0.3) burst(x + 24, y + 48, '#c8b078', 3);
     if (hover === m) { g.strokeStyle = 'rgba(248,216,56,.8)'; g.lineWidth = 1; g.strokeRect(x - 1.5, y - 7.5, 51, 61); }
-    text(m.kind === 'warden' ? `${m.island === 'cyber' ? 'MECH ISLE' : m.island === 'funpark' ? 'FUN PARK' : 'BACKROOMS'} WARDEN` : 'WATCHDOG', x + 24, y + 56, m.kind === 'warden' ? '#2affd0' : '#ff9f43', 5, 'center');
+    text(m.kind === 'warden' ? `${m.island === 'cyber' ? 'MECH ISLE' : m.island === 'funpark' ? 'FUN PARK' : m.island === 'wallst' ? 'COMPLIANCE' : 'BACKROOMS'} WARDEN` : 'WATCHDOG', x + 24, y + 56, m.kind === 'warden' ? '#2affd0' : '#ff9f43', 5, 'center');
   }
 
   /* ---------- static land layer + animated sea ---------- */
@@ -1820,6 +2009,7 @@
           const theme = ISLE[y][x];
           if (theme === 'backrooms') { drawBackroomsTile(x, y); continue; }
           if (theme === 'cyber') { drawCyberTile(x, y); continue; }
+          if (theme === 'wallst') { drawNycTile(x, y); continue; }
           if (theme === 'funpark') { if (FLOOR[y][x] && !isPath(x, y)) drawFloor(x, y, FLOOR[y][x]); else drawParkTile(x, y); continue; }
           if (theme === 'main' && isBeach(x, y)) { drawSand(x, y); continue; }
           drawGrass(x, y);
@@ -2071,6 +2261,7 @@
         else if (a.kind === 'warden') wardenStep(a, now);
         else if (a.kind === 'npc') npcStep(a, now);
         else if (a.kind === 'tycoon') tycoonStep(a, now);
+        else if (a.kind === 'trader') traderStep(a, now);
       } catch (err) {
         // one confused character must never freeze the whole map
         a.path = [];
@@ -2148,7 +2339,7 @@
     for (const d of DECOR) {
       if (!vis(d.x * T, d.y * T)) continue;
       const th = ISLE[d.y][d.x];
-      layers.push({ y: d.y * T + 15, draw: th === 'backrooms' ? () => drawBackroomsDecor(d, f) : th === 'funpark' ? () => drawParkDecor(d, f) : th === 'cyber' ? () => drawCyberDecor(d, f) : () => drawThemeDecor(d, f) });
+      layers.push({ y: d.y * T + 15, draw: th === 'backrooms' ? () => drawBackroomsDecor(d, f) : th === 'funpark' ? () => drawParkDecor(d, f) : th === 'cyber' ? () => drawCyberDecor(d, f) : th === 'wallst' ? () => drawNycDecor(d, f) : () => drawThemeDecor(d, f) });
     }
     for (const [id, p] of Object.entries(PLACES)) {
       if (!vis(p.door[0] * T, p.door[1] * T, 120)) continue;
@@ -2160,6 +2351,8 @@
         if (p.kind === 'dept') drawDept(cx, by, f, p.zone, n);
         else if (p.kind === 'ride') drawRide(cx, by, f, p.zone, n);
         else if (p.kind === 'hangar') drawHangar(cx, by, f, n);
+        else if (p.kind === 'nyse') drawNyse(cx, by, f, tickerText());
+        else if (p.kind === 'bell') drawBell(cx, by, f, !trading || !trading.killSwitch || trading.killSwitch.master !== false);
         else drawPlace(id, p, f, n);
       } });
     }
@@ -2168,6 +2361,8 @@
     if (vis(TEMPLE.x * T, TEMPLE.base * T, 120)) layers.push({ y: TEMPLE.base * T, draw: () => drawTemple(f) });
     if (vis(HELIPAD.x * T, HELIPAD.y * T, 80)) layers.push({ y: HELIPAD.y * T + 20, draw: () => drawHelipad(f) });
     if (vis(YACHT.x * T, YACHT.y * T, 120)) layers.push({ y: YACHT.y * T + 10, draw: () => drawYacht(t) });
+    if (vis(BULL.x * T, BULL.y * T, 80)) layers.push({ y: BULL.y * T + 10, draw: () => drawBull(f) });
+    if (vis(80 * T, 22 * T, 900)) layers.push({ y: 22 * T + 12, draw: () => drawCabs(t) });
     if (vis(FUEL.x * T, FUEL.y * T, 160)) layers.push({ y: FUEL.y * T, draw: () => drawFuel(f, t) });
     const look = eyeTarget();
     layers.push({ y: PYRAMID.base * T, draw: () => drawPyramid(f, t, look ? look.x + 8 : PYRAMID.x * T, look ? look.y : 0) });
@@ -2208,10 +2403,11 @@
     for (const a of actors.values()) {
       if (a.kind === 'npc') continue;
       const big = a.kind === 'mech' || a.kind === 'warden';
-      const x0 = a.x - (a.kind === 'bot' ? 4 : 0);
-      const w = big ? 48 : a.kind === 'bot' ? 24 : 16;
-      const y0 = a.y - (big ? 6 : a.kind === 'bot' ? 22 : 10);
-      const h = big ? 58 : a.kind === 'bot' ? 38 : 26;
+      const tall = a.kind === 'bot' || (a.kind === 'trader' && a.robot);
+      const x0 = a.x - (tall ? 4 : 0);
+      const w = big ? 48 : tall ? 24 : 16;
+      const y0 = a.y - (big ? 6 : tall ? 22 : 10);
+      const h = big ? 58 : tall ? 38 : 26;
       if (x >= x0 && x <= x0 + w && y >= y0 && y <= y0 + h) best = !best || a.y > best.y ? a : best;
     }
     if (best) return best;
@@ -2243,6 +2439,7 @@
     if (a.kind === 'crew') return { type: 'crew', id: a.id };
     if (a.kind === 'dot') return { type: 'dot', id: 'dot' };
     if (a.kind === 'overlord') return { type: 'overlord', id: a.id };
+    if (a.kind === 'trader') return { type: 'trader', id: a.desk.id };
     return null;
   }
 
@@ -2364,5 +2561,5 @@
   const setUsage = (u) => { usageData = u; };
   let replayLabel = '';
   const setReplay = (label) => { replayLabel = label || ''; };
-  window.Arcade = { mount, update, setUsage, setReplay, start, stop, say, select, info, team, camera, placeOf, enterIsland, weather, PLACES, ISLANDS, ZONES, _actors: actors };
+  window.Arcade = { mount, update, setUsage, setReplay, setTrading, trading: () => trading, start, stop, say, select, info, team, camera, placeOf, enterIsland, weather, PLACES, ISLANDS, ZONES, _actors: actors };
 })();

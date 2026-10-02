@@ -312,6 +312,7 @@ function connectEvents() {
     if (e.type === 'ask:suggested') { delete home.asks[e.jobId]; if (state.tab === 'home') hydrateAsks(queueItems()); }
     if (e.type === 'reply:progress' || e.type === 'reply:done') onReplyEvent(e);
     if (e.type === 'trading:refresh' && state.tab === 'trading') window.Trading.load();
+    if (e.type === 'trading:refresh' && state.tab === 'arcade') api('GET', '/api/trading').then((s) => { arcade.trading = s; window.Arcade.setTrading(s); }).catch(() => {});
     if (e.type === 'cos:done') { toast(`Chief of Staff replied: ${e.chat.a.slice(0, 80)}`, e.chat.status === 'done' ? 'ok' : 'bad'); loadCos(); }
     if (e.type === 'board:refresh') loadBoard().then(() => { if (state.tab === 'arcade') loadArcade(); });
     if (e.type === 'job:transition') toast(`${e.title.slice(0, 70)} → ${STATUS_LABEL[e.to] || e.to}`, e.to === 'failed' ? 'bad' : e.to === 'needs_you' ? 'you' : 'ok');
@@ -355,6 +356,7 @@ async function loadArcade() {
     api('GET', '/api/dot').catch(() => ({ target: 'codex-voice' })),
     api('GET', '/api/automations').catch(() => []),
   ]);
+  api('GET', '/api/trading').then((s) => { arcade.trading = s; window.Arcade.setTrading(s); if (arcade.sel && (arcade.sel.type === 'trader' || ['nyse', 'bell'].includes(arcade.sel.id))) renderSide(); }).catch(() => {});
   state.board = board;
   state.workforce = workforce;
   Object.assign(arcade, { crew, dot, automations });
@@ -921,6 +923,10 @@ function renderSide() {
       <div class="btns">${btn('Enter this island', `data-side-island="${esc(info.island)}"`, 'go')}</div>`;
     return;
   }
+  if (sel.type === 'trader' || (sel.type === 'place' && (sel.id === 'nyse' || sel.id === 'bell'))) {
+    el.innerHTML = back + wallStreetSide(sel);
+    return;
+  }
   if (sel.type === 'place' && sel.id === 'fuel') {
     el.innerHTML = `${back}<h2>FUEL DEPOT</h2><div class="why">How much of each AI's allowance is left. Background thinking in Mission Control runs on the free local model, so it never touches these.</div><div class="fuel-side">${fuelRows(fuel.data)}</div>`;
     loadUsage().then(() => { if (arcade.sel && arcade.sel.id === 'fuel') $('#arcade-side .fuel-side').innerHTML = fuelRows(fuel.data); });
@@ -942,7 +948,7 @@ function renderSide() {
     const places = Object.entries(P).filter(([, p]) => (sel.id === 'main' ? !p.island : p.island === sel.id));
     const jobsAt = (id) => allJobs().filter((j) => placeOfJob(j) === id);
     const total = places.reduce((n, [id]) => n + jobsAt(id).length, 0);
-    const intro = sel.id === 'backrooms' ? 'Where the coders and office work live: one department per company.' : sel.id === 'funpark' ? 'One ride per app. Anyone working on an app rides it; social and creative work is at the Content Studio.' : sel.id === 'cyber' ? 'The machine city: the Bot Fortress, the mech hangar, and the Eye on its golden pyramid watching every island.' : 'Status landmarks: anyone who needs you, finished or failed comes here.';
+    const intro = sel.id === 'wallst' ? 'The trading floor. Every trading bot and agent works here, watch-only: nothing on this island can buy, sell or move funds. The bell is the master kill switch.' : sel.id === 'backrooms' ? 'Where the coders and office work live: one department per company.' : sel.id === 'funpark' ? 'One ride per app. Anyone working on an app rides it; social and creative work is at the Content Studio.' : sel.id === 'cyber' ? 'The machine city: the Bot Fortress, the mech hangar, and the Eye on its golden pyramid watching every island.' : 'Status landmarks: anyone who needs you, finished or failed comes here.';
     el.innerHTML = `${back}<h2>${esc(isl ? isl.name : sel.id)}</h2><div class="why">${intro}</div>
       <div class="doing"><span class="k">On this island</span>${total} agents working here</div>
       ${places.map(([id, p]) => {
@@ -986,15 +992,57 @@ function renderSide() {
   }
 }
 
+/** Wall Street sidebar: a trader's desk, the trading floor, or the bell (the master kill switch). */
+const DESK_STATE = { safe: '🟢 Halted (safe)', unknown: '🟡 Unknown, treated as unsafe', unsafe: '🔴 Live / unsafe' };
+function wallStreetSide(sel) {
+  const s = arcade.trading;
+  if (!s) return '<div class="empty">Loading the trading floor…</div>';
+  const usd = (n) => (n == null ? '—' : `${n < 0 ? '−' : ''}$${Math.abs(n).toLocaleString(undefined, { maximumFractionDigits: 2 })}`);
+  const ks = s.killSwitch || {};
+  const desks = ks.projects || [];
+  const open = () => btn('📈 Open the Trading tab', 'data-side-tab="trading"', 'go');
+  const deskRow = (d) => `<li>${esc(DESK_STATE[d.state] || d.state)} · <b>${esc(d.name)}</b><span class="sub">${esc(d.detail || '')}</span></li>`;
+  if (sel.type === 'trader') {
+    const d = desks.find((x) => x.id === sel.id);
+    if (!d) return '<div class="empty">This desk has left the floor.</div>';
+    const p = (s.projects || {})[d.id] || {};
+    const extra = [];
+    if (p.ledger) extra.push(`Ledger: ${p.ledger.intents ?? 0} intents · ${p.ledger.orders ?? 0} orders · ${p.ledger.fills ?? 0} fills`);
+    if (p.lanes) extra.push(`${p.lanes.length} lanes configured`);
+    if (p.version) extra.push(`Version ${p.version}`);
+    if (d.agents && d.agents.length) extra.push(`Agents: ${d.agents.join(', ')}`);
+    return `<h2>${esc(d.name.toUpperCase())}</h2><div class="chips"><span class="chip">${esc(DESK_STATE[d.state] || d.state)}</span><span class="chip">👁 watch-only</span></div>
+      <div class="why">${esc(d.detail || '')}</div>${d.alarm ? `<div class="doing" style="border-color:#e8434f"><span class="k">Alarm</span>${esc(d.alarm)}</div>` : ''}
+      ${extra.length ? `<div class="meta">${extra.map(esc).join('<br>')}</div>` : ''}
+      <div class="btns">${open()}</div>`;
+  }
+  if (sel.id === 'bell') {
+    return `<h2>THE BELL · MASTER KILL SWITCH</h2>
+      <div class="chips"><span class="chip ${ks.master ? '' : 'working'}">${ks.master ? '🟢 ON: all trading halted' : '🔴 OFF'}</span>${ks.allSafe ? '<span class="chip">every desk safe</span>' : `<span class="chip">${ks.unsafeCount || 0} desk(s) not confirmed safe</span>`}</div>
+      <div class="why">${ks.master ? 'The bell is green: Mission Control will not let anything trade. Turning it off needs Touch ID and a typed phrase, in the Trading tab.' : 'The kill switch is OFF. Turn it back on right away unless you meant this.'}</div>
+      <ul>${desks.map(deskRow).join('')}</ul>
+      <div class="btns">${ks.master ? '' : btn('🛑 Halt everything now', 'data-side-halt', 'go')}${open()}</div>`;
+  }
+  const poly = (s.polymarket || []).filter((p) => p.ok);
+  return `<h2>NYSE · TRADING FLOOR</h2><div class="why">Watch-only. Prices and balances are read from public chain data and your local bot ledgers; nothing here can place an order.</div>
+    <div class="doing"><span class="k">Watched value</span>${usd(s.totals && s.totals.usd)} · P&amp;L ${usd(s.totals && s.totals.pnl)}</div>
+    <h2>WALLETS</h2><ul>${(s.wallets || []).map((w) => `<li>${w.ok ? '👁' : '⚠️'} <b>${esc(w.label || w.chain)}</b> <b style="float:right">${usd(w.usd)}</b><span class="sub">${esc(w.chain)}${w.role ? ` · ${esc(w.role)}` : ''}</span></li>`).join('') || '<div class="empty">No wallets watched yet.</div>'}</ul>
+    ${poly.length ? `<h2>POLYMARKET</h2><ul>${poly.map((p) => `<li>${esc(p.wallet)} <b style="float:right">${usd(p.cashPnl)}</b><span class="sub">${p.open} open of ${p.count}${p.lastTradeAt ? ` · last trade ${ago(p.lastTradeAt)}` : ''}</span></li>`).join('')}</ul>` : ''}
+    <h2>DESKS</h2><ul>${desks.map(deskRow).join('')}</ul>
+    <div class="btns">${open()}</div>`;
+}
+
 const refreshViews = () => (state.tab === 'home' ? loadHome() : state.tab === 'arcade' ? loadArcade() : loadBoard());
 
 document.addEventListener('click', async (ev) => {
-  const t = ev.target.closest('[data-side-island],[data-side-place],[data-side-realm],[data-side-clear],[data-side-select],[data-side-act],[data-side-run],[data-side-copy],[data-side-path],[data-side-url],[data-side-drawer],[data-side-decide],[data-side-run-agent],[data-side-agent-toggle],[data-side-agent],[data-side-crew],[data-side-dot]');
+  const t = ev.target.closest('[data-side-tab],[data-side-halt],[data-side-island],[data-side-place],[data-side-realm],[data-side-clear],[data-side-select],[data-side-act],[data-side-run],[data-side-copy],[data-side-path],[data-side-url],[data-side-drawer],[data-side-decide],[data-side-run-agent],[data-side-agent-toggle],[data-side-agent],[data-side-crew],[data-side-dot]');
   if (!t) return;
   const d = t.dataset;
   const job = (id) => allJobs().concat(state.board.snoozed || []).find((x) => x.id === id);
   try {
     if ('sideClear' in d) return selectInArcade(null);
+    if (d.sideTab) return showTab(d.sideTab);
+    if ('sideHalt' in d) { const s = await api('POST', '/api/trading/killswitch', { engage: true }); arcade.trading = s; window.Arcade.setTrading(s); return renderSide(); }
     if (d.sideRealm) { state.biz = d.sideRealm; return showTab('home'); }
     if (d.sidePlace) return selectInArcade({ type: 'place', id: d.sidePlace });
     if (d.sideIsland) { window.Arcade.enterIsland(d.sideIsland); return; }

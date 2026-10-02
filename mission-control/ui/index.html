@@ -12,7 +12,8 @@
 <header class="topbar">
   <div class="brand"><span class="dot"></span> Mission Control</div>
   <nav class="tabs" id="tabs">
-    <button data-tab="board" class="active">Board</button>
+    <button data-tab="home" class="active">Home <span class="pill" id="pill-home" hidden></span></button>
+    <button data-tab="board">Board</button>
     <button data-tab="arcade">Arcade</button>
     <button data-tab="bots">Bots <span class="pill" id="pill-bots" hidden></span></button>
     <button data-tab="workforce">Workforce <span class="pill" id="pill-approvals" hidden></span></button>
@@ -28,7 +29,28 @@
 </header>
 
 <main>
-  <section id="tab-board" class="tab active">
+  <section id="tab-home" class="tab active">
+    <div class="home-head">
+      <div><h1 id="home-hello">Hi Richard</h1><div class="muted" id="home-sub"></div></div>
+      <div class="biz-tabs" id="biz-tabs"></div>
+    </div>
+    <div class="home-grid">
+      <div>
+        <h2 class="sec">What needs you <span class="muted" id="queue-count"></span></h2>
+        <div id="queue"></div>
+      </div>
+      <div>
+        <h2 class="sec">Today by business</h2>
+        <div id="biz-cards"></div>
+        <h2 class="sec">Working right now</h2>
+        <div id="working-list" class="mini-list"></div>
+        <h2 class="sec">Coming up</h2>
+        <div id="upcoming" class="mini-list"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="tab-board" class="tab">
     <div class="filters" id="filters"></div>
     <div class="board" id="board"></div>
     <div class="snoozed" id="snoozed"></div>
@@ -44,7 +66,7 @@
     </div>
     <div class="arcade-layout">
       <div>
-        <div class="arcade-frame"><canvas id="arcade" width="512" height="368"></canvas></div>
+        <div class="arcade-frame"><canvas id="arcade" width="704" height="480"></canvas></div>
         <div id="arcade-legend" class="legend"></div>
       </div>
       <aside id="arcade-side" class="arcade-side"></aside>

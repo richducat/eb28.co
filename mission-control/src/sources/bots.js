@@ -271,6 +271,8 @@ export function parsePs(out, keywords = /grok|xai/i, selfPid = process.pid) {
     if (/\s--type=|chrome_crashpad_handler|\bHelper\b|\((Renderer|Service|GPU|Plugin)\)/.test(command)) continue;
     // A macOS app is one bot: "/Applications/Grok Bot.app/Contents/MacOS/Grok Bot" -> "Grok Bot".
     const app = command.match(/^(.*?\/([^/]+)\.app)\/Contents\/MacOS\//);
+    // anything else inside an app bundle (updaters like Squirrel's ShipIt, frameworks) is not a bot
+    if (!app && /\.app\/Contents\//.test(command)) continue;
     if (app) {
       if (!keywords.test(app[2])) continue;
       if (rows.some((r) => r.app === app[1])) continue;

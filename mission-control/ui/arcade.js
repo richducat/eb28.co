@@ -8,10 +8,11 @@
  */
 (() => {
   const T = 16; // tile size
-  const COLS = 32;
-  const ROWS = 23;
-  const W = COLS * T; // 512
-  const H = ROWS * T; // 368
+  const COLS = 44;
+  const ROWS = 30;
+  const W = COLS * T; // 704
+  const H = ROWS * T; // 480
+  const GAP = 18; // spacing between characters in a crowd
 
   /* ---------- palette: SNES-like 3–4 step ramps ---------- */
   const P = {
@@ -31,19 +32,19 @@
 
   /* ---------- places ---------- */
   // door = tile the crowd gathers at; building drawn above it. route = path from the HQ door.
-  const HQD = [16, 13];
+  const HQD = [22, 17];
   const PLACES = {
-    needs_you: { name: 'NEEDS YOU', blurb: 'Waiting on your answer or approval', door: [7, 7], route: [HQD, [16, 9], [7, 9], [7, 7]], cols: 5, kind: 'castle' },
-    working: { name: 'WORKSHOP', blurb: 'Agents busy right now', door: [16, 6], route: [HQD, [16, 9], [16, 6]], cols: 6, kind: 'workshop' },
-    bots: { name: 'BOT FORTRESS', blurb: 'Always-on bots (Grok, Hermes...)', door: [25, 7], route: [HQD, [16, 9], [25, 9], [25, 7]], cols: 4, kind: 'fortress' },
-    follow_up: { name: 'FOLLOW-UP', blurb: 'Idle, stale or needs a nudge', door: [6, 14], route: [HQD, [16, 15], [6, 15], [6, 14]], cols: 5, kind: 'post' },
+    needs_you: { name: 'NEEDS YOU', blurb: 'Waiting on your answer or approval', door: [9, 9], route: [HQD, [22, 12], [9, 12], [9, 9]], cols: 5, kind: 'castle' },
+    working: { name: 'WORKSHOP', blurb: 'Agents busy right now', door: [22, 8], route: [HQD, [22, 8]], cols: 6, kind: 'workshop' },
+    bots: { name: 'BOT FORTRESS', blurb: 'Always-on bots (Grok, Hermes...)', door: [35, 9], route: [HQD, [22, 12], [35, 12], [35, 9]], cols: 4, kind: 'fortress' },
+    follow_up: { name: 'FOLLOW-UP', blurb: 'Idle, stale or needs a nudge', door: [8, 18], route: [HQD, [22, 21], [8, 21], [8, 18]], cols: 5, kind: 'post' },
     hq: { name: 'HQ', blurb: 'Your workforce agents + Dot', door: HQD, route: [HQD], cols: 5, kind: 'house' },
-    done: { name: 'GOAL', blurb: 'Finished in the last day', door: [26, 14], route: [HQD, [16, 15], [26, 15], [26, 14]], cols: 6, kind: 'goal', max: 12 },
-    failed: { name: 'GHOST HOUSE', blurb: 'Crashed or errored. Check these', door: [23, 19], route: [HQD, [16, 15], [21, 15], [21, 19], [23, 19]], cols: 4, kind: 'ghost', max: 8 },
-    crew: { name: 'HERMES VILLAGE', blurb: 'Your Hermes profile agents', door: [10, 19], route: [HQD, [16, 15], [10, 15], [10, 19]], cols: 11, kind: 'village' },
+    done: { name: 'GOAL', blurb: 'Finished in the last day', door: [36, 18], route: [HQD, [22, 21], [36, 21], [36, 18]], cols: 6, kind: 'goal', max: 12 },
+    failed: { name: 'GHOST HOUSE', blurb: 'Crashed or errored. Check these', door: [32, 25], route: [HQD, [22, 21], [28, 21], [28, 25], [32, 25]], cols: 4, kind: 'ghost', max: 8 },
+    crew: { name: 'HERMES VILLAGE', blurb: 'Your Hermes profile agents', door: [13, 25], route: [HQD, [22, 21], [13, 21], [13, 25]], cols: 11, kind: 'village' },
   };
   // The clock tower is a landmark, not a status: it shows when scheduled agents run next.
-  const CLOCK = { door: [11, 13] };
+  const CLOCK = { door: [15, 16] };
   const AGENT_TARGET = { triage: 'needs_you', 'follow-up': 'follow_up', 'bot-watchdog': 'bots', janitor: 'done', 'pr-steward': 'working', 'ops-runner': 'working', 'automation-scout': 'working', reporter: 'hq' };
 
   /* ---------- deterministic noise ---------- */
@@ -62,8 +63,8 @@
     for (let y = 0; y < ROWS; y += 1) {
       LAND[y] = []; PATH[y] = []; PLAZA[y] = [];
       for (let x = 0; x < COLS; x += 1) {
-        const nx = (x + 0.5 - 16) / 15.2;
-        const ny = (y + 0.5 - 12) / 10.4;
+        const nx = (x + 0.5 - COLS / 2) / (COLS / 2 - 0.8);
+        const ny = (y + 0.5 - ROWS / 2 - 0.5) / (ROWS / 2 - 1.6);
         const n = (hash(x >> 1, y >> 1, 7) - 0.5) * 0.22 + (hash(x, y, 3) - 0.5) * 0.08;
         LAND[y][x] = y >= 2 && nx * nx + ny * ny + n < 1;
         PATH[y][x] = false;
@@ -79,7 +80,7 @@
         for (let y = Math.min(y0, y1); y <= Math.max(y0, y1); y += 1) mark(x1, y);
       }
       const [dx, dy] = p.door;
-      const half = (Math.ceil(p.cols / 2) * 14) / T + 0.5;
+      const half = (Math.ceil(p.cols / 2) * GAP) / T + 0.5;
       for (let y = dy - 3; y <= dy + 1; y += 1) for (let x = Math.floor(dx - half); x <= Math.ceil(dx + half); x += 1) if (y >= 0 && y < ROWS && x >= 0 && x < COLS) { PLAZA[y][x] = true; LAND[y][x] = true; }
     }
     for (let y = CLOCK.door[1] - 3; y <= CLOCK.door[1]; y += 1) for (let x = CLOCK.door[0] - 1; x <= CLOCK.door[0] + 1; x += 1) PLAZA[y][x] = true;
@@ -487,7 +488,7 @@
     const w = Math.max(30, Math.ceil(g.measureText(label).width) + 10);
     const x = Math.round(cx - w / 2);
     const rows = Math.ceil(Math.min(count, p.max || 99) / p.cols);
-    const y = Math.min(by + 8 + Math.max(1, rows) * 14, H - 28);
+    const y = Math.min(by + 8 + Math.max(1, rows) * (GAP - 1), H - 28);
     px(x - 1, y - 1, w + 2, 12, P.ink);
     px(x, y, w, 10, P.wood[2]);
     px(x, y, w, 1, P.wood[3]);
@@ -570,7 +571,7 @@
     const p = PLACES[placeId];
     const row = Math.floor(i / p.cols);
     const col = i % p.cols;
-    return { x: Math.round(p.door[0] * T + (col - (p.cols - 1) / 2) * 14), y: p.door[1] * T + 4 + row * 14 };
+    return { x: Math.round(p.door[0] * T + (col - (p.cols - 1) / 2) * GAP), y: p.door[1] * T + 4 + row * (GAP - 1) };
   }
 
   function routeBetween(from, to) {
@@ -772,7 +773,7 @@
     const k = Math.floor(t / cycle);
     const ph = (t % cycle) / 1.2;
     if (ph > 1) return;
-    const spots = [[1, 6], [30, 9], [2, 18], [29, 20], [20, 1]];
+    const spots = [[1, 8], [42, 12], [2, 24], [41, 25], [30, 1], [10, 1]];
     const [sx, sy] = spots[k % spots.length];
     const x = sx * T + ph * 24;
     const y = sy * T - Math.sin(ph * Math.PI) * 18;
@@ -786,7 +787,7 @@
   function clouds(t) {
     for (let i = 0; i < 4; i += 1) {
       const cx = ((t * (4 + i) + i * 160) % (W + 80)) - 60;
-      const cy = 30 + i * 80 + Math.sin(t / 3 + i) * 3;
+      const cy = 34 + i * 110 + Math.sin(t / 3 + i) * 3;
       g.fillStyle = 'rgba(255,255,255,.5)';
       g.fillRect(Math.round(cx), Math.round(cy), 40, 8);
       g.fillRect(Math.round(cx + 6), Math.round(cy - 5), 22, 6);
@@ -801,8 +802,8 @@
     px(0, 20, W, 1, P.gold[1]);
     text('MISSION CONTROL', 8, 7, P.gold[2], 7);
     const items = [['!', counts.needs_you, P.red[3]], ['WORK', counts.working, P.grass[3]], ['BOTS', counts.bots, P.sea[3]], ['GOAL', counts.done, P.gold[3]], ['BOO', counts.failed, P.ghost[3]], ['CREW', counts.crew, P.gold[2]]];
-    let x = 132;
-    for (const [k, v, c] of items) { text(`${k}x${String(v || 0).padStart(2, '0')}`, x, 7, c, 6); x += 63; }
+    let x = 190;
+    for (const [k, v, c] of items) { text(`${k}x${String(v || 0).padStart(2, '0')}`, x, 7, c, 6); x += 84; }
     const msg = ticker[0];
     const age = msg ? (performance.now() - msg.t) / 1000 : 99;
     px(0, H - 14, W, 14, 'rgba(16,16,24,.85)');
@@ -845,12 +846,12 @@
     }
   }
 
-  // The art animates at ~10fps, so 30fps is plenty; skip work entirely while hidden.
+  // The art animates at ~10fps, so 30fps is plenty; while hidden, one frame every 2s.
   const FRAME_MS = 1000 / 30;
   let lastDraw = 0;
   function render(ts) {
     if (!running) return;
-    if (document.hidden || ts - lastDraw < FRAME_MS - 1) {
+    if (ts - lastDraw < (document.hidden ? 2000 : FRAME_MS - 1)) {
       requestAnimationFrame(render);
       return;
     }

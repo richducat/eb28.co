@@ -59,7 +59,7 @@ export function createServer({ orchestrator = new Orchestrator(), nativeNotify =
     'GET /api/job': async (_b, q) => jobDetail(q.get('id')),
     'POST /api/job/override': async (b) => {
       if (b.id && b.id.startsWith('manual:')) updateManual(b.id, { status: b.status, notes: b.note });
-      const o = setOverride(b.id, { status: b.status, reason: b.reason, note: b.note, snoozedUntil: b.snoozedUntil, archived: b.archived, followUpAt: b.followUpAt });
+      const o = setOverride(b.id, { status: b.status, reason: b.reason, note: b.note, snoozedUntil: b.snoozedUntil, archived: b.archived, followUpAt: b.followUpAt, business: b.business });
       await orchestrator.refreshBoard();
       return { ok: true, override: o };
     },

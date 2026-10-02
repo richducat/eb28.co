@@ -2,6 +2,7 @@ import { collectAll } from './sources/index.js';
 import { store } from './store.js';
 import { STATUSES, SOURCES } from './jobs/model.js';
 import { T } from './config.js';
+import { askOf, businessOf, loadBusinesses, OTHER } from './businesses.js';
 
 export const COLUMNS = [
   { id: 'needs_you', title: 'Needs you', hint: 'Answer, approve, or decide' },
@@ -31,6 +32,7 @@ export function applyOverrides(jobs, overrides, now = Date.now()) {
         next.overridden = true;
       }
       if (o.followUpAt) next.followUpAt = o.followUpAt;
+      if (o.business) next.business = o.business;
       return next;
     })
     .filter((job) => !job.archived);
@@ -57,6 +59,11 @@ export async function buildBoard({ now = Date.now(), only } = {}) {
   const overrides = store.get('overrides', {});
   let jobs = applyOverrides(raw, overrides, now);
   jobs = jobs.filter((j) => !(j.status === 'done' && j.lastActivity && now - Date.parse(j.lastActivity) > T.staleAfter));
+  const businesses = loadBusinesses();
+  jobs = jobs.map((j) => {
+    const job = { ...j, business: businessOf(j, businesses) };
+    return { ...job, ask: askOf(job) };
+  });
   const visible = jobs.filter((j) => !j.snoozedUntil);
   const snoozed = jobs.filter((j) => j.snoozedUntil);
   const columns = COLUMNS.map((c) => ({ ...c, jobs: visible.filter((j) => j.status === c.id).sort(sortJobs) }));
@@ -65,6 +72,7 @@ export async function buildBoard({ now = Date.now(), only } = {}) {
     columns,
     snoozed: snoozed.sort(sortJobs),
     summary: summarize(visible),
+    businesses: [...businesses, OTHER].map(({ id, name, full, color }) => ({ id, name, full, color })),
     sources: Object.entries(SOURCES).map(([id, s]) => ({ id, ...s })),
     errors,
     timings,
@@ -74,7 +82,9 @@ export async function buildBoard({ now = Date.now(), only } = {}) {
 export function setOverride(id, patch) {
   return store.update('overrides', {}, (all) => {
     const current = all[id] || {};
-    const next = { ...current, ...patch, asOf: new Date().toISOString() };
+    // undefined means "not mentioned" (keep the current value); null or '' clears it
+    const given = Object.fromEntries(Object.entries(patch).filter(([, v]) => v !== undefined));
+    const next = { ...current, ...given, asOf: new Date().toISOString() };
     for (const k of Object.keys(next)) if (next[k] === null || next[k] === undefined || next[k] === '') delete next[k];
     if (Object.keys(next).length <= 1) {
       const copy = { ...all };

@@ -92,6 +92,7 @@ test('parsePs: a macOS app and its Electron helpers count as one bot', () => {
     '102 01:00 /Applications/Grok Bot.app/Contents/Frameworks/Electron Framework.framework/Helpers/chrome_crashpad_handler --x',
     '103 01:00 /Applications/ChatGPT.app/Contents/Frameworks/Codex Framework.framework/Helpers/Codex (Renderer).app/Contents/MacOS/Codex (Renderer) --type=renderer --flag=xai',
     '104 01:00 node /srv/bots/grok-poster.js',
+    '105 01:00 /Applications/Grok Bot.app/Contents/Frameworks/Squirrel.framework/Resources/ShipIt com.xai.grok.ShipIt',
   ].join('\n');
   const rows = parsePs(out, /grok|xai/i, 1);
   assert.deepEqual(rows.map((r) => r.name), ['Grok Bot', 'grok-poster.js']);

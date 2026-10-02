@@ -239,6 +239,10 @@ export function createServer({ orchestrator = new Orchestrator(), nativeNotify =
       return;
     }
     const handler = routes[`${req.method} ${url.pathname}`];
+    if (handler && req.method !== 'GET') {
+      const guard = checkWrite(req);
+      if (!guard.ok) return json(res, 403, { error: guard.reason });
+    }
     if (handler) {
       try {
         const body = req.method === 'GET' ? {} : await readBody(req);
@@ -364,6 +368,24 @@ export async function openLocal({ path: target, url, command }) {
     if (res.ok) return { ok: true, opened: term };
   }
   return { ok: false, error: 'no terminal emulator found. Copy the command instead.' };
+}
+
+/**
+ * Write guard for every non-GET API route. The server has no auth and binds to localhost, so
+ * without this any web page open in a browser could POST to it (a "simple" text/plain request
+ * needs no CORS preflight) and, say, send replies to agents or run automations. Requiring a
+ * JSON content type forces a preflight the server never answers, and checking Host/Origin
+ * blocks DNS rebinding and cross-site requests. Exported for tests.
+ */
+export function checkWrite(req) {
+  const port = req.socket && req.socket.localPort;
+  const allowed = new Set([`127.0.0.1:${port}`, `localhost:${port}`]);
+  const host = String(req.headers.host || '');
+  if (!allowed.has(host)) return { ok: false, reason: 'Refused: request did not come from Mission Control (host).' };
+  const origin = req.headers.origin;
+  if (origin && !allowed.has(origin.replace(/^https?:\/\//, ''))) return { ok: false, reason: 'Refused: request did not come from Mission Control (origin).' };
+  if (!/^application\/json\b/i.test(String(req.headers['content-type'] || ''))) return { ok: false, reason: 'Refused: write requests must be JSON.' };
+  return { ok: true };
 }
 
 export function listen(server, port = PORT) {

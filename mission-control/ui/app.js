@@ -2,7 +2,9 @@
 const $ = (sel, root = document) => root.querySelector(sel);
 const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
 const api = async (method, path, body) => {
-  const res = await fetch(path, { method, headers: body ? { 'Content-Type': 'application/json' } : {}, body: body ? JSON.stringify(body) : undefined });
+  // writes are always JSON: the server refuses anything else (see checkWrite in server.js)
+  const write = method !== 'GET';
+  const res = await fetch(path, { method, headers: write ? { 'Content-Type': 'application/json' } : {}, body: write ? JSON.stringify(body || {}) : undefined });
   const data = await res.json();
   if (!res.ok) throw new Error(data.error || res.statusText);
   return data;

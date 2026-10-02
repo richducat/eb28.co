@@ -44,3 +44,17 @@ test('optionsFromText: obvious answers from the agent\'s own words', () => {
   assert.deepEqual(optionsFromText('Which approach do you prefer?\n1. Patch the parser\n2. Regenerate the page\n3. Do both').map((o) => o.label), ['Patch the parser', 'Regenerate the page', 'Do both']);
   assert.deepEqual(optionsFromText('Three questions:\n1. What is Dot?\n2. Where do bots run?\n3. Is it broken?'), []);
 });
+
+test('reply: progress lines from Claude and Codex streams', async () => {
+  const { progressFrom, allowRule } = await import('../src/reply.js');
+  assert.deepEqual(progressFrom('{"type":"system","subtype":"init","session_id":"abc"}'), { sessionId: 'abc' });
+  assert.equal(progressFrom('{"type":"assistant","message":{"content":[{"type":"tool_use","name":"Edit","input":{"file_path":"/a/b.js"}}]}}').note, '✏️ Editing b.js');
+  const r = progressFrom('{"type":"result","is_error":false,"result":"Done.","permission_denials":[{"tool_name":"Bash","tool_input":{"command":"npm test"}}]}');
+  assert.equal(r.done, true);
+  assert.equal(r.denials[0].tool_name, 'Bash');
+  assert.deepEqual(progressFrom('{"type":"thread.started","thread_id":"t1"}'), { sessionId: 't1' });
+  assert.equal(progressFrom('{"type":"item.completed","item":{"type":"agent_message","text":"hi"}}').text, 'hi');
+  assert.equal(progressFrom('not json'), null);
+  assert.equal(allowRule('Bash', { command: 'npm test' }), 'Bash(npm test)');
+  assert.equal(allowRule('Edit', { file_path: 'x' }), 'Edit');
+});

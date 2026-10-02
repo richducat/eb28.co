@@ -1,7 +1,7 @@
 import http from 'node:http';
 import { listCrew } from './sources/hermes-crew.js';
 import { recordAnswer } from './sources/hermes-handoff.js';
-import { askFor, suggest } from './reply.js';
+import { askFor, claudeReady, replyRun, sendReply, startClaudeLogin, suggest } from './reply.js';
 import fs from 'node:fs';
 import path from 'node:path';
 import { execFile } from 'node:child_process';
@@ -165,8 +165,35 @@ export function createServer({ orchestrator = new Orchestrator(), nativeNotify =
       if (!job) throw new Error('job not found');
       const ask = askFor(job);
       if (!ask.suggested && ask.kind !== 'approve' && ask.kind !== 'decision') suggest(job, () => orchestrator.emitEvent({ type: 'ask:suggested', jobId: job.id })).catch(() => {});
-      return ask;
+      return { ...ask, run: replyRun(job.id) };
     },
+    // Send Richard's answer to the agent's session (Claude Code or Codex), headless.
+    'POST /api/reply': async (b) => {
+      const board = orchestrator.board || (await orchestrator.refreshBoard());
+      const job = board.columns.flatMap((c) => c.jobs).concat(board.snoozed || []).find((j) => j.id === b.id);
+      if (!job) throw new Error('job not found');
+      // `allow` approves one command the agent was denied during an earlier reply
+      const ask = b.approve && !b.allow ? askFor(job) : {};
+      try {
+        return await sendReply(job, b.text, {
+          approve: Boolean(b.approve || b.allow),
+          tool: b.allow ? b.allow.tool : ask.tool,
+          toolInput: b.allow ? b.allow.input : ask.toolInput,
+          onEvent: (e) => {
+            orchestrator.emitEvent(e);
+            if (e.type === 'reply:done') {
+              if (e.run.forked && e.run.status === 'done') setOverride(job.id, { status: 'done', reason: 'Continued from Mission Control in a new thread.' });
+              setTimeout(() => orchestrator.refreshBoard(), 500);
+            }
+          },
+        });
+      } catch (err) {
+        if (err.code === 'claude-login') return { ok: false, needsLogin: true, error: err.message };
+        throw err;
+      }
+    },
+    'GET /api/claude/status': async () => ({ ready: await claudeReady() }),
+    'POST /api/claude/login': async () => startClaudeLogin(),
     // Answer a Hermes decision: written to ~/hermes-handoff/decisions/answers.md for CoS.
     'POST /api/decision': async (b) => {
       const line = recordAnswer(String(b.id || '').replace(/^decision:/, ''), b.answer);

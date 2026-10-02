@@ -222,3 +222,13 @@ h2.sec { font-size: 13px; text-transform: uppercase; letter-spacing: .07em; colo
 .q .other .go { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
 .q .note { font-size: 11px; color: var(--muted); margin-top: 6px; }
 .q .btns button[title] { padding: 4px 8px; }
+/* reply progress */
+.q .run { border-radius: 8px; padding: 8px 10px; margin-bottom: 8px; background: var(--panel-2); font-size: 13px; }
+.q .run.running { border-left: 3px solid var(--work); }
+.q .run.done { border-left: 3px solid var(--ok); }
+.q .run.failed { border-left: 3px solid var(--bad); }
+.q .run .notes { color: var(--muted); font-size: 12px; margin-top: 4px; }
+.q .run .aq { margin: 6px 0 0; }
+.q .deny { margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--line); }
+.q .deny code { display: block; margin: 4px 0 6px; font-size: 12px; white-space: pre-wrap; word-break: break-all; }
+.q .note .opt { margin-left: 6px; }

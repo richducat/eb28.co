@@ -308,6 +308,7 @@ function connectEvents() {
   es.onmessage = (ev) => {
     const e = JSON.parse(ev.data);
     if (e.type === 'ask:suggested') { delete home.asks[e.jobId]; if (state.tab === 'home') hydrateAsks(queueItems()); }
+    if (e.type === 'reply:progress' || e.type === 'reply:done') onReplyEvent(e);
     if (e.type === 'board:refresh') loadBoard().then(() => { if (state.tab === 'arcade') loadArcade(); });
     if (e.type === 'job:transition') toast(`${e.title.slice(0, 70)} → ${STATUS_LABEL[e.to] || e.to}`, e.to === 'failed' ? 'bad' : e.to === 'needs_you' ? 'you' : 'ok');
     if (e.type === 'proposal:new') { toast(`Approval needed: ${e.title}`, 'you'); loadWorkforce(); }
@@ -414,7 +415,9 @@ function queueItems() {
     items.push({ kind: 'proposal', ask: 'approve', id: p.id, title: p.title, line: p.description || '', at: p.createdAt, business: job ? job.business : 'other', p });
   }
   for (const j of jobs) {
-    if (j.status !== 'needs_you' && j.status !== 'failed') continue;
+    const run = home.runs[j.id];
+    const live = run && (run.status === 'running' || (run.denials && run.denials.length));
+    if (j.status !== 'needs_you' && j.status !== 'failed' && !live) continue;
     const act = j.meta && j.meta.activity;
     const line = j.status === 'needs_you' && act && /question|permission/i.test(`${act.label} ${j.reason}`) ? `${act.icon} ${act.label}` : j.reason;
     items.push({ kind: 'job', ask: j.ask || (j.status === 'failed' ? 'fix' : 'review'), id: j.id, title: j.title, line, at: j.lastActivity, business: j.business, j });
@@ -436,7 +439,7 @@ function queueHtml(it) {
       : j.link ? `<button class="go" data-side-url="${esc(j.link)}">Open</button>` : '';
     btns = `${primary}<button data-side-act='${esc(JSON.stringify({ id: j.id, status: 'done' }))}'>Done</button><button data-side-act='${esc(JSON.stringify({ id: j.id, snoozedUntil: new Date(Date.now() + 4 * 3600e3).toISOString() }))}'>Snooze 4h</button>`;
   }
-  const answerable = it.kind === 'job' && it.j.status === 'needs_you';
+  const answerable = it.kind === 'job' && (it.j.status === 'needs_you' || Boolean(home.runs[it.id]));
   return `<div class="q ${it.ask}"><div class="ask">${ASK[it.ask]}</div>
     <div><div class="t" ${it.kind === 'job' ? `data-side-drawer="${esc(it.id)}"` : ''}>${esc(it.title)}</div>
     <div class="s"><span class="biz" style="background:${b.color}">${esc(b.name)}</span>${wait}${answerable ? '' : `<span>${esc((it.line || '').slice(0, 140))}</span>`}</div>
@@ -444,19 +447,33 @@ function queueHtml(it) {
     <div class="btns">${answerable ? `<button data-side-act='${esc(JSON.stringify({ id: it.j.id, status: 'done' }))}' title="Mark done">✓</button><button data-side-act='${esc(JSON.stringify({ id: it.j.id, snoozedUntil: new Date(Date.now() + 4 * 3600e3).toISOString() }))}' title="Snooze 4 hours">💤</button>` : btns}</div></div>`;
 }
 
-const home = { asks: {}, loading: new Set(), open: new Set() };
+const home = { asks: {}, loading: new Set(), open: new Set(), runs: {}, needsLogin: false };
+
+/** Live status of a reply Richard sent: progress, the agent's answer, follow-up approvals. */
+function runHtml(run) {
+  if (!run) return '';
+  const notes = (run.notes || []).slice(-3).map((n) => `<div>${esc(n)}</div>`).join('');
+  const head = run.status === 'running' ? '⏳ Sent. The agent is working…' : run.status === 'done' ? '✅ The agent finished.' : '⚠️ The agent hit a problem.';
+  const denials = (run.denials || []).map((d, i) => {
+    const what = d.input && (d.input.command || d.input.file_path || d.input.url) ? `<code>${esc(String(d.input.command || d.input.file_path || d.input.url).slice(0, 300))}</code>` : '';
+    return `<div class="deny">It wants to use <b>${esc(d.tool)}</b>${what}<div class="opts"><button class="opt go" data-allow="${esc(run.jobId)}" data-i="${i}"><b>1</b> Approve</button><button class="opt" data-run-clear="${esc(run.jobId)}"><b>2</b> Don't</button></div></div>`;
+  }).join('');
+  return `<div class="run ${run.status}"><b>${head}</b>${notes ? `<div class="notes">${notes}</div>` : ''}${run.answer ? `<div class="aq">${esc(run.answer.slice(0, 900))}</div>` : ''}${denials}</div>`;
+}
 
 function askHtml(j, ask) {
-  if (!ask) return '<div class="aq muted">Loading the question…</div>';
+  const run = home.runs[j.id];
+  if (!ask) return run ? runHtml(run) : '<div class="aq muted">Loading the question…</div>';
+  if (run && (run.status === 'running' || (run.denials && run.denials.length))) return runHtml(run);
   const opts = (ask.suggested && ask.suggested.length ? ask.suggested : ask.options) || [];
   const q = ask.kind === 'approve' ? `${esc(ask.question)}${ask.detail ? `<code>${esc(ask.detail)}</code>` : ''}` : ask.question && ask.question.trim() !== j.title.trim() ? esc(ask.question) : '';
-  const sendNote = ask.kind === 'decision' ? '' : '<div class="note">Sending from Mission Control is waiting on a permission change. For now your answer is copied so you can paste it into the session.</div>';
+  const login = home.needsLogin && j.source === 'claude-code' ? '<div class="note">Mission Control needs a one-time Claude sign-in to send replies. <button class="opt go" data-claude-login>Connect Claude</button></div>' : '';
   const other = home.open.has(j.id)
-    ? `<div class="other"><textarea rows="2" placeholder="Type your answer…" data-other-text="${esc(j.id)}"></textarea><button class="go" data-answer-other="${esc(j.id)}">Send</button></div>${sendNote}`
+    ? `<div class="other"><textarea rows="2" placeholder="Type your answer…" data-other-text="${esc(j.id)}"></textarea><button class="go" data-answer-other="${esc(j.id)}">Send</button></div>`
     : '';
-  return `${q ? `<div class="aq">${q}</div>` : ''}
-    <div class="opts">${opts.map((o, i) => `<button class="opt ${i === 0 ? 'go' : ''}" data-answer="${esc(j.id)}" data-reply="${esc(o.reply)}" title="${esc(o.reply)}"><b>${i + 1}</b> ${esc(o.label)}</button>`).join('')}
-    <button class="opt" data-answer-open="${esc(j.id)}">✍️ Other…</button></div>${other}`;
+  return `${run && run.status !== 'running' ? runHtml(run) : ''}${q ? `<div class="aq">${q}</div>` : ''}
+    <div class="opts">${opts.map((o, i) => `<button class="opt ${i === 0 ? 'go' : ''}" data-answer="${esc(j.id)}" data-reply="${esc(o.reply)}" ${o.approve ? 'data-approve="1"' : ''} title="${esc(o.reply)}"><b>${i + 1}</b> ${esc(o.label)}</button>`).join('')}
+    <button class="opt" data-answer-open="${esc(j.id)}">✍️ Other…</button></div>${other}${login}`;
 }
 
 async function hydrateAsks(items) {
@@ -476,7 +493,7 @@ function paintAsk(id) {
   if (el && j) el.innerHTML = askHtml(j, home.asks[id]);
 }
 
-async function answer(id, text) {
+async function answer(id, text, { approve = false, allow = null } = {}) {
   const ask = home.asks[id];
   const reply = String(text || '').trim();
   if (!reply) return toast('Type an answer first.', 'bad');
@@ -488,15 +505,48 @@ async function answer(id, text) {
     await loadBoard();
     return renderHome();
   }
-  try { await navigator.clipboard.writeText(reply); } catch { /* clipboard blocked */ }
-  toast('Copied your answer. Paste it into the session.', 'ok');
+  const res = await api('POST', '/api/reply', { id, text: reply, approve, allow });
+  if (res && res.needsLogin) {
+    home.needsLogin = true;
+    paintAsk(id);
+    return toast('Connect Claude once, then send again.', 'bad');
+  }
+  home.open.delete(id);
+  home.runs[id] = res;
+  paintAsk(id);
+  toast('Sent to the agent ✓', 'ok');
+}
+
+/** Follow a reply's progress as the server streams it. */
+function onReplyEvent(e) {
+  home.runs[e.jobId] = e.run;
+  if (e.type === 'reply:done') {
+    delete home.asks[e.jobId];
+    toast(e.run.status === 'done' ? `${e.run.title.slice(0, 50)}: agent finished` : `${e.run.title.slice(0, 50)}: agent hit a problem`, e.run.status === 'done' ? 'ok' : 'bad');
+  }
+  if (state.tab === 'home') paintAsk(e.jobId);
 }
 
 document.addEventListener('click', async (ev) => {
-  const t = ev.target.closest('[data-answer],[data-answer-open],[data-answer-other]');
+  const t = ev.target.closest('[data-answer],[data-answer-open],[data-answer-other],[data-allow],[data-run-clear],[data-claude-login]');
   if (!t) return;
   try {
-    if (t.dataset.answer) return await answer(t.dataset.answer, t.dataset.reply);
+    if ('claudeLogin' in t.dataset) {
+      await api('POST', '/api/claude/login');
+      home.needsLogin = false;
+      return toast('Finish signing in to Claude in your browser, then send your answer again.', 'ok');
+    }
+    if (t.dataset.allow) {
+      const run = home.runs[t.dataset.allow];
+      const d = run && run.denials && run.denials[Number(t.dataset.i)];
+      if (!d) return;
+      // a forked reply continues in its own session; approve there
+      const target = run.forked && run.sessionId ? `claude-code:${run.sessionId}` : run.jobId;
+      await loadBoard();
+      return await answer(target, 'Approved. Run it now and continue.', { allow: { tool: d.tool, input: d.input } });
+    }
+    if (t.dataset.runClear) { delete home.runs[t.dataset.runClear]; return paintAsk(t.dataset.runClear); }
+    if (t.dataset.answer) return await answer(t.dataset.answer, t.dataset.reply, { approve: t.dataset.approve === '1' });
     if (t.dataset.answerOpen) { const id = t.dataset.answerOpen; home.open.has(id) ? home.open.delete(id) : home.open.add(id); paintAsk(id); const ta = document.querySelector(`[data-other-text="${CSS.escape(id)}"]`); if (ta) ta.focus(); return; }
     if (t.dataset.answerOther) { const ta = document.querySelector(`[data-other-text="${CSS.escape(t.dataset.answerOther)}"]`); return await answer(t.dataset.answerOther, ta && ta.value); }
   } catch (err) { toast(err.message, 'bad'); }

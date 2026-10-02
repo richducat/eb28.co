@@ -14,6 +14,7 @@
   <nav class="tabs" id="tabs">
     <button data-tab="home" class="active">Home <span class="pill" id="pill-home" hidden></span></button>
     <button data-tab="tyfys">TYFYS <span class="pill" id="pill-tyfys" hidden></span></button>
+    <button data-tab="trading">Trading <span class="pill" id="pill-trading" hidden></span></button>
     <button data-tab="board">Board</button>
     <button data-tab="arcade">Arcade</button>
     <button data-tab="bots">Bots <span class="pill" id="pill-bots" hidden></span></button>
@@ -67,6 +68,8 @@
       <div><h2 class="sec">Who owns what</h2><div id="ty-owners" class="ty-bars"></div></div>
     </div>
   </section>
+
+  <section id="tab-trading" class="tab"><div id="trading-root"><div class="muted">Loading the trading desk…</div></div></section>
 
   <section id="tab-board" class="tab">
     <div class="filters" id="filters"></div>
@@ -198,6 +201,7 @@
 </dialog>
 
 <div id="toasts" class="toasts"></div>
+<script src="/trading.js"></script>
 <script src="/sprites.js"></script>
 <script src="/arcade.js"></script>
 <script src="/app.js"></script>

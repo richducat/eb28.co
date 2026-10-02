@@ -2,6 +2,7 @@ import http from 'node:http';
 import { listCrew } from './sources/hermes-crew.js';
 import { recordAnswer } from './sources/hermes-handoff.js';
 import { usage } from './usage.js';
+import { tradingRoutes } from './trading/routes.js';
 import { tyfysPipeline } from './tyfys.js';
 import { boardFrom, days as replayDays, frames as replayFrames } from './replay.js';
 import { askCos, chats, PROFILES as COS_PROFILES } from './cos.js';
@@ -24,7 +25,7 @@ import { restartBot } from './workforce/bot-control.js';
 const UI_DIR = path.join(APP_ROOT, 'ui');
 const MIME = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.svg': 'image/svg+xml', '.png': 'image/png' };
 
-export function createServer({ orchestrator = new Orchestrator(), nativeNotify = null } = {}) {
+export function createServer({ orchestrator = new Orchestrator(), nativeNotify = null, confirmOwner = null } = {}) {
   const clients = new Set();
 
   orchestrator.on('event', (event) => {
@@ -226,6 +227,7 @@ export function createServer({ orchestrator = new Orchestrator(), nativeNotify =
       store.set('dot', dot);
       return dot;
     },
+    ...tradingRoutes({ orchestrator, confirmOwner }),
     'GET /api/health': async () => ({ ok: true, home: MC_HOME, pid: process.pid }),
   };
 

@@ -311,6 +311,7 @@ function connectEvents() {
     const e = JSON.parse(ev.data);
     if (e.type === 'ask:suggested') { delete home.asks[e.jobId]; if (state.tab === 'home') hydrateAsks(queueItems()); }
     if (e.type === 'reply:progress' || e.type === 'reply:done') onReplyEvent(e);
+    if (e.type === 'trading:refresh' && state.tab === 'trading') window.Trading.load();
     if (e.type === 'cos:done') { toast(`Chief of Staff replied: ${e.chat.a.slice(0, 80)}`, e.chat.status === 'done' ? 'ok' : 'bad'); loadCos(); }
     if (e.type === 'board:refresh') loadBoard().then(() => { if (state.tab === 'arcade') loadArcade(); });
     if (e.type === 'job:transition') toast(`${e.title.slice(0, 70)} → ${STATUS_LABEL[e.to] || e.to}`, e.to === 'failed' ? 'bad' : e.to === 'needs_you' ? 'you' : 'ok');
@@ -331,6 +332,7 @@ function showTab(id) {
   $$('.tab').forEach((t) => t.classList.toggle('active', t.id === `tab-${id}`));
   if (id === 'home') loadHome();
   if (id === 'tyfys') loadTyfys();
+  if (id === 'trading') window.Trading.load();
   if (id === 'workforce') loadWorkforce();
   if (id === 'bots') loadBots();
   if (id === 'automations') loadAutomations();

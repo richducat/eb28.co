@@ -1,0 +1,197 @@
+import Foundation
+import SwiftUI
+import UIKit
+import UserNotifications
+
+@MainActor
+final class AppModel: ObservableObject {
+    @Published var pairing: Pairing?
+    @Published var board: Board?
+    @Published var trading: Trading?
+    @Published var tyfys: Tyfys?
+    @Published var cos: CosResponse?
+    @Published var usage: Usage?
+    @Published var asks: [String: Ask] = [:]
+    @Published var connected = false
+    @Published var error: String?
+    @Published var toast: String?
+    @Published var lastSync: Date?
+    @Published var busy: Set<String> = []
+
+    let api: API
+    private var poller: Task<Void, Never>?
+
+    init() {
+        #if DEBUG
+        // simulator testing only: pair from a launch environment variable (no camera there)
+        if let code = ProcessInfo.processInfo.environment["MC_PAIRING"], let dp = Pairing.parse(code) { PairingStore.save(dp) }
+        #endif
+        let p = PairingStore.load()
+        pairing = p
+        api = API(pairing: p)
+    }
+
+    // MARK: pairing
+
+    func pair(with text: String) -> Bool {
+        guard let p = Pairing.parse(text) else { return false }
+        PairingStore.save(p)
+        api.use(p)
+        pairing = p
+        Task { await refresh() }
+        return true
+    }
+
+    func unpair() {
+        PairingStore.clear()
+        api.use(nil)
+        pairing = nil
+        board = nil; trading = nil; tyfys = nil; cos = nil; usage = nil; asks = [:]
+        connected = false
+    }
+
+    // MARK: loading
+
+    func startPolling() {
+        poller?.cancel()
+        poller = Task { [weak self] in
+            while !Task.isCancelled {
+                await self?.refresh()
+                try? await Task.sleep(nanoseconds: 20_000_000_000)
+            }
+        }
+    }
+
+    func stopPolling() {
+        poller?.cancel()
+        poller = nil
+    }
+
+    func refresh() async {
+        guard pairing != nil else { return }
+        do {
+            let b: Board = try await api.get("/api/board")
+            board = b
+            connected = true
+            error = nil
+            lastSync = Date()
+        } catch {
+            connected = false
+            self.error = error.localizedDescription
+            if case APIError.unauthorized = error { unpair() }
+            return
+        }
+        async let t: Trading? = try? api.get("/api/trading")
+        async let y: Tyfys? = try? api.get("/api/tyfys")
+        async let c: CosResponse? = try? api.get("/api/cos")
+        async let u: Usage? = try? api.get("/api/usage")
+        let (tt, yy, cc, uu) = await (t, y, c, u)
+        if let tt { trading = tt }
+        if let yy { tyfys = yy }
+        if let cc { cos = cc }
+        if let uu { usage = uu }
+        // drop answers for jobs that no longer need Richard
+        let waiting = Set((board?.jobs("needs_you") ?? []).map(\.id))
+        asks = asks.filter { waiting.contains($0.key) }
+        updateBadge()
+    }
+
+    private func updateBadge() {
+        let n = board?.jobs("needs_you").count ?? 0
+        Badge.set(n)
+    }
+
+    func loadAsk(_ job: Job, force: Bool = false) async {
+        if !force, let a = asks[job.id], a.run?.status != "running" { return }
+        let path = "/api/ask?id=" + (job.id.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed.subtracting(CharacterSet(charactersIn: "&=+:#?/"))) ?? job.id)
+        if let a: Ask = try? await api.get(path) { asks[job.id] = a }
+    }
+
+    // MARK: actions
+
+    private func act(_ key: String, _ work: () async throws -> String?) async {
+        busy.insert(key)
+        defer { busy.remove(key) }
+        do {
+            if let msg = try await work() { flash(msg) }
+            await refresh()
+        } catch {
+            flash(error.localizedDescription)
+        }
+    }
+
+    func flash(_ msg: String) {
+        toast = msg
+        UIImpactFeedbackGenerator(style: .light).impactOccurred()
+        Task {
+            try? await Task.sleep(nanoseconds: 3_000_000_000)
+            if toast == msg { toast = nil }
+        }
+    }
+
+    func answer(_ job: Job, text: String, approve: Bool = false) async {
+        let reply = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !reply.isEmpty else { return flash("Type an answer first.") }
+        await act("ask:\(job.id)") {
+            if asks[job.id]?.kind == "decision" {
+                let _: OK = try await api.post("/api/decision", ["id": job.id, "answer": reply])
+                return "Answer sent to your Chief of Staff ✓"
+            }
+            let r: ReplyResult = try await api.post("/api/reply", ["id": job.id, "text": reply, "approve": approve])
+            if r.needsLogin == true { return "Claude needs a one-time sign-in on the Mac (Home → Connect Claude)." }
+            if r.ok == false { return r.error ?? "The agent didn't take the reply." }
+            await loadAsk(job, force: true)
+            return "Sent to the agent ✓"
+        }
+    }
+
+    func markDone(_ job: Job) async {
+        await act("job:\(job.id)") {
+            let _: OK = try await api.post("/api/job/override", ["id": job.id, "status": "done", "reason": "Marked done from iPhone."])
+            return "Marked done"
+        }
+    }
+
+    func snooze(_ job: Job, hours: Double) async {
+        await act("job:\(job.id)") {
+            let _: OK = try await api.post("/api/job/override", ["id": job.id, "snoozedUntil": Fmt.isoNow(plusHours: hours)])
+            return "Snoozed \(Int(hours))h"
+        }
+    }
+
+    func restartBot(_ job: Job) async {
+        await act("job:\(job.id)") {
+            let r: OK = try await api.post("/api/bots/restart", ["id": job.id])
+            return r.ok == true ? "Restarting \(job.title)" : (r.error ?? "Restart refused.")
+        }
+    }
+
+    func sendCos(_ text: String, profile: String) async {
+        let q = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !q.isEmpty else { return }
+        await act("cos") {
+            let _: Chat = try await api.post("/api/cos", ["text": q, "profile": profile])
+            return nil
+        }
+    }
+
+    func haltTrading() async {
+        await act("halt") {
+            let _: Trading = try await api.post("/api/trading/killswitch", ["engage": true])
+            return "Kill switch ON: all trading halted"
+        }
+    }
+}
+
+/// App icon badge = how many things need Richard.
+enum Badge {
+    private static var asked = false
+    static func set(_ n: Int) {
+        let center = UNUserNotificationCenter.current()
+        if !asked {
+            asked = true
+            center.requestAuthorization(options: [.badge]) { _, _ in }
+        }
+        center.setBadgeCount(n) { _ in }
+    }
+}

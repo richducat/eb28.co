@@ -183,6 +183,22 @@ positions. They are **read-only by design**:
 - The approvals queue only **records** decisions about risky changes (Touch ID + typed phrase for
   risky ones); it executes nothing.
 
+## iPhone app
+
+`ios/` is a SwiftUI app (iOS 17+) for answering agents, chatting with a chief of staff,
+watching trading and the TYFYS pipeline from your phone.
+
+- **Pairing:** on the Mac click **📱 Phone**, turn on phone access and scan the code with the app.
+  Phone access is off until you turn it on, works on the same Wi-Fi, and is HTTPS with a
+  certificate the phone pins from the code, plus a pairing token (kept in the iPhone Keychain).
+  **New code** unpairs every phone.
+- **What the phone can do** (`src/mobile.js` allowlist): read the board, answer and approve
+  agents, Hermes decisions, chief-of-staff chat, mark done / snooze, restart a non-trading bot,
+  run an automation, and turn the trading kill switch **on**. It can never turn the kill
+  switch off, approve trading changes, change settings, or open things on the Mac.
+- **Build:** `brew install xcodegen`, then `cd ios && xcodegen generate` and open the project.
+  `ios/scripts/testflight.sh` archives and uploads to TestFlight with an App Store Connect API key.
+
 ## More
 
 - **TYFYS tab:** the Zoho CRM deal pipeline grouped into lanes (Onboarding, Intake, Evaluation,

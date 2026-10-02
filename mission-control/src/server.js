@@ -22,6 +22,9 @@ import { readTailJsonl, textOf } from './sources/util.js';
 import { loadRegistry as loadBots, saveRegistry as saveBots, PROVIDERS } from './sources/bots.js';
 import { restartBot } from './workforce/bot-control.js';
 import { createMobile, mobileAllowed } from './mobile.js';
+import { today as todayData, suggestFocus } from './today.js';
+import { events as calendarEvents } from './calendar.js';
+import { addTask, updateTask, deleteTask, tasks as taskList, updateDay, setHabits, ymd } from './planner.js';
 
 const UI_DIR = path.join(APP_ROOT, 'ui');
 const MIME = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.svg': 'image/svg+xml', '.png': 'image/png' };
@@ -242,6 +245,25 @@ export function createServer({ orchestrator = new Orchestrator(), nativeNotify =
       return dot;
     },
     ...tradingRoutes({ orchestrator, confirmOwner }),
+    // Today, calendar and tasks
+    'GET /api/today': async (_b, q) => todayData(orchestrator.board || (await orchestrator.refreshBoard()), validDay(q.get('date')) || ymd()),
+    'POST /api/today/suggest': async (b) => ({ focus: await suggestFocus(await todayData(orchestrator.board || (await orchestrator.refreshBoard()), validDay(b.date) || ymd())) }),
+    'GET /api/calendar': async (_b, q) => {
+      const start = validDay(q.get('start'));
+      const end = validDay(q.get('end'));
+      if (!start || !end || end <= start) throw new Error('start and end (YYYY-MM-DD) required');
+      const cal = await calendarEvents(start, end, { fresh: q.get('fresh') === '1' });
+      return { ...cal, tasks: taskList().filter((t) => t.due && t.due >= start && t.due < end) };
+    },
+    'GET /api/tasks': async () => taskList(),
+    'POST /api/tasks': async (b) => {
+      if (b.add) return addTask(b.add);
+      if (b.delete) return deleteTask(b.delete);
+      if (b.id) return updateTask(b.id, b.patch || {});
+      throw new Error('add, delete or id+patch required');
+    },
+    'POST /api/day': async (b) => updateDay(validDay(b.date) || ymd(), b),
+    'POST /api/habits': async (b) => setHabits(b.habits),
     'GET /api/health': async () => ({ ok: true, home: MC_HOME, pid: process.pid }),
   };
 
@@ -427,6 +449,8 @@ export function checkWrite(req) {
   if (!/^application\/json\b/i.test(String(req.headers['content-type'] || ''))) return { ok: false, reason: 'Refused: write requests must be JSON.' };
   return { ok: true };
 }
+
+const validDay = (s) => (/^\d{4}-\d{2}-\d{2}$/.test(String(s || '')) ? String(s) : null);
 
 /** Phone requests are token-checked and route-limited; writes must still be JSON. */
 function jsonOnly(req) {

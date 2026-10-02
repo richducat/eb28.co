@@ -5,34 +5,79 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>EB28 Mission Control</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Press+Start+2P&display=swap" />
 <link rel="stylesheet" href="/styles.css" />
 </head>
 <body>
-<header class="topbar">
-  <div class="brand"><span class="dot"></span> Mission Control</div>
+<div class="app">
+<aside class="sidenav">
+  <div class="brand"><span class="logo">◆</span><div class="brand-t"><b>Mission Control</b><small>EB28</small></div><span class="dot" title="Connected"></span></div>
   <nav class="tabs" id="tabs">
-    <button data-tab="home" class="active">Home <span class="pill" id="pill-home" hidden></span></button>
-    <button data-tab="tyfys">TYFYS <span class="pill" id="pill-tyfys" hidden></span></button>
-    <button data-tab="trading">Trading <span class="pill" id="pill-trading" hidden></span></button>
-    <button data-tab="board">Board</button>
-    <button data-tab="arcade">Arcade</button>
-    <button data-tab="bots">Bots <span class="pill" id="pill-bots" hidden></span></button>
-    <button data-tab="workforce">Workforce <span class="pill" id="pill-approvals" hidden></span></button>
-    <button data-tab="automations">Automations</button>
-    <button data-tab="briefing">Briefing</button>
+    <div class="nav-group">
+      <button data-tab="today" class="active"><i>☀️</i><span>Today</span><span class="pill soft" id="pill-today" hidden></span></button>
+      <button data-tab="home"><i>📥</i><span>Inbox</span><span class="pill" id="pill-home" hidden></span></button>
+      <button data-tab="calendar"><i>📅</i><span>Calendar</span></button>
+      <button data-tab="tasks"><i>✅</i><span>Tasks</span><span class="pill soft" id="pill-tasks" hidden></span></button>
+    </div>
+    <div class="nav-label">Businesses</div>
+    <div class="nav-group">
+      <button data-tab="tyfys"><i>🎖️</i><span>TYFYS</span><span class="pill" id="pill-tyfys" hidden></span></button>
+      <button data-tab="trading"><i>📈</i><span>Trading</span><span class="pill" id="pill-trading" hidden></span></button>
+    </div>
+    <div class="nav-label">Agents</div>
+    <div class="nav-group">
+      <button data-tab="arcade"><i>🕹️</i><span>Arcade</span></button>
+      <button data-tab="board"><i>🗂️</i><span>Board</span></button>
+      <button data-tab="bots"><i>🤖</i><span>Bots</span><span class="pill" id="pill-bots" hidden></span></button>
+      <button data-tab="workforce"><i>👥</i><span>Workforce</span><span class="pill" id="pill-approvals" hidden></span></button>
+      <button data-tab="automations"><i>⚙️</i><span>Automations</span></button>
+      <button data-tab="briefing"><i>📰</i><span>Briefing</span></button>
+    </div>
   </nav>
-  <div class="stats" id="stats"></div>
+  <div class="nav-foot">
+    <button id="phone-btn" title="Use Mission Control on your iPhone"><i>📱</i><span>Phone</span></button>
+    <div class="nav-hint"><kbd>/</kbd> search · <kbd>n</kbd> new task · <kbd>c</kbd> ask CoS</div>
+  </div>
+</aside>
+<div class="shell">
+<header class="topbar">
+  <div class="page-title"><h1 id="page-title">Today</h1><div class="muted" id="page-sub"></div></div>
+  <div class="stats" id="stats" hidden></div>
   <div class="actions">
-    <input id="search" type="search" placeholder="Search jobs  ( / )" autocomplete="off" />
-    <button id="phone-btn" title="Use Mission Control on your iPhone">📱 Phone</button>
-    <button id="add-job" class="primary">+ Track a job</button>
-    <button id="refresh" title="Rescan now (r)">↻</button>
+    <div class="search"><input id="search" type="search" placeholder="Search jobs" autocomplete="off" /><kbd>/</kbd></div>
+    <button id="cos-btn" title="Ask your Chief of Staff (c)">✨ Ask CoS</button>
+    <button id="add-job" title="Track a job by hand">Track a job</button>
+    <button id="quick-add" class="primary" title="New task (n)">＋ New task</button>
+    <button id="refresh" class="icon" title="Rescan now (r)">↻</button>
   </div>
 </header>
 
 <main>
-  <section id="tab-home" class="tab active">
+  <section id="tab-today" class="tab active">
+    <div class="today-head">
+      <div class="day-nav"><button class="icon" data-day="-1" title="Previous day">‹</button><button data-day="0">Today</button><button class="icon" data-day="1" title="Next day">›</button></div>
+      <div class="today-chips" id="today-chips"></div>
+    </div>
+    <div class="today-grid">
+      <div class="col">
+        <div class="panel" id="focus-panel"></div>
+        <div class="panel" id="schedule-panel"></div>
+        <div class="panel" id="due-panel"></div>
+      </div>
+      <div class="col">
+        <div class="panel" id="needs-panel"></div>
+        <div class="panel" id="track-panel"></div>
+        <div class="panel" id="notes-panel"></div>
+        <div class="panel" id="tomorrow-panel"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="tab-calendar" class="tab"><div id="cal-root"><div class="muted">Loading your calendar…</div></div></section>
+
+  <section id="tab-tasks" class="tab"><div id="tasks-root"></div></section>
+
+  <section id="tab-home" class="tab">
     <div class="home-head">
       <div><h1 id="home-hello">Hi Richard</h1><div class="muted" id="home-sub"></div></div>
       <div class="biz-tabs" id="biz-tabs"></div>
@@ -43,8 +88,6 @@
         <div id="queue"></div>
       </div>
       <div>
-        <h2 class="sec">Ask your Chief of Staff</h2>
-        <div data-cos-panel class="cos-home"></div>
         <h2 class="sec">Today by business</h2>
         <div id="biz-cards"></div>
         <h2 class="sec">Fuel</h2>
@@ -148,6 +191,8 @@
     <article id="digest" class="digest"></article>
   </section>
 </main>
+</div>
+</div>
 
 <aside id="drawer" class="drawer" hidden>
   <div class="drawer-head">
@@ -207,12 +252,29 @@
   <menu><button type="button" id="phone-close">Close</button></menu>
 </dialog>
 
+<dialog id="task-dialog">
+  <form method="dialog" id="task-form">
+    <h2>New task</h2>
+    <input name="text" id="task-text" placeholder="Call the VA about John tomorrow 3pm #tyfys !" autocomplete="off" />
+    <p class="muted small">Write it the way you'd say it. Dates like <b>today</b>, <b>tomorrow</b>, <b>fri</b>, <b>next week</b>, <b>10/14</b>; times like <b>3pm</b>; <b>#tyfys</b> files it under a business; <b>!</b> marks it important.</p>
+    <menu><button value="cancel" type="button" id="task-cancel">Cancel</button><button value="ok" class="primary">Add task</button></menu>
+  </form>
+</dialog>
+
+<dialog id="cos-dialog" class="wide">
+  <h2>✨ Ask your Chief of Staff</h2>
+  <p class="muted small">Runs on the free local model on this Mac. It drafts and plans; it asks before sending, paying, deleting or submitting anything.</p>
+  <div data-cos-panel class="cos-home"></div>
+  <menu><button type="button" id="cos-close">Close</button></menu>
+</dialog>
+
 <div id="toasts" class="toasts"></div>
 <script src="/vendor/qrcode.js"></script>
 <script src="/keep.js"></script>
 <script src="/trading.js"></script>
 <script src="/sprites.js"></script>
 <script src="/arcade.js"></script>
+<script src="/planner.js"></script>
 <script src="/app.js"></script>
 </body>
 </html>

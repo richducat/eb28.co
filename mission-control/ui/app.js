@@ -21,7 +21,7 @@ const ago = (iso) => {
 };
 const STATUS_LABEL = { needs_you: 'Needs you', working: 'Working', follow_up: 'Follow up', done: 'Done', failed: 'Failed' };
 
-const state = { board: null, workforce: null, automations: [], filter: new Set(), search: '', open: null, tab: 'home', biz: 'all' };
+const state = { board: null, workforce: null, automations: [], filter: new Set(), search: '', open: null, tab: 'today', biz: 'all' };
 
 /* ---------- toasts ---------- */
 function toast(text, kind = '') {
@@ -36,6 +36,9 @@ function toast(text, kind = '') {
 async function loadBoard() {
   state.board = await api('GET', '/api/board');
   chime.check(state.board);
+  const needs = state.board.columns.find((c) => c.id === 'needs_you');
+  const pillHome = $('#pill-home');
+  if (pillHome && needs) { pillHome.hidden = !needs.jobs.length; pillHome.textContent = needs.jobs.length; }
   if (state.tab === 'home') renderHome();
   renderBoard();
 }
@@ -327,10 +330,26 @@ function connectEvents() {
 }
 
 /* ---------- wiring ---------- */
+const PAGES = {
+  home: ['Inbox', 'Answer, approve or unblock your agents. Everything waiting on you is here.'],
+  tyfys: ['TYFYS', 'Thank You For Your Service · Zoho pipeline'],
+  trading: ['Trading', 'Watch-only. Nothing here can buy, sell or move funds.'],
+  board: ['Board', 'Every job across Claude, Codex, Hermes, bots and automations'],
+  arcade: ['Arcade', 'Your whole operation as a living map'],
+  bots: ['Bots', 'Always-on bots and agents'],
+  workforce: ['Workforce', 'Your background agents and what they want approved'],
+  automations: ['Automations', 'Scheduled jobs and one-click runs'],
+  briefing: ['Briefing', 'Your latest written briefing'],
+};
 function showTab(id) {
   state.tab = id;
   $$('#tabs button').forEach((b) => b.classList.toggle('active', b.dataset.tab === id));
   $$('.tab').forEach((t) => t.classList.toggle('active', t.id === `tab-${id}`));
+  if (PAGES[id]) window.Planner.setTitle(...PAGES[id]);
+  document.querySelector('main').scrollTop = 0;
+  if (id === 'today') window.Planner.loadToday().catch((e) => toast(e.message, 'bad'));
+  if (id === 'calendar') window.Planner.loadCalendar().catch((e) => toast(e.message, 'bad'));
+  if (id === 'tasks') window.Planner.loadTasks().catch((e) => toast(e.message, 'bad'));
   if (id === 'home') loadHome();
   if (id === 'tyfys') loadTyfys();
   if (id === 'trading') window.Trading.load();
@@ -1075,7 +1094,7 @@ $('#phone-body').addEventListener('click', async (ev) => {
   } catch (e) { toast(e.message); }
 });
 
-const refreshViews = () => (state.tab === 'home' ? loadHome() : state.tab === 'arcade' ? loadArcade() : loadBoard());
+const refreshViews = () => (['today', 'calendar', 'tasks'].includes(state.tab) ? window.Planner.refreshAll() : state.tab === 'home' ? loadHome() : state.tab === 'arcade' ? loadArcade() : loadBoard());
 
 document.addEventListener('click', async (ev) => {
   const t = ev.target.closest('[data-side-tab],[data-side-halt],[data-side-island],[data-side-place],[data-side-realm],[data-side-clear],[data-side-select],[data-side-act],[data-side-run],[data-side-copy],[data-side-path],[data-side-url],[data-side-drawer],[data-side-decide],[data-side-run-agent],[data-side-agent-toggle],[data-side-agent],[data-side-crew],[data-side-dot]');
@@ -1222,7 +1241,23 @@ document.addEventListener('change', async (ev) => {
 });
 
 $('#drawer-note').addEventListener('change', () => override({ note: $('#drawer-note').value }));
-$('#search').addEventListener('input', (e) => { state.search = e.target.value; renderBoard(); });
+$('#search').addEventListener('input', (e) => { state.search = e.target.value; if (state.tab !== 'board' && state.search) showTab('board'); renderBoard(); });
+// new task + chief of staff, from anywhere
+function openTaskDialog() { $('#task-dialog').showModal(); $('#task-text').value = ''; $('#task-text').focus(); }
+function openCos() { $('#cos-dialog').showModal(); loadCos(); setTimeout(() => { const t = $('#cos-dialog [data-cos-text]'); if (t) t.focus(); }, 150); }
+$('#quick-add').addEventListener('click', openTaskDialog);
+$('#cos-btn').addEventListener('click', openCos);
+$('#cos-close').addEventListener('click', () => $('#cos-dialog').close());
+$('#task-cancel').addEventListener('click', () => $('#task-dialog').close());
+$('#task-form').addEventListener('submit', async (e) => {
+  const text = $('#task-text').value.trim();
+  if (!text) return;
+  try {
+    const t = await api('POST', '/api/tasks', { add: { text } });
+    toast(`Added: ${t.title}${t.due ? ` · due ${t.due}${t.time ? ` ${t.time}` : ''}` : ''}`, 'ok');
+    window.Planner.refreshAll();
+  } catch (err) { toast(err.message, 'bad'); }
+});
 $('#bot-form').addEventListener('submit', async (e) => {
   const f = e.target;
   const body = Object.fromEntries(new FormData(f).entries());
@@ -1249,7 +1284,10 @@ $('#add-form').addEventListener('submit', async (e) => {
 document.addEventListener('keydown', (e) => {
   if (e.key === '/' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') { e.preventDefault(); $('#search').focus(); }
   if (e.key === 'Escape') closeDrawer();
-  if (e.key === 'r' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') $('#refresh').click();
+  const typing = ['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName) || document.querySelector('dialog[open]');
+  if (e.key === 'r' && !typing) $('#refresh').click();
+  if (e.key === 'n' && !typing && !e.metaKey && !e.ctrlKey) { e.preventDefault(); openTaskDialog(); }
+  if (e.key === 'c' && !typing && !e.metaKey && !e.ctrlKey) { e.preventDefault(); openCos(); }
 });
 
 const params = new URLSearchParams(location.search);
@@ -1258,8 +1296,9 @@ loadBoard()
   .catch((err) => toast(err.message, 'bad'));
 loadWorkforce().catch(() => {});
 loadBots().catch(() => {});
-showTab(params.get('tab') || 'home');
+showTab(params.get('tab') || 'today');
 connectEvents();
 setInterval(() => { if (state.tab === 'board' || state.tab === 'home') loadBoard().catch(() => {}); }, 30000);
 setInterval(() => { if (state.tab === 'home') loadHome().catch(() => {}); }, 60000);
+setInterval(() => { if (state.tab === 'today' && !document.querySelector('#tab-today :focus')) window.Planner.loadToday().catch(() => {}); }, 60000);
 setInterval(() => { if (state.tab === 'arcade') loadArcade().catch(() => {}); }, 15000);

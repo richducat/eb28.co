@@ -33,12 +33,12 @@ struct RootView: View {
                 PairView()
             } else {
                 TabView(selection: $tab) {
-                    HomeView().tabItem { Label("Home", systemImage: "tray.full") }.tag(0)
+                    TodayView().tabItem { Label("Today", systemImage: "sun.max") }.tag(0)
+                    HomeView().tabItem { Label("Inbox", systemImage: "tray.full") }.tag(1)
                         .badge(model.board?.jobs("needs_you").count ?? 0)
-                    ChatView().tabItem { Label("Chief of Staff", systemImage: "bubble.left.and.bubble.right") }.tag(1)
-                    TradingView().tabItem { Label("Trading", systemImage: "chart.line.uptrend.xyaxis") }.tag(2)
-                    TyfysView().tabItem { Label("TYFYS", systemImage: "flag") }.tag(3)
-                    MoreView().tabItem { Label("More", systemImage: "ellipsis.circle") }.tag(4)
+                    CalendarAgendaView().tabItem { Label("Calendar", systemImage: "calendar") }.tag(2)
+                    ChatView().tabItem { Label("Chief of Staff", systemImage: "bubble.left.and.bubble.right") }.tag(3)
+                    MoreView().tabItem { Label("More", systemImage: "square.grid.2x2") }.tag(4)
                 }
                 .onAppear { model.startPolling() }
             }

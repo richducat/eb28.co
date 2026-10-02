@@ -31,6 +31,20 @@ npm test
 
 State lives in `~/.eb28-mission-control/` (override with `MC_HOME`). Nothing leaves your machine unless you add credentials.
 
+## Today, Calendar and Tasks
+
+- **Today** is the home page: focus for the day (✨ Suggest asks the free local model), your
+  schedule from Google Calendar with a live "now" line, what's due (overdue, today, tomorrow,
+  next 7 days, later), what needs you, daily habit tracking with streaks, notes, and a
+  tomorrow preview. ‹ › moves between days.
+- **Calendar** shows week, month and agenda views across the calendars listed in
+  `~/.eb28-mission-control/calendar.json` (read-only, through Hermes's `gapi-ro` helper),
+  with filters per calendar, a Routines toggle for repeating events, and tasks on their due days.
+- **Tasks** take plain English: `Call the VA about John tomorrow 3pm #tyfys !` sets the date,
+  time, business and importance. Snoozed jobs, follow-ups, TYFYS overdue cases and open trading
+  safety items also show up in "what's due".
+- Keys: `/` search, `n` new task, `c` ask your chief of staff, `r` refresh.
+
 ## The board
 
 | Column | Meaning |

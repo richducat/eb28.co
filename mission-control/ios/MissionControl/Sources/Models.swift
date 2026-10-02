@@ -234,3 +234,129 @@ enum Fmt {
         iso.string(from: Date().addingTimeInterval(h * 3600))
     }
 }
+
+// MARK: Today / calendar / tasks
+
+struct CalEvent: Decodable, Identifiable, Hashable {
+    var id: String
+    var title: String
+    var start: String
+    var end: String?
+    var allDay: Bool?
+    var location: String?
+    var link: String?
+    var calendar: String?
+    var color: String?
+    var recurring: Bool?
+
+    var startDate: Date? { allDay == true ? nil : Fmt.date(start) }
+    var endDate: Date? { allDay == true ? nil : Fmt.date(end) }
+    /// Local day (YYYY-MM-DD) this event starts on.
+    var day: String { allDay == true ? String(start.prefix(10)) : (startDate.map(Fmt.ymd) ?? String(start.prefix(10))) }
+}
+
+struct DueItem: Decodable, Identifiable, Hashable {
+    var id: String
+    var kind: String
+    var title: String
+    var due: String?
+    var time: String?
+    var business: String?
+    var priority: String?
+    var note: String?
+    var isTask: Bool { kind == "task" }
+    var icon: String {
+        switch kind {
+        case "snooze": return "moon.zzz"
+        case "followup": return "arrow.uturn.backward"
+        case "tyfys": return "flag"
+        case "trading": return "chart.line.uptrend.xyaxis"
+        default: return "checkmark.circle"
+        }
+    }
+}
+
+struct DueGroups: Decodable {
+    var overdue: [DueItem] = []
+    var today: [DueItem] = []
+    var tomorrow: [DueItem] = []
+    var week: [DueItem] = []
+    var later: [DueItem] = []
+    var someday: [DueItem] = []
+}
+
+struct FocusItem: Codable, Hashable { var text: String; var done: Bool }
+struct DaySheet: Decodable { var focus: [FocusItem]? ; var notes: String?; var habits: [String: Bool]? }
+struct Habit: Decodable, Identifiable, Hashable { var id: String; var name: String; var emoji: String }
+
+struct TodayData: Decodable {
+    var date: String
+    var events: [CalEvent] = []
+    var tomorrowEvents: [CalEvent] = []
+    var due: DueGroups = DueGroups()
+    var sheet: DaySheet?
+    var habits: [Habit] = []
+    var streaks: [String: Int] = [:]
+    var needsYou: [NeedsItem] = []
+    var stats: Stats?
+    var calendarErrors: [String]?
+
+    struct NeedsItem: Decodable, Identifiable, Hashable { var id: String; var title: String; var source: String?; var business: String?; var ask: String? }
+    struct Stats: Decodable { var needsYou: Int?; var working: Int?; var agentsDone: Int?; var tasksDone: Int?; var repliesSent: Int?; var events: Int? }
+}
+
+struct TaskItem: Decodable, Identifiable, Hashable {
+    var id: String
+    var title: String
+    var due: String?
+    var time: String?
+    var business: String?
+    var priority: String?
+    var done: Bool?
+}
+
+struct CalendarRange: Decodable {
+    var events: [CalEvent] = []
+    var tasks: [TaskItem] = []
+    var errors: [String]?
+}
+
+struct FocusSuggestion: Decodable { var focus: [String] }
+
+extension Fmt {
+    static func ymd(_ d: Date) -> String {
+        let f = DateFormatter()
+        f.calendar = Calendar(identifier: .gregorian)
+        f.locale = Locale(identifier: "en_US_POSIX")
+        f.dateFormat = "yyyy-MM-dd"
+        return f.string(from: d)
+    }
+    static func day(_ s: String) -> Date? {
+        let f = DateFormatter()
+        f.locale = Locale(identifier: "en_US_POSIX")
+        f.dateFormat = "yyyy-MM-dd"
+        return f.date(from: s)
+    }
+    static func addDays(_ s: String, _ n: Int) -> String {
+        guard let d = day(s), let r = Calendar.current.date(byAdding: .day, value: n, to: d) else { return s }
+        return ymd(r)
+    }
+    static func time(_ d: Date?) -> String {
+        guard let d else { return "" }
+        return d.formatted(date: .omitted, time: .shortened)
+    }
+    static func relDay(_ s: String) -> String {
+        let t = ymd(Date())
+        if s == t { return "Today" }
+        if s == addDays(t, 1) { return "Tomorrow" }
+        if s == addDays(t, -1) { return "Yesterday" }
+        guard let d = day(s) else { return s }
+        return d.formatted(.dateTime.weekday(.wide).month(.abbreviated).day())
+    }
+    static func time12(_ t: String?) -> String {
+        guard let t, t.count >= 4 else { return "" }
+        let p = t.split(separator: ":").compactMap { Int($0) }
+        guard p.count == 2 else { return t }
+        return "\((p[0] + 11) % 12 + 1)\(p[1] > 0 ? String(format: ":%02d", p[1]) : "")\(p[0] < 12 ? "am" : "pm")"
+    }
+}

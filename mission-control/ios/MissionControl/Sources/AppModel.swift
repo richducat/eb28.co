@@ -17,6 +17,8 @@ final class AppModel: ObservableObject {
     @Published var toast: String?
     @Published var lastSync: Date?
     @Published var busy: Set<String> = []
+    @Published var today: TodayData?
+    @Published var day: String = Fmt.ymd(Date())
 
     let api: API
     private var poller: Task<Void, Never>?
@@ -81,6 +83,7 @@ final class AppModel: ObservableObject {
             if case APIError.unauthorized = error { unpair() }
             return
         }
+        await loadToday()
         async let t: Trading? = try? api.get("/api/trading")
         async let y: Tyfys? = try? api.get("/api/tyfys")
         async let c: CosResponse? = try? api.get("/api/cos")
@@ -105,6 +108,61 @@ final class AppModel: ObservableObject {
         if !force, let a = asks[job.id], a.run?.status != "running" { return }
         let path = "/api/ask?id=" + (job.id.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed.subtracting(CharacterSet(charactersIn: "&=+:#?/"))) ?? job.id)
         if let a: Ask = try? await api.get(path) { asks[job.id] = a }
+    }
+
+    // MARK: today
+
+    func loadToday() async {
+        if let t: TodayData = try? await api.get("/api/today?date=\(day)") { today = t }
+    }
+
+    func shiftDay(_ n: Int) {
+        day = n == 0 ? Fmt.ymd(Date()) : Fmt.addDays(day, n)
+        today = nil
+        Task { await loadToday() }
+    }
+
+    func toggleTask(_ id: String, done: Bool) async {
+        await act("task:\(id)") {
+            let _: TaskItem = try await api.post("/api/tasks", ["id": id, "patch": ["done": done]])
+            return done ? "Task done ✓" : nil
+        }
+    }
+
+    func addTask(_ text: String, defaultDue: String?) async {
+        let q = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !q.isEmpty else { return }
+        await act("addtask") {
+            var add: [String: Any] = ["text": q]
+            if let defaultDue { add["defaultDue"] = defaultDue }
+            let t: TaskItem = try await api.post("/api/tasks", ["add": add])
+            return "Added: \(t.title)\(t.due.map { " · " + Fmt.relDay($0) } ?? "")"
+        }
+    }
+
+    func toggleHabit(_ id: String) async {
+        await act("habit:\(id)") {
+            let _: DaySheet = try await api.post("/api/day", ["date": day, "habit": id])
+            return nil
+        }
+    }
+
+    func saveFocus(_ items: [FocusItem]) async {
+        let body = items.filter { !$0.text.trimmingCharacters(in: .whitespaces).isEmpty }.map { ["text": $0.text, "done": $0.done] as [String: Any] }
+        let _: DaySheet? = try? await api.post("/api/day", ["date": day, "focus": body])
+        await loadToday()
+    }
+
+    func saveNotes(_ notes: String) async {
+        let _: DaySheet? = try? await api.post("/api/day", ["date": day, "notes": notes])
+    }
+
+    func suggestFocus() async -> [String] {
+        (try? await api.post("/api/today/suggest", ["date": day], as: FocusSuggestion.self))?.focus ?? []
+    }
+
+    func calendar(from start: String, days: Int) async -> CalendarRange? {
+        try? await api.get("/api/calendar?start=\(start)&end=\(Fmt.addDays(start, days))")
     }
 
     // MARK: actions

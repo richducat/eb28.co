@@ -89,7 +89,7 @@ struct TradingView: View {
     @State private var confirmHalt = false
 
     var body: some View {
-        NavigationStack {
+        Group {
             List {
                 if let s = model.trading {
                     Section {
@@ -223,7 +223,7 @@ struct TyfysView: View {
     @EnvironmentObject var model: AppModel
 
     var body: some View {
-        NavigationStack {
+        Group {
             List {
                 if let t = model.tyfys, t.ok == true, let k = t.kpis {
                     Section {
@@ -291,6 +291,10 @@ struct MoreView: View {
     var body: some View {
         NavigationStack {
             List {
+                Section {
+                    NavigationLink { TradingView() } label: { Label("Trading", systemImage: "chart.line.uptrend.xyaxis") }
+                    NavigationLink { TyfysView() } label: { Label("TYFYS pipeline", systemImage: "flag") }
+                }
                 Section("Connection") {
                     ConnectionPill()
                     if let e = model.error, !model.connected { Text(e).font(.footnote).foregroundStyle(.secondary) }

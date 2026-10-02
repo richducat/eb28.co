@@ -51,14 +51,14 @@ struct HomeView: View {
             }
             .refreshable { await model.refresh() }
             .navigationDestination(for: Job.self) { JobDetail(job: $0) }
-            .navigationTitle("Mission Control")
+            .navigationTitle("Inbox")
             .navigationBarTitleDisplayMode(.inline)
         }
     }
 
     private var header: some View {
         VStack(alignment: .leading, spacing: 4) {
-            Text("\(greeting), Richard").font(.title2.bold())
+            Text("\(greeting), Richard").font(.title3.bold())
             if let c = model.board?.summary?.counts {
                 Text("\(c["needs_you"] ?? 0) need you · \(c["working"] ?? 0) working · \(c["done"] ?? 0) done today")
                     .font(.subheadline).foregroundStyle(.secondary)

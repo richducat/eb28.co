@@ -288,3 +288,24 @@ h2.sec { font-size: 13px; text-transform: uppercase; letter-spacing: .07em; colo
 .replay-bar input[type=range] { flex: 1; padding: 0; }
 .replay-bar button, .replay-bar select { background: #2a1a2a; color: #fff; border: 1px solid #a01428; border-radius: 6px; padding: 3px 8px; width: auto; }
 .replay-bar span { font: 10px "Press Start 2P", monospace; min-width: 60px; }
+
+/* TYFYS operations */
+.ty-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin: 10px 0 4px; }
+.ty-kpi { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+.ty-kpi b { display: block; font-size: 24px; line-height: 1.1; }
+.ty-kpi span { color: var(--muted); font-size: 12px; }
+.ty-kpi.bad b { color: var(--bad); } .ty-kpi.good b { color: var(--ok); }
+.ty-board { display: grid; grid-template-columns: repeat(7, minmax(150px, 1fr)); gap: 10px; overflow-x: auto; }
+.ty-lane { background: var(--panel); border: 1px solid var(--line); border-top: 3px solid #c8102e; border-radius: 10px; padding: 8px; min-height: 160px; }
+.ty-lane.stalled { border-top-color: var(--muted); }
+.ty-lane h3 { margin: 0 0 6px; font-size: 12px; display: flex; justify-content: space-between; color: var(--text); text-transform: none; letter-spacing: 0; }
+.ty-lane h3 .n { color: var(--muted); }
+.ty-case { display: flex; gap: 8px; align-items: center; background: var(--panel-2); border: 1px solid var(--line); border-left: 3px solid var(--line); border-radius: 8px; padding: 6px 8px; margin-bottom: 6px; font-size: 12px; }
+.ty-case.amber { border-left-color: var(--warn); } .ty-case.red { border-left-color: var(--bad); }
+.ty-case .ini { font-weight: 700; min-width: 30px; text-align: center; background: #c8102e22; color: #ff8a9a; border-radius: 6px; padding: 2px 4px; }
+.ty-case .meta2 { flex: 1; min-width: 0; color: var(--muted); }
+.ty-case .meta2 b { color: var(--text); font-weight: 600; }
+.ty-case .age { font-weight: 700; } .ty-case.red .age { color: var(--bad); } .ty-case.amber .age { color: var(--warn); }
+.ty-bars .bar-row { display: grid; grid-template-columns: 150px 1fr 40px; gap: 8px; align-items: center; font-size: 12px; margin-bottom: 6px; }
+.ty-bars .track { height: 10px; background: var(--panel-2); border-radius: 999px; overflow: hidden; display: flex; }
+.ty-bars .track i { display: block; height: 100%; }

@@ -154,3 +154,15 @@ buttons and minimap.
 
 **Dot (OG Kush)** wears the leaf hat. By default Dot is any Codex thread handed over by voice
 (`<realtime_delegation>`). Pick a different bot or Hermes profile with "Who is Dot?" on the tab.
+
+## More
+
+- **TYFYS tab:** the Zoho CRM deal pipeline grouped into lanes (Onboarding, Intake, Evaluation,
+  Provider/DBQs, Claim, Appeal, Stalled) with overdue flags per stage, KPIs, bottlenecks and owner
+  load. Read from `~/.eb28-mission-control/tyfys-pipeline.json` (initials only, no veteran details).
+- **Fuel:** Codex weekly limit and credits, Claude token activity, Grok (via Hermes quota cache),
+  local Qwen. Fuel Depot tanks on Mech Island and a card on Home.
+- **Ask your Chief of Staff:** message a Hermes chief of staff from Home or the Arcade; it runs on
+  the free local model and shows up on the map while it works.
+- **Replay:** the Arcade records every status change; replay today on the map.
+- **Weather and night:** each island's sky shows its health; day/night follows your clock.

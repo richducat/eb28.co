@@ -13,6 +13,7 @@
   <div class="brand"><span class="dot"></span> Mission Control</div>
   <nav class="tabs" id="tabs">
     <button data-tab="home" class="active">Home <span class="pill" id="pill-home" hidden></span></button>
+    <button data-tab="tyfys">TYFYS <span class="pill" id="pill-tyfys" hidden></span></button>
     <button data-tab="board">Board</button>
     <button data-tab="arcade">Arcade</button>
     <button data-tab="bots">Bots <span class="pill" id="pill-bots" hidden></span></button>
@@ -51,6 +52,19 @@
         <h2 class="sec">Coming up</h2>
         <div id="upcoming" class="mini-list"></div>
       </div>
+    </div>
+  </section>
+
+  <section id="tab-tyfys" class="tab">
+    <div class="home-head">
+      <div><h1>Thank You For Your Service</h1><div class="muted" id="ty-sub"></div></div>
+    </div>
+    <div class="ty-kpis" id="ty-kpis"></div>
+    <h2 class="sec">Pipeline <span class="muted">· oldest update first · amber/red = overdue for this stage</span></h2>
+    <div class="ty-board" id="ty-board"></div>
+    <div class="home-grid" style="margin-top:8px">
+      <div><h2 class="sec">Where cases pile up</h2><div id="ty-bottle" class="ty-bars"></div></div>
+      <div><h2 class="sec">Who owns what</h2><div id="ty-owners" class="ty-bars"></div></div>
     </div>
   </section>
 

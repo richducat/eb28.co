@@ -37,3 +37,23 @@ test('appOf: jobs map to the app they work on', async () => {
   assert.equal(appOf({ cwd: '/Users/r/Synccstep', title: 'Local session' }), 'syncstep');
   assert.equal(appOf({ cwd: '/tmp', title: 'Review TYFYS website copy' }), '');
 });
+
+test('tyfys: lanes, overdue flags and KPIs from a snapshot', async () => {
+  const { summarize } = await import('../src/tyfys.js');
+  const now = Date.parse('2026-10-01T12:00:00Z');
+  const d = (days) => new Date(now - days * 86400e3).toISOString();
+  const s = summarize({
+    stageCounts: { 'Payment complete': 3, Lost: 1 },
+    cases: [
+      { id: 'a', initials: 'AB', stage: 'Welcome', updatedAt: d(10), createdAt: d(10), owner: 'X' },
+      { id: 'b', initials: 'CD', stage: 'IN APPEAL', updatedAt: d(40), createdAt: d(200), owner: 'Y' },
+      { id: 'c', initials: 'EF', stage: 'Service Paused', updatedAt: d(5), createdAt: d(90), owner: 'X' },
+      { id: 't', initials: 'T', stage: 'Welcome', updatedAt: d(1), createdAt: d(1), owner: 'X', test: true },
+    ],
+  }, now);
+  assert.equal(s.kpis.active, 2);
+  assert.equal(s.kpis.stalled, 1);
+  assert.equal(s.kpis.overdue, 1);
+  assert.equal(s.kpis.winRate, 75);
+  assert.equal(s.lanes.find((l) => l.id === 'appeal').cases[0].flag, 'amber');
+});

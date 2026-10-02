@@ -2,6 +2,7 @@ import http from 'node:http';
 import { listCrew } from './sources/hermes-crew.js';
 import { recordAnswer } from './sources/hermes-handoff.js';
 import { usage } from './usage.js';
+import { tyfysPipeline } from './tyfys.js';
 import { boardFrom, days as replayDays, frames as replayFrames } from './replay.js';
 import { askCos, chats, PROFILES as COS_PROFILES } from './cos.js';
 import { askFor, claudeReady, replyRun, sendReply, startClaudeLogin, suggest } from './reply.js';
@@ -215,6 +216,7 @@ export function createServer({ orchestrator = new Orchestrator(), nativeNotify =
       const frames = replayFrames(q.get('date') || undefined);
       return { days: replayDays(), frames: frames.map((f) => ({ t: f.t, board: boardFrom(f, board.businesses, board.apps) })) };
     },
+    'GET /api/tyfys': async () => tyfysPipeline(),
     'GET /api/usage': async (_b, q) => usage({ fresh: q.get('fresh') === '1' }),
     'GET /api/crew': async () => listCrew(),
     // Who "Dot" (OG Kush) is: Codex voice delegations by default, or any job/bot/crew id.

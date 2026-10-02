@@ -328,6 +328,7 @@ function showTab(id) {
   $$('#tabs button').forEach((b) => b.classList.toggle('active', b.dataset.tab === id));
   $$('.tab').forEach((t) => t.classList.toggle('active', t.id === `tab-${id}`));
   if (id === 'home') loadHome();
+  if (id === 'tyfys') loadTyfys();
   if (id === 'workforce') loadWorkforce();
   if (id === 'bots') loadBots();
   if (id === 'automations') loadAutomations();
@@ -716,6 +717,36 @@ document.addEventListener('change', (ev) => {
   replayStop();
   $('#replay-play').click();
 });
+
+/* ---------- TYFYS operations ---------- */
+async function loadTyfys() {
+  const d = await api('GET', '/api/tyfys').catch(() => ({ ok: false, reason: 'Could not load.' }));
+  if (!d.ok) { $('#ty-sub').textContent = d.reason; $('#ty-kpis').innerHTML = ''; $('#ty-board').innerHTML = ''; return; }
+  const k = d.kpis;
+  const pill = $('#pill-tyfys');
+  pill.hidden = !k.overdue;
+  pill.textContent = k.overdue;
+  $('#ty-sub').textContent = `Zoho CRM pipeline · snapshot ${ago(d.fetchedAt)} · initials only`;
+  const tile = (n, label, cls = '') => `<div class="ty-kpi ${cls}"><b>${n}</b><span>${label}</span></div>`;
+  $('#ty-kpis').innerHTML = [
+    tile(k.active, 'active cases'),
+    tile(k.overdue, 'overdue for an update', k.overdue ? 'bad' : 'good'),
+    tile(k.inAppeal, 'in appeal'),
+    tile(k.newThisMonth, 'new in 30 days'),
+    tile(k.stalled, 'paused / no response'),
+    tile(`${k.winRate ?? '–'}%`, `win rate (${k.won} won · ${k.lost} lost)`, 'good'),
+  ].join('');
+  $('#ty-board').innerHTML = d.lanes.map((l) => `<div class="ty-lane ${l.id}"><h3><span>${esc(l.name)}</span><span class="n">${l.cases.length}${l.redCount ? ` · <span style="color:var(--bad)">${l.redCount} overdue</span>` : ''}</span></h3>
+    ${l.cases.map((c) => `<div class="ty-case ${c.flag}" title="${esc(c.stage)} · created ${ago(c.createdAt)}"><span class="ini">${esc(c.initials)}</span><span class="meta2"><b>${esc(c.owner)}</b><br>${esc(c.stage.replace('Intake (Document Collection)', 'Docs'))}${c.app ? ' · app' : ''}</span><span class="age">${c.days}d</span></div>`).join('') || '<div class="muted" style="font-size:12px">Empty</div>'}</div>`).join('');
+  const max = Math.max(1, ...d.lanes.map((l) => l.cases.length));
+  $('#ty-bottle').innerHTML = d.lanes.map((l) => {
+    const ok = l.cases.length - l.redCount - l.amberCount;
+    const w = (n) => `${(n / max) * 100}%`;
+    return `<div class="bar-row"><span>${esc(l.name)}</span><div class="track"><i style="width:${w(l.redCount)};background:var(--bad)"></i><i style="width:${w(l.amberCount)};background:var(--warn)"></i><i style="width:${w(ok)};background:var(--ok)"></i></div><b>${l.cases.length}</b></div>`;
+  }).join('');
+  const omax = Math.max(1, ...d.owners.map((o) => o.n));
+  $('#ty-owners').innerHTML = d.owners.map((o) => `<div class="bar-row"><span>${esc(o.name)}</span><div class="track"><i style="width:${(o.n / omax) * 100}%;background:#c8102e"></i></div><b>${o.n}</b></div>`).join('');
+}
 
 /* ---------- usage / fuel ---------- */
 const fuel = { data: null, at: 0 };

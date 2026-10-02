@@ -260,3 +260,13 @@ h2.sec { font-size: 13px; text-transform: uppercase; letter-spacing: .07em; colo
 .arcade-frame { padding: 4px; }
 #tab-arcade .arcade-bar { margin-bottom: 6px; }
 #tab-arcade .arcade-bar > .muted { display: none; }
+
+.fuel-card, .fuel-side { display: grid; gap: 8px; }
+.fuel-card { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+.frow { font-size: 13px; }
+.frow span { color: var(--muted); margin-left: 6px; font-size: 12px; }
+.frow .small { font-size: 11px; margin-top: 2px; }
+.fbar { height: 6px; border-radius: 999px; background: var(--panel-2); overflow: hidden; margin-top: 4px; }
+.fbar span { display: block; height: 100%; margin: 0; border-radius: 999px; }
+.arcade-side .frow span { color: #9d93c2; }
+.arcade-side .fbar { background: #241e40; }

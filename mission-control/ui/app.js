@@ -352,6 +352,7 @@ async function loadArcade() {
   state.board = board;
   state.workforce = workforce;
   Object.assign(arcade, { crew, dot, automations });
+  loadUsage().catch(() => {});
   renderDotPicker();
   $('#chime-toggle').checked = chime.on;
   window.Arcade.update(board, workforce, crew, dot, scheduleList());
@@ -415,6 +416,7 @@ async function loadHome() {
   arcade.automations = automations;
   if (!state.board) await loadBoard();
   renderHome();
+  loadUsage().then(() => { const el = $('#home-fuel'); if (el) el.innerHTML = fuelRows(fuel.data); }).catch(() => {});
 }
 
 function bizInfo(id) {
@@ -460,7 +462,8 @@ function queueHtml(it) {
       : j.link ? `<button class="go" data-side-url="${esc(j.link)}">Open</button>` : '';
     btns = `${primary}<button data-side-act='${esc(JSON.stringify({ id: j.id, status: 'done' }))}'>Done</button><button data-side-act='${esc(JSON.stringify({ id: j.id, snoozedUntil: new Date(Date.now() + 4 * 3600e3).toISOString() }))}'>Snooze 4h</button>`;
   }
-  const answerable = it.kind === 'job' && (it.j.status === 'needs_you' || Boolean(home.runs[it.id]));
+  // only conversations can be answered; bots and automations get their own buttons (restart, retry)
+  const answerable = it.kind === 'job' && ['claude-code', 'codex', 'hermes'].includes(it.j.source) && (it.j.status === 'needs_you' || Boolean(home.runs[it.id]));
   return `<div class="q ${it.ask}"><div class="ask">${ASK[it.ask]}</div>
     <div><div class="t" ${it.kind === 'job' ? `data-side-drawer="${esc(it.id)}"` : ''}>${esc(it.title)}</div>
     <div class="s"><span class="biz" style="background:${b.color}">${esc(b.name)}</span>${wait}${answerable ? '' : `<span>${esc((it.line || '').slice(0, 140))}</span>`}</div>
@@ -499,7 +502,7 @@ function askHtml(j, ask) {
 
 async function hydrateAsks(items) {
   for (const it of items) {
-    if (it.kind !== 'job' || it.j.status !== 'needs_you' || home.asks[it.id] || home.loading.has(it.id)) continue;
+    if (it.kind !== 'job' || it.j.status !== 'needs_you' || !['claude-code', 'codex', 'hermes'].includes(it.j.source) || home.asks[it.id] || home.loading.has(it.id)) continue;
     home.loading.add(it.id);
     api('GET', `/api/ask?id=${encodeURIComponent(it.id)}`)
       .then((ask) => { home.asks[it.id] = ask; paintAsk(it.id); })
@@ -621,6 +624,30 @@ document.addEventListener('click', (ev) => {
   const b = ev.target.closest('[data-biz]');
   if (b && state.tab === 'home') { state.biz = b.dataset.biz === state.biz && b.classList.contains('bizcard') ? 'all' : b.dataset.biz; renderHome(); }
 });
+
+/* ---------- usage / fuel ---------- */
+const fuel = { data: null, at: 0 };
+async function loadUsage() {
+  if (fuel.data && Date.now() - fuel.at < 60e3) return fuel.data;
+  fuel.data = await api('GET', '/api/usage').catch(() => null);
+  fuel.at = Date.now();
+  if (fuel.data && window.Arcade && window.Arcade.setUsage) window.Arcade.setUsage(fuel.data);
+  return fuel.data;
+}
+const fmtTok = (n) => (n >= 1e6 ? `${(n / 1e6).toFixed(1)}M` : n >= 1e3 ? `${Math.round(n / 1e3)}k` : String(n || 0));
+function fuelRows(u) {
+  if (!u) return '<div class="empty">Loading…</div>';
+  const bar = (pct, color) => `<div class="fbar"><span style="width:${Math.max(0, Math.min(100, pct))}%;background:${color}"></span></div>`;
+  const rows = [];
+  if (u.codex.ok && u.codex.primary) {
+    const left = 100 - u.codex.primary.usedPercent;
+    rows.push(`<div class="frow"><b>Codex</b><span>${Math.round(left)}% left this week · resets ${until(u.codex.primary.resetsAt).replace('in ', 'in ')}</span>${bar(left, left < 20 ? 'var(--bad)' : left < 40 ? 'var(--warn)' : '#10b088')}</div>`);
+  } else rows.push(`<div class="frow"><b>Codex</b><span>${esc(u.codex.reason || 'no data')}</span></div>`);
+  if (u.claude.ok) rows.push(`<div class="frow"><b>Claude</b><span>${fmtTok(u.claude.tokens5h)} tokens in 5h · ${u.claude.sessions5h} sessions</span>${bar(Math.min(100, (u.claude.tokens5h / 5e6) * 100), '#e07850')}<div class="muted small">Activity, not a %: Anthropic doesn't publish your Max cap.</div></div>`);
+  rows.push(u.grok.ok ? `<div class="frow"><b>Grok</b><span>${Math.round(100 - u.grok.usedPercent)}% left</span>${bar(100 - u.grok.usedPercent, '#9aa8c0')}</div>` : `<div class="frow"><b>Grok</b><span>${esc(u.grok.reason)}</span></div>`);
+  rows.push(u.local.ok ? `<div class="frow"><b>Local Qwen</b><span>free · ${u.local.loaded.length ? esc(u.local.loaded[0].replace(/-UD.*/, '')) + ' loaded' : 'idle'}${u.local.busy ? ` · ${u.local.busy} busy` : ''}</span>${bar(100, '#2affd0')}</div>` : `<div class="frow"><b>Local Qwen</b><span>${esc(u.local.reason)}</span></div>`);
+  return rows.join('');
+}
 
 /* ---------- arcade sidebar ---------- */
 function allJobs() {
@@ -764,6 +791,11 @@ function renderSide() {
       <div class="why">Patrols every corner of its island, scans each department or ride, and leans on anyone who has gone quiet.</div>
       <h2>RECENT SCANS</h2>${info.log.length ? `<ul>${info.log.map((l) => `<li>🔍 ${esc(l.what)}<span class="sub">${ago(new Date(l.at).toISOString())} · ${l.n} agent${l.n === 1 ? '' : 's'} there</span></li>`).join('')}</ul>` : '<div class="empty">Just left the hangar.</div>'}
       <div class="btns">${btn('Enter this island', `data-side-island="${esc(info.island)}"`, 'go')}</div>`;
+    return;
+  }
+  if (sel.type === 'place' && sel.id === 'fuel') {
+    el.innerHTML = `${back}<h2>FUEL DEPOT</h2><div class="why">How much of each AI's allowance is left. Background thinking in Mission Control runs on the free local model, so it never touches these.</div><div class="fuel-side">${fuelRows(fuel.data)}</div>`;
+    loadUsage().then(() => { if (arcade.sel && arcade.sel.id === 'fuel') $('#arcade-side .fuel-side').innerHTML = fuelRows(fuel.data); });
     return;
   }
   if (sel.type === 'place' && sel.id === 'eye') {

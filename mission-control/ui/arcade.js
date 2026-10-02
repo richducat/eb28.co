@@ -134,6 +134,8 @@
   const TEMPLE = { x: 95, base: 39 };
   const HELIPAD = { x: 101, y: 47 };
   const YACHT = { x: 104, y: 60 };
+  // Mech Island fuel depot: one tank per AI (tile coords of the middle of the row).
+  const FUEL = { x: 98, y: 117 };
   // The all-seeing eye: a golden pyramid in the middle of Mech Island (tile coords of its base).
   const PYRAMID = { x: 80, base: 113 };
   // The clock tower is a landmark, not a status: it shows when scheduled agents run next.
@@ -199,6 +201,7 @@
     for (let y = PYRAMID.base - 9; y <= PYRAMID.base + 1; y += 1) for (let x = PYRAMID.x - 7; x <= PYRAMID.x + 7; x += 1) PLAZA[y][x] = true;
     for (let y = TEMPLE.base - 5; y <= TEMPLE.base + 1; y += 1) for (let x = TEMPLE.x - 4; x <= TEMPLE.x + 4; x += 1) PLAZA[y][x] = true;
     for (let y = HELIPAD.y - 2; y <= HELIPAD.y + 2; y += 1) for (let x = HELIPAD.x - 2; x <= HELIPAD.x + 2; x += 1) PLAZA[y][x] = true;
+    for (let y = FUEL.y - 4; y <= FUEL.y + 1; y += 1) for (let x = FUEL.x - 6; x <= FUEL.x + 6; x += 1) PLAZA[y][x] = true;
     for (let y = 2; y < ROWS - 2; y += 1) {
       for (let x = 1; x < COLS - 1; x += 1) {
         if (!LAND[y][x] || PATH[y][x] || PLAZA[y][x] || !LAND[y + 1][x]) continue;
@@ -1675,6 +1678,48 @@
       if ((i + Math.floor(t * 2)) % 7) px(x, y, 1, 1, `rgba(255,255,255,${dark})`);
     }
   }
+
+  /* ---------- fuel depot: how much of each AI's allowance is left ---------- */
+  let usageData = null;
+  const fuelRect = { x: 0, y: 0, w: 0, h: 0 };
+  function fuelLevels() {
+    const u = usageData || {};
+    const cx = u.codex && u.codex.ok && u.codex.primary ? Math.max(0, 100 - u.codex.primary.usedPercent) : null;
+    const cl = u.claude && u.claude.ok ? Math.min(100, (u.claude.tokens5h / 5e6) * 100) : null;
+    const gk = u.grok && u.grok.ok ? Math.max(0, 100 - u.grok.usedPercent) : null;
+    return [
+      { name: 'CODEX', level: cx, color: '#10b088', note: cx == null ? '?' : `${Math.round(cx)}% LEFT` },
+      { name: 'CLAUDE', level: cl == null ? null : 100 - cl, color: '#e07850', note: cl == null ? '?' : 'BURN', burn: cl },
+      { name: 'GROK', level: gk, color: '#9aa8c0', note: gk == null ? 'OFF' : `${Math.round(gk)}% LEFT` },
+      { name: 'LOCAL', level: 100, color: '#2affd0', note: 'FREE', busy: u.local && u.local.busy },
+    ];
+  }
+  function drawFuel(f, t) {
+    const cx = FUEL.x * T + 8;
+    const by = FUEL.y * T;
+    const tanks = fuelLevels();
+    px(cx - 92, by - 2, 184, 4, '#1a2030');
+    tanks.forEach((k, i) => {
+      const x = cx - 84 + i * 44;
+      const h = 46;
+      px(x, by - h, 34, h, '#1a1f2e'); px(x + 2, by - h + 2, 30, h - 4, '#05070c');
+      if (k.level != null) {
+        const lh = Math.round(((h - 4) * k.level) / 100);
+        const low = k.level < 20;
+        px(x + 2, by - 2 - lh, 30, lh, low && Math.floor(f / 4) % 2 ? '#ff2a3a' : k.color);
+        px(x + 2, by - 2 - lh, 30, 2, '#ffffff66');
+        if (k.busy || (k.name === 'CLAUDE' && k.burn > 10)) for (let b = 0; b < 3; b += 1) px(x + 6 + b * 9, by - 6 - ((t * 30 + b * 13) % Math.max(4, lh - 4)), 2, 2, '#ffffffaa');
+      } else {
+        px(x + 8, by - 26, 18, 2, '#3a4258');
+      }
+      for (let r = 0; r < 4; r += 1) px(x, by - h + 8 + r * 11, 34, 1, '#2a3248');
+      px(x - 2, by - h - 4, 38, 4, '#2a3248');
+      text(k.name, x + 17, by + 4, k.color, 4, 'center');
+      text(k.note, x + 17, by - h - 12, k.level != null && k.level < 20 ? '#ff2a3a' : '#c8d0e0', 4, 'center');
+    });
+    text('FUEL DEPOT', cx, by - 72, '#2affd0', 6, 'center');
+    Object.assign(fuelRect, { x: cx - 92, y: by - 76, w: 184, h: 86 });
+  }
   /* ---------- drawing actors ---------- */
   function drawActor(a, t) {
     if (a.kind === 'tycoon') return drawTycoon(a, t);
@@ -2122,6 +2167,7 @@
     if (vis(TEMPLE.x * T, TEMPLE.base * T, 120)) layers.push({ y: TEMPLE.base * T, draw: () => drawTemple(f) });
     if (vis(HELIPAD.x * T, HELIPAD.y * T, 80)) layers.push({ y: HELIPAD.y * T + 20, draw: () => drawHelipad(f) });
     if (vis(YACHT.x * T, YACHT.y * T, 120)) layers.push({ y: YACHT.y * T + 10, draw: () => drawYacht(t) });
+    if (vis(FUEL.x * T, FUEL.y * T, 160)) layers.push({ y: FUEL.y * T, draw: () => drawFuel(f, t) });
     const look = eyeTarget();
     layers.push({ y: PYRAMID.base * T, draw: () => drawPyramid(f, t, look ? look.x + 8 : PYRAMID.x * T, look ? look.y : 0) });
     for (const a of actors.values()) if (!a.carriedBy && vis(a.x, a.y)) layers.push({ y: a.y + (a.kind === 'mech' ? 44 : 14), draw: () => drawActor(a, t) });
@@ -2171,6 +2217,7 @@
     for (const [id, r] of Object.entries(signRects)) if (x >= r.x && x <= r.x + r.w && y >= r.y && y <= r.y + r.h) return { sign: id };
     for (const [id, r] of Object.entries(bannerRects)) if (x >= r.x && x <= r.x + r.w && y >= r.y && y <= r.y + r.h) return { island: id };
     if (x >= clockRect.x && x <= clockRect.x + clockRect.w && y >= clockRect.y && y <= clockRect.y + clockRect.h) return { sign: 'clock' };
+    if (x >= fuelRect.x && x <= fuelRect.x + fuelRect.w && y >= fuelRect.y && y <= fuelRect.y + fuelRect.h) return { sign: 'fuel' };
     if (Math.abs(x - (PYRAMID.x * T + 8)) < 100 && y > PYRAMID.base * T - 190 && y < PYRAMID.base * T) return { sign: 'eye' };
     for (const [id, p] of Object.entries(PLACES)) {
       const cx = p.door[0] * T + 8;
@@ -2313,5 +2360,6 @@
     return [...actors.values()].filter((a) => ['tycoon', 'overlord', 'agent', 'crew', 'dot', 'mech', 'warden'].includes(a.kind)).map((a) => ({ id: a.id, kind: a.kind, spec: specOf(a), name: a.kind === 'overlord' ? a.realm.label : a.kind === 'mech' ? 'Watchdog Mech' : a.kind === 'warden' ? a.title.replace('The ', '') : a.kind === 'tycoon' ? 'The Tycoon' : (a.title || '').split(' · ')[0].split(' (')[0], sel: describe({ type: 'actor', id: a.id }) }));
   }
 
-  window.Arcade = { mount, update, start, stop, say, select, info, team, camera, placeOf, enterIsland, weather, PLACES, ISLANDS, ZONES, _actors: actors };
+  const setUsage = (u) => { usageData = u; };
+  window.Arcade = { mount, update, setUsage, start, stop, say, select, info, team, camera, placeOf, enterIsland, weather, PLACES, ISLANDS, ZONES, _actors: actors };
 })();

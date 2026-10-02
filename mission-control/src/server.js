@@ -1,6 +1,7 @@
 import http from 'node:http';
 import { listCrew } from './sources/hermes-crew.js';
 import { recordAnswer } from './sources/hermes-handoff.js';
+import { usage } from './usage.js';
 import { askFor, claudeReady, replyRun, sendReply, startClaudeLogin, suggest } from './reply.js';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -200,6 +201,7 @@ export function createServer({ orchestrator = new Orchestrator(), nativeNotify =
       await orchestrator.refreshBoard();
       return { ok: true, line };
     },
+    'GET /api/usage': async (_b, q) => usage({ fresh: q.get('fresh') === '1' }),
     'GET /api/crew': async () => listCrew(),
     // Who "Dot" (OG Kush) is: Codex voice delegations by default, or any job/bot/crew id.
     'GET /api/dot': async () => store.get('dot', { target: 'codex-voice' }),

@@ -36,3 +36,21 @@ test('missingTarget: explains why an automation cannot run here', async () => {
   assert.match(missingTarget({ command: ['node', 'scripts/x.mjs'] }, dir), /scripts\/x.mjs is not in/);
   assert.match(missingTarget({ command: ['python3', '-m', 'unittest', 'discover', '-s', 'tests'] }, dir), /tests is not in/);
 });
+
+test('cos: strips Hermes housekeeping from answers', async () => {
+  const { cleanAnswer } = await import('../src/cos.js');
+  assert.equal(cleanAnswer('Skipping broken secondary profile x\nHello Richard.\nsession_id: 123'), 'Hello Richard.');
+});
+
+test('replay: records only when statuses change and rebuilds boards', async () => {
+  const { record, frames, boardFrom } = await import('../src/replay.js');
+  const board = (s) => ({ columns: [{ id: s, jobs: [{ id: 'j1', status: s, title: 'Job', source: 'codex', business: 'tyfys', app: '', meta: {} }] }] });
+  const t = Date.parse('2026-10-01T12:00:00');
+  assert.equal(record(board('working'), t), true);
+  assert.equal(record(board('working'), t + 1000), false);
+  assert.equal(record(board('needs_you'), t + 2000), true);
+  const f = frames('2026-10-01');
+  assert.equal(f.length, 2);
+  const b = boardFrom(f[1]);
+  assert.equal(b.columns.find((c) => c.id === 'needs_you').jobs[0].id, 'j1');
+});

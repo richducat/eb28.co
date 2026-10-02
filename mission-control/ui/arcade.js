@@ -1988,6 +1988,7 @@
     const items = [['!', counts.needs_you, P.red[3]], ['WORK', counts.working, P.grass[3]], ['BOTS', counts.bots, P.sea[3]], ['GOAL', counts.done, P.gold[3]], ['BOO', counts.failed, P.ghost[3]], ['CREW', counts.crew, P.gold[2]]];
     let x = 160;
     for (const [k, v, c] of items) { if (x > cw - 90) break; text(`${k}x${String(v || 0).padStart(2, '0')}`, x, 9, c, 7); x += 96; }
+    if (replayLabel) { px(cw / 2 - 90, 30, 180, 20, 'rgba(160,20,40,.9)'); text(`⏪ REPLAY ${replayLabel}`, cw / 2, 36, '#ffffff', 8, 'center'); }
     const msg = ticker[0];
     const age = msg ? (performance.now() - msg.t) / 1000 : 99;
     px(0, ch - 18, cw, 18, 'rgba(16,16,24,.85)');
@@ -2361,5 +2362,7 @@
   }
 
   const setUsage = (u) => { usageData = u; };
-  window.Arcade = { mount, update, setUsage, start, stop, say, select, info, team, camera, placeOf, enterIsland, weather, PLACES, ISLANDS, ZONES, _actors: actors };
+  let replayLabel = '';
+  const setReplay = (label) => { replayLabel = label || ''; };
+  window.Arcade = { mount, update, setUsage, setReplay, start, stop, say, select, info, team, camera, placeOf, enterIsland, weather, PLACES, ISLANDS, ZONES, _actors: actors };
 })();

@@ -1,5 +1,6 @@
 import { EventEmitter } from 'node:events';
 import { buildBoard } from '../board.js';
+import { record as recordReplay } from '../replay.js';
 import { store } from '../store.js';
 import { loadRegistry, nextRunAt, runAutomation, setAutomationState } from './automations.js';
 import { available as llmAvailable, activeModel } from './llm.js';
@@ -37,6 +38,11 @@ export class Orchestrator extends EventEmitter {
 
   async refreshBoard() {
     this.board = await buildBoard();
+    try {
+      recordReplay(this.board);
+    } catch {
+      /* replay is a nicety */
+    }
     this.emitEvent({ type: 'board:refresh', summary: this.board.summary });
     return this.board;
   }

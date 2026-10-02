@@ -2,6 +2,8 @@ import http from 'node:http';
 import { listCrew } from './sources/hermes-crew.js';
 import { recordAnswer } from './sources/hermes-handoff.js';
 import { usage } from './usage.js';
+import { boardFrom, days as replayDays, frames as replayFrames } from './replay.js';
+import { askCos, chats, PROFILES as COS_PROFILES } from './cos.js';
 import { askFor, claudeReady, replyRun, sendReply, startClaudeLogin, suggest } from './reply.js';
 import fs from 'node:fs';
 import path from 'node:path';
@@ -200,6 +202,18 @@ export function createServer({ orchestrator = new Orchestrator(), nativeNotify =
       const line = recordAnswer(String(b.id || '').replace(/^decision:/, ''), b.answer);
       await orchestrator.refreshBoard();
       return { ok: true, line };
+    },
+    'GET /api/cos': async () => ({ profiles: COS_PROFILES, chats: chats().reverse() }),
+    'POST /api/cos': async (b) => {
+      const entry = askCos({ text: b.text, profile: b.profile, onEvent: (e) => { orchestrator.emitEvent(e); orchestrator.refreshBoard(); } });
+      setTimeout(() => orchestrator.refreshBoard(), 300);
+      return entry;
+    },
+    // Daily replay: snapshots of the board, rebuilt into boards the Arcade can show.
+    'GET /api/replay': async (_b, q) => {
+      const board = orchestrator.board || (await orchestrator.refreshBoard());
+      const frames = replayFrames(q.get('date') || undefined);
+      return { days: replayDays(), frames: frames.map((f) => ({ t: f.t, board: boardFrom(f, board.businesses, board.apps) })) };
     },
     'GET /api/usage': async (_b, q) => usage({ fresh: q.get('fresh') === '1' }),
     'GET /api/crew': async () => listCrew(),

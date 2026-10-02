@@ -270,3 +270,21 @@ h2.sec { font-size: 13px; text-transform: uppercase; letter-spacing: .07em; colo
 .fbar span { display: block; height: 100%; margin: 0; border-radius: 999px; }
 .arcade-side .frow span { color: #9d93c2; }
 .arcade-side .fbar { background: #241e40; }
+
+/* chief of staff chat */
+.cos-box { display: grid; grid-template-columns: 1fr auto; gap: 6px; }
+.cos-box select { grid-column: 1 / -1; }
+.cos-box textarea { resize: vertical; }
+.cos-box .go { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
+.cos-home { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 10px; }
+.cos-x { margin-top: 8px; font-size: 12px; border-left: 3px solid var(--line); padding-left: 8px; }
+.cos-x.running { border-color: var(--work); } .cos-x.done { border-color: var(--ok); } .cos-x.failed { border-color: var(--bad); }
+.cos-q { font-weight: 600; }
+.cos-a { color: var(--muted); white-space: pre-wrap; max-height: 160px; overflow: auto; margin-top: 2px; }
+.arcade-side .cos-box select, .arcade-side .cos-box textarea { background: #221c3d; color: #f0ecff; border-color: #4a3f86; }
+.arcade-side .cos-a { color: #bdb5e0; }
+
+.replay-bar { position: absolute; left: 18px; right: 220px; bottom: 30px; display: flex; gap: 8px; align-items: center; background: rgba(16,16,24,.88); border: 1px solid #a01428; border-radius: 8px; padding: 6px 10px; color: #fff; }
+.replay-bar input[type=range] { flex: 1; padding: 0; }
+.replay-bar button, .replay-bar select { background: #2a1a2a; color: #fff; border: 1px solid #a01428; border-radius: 6px; padding: 3px 8px; width: auto; }
+.replay-bar span { font: 10px "Press Start 2P", monospace; min-width: 60px; }

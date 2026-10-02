@@ -40,6 +40,8 @@
         <div id="queue"></div>
       </div>
       <div>
+        <h2 class="sec">Ask your Chief of Staff</h2>
+        <div data-cos-panel class="cos-home"></div>
         <h2 class="sec">Today by business</h2>
         <div id="biz-cards"></div>
         <h2 class="sec">Fuel</h2>
@@ -62,6 +64,7 @@
     <div class="arcade-bar">
       <span class="muted">Your whole operation as an archipelago: coders work in the Backrooms, creators in the Fun Park, and anyone who needs you walks to the castle on the main island. Drag to explore, scroll to zoom, click an island's sign to go inside.</span>
       <span class="arcade-controls">
+        <button id="replay-open" class="small">⏪ Replay today</button>
         <label class="switch"><input type="checkbox" id="chime-toggle" /> 🔔 Chime when something needs me</label>
         <label class="arcade-dot">Dot (OG Kush) is <select id="dot-target"><option value="codex-voice">Codex voice delegations</option></select></label>
       </span>
@@ -70,6 +73,13 @@
       <div>
         <div class="arcade-frame">
           <canvas id="arcade"></canvas>
+          <div class="replay-bar" id="replay-bar" hidden>
+            <button id="replay-play">▶</button>
+            <input type="range" id="replay-slider" min="0" max="0" value="0" />
+            <span id="replay-time">--:--</span>
+            <select id="replay-speed"><option value="1500">1x</option><option value="600" selected>3x</option><option value="200">10x</option></select>
+            <button id="replay-live">Back to live</button>
+          </div>
           <div class="cam-ctrl">
             <button data-cam="in" title="Zoom in (+)">＋</button><button data-cam="out" title="Zoom out (−)">−</button><button data-cam="fit" title="Whole archipelago (0)">⤢</button>
             <span class="sep"></span>

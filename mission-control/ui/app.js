@@ -309,6 +309,7 @@ function connectEvents() {
     const e = JSON.parse(ev.data);
     if (e.type === 'ask:suggested') { delete home.asks[e.jobId]; if (state.tab === 'home') hydrateAsks(queueItems()); }
     if (e.type === 'reply:progress' || e.type === 'reply:done') onReplyEvent(e);
+    if (e.type === 'cos:done') { toast(`Chief of Staff replied: ${e.chat.a.slice(0, 80)}`, e.chat.status === 'done' ? 'ok' : 'bad'); loadCos(); }
     if (e.type === 'board:refresh') loadBoard().then(() => { if (state.tab === 'arcade') loadArcade(); });
     if (e.type === 'job:transition') toast(`${e.title.slice(0, 70)} → ${STATUS_LABEL[e.to] || e.to}`, e.to === 'failed' ? 'bad' : e.to === 'needs_you' ? 'you' : 'ok');
     if (e.type === 'proposal:new') { toast(`Approval needed: ${e.title}`, 'you'); loadWorkforce(); }
@@ -353,9 +354,10 @@ async function loadArcade() {
   state.workforce = workforce;
   Object.assign(arcade, { crew, dot, automations });
   loadUsage().catch(() => {});
+  if (!cos.data) loadCos();
   renderDotPicker();
   $('#chime-toggle').checked = chime.on;
-  window.Arcade.update(board, workforce, crew, dot, scheduleList());
+  if (!replay.on) window.Arcade.update(board, workforce, crew, dot, scheduleList());
   renderLegend(board, workforce, crew);
   renderTeam();
   renderSide();
@@ -417,6 +419,7 @@ async function loadHome() {
   if (!state.board) await loadBoard();
   renderHome();
   loadUsage().then(() => { const el = $('#home-fuel'); if (el) el.innerHTML = fuelRows(fuel.data); }).catch(() => {});
+  loadCos();
 }
 
 function bizInfo(id) {
@@ -625,6 +628,95 @@ document.addEventListener('click', (ev) => {
   if (b && state.tab === 'home') { state.biz = b.dataset.biz === state.biz && b.classList.contains('bizcard') ? 'all' : b.dataset.biz; renderHome(); }
 });
 
+/* ---------- chat with a chief of staff ---------- */
+const cos = { data: null, profile: (() => { try { return localStorage.getItem('mc-cos') || 'hermes-cos'; } catch { return 'hermes-cos'; } })() };
+async function loadCos() {
+  cos.data = await api('GET', '/api/cos').catch(() => ({ profiles: [], chats: [] }));
+  paintCos();
+}
+function cosHtml() {
+  const d = cos.data || { profiles: [], chats: [] };
+  const opts = d.profiles.map((p) => `<option value="${esc(p.id)}" ${p.id === cos.profile ? 'selected' : ''}>${esc(p.name)}</option>`).join('');
+  const recent = d.chats.slice(0, 3).map((c) => `<div class="cos-x ${c.status}"><div class="cos-q">You: ${esc(c.q)}</div><div class="cos-a">${c.status === 'running' ? '⏳ Thinking (local model, free)…' : esc(c.a.slice(0, 900))}</div></div>`).join('');
+  return `<div class="cos-box"><select data-cos-profile>${opts}</select><textarea rows="2" data-cos-text placeholder="Ask or assign anything… e.g. 'Who hasn't logged Joel Brock in Zoho?'"></textarea><button class="go" data-cos-send>Send</button></div>${recent}`;
+}
+function paintCos() {
+  for (const el of document.querySelectorAll('[data-cos-panel]')) {
+    const typed = el.querySelector('[data-cos-text]');
+    const keep = typed ? typed.value : '';
+    el.innerHTML = cosHtml();
+    if (keep) el.querySelector('[data-cos-text]').value = keep;
+  }
+}
+document.addEventListener('click', async (ev) => {
+  const b = ev.target.closest('[data-cos-send]');
+  if (!b) return;
+  const box = b.closest('[data-cos-panel]');
+  const text = box.querySelector('[data-cos-text]').value.trim();
+  if (!text) return toast('Type a message first.', 'bad');
+  try {
+    await api('POST', '/api/cos', { text, profile: cos.profile });
+    box.querySelector('[data-cos-text]').value = '';
+    toast('Sent to your chief of staff', 'ok');
+    loadCos();
+  } catch (err) { toast(err.message, 'bad'); }
+});
+document.addEventListener('change', (ev) => {
+  if (!ev.target.matches('[data-cos-profile]')) return;
+  cos.profile = ev.target.value;
+  try { localStorage.setItem('mc-cos', cos.profile); } catch { /* ignore */ }
+});
+
+/* ---------- daily replay ---------- */
+const replay = { on: false, frames: [], i: 0, timer: null };
+function replayShow(i) {
+  replay.i = Math.max(0, Math.min(replay.frames.length - 1, i));
+  const f = replay.frames[replay.i];
+  if (!f) return;
+  const label = new Date(f.t).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  $('#replay-slider').value = replay.i;
+  $('#replay-time').textContent = label;
+  window.Arcade.setReplay(label);
+  window.Arcade.update(f.board, state.workforce, arcade.crew, arcade.dot, scheduleList());
+}
+function replayStop() {
+  clearInterval(replay.timer);
+  replay.timer = null;
+  $('#replay-play').textContent = '▶';
+}
+async function replayOpen() {
+  const data = await api('GET', '/api/replay');
+  if (!data.frames.length) return toast('Nothing recorded yet today. The replay builds up as the day goes on.', 'bad');
+  Object.assign(replay, { on: true, frames: data.frames });
+  $('#replay-slider').max = data.frames.length - 1;
+  $('#replay-bar').hidden = false;
+  window.Arcade.camera('fit');
+  replayShow(0);
+}
+async function replayClose() {
+  replayStop();
+  replay.on = false;
+  $('#replay-bar').hidden = true;
+  window.Arcade.setReplay('');
+  await loadArcade();
+}
+document.addEventListener('click', (ev) => {
+  const t = ev.target.closest('#replay-open,#replay-live,#replay-play');
+  if (!t) return;
+  if (t.id === 'replay-open') return replayOpen().catch((err) => toast(err.message, 'bad'));
+  if (t.id === 'replay-live') return replayClose();
+  if (replay.timer) return replayStop();
+  if (replay.i >= replay.frames.length - 1) replayShow(0);
+  t.textContent = '⏸';
+  replay.timer = setInterval(() => { if (replay.i >= replay.frames.length - 1) return replayStop(); replayShow(replay.i + 1); }, Number($('#replay-speed').value));
+});
+document.addEventListener('input', (ev) => { if (ev.target.id === 'replay-slider') { replayStop(); replayShow(Number(ev.target.value)); } });
+document.addEventListener('change', (ev) => {
+  if (ev.target.id !== 'replay-speed' || !replay.timer) return;
+  replayStop();
+  $('#replay-play').click();
+});
+
 /* ---------- usage / fuel ---------- */
 const fuel = { data: null, at: 0 };
 async function loadUsage() {
@@ -707,6 +799,7 @@ function renderSide() {
       ${proposals.length ? proposals.map((p) => `<div class="doing"><b>${esc(p.title)}</b><div class="why">${esc(p.description || '')}</div><div class="btns">${btn('Approve', `data-side-decide="${esc(p.id)}" data-decision="approved"`, 'go')}${btn('Always allow', `data-side-decide="${esc(p.id)}" data-decision="approved" data-standing="1"`)}${btn('Not now', `data-side-decide="${esc(p.id)}" data-decision="rejected"`)}</div></div>`).join('') : '<div class="empty">No approvals pending.</div>'}
       ${failed.length ? `<h2>IN THE GHOST HOUSE</h2><ul>${failed.map(jobLi).join('')}</ul>` : ''}
       ${next ? `<h2>NEXT UP</h2><div class="doing">⏰ <b>${esc(next.name)}</b> runs ${until(next.nextRunAt)}</div>` : ''}
+      <h2>ASK YOUR CHIEF OF STAFF</h2><div data-cos-panel>${cosHtml()}</div>
       <div class="meta">Click anyone on the map, or a building, to see details here.</div>`;
     return;
   }

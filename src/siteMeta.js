@@ -13,6 +13,7 @@ import {
     GROWTH_HOSTING_UPFRONT_PRICE,
     WEBSITE_ONLY_PRICE,
 } from './offerTerms.js';
+import { LOCAL_AI_PACKAGES } from './localAiOffer.js';
 
 export const SITE_NAME = 'EB28';
 export const SITE_ORIGIN = 'https://eb28.co';
@@ -32,6 +33,7 @@ const THOMAS_CUSTOM_HOMES_CUSTOM_DOMAIN_IMAGE = `${THOMAS_CUSTOM_HOMES_SITE_ORIG
 const MELBOURNE_WEB_STUDIO_CANONICAL_URL = `${SITE_ORIGIN}/melbournewebstudio/`;
 const FREE_WEBSITE_BUILD_CANONICAL_URL = `${SITE_ORIGIN}/free-website-build/`;
 const GET_STARTED_CANONICAL_URL = `${SITE_ORIGIN}/get-started/`;
+const LOCAL_AI_CANONICAL_URL = `${SITE_ORIGIN}/local-ai/`;
 const CADETCATCH_IMAGE = `${SITE_ORIGIN}/cc/img/find-cadet-photos.png`;
 const CADETCATCH_SITE_ORIGIN = 'https://cadetcatch.com';
 
@@ -179,9 +181,9 @@ const ROUTE_META = {
         ...BASE_ROUTE_META,
         key: 'home',
         path: '/',
-        title: 'EB28 | Websites, Marketing, Apps & Automation in Melbourne, FL',
+        title: 'EB28 | AI Setup & Websites for Local Businesses in Melbourne, FL',
         description:
-            'Start an EB28 website, marketing, app, SEO, lead-generation, or automation project with a guided client brief. Website offer: $1,176 upfront for 12 months of Growth Hosting, or $800 website-only.',
+            'EB28 sets up plain-English AI for Melbourne and Brevard businesses — missed-call text-back, lead follow-up, reviews, and invoice reminders at fixed prices — plus websites from $800.',
         image: DEFAULT_IMAGE,
         includeInSitemap: true,
         structuredData: [
@@ -200,6 +202,9 @@ const ROUTE_META = {
                     '@id': ORGANIZATION_ID,
                 },
                 serviceType: [
+                    'AI setup for local businesses',
+                    'Missed-call text-back',
+                    'AI lead follow-up',
                     'App Development',
                     'Website Builder',
                     'Free website build',
@@ -531,6 +536,46 @@ const ROUTE_META = {
             },
         ],
     },
+    localai: {
+        ...BASE_ROUTE_META,
+        key: 'localai',
+        path: '/local-ai/',
+        canonicalUrlOverride: LOCAL_AI_CANONICAL_URL,
+        title: 'AI Setup for Local Businesses in Melbourne, FL | EB28',
+        description:
+            'Plain-English AI setup for Melbourne and Brevard businesses: missed-call text-back, website chat, lead follow-up, review requests, and invoice reminders. Fixed prices from $400. Free 20-minute checkup.',
+        image: DEFAULT_IMAGE,
+        themeColor: '#fafaf7',
+        colorScheme: 'light',
+        includeInSitemap: true,
+        structuredData: [
+            ORGANIZATION_SCHEMA,
+            {
+                '@context': 'https://schema.org',
+                '@type': 'ProfessionalService',
+                name: 'EB28 Local AI Setup',
+                url: LOCAL_AI_CANONICAL_URL,
+                image: DEFAULT_IMAGE,
+                description:
+                    'Done-for-you AI setup for local service businesses, explained in plain English, with fixed one-time setup prices and optional monthly care plans.',
+                areaServed: ['Melbourne, Florida', 'Brevard County, Florida', 'Space Coast, Florida'],
+                provider: {
+                    '@id': ORGANIZATION_ID,
+                },
+                hasOfferCatalog: {
+                    '@type': 'OfferCatalog',
+                    name: 'Local AI packages',
+                    itemListElement: LOCAL_AI_PACKAGES.map((pkg) => ({
+                        '@type': 'Offer',
+                        name: pkg.name,
+                        description: pkg.tagline,
+                        price: pkg.setup,
+                        priceCurrency: 'USD',
+                    })),
+                },
+            },
+        ],
+    },
     weedauthority: {
         ...BASE_ROUTE_META,
         key: 'weedauthority',
@@ -690,6 +735,8 @@ export const STATIC_ROUTE_OUTPUTS = [
     { routeKey: 'freewebsitebuild', outputPath: 'free-website-build/index.html' },
     { routeKey: 'freewebsitebuild', outputPath: 'free-local-business-website/index.html' },
     { routeKey: 'getstarted', outputPath: 'get-started/index.html' },
+    { routeKey: 'localai', outputPath: 'local-ai/index.html' },
+    { routeKey: 'localai', outputPath: 'ai/index.html' },
     { routeKey: 'weedauthority', outputPath: 'weedauthority/index.html' },
     { routeKey: 'cc', outputPath: 'cc/index.html' },
     { routeKey: 'dash', outputPath: 'dash/index.html' },
@@ -791,6 +838,10 @@ export function detectRouteKey({ pathname = '/', hostname = '' } = {}) {
 
     if (normalizedPathname === '/get-started') {
         return 'getstarted';
+    }
+
+    if (normalizedPathname === '/local-ai' || normalizedPathname === '/ai') {
+        return 'localai';
     }
 
     if (

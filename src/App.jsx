@@ -1,24 +1,24 @@
 import React, { useState } from 'react';
-import { ArrowRight, CalendarDays, Check, Menu, X } from 'lucide-react';
+import { ArrowRight, Check, Menu, X } from 'lucide-react';
 import ConversionAssistant from './components/ConversionAssistant.jsx';
 import {
   GROWTH_HOSTING_SHORT_LABEL,
-  WEBSITE_ONLY_LABEL,
 } from './offerTerms.js';
+import { LOCAL_AI_PACKAGES, formatUsd } from './localAiOffer.js';
 
 const services = [
-  ['01', 'A website built around the next customer', 'A custom site with one clear offer, useful proof, and a direct path to call, book, request a quote, or buy.'],
-  ['02', 'Lead capture and faster follow-up', 'Forms, qualification, routing, CRM structure, and practical automation that help your team respond while the lead is still warm.'],
-  ['03', 'Social and content with a real job', 'Posts, articles, and short-form content planned around the audience, offer, proof, and business result you need.'],
+  ['01', 'AI that answers when you cannot', 'Missed-call text-back, website chat that answers common questions, and booking requests that land on your phone — set up and explained in plain English.'],
+  ['02', 'Follow-up that never forgets', 'New leads, review requests, overdue invoices, and past customers all get a polite, automatic nudge while you keep the final say.'],
+  ['03', 'A website built around the next customer', 'A custom site with one clear offer, useful proof, and a direct path to call, book, request a quote, or buy.'],
   ['04', 'Local search people can act on', 'Service pages, local signals, useful answers, and technical foundations working toward qualified traffic—not vanity rankings.'],
-  ['05', 'Apps and automation that remove friction', 'Focused software and repeatable workflows, with human approval kept around sensitive decisions.'],
+  ['05', 'Apps and custom software', 'Focused software and repeatable workflows, with human approval kept around sensitive decisions.'],
 ];
 
 const process = [
-  ['We map the business', 'We learn your best customers, offers, service areas, busy seasons, margins, and the questions people ask every day.'],
-  ['We build around it', 'A fast custom website, designed for phones first, with a clear offer and a lead path that works on the first try.'],
-  ['We connect the growth system', 'Search, content, lead capture, and follow-up share the same business knowledge instead of living in separate silos.'],
-  ['We improve what is live', 'We watch what people use, fix friction, and keep the site useful as your business changes.'],
+  ['Free 20-minute checkup', 'By phone or in person around Brevard. We find where time and customers slip away — no jargon, no pitch deck.'],
+  ['A fixed price in writing', 'One page: what we will set up, what it costs, and what it will not do. No hourly billing and no surprises.'],
+  ['We set it up and test it', 'We build it with your name, your hours, and answers you approve, then test it before customers ever see it.'],
+  ['We keep it running', 'A short walkthrough for your team, then we watch it every month and fix anything that breaks.'],
 ];
 
 const portfolioProjects = [
@@ -55,12 +55,13 @@ function App() {
       <header className="eb-nav">
         <a href="/" className="eb-logo" aria-label="EB28 home">EB<span>28</span></a>
         <nav className={`eb-navlinks ${menuOpen ? 'is-open' : ''}`} aria-label="Primary navigation">
+          <a href="/local-ai/">AI for your business</a>
           <button onClick={() => closeAndScroll('what')}>What we do</button>
           <button onClick={() => closeAndScroll('how')}>How it works</button>
           <button onClick={() => closeAndScroll('work')}>Our work</button>
           <a href="/melbournewebstudio/">Web Studio</a>
           <a href="/blog/">Blog</a>
-          <a className="eb-button eb-button-small" href="/get-started/">Get started</a>
+          <a className="eb-button eb-button-small" href="/local-ai/#checkup">Free AI checkup</a>
         </nav>
         <button className="eb-menu" onClick={() => setMenuOpen(!menuOpen)} aria-expanded={menuOpen} aria-label={menuOpen ? 'Close navigation' : 'Open navigation'}>
           {menuOpen ? <X /> : <Menu />}
@@ -70,27 +71,27 @@ function App() {
       <main id="main-content">
         <section className="eb-hero">
           <div className="eb-hero-copy">
-            <p className="eb-eyebrow"><span /> Web help for Melbourne, FL</p>
-            <h1>A website that attracts customers — and services them for you, too.</h1>
+            <p className="eb-eyebrow"><span /> AI help for Melbourne &amp; Brevard businesses</p>
+            <h1>Put AI to work in your business — explained in plain English.</h1>
             <p className="eb-lede">
-              Tell us what needs to move: the website, social and content, search, lead follow-up,
-              automation, or an app. EB28 turns your answers into a focused project brief, then
-              gets you to the right build, proposal, or call without making you repeat the story.
+              We set up simple AI helpers that answer missed calls, follow up with leads, ask for reviews,
+              and chase unpaid invoices. Fixed prices, no tech skills needed, and a local person who
+              explains it and keeps it running.
             </p>
             <div className="eb-actions">
-              <a href="/get-started/" className="eb-button">Start my project <ArrowRight /></a>
-              <a className="eb-text-link" href="/get-started/?intent=call"><CalendarDays /> Book a 15-minute fit call</a>
+              <a href="/local-ai/#checkup" className="eb-button">Book a free 20-minute AI checkup <ArrowRight /></a>
+              <a className="eb-text-link" href="/local-ai/#packages">See packages and prices</a>
             </div>
-            <div className="eb-hero-price">
-              <p><strong>$98/month</strong> <span>website offer</span></p>
-              <b>$1,176 paid upfront for the first 12 months</b>
+            <div className="eb-hero-price eb-hero-ai">
+              <p><strong>From {formatUsd(Math.min(...LOCAL_AI_PACKAGES.map((pkg) => pkg.setup)))}</strong> <span>fixed price, in writing</span></p>
               <div>
-                <span><Check /> Website build included</span>
-                <span><Check /> Managed hosting and upkeep</span>
-                <span><Check /> SEO foundations and weekly content</span>
-                <span><Check /> Lead capture and routing support</span>
+                {LOCAL_AI_PACKAGES.map((pkg) => (
+                  <span key={pkg.id}>
+                    <Check /> <span><strong>{pkg.name}</strong> — {formatUsd(pkg.setup)}{pkg.monthly ? ` setup + ${formatUsd(pkg.monthly)}/mo` : ' flat'}</span>
+                  </span>
+                ))}
               </div>
-              <small>Or {WEBSITE_ONLY_LABEL.toLowerCase()}. No payment is taken on the project-intake form.</small>
+              <small>Need a website instead? <a href="/get-started/?service=website">{GROWTH_HOSTING_SHORT_LABEL}, or $800 website-only.</a></small>
             </div>
           </div>
           <aside className="eb-hero-assistant-stage" aria-label="EB28 Project Assistant">
@@ -99,12 +100,13 @@ function App() {
         </section>
 
         <div className="eb-audience">
-          <strong>BUILT FOR PEOPLE READY TO GET THE WORK MOVING</strong>
-          <span>Local operators</span>
-          <span>Professional services</span>
-          <span>Founders</span>
-          <span>Marketing teams</span>
-          <span>Referral clients</span>
+          <strong>BUILT FOR BREVARD BUSINESSES</strong>
+          <span>Home services &amp; trades</span>
+          <span>Salons &amp; spas</span>
+          <span>Realtors</span>
+          <span>Auto shops</span>
+          <span>Restaurants</span>
+          <span>Local service pros</span>
         </div>
 
         <section id="what" className="eb-section">
@@ -112,8 +114,8 @@ function App() {
           <span id="packages" className="eb-anchor-alias" aria-hidden="true" />
           <div className="eb-section-head">
             <p className="eb-kicker">Start with the bottleneck</p>
-            <h2>One team from first question to working system.</h2>
-            <p>You do not need to diagnose the project before contacting EB28. The guided intake asks the right questions for the services you select and turns the answers into a usable production brief.</p>
+            <h2>One local team from first question to working system.</h2>
+            <p>You do not need to know anything about AI before you call. We run our own business on these tools every day, and we only set up what we would trust in our own shop.</p>
           </div>
           <div className="eb-service-grid">
             {services.map(([number, title, description]) => (
@@ -132,8 +134,8 @@ function App() {
 
         <section id="how" className="eb-section eb-process">
           <div className="eb-section-head">
-            <p className="eb-kicker">The system behind it</p>
-            <h2>Less sales theater. Better information.</h2>
+            <p className="eb-kicker">How it works</p>
+            <h2>Four steps. No homework for you.</h2>
           </div>
           <div className="eb-process-list">
             {process.map(([title, description], index) => (
@@ -173,21 +175,21 @@ function App() {
         <section id="contact" className="eb-contact eb-contact-conversion">
           <div className="eb-contact-intro">
             <p className="eb-kicker">Your next useful step</p>
-            <h2>Start the project before the call.</h2>
-            <p>Select the services, answer the detailed questions, set a high-level design direction, and choose whether you want a call, a proposal, or the fastest path to production.</p>
+            <h2>Find out where AI saves you time.</h2>
+            <p>Start with a free 20-minute checkup. If AI would not help your business, we will tell you — and if you need a website or app instead, the guided brief gets that moving.</p>
           </div>
           <div className="eb-contact-actions">
             <div>
               <span>01</span>
-              <h3>Build the project brief</h3>
-              <p>About 4–8 minutes. Your answers arrive together so the first conversation can focus on decisions.</p>
-              <a href="/get-started/" className="eb-button">Start my project <ArrowRight /></a>
+              <h3>Free AI checkup</h3>
+              <p>About 1 minute to request. We reach out by text, call, or email to set a time — by phone or in person.</p>
+              <a href="/local-ai/#checkup" className="eb-button">Book my free checkup <ArrowRight /></a>
             </div>
             <div>
               <span>02</span>
-              <h3>Book a focused fit call</h3>
-              <p>Choose the call path inside the intake and tell us the best time. No blank calendar invite with no context.</p>
-              <a href="/get-started/?intent=call" className="eb-button eb-button-light">Book the call <CalendarDays /></a>
+              <h3>Website or app project</h3>
+              <p>About 4–8 minutes. Answer the guided questions so the first conversation can focus on decisions.</p>
+              <a href="/get-started/" className="eb-button eb-button-light">Start my project <ArrowRight /></a>
             </div>
           </div>
         </section>
@@ -195,8 +197,8 @@ function App() {
 
       <footer className="eb-footer">
         <a href="/" className="eb-logo">EB<span>28</span></a>
-        <p>Websites, apps, and useful automation from Melbourne, Florida.</p>
-        <div><a href="/get-started/">Get started</a><a href="/melbournewebstudio/">Web Studio</a><a href="/reconcile/">Recon Agent</a><a href="/appbuilder/">App Builder</a><a href="/blog/">Blog</a></div>
+        <p>AI setup, websites, apps, and useful automation for local businesses — from Melbourne, Florida.</p>
+        <div><a href="/local-ai/">AI for your business</a><a href="/get-started/">Get started</a><a href="/melbournewebstudio/">Web Studio</a><a href="/reconcile/">Recon Agent</a><a href="/appbuilder/">App Builder</a><a href="/blog/">Blog</a></div>
         <small>© {new Date().getFullYear()} EB28. All rights reserved.</small>
       </footer>
     </div>

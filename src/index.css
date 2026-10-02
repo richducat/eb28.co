@@ -196,6 +196,100 @@
   .eb-home *, .eb-home *::before, .eb-home *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
 }
 
+/* EB28 local AI services (/local-ai/) */
+.lai-hero { display: grid; grid-template-columns: 1.1fr .9fr; max-width: 1320px; margin: auto; border-bottom: 2px solid var(--line); }
+.lai-hero-copy { border-right: 2px solid var(--line); padding: 68px 47px 56px; }
+.lai-hero h1 { max-width: 640px; margin-top: 1.3rem; font-size: clamp(40px, 4.4vw, 60px); line-height: 1.05; }
+.lai-hero-points { display: flex; flex-wrap: wrap; gap: .6rem 1.4rem; margin: 2rem 0 0; padding: 0; list-style: none; font-size: .86rem; font-weight: 650; }
+.lai-hero-points li { display: flex; align-items: center; gap: .45rem; }
+.lai-hero-points svg, .lai-package li svg, .lai-monthly-covers svg, .lai-promises svg { flex: 0 0 auto; color: var(--green); stroke-width: 3.5; }
+.lai-demo { display: flex; flex-direction: column; justify-content: center; gap: 1rem; padding: clamp(2rem, 4vw, 3rem); background: radial-gradient(circle at 17% 78%, rgba(25,119,91,.45), transparent 36%), radial-gradient(circle at 85% 15%, rgba(92,66,177,.45), transparent 40%), #080d1c; color: white; }
+.lai-demo-label { color: #79d4a4; font-size: .72rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+.lai-phone { display: flex; max-width: 25rem; flex-direction: column; gap: .6rem; border: 1px solid #343944; border-radius: 22px; background: #0f172a; padding: 1.2rem; }
+.lai-phone-event { display: flex; align-items: center; justify-content: center; gap: .45rem; color: #f2a38b; font-size: .74rem; font-weight: 700; }
+.lai-phone-owner { margin-top: .4rem; border-top: 1px dashed #343944; padding-top: .8rem; color: #79d4a4; text-align: center; }
+.lai-bubble { max-width: 85%; border-radius: 16px; padding: .6rem .85rem; font-size: .84rem; line-height: 1.45; }
+.lai-bubble-in { align-self: flex-start; background: #1e293b; }
+.lai-bubble-out { align-self: flex-end; background: var(--green); }
+.lai-demo-note { max-width: 25rem; color: #9aa0ab; font-size: .74rem; line-height: 1.5; }
+.lai-pains { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 2px solid var(--line); }
+.lai-pains article { padding: 2rem; border-right: 2px solid var(--line); }
+.lai-pains article:last-child { border-right: 0; }
+.lai-pains h3 { font-size: 1.2rem; line-height: 1.15; }
+.lai-pains p { margin-top: .75rem; color: var(--muted); font-size: .9rem; line-height: 1.6; }
+.lai-packages { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 2px solid var(--line); }
+.lai-package { display: flex; position: relative; flex-direction: column; padding: 2.2rem 2rem; border-right: 2px solid var(--line); }
+.lai-package:last-child { border-right: 0; }
+.lai-package.is-featured { background: #e7f3eb; }
+.lai-badge { position: absolute; top: 1rem; right: 1rem; border-radius: 99px; background: var(--ink); color: white; padding: .3rem .7rem; font-size: .66rem; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; }
+.lai-package h3 { font-size: 1.6rem; }
+.lai-tagline { min-height: 3rem; margin-top: .5rem !important; color: var(--muted); line-height: 1.5; }
+.lai-price { display: flex; align-items: baseline; gap: .6rem; margin-top: 1.4rem !important; }
+.lai-price strong { font-family: 'Sora', sans-serif; font-size: 2.4rem; letter-spacing: -.05em; }
+.lai-price span { color: var(--muted); font-size: .85rem; }
+.lai-monthly { min-height: 1.4rem; margin-top: .2rem !important; font-weight: 700; font-size: .92rem; }
+.lai-package ul, .lai-monthly-covers ul, .lai-promises ul { margin: 1.4rem 0 0; padding: 0; list-style: none; }
+.lai-package li, .lai-monthly-covers li, .lai-promises li { display: flex; align-items: flex-start; gap: .6rem; padding: .45rem 0; font-size: .9rem; line-height: 1.5; }
+.lai-package li svg, .lai-monthly-covers li svg, .lai-promises li svg { margin-top: .2rem; }
+.lai-fit { margin: 1.2rem 0 1.6rem !important; color: var(--muted); font-size: .85rem; line-height: 1.5; }
+.lai-package .eb-button { align-self: flex-start; margin-top: auto; }
+.lai-founding { border-top: 2px solid var(--line); background: var(--ink); color: white; padding: 1.2rem clamp(1.25rem, 4vw, 3rem); font-weight: 700; }
+.lai-monthly-covers { padding: 2.5rem clamp(1.25rem, 4vw, 3rem) 3rem; }
+.lai-monthly-covers h3 { font-size: 1.4rem; }
+.lai-monthly-covers ul { display: grid; grid-template-columns: 1fr 1fr; gap: 0 2rem; }
+.lai-promises ul { display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: 0 2rem; margin: 0; padding: 0 clamp(1.25rem, 4vw, 3rem) 4rem; }
+.lai-promises li { border-top: 2px solid var(--line); padding: 1rem 0; font-weight: 650; }
+.lai-faq-list { padding: 0 clamp(1.25rem, 4vw, 3rem) 4rem; }
+.lai-faq-list details { border-top: 2px solid var(--line); padding: 1.3rem 0; }
+.lai-faq-list details:last-child { border-bottom: 2px solid var(--line); }
+.lai-faq-list summary { cursor: pointer; font-family: 'Sora', sans-serif; font-size: 1.15rem; font-weight: 700; letter-spacing: -.02em; }
+.lai-faq-list details p { max-width: 50rem; margin-top: .8rem; color: var(--muted); line-height: 1.7; }
+.lai-checkup { align-items: start; }
+.lai-form { display: flex; min-width: 0; flex-direction: column; gap: 1rem; border-radius: 6px; background: white; color: var(--ink); padding: clamp(1.25rem, 3vw, 2.2rem); }
+.lai-form label { display: flex; flex-direction: column; gap: .4rem; font-size: .84rem; font-weight: 700; }
+.lai-form input, .lai-form select, .lai-form textarea { width: 100%; border: 1.5px solid #c9cbd1; border-radius: 5px; background: white; color: var(--ink); padding: .75rem .8rem; font: inherit; font-weight: 400; }
+.lai-form input:focus, .lai-form select:focus, .lai-form textarea:focus { outline: 2px solid var(--green); outline-offset: 1px; border-color: var(--green); }
+.lai-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.lai-form fieldset { margin: 0; border: 0; padding: 0; }
+.lai-form legend { margin-bottom: .5rem; font-size: .84rem; font-weight: 700; }
+.lai-chips { display: flex; flex-wrap: wrap; gap: .5rem; }
+.lai-chips button { border: 1.5px solid #c9cbd1; border-radius: 99px; background: white; color: var(--ink); padding: .5rem .9rem; font-size: .82rem; cursor: pointer; }
+.lai-chips button.is-on { border-color: var(--green); background: var(--green); color: white; }
+.lai-form .lai-consent { flex-direction: row; align-items: flex-start; gap: .6rem; font-weight: 400; line-height: 1.45; }
+.lai-form .lai-consent input { width: auto; margin-top: .2rem; }
+.lai-form-error { border-radius: 5px; background: #fdecea; color: #a12a1b; padding: .7rem .9rem; font-size: .86rem; }
+.lai-form .eb-button { align-self: flex-start; }
+.lai-form .eb-button:disabled { opacity: .6; cursor: wait; }
+.lai-form small { color: var(--muted); font-size: .78rem; }
+.lai-form-done { align-items: flex-start; }
+.lai-form-done svg { width: 2.2rem !important; height: 2.2rem !important; color: var(--green); }
+.lai-form-done h3 { font-size: 1.6rem; }
+.lai-form-done p { color: var(--muted); line-height: 1.6; }
+.eb-hero-ai > div { grid-template-columns: 1fr; }
+.eb-hero-ai > div span span { display: inline; }
+.eb-hero-ai > div span strong { font-weight: 800; }
+.eb-hero-ai small a { color: var(--ink); text-decoration: underline; }
+
+@media (max-width: 850px) {
+  .lai-hero { grid-template-columns: 1fr; }
+  .lai-hero-copy { border-right: 0; border-bottom: 2px solid var(--line); padding: 49px 20px 42px; }
+  .lai-pains { grid-template-columns: 1fr 1fr; }
+  .lai-pains article:nth-child(2n) { border-right: 0; }
+  .lai-pains article:nth-child(-n+2) { border-bottom: 2px solid var(--line); }
+  .lai-packages { grid-template-columns: 1fr; }
+  .lai-package { border-right: 0; border-bottom: 2px solid var(--line); }
+  .lai-package:last-child { border-bottom: 0; }
+  .lai-monthly-covers ul { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 560px) {
+  .lai-pains { grid-template-columns: 1fr; }
+  .lai-pains article { border-right: 0; border-bottom: 2px solid var(--line); }
+  .lai-pains article:last-child { border-bottom: 0; }
+  .lai-form-row { grid-template-columns: 1fr; }
+  .lai-hero h1 { font-size: 2.6rem; }
+}
+
 /* Free website build — supplied Design.pdf */
 .claim-design {
   --claim-ink: #1d1e24;

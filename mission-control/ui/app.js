@@ -374,6 +374,8 @@ function renderTeam() {
 }
 
 document.addEventListener('click', (ev) => {
+  const b = ev.target.closest('[data-cam]');
+  if (b) { window.Arcade.camera(b.dataset.cam); return; }
   const c = ev.target.closest('[data-team]');
   if (c) { selectInArcade(JSON.parse(c.dataset.team)); $('#arcade-side').scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
 });
@@ -647,7 +649,7 @@ function selectInArcade(sel) {
   renderSide();
 }
 
-const placeOfJob = (j) => (j.source === 'bot' ? 'bots' : window.Arcade.PLACES[j.status] ? j.status : 'follow_up');
+const placeOfJob = (j) => (window.Arcade.placeOf ? window.Arcade.placeOf(j) : j.source === 'bot' ? 'bots' : j.status);
 const jobLi = (j) => `<li data-side-select="${esc(j.id)}">${esc(j.title)}<span class="sub">${j.meta && j.meta.activity ? `${j.meta.activity.icon} ${esc(j.meta.activity.label)}` : esc(j.reason)}</span></li>`;
 const btn = (label, attrs, cls = '') => `<button class="${cls}" ${attrs}>${label}</button>`;
 

@@ -58,7 +58,7 @@
 
   <section id="tab-arcade" class="tab">
     <div class="arcade-bar">
-      <span class="muted">Your whole operation as a game map. Each building is a status, each little person is a job or agent. Click anyone to see what they're doing.</span>
+      <span class="muted">Your whole operation as an archipelago. Each company has its own island; agents walk to the main island when they need you. Drag to explore, scroll to zoom, click anyone.</span>
       <span class="arcade-controls">
         <label class="switch"><input type="checkbox" id="chime-toggle" /> 🔔 Chime when something needs me</label>
         <label class="arcade-dot">Dot (OG Kush) is <select id="dot-target"><option value="codex-voice">Codex voice delegations</option></select></label>
@@ -66,7 +66,14 @@
     </div>
     <div class="arcade-layout">
       <div>
-        <div class="arcade-frame"><canvas id="arcade" width="704" height="480"></canvas></div>
+        <div class="arcade-frame">
+          <canvas id="arcade"></canvas>
+          <div class="cam-ctrl">
+            <button data-cam="in" title="Zoom in (+)">＋</button><button data-cam="out" title="Zoom out (−)">−</button><button data-cam="fit" title="Whole archipelago (0)">⤢</button>
+            <span class="sep"></span>
+            <button data-cam="main" title="Main island (H)">🏰 Main</button><button data-cam="tyfys">🎖 TYFYS</button><button data-cam="eb28">🎡 EB28</button><button data-cam="inspection">🏡 Inspection</button><button data-cam="apps">🛰 Apps</button>
+          </div>
+        </div>
         <h2 class="sec">Meet the team</h2>
         <div id="arcade-team" class="team"></div>
         <div id="arcade-legend" class="legend"></div>

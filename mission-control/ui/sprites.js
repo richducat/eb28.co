@@ -151,6 +151,26 @@
   function drawBust(c, s) {
     // head + shoulders at roughly 2.4x map scale with extra facial detail
     const p = (x, y, w, h, col) => { c.fillStyle = col; c.fillRect(x, y, w, h); };
+    if (s.kind === 'alien') {
+      const sk = s.alienSkin || '#3a3f4e';
+      const gl = s.glow || '#7cf8ff';
+      p(23, 0, 2, 7, shade(sk, 0.7)); p(21, -2, 6, 4, gl);
+      p(12, 6, 24, 4, sk); p(8, 10, 32, 16, sk); p(10, 26, 28, 4, sk); p(14, 30, 20, 4, sk);
+      p(10, 10, 8, 6, shade(sk, 1.35)); p(36, 12, 4, 14, shade(sk, 0.7));
+      p(12, 16, 10, 8, '#05060a'); p(26, 16, 10, 8, '#05060a'); p(14, 24, 6, 2, '#05060a'); p(28, 24, 6, 2, '#05060a');
+      p(14, 18, 4, 2, gl); p(28, 18, 4, 2, gl); p(19, 22, 2, 2, '#fff'); p(33, 22, 2, 2, '#fff');
+      p(16, 36, 16, 20, '#16181f'); p(19, 39, 2, 12, '#e8e8f0'); p(21, 42, 2, 6, '#e8e8f0'); p(26, 39, 2, 12, gl);
+      p(8, 36, 8, 20, sk); p(32, 36, 8, 20, shade(sk, 0.7));
+      return;
+    }
+    if (s.kind === 'mech') {
+      p(10, 4, 28, 20, '#2d3748'); p(12, 6, 24, 5, '#718096'); p(14, 14, 20, 6, '#0b0f19'); p(16, 15, 16, 3, '#ff9f43');
+      p(22, -2, 4, 7, '#a0aec0'); p(21, -4, 6, 3, '#e53e3e');
+      p(2, 26, 44, 30, '#4a5568'); p(2, 26, 44, 4, '#718096'); p(0, 28, 8, 12, '#2d3748'); p(40, 28, 8, 12, '#2d3748');
+      for (let i = 0; i < 5; i += 1) p(6 + i * 8, 48, 5, 4, i % 2 ? '#f6c90e' : '#1a202c');
+      p(30, 34, 10, 10, '#e53e3e'); p(32, 36, 6, 6, '#fff5f5'); p(34, 38, 2, 2, '#e53e3e');
+      return;
+    }
     const skin = s.skin;
     const skinS = shade(skin, 0.82);
     const skinH = shade(skin, 1.08);
@@ -254,5 +274,132 @@
     return { ...vary(id, base), ...extra };
   }
 
-  window.Sprites = { person, portrait, specFor, ARCHETYPES, shade, hash };
+  /* ---------- 32-bit bots: alien Grok bots, Hermes messenger, generic bot (24 x 32) ---------- */
+  function drawAlien(c, s, frame) {
+    const p = (x, y, w, h, col) => { c.fillStyle = col; c.fillRect(x, y, w, h); };
+    const skin = s.alienSkin || '#3a3f4e';
+    const skinL = shade(skin, 1.35);
+    const skinD = shade(skin, 0.7);
+    const glow = s.glow || '#7cf8ff';
+    const hover = frame ? 1 : 0;
+    // antenna with pulsing tip
+    p(11, 0 + hover, 2, 4, skinD); p(10, -2 + hover, 4, 3, frame ? glow : shade(glow, 0.6));
+    // big oval head
+    p(6, 4 + hover, 12, 2, skin); p(4, 6 + hover, 16, 8, skin); p(5, 14 + hover, 14, 2, skin); p(7, 16 + hover, 10, 2, skin);
+    p(5, 6 + hover, 4, 3, skinL); p(6, 5 + hover, 4, 1, skinL); p(18, 7 + hover, 2, 7, skinD);
+    // huge glossy eyes with reflections
+    p(6, 9 + hover, 5, 4, '#05060a'); p(13, 9 + hover, 5, 4, '#05060a'); p(7, 13 + hover, 3, 1, '#05060a'); p(14, 13 + hover, 3, 1, '#05060a');
+    p(7, 10 + hover, 2, 1, glow); p(14, 10 + hover, 2, 1, glow); p(9, 12 + hover, 1, 1, '#ffffff'); p(16, 12 + hover, 1, 1, '#ffffff');
+    p(11, 16 + hover, 2, 1, skinD);
+    // slim armored body with xAI-style slash
+    p(8, 18 + hover, 8, 8, '#16181f'); p(9, 19 + hover, 6, 6, '#2a2e3a'); p(10, 20 + hover, 1, 4, '#e8e8f0'); p(11, 21 + hover, 1, 2, '#e8e8f0'); p(13, 20 + hover, 1, 4, glow);
+    p(5, 18 + hover, 3, 6, skin); p(16, 18 + hover, 3, 6, skinD); p(4, 24 + hover, 3, 2, skinL); p(17, 24 + hover, 3, 2, skin);
+    // hover jets instead of legs
+    p(9, 26 + hover, 2, 2, '#16181f'); p(13, 26 + hover, 2, 2, '#16181f');
+    p(9, 28 + hover, 2, 1 + (frame ? 2 : 1), glow); p(13, 28 + hover, 2, 1 + (frame ? 1 : 2), glow);
+    if (s.hat === 'leaf') { p(9, -4, 6, 3, '#40a848'); p(11, -6, 2, 2, '#40a848'); }
+  }
+
+  function drawMessenger(c, s, frame) {
+    const p = (x, y, w, h, col) => { c.fillStyle = col; c.fillRect(x, y, w, h); };
+    const gold = '#e8b830';
+    const goldL = '#f8e070';
+    const goldD = '#a07818';
+    // winged helmet
+    p(7, 2, 10, 9, gold); p(8, 2, 6, 2, goldL); p(16, 3, 1, 8, goldD);
+    p(2 - frame, 3, 5, 2, '#f4f4f4'); p(3 - frame, 5, 4, 2, '#dcdce4'); p(17 + frame, 3, 5, 2, '#f4f4f4'); p(17 + frame, 5, 4, 2, '#dcdce4');
+    p(8, 6, 8, 3, '#20283a'); p(9, 7, 2, 1, '#40e0ff'); p(13, 7, 2, 1, '#40e0ff');
+    // body with satchel of messages
+    p(7, 12, 10, 9, '#3a3a52'); p(8, 13, 8, 3, gold); p(10, 14, 4, 1, goldL);
+    p(4, 12, 3, 7, '#5a5a78'); p(17, 12, 3, 7, '#3a3a52');
+    p(15, 16, 6, 5, '#7a4e2a'); p(16, 17, 4, 2, '#f4f4f4');
+    p(8, 21, 3, 6, '#5a5a78'); p(13, 21, 3, 6, '#3a3a52'); p(7, 27, 4, 2, gold); p(13, 27, 4, 2, gold);
+    p(5, 27, 2, 1, '#f4f4f4'); p(17, 27, 2, 1, '#f4f4f4');
+  }
+
+  function drawBot32(c, s, frame) {
+    const p = (x, y, w, h, col) => { c.fillStyle = col; c.fillRect(x, y, w, h); };
+    const body = s.suit || '#606878';
+    p(11, 0, 2, 3, '#888'); p(10, -1, 4, 2, frame ? '#f8d838' : '#e04040');
+    p(5, 3, 14, 10, '#b8c0d8'); p(6, 5, 12, 5, '#20283a'); p(8, 6, 3, 3, '#40e0ff'); p(13, 6, 3, 3, '#40e0ff'); p(17, 3, 2, 10, '#7880a0');
+    p(6, 14, 12, 9, body); p(8, 15, 8, 4, shade(body, 1.3)); p(10, 16, 4, 2, '#f8d838');
+    p(3, 14, 3, 8, '#b8c0d8'); p(18, 14, 3, 8, '#7880a0');
+    p(7, 23, 4, 6, '#b8c0d8'); p(13, 23, 4, 6, '#7880a0'); p(6, 29, 5, 2, '#40404a'); p(13, 29, 5, 2, '#40404a');
+    if (s.hat === 'leaf') { p(9, -4, 6, 3, '#40a848'); }
+  }
+
+  function bot(spec, frame = 0) {
+    const key = `bot|${JSON.stringify(spec)}|${frame}`;
+    if (cache.has(key)) return cache.get(key);
+    const cv = document.createElement('canvas');
+    cv.width = 24;
+    cv.height = 40; // 8px headroom for antennas and hats
+    const c = cv.getContext('2d');
+    c.translate(0, 8);
+    if (spec.kind === 'alien') drawAlien(c, spec, frame);
+    else if (spec.kind === 'messenger') drawMessenger(c, spec, frame);
+    else drawBot32(c, spec, frame);
+    c.setTransform(1, 0, 0, 1, 0, 0);
+    outline(c);
+    cache.set(key, cv);
+    return cv;
+  }
+
+  /* ---------- the Watchdog: a big war mech (48 x 56) ---------- */
+  // pose: 'idle' | 'walk' | 'grab' | 'carry' | 'stomp'
+  function drawMech(c, pose, frame) {
+    const p = (x, y, w, h, col) => { c.fillStyle = col; c.fillRect(x, y, w, h); };
+    const armor = '#4a5568';
+    const armorL = '#718096';
+    const armorD = '#2d3748';
+    const hazard = '#f6c90e';
+    const red = '#e53e3e';
+    const step = pose === 'walk' || pose === 'carry' ? frame : 0;
+    // legs (heavy, digitigrade)
+    const lx = step ? 2 : 0;
+    p(10 - lx, 34, 8, 12, armorD); p(11 - lx, 35, 6, 5, armorL); p(8 - lx, 46, 12, 5, armorD); p(8 - lx, 50, 12, 2, '#1a202c');
+    p(30 + lx, 34, 8, 12, armorD); p(31 + lx, 35, 6, 5, armor); p(28 + lx, 46, 12, 5, armorD); p(28 + lx, 50, 12, 2, '#1a202c');
+    for (let i = 0; i < 3; i += 1) { p(9 - lx + i * 4, 47, 2, 2, hazard); p(29 + lx + i * 4, 47, 2, 2, hazard); }
+    // hips + torso
+    p(12, 30, 24, 6, armorD);
+    p(8, 12, 32, 20, armor); p(8, 12, 32, 3, armorL); p(36, 12, 4, 20, armorD);
+    for (let i = 0; i < 4; i += 1) p(10 + i * 7, 27, 4, 3, i % 2 ? hazard : '#1a202c');
+    // cockpit with glowing visor
+    p(16, 4, 16, 11, armorD); p(17, 5, 14, 3, armorL);
+    p(18, 9, 12, 4, '#0b0f19'); p(19, 10, 10, 2, pose === 'stomp' ? red : frame ? '#ff6b6b' : '#ff9f43');
+    p(23, 0, 2, 5, '#a0aec0'); p(22, -2, 4, 2, frame ? red : '#9b2c2c');
+    // shoulder cannons
+    p(2, 10, 8, 8, armorD); p(0, 12, 4, 4, '#1a202c'); p(38, 10, 8, 8, armorD); p(44, 12, 4, 4, '#1a202c');
+    p(3, 11, 6, 2, armorL); p(39, 11, 6, 2, armorL);
+    // arms: raised to carry, reaching to grab, or down
+    if (pose === 'carry' || pose === 'grab') {
+      p(4, 2, 5, 12, armor); p(39, 2, 5, 12, armorD); p(3, -2, 7, 4, '#a0aec0'); p(38, -2, 7, 4, '#a0aec0');
+      p(3, -4, 2, 3, '#a0aec0'); p(8, -4, 2, 3, '#a0aec0'); p(38, -4, 2, 3, '#a0aec0'); p(43, -4, 2, 3, '#a0aec0');
+    } else if (pose === 'stomp') {
+      p(2, 18, 6, 14, armor); p(40, 18, 6, 14, armorD); p(0, 30, 10, 6, '#a0aec0'); p(38, 30, 10, 6, '#a0aec0');
+    } else {
+      p(3, 18, 5, 14, armor); p(40, 18, 5, 14, armorD); p(2, 31, 7, 5, '#a0aec0'); p(39, 31, 7, 5, '#a0aec0');
+      p(2, 35, 2, 2, '#a0aec0'); p(7, 35, 2, 2, '#a0aec0'); p(39, 35, 2, 2, '#a0aec0'); p(44, 35, 2, 2, '#a0aec0');
+    }
+    // unit markings
+    p(12, 17, 10, 6, '#1a202c'); p(13, 18, 2, 4, hazard); p(16, 18, 2, 4, hazard); p(19, 18, 2, 4, hazard);
+    p(28, 17, 6, 6, red); p(29, 18, 4, 4, '#fff5f5'); p(30, 19, 2, 2, red);
+  }
+
+  function mech(pose = 'idle', frame = 0) {
+    const key = `mech|${pose}|${frame}`;
+    if (cache.has(key)) return cache.get(key);
+    const cv = document.createElement('canvas');
+    cv.width = 48;
+    cv.height = 60;
+    const c = cv.getContext('2d');
+    c.translate(0, 6);
+    drawMech(c, pose, frame);
+    c.setTransform(1, 0, 0, 1, 0, 0);
+    outline(c);
+    cache.set(key, cv);
+    return cv;
+  }
+
+  window.Sprites = { person, portrait, bot, mech, specFor, ARCHETYPES, shade, hash };
 })();

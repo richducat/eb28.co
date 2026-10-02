@@ -127,12 +127,22 @@ Runs are logged with output; the latest run of each automation also appears on t
 
 ## Arcade
 
-A live Super Mario World style overworld of everything at once, drawn in code (no image assets).
-Each status is a landmark on the island: the Needs You castle, the Workshop, the Bot Fortress,
-the Follow-up post office, the Goal posts (done), the Ghost House (failed), HQ for the workforce
-agents, and Hermes Village for every Hermes profile (`~/.hermes/profiles/*`). Each person on the
-map is one job or agent; when a status changes they walk the path to the new landmark. Hover for
-details, click a person to open the job, click a signpost to jump to its list in the legend.
+A live Super Mario World style archipelago of the whole operation, drawn in code (no image
+assets). Drag to explore, scroll to zoom, double-click an island to fly to it, or use the
+buttons and minimap.
+
+- **Main island:** the status landmarks (Needs You castle, Workshop, Follow-up post office,
+  Goal, Ghost House), HQ for the workforce, the clock tower, the Bot Fortress and Hermes Village.
+- **Company islands** (TYFYS, EB28, Inspection Rent, Apps) joined by bridges, each with three
+  districts: the **Backrooms** (coders: Claude Code, Codex, PRs), the **Fun Park** (content,
+  social, creative) and the company **Office**. Agents work on their company's island and walk
+  across to the main island when they need you, finish or fail.
+- **Overlords:** each Hermes chief-of-staff profile patrols its realm and checks in on every job;
+  the crowned Grand Chief of Staff makes rounds of the overlords.
+- **The Watchdog** is a war mech: it hauls failed agents to the Ghost House and stomps over to
+  bots that are down.
+- Characters are original pixel archetypes in the style of the Fund Manager agents grid; Grok bots
+  are aliens and the Hermes gateway is a gold messenger. Click anyone for a portrait card.
 
 **Dot (OG Kush)** wears the leaf hat. By default Dot is any Codex thread handed over by voice
 (`<realtime_delegation>`). Pick a different bot or Hermes profile with "Who is Dot?" on the tab.

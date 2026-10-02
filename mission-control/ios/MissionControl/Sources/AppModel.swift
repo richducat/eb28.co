@@ -18,7 +18,9 @@ final class AppModel: ObservableObject {
     @Published var lastSync: Date?
     @Published var busy: Set<String> = []
     @Published var today: TodayData?
-    @Published var day: String = Fmt.ymd(Date())
+    /// nil = follow today (so the app rolls over at midnight); set when Richard pages to another day
+    @Published var pinnedDay: String?
+    var day: String { pinnedDay ?? Fmt.ymd(Date()) }
 
     let api: API
     private var poller: Task<Void, Never>?
@@ -117,7 +119,8 @@ final class AppModel: ObservableObject {
     }
 
     func shiftDay(_ n: Int) {
-        day = n == 0 ? Fmt.ymd(Date()) : Fmt.addDays(day, n)
+        let next = n == 0 ? Fmt.ymd(Date()) : Fmt.addDays(day, n)
+        pinnedDay = next == Fmt.ymd(Date()) ? nil : next
         today = nil
         Task { await loadToday() }
     }
@@ -153,8 +156,8 @@ final class AppModel: ObservableObject {
         await loadToday()
     }
 
-    func saveNotes(_ notes: String) async {
-        let _: DaySheet? = try? await api.post("/api/day", ["date": day, "notes": notes])
+    func saveNotes(_ notes: String, for date: String) async {
+        let _: DaySheet? = try? await api.post("/api/day", ["date": date, "notes": notes])
     }
 
     func suggestFocus() async -> [String] {

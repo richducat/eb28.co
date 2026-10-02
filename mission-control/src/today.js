@@ -1,4 +1,5 @@
-import { events as calendarEvents, dayOf } from './calendar.js';
+import crypto from 'node:crypto';
+import { events as calendarEvents, onDay } from './calendar.js';
 import { addDays, dueItems, daySheet, habits, streaks, tasks, ymd } from './planner.js';
 import { collectTrading } from './trading/index.js';
 import { tyfysPipeline } from './tyfys.js';
@@ -17,13 +18,13 @@ export async function today(board, day = ymd()) {
   const due = dueItems({ taskList: tasks(), board, trading, tyfys: ty, today: day });
   const sheet = daySheet(day);
   const habitList = habits();
-  const onDay = (e) => (e.allDay ? e.start <= day && dayOf(e.end) > day : dayOf(e.start) === day);
-  const onTomorrow = (e) => (e.allDay ? e.start <= tomorrow && dayOf(e.end) > tomorrow : dayOf(e.start) === tomorrow);
+  const todays = cal.events.filter((e) => onDay(e, day));
+  const tomorrows = cal.events.filter((e) => onDay(e, tomorrow));
   const replies = store.get('replies', []).filter((r) => ymd(r.at) === day);
   return {
     date: day,
-    events: cal.events.filter(onDay),
-    tomorrowEvents: cal.events.filter(onTomorrow),
+    events: todays,
+    tomorrowEvents: tomorrows,
     calendars: cal.calendars,
     calendarErrors: cal.errors,
     calendarSetup: Boolean(cal.setup),
@@ -38,7 +39,7 @@ export async function today(board, day = ymd()) {
       agentsDone: jobs.filter((j) => j.status === 'done' && j.lastActivity && ymd(j.lastActivity) === day).length,
       tasksDone: tasks().filter((t) => t.done && t.doneAt && ymd(t.doneAt) === day).length,
       repliesSent: replies.length,
-      events: cal.events.filter(onDay).length,
+      events: todays.length,
     },
   };
 }
@@ -55,7 +56,7 @@ export async function suggestFocus(t) {
     .concat(t.needsYou.slice(0, 3).map((n) => `Answer: ${n.title}`)).slice(0, 3);
   if (!lines.length) return fallback;
   const text = await ask({
-    key: `focus:${t.date}:${lines.join('|').length}:${lines.length}`,
+    key: `focus:${t.date}:${crypto.createHash('sha1').update(lines.join('\n')).digest('hex').slice(0, 16)}`,
     system: 'You are Richard\'s chief of staff. Pick the 3 most important things for him to focus on today. Reply with exactly 3 lines, each a short imperative under 70 characters, no numbering, no extra text.',
     prompt: lines.join('\n'),
     maxTokens: 200,

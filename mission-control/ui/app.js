@@ -716,6 +716,7 @@ function replayStop() {
 async function replayOpen() {
   const data = await api('GET', '/api/replay');
   if (!data.frames.length) return toast('Nothing recorded yet today. The replay builds up as the day goes on.', 'bad');
+  for (const f of data.frames) { f.board.businesses = data.businesses || []; f.board.apps = data.apps || []; }
   Object.assign(replay, { on: true, frames: data.frames });
   $('#replay-slider').max = data.frames.length - 1;
   $('#replay-bar').hidden = false;

@@ -93,3 +93,18 @@ test('phone listener: HTTPS, token required, allowlist enforced', async () => {
   m.stop();
   assert.equal(typeof https.request, 'function');
 });
+
+test('audit 2: reads are refused when the Host is not Mission Control (DNS rebinding)', async () => {
+  const server = createServer();
+  await new Promise((r) => server.listen(0, '127.0.0.1', r));
+  const { port } = server.address();
+  const get = (host) => new Promise((resolve) => {
+    const s = net.connect(port, '127.0.0.1', () => s.write(`GET /api/mobile HTTP/1.1\r\nHost: ${host}\r\nConnection: close\r\n\r\n`));
+    let out = '';
+    s.on('data', (d) => { out += d; });
+    s.on('close', () => resolve(out));
+  });
+  assert.match(await get('attacker.example:47831'), /HTTP\/1\.1 403/);
+  assert.match(await get(`127.0.0.1:${port}`), /HTTP\/1\.1 200/);
+  server.close();
+});

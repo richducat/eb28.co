@@ -78,3 +78,54 @@ test('calendar events normalize and know their day', () => {
   assert.equal(timed.recurring, true);
   assert.equal(dayOf('2026-10-12'), '2026-10-12');
 });
+
+test('audit 2: quick add leaves ordinary text alone and rejects impossible dates/times', async () => {
+  const cases = {
+    'Close issue #42 tomorrow': { title: 'Close issue #42', due: '2026-10-02', business: null },
+    "Review today's numbers": { title: "Review today's numbers", due: null },
+    'Pay 1/2 of the deposit': { due: null },
+    'Buy 24/7 coverage': { due: null },
+    'Finish 2/30 report': { due: null },
+    'Meet 9:75pm': { time: null },
+    'Read chapter 3:16': { time: null },
+    'Call Sat phone provider': { due: null },
+    'Send report 10/14': { due: '2026-10-14' },
+    'sync 9:30': { time: '09:30' },
+    'Gym sat 7am': { due: '2026-10-03', time: '07:00' },
+  };
+  for (const [text, want] of Object.entries(cases)) {
+    const got = parseQuick(text, now);
+    for (const [k, v] of Object.entries(want)) assert.equal(got[k], v, `${text} -> ${k}`);
+  }
+  const { isRealDay } = await import('../src/planner.js');
+  assert.equal(isRealDay('2026-02-31'), false);
+  assert.equal(isRealDay('2026-99-99'), false);
+  assert.equal(isRealDay('2026-10-01'), true);
+  const t = addTask({ text: 'validate me' });
+  assert.throws(() => updateTask(t.id, { due: '2026-24-07' }), /YYYY-MM-DD/);
+  assert.throws(() => updateTask(t.id, { time: '21:75' }), /HH:MM/);
+  deleteTask(t.id);
+});
+
+test('audit 2: editing habits keeps ids (streaks) and whole emoji', async () => {
+  const { setHabits, habits } = await import('../src/planner.js');
+  const before = habits();
+  const after = setHabits(before.map((h) => ({ emoji: h.emoji, name: h.name })).concat([{ emoji: '👨‍👩‍👧', name: 'Dinner together' }]));
+  for (const h of before) assert.equal(after.find((x) => x.name === h.name).id, h.id);
+  assert.equal(after.find((x) => x.name === 'Dinner together').emoji, '👨‍👩‍👧');
+  setHabits(before);
+});
+
+test('audit 2: overnight and multi-day events count on every day they touch', async () => {
+  const { onDay, startMs } = await import('../src/calendar.js');
+  const late = { allDay: false, start: '2026-10-01T22:00:00-04:00', end: '2026-10-02T01:00:00-04:00' };
+  assert.equal(onDay(late, '2026-10-01'), true);
+  assert.equal(onDay(late, '2026-10-02'), true);
+  assert.equal(onDay(late, '2026-10-03'), false);
+  const trip = { allDay: true, start: '2026-10-05', end: '2026-10-08' };
+  assert.deepEqual(['2026-10-04', '2026-10-05', '2026-10-07', '2026-10-08'].map((d) => onDay(trip, d)), [false, true, true, false]);
+  // mixed offsets sort by real time
+  const a = { start: '2026-10-05T12:00:00-04:00' };
+  const b = { start: '2026-10-05T12:45:00Z' };
+  assert.ok(startMs(b) < startMs(a));
+});

@@ -24,7 +24,7 @@ import { restartBot } from './workforce/bot-control.js';
 import { createMobile, mobileAllowed } from './mobile.js';
 import { today as todayData, suggestFocus } from './today.js';
 import { events as calendarEvents } from './calendar.js';
-import { addTask, updateTask, deleteTask, tasks as taskList, updateDay, setHabits, ymd } from './planner.js';
+import { addTask, updateTask, deleteTask, tasks as taskList, updateDay, setHabits, ymd, isRealDay } from './planner.js';
 
 const UI_DIR = path.join(APP_ROOT, 'ui');
 const MIME = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.svg': 'image/svg+xml', '.png': 'image/png' };
@@ -232,7 +232,8 @@ export function createServer({ orchestrator = new Orchestrator(), nativeNotify =
     'GET /api/replay': async (_b, q) => {
       const board = orchestrator.board || (await orchestrator.refreshBoard());
       const frames = replayFrames(q.get('date') || undefined);
-      return { days: replayDays(), frames: frames.map((f) => ({ t: f.t, board: boardFrom(f, board.businesses, board.apps) })) };
+      // businesses/apps are sent once; each frame carries only its jobs
+      return { days: replayDays(), businesses: board.businesses, apps: board.apps, frames: frames.map((f) => ({ t: f.t, board: boardFrom(f, undefined, undefined) })) };
     },
     'GET /api/tyfys': async () => tyfysPipeline(),
     'GET /api/usage': async (_b, q) => usage({ fresh: q.get('fresh') === '1' }),
@@ -279,6 +280,12 @@ export function createServer({ orchestrator = new Orchestrator(), nativeNotify =
   };
   const route = async (req, res, { remote = false } = {}) => {
     const url = new URL(req.url, `http://${HOST}`);
+    if (!remote) {
+      // every local request, reads included, must be addressed to Mission Control itself
+      // (a DNS-rebinding page would otherwise read the board, trading or the phone pairing code)
+      const host = checkHost(req);
+      if (!host.ok) return json(res, 403, { error: host.reason });
+    }
     if (req.method === 'GET' && url.pathname === '/api/events') {
       res.writeHead(200, { 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-cache', Connection: 'keep-alive' });
       res.write(`data: ${JSON.stringify({ type: 'hello' })}\n\n`);
@@ -439,18 +446,24 @@ export async function openLocal({ path: target, url, command }) {
  * JSON content type forces a preflight the server never answers, and checking Host/Origin
  * blocks DNS rebinding and cross-site requests. Exported for tests.
  */
-export function checkWrite(req) {
+export function checkHost(req) {
   const port = req.socket && req.socket.localPort;
   const allowed = new Set([`127.0.0.1:${port}`, `localhost:${port}`]);
   const host = String(req.headers.host || '');
   if (!allowed.has(host)) return { ok: false, reason: 'Refused: request did not come from Mission Control (host).' };
   const origin = req.headers.origin;
   if (origin && !allowed.has(origin.replace(/^https?:\/\//, ''))) return { ok: false, reason: 'Refused: request did not come from Mission Control (origin).' };
+  return { ok: true };
+}
+
+export function checkWrite(req) {
+  const host = checkHost(req);
+  if (!host.ok) return host;
   if (!/^application\/json\b/i.test(String(req.headers['content-type'] || ''))) return { ok: false, reason: 'Refused: write requests must be JSON.' };
   return { ok: true };
 }
 
-const validDay = (s) => (/^\d{4}-\d{2}-\d{2}$/.test(String(s || '')) ? String(s) : null);
+const validDay = (s) => (isRealDay(s) ? String(s) : null);
 
 /** Phone requests are token-checked and route-limited; writes must still be JSON. */
 function jsonOnly(req) {

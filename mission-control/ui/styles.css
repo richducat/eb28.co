@@ -54,6 +54,8 @@ h3 { font-size: 12px; margin: 18px 0 8px; color: var(--muted); text-transform: u
 .nav-hint { font-size: 11px; color: var(--faint); padding: 10px 10px 0; line-height: 1.9; }
 .shell { display: flex; flex-direction: column; min-width: 0; height: 100vh; }
 .topbar { display: flex; align-items: center; gap: 16px; padding: 0 28px; height: 68px; border-bottom: 1px solid var(--line); background: var(--bg); flex: none; }
+.page-title { min-width: 0; flex: 1 1 auto; }
+.actions { flex: none; }
 .page-title h1 { font-size: 20px; margin: 0; letter-spacing: -.02em; font-weight: 650; }
 .page-title .muted { font-size: 12.5px; margin-top: 1px; max-width: 640px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .actions { display: flex; gap: 8px; align-items: center; margin-left: auto; }

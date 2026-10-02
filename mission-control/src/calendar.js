@@ -43,6 +43,20 @@ export function normalizeEvent(e, cal) {
   };
 }
 
+/** Milliseconds for sorting/overlap: all-day dates count from local midnight. */
+export function startMs(e) { return e.allDay ? new Date(`${e.start}T00:00:00`).getTime() : Date.parse(e.start); }
+export function endMs(e) { return e.allDay ? new Date(`${e.end}T00:00:00`).getTime() : Date.parse(e.end); }
+
+/** Does the event touch this local day (YYYY-MM-DD)? Handles all-day and past-midnight events. Pure. */
+export function onDay(e, day) {
+  const s = new Date(`${day}T00:00:00`).getTime();
+  const end = new Date(`${day}T00:00:00`);
+  end.setDate(end.getDate() + 1);
+  const a = startMs(e);
+  const b = Math.max(endMs(e), a + (e.allDay ? 864e5 : 1));
+  return a < end.getTime() && b > s;
+}
+
 /** Local YYYY-MM-DD of an event start (all-day events are already dates). */
 export function dayOf(s) {
   if (/^\d{4}-\d{2}-\d{2}$/.test(s)) return s;
@@ -50,6 +64,7 @@ export function dayOf(s) {
 }
 
 const cache = new Map();
+const inflight = new Map();
 
 function listCalendar(cfg, cal, start, end) {
   return new Promise((resolve) => {
@@ -74,15 +89,31 @@ export async function events(startDay, endDay, { fresh = false } = {}) {
   const end = new Date(`${endDay}T00:00:00`).toISOString();
   const key = `${startDay}|${endDay}|${cfg.calendars.map((c) => c.id).join(',')}`;
   const hit = cache.get(key);
-  if (!fresh && hit && Date.now() - hit.at < 5 * 60e3) return hit.value;
+  if (!fresh && hit) {
+    // fresh enough: use it; older: still answer instantly and refresh in the background
+    if (Date.now() - hit.at >= 5 * 60e3 && !inflight.has(key)) inflight.set(key, load(cfg, key, start, end).finally(() => inflight.delete(key)));
+    return hit.value;
+  }
+  if (inflight.has(key)) return inflight.get(key);
+  const p = load(cfg, key, start, end).finally(() => inflight.delete(key));
+  inflight.set(key, p);
+  return p;
+}
+
+async function load(cfg, key, start, end) {
   const results = await Promise.all(cfg.calendars.map((c) => listCalendar(cfg, c, start, end)));
-  const all = results.flatMap((r) => r.events || []).sort((a, b) => String(a.start).localeCompare(String(b.start)));
+  // Google mixes "...Z" and "...-04:00", so sort by real time, not text
+  const all = results.flatMap((r) => r.events || []).sort((a, b) => startMs(a) - startMs(b));
   const value = {
     ok: results.some((r) => r.ok),
     events: all,
     calendars: cfg.calendars.map((c) => ({ id: c.id, name: c.name, color: c.color })),
     errors: results.filter((r) => !r.ok).map((r) => `${r.calendar}: ${r.error}`),
   };
+  const prev = cache.get(key);
+  // a failed refresh (Google or Hermes down) never replaces good data
+  if (!value.ok && prev && prev.value.ok) return prev.value;
+  if (!value.ok) return value; // never cache a total failure
   cache.set(key, { at: Date.now(), value });
   if (cache.size > 40) cache.delete(cache.keys().next().value);
   return value;

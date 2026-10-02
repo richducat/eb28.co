@@ -161,7 +161,8 @@ final class AppModel: ObservableObject {
     }
 
     func suggestFocus() async -> [String] {
-        (try? await api.post("/api/today/suggest", ["date": day], as: FocusSuggestion.self))?.focus ?? []
+        // the local model can take a minute; give it time
+        (try? await api.post("/api/today/suggest", ["date": day], as: FocusSuggestion.self, timeout: 100))?.focus ?? []
     }
 
     func calendar(from start: String, days: Int) async -> CalendarRange? {

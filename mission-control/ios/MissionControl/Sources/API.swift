@@ -63,7 +63,7 @@ final class API: NSObject, URLSessionDelegate {
     private var base: String?
     private lazy var session: URLSession = {
         let c = URLSessionConfiguration.ephemeral
-        c.timeoutIntervalForRequest = 12
+        c.timeoutIntervalForRequest = 120
         c.waitsForConnectivity = false
         return URLSession(configuration: c, delegate: self, delegateQueue: nil)
     }()
@@ -85,8 +85,8 @@ final class API: NSObject, URLSessionDelegate {
     }
 
     @discardableResult
-    func post<T: Decodable>(_ path: String, _ body: [String: Any], as: T.Type = T.self) async throws -> T {
-        try decode(await send("POST", path, body: body))
+    func post<T: Decodable>(_ path: String, _ body: [String: Any], as: T.Type = T.self, timeout: TimeInterval = 45) async throws -> T {
+        try decode(await send("POST", path, body: body, timeout: timeout))
     }
 
     private func decode<T: Decodable>(_ data: Data) throws -> T {
@@ -96,7 +96,7 @@ final class API: NSObject, URLSessionDelegate {
     }
 
     /// Try the address that worked last, then every address in the pairing code.
-    private func send(_ method: String, _ path: String, body: [String: Any]?) async throws -> Data {
+    private func send(_ method: String, _ path: String, body: [String: Any]?, timeout: TimeInterval = 15) async throws -> Data {
         guard let p = pairing else { throw APIError.notPaired }
         let candidates = ([base].compactMap { $0 } + p.urls).reduce(into: [String]()) { if !$0.contains($1) { $0.append($1) } }
         var lastError: Error = APIError.unreachable
@@ -104,6 +104,7 @@ final class API: NSObject, URLSessionDelegate {
             guard let url = URL(string: b + path) else { continue }
             var req = URLRequest(url: url)
             req.httpMethod = method
+            req.timeoutInterval = timeout
             req.setValue("Bearer \(p.token)", forHTTPHeaderField: "Authorization")
             if let body {
                 req.setValue("application/json", forHTTPHeaderField: "Content-Type")

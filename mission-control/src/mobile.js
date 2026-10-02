@@ -96,12 +96,16 @@ export function fingerprint(pem = read('cert.pem')) {
   return new crypto.X509Certificate(pem).fingerprint256.replace(/:/g, '').toLowerCase();
 }
 
+/** Tailscale's private range (100.64.0.0/10): reachable from anywhere once the phone is on Tailscale. */
+export const isTailscale = (ip) => { const [a, b] = String(ip).split('.').map(Number); return a === 100 && b >= 64 && b <= 127; };
+
 function lanAddresses() {
   const out = [];
   for (const list of Object.values(os.networkInterfaces())) {
     for (const a of list || []) if (a.family === 'IPv4' && !a.internal && !a.address.startsWith('169.254.')) out.push(a.address);
   }
-  return out;
+  // Tailscale first: it works at home and away; home-Wi-Fi addresses only work at home
+  return out.sort((x, y) => Number(isTailscale(y)) - Number(isTailscale(x)));
 }
 
 function localHostName() {

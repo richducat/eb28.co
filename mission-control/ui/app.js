@@ -36,9 +36,8 @@ function toast(text, kind = '') {
 async function loadBoard() {
   state.board = await api('GET', '/api/board');
   chime.check(state.board);
-  const needs = state.board.columns.find((c) => c.id === 'needs_you');
   const pillHome = $('#pill-home');
-  if (pillHome && needs) { pillHome.hidden = !needs.jobs.length; pillHome.textContent = needs.jobs.length; }
+  if (pillHome) { const n = queueItems().length; pillHome.hidden = !n; pillHome.textContent = n; }
   if (state.tab === 'home') renderHome();
   renderBoard();
 }
@@ -285,7 +284,13 @@ function md(text) {
   let html = '';
   let inList = false;
   for (const raw of lines) {
-    const line = raw.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/\*\*(.+?)\*\*/g, '<b>$1</b>').replace(/_(.+?)_/g, '<i>$1</i>').replace(/`(.+?)`/g, '<code>$1</code>');
+    // code spans first (so underscores inside them stay literal), then bold, then _italic_ on word boundaries
+    const codes = [];
+    const line = raw.replace(/&/g, '&amp;').replace(/</g, '&lt;')
+      .replace(/`(.+?)`/g, (_, c) => `\u0000${codes.push(c) - 1}\u0000`)
+      .replace(/\*\*(.+?)\*\*/g, '<b>$1</b>')
+      .replace(/(^|[^\w])_([^_]+?)_(?=[^\w]|$)/g, '$1<i>$2</i>')
+      .replace(/\u0000(\d+)\u0000/g, (_, i) => `<code>${codes[Number(i)]}</code>`);
     const h = line.match(/^(#{1,3})\s+(.*)/);
     const li = line.match(/^\s*[-*]\s+(.*)/);
     if (li) {
@@ -357,7 +362,7 @@ function showTab(id) {
   if (id === 'bots') loadBots();
   if (id === 'automations') loadAutomations();
   if (id === 'briefing') loadBriefing();
-  if (id === 'arcade') loadArcade().then(() => window.Arcade.start());
+  if (id === 'arcade') loadArcade().then(() => { if (state.tab === 'arcade') window.Arcade.start(); }).catch((e) => toast(e.message, 'bad'));
   else if (window.Arcade) window.Arcade.stop();
 }
 
@@ -1013,6 +1018,7 @@ function paintSide() {
     let items = '';
     if (sel.id === 'hq') items = ((state.workforce && state.workforce.agents) || []).map((a) => `<li data-side-agent="${esc(a.id)}">${esc(a.name)}<span class="sub">${esc(a.lastSummary || a.role)}</span></li>`).join('');
     else if (sel.id === 'crew') items = arcade.crew.map((m) => `<li data-side-crew="${esc(m.id)}">${m.busy ? '🟢' : '⚪'} ${esc(m.title)}<span class="sub">${esc(m.name)} · ${esc(m.description || '')}</span></li>`).join('');
+    else if (sel.id === 'working' || sel.id === 'follow_up') items = allJobs().filter((j) => j.status === sel.id && j.source !== 'bot').map(jobLi).join('');
     else items = allJobs().filter((j) => placeOfJob(j) === sel.id).map(jobLi).join('');
     el.innerHTML = `${back}<h2>${esc(P.name)}</h2><div class="why">${esc(P.blurb)}</div><ul>${items || '<div class="empty">Empty right now.</div>'}</ul>`;
   }
@@ -1211,8 +1217,12 @@ document.addEventListener('click', async (ev) => {
     if (t.dataset.decide) { await api('POST', '/api/workforce/proposal', { id: t.dataset.decide, decision: t.dataset.decision, standing: Boolean(t.dataset.standing) }); return loadWorkforce(); }
     if (t.dataset.adopt) { await api('POST', '/api/workforce/scout/adopt', { id: t.dataset.adopt, tier: t.dataset.tier }); toast('Added to automations'); return loadWorkforce(); }
     if (t.dataset.runAuto) {
-      if (t.dataset.tier === 'manual' && !confirm('This automation touches customers, money, or the public. Run it now?')) return;
-      await api('POST', '/api/automations/run', { id: t.dataset.runAuto, confirmed: true });
+      // use the automation's current tier, not the one stored on an old run
+      const list = state.automations && state.automations.length ? state.automations : await api('GET', '/api/automations');
+      const tier = (list.find((a) => a.id === t.dataset.runAuto) || {}).tier || t.dataset.tier;
+      const ok = tier !== 'manual' || confirm('This automation touches customers, money, or the public. Run it now?');
+      if (!ok) return;
+      await api('POST', '/api/automations/run', { id: t.dataset.runAuto, confirmed: tier === 'manual' });
       toast('Started');
       return setTimeout(loadAutomations, 800);
     }
@@ -1282,6 +1292,7 @@ $('#add-form').addEventListener('submit', async (e) => {
   loadBoard();
   toast('Tracking it');
 });
+document.addEventListener('click', (ev) => { if (ev.target.closest('[data-tab-agent]')) showTab('workforce'); });
 document.addEventListener('keydown', (e) => {
   if (e.key === '/' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') { e.preventDefault(); $('#search').focus(); }
   if (e.key === 'Escape') closeDrawer();

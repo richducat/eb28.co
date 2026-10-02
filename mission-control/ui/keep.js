@@ -4,6 +4,7 @@
  * Fields are matched by their data-* attributes (or id/name), so they must be stable.
  */
 window.keepTyping = function keepTyping(el, render, { focusedOnly = false } = {}) {
+  // focusedOnly: true = only the focused field; a CSS selector = only those fields need focus, others always keep their text
   if (!el) return render();
   const SEL = 'input:not([type=checkbox]):not([type=radio]):not([type=hidden]), textarea, select';
   const keyOf = (f, i) => [...f.attributes].filter((a) => a.name.startsWith('data-')).map((a) => `${a.name}=${a.value}`).join('&') || f.id || f.name || `#${i}`;
@@ -11,7 +12,7 @@ window.keepTyping = function keepTyping(el, render, { focusedOnly = false } = {}
   const saved = new Map();
   before.forEach((f, i) => {
     // focusedOnly: fresh server data wins everywhere except the field being typed in
-    if (focusedOnly && f !== document.activeElement) return;
+    if (focusedOnly && f !== document.activeElement && (focusedOnly === true || f.matches(focusedOnly))) return;
     if (f.value && f.tagName !== 'SELECT') saved.set(keyOf(f, i), f.value); else if (f.tagName === 'SELECT' && f.dataset.touched) saved.set(keyOf(f, i), f.value);
   });
   const act = document.activeElement;

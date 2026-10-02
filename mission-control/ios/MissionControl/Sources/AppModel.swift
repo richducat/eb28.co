@@ -220,6 +220,13 @@ final class AppModel: ObservableObject {
         }
     }
 
+    func snooze(_ job: Job, until iso: String) async {
+        await act("job:\(job.id)") {
+            let _: OK = try await api.post("/api/job/override", ["id": job.id, "snoozedUntil": iso])
+            return "Snoozed until tomorrow"
+        }
+    }
+
     func restartBot(_ job: Job) async {
         await act("job:\(job.id)") {
             let r: OK = try await api.post("/api/bots/restart", ["id": job.id])

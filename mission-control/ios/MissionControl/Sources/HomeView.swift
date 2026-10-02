@@ -60,7 +60,8 @@ struct HomeView: View {
         VStack(alignment: .leading, spacing: 4) {
             Text("\(greeting), Richard").font(.title3.bold())
             if let c = model.board?.summary?.counts {
-                Text("\(c["needs_you"] ?? 0) need you · \(c["working"] ?? 0) working · \(c["done"] ?? 0) done today")
+                let doneToday = model.board?.jobs("done").filter { Fmt.date($0.lastActivity).map { Calendar.current.isDateInToday($0) } ?? false }.count ?? 0
+                Text("\(c["needs_you"] ?? 0) need you · \(c["working"] ?? 0) working · \(doneToday) done today")
                     .font(.subheadline).foregroundStyle(.secondary)
             }
             ConnectionPill()
@@ -245,7 +246,7 @@ struct JobCard: View {
             Button("Done") { Task { await model.markDone(job) } }.buttonStyle(.bordered)
             Menu("Snooze") {
                 Button("4 hours") { Task { await model.snooze(job, hours: 4) } }
-                Button("Tomorrow") { Task { await model.snooze(job, hours: 16) } }
+                Button("Tomorrow 9am") { Task { await model.snooze(job, until: Fmt.tomorrowAt(hour: 9)) } }
             }
             .buttonStyle(.bordered)
             Spacer()

@@ -108,3 +108,52 @@ test('audit 2: reads are refused when the Host is not Mission Control (DNS rebin
   assert.match(await get(`127.0.0.1:${port}`), /HTTP\/1\.1 200/);
   server.close();
 });
+
+test('audit 3: editing a bot keeps the fields the form does not show', async () => {
+  fs.writeFileSync(process.env.MC_BOTS, JSON.stringify([{ name: 'hb-bot', heartbeat: '~/x/hb.log', hidden: true, match: 'launchd:hb', process: 'hb', autoRestart: true }]));
+  const server = createServer();
+  await new Promise((r) => server.listen(0, '127.0.0.1', r));
+  const { port } = server.address();
+  const res = await fetch(`http://127.0.0.1:${port}/api/bots/registry`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ name: 'hb-bot', originalName: 'hb-bot', process: 'hb2', autoRestart: false }) });
+  assert.equal(res.status, 200);
+  const saved = JSON.parse(fs.readFileSync(process.env.MC_BOTS, 'utf8'))[0];
+  assert.equal(saved.heartbeat, '~/x/hb.log');
+  assert.equal(saved.hidden, true);
+  assert.equal(saved.match, 'launchd:hb');
+  assert.equal(saved.process, 'hb2');
+  assert.equal(saved.autoRestart, false);
+  server.close();
+});
+
+test('audit 3: requesting a folder (e.g. /vendor) does not crash the server', async () => {
+  const server = createServer();
+  await new Promise((r) => server.listen(0, '127.0.0.1', r));
+  const { port } = server.address();
+  for (const p of ['/vendor', '/vendor/', '/../package.json', '/%2e%2e/src/server.js']) {
+    const r = await fetch(`http://127.0.0.1:${port}${p}`);
+    assert.equal(r.status, 200);
+    assert.match(await r.text(), /<!doctype html>/i); // falls back to the app page
+  }
+  assert.equal((await fetch(`http://127.0.0.1:${port}/api/health`)).status, 200);
+  server.close();
+});
+
+test('audit 3: turning phone access off drops connections that are still open', async () => {
+  process.env.MC_MOBILE_DIR = fs.mkdtempSync(path.join(os.tmpdir(), 'mc-mobile3-'));
+  process.env.MC_MOBILE_PORT = String(47900 + Math.floor(Math.random() * 90));
+  const { createMobile } = await import(`../src/mobile.js?drop=${Date.now()}`);
+  const m = createMobile({ handle: (req, res) => { res.writeHead(200, { 'Content-Type': 'text/event-stream' }); res.write('data: hi\n\n'); } }); // never ends, like SSE
+  const st = m.set({ enabled: true });
+  const { token } = JSON.parse(st.pairing);
+  await new Promise((r) => setTimeout(r, 200));
+  const closed = new Promise((resolve) => {
+    const req = https.request({ host: '127.0.0.1', port: Number(process.env.MC_MOBILE_PORT), path: '/api/events', rejectUnauthorized: false, headers: { Authorization: `Bearer ${token}` } }, (res) => {
+      res.on('data', () => m.set({ enabled: false }));
+      res.on('close', () => resolve(true));
+    });
+    req.on('error', () => resolve(true));
+    req.end();
+  });
+  const result = await Promise.race([closed, new Promise((r) => setTimeout(() => r(false), 3000))]);
+  assert.equal(result, true);
+});

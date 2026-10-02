@@ -30,7 +30,9 @@
   /* ================= TODAY ================= */
   async function loadToday() {
     if (P.day === ymd()) P.day = null;
-    const data = await api('GET', `/api/today?date=${P.day || ymd()}`);
+    const want = P.day || ymd();
+    const data = await api('GET', `/api/today?date=${want}`);
+    if ((P.day || ymd()) !== want) return; // a different day was picked while this loaded
     P.today = data;
     renderToday();
   }
@@ -58,7 +60,7 @@
       paintTracking(t);
       paintNotes(t);
       paintTomorrow(t);
-    }, { focusedOnly: true });
+    }, { focusedOnly: '[data-focus],[data-day-notes]' });
   }
   const chip = (icon, text, cls = '', attrs = '') => `<span class="tchip ${cls}" ${attrs}><i>${icon}</i>${esc(text)}</span>`;
   const panelHead = (title, right = '') => `<div class="panel-h"><h2>${title}</h2>${right}</div>`;
@@ -153,7 +155,7 @@
 
   function paintNotes(t) {
     const cur = document.activeElement && document.activeElement.matches('[data-day-notes]');
-    if (cur) return;
+    if (cur || P.notesPending) return; // don't paint over text that is still being saved
     $('#notes-panel').innerHTML = panelHead('📝 Notes', '<span class="muted small" id="notes-saved"></span>')
       + `<textarea class="notes" data-day-notes="${t.date}" rows="6" placeholder="Wins, ideas, what happened today…">${esc(t.sheet.notes || '')}</textarea>`;
   }
@@ -197,8 +199,13 @@
     const val = ev.target.value;
     const tag = $('#notes-saved');
     if (tag) tag.textContent = 'Saving…';
+    P.notesPending = true;
     notesTimer = setTimeout(async () => {
-      try { const s = await api('POST', '/api/day', { date: day, notes: val }); P.today.sheet = s; if ($('#notes-saved')) $('#notes-saved').textContent = 'Saved'; } catch (err) { toast(err.message, 'bad'); }
+      try {
+        const s = await api('POST', '/api/day', { date: day, notes: val });
+        if (P.today && P.today.date === day) P.today.sheet = s;
+        if ($('#notes-saved')) $('#notes-saved').textContent = 'Saved';
+      } catch (err) { toast(err.message, 'bad'); } finally { P.notesPending = false; }
     }, 700);
   });
 
@@ -242,7 +249,15 @@
           const first = [...seg.segment(l)][0]?.segment || '';
           if (/\p{Extended_Pictographic}/u.test(first)) return { emoji: first, name: l.slice(first.length).trim() || l };
           return { emoji: '✅', name: l };
-        }).map((h) => ({ ...h, id: (P.today.habits.find((x) => x.name.toLowerCase() === h.name.toLowerCase()) || {}).id }));
+        });
+        // same name -> same habit; otherwise the habit on that line (a rename keeps its streak)
+        const byName = new Map(P.today.habits.map((x) => [x.name.toLowerCase(), x.id]));
+        const taken = new Set(habits.map((h) => byName.get(h.name.toLowerCase())).filter(Boolean));
+        habits.forEach((h, i) => {
+          h.id = byName.get(h.name.toLowerCase());
+          const old = P.today.habits[i];
+          if (!h.id && old && !taken.has(old.id)) { h.id = old.id; taken.add(old.id); }
+        });
         await api('POST', '/api/habits', { habits });
         toast('Habits saved', 'ok');
         return loadToday();

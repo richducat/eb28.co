@@ -13,9 +13,9 @@
  */
 (() => {
   const T = 16; // tile size
-  const COLS = 128;
+  const COLS = 160;
   const ROWS = 92;
-  const W = COLS * T; // 2048
+  const W = COLS * T; // 2560
   const H = ROWS * T; // 1472
   const GAP = 18; // spacing between characters in a crowd
 
@@ -35,36 +35,50 @@
     skin: ['#a85830', '#e09868', '#f8c8a0'],
   };
 
-  /* ---------- islands ---------- */
-  // c = center tile, r = radii; theme drives decor, tint and buildings.
+  /* ---------- islands: one big theme each ---------- */
   const ISLANDS = [
-    { id: 'main', name: 'MISSION CONTROL', c: [64, 46], r: [25, 17], theme: 'main' },
-    { id: 'tyfys', name: 'TYFYS ISLAND', business: ['tyfys'], c: [18, 20], r: [16, 13], theme: 'base', color: '#c8102e', tint: 'rgba(120,110,40,.16)' },
-    { id: 'eb28', name: 'EB28 ISLAND', business: ['eb28'], c: [110, 20], r: [16, 13], theme: 'studio', color: '#2d9c67', tint: 'rgba(40,200,180,.10)' },
-    { id: 'inspection', name: 'INSPECTION RENT', business: ['inspection'], c: [18, 74], r: [15, 12], theme: 'suburb', color: '#2f6fdb', tint: 'rgba(60,90,200,.08)' },
-    { id: 'apps', name: 'APPS ISLAND', business: ['apps', 'syncstep'], c: [110, 74], r: [15, 12], theme: 'tech', color: '#f59e0b', tint: 'rgba(240,160,40,.10)' },
+    { id: 'main', name: 'MISSION CONTROL', c: [80, 46], r: [25, 17], theme: 'main' },
+    { id: 'backrooms', name: 'THE BACKROOMS', c: [26, 46], r: [22, 30], theme: 'backrooms', color: '#c8b45a' },
+    { id: 'funpark', name: 'FUN PARK', c: [134, 46], r: [22, 30], theme: 'funpark', color: '#ff5a7a' },
   ];
-  const ISLAND_OF = {};
-  for (const isl of ISLANDS) for (const b of isl.business || []) ISLAND_OF[b] = isl.id;
+  // Companies are departments in the Backrooms and rides in the Fun Park.
+  const ZONES = [
+    { id: 'tyfys', name: 'TYFYS', biz: ['tyfys'], color: '#c8102e', ride: 'coaster' },
+    { id: 'eb28', name: 'EB28', biz: ['eb28'], color: '#2d9c67', ride: 'ferris' },
+    { id: 'inspection', name: 'INSPECTION', biz: ['inspection'], color: '#2f6fdb', ride: 'carousel' },
+    { id: 'apps', name: 'APPS', biz: ['apps', 'syncstep'], color: '#f59e0b', ride: 'tagdome' },
+    { id: 'other', name: 'GENERAL', biz: ['other'], color: '#8a8a9a', ride: 'slides' },
+  ];
+  const ZONE_OF = {};
+  for (const z of ZONES) for (const b of z.biz) ZONE_OF[b] = z.id;
+  const RIDE_NAME = { coaster: 'COASTER', ferris: 'FERRIS WHEEL', carousel: 'CAROUSEL', tagdome: 'LASER TAG', slides: 'SLIDES' };
 
   /* ---------- road network (tile coords); every edge is axis-aligned ---------- */
   const NODES = {
-    HQ: [64, 48], N1: [64, 43], S1: [64, 52], NYC: [51, 43], NY: [51, 40], WK: [64, 39], BC: [77, 43], BT: [77, 40],
-    FUC: [50, 52], FU: [50, 49], DC: [78, 52], DN: [78, 49], FC1: [70, 52], FC2: [70, 56], FL: [74, 56], CC: [55, 52], CR: [55, 56],
-    W1: [45, 43], WN: [45, 25], E1: [83, 43], EN: [83, 25], W2: [45, 52], WS: [45, 79], E2: [83, 52], ES: [83, 79],
+    HQ: [80, 48], N1: [80, 43], S1: [80, 52], NYC: [67, 43], NY: [67, 40], WK: [80, 39], BC: [93, 43], BT: [93, 40],
+    FUC: [66, 52], FU: [66, 49], DC: [94, 52], DN: [94, 49], FC1: [86, 52], FC2: [86, 56], FL: [90, 56], CC: [71, 52], CR: [71, 56],
+    W1: [61, 43], E1: [99, 43],
   };
   const EDGES = [
     ['HQ', 'N1'], ['HQ', 'S1'], ['N1', 'NYC'], ['NYC', 'NY'], ['N1', 'WK'], ['N1', 'BC'], ['BC', 'BT'], ['NYC', 'W1'], ['BC', 'E1'],
-    ['W1', 'WN'], ['E1', 'EN'], ['S1', 'CC'], ['CC', 'FUC'], ['FUC', 'FU'], ['CC', 'CR'], ['S1', 'FC1'], ['FC1', 'DC'], ['DC', 'DN'],
-    ['FC1', 'FC2'], ['FC2', 'FL'], ['FUC', 'W2'], ['DC', 'E2'], ['W2', 'WS'], ['E2', 'ES'],
+    ['S1', 'CC'], ['CC', 'FUC'], ['FUC', 'FU'], ['CC', 'CR'], ['S1', 'FC1'], ['FC1', 'DC'], ['DC', 'DN'], ['FC1', 'FC2'], ['FC2', 'FL'],
   ];
-  // company islands: plaza road along cy+5, three districts with doors at cy-2
-  const BRIDGE_END = { tyfys: 'WN', eb28: 'EN', inspection: 'WS', apps: 'ES' };
-  const DISTRICTS = {
-    backrooms: { name: 'BACKROOMS', blurb: 'Coders: Claude Code, Codex, PRs', cols: 5, kind: 'backrooms' },
-    office: { name: 'OFFICE', blurb: 'Ops, reports and the overlord', cols: 4, kind: 'office' },
-    funpark: { name: 'FUN PARK', blurb: 'Content, social and creative', cols: 5, kind: 'funpark' },
-  };
+  // Each themed island: two hallways (y=43 and y=68), a spine, five zone doors, one bridge.
+  const ZONE_SPOTS = { tyfys: [-14, 36, 'a', 43], eb28: [10, 36, 'b', 43], other: [0, 30, 'c', 43], inspection: [-14, 61, 'a', 68], apps: [10, 61, 'b', 68] };
+  function islandRoads(prefix, cx, mirror, bridgeFrom) {
+    const X = (dx) => cx + (mirror ? -dx : dx);
+    NODES[`${prefix}_dock`] = [X(14), 43];
+    NODES[`${prefix}_b43`] = [X(10), 43]; NODES[`${prefix}_c43`] = [X(0), 43]; NODES[`${prefix}_a43`] = [X(-14), 43];
+    NODES[`${prefix}_b68`] = [X(10), 68]; NODES[`${prefix}_c68`] = [X(0), 68]; NODES[`${prefix}_a68`] = [X(-14), 68];
+    EDGES.push([bridgeFrom, `${prefix}_dock`], [`${prefix}_dock`, `${prefix}_b43`], [`${prefix}_b43`, `${prefix}_c43`], [`${prefix}_c43`, `${prefix}_a43`],
+      [`${prefix}_c43`, `${prefix}_c68`], [`${prefix}_b68`, `${prefix}_c68`], [`${prefix}_c68`, `${prefix}_a68`]);
+    for (const [zone, [dx, y, col, hall]] of Object.entries(ZONE_SPOTS)) {
+      NODES[`${prefix}_${zone}`] = [X(dx), y];
+      EDGES.push([`${prefix}_${col}${hall}`, `${prefix}_${zone}`]);
+    }
+  }
+  islandRoads('backrooms', 26, false, 'W1'); // dock faces east, toward the main island
+  islandRoads('funpark', 134, true, 'E1'); // mirrored: dock faces west
 
   /* ---------- places ---------- */
   // node = road node at the door; the building is drawn above it, the crowd below.
@@ -78,30 +92,16 @@
     failed: { name: 'GHOST HOUSE', blurb: 'Crashed or errored. Check these', node: 'FL', cols: 4, kind: 'ghost', max: 8 },
     crew: { name: 'HERMES VILLAGE', blurb: 'Your Hermes profile agents', node: 'CR', cols: 11, kind: 'village' },
   };
-  for (const isl of ISLANDS) {
-    if (isl.id === 'main') continue;
-    const [cx, cy] = isl.c;
-    const y = cy + 5;
-    NODES[`${isl.id}_P`] = [cx, y];
-    NODES[`${isl.id}_L`] = [cx - 9, y];
-    NODES[`${isl.id}_R`] = [cx + 9, y];
-    NODES[`${isl.id}_backrooms`] = [cx - 9, cy - 2];
-    NODES[`${isl.id}_office`] = [cx, cy - 2];
-    NODES[`${isl.id}_funpark`] = [cx + 9, cy - 2];
-    EDGES.push([`${isl.id}_L`, `${isl.id}_P`], [`${isl.id}_P`, `${isl.id}_R`], [`${isl.id}_L`, `${isl.id}_backrooms`], [`${isl.id}_P`, `${isl.id}_office`], [`${isl.id}_R`, `${isl.id}_funpark`]);
-    // the bridge lands on the side facing the main island
-    const end = BRIDGE_END[isl.id];
-    EDGES.push([end, NODES[end][0] < cx ? `${isl.id}_L` : `${isl.id}_R`]);
-    for (const [d, spec] of Object.entries(DISTRICTS)) {
-      PLACES[`${isl.id}:${d}`] = { ...spec, name: `${spec.name}`, blurb: `${isl.name}: ${spec.blurb}`, node: `${isl.id}_${d}`, island: isl.id, max: 12 };
-    }
+  for (const z of ZONES) {
+    PLACES[`backrooms:${z.id}`] = { name: `${z.name} DEPT`, blurb: `The Backrooms: ${z.name} coders and office work`, node: `backrooms_${z.id}`, cols: 5, kind: 'dept', zone: z, island: 'backrooms', max: 12 };
+    PLACES[`funpark:${z.id}`] = { name: `${z.name} ${RIDE_NAME[z.ride]}`, blurb: `Fun Park: ${z.name} content, social and creative`, node: `funpark_${z.id}`, cols: 5, kind: 'ride', zone: z, island: 'funpark', max: 12 };
   }
   for (const p of Object.values(PLACES)) p.door = NODES[p.node];
   const ADJ = {};
   for (const [a, b] of EDGES) { (ADJ[a] ||= []).push(b); (ADJ[b] ||= []).push(a); }
 
   // The clock tower is a landmark, not a status: it shows when scheduled agents run next.
-  const CLOCK = { door: [57, 47] };
+  const CLOCK = { door: [73, 47] };
   // Hermes chief-of-staff profiles -> the realm (business) each one oversees on the map.
   const REALMS = {
     cos: { business: '*', grand: true, short: 'CHIEF', label: 'Grand Chief of Staff' },
@@ -149,7 +149,7 @@
     for (const [id, p] of Object.entries(PLACES)) {
       const [dx, dy] = p.door;
       const half = (Math.ceil(p.cols / 2) * GAP) / T + 0.5;
-      const floor = p.kind === 'backrooms' ? 'carpet' : p.kind === 'funpark' ? 'rainbow' : '';
+      const floor = p.kind === 'ride' ? 'rainbow' : '';
       for (let y = dy - 4; y <= dy + 3; y += 1) {
         for (let x = Math.floor(dx - half); x <= Math.ceil(dx + half); x += 1) {
           if (y < 0 || y >= ROWS || x < 0 || x >= COLS || !LAND[y][x]) continue;
@@ -166,14 +166,22 @@
         const isl = ISLANDS.find((i) => i.id === ISLE[y][x]);
         const r = hash(x, y, 11);
         const coast = !LAND[y - 1][x] || !LAND[y][x - 1] || !LAND[y][x + 1] || !LAND[y + 2][x];
-        const tree = coast ? 0.42 : 0.12;
         const theme = isl ? isl.theme : 'main';
-        // each company island south of its road is the neighbourhood: homes for its agents
-        const south = isl && isl.id !== 'main' && y > isl.c[1] + 6;
-        if (south && !coast && r < 0.16 && x % 3 === 0) { DECOR.push({ x, y, type: 'home', theme, color: isl.color }); continue; }
-        const extra = { base: ['flag', 'tent', 'sandbag'], studio: ['palm', 'neon', 'palm'], suburb: ['fence', 'mailbox', 'fence'], tech: ['palm', 'dish', 'palm'] }[theme];
-        if (extra && r > 0.93) { DECOR.push({ x, y, type: extra[Math.floor(hash(x, y, 13) * extra.length)], theme, color: isl.color }); continue; }
-        if (r < tree) DECOR.push({ x, y, type: theme === 'studio' || theme === 'tech' ? (hash(x, y, 17) < 0.5 ? 'palm' : 'tree') : 'tree' });
+        if (theme === 'backrooms') {
+          // endless partition walls, flickering panels, coolers and sad plants
+          if (!coast && x % 6 === 0 && y % 5 !== 0 && r < 0.75) DECOR.push({ x, y, type: 'pwall' });
+          else if (!coast && y % 7 === 3 && x % 4 === 1 && r < 0.8) DECOR.push({ x, y, type: 'hwall' });
+          else if (r > 0.94) DECOR.push({ x, y, type: hash(x, y, 13) < 0.5 ? 'cooler' : 'plant' });
+          else if (r > 0.9) DECOR.push({ x, y, type: 'chair' });
+          continue;
+        }
+        if (theme === 'funpark') {
+          if (r < (coast ? 0.3 : 0.05)) DECOR.push({ x, y, type: hash(x, y, 17) < 0.6 ? 'palm' : 'tree' });
+          else if (r > 0.9) DECOR.push({ x, y, type: ['balloon', 'candy', 'bench', 'fountain', 'lamp', 'balloon'][Math.floor(hash(x, y, 13) * 6)] });
+          continue;
+        }
+        const tree = coast ? 0.42 : 0.12;
+        if (r < tree) DECOR.push({ x, y, type: 'tree' });
         else if (r < tree + 0.06) DECOR.push({ x, y, type: 'hill' });
         else if (r < tree + 0.15) DECOR.push({ x, y, type: 'bush' });
         else if (r < tree + 0.33) DECOR.push({ x, y, type: 'flower', c: hash(x, y, 5) < 0.5 ? P.red[2] : P.gold[2] });
@@ -448,73 +456,153 @@
     }
   }
 
-  /* ---------- district buildings on the company islands ---------- */
-  function drawBackrooms(cx, by, f, count) {
-    // liminal mono-yellow office block, buzzing fluorescent tubes, one EXIT sign
-    px(cx - 34, by - 46, 68, 46, '#d4c47a');
-    for (let i = 0; i < 17; i += 1) px(cx - 34 + i * 4, by - 46, 2, 46, '#cab86e');
-    for (let r = 0; r < 5; r += 1) for (let c = 0; c < 9; c += 1) px(cx - 32 + c * 8, by - 42 + r * 8, 2, 1, '#b8a458');
-    px(cx - 34, by - 4, 68, 4, '#8a7a40');
-    px(cx - 20, by - 30, 7, 9, '#b8a050'); px(cx + 14, by - 18, 9, 6, '#b8a050');
-    px(cx - 36, by - 52, 72, 7, '#9a8a50'); px(cx - 36, by - 52, 72, 1, '#c8b878');
+  /* ---------- island ground ---------- */
+  function drawBackroomsTile(x, y) {
+    const X = x * T;
+    const Y = y * T;
+    drawFloor(x, y, 'carpet');
+    if (isPath(x, y)) { px(X + 2, Y + 2, 12, 12, '#a49448'); px(X + 2, Y + 2, 12, 1, '#b4a458'); }
+    // ceiling grid shadow lines every few tiles
+    if (x % 4 === 0) px(X, Y, 1, T, 'rgba(90,80,30,.25)');
+    if (y % 4 === 0) px(X, Y, T, 1, 'rgba(90,80,30,.25)');
+    if (!land(x, y + 1)) { px(X, Y + 10, T, 6, '#8a7a40'); px(X, Y + 10, T, 1, '#6a5a28'); for (let i = 0; i < 4; i += 1) px(X + i * 4 + 1, Y + 12, 2, 3, '#a89848'); }
+    if (!land(x - 1, y)) px(X, Y, 2, T, '#8a7a40');
+    if (!land(x + 1, y)) px(X + T - 2, Y, 2, T, '#8a7a40');
+    if (!land(x, y - 1)) px(X, Y, T, 2, '#e0d090');
+  }
+
+  function drawParkTile(x, y) {
+    const X = x * T;
+    const Y = y * T;
+    px(X, Y, T, T, '#e8dcc4');
+    px(X, Y, T, 1, '#f4ecd8'); px(X, Y, 1, T, '#f4ecd8'); px(X + 15, Y, 1, T, '#d4c8ac'); px(X, Y + 15, T, 1, '#d4c8ac');
+    if (hash(x, y, 51) < 0.08) px(X + 5, Y + 6, 3, 2, ['#ff5a7a', '#4ab8ff', '#ffe45c'][Math.floor(hash(x, y, 52) * 3)]);
+    if (isPath(x, y)) { const c = ['#ff7a9a', '#ffc45c', '#7ad07a', '#6ab8ff'][(x + y) % 4]; px(X + 1, Y + 1, 14, 14, c); px(X + 1, Y + 1, 14, 2, Sprites.shade(c, 1.15)); }
+    if (!land(x, y + 1)) { px(X, Y + 10, T, 6, '#c86a4a'); px(X, Y + 10, T, 1, '#a04a2a'); for (let i = 0; i < 4; i += 1) px(X + i * 4, Y + 12, 2, 2, '#ffd0a0'); }
+    if (!land(x, y - 1)) px(X, Y, T, 2, '#fff8e8');
+  }
+
+  /* ---------- Backrooms decor ---------- */
+  function drawBackroomsDecor(d, f) {
+    const X = d.x * T;
+    const Y = d.y * T;
+    if (d.type === 'pwall') { px(X + 6, Y - 6, 4, 22, '#d8c880'); px(X + 6, Y - 6, 4, 2, '#ece0a0'); px(X + 9, Y - 4, 1, 20, '#b8a860'); px(X + 6, Y + 14, 4, 2, '#8a7a40'); }
+    else if (d.type === 'hwall') { px(X - 2, Y - 2, 20, 14, '#d8c880'); for (let i = 0; i < 5; i += 1) px(X - 2 + i * 4, Y - 2, 2, 14, '#cab86e'); px(X - 2, Y - 4, 20, 2, '#ece0a0'); px(X - 2, Y + 12, 20, 2, '#8a7a40'); }
+    else if (d.type === 'cooler') { px(X + 4, Y + 2, 8, 12, '#e8eef4'); px(X + 5, Y - 4, 6, 7, '#9ad0f0'); px(X + 6, Y - 3, 2, 4, '#c8ecff'); px(X + 5, Y + 7, 2, 2, '#4080e0'); }
+    else if (d.type === 'plant') { px(X + 5, Y + 9, 6, 6, '#8a5a3a'); px(X + 3, Y + 2, 4, 8, '#5a7a3a'); px(X + 8, Y + 1, 4, 9, '#4a6a2a'); px(X + 6, Y + 4, 3, 6, '#7a8a4a'); }
+    else if (d.type === 'chair') { px(X + 4, Y + 6, 8, 3, '#4a4a5a'); px(X + 4, Y + 1, 8, 5, '#5a5a6a'); px(X + 7, Y + 9, 2, 4, '#2a2a3a'); px(X + 4, Y + 13, 8, 1, '#2a2a3a'); }
+  }
+
+  /* ---------- Fun Park decor ---------- */
+  function drawParkDecor(d, f) {
+    const X = d.x * T;
+    const Y = d.y * T;
+    if (d.type === 'balloon') {
+      const bob = Math.round(Math.sin(f / 6 + d.x) * 2);
+      const c = ['#ff5a7a', '#4ab8ff', '#ffe45c', '#a070ff'][d.x % 4];
+      px(X + 7, Y - 2 + bob, 1, 16, '#888'); px(X + 4, Y - 10 + bob, 8, 9, c); px(X + 5, Y - 9 + bob, 2, 2, '#ffffff');
+    } else if (d.type === 'candy') {
+      px(X + 1, Y + 4, 14, 10, '#ffffff'); for (let i = 0; i < 4; i += 1) px(X + 1 + i * 4, Y - 2, 2, 6, i % 2 ? '#ff5a7a' : '#ffffff');
+      px(X, Y - 3, 16, 2, '#ff5a7a'); px(X + 4, Y + 6, 4, 4, '#ffb0d0'); px(X + 9, Y + 6, 4, 4, '#b0e0ff');
+    } else if (d.type === 'bench') {
+      px(X + 1, Y + 7, 14, 3, '#a86028'); px(X + 1, Y + 4, 14, 2, '#c87838'); px(X + 2, Y + 10, 2, 4, '#3a3a3a'); px(X + 12, Y + 10, 2, 4, '#3a3a3a');
+    } else if (d.type === 'fountain') {
+      px(X - 2, Y + 6, 20, 8, '#a8b0c0'); px(X, Y + 7, 16, 5, '#4aa8f0');
+      const sp = Math.floor(f / 2) % 3;
+      px(X + 7, Y - 2 - sp, 2, 9 + sp, '#c8ecff'); px(X + 4, Y + 2 - sp, 2, 2, '#c8ecff'); px(X + 10, Y + 2, 2, 2, '#c8ecff');
+    } else if (d.type === 'lamp') {
+      px(X + 7, Y - 8, 2, 22, '#3a3a4a'); px(X + 4, Y - 11, 8, 4, Math.floor(f / 10 + d.x) % 9 ? '#fff0a0' : '#a09060');
+    } else drawThemeDecor(d, f);
+  }
+
+  /* ---------- company departments (Backrooms) ---------- */
+  function drawDept(cx, by, f, z, count) {
+    // a cubicle block with CRT monitors, under buzzing tubes, with the company banner
+    px(cx - 36, by - 40, 72, 40, '#d4c47a');
+    for (let i = 0; i < 18; i += 1) px(cx - 36 + i * 4, by - 40, 2, 40, '#cab86e');
+    px(cx - 36, by - 4, 72, 4, '#8a7a40');
+    for (let k = 0; k < 3; k += 1) {
+      const x0 = cx - 32 + k * 23;
+      px(x0, by - 26, 20, 20, '#bfae62'); px(x0, by - 26, 20, 2, '#e0d090');
+      px(x0 + 3, by - 16, 14, 4, '#7a5a3a');
+      const on = hash(Math.floor(f / 3), k, 7 + count) > 0.08;
+      px(x0 + 6, by - 24, 9, 8, '#d8d0c0'); px(x0 + 7, by - 23, 7, 5, on ? '#3af070' : '#1a3a1a');
+      if (on && count) px(x0 + 8, by - 22 + (Math.floor(f / 2 + k) % 3), 4, 1, '#c8ffd0');
+    }
     for (let i = 0; i < 3; i += 1) {
-      const flick = hash(Math.floor(f / 2), i, 41) < (count ? 0.12 : 0.4);
-      px(cx - 26 + i * 20, by - 50, 14, 3, flick ? '#8a8a70' : '#fbfff0');
-      if (!flick) { g.fillStyle = 'rgba(255,255,220,.18)'; g.fillRect(cx - 30 + i * 20, by - 47, 22, 12); }
+      const flick = hash(Math.floor(f / 2), i, 43) < 0.1;
+      px(cx - 28 + i * 22, by - 46, 14, 3, flick ? '#8a8a70' : '#fbfff0');
+      if (!flick) { g.fillStyle = 'rgba(255,255,220,.16)'; g.fillRect(cx - 32 + i * 22, by - 43, 22, 14); }
     }
-    px(cx - 7, by - 22, 14, 22, '#14100a'); px(cx - 6, by - 21, 12, 3, '#2a2410');
-    px(cx - 6, by - 28, 12, 5, '#1a3a1a'); px(cx - 5, by - 27, 10, 3, Math.floor(f / 6) % 9 ? '#40e060' : '#206030');
-    text('LEVEL 0', cx, by - 40, '#7a6a30', 5, 'center', '#e8dca0');
+    px(cx - 30, by - 58, 60, 11, P.ink); px(cx - 29, by - 57, 58, 9, z.color);
+    text(`${z.name} DEPT`, cx, by - 55, P.white, 5, 'center', Sprites.shade(z.color, 0.5));
   }
 
-  function drawFunpark(cx, by, f, count) {
-    // ferris wheel (left), circus tent (middle), slide + ball pit (right), arcade cabinet
-    const wx = cx - 24;
-    const wy = by - 34;
-    px(wx - 1, wy, 2, 34, P.stone[2]); px(wx - 8, by - 2, 16, 2, P.stone[1]);
-    g.strokeStyle = '#e8e8f0'; g.lineWidth = 1;
-    g.beginPath(); g.arc(wx, wy, 15, 0, Math.PI * 2); g.stroke();
-    const spin = (f / 30) * (count ? 1 : 0.3);
-    const cabins = ['#ff5a7a', '#ffb43c', '#5ad07a', '#4ab8ff', '#a070ff', '#ffe45c'];
-    for (let i = 0; i < 6; i += 1) {
-      const a = spin + (i * Math.PI) / 3;
-      const ex = wx + Math.cos(a) * 15;
-      const ey = wy + Math.sin(a) * 15;
-      g.beginPath(); g.moveTo(wx + 0.5, wy + 0.5); g.lineTo(ex, ey); g.stroke();
-      px(ex - 3, ey, 6, 5, cabins[i]); px(ex - 3, ey, 6, 1, '#ffffff');
-    }
-    // tent
-    for (let i = 0; i < 14; i += 1) px(cx - 2 - i, by - 40 + i * 2, 4 + i * 2, 2, i % 2 ? '#ffffff' : '#e8344c');
-    px(cx - 16, by - 12, 32, 12, '#e8344c');
-    for (let i = 0; i < 8; i += 1) px(cx - 16 + i * 4, by - 12, 2, 12, '#ffffff');
-    px(cx - 4, by - 10, 8, 10, '#3a1020');
-    px(cx, by - 48, 1, 8, P.ink); px(cx + 1, by - 48 + (Math.floor(f / 3) % 2), 6, 3, '#ffe45c');
-    // slide + ball pit
-    px(cx + 24, by - 30, 4, 30, P.stone[2]); px(cx + 22, by - 32, 8, 3, P.stone[3]);
-    for (let i = 0; i < 12; i += 1) px(cx + 27 + i, by - 30 + i * 2, 3, 2, '#ffd23c');
-    px(cx + 30, by - 8, 18, 8, '#2a6ad0'); px(cx + 30, by - 8, 18, 1, '#5a9af0');
-    for (let i = 0; i < 12; i += 1) px(cx + 31 + ((i * 5) % 16), by - 7 + ((i * 3 + Math.floor(f / 4)) % 5), 2, 2, cabins[i % 6]);
-    // arcade cabinet with a glowing screen
-    px(cx + 18, by - 16, 8, 16, '#2a1a4a'); px(cx + 19, by - 14, 6, 5, Math.floor(f / 3) % 2 ? '#40e0ff' : '#ff4fd8'); px(cx + 19, by - 7, 6, 2, '#5a3a8a');
-    text('FUN PARK', cx, by - 58, '#ffe45c', 6, 'center');
-  }
-
-  function drawOffice(cx, by, f, isl, count) {
-    const c = isl.color || P.stone[2];
-    px(cx - 24, by - 58, 48, 58, '#d8dce8'); px(cx - 24, by - 58, 48, 3, c); px(cx + 20, by - 58, 4, 58, '#b8bcc8');
-    for (let r = 0; r < 6; r += 1) {
-      for (let k = 0; k < 5; k += 1) {
-        const lit = hash(k, r, Math.floor(f / 40) + isl.c[0]) < (count ? 0.75 : 0.35);
-        px(cx - 20 + k * 8, by - 52 + r * 8, 6, 5, lit ? '#ffe9a0' : '#5a6a88');
+  /* ---------- company rides (Fun Park) ---------- */
+  const RAINBOW = ['#ff5a7a', '#ffb43c', '#ffe45c', '#5ad07a', '#4ab8ff', '#a070ff'];
+  function drawRide(cx, by, f, z, count) {
+    const speed = count ? 1 : 0.35;
+    const t = f / 10;
+    if (z.ride === 'ferris') {
+      const wy = by - 40;
+      px(cx - 10, by - 2, 20, 2, P.stone[1]); px(cx - 9, wy, 2, 40, P.stone[2]); px(cx + 7, wy, 2, 40, P.stone[2]);
+      g.strokeStyle = '#f0f0f8'; g.lineWidth = 1.5;
+      g.beginPath(); g.arc(cx, wy, 26, 0, Math.PI * 2); g.stroke();
+      g.beginPath(); g.arc(cx, wy, 8, 0, Math.PI * 2); g.stroke();
+      for (let i = 0; i < 8; i += 1) {
+        const a = t * 0.6 * speed + (i * Math.PI) / 4;
+        const ex = cx + Math.cos(a) * 26;
+        const ey = wy + Math.sin(a) * 26;
+        g.beginPath(); g.moveTo(cx, wy); g.lineTo(ex, ey); g.stroke();
+        px(ex - 4, ey, 8, 6, RAINBOW[i % 6]); px(ex - 4, ey, 8, 1, '#ffffff');
       }
+      px(cx - 3, wy - 3, 6, 6, z.color);
+    } else if (z.ride === 'coaster') {
+      // track loop on stilts with a cart racing around it
+      for (let i = 0; i < 6; i += 1) px(cx - 36 + i * 14, by - 22 + (i % 2) * 8, 2, 22 - (i % 2) * 8, P.stone[2]);
+      g.strokeStyle = z.color; g.lineWidth = 3;
+      g.beginPath(); g.moveTo(cx - 40, by - 16); g.bezierCurveTo(cx - 20, by - 50, cx - 5, by - 60, cx + 4, by - 36); g.arc(cx + 14, by - 36, 10, Math.PI, Math.PI * 3); g.bezierCurveTo(cx + 30, by - 40, cx + 34, by - 20, cx + 42, by - 16); g.stroke();
+      g.strokeStyle = '#ffffff'; g.lineWidth = 1; g.stroke();
+      const k = ((t * 0.5 * speed) % 1);
+      const cxk = cx - 40 + k * 82;
+      const cyk = by - 16 - Math.sin(k * Math.PI) * 34;
+      px(cxk - 5, cyk - 4, 10, 5, '#ffe45c'); px(cxk - 4, cyk - 6, 3, 2, P.skin[2]); px(cxk + 1, cyk - 6, 3, 2, P.skin[1]);
+    } else if (z.ride === 'carousel') {
+      const rot = Math.floor(t * 4 * speed);
+      px(cx - 30, by - 8, 60, 8, '#f0e0c0'); px(cx - 30, by - 8, 60, 2, '#ffffff');
+      for (let i = 0; i < 12; i += 1) px(cx - 30 + i * 5, by - 46 + Math.abs(6 - i) * 0.6, 5, 10, RAINBOW[(i + rot) % 6]);
+      px(cx - 32, by - 38, 64, 3, z.color); px(cx - 1, by - 56, 2, 12, P.gold[2]); px(cx - 4, by - 58, 8, 3, P.gold[2]);
+      for (let i = 0; i < 5; i += 1) {
+        const hx = cx - 24 + i * 12;
+        const hy = by - 26 + Math.round(Math.sin(t * 2 + i) * 3);
+        px(hx, by - 35, 1, 27, '#d8c890'); px(hx - 4, hy, 9, 5, i % 2 ? '#ffffff' : '#c08a5a'); px(hx + 3, hy - 3, 3, 3, i % 2 ? '#ffffff' : '#c08a5a');
+      }
+    } else if (z.ride === 'tagdome') {
+      g.fillStyle = '#2a1a4a'; g.beginPath(); g.arc(cx, by - 4, 34, Math.PI, Math.PI * 2); g.fill();
+      g.strokeStyle = '#5a3a8a'; g.lineWidth = 1;
+      for (let i = 1; i < 4; i += 1) { g.beginPath(); g.arc(cx, by - 4, 34 - i * 8, Math.PI, Math.PI * 2); g.stroke(); }
+      for (let i = 0; i < 3; i += 1) {
+        const a = Math.PI + 0.4 + ((t * 0.9 * speed + i * 0.8) % 2.3);
+        g.strokeStyle = ['#ff2a6a', '#2affd0', '#ffe42a'][i]; g.lineWidth = 1.5;
+        g.beginPath(); g.moveTo(cx - 20 + i * 20, by - 6); g.lineTo(cx + Math.cos(a) * 30, by - 4 + Math.sin(a) * 30); g.stroke();
+      }
+      px(cx - 8, by - 14, 16, 10, '#0a0614'); text('LASER', cx, by - 30, '#2affd0', 5, 'center', '#2a1a4a');
+    } else {
+      // slide tower + ball pit
+      px(cx - 26, by - 44, 12, 44, '#4ab8ff'); px(cx - 28, by - 48, 16, 5, '#ff5a7a');
+      for (let i = 0; i < 16; i += 1) px(cx - 14 + i * 2, by - 40 + i * 2, 4, 3, '#ffd23c');
+      px(cx + 6, by - 12, 34, 12, '#2a6ad0'); px(cx + 6, by - 12, 34, 2, '#5a9af0');
+      for (let i = 0; i < 20; i += 1) px(cx + 8 + ((i * 7) % 30), by - 10 + ((i * 3 + Math.floor(t * 3)) % 7), 3, 3, RAINBOW[i % 6]);
     }
-    px(cx - 7, by - 12, 14, 12, '#3a4a68'); px(cx - 6, by - 11, 5, 11, '#7ab0e0'); px(cx + 1, by - 11, 5, 11, '#7ab0e0');
-    px(cx - 28, by - 2, 56, 2, P.stone[1]);
-    // rooftop flag in the company color
-    px(cx + 14, by - 74, 1, 16, P.ink); px(cx + 15, by - 74 + (Math.floor(f / 3) % 2), 10, 6, c);
-    text(isl.name.replace(' ISLAND', ''), cx, by - 66, c, 5, 'center', P.white);
+    // ride sign in the company color
+    g.font = '5px "Press Start 2P", monospace';
+    const label = `${z.name} ${RIDE_NAME[z.ride]}`;
+    const w = Math.ceil(g.measureText(label).width) + 8;
+    px(cx - w / 2 - 1, by - 74, w + 2, 10, P.ink); px(cx - w / 2, by - 73, w, 8, z.color);
+    text(label, cx, by - 72, P.white, 5, 'center', Sprites.shade(z.color, 0.5));
   }
 
+  const bannerRects = {};
   function drawIslandBanner(isl, f) {
     if (isl.id === 'main') return;
     const x = isl.c[0] * T + 8;
@@ -525,6 +613,7 @@
     px(x - w / 2 - 2, y - 2, w + 4, 16, P.ink);
     px(x - w / 2, y, w, 12, P.wood[2]); px(x - w / 2, y, w, 2, P.wood[3]);
     text(isl.name, x, y + 2, P.white, 8, 'center');
+    bannerRects[isl.id] = { x: x - w / 2 - 2, y: y - 2, w: w + 4, h: 16 };
     px(x - w / 2 + 3, y + 4, 4, 4, isl.color);
     px(x + w / 2 - 7, y + 4, 4, 4, isl.color);
   }
@@ -887,9 +976,8 @@
   function placeOf(j) {
     if (j.source === 'bot') return 'bots';
     if (j.status === 'needs_you' || j.status === 'done' || j.status === 'failed') return j.status;
-    const isl = ISLAND_OF[j.business];
-    if (isl) return `${isl}:${districtOf(j)}`;
-    return j.status === 'working' ? 'working' : 'follow_up';
+    const zone = ZONE_OF[j.business] || 'other';
+    return districtOf(j) === 'funpark' ? `funpark:${zone}` : `backrooms:${zone}`;
   }
   const isDot = (j) => (dotTarget === 'codex-voice' ? Boolean(j.meta && j.meta.agent === 'Dot') : j.id === dotTarget);
 
@@ -986,8 +1074,8 @@
       const dest = slot(place, i);
       let a = actors.get(id);
       if (!a) {
-        const start = ISLAND_OF[j.business] ? nodeXY(`${ISLAND_OF[j.business]}_P`) : nodeXY('HQ');
-        a = { id, kind: j.source === 'bot' ? 'bot' : 'job', x: firstLoad ? dest.x : start.x, y: firstLoad ? dest.y : start.y, path: [], node: firstLoad ? PLACES[place].node : ISLAND_OF[j.business] ? `${ISLAND_OF[j.business]}_P` : 'HQ', place, jobId: j.id, phase: Math.random() * 6 };
+        const start = nodeXY('HQ');
+        a = { id, kind: j.source === 'bot' ? 'bot' : 'job', x: firstLoad ? dest.x : start.x, y: firstLoad ? dest.y : start.y, path: [], node: firstLoad ? PLACES[place].node : 'HQ', place, jobId: j.id, phase: Math.random() * 6 };
         actors.set(id, a);
         if (!firstLoad) { say(`NEW  ${(j.title || '').slice(0, 34)}`, P.gold[3]); walkTo(a, PLACES[place].node, dest); }
       } else if (a.place !== place && !a.carriedBy) {
@@ -1060,17 +1148,17 @@
       seen.add(x.id);
       const realm = REALMS[x.name];
       const biz = businesses.find((b) => b.id === realm.business);
-      const isl = ISLAND_OF[realm.business];
+      const zone = realm.business !== '*' ? ZONE_OF[realm.business] : null;
       let a = actors.get(x.id);
       if (!a) {
-        const homeNode = isl ? `${isl}_office` : 'HQ';
+        const homeNode = zone ? `backrooms_${zone}` : 'HQ';
         const h = nodeXY(homeNode);
-        a = { id: x.id, kind: 'overlord', x: h.x - 30 + i * 8, y: h.y + 26, path: [], node: homeNode, place: isl ? `${isl}:office` : 'hq', phase: Math.random() * 6, pauseUntil: performance.now() / 1000 + 1 + i, log: [], cursor: i };
+        a = { id: x.id, kind: 'overlord', x: h.x - 30 + i * 8, y: h.y + 26, path: [], node: homeNode, place: zone ? `backrooms:${zone}` : 'hq', phase: Math.random() * 6, pauseUntil: performance.now() / 1000 + 1 + i, log: [], cursor: i };
         actors.set(x.id, a);
       }
       const cape = realm.grand ? '#f8d838' : realm.liaison ? '#d8a828' : (biz && biz.color) || '#9060d8';
       Object.assign(a, {
-        realm, lordName: x.name, short: realm.short, island: isl, businessName: biz ? biz.full || biz.name : realm.label, title: `${realm.label} · ${x.title}`, busy: x.busy,
+        realm, lordName: x.name, short: realm.short, zone, businessName: biz ? biz.full || biz.name : realm.label, title: `${realm.label} · ${x.title}`, busy: x.busy,
         spec: window.Sprites ? Sprites.specFor('analyst', x.id, { suit: realm.grand ? '#1a1a22' : '#2a2a3a', tie: cape, cape, hat: realm.grand ? 'crown' : undefined, prop: 'clipboard', scene: 'castle', bg: Sprites.shade(cape, 0.35), accent: cape, label: realm.label }) : null,
       });
     });
@@ -1179,9 +1267,10 @@
     for (let y = 0; y < ROWS; y += 1) {
       for (let x = 0; x < COLS; x += 1) {
         if (land(x, y)) {
+          const theme = ISLE[y][x];
+          if (theme === 'backrooms') { drawBackroomsTile(x, y); continue; }
+          if (theme === 'funpark') { if (FLOOR[y][x] && !isPath(x, y)) drawFloor(x, y, FLOOR[y][x]); else drawParkTile(x, y); continue; }
           drawGrass(x, y);
-          const isl = ISLANDS.find((i) => i.id === ISLE[y][x]);
-          if (isl && isl.tint) px(x * T, y * T, T, T, isl.tint);
           if (FLOOR[y][x]) drawFloor(x, y, FLOOR[y][x]);
           else if (isPath(x, y)) drawPath(x, y);
           else if (PLAZA[y][x]) drawPlaza(x, y);
@@ -1207,7 +1296,7 @@
     const k = Math.floor(t / cycle);
     const ph = (t % cycle) / 1.2;
     if (ph > 1) return;
-    const spots = [[2, 45], [124, 45], [64, 4], [64, 88], [38, 10], [90, 10], [38, 86], [90, 86], [60, 70]];
+    const spots = [[52, 20], [108, 20], [80, 6], [80, 84], [52, 74], [108, 74], [2, 46], [157, 46], [70, 72]];
     const [sx, sy] = spots[k % spots.length];
     const x = sx * T + ph * 24;
     const y = sy * T - Math.sin(ph * Math.PI) * 18;
@@ -1228,7 +1317,7 @@
   }
 
   /* ---------- camera ---------- */
-  const cam = { x: 64 * T, y: 46 * T, z: 1, tx: 64 * T, ty: 46 * T, tz: 1 };
+  const cam = { x: 80 * T, y: 46 * T, z: 1, tx: 80 * T, ty: 46 * T, tz: 1 };
   let cw = 800;
   let ch = 560;
   let dpr = 1;
@@ -1345,7 +1434,7 @@
     else targets = [...actors.values()].filter((x) => (x.kind === 'job' || x.kind === 'bot') && x.job && !x.carriedBy && (x.job.business === realmBiz || (realmBiz === 'apps' && x.job.business === 'syncstep')));
     targets.sort((x, y) => (y.status === 'needs_you') - (x.status === 'needs_you'));
     if (!targets.length) {
-      const nodes = a.island ? [`${a.island}_backrooms`, `${a.island}_office`, `${a.island}_funpark`] : Object.values(PLACES).map((p) => p.node);
+      const nodes = a.zone ? [`backrooms_${a.zone}`, `funpark_${a.zone}`, 'NY', 'HQ'] : Object.values(PLACES).map((p) => p.node);
       const n = nodes[(a.cursor += 1) % nodes.length];
       const d = nodeXY(n);
       walkTo(a, n, { x: d.x + 26, y: d.y + 2 });
@@ -1417,7 +1506,11 @@
     g.fillRect(Math.max(-64, tl.x - 64), Math.max(-64, tl.y - 64), Math.min(W + 128, br.x - tl.x + 128), Math.min(H + 128, br.y - tl.y + 128));
     g.drawImage(landLayer, 0, 0);
     const layers = [];
-    for (const d of DECOR) if (vis(d.x * T, d.y * T)) layers.push({ y: d.y * T + 15, draw: () => drawThemeDecor(d, f) });
+    for (const d of DECOR) {
+      if (!vis(d.x * T, d.y * T)) continue;
+      const th = ISLE[d.y][d.x];
+      layers.push({ y: d.y * T + 15, draw: th === 'backrooms' ? () => drawBackroomsDecor(d, f) : th === 'funpark' ? () => drawParkDecor(d, f) : () => drawThemeDecor(d, f) });
+    }
     for (const [id, p] of Object.entries(PLACES)) {
       if (!vis(p.door[0] * T, p.door[1] * T, 120)) continue;
       const isl = p.island && ISLANDS.find((i) => i.id === p.island);
@@ -1425,9 +1518,8 @@
       layers.push({ y: p.door[1] * T - 2, draw: () => {
         const cx = p.door[0] * T + 8;
         const by = p.door[1] * T;
-        if (p.kind === 'backrooms') drawBackrooms(cx, by, f, n);
-        else if (p.kind === 'funpark') drawFunpark(cx, by, f, n);
-        else if (p.kind === 'office') drawOffice(cx, by, f, isl, n);
+        if (p.kind === 'dept') drawDept(cx, by, f, p.zone, n);
+        else if (p.kind === 'ride') drawRide(cx, by, f, p.zone, n);
         else drawPlace(id, p, f, n);
       } });
     }
@@ -1470,6 +1562,7 @@
     }
     if (best) return best;
     for (const [id, r] of Object.entries(signRects)) if (x >= r.x && x <= r.x + r.w && y >= r.y && y <= r.y + r.h) return { sign: id };
+    for (const [id, r] of Object.entries(bannerRects)) if (x >= r.x && x <= r.x + r.w && y >= r.y && y <= r.y + r.h) return { island: id };
     if (x >= clockRect.x && x <= clockRect.x + clockRect.w && y >= clockRect.y && y <= clockRect.y + clockRect.h) return { sign: 'clock' };
     for (const [id, p] of Object.entries(PLACES)) {
       const cx = p.door[0] * T + 8;
@@ -1483,6 +1576,7 @@
   function describe(sel) {
     if (!sel) return null;
     if (sel.type === 'place') return { type: 'place', id: sel.id };
+    if (sel.type === 'island') return { type: 'island', id: sel.id };
     const a = actors.get(sel.id);
     if (!a) return null;
     if (a.kind === 'job' || a.kind === 'bot') return { type: 'job', id: a.jobId };
@@ -1500,6 +1594,7 @@
     else if (sel && (sel.type === 'crew' || sel.type === 'overlord')) selected = { type: 'actor', id: sel.id };
     else if (sel && sel.type === 'dot') selected = { type: 'actor', id: 'agent:dot' };
     else if (sel && sel.type === 'place') selected = { type: 'place', id: sel.id };
+    else if (sel && sel.type === 'island') { selected = sel; frameIsland(sel.id); }
     else selected = null;
     // bring the selection into view
     const a = selected && selected.type === 'actor' && actors.get(selected.id);
@@ -1548,6 +1643,7 @@
         return;
       }
       const h = hit(sx, sy);
+      if (h && h.island) return enterIsland(h.island);
       selected = !h ? null : h.sign ? { type: 'place', id: h.sign } : { type: 'actor', id: h.id };
       if (opts.onSelect) opts.onSelect(describe(selected));
     });
@@ -1568,7 +1664,7 @@
       const r = cv.getBoundingClientRect();
       const w = toWorld(ev.clientX - r.left, ev.clientY - r.top);
       const isl = ISLE[Math.floor(w.y / T)] && ISLE[Math.floor(w.y / T)][Math.floor(w.x / T)];
-      if (isl) frameIsland(isl);
+      if (isl) enterIsland(isl);
     });
     cv.tabIndex = 0;
     cv.addEventListener('keydown', (ev) => {
@@ -1588,6 +1684,13 @@
     });
   }
 
+  /** Fly into an island and show its directory in the sidebar. */
+  function enterIsland(id) {
+    frameIsland(id);
+    selected = { type: 'island', id };
+    if (opts.onSelect) opts.onSelect({ type: 'island', id });
+  }
+
   const start = () => { if (running || !cv) return; running = true; lastT = 0; requestAnimationFrame(render); };
   const stop = () => { running = false; };
 
@@ -1603,5 +1706,5 @@
     return [...actors.values()].filter((a) => a.kind === 'overlord' || a.kind === 'agent' || a.kind === 'crew' || a.kind === 'dot' || a.kind === 'mech').map((a) => ({ id: a.id, kind: a.kind, spec: specOf(a), name: a.kind === 'overlord' ? a.realm.label : a.kind === 'mech' ? 'Watchdog Mech' : (a.title || '').split(' · ')[0].split(' (')[0], sel: describe({ type: 'actor', id: a.id }) }));
   }
 
-  window.Arcade = { mount, update, start, stop, say, select, info, team, camera, placeOf, PLACES, ISLANDS, _actors: actors };
+  window.Arcade = { mount, update, start, stop, say, select, info, team, camera, placeOf, enterIsland, PLACES, ISLANDS, ZONES, _actors: actors };
 })();

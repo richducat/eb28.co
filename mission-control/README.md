@@ -133,10 +133,12 @@ buttons and minimap.
 
 - **Main island:** the status landmarks (Needs You castle, Workshop, Follow-up post office,
   Goal, Ghost House), HQ for the workforce, the clock tower, the Bot Fortress and Hermes Village.
-- **Company islands** (TYFYS, EB28, Inspection Rent, Apps) joined by bridges, each with three
-  districts: the **Backrooms** (coders: Claude Code, Codex, PRs), the **Fun Park** (content,
-  social, creative) and the company **Office**. Agents work on their company's island and walk
-  across to the main island when they need you, finish or fail.
+- **The Backrooms** (west): one big liminal-office island where all coders and office work
+  live, with a department per company (TYFYS, EB28, Inspection, Apps, General).
+- **The Fun Park** (east): one big theme-park island for content, social and creative work,
+  with a ride per company (coaster, ferris wheel, carousel, laser tag, slides).
+- Agents walk the bridges to the main island when they need you, finish or fail. Click an
+  island's sign (or double-click the island) to fly in and get its directory in the sidebar.
 - **Overlords:** each Hermes chief-of-staff profile patrols its realm and checks in on every job;
   the crowned Grand Chief of Staff makes rounds of the overlords.
 - **The Watchdog** is a war mech: it hauls failed agents to the Ghost House and stomps over to

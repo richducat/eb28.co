@@ -744,6 +744,23 @@ function renderSide() {
       <h2>HANDED TO CODEX</h2>${mine.length ? `<ul>${mine.map(jobLi).join('')}</ul>` : '<div class="empty">No voice-started threads in the last day.</div>'}`;
     return;
   }
+  if (sel.type === 'island') {
+    const isl = (window.Arcade.ISLANDS || []).find((i) => i.id === sel.id);
+    const P = window.Arcade.PLACES;
+    const places = Object.entries(P).filter(([, p]) => (sel.id === 'main' ? !p.island : p.island === sel.id));
+    const jobsAt = (id) => allJobs().filter((j) => placeOfJob(j) === id);
+    const total = places.reduce((n, [id]) => n + jobsAt(id).length, 0);
+    const intro = sel.id === 'backrooms' ? 'Where the coders and office work live: one department per company.' : sel.id === 'funpark' ? 'Content, social and creative work: one ride per company.' : 'Status landmarks: anyone who needs you, finished or failed comes here.';
+    el.innerHTML = `${back}<h2>${esc(isl ? isl.name : sel.id)}</h2><div class="why">${intro}</div>
+      <div class="doing"><span class="k">On this island</span>${total} agents working here</div>
+      ${places.map(([id, p]) => {
+        const list = jobsAt(id);
+        const urgent = list.filter((j) => j.status === 'needs_you' || j.status === 'failed').length;
+        return `<div class="isl-row" data-side-place="${esc(id)}"><b>${esc(p.name)}</b><span class="n">${list.length}${urgent ? ` · <span style="color:#ff7a7a">${urgent} need you</span>` : ''}</span>
+          ${list.length ? `<ul>${list.slice(0, 4).map(jobLi).join('')}${list.length > 4 ? `<li class="sub">+${list.length - 4} more</li>` : ''}</ul>` : ''}</div>`;
+      }).join('')}`;
+    return;
+  }
   if (sel.type === 'overlord') {
     const info = window.Arcade.info(sel);
     const m = arcade.crew.find((x) => x.id === sel.id);
@@ -780,13 +797,14 @@ function renderSide() {
 const refreshViews = () => (state.tab === 'home' ? loadHome() : state.tab === 'arcade' ? loadArcade() : loadBoard());
 
 document.addEventListener('click', async (ev) => {
-  const t = ev.target.closest('[data-side-realm],[data-side-clear],[data-side-select],[data-side-act],[data-side-run],[data-side-copy],[data-side-path],[data-side-url],[data-side-drawer],[data-side-decide],[data-side-run-agent],[data-side-agent-toggle],[data-side-agent],[data-side-crew],[data-side-dot]');
+  const t = ev.target.closest('[data-side-place],[data-side-realm],[data-side-clear],[data-side-select],[data-side-act],[data-side-run],[data-side-copy],[data-side-path],[data-side-url],[data-side-drawer],[data-side-decide],[data-side-run-agent],[data-side-agent-toggle],[data-side-agent],[data-side-crew],[data-side-dot]');
   if (!t) return;
   const d = t.dataset;
   const job = (id) => allJobs().concat(state.board.snoozed || []).find((x) => x.id === id);
   try {
     if ('sideClear' in d) return selectInArcade(null);
     if (d.sideRealm) { state.biz = d.sideRealm; return showTab('home'); }
+    if (d.sidePlace) return selectInArcade({ type: 'place', id: d.sidePlace });
     if (d.sideSelect) return selectInArcade({ type: 'job', id: d.sideSelect });
     if (d.sideAgent) return selectInArcade({ type: 'agent', id: d.sideAgent });
     if (d.sideCrew) return selectInArcade({ type: 'crew', id: d.sideCrew });

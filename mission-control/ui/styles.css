@@ -253,3 +253,7 @@ h2.sec { font-size: 13px; text-transform: uppercase; letter-spacing: .07em; colo
 .cam-ctrl button { background: rgba(16,16,24,.82); color: #f0ecff; border: 1px solid #4a3f86; border-radius: 6px; padding: 4px 8px; font-size: 12px; }
 .cam-ctrl button:hover { background: #3c3370; }
 .cam-ctrl .sep { width: 8px; }
+.arcade-side .isl-row { background: #1b1633; border-radius: 6px; padding: 8px 10px; margin: 6px 0; cursor: pointer; }
+.arcade-side .isl-row:hover { background: #241e40; }
+.arcade-side .isl-row .n { float: right; color: #9d93c2; font-size: 12px; }
+.arcade-side .isl-row ul { margin: 6px 0 0; }

@@ -56,6 +56,16 @@ export async function activeModel() {
  * Ask Claude for a short answer. Cached by `key` so the same question is never billed twice.
  * Returns null when Claude is unavailable or the call fails, so callers fall back to heuristics.
  */
+/** Cache an answer, keeping only the newest 800 so the file stays small. */
+function remember(key, entry) {
+  store.update('llm-cache', {}, (all) => {
+    const next = { ...all, [key]: entry };
+    const keys = Object.keys(next);
+    if (keys.length > 800) for (const k of keys.slice(0, keys.length - 800)) delete next[k];
+    return next;
+  });
+}
+
 export async function ask({ key, system, prompt, maxTokens = 600, effort = 'low' }) {
   const cache = store.get('llm-cache', {});
   if (key && cache[key]) return cache[key].text;
@@ -63,7 +73,7 @@ export async function ask({ key, system, prompt, maxTokens = 600, effort = 'low'
   if (!preferClaude()) {
     const text = await localComplete(prompt, { system, maxTokens: Math.max(maxTokens, 300) });
     if (text) {
-      if (key) store.update('llm-cache', {}, (all) => ({ ...all, [key]: { text, at: new Date().toISOString(), model: 'local' } }));
+      if (key) remember(key, { text, at: new Date().toISOString(), model: 'local' });
       return text;
     }
   }
@@ -86,12 +96,7 @@ export async function ask({ key, system, prompt, maxTokens = 600, effort = 'low'
       .join('\n')
       .trim();
     if (key) {
-      store.update('llm-cache', {}, (all) => {
-        const next = { ...all, [key]: { text, at: new Date().toISOString() } };
-        const keys = Object.keys(next);
-        if (keys.length > 800) for (const k of keys.slice(0, keys.length - 800)) delete next[k];
-        return next;
-      });
+      remember(key, { text, at: new Date().toISOString() });
     }
     return text;
   } catch (err) {

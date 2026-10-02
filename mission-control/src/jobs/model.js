@@ -20,6 +20,7 @@ export const SOURCES = {
   automation: { label: 'Automation', color: '#0891b2' },
   bot: { label: 'Bots & agents', color: '#111827' },
   manual: { label: 'Tracked', color: '#64748b' },
+  trading: { label: 'Trading', color: '#d4af37' },
 };
 
 const QUESTION_PATTERNS = [
@@ -167,6 +168,8 @@ export function makeJob(partial) {
     meta: partial.meta || {},
     tags: partial.tags || [],
   };
+  // a source that knows its business (e.g. trading) can say so; otherwise the board infers it
+  if (partial.business) job.business = partial.business;
   return job;
 }
 

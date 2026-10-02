@@ -12,10 +12,11 @@ import * as opsRunner from './agents/ops-runner.js';
 import * as prSteward from './agents/pr-steward.js';
 import * as janitor from './agents/janitor.js';
 import * as botWatchdog from './agents/bot-watchdog.js';
+import * as tradingWatch from './agents/trading-watch.js';
 import { restartBot } from './bot-control.js';
 import { loadRegistry as loadBots, saveRegistry as saveBots } from '../sources/bots.js';
 
-export const AGENTS = [triage, botWatchdog, opsRunner, followUp, prSteward, reporter, scout, janitor];
+export const AGENTS = [triage, botWatchdog, opsRunner, followUp, prSteward, reporter, scout, janitor, tradingWatch];
 
 /**
  * The workforce: a single in-process scheduler that wakes every `tick` ms, rebuilds the

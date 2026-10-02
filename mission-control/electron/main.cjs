@@ -1,5 +1,5 @@
 /* Electron shell: starts the local server in-process, opens the window, tray, and native notifications. */
-const { app, BrowserWindow, Tray, Menu, Notification, nativeImage, shell, screen } = require('electron');
+const { app, BrowserWindow, Tray, Menu, Notification, nativeImage, shell, screen, systemPreferences } = require('electron');
 const path = require('node:path');
 
 let win = null;
@@ -12,7 +12,11 @@ async function boot() {
   const { Orchestrator } = await import(path.join(__dirname, '..', 'src', 'workforce', 'orchestrator.js'));
   const orchestrator = new Orchestrator();
   server = createServer({
+    // Touch ID gate for the Trading tab (disengaging the kill switch, risky approvals).
+    // Not available in `npm run web`, so those actions are refused there.
+    confirmOwner: systemPreferences && systemPreferences.canPromptTouchID && systemPreferences.canPromptTouchID() ? (reason) => systemPreferences.promptTouchID(reason) : null,
     orchestrator,
+    mobile: true,
     nativeNotify: ({ title, body }) => {
       if (Notification.isSupported()) {
         const n = new Notification({ title, body });
@@ -105,7 +109,12 @@ function createTray() {
   tray.on('click', () => win && (win.isVisible() ? win.hide() : win.show()));
 }
 
+// One Mission Control at a time: a second copy would run a second set of agents on the same state.
+if (!app.requestSingleInstanceLock()) app.quit();
+app.on('second-instance', () => { if (win) { win.show(); win.focus(); } });
+
 app.whenReady().then(async () => {
+  if (!app.hasSingleInstanceLock()) return;
   await boot();
   createWindow();
   createTray();

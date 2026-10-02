@@ -31,6 +31,20 @@ npm test
 
 State lives in `~/.eb28-mission-control/` (override with `MC_HOME`). Nothing leaves your machine unless you add credentials.
 
+## Today, Calendar and Tasks
+
+- **Today** is the home page: focus for the day (✨ Suggest asks the free local model), your
+  schedule from Google Calendar with a live "now" line, what's due (overdue, today, tomorrow,
+  next 7 days, later), what needs you, daily habit tracking with streaks, notes, and a
+  tomorrow preview. ‹ › moves between days.
+- **Calendar** shows week, month and agenda views across the calendars listed in
+  `~/.eb28-mission-control/calendar.json` (read-only, through Hermes's `gapi-ro` helper),
+  with filters per calendar, a Routines toggle for repeating events, and tasks on their due days.
+- **Tasks** take plain English: `Call the VA about John tomorrow 3pm #tyfys !` sets the date,
+  time, business and importance. Snoozed jobs, follow-ups, TYFYS overdue cases and open trading
+  safety items also show up in "what's due".
+- Keys: `/` search, `n` new task, `c` ask your chief of staff, `r` refresh.
+
 ## The board
 
 | Column | Meaning |
@@ -151,9 +165,53 @@ buttons and minimap.
   bots that are down.
 - Characters are original pixel archetypes in the style of the Fund Manager agents grid; Grok bots
   are aliens and the Hermes gateway is a gold messenger. Click anyone for a portrait card.
+- **Wall Street** (north): a New York trading island reached by a bridge from the main island:
+  the NYSE facade with its columns and flag, an LED ticker with your watched totals, the Charging
+  Bull, yellow cabs, hot-dog carts and steam vents. Every trading desk (bot or agent) stands on
+  the floor in a jacket colored by its kill-switch state, and **the opening bell is the master kill
+  switch**: green "HALTED · SAFE" while trading is off, flashing red if it is ever on. A
+  compliance mech patrols the island. Nothing on this island can trade.
 
 **Dot (OG Kush)** wears the leaf hat. By default Dot is any Codex thread handed over by voice
 (`<realtime_delegation>`). Pick a different bot or Hermes profile with "Who is Dot?" on the tab.
+
+## Trading (watch-only)
+
+The **Trading** tab and Wall Street island show trading bots, wallets and prediction-market
+positions. They are **read-only by design**:
+
+- No buy, sell, swap, send, redeem or "enable live" control exists. Wallets are added by public
+  address only; Mission Control never holds private keys or seed phrases and never signs anything.
+- **Kill switches** are visible and ON by default. A desk whose state can't be confirmed counts as
+  unsafe. Turning the master switch off needs Touch ID plus a typed phrase and is refused in a
+  plain browser. Turning it back on is one click (also from the bell's sidebar card).
+- Trading bots are on a denylist in `src/workforce/bot-control.js`: Mission Control and the
+  watchdog will not restart them.
+- Data comes from public Solana/Polygon RPCs (read methods only, allowlisted), the public
+  Polymarket data API, Jupiter prices, and local bot ledgers opened read-only.
+- Secrets (RPC URLs with keys, API keys) live only in the macOS Keychain under the service
+  `co.eb28.missioncontrol.trading`; the tab shows which names are present and the command to add
+  one. They never appear in JSON state, logs, events or error messages.
+- Personal settings (watched addresses, account names, checklist) live in
+  `~/.eb28-mission-control/trading.json`, never in this repo.
+- The approvals queue only **records** decisions about risky changes (Touch ID + typed phrase for
+  risky ones); it executes nothing.
+
+## iPhone app
+
+`ios/` is a SwiftUI app (iOS 17+) for answering agents, chatting with a chief of staff,
+watching trading and the TYFYS pipeline from your phone.
+
+- **Pairing:** on the Mac click **📱 Phone**, turn on phone access and scan the code with the app.
+  Phone access is off until you turn it on, works on the same Wi-Fi, and is HTTPS with a
+  certificate the phone pins from the code, plus a pairing token (kept in the iPhone Keychain).
+  **New code** unpairs every phone.
+- **What the phone can do** (`src/mobile.js` allowlist): read the board, answer and approve
+  agents, Hermes decisions, chief-of-staff chat, mark done / snooze, restart a non-trading bot,
+  run an automation, and turn the trading kill switch **on**. It can never turn the kill
+  switch off, approve trading changes, change settings, or open things on the Mac.
+- **Build:** `brew install xcodegen`, then `cd ios && xcodegen generate` and open the project.
+  `ios/scripts/testflight.sh` archives and uploads to TestFlight with an App Store Connect API key.
 
 ## More
 

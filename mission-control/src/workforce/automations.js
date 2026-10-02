@@ -31,7 +31,16 @@ export function loadRegistry() {
   const custom = store.get('custom-automations', []);
   const state = store.get('automation-state', {});
   const merged = [...list, ...custom.filter((c) => !list.some((a) => a.id === c.id))];
-  return merged.map((a) => validate({ ...a, ...(state[a.id] || {}) }));
+  const out = [];
+  for (const a of merged) {
+    try {
+      out.push(validate({ ...a, ...(state[a.id] || {}) }));
+    } catch (err) {
+      // a bad saved override: fall back to the entry as defined; skip it only if that is bad too
+      try { out.push(validate(a)); } catch { console.warn('automation skipped:', err.message); }
+    }
+  }
+  return out;
 }
 
 export function validate(a) {

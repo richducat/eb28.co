@@ -74,7 +74,7 @@ test('botToJob carries provider, restart, and log into the job', () => {
 
 test('bot form input is cleaned into a bots.json entry', () => {
   const e = cleanBotEntry({ name: ' Dot ', provider: 'Dot', restart: 'pm2 restart dot', expected: 'true', autoRestart: false, log: '', junk: 'x' });
-  assert.deepEqual(e, { name: 'Dot', provider: 'dot', restart: ['pm2', 'restart', 'dot'], expected: true });
+  assert.deepEqual(e, { name: 'Dot', provider: 'dot', restart: ['pm2', 'restart', 'dot'], expected: true, autoRestart: false });
 });
 
 test('restart refuses binaries outside the allow-list', async () => {

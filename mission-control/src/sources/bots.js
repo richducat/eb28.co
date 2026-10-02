@@ -318,8 +318,9 @@ async function fromRegistryEntry(entry, discovered, psRows) {
   const match = discovered.find((d) => d.key === entry.match || d.name === entry.name || d.name === entry.match);
   const base = match ? { ...match } : { key: `registry:${entry.id || entry.name}`, name: entry.name, manager: 'registry', state: 'unknown' };
   if (!match && entry.process) {
-    const re = new RegExp(entry.process, 'i');
-    const hit = psRows.find((r) => re.test(r.command));
+    let re = null;
+    try { re = new RegExp(entry.process, 'i'); } catch { base.reason = `Bad "Process match" pattern: ${entry.process}`; }
+    const hit = re && psRows.find((r) => re.test(r.command));
     base.state = hit ? 'running' : 'stopped';
     if (hit) base.pid = hit.pid;
   }

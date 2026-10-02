@@ -36,3 +36,13 @@ test('automation with a missing binary fails with a clear message', async () => 
   assert.equal(run.ok, false);
   assert.match(run.error, /not found on PATH/);
 });
+
+test('checkWrite: only JSON writes from Mission Control itself are accepted', async () => {
+  const { checkWrite } = await import('../src/server.js');
+  const req = (headers) => ({ socket: { localPort: 47831 }, headers });
+  assert.equal(checkWrite(req({ host: '127.0.0.1:47831', 'content-type': 'application/json', origin: 'http://127.0.0.1:47831' })).ok, true);
+  assert.equal(checkWrite(req({ host: 'localhost:47831', 'content-type': 'application/json' })).ok, true);
+  assert.equal(checkWrite(req({ host: '127.0.0.1:47831', 'content-type': 'text/plain' })).ok, false); // simple cross-site POST
+  assert.equal(checkWrite(req({ host: '127.0.0.1:47831', 'content-type': 'application/json', origin: 'https://evil.example' })).ok, false);
+  assert.equal(checkWrite(req({ host: 'evil.example:47831', 'content-type': 'application/json' })).ok, false); // DNS rebinding
+});

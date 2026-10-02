@@ -2,7 +2,9 @@
 const $ = (sel, root = document) => root.querySelector(sel);
 const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
 const api = async (method, path, body) => {
-  const res = await fetch(path, { method, headers: body ? { 'Content-Type': 'application/json' } : {}, body: body ? JSON.stringify(body) : undefined });
+  // writes are always JSON: the server refuses anything else (see checkWrite in server.js)
+  const write = method !== 'GET';
+  const res = await fetch(path, { method, headers: write ? { 'Content-Type': 'application/json' } : {}, body: write ? JSON.stringify(body || {}) : undefined });
   const data = await res.json();
   if (!res.ok) throw new Error(data.error || res.statusText);
   return data;
@@ -19,7 +21,7 @@ const ago = (iso) => {
 };
 const STATUS_LABEL = { needs_you: 'Needs you', working: 'Working', follow_up: 'Follow up', done: 'Done', failed: 'Failed' };
 
-const state = { board: null, workforce: null, automations: [], filter: new Set(), search: '', open: null, tab: 'home', biz: 'all' };
+const state = { board: null, workforce: null, automations: [], filter: new Set(), search: '', open: null, tab: 'today', biz: 'all' };
 
 /* ---------- toasts ---------- */
 function toast(text, kind = '') {
@@ -34,6 +36,9 @@ function toast(text, kind = '') {
 async function loadBoard() {
   state.board = await api('GET', '/api/board');
   chime.check(state.board);
+  const needs = state.board.columns.find((c) => c.id === 'needs_you');
+  const pillHome = $('#pill-home');
+  if (pillHome && needs) { pillHome.hidden = !needs.jobs.length; pillHome.textContent = needs.jobs.length; }
   if (state.tab === 'home') renderHome();
   renderBoard();
 }
@@ -309,6 +314,8 @@ function connectEvents() {
     const e = JSON.parse(ev.data);
     if (e.type === 'ask:suggested') { delete home.asks[e.jobId]; if (state.tab === 'home') hydrateAsks(queueItems()); }
     if (e.type === 'reply:progress' || e.type === 'reply:done') onReplyEvent(e);
+    if (e.type === 'trading:refresh' && state.tab === 'trading') window.Trading.load();
+    if (e.type === 'trading:refresh' && state.tab === 'arcade') api('GET', '/api/trading').then((s) => { arcade.trading = s; window.Arcade.setTrading(s); }).catch(() => {});
     if (e.type === 'cos:done') { toast(`Chief of Staff replied: ${e.chat.a.slice(0, 80)}`, e.chat.status === 'done' ? 'ok' : 'bad'); loadCos(); }
     if (e.type === 'board:refresh') loadBoard().then(() => { if (state.tab === 'arcade') loadArcade(); });
     if (e.type === 'job:transition') toast(`${e.title.slice(0, 70)} → ${STATUS_LABEL[e.to] || e.to}`, e.to === 'failed' ? 'bad' : e.to === 'needs_you' ? 'you' : 'ok');
@@ -323,12 +330,29 @@ function connectEvents() {
 }
 
 /* ---------- wiring ---------- */
+const PAGES = {
+  home: ['Inbox', 'Answer, approve or unblock your agents. Everything waiting on you is here.'],
+  tyfys: ['TYFYS', 'Thank You For Your Service · Zoho pipeline'],
+  trading: ['Trading', 'Watch-only. Nothing here can buy, sell or move funds.'],
+  board: ['Board', 'Every job across Claude, Codex, Hermes, bots and automations'],
+  arcade: ['Arcade', 'Your whole operation as a living map'],
+  bots: ['Bots', 'Always-on bots and agents'],
+  workforce: ['Workforce', 'Your background agents and what they want approved'],
+  automations: ['Automations', 'Scheduled jobs and one-click runs'],
+  briefing: ['Briefing', 'Your latest written briefing'],
+};
 function showTab(id) {
   state.tab = id;
   $$('#tabs button').forEach((b) => b.classList.toggle('active', b.dataset.tab === id));
   $$('.tab').forEach((t) => t.classList.toggle('active', t.id === `tab-${id}`));
+  if (PAGES[id]) window.Planner.setTitle(...PAGES[id]);
+  document.querySelector('main').scrollTop = 0;
+  if (id === 'today') window.Planner.loadToday().catch((e) => toast(e.message, 'bad'));
+  if (id === 'calendar') window.Planner.loadCalendar().catch((e) => toast(e.message, 'bad'));
+  if (id === 'tasks') window.Planner.loadTasks().catch((e) => toast(e.message, 'bad'));
   if (id === 'home') loadHome();
   if (id === 'tyfys') loadTyfys();
+  if (id === 'trading') window.Trading.load();
   if (id === 'workforce') loadWorkforce();
   if (id === 'bots') loadBots();
   if (id === 'automations') loadAutomations();
@@ -351,6 +375,7 @@ async function loadArcade() {
     api('GET', '/api/dot').catch(() => ({ target: 'codex-voice' })),
     api('GET', '/api/automations').catch(() => []),
   ]);
+  api('GET', '/api/trading').then((s) => { arcade.trading = s; window.Arcade.setTrading(s); if (arcade.sel && (arcade.sel.type === 'trader' || ['nyse', 'bell'].includes(arcade.sel.id))) renderSide(); }).catch(() => {});
   state.board = board;
   state.workforce = workforce;
   Object.assign(arcade, { crew, dot, automations });
@@ -581,6 +606,9 @@ document.addEventListener('click', async (ev) => {
 });
 
 function renderHome() {
+  return window.keepTyping($('#queue'), paintHome);
+}
+function paintHome() {
   if (!state.board) return;
   const all = queueItems();
   const items = state.biz === 'all' ? all : all.filter((x) => x.business === state.biz);
@@ -815,6 +843,9 @@ function portraitHtml(sel, name, role, big = true) {
 }
 
 function renderSide() {
+  return window.keepTyping($('#arcade-side'), paintSide);
+}
+function paintSide() {
   const el = $('#arcade-side');
   if (!el || !state.board) return;
   const sel = arcade.sel;
@@ -917,6 +948,10 @@ function renderSide() {
       <div class="btns">${btn('Enter this island', `data-side-island="${esc(info.island)}"`, 'go')}</div>`;
     return;
   }
+  if (sel.type === 'trader' || (sel.type === 'place' && (sel.id === 'nyse' || sel.id === 'bell'))) {
+    el.innerHTML = back + wallStreetSide(sel);
+    return;
+  }
   if (sel.type === 'place' && sel.id === 'fuel') {
     el.innerHTML = `${back}<h2>FUEL DEPOT</h2><div class="why">How much of each AI's allowance is left. Background thinking in Mission Control runs on the free local model, so it never touches these.</div><div class="fuel-side">${fuelRows(fuel.data)}</div>`;
     loadUsage().then(() => { if (arcade.sel && arcade.sel.id === 'fuel') $('#arcade-side .fuel-side').innerHTML = fuelRows(fuel.data); });
@@ -938,7 +973,7 @@ function renderSide() {
     const places = Object.entries(P).filter(([, p]) => (sel.id === 'main' ? !p.island : p.island === sel.id));
     const jobsAt = (id) => allJobs().filter((j) => placeOfJob(j) === id);
     const total = places.reduce((n, [id]) => n + jobsAt(id).length, 0);
-    const intro = sel.id === 'backrooms' ? 'Where the coders and office work live: one department per company.' : sel.id === 'funpark' ? 'One ride per app. Anyone working on an app rides it; social and creative work is at the Content Studio.' : sel.id === 'cyber' ? 'The machine city: the Bot Fortress, the mech hangar, and the Eye on its golden pyramid watching every island.' : 'Status landmarks: anyone who needs you, finished or failed comes here.';
+    const intro = sel.id === 'wallst' ? 'The trading floor. Every trading bot and agent works here, watch-only: nothing on this island can buy, sell or move funds. The bell is the master kill switch.' : sel.id === 'backrooms' ? 'Where the coders and office work live: one department per company.' : sel.id === 'funpark' ? 'One ride per app. Anyone working on an app rides it; social and creative work is at the Content Studio.' : sel.id === 'cyber' ? 'The machine city: the Bot Fortress, the mech hangar, and the Eye on its golden pyramid watching every island.' : 'Status landmarks: anyone who needs you, finished or failed comes here.';
     el.innerHTML = `${back}<h2>${esc(isl ? isl.name : sel.id)}</h2><div class="why">${intro}</div>
       <div class="doing"><span class="k">On this island</span>${total} agents working here</div>
       ${places.map(([id, p]) => {
@@ -982,15 +1017,94 @@ function renderSide() {
   }
 }
 
-const refreshViews = () => (state.tab === 'home' ? loadHome() : state.tab === 'arcade' ? loadArcade() : loadBoard());
+/** Wall Street sidebar: a trader's desk, the trading floor, or the bell (the master kill switch). */
+const DESK_STATE = { safe: '🟢 Halted (safe)', unknown: '🟡 Unknown, treated as unsafe', unsafe: '🔴 Live / unsafe' };
+function wallStreetSide(sel) {
+  const s = arcade.trading;
+  if (!s) return '<div class="empty">Loading the trading floor…</div>';
+  const usd = (n) => (n == null ? '—' : `${n < 0 ? '−' : ''}$${Math.abs(n).toLocaleString(undefined, { maximumFractionDigits: 2 })}`);
+  const ks = s.killSwitch || {};
+  const desks = ks.projects || [];
+  const open = () => btn('📈 Open the Trading tab', 'data-side-tab="trading"', 'go');
+  const deskRow = (d) => `<li>${esc(DESK_STATE[d.state] || d.state)} · <b>${esc(d.name)}</b><span class="sub">${esc(d.detail || '')}</span></li>`;
+  if (sel.type === 'trader') {
+    const d = desks.find((x) => x.id === sel.id);
+    if (!d) return '<div class="empty">This desk has left the floor.</div>';
+    const p = (s.projects || {})[d.id] || {};
+    const extra = [];
+    if (p.ledger) extra.push(`Ledger: ${p.ledger.intents ?? 0} intents · ${p.ledger.orders ?? 0} orders · ${p.ledger.fills ?? 0} fills`);
+    if (p.lanes) extra.push(`${p.lanes.length} lanes configured`);
+    if (p.version) extra.push(`Version ${p.version}`);
+    if (d.agents && d.agents.length) extra.push(`Agents: ${d.agents.map((a) => (typeof a === 'string' ? a : `${a.name} (${a.state})`)).join(', ')}`);
+    return `<h2>${esc(d.name.toUpperCase())}</h2><div class="chips"><span class="chip">${esc(DESK_STATE[d.state] || d.state)}</span><span class="chip">👁 watch-only</span></div>
+      <div class="why">${esc(d.detail || '')}</div>${d.alarm ? '<div class="doing" style="border-color:#e8434f"><span class="k">Alarm</span>This desk is not confirmed safe. Check it in the Trading tab.</div>' : ''}
+      ${extra.length ? `<div class="meta">${extra.map(esc).join('<br>')}</div>` : ''}
+      <div class="btns">${open()}</div>`;
+  }
+  if (sel.id === 'bell') {
+    return `<h2>THE BELL · MASTER KILL SWITCH</h2>
+      <div class="chips"><span class="chip ${ks.master ? '' : 'working'}">${ks.master ? '🟢 ON: all trading halted' : '🔴 OFF'}</span>${ks.allSafe ? '<span class="chip">every desk safe</span>' : `<span class="chip">${ks.unsafeCount || 0} desk(s) not confirmed safe</span>`}</div>
+      <div class="why">${ks.master ? 'The bell is green: Mission Control will not let anything trade. Turning it off needs Touch ID and a typed phrase, in the Trading tab.' : 'The kill switch is OFF. Turn it back on right away unless you meant this.'}</div>
+      <ul>${desks.map(deskRow).join('')}</ul>
+      <div class="btns">${ks.master ? '' : btn('🛑 Halt everything now', 'data-side-halt', 'go')}${open()}</div>`;
+  }
+  const poly = (s.polymarket || []).filter((p) => p.ok);
+  return `<h2>NYSE · TRADING FLOOR</h2><div class="why">Watch-only. Prices and balances are read from public chain data and your local bot ledgers; nothing here can place an order.</div>
+    <div class="doing"><span class="k">Watched value</span>${usd(s.totals && s.totals.usd)} · P&amp;L ${usd(s.totals && s.totals.pnl)}</div>
+    <h2>WALLETS</h2><ul>${(s.wallets || []).map((w) => `<li>${w.ok ? '👁' : '⚠️'} <b>${esc(w.label || w.chain)}</b> <b style="float:right">${usd(w.usd)}</b><span class="sub">${esc(w.chain)}${w.role ? ` · ${esc(w.role)}` : ''}</span></li>`).join('') || '<div class="empty">No wallets watched yet.</div>'}</ul>
+    ${poly.length ? `<h2>POLYMARKET</h2><ul>${poly.map((p) => `<li>${esc(p.wallet)} <b style="float:right">${usd(p.cashPnl)}</b><span class="sub">${p.open} open of ${p.count}${p.lastTradeAt ? ` · last trade ${ago(p.lastTradeAt)}` : ''}</span></li>`).join('')}</ul>` : ''}
+    <h2>DESKS</h2><ul>${desks.map(deskRow).join('')}</ul>
+    <div class="btns">${open()}</div>`;
+}
+
+/* ---------- phone pairing ---------- */
+async function openPhone() {
+  $('#phone-dialog').showModal();
+  paintPhone(await api('GET', '/api/mobile'));
+}
+function paintPhone(m) {
+  const el = $('#phone-body');
+  if (!m.enabled) {
+    el.innerHTML = `<p class="muted">Turn this on to answer agents, chat with your chief of staff, and watch trading from the Mission Control iPhone app while you're on the same Wi-Fi as this Mac.</p>
+      <ul class="muted"><li>Encrypted, and only a phone that scanned your code can connect.</li><li>The phone can turn the trading kill switch <b>on</b>, never off.</li><li>Turn it off here any time.</li></ul>
+      <menu><button class="primary" data-phone="on">Turn on phone access</button></menu>`;
+    return;
+  }
+  let qr = '';
+  try {
+    const q = window.qrcode(0, 'M');
+    q.addData(m.pairing);
+    q.make();
+    qr = q.createSvgTag({ cellSize: 4, margin: 2, scalable: true });
+  } catch (err) { qr = `<div class="callout">Couldn't draw the code: ${esc(err.message)}</div>`; }
+  el.innerHTML = `<p>Open the Mission Control app on your iPhone and tap <b>Scan pairing code</b>.</p>
+    <div class="phone-qr">${qr}</div>
+    <div class="muted">${m.listening ? '🟢 Ready' : `⚠️ Not listening${m.error ? `: ${esc(m.error)}` : ''}`} · ${m.urls.map(esc).join(' · ')}</div>
+    <p class="muted">Works on your home Wi-Fi. If macOS asks whether Mission Control may accept incoming connections, choose Allow.</p>
+    <menu><button data-phone="rotate" title="Unpairs every phone">New code</button><button class="danger" data-phone="off">Turn off phone access</button></menu>`;
+}
+$('#phone-btn').addEventListener('click', () => openPhone().catch((e) => toast(e.message)));
+$('#phone-close').addEventListener('click', () => $('#phone-dialog').close());
+$('#phone-body').addEventListener('click', async (ev) => {
+  const b = ev.target.closest('[data-phone]');
+  if (!b) return;
+  const act = b.dataset.phone;
+  try {
+    paintPhone(await api('POST', '/api/mobile', act === 'rotate' ? { rotate: true } : { enabled: act === 'on' }));
+  } catch (e) { toast(e.message); }
+});
+
+const refreshViews = () => (['today', 'calendar', 'tasks'].includes(state.tab) ? window.Planner.refreshAll() : state.tab === 'home' ? loadHome() : state.tab === 'arcade' ? loadArcade() : loadBoard());
 
 document.addEventListener('click', async (ev) => {
-  const t = ev.target.closest('[data-side-island],[data-side-place],[data-side-realm],[data-side-clear],[data-side-select],[data-side-act],[data-side-run],[data-side-copy],[data-side-path],[data-side-url],[data-side-drawer],[data-side-decide],[data-side-run-agent],[data-side-agent-toggle],[data-side-agent],[data-side-crew],[data-side-dot]');
+  const t = ev.target.closest('[data-side-tab],[data-side-halt],[data-side-island],[data-side-place],[data-side-realm],[data-side-clear],[data-side-select],[data-side-act],[data-side-run],[data-side-copy],[data-side-path],[data-side-url],[data-side-drawer],[data-side-decide],[data-side-run-agent],[data-side-agent-toggle],[data-side-agent],[data-side-crew],[data-side-dot]');
   if (!t) return;
   const d = t.dataset;
   const job = (id) => allJobs().concat(state.board.snoozed || []).find((x) => x.id === id);
   try {
     if ('sideClear' in d) return selectInArcade(null);
+    if (d.sideTab) return showTab(d.sideTab);
+    if ('sideHalt' in d) { const s = await api('POST', '/api/trading/killswitch', { engage: true }); arcade.trading = s; window.Arcade.setTrading(s); return renderSide(); }
     if (d.sideRealm) { state.biz = d.sideRealm; return showTab('home'); }
     if (d.sidePlace) return selectInArcade({ type: 'place', id: d.sidePlace });
     if (d.sideIsland) { window.Arcade.enterIsland(d.sideIsland); return; }
@@ -1127,7 +1241,23 @@ document.addEventListener('change', async (ev) => {
 });
 
 $('#drawer-note').addEventListener('change', () => override({ note: $('#drawer-note').value }));
-$('#search').addEventListener('input', (e) => { state.search = e.target.value; renderBoard(); });
+$('#search').addEventListener('input', (e) => { state.search = e.target.value; if (state.tab !== 'board' && state.search) showTab('board'); renderBoard(); });
+// new task + chief of staff, from anywhere
+function openTaskDialog() { $('#task-dialog').showModal(); $('#task-text').value = ''; $('#task-text').focus(); }
+function openCos() { $('#cos-dialog').showModal(); loadCos(); setTimeout(() => { const t = $('#cos-dialog [data-cos-text]'); if (t) t.focus(); }, 150); }
+$('#quick-add').addEventListener('click', openTaskDialog);
+$('#cos-btn').addEventListener('click', openCos);
+$('#cos-close').addEventListener('click', () => $('#cos-dialog').close());
+$('#task-cancel').addEventListener('click', () => $('#task-dialog').close());
+$('#task-form').addEventListener('submit', async (e) => {
+  const text = $('#task-text').value.trim();
+  if (!text) return;
+  try {
+    const t = await api('POST', '/api/tasks', { add: { text } });
+    toast(`Added: ${t.title}${t.due ? ` · due ${t.due}${t.time ? ` ${t.time}` : ''}` : ''}`, 'ok');
+    window.Planner.refreshAll();
+  } catch (err) { toast(err.message, 'bad'); }
+});
 $('#bot-form').addEventListener('submit', async (e) => {
   const f = e.target;
   const body = Object.fromEntries(new FormData(f).entries());
@@ -1154,7 +1284,10 @@ $('#add-form').addEventListener('submit', async (e) => {
 document.addEventListener('keydown', (e) => {
   if (e.key === '/' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') { e.preventDefault(); $('#search').focus(); }
   if (e.key === 'Escape') closeDrawer();
-  if (e.key === 'r' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') $('#refresh').click();
+  const typing = ['INPUT', 'TEXTAREA', 'SELECT'].includes(document.activeElement.tagName) || document.querySelector('dialog[open]');
+  if (e.key === 'r' && !typing) $('#refresh').click();
+  if (e.key === 'n' && !typing && !e.metaKey && !e.ctrlKey) { e.preventDefault(); openTaskDialog(); }
+  if (e.key === 'c' && !typing && !e.metaKey && !e.ctrlKey) { e.preventDefault(); openCos(); }
 });
 
 const params = new URLSearchParams(location.search);
@@ -1163,8 +1296,9 @@ loadBoard()
   .catch((err) => toast(err.message, 'bad'));
 loadWorkforce().catch(() => {});
 loadBots().catch(() => {});
-showTab(params.get('tab') || 'home');
+showTab(params.get('tab') || 'today');
 connectEvents();
 setInterval(() => { if (state.tab === 'board' || state.tab === 'home') loadBoard().catch(() => {}); }, 30000);
 setInterval(() => { if (state.tab === 'home') loadHome().catch(() => {}); }, 60000);
+setInterval(() => { if (state.tab === 'today' && !document.querySelector('#tab-today :focus')) window.Planner.loadToday().catch(() => {}); }, 60000);
 setInterval(() => { if (state.tab === 'arcade') loadArcade().catch(() => {}); }, 15000);

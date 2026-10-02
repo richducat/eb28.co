@@ -353,6 +353,7 @@
     backrooms: { armor: '#8a7a3a', armorL: '#c8b45a', armorD: '#5a4e22', hazard: '#1a1a1a', red: '#f6c90e', visor: '#fff6a0' },
     funpark: { armor: '#d0508a', armorL: '#ff8ac0', armorD: '#8a2a5a', hazard: '#4ab8ff', red: '#ffe45c', visor: '#4affd0' },
     cyber: { armor: '#161a26', armorL: '#2a3248', armorD: '#07090f', hazard: '#2affd0', red: '#ff2a3a', visor: '#ff2a3a' },
+    wallst: { armor: '#1d2a4a', armorL: '#3a4e7a', armorD: '#0e1528', hazard: '#d4af37', red: '#c8102e', visor: '#ffcf4a' },
   };
   function drawMech(c, pose, frame, skin = 'watchdog') {
     const p = (x, y, w, h, col) => { c.fillStyle = col; c.fillRect(x, y, w, h); };

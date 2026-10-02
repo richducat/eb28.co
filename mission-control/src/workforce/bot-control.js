@@ -4,6 +4,12 @@ import { store } from '../store.js';
 
 const ALLOWED = new Set(['pm2', 'launchctl', 'docker', 'systemctl', 'node', 'python3', 'bash', 'npm']);
 const MAX_AUTO_PER_HOUR = 3;
+// Trading bots are never restarted from Mission Control, by hand or automatically.
+export const TRADING_DENY = /openclaw|simmer|polymarket|kalshi|robinhood|trading|--live/i;
+export const isTradingBot = (job) => {
+  const m = (job && job.meta) || {};
+  return TRADING_DENY.test([job && job.title, m.script, m.registryId, ...(Array.isArray(m.restart) ? m.restart : [])].filter(Boolean).join(' '));
+};
 
 /**
  * Restart a bot with the argv the bots source attached to it. Only argv arrays whose
@@ -11,8 +17,11 @@ const MAX_AUTO_PER_HOUR = 3;
  */
 export function restartBot(job, { trigger = 'manual' } = {}) {
   const argv = job && job.meta && job.meta.restart;
+  if (isTradingBot(job)) return Promise.resolve({ ok: false, error: 'Refusing: trading bots are never restarted from Mission Control. Use the project itself.' });
   if (!Array.isArray(argv) || !argv.length) return Promise.resolve({ ok: false, error: 'This bot has no restart command. Add one in bots.json.' });
-  if (!ALLOWED.has(argv[0])) return Promise.resolve({ ok: false, error: `Refusing to run "${argv[0]}". Allowed: ${[...ALLOWED].join(', ')}.` });
+  // apps relaunch with exactly `open -a <App>`; nothing else may go through `open`
+  const openApp = argv[0] === 'open' && argv.length === 3 && argv[1] === '-a' && !String(argv[2]).startsWith('-');
+  if (!openApp && !ALLOWED.has(argv[0])) return Promise.resolve({ ok: false, error: `Refusing to run "${argv[0]}". Allowed: ${[...ALLOWED].join(', ')}.` });
   const bin = which(argv[0]);
   if (!bin) return Promise.resolve({ ok: false, error: `"${argv[0]}" was not found on PATH.` });
   return new Promise((resolve) => {
@@ -37,7 +46,7 @@ export function recentAutoRestarts(jobId, now = Date.now()) {
 }
 
 export function canAutoRestart(job, now = Date.now()) {
-  return Boolean(job.meta && job.meta.autoRestart && job.meta.restart) && recentAutoRestarts(job.id, now) < MAX_AUTO_PER_HOUR;
+  return !isTradingBot(job) && Boolean(job.meta && job.meta.autoRestart && job.meta.restart) && recentAutoRestarts(job.id, now) < MAX_AUTO_PER_HOUR;
 }
 
 export { MAX_AUTO_PER_HOUR };

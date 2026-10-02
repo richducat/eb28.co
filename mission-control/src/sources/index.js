@@ -9,8 +9,9 @@ import * as automationRuns from './automation-runs.js';
 import * as bots from './bots.js';
 import * as handoff from './hermes-handoff.js';
 import * as cos from '../cos.js';
+import * as trading from './trading.js';
 
-export const SOURCE_MODULES = [claudeCode, codex, gemini, openclaw, hermes, github, manual, automationRuns, bots, handoff, cos];
+export const SOURCE_MODULES = [claudeCode, codex, gemini, openclaw, hermes, github, manual, automationRuns, bots, handoff, cos, trading];
 
 /**
  * Run every source, isolating failures so one broken tool never blanks the board.

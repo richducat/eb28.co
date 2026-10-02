@@ -2,7 +2,7 @@ import { EventEmitter } from 'node:events';
 import { buildBoard } from '../board.js';
 import { store } from '../store.js';
 import { loadRegistry, nextRunAt, runAutomation, setAutomationState } from './automations.js';
-import { available as llmAvailable, MODEL } from './llm.js';
+import { available as llmAvailable, activeModel } from './llm.js';
 import * as triage from './agents/triage.js';
 import * as followUp from './agents/follow-up.js';
 import * as reporter from './agents/reporter.js';
@@ -160,7 +160,7 @@ export class Orchestrator extends EventEmitter {
     const state = store.get('agent-state', {});
     return {
       paused: this.paused,
-      llm: { available: await llmAvailable(), model: MODEL },
+      llm: { available: await llmAvailable(), model: await activeModel() },
       agents: AGENTS.map((a) => ({
         id: a.id,
         name: a.name,

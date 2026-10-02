@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import os from 'node:os';
 import { store } from '../store.js';
+import { localAvailable, localComplete } from '../local-llm.js';
 
 /**
  * Optional Claude access for the workforce. Everything in the app works without it;
@@ -33,8 +34,22 @@ function hasProfile() {
   return fs.existsSync(`${os.homedir()}/.config/anthropic`);
 }
 
+/**
+ * Routing: the free local Qwen model (via Hermes's llama.cpp server) handles every
+ * workforce prompt first. Claude is only used when the local model is down, or when
+ * MC_LLM=claude asks for it explicitly. MC_LLM=off disables both.
+ */
+const preferClaude = () => process.env.MC_LLM === 'claude';
+
 export async function available() {
-  return Boolean(await client());
+  if (process.env.MC_LLM === 'off') return false;
+  return (await localAvailable()) || Boolean(await client());
+}
+
+export async function activeModel() {
+  if (process.env.MC_LLM === 'off') return 'off';
+  if (!preferClaude() && (await localAvailable())) return 'local Qwen (free)';
+  return (await client()) ? MODEL : 'none';
 }
 
 /**
@@ -44,6 +59,14 @@ export async function available() {
 export async function ask({ key, system, prompt, maxTokens = 600, effort = 'low' }) {
   const cache = store.get('llm-cache', {});
   if (key && cache[key]) return cache[key].text;
+  if (process.env.MC_LLM === 'off') return null;
+  if (!preferClaude()) {
+    const text = await localComplete(prompt, { system, maxTokens: Math.max(maxTokens, 300) });
+    if (text) {
+      if (key) store.update('llm-cache', {}, (all) => ({ ...all, [key]: { text, at: new Date().toISOString(), model: 'local' } }));
+      return text;
+    }
+  }
   const c = await client();
   if (!c) return null;
   try {

@@ -7,8 +7,9 @@ import * as github from './github.js';
 import * as manual from './manual.js';
 import * as automationRuns from './automation-runs.js';
 import * as bots from './bots.js';
+import * as handoff from './hermes-handoff.js';
 
-export const SOURCE_MODULES = [claudeCode, codex, gemini, openclaw, hermes, github, manual, automationRuns, bots];
+export const SOURCE_MODULES = [claudeCode, codex, gemini, openclaw, hermes, github, manual, automationRuns, bots, handoff];
 
 /**
  * Run every source, isolating failures so one broken tool never blanks the board.

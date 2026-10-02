@@ -12,7 +12,7 @@ export const DEFAULTS = [
   { id: 'eb28', name: 'EB28', full: 'EB28 studio', color: '#2d9c67', match: ['eb28', 'mission-control', 'growth hosting', '32940', 'social-publisher', 'fundmanager', 'buffer'] },
   { id: 'inspection', name: 'Inspection Rent', full: 'Inspection Rent / HIP', color: '#2f6fdb', match: ['inspection', 'insprent', '\\bhip-', 'home-inspection'] },
   { id: 'syncstep', name: 'SyncStep', full: 'SyncStep', color: '#8b5cf6', match: ['sync+step', 'syncc'] },
-  { id: 'apps', name: 'Apps', full: 'Other apps', color: '#f59e0b', match: ['labstudio', 'snapgrid', 'parentpath', 'cadetcatch', 'microfit', 'teslaware', 'cosmicchat', 'solana'] },
+  { id: 'apps', name: 'Apps', full: 'Other apps', color: '#f59e0b', match: ['lab ?studio', 'snapgrid', 'parentpath', 'cadetcatch', 'microfit', 'teslaware', 'cosmicchat', 'solana'] },
 ];
 export const OTHER = { id: 'other', name: 'Other', full: 'Everything else', color: '#6b7280', match: [] };
 
@@ -50,6 +50,7 @@ export function businessOf(job, list = loadBusinesses()) {
 export function askOf(job) {
   if (job.status === 'failed') return 'fix';
   if (job.status !== 'needs_you') return '';
+  if (job.meta && job.meta.kind === 'decision') return 'answer';
   const r = `${job.reason || ''} ${(job.meta && job.meta.activity && job.meta.activity.label) || ''}`;
   if (/approv|permission|allow/i.test(r)) return 'approve';
   if (/error|crash|fail|down/i.test(r)) return 'fix';

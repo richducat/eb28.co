@@ -208,3 +208,17 @@ h2.sec { font-size: 13px; text-transform: uppercase; letter-spacing: .07em; colo
 .legend .place li { border-top-color: var(--line); }
 @media (max-width: 1500px) { .topbar .stats { display: none; } }
 .topbar .actions button.primary { white-space: nowrap; }
+
+/* inline answers */
+.q .ans { margin-top: 8px; }
+.q .aq { font-size: 13px; line-height: 1.45; white-space: pre-wrap; background: var(--panel-2); border-radius: 8px; padding: 8px 10px; margin-bottom: 8px; max-height: 140px; overflow: auto; }
+.q .aq code { display: block; margin-top: 6px; font-size: 12px; white-space: pre-wrap; word-break: break-all; }
+.q .opts { display: flex; gap: 6px; flex-wrap: wrap; }
+.q .opt { font-size: 13px; padding: 6px 12px; border-radius: 999px; }
+.q .opt b { display: inline-block; min-width: 16px; opacity: .7; margin-right: 2px; }
+.q .opt.go { background: var(--accent); border-color: var(--accent); color: #fff; }
+.q .other { display: flex; gap: 6px; margin-top: 8px; align-items: flex-start; }
+.q .other textarea { flex: 1; resize: vertical; }
+.q .other .go { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
+.q .note { font-size: 11px; color: var(--muted); margin-top: 6px; }
+.q .btns button[title] { padding: 4px 8px; }

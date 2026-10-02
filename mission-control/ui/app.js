@@ -307,6 +307,7 @@ function connectEvents() {
   const es = new EventSource('/api/events');
   es.onmessage = (ev) => {
     const e = JSON.parse(ev.data);
+    if (e.type === 'ask:suggested') { delete home.asks[e.jobId]; if (state.tab === 'home') hydrateAsks(queueItems()); }
     if (e.type === 'board:refresh') loadBoard().then(() => { if (state.tab === 'arcade') loadArcade(); });
     if (e.type === 'job:transition') toast(`${e.title.slice(0, 70)} → ${STATUS_LABEL[e.to] || e.to}`, e.to === 'failed' ? 'bad' : e.to === 'needs_you' ? 'you' : 'ok');
     if (e.type === 'proposal:new') { toast(`Approval needed: ${e.title}`, 'you'); loadWorkforce(); }
@@ -435,11 +436,71 @@ function queueHtml(it) {
       : j.link ? `<button class="go" data-side-url="${esc(j.link)}">Open</button>` : '';
     btns = `${primary}<button data-side-act='${esc(JSON.stringify({ id: j.id, status: 'done' }))}'>Done</button><button data-side-act='${esc(JSON.stringify({ id: j.id, snoozedUntil: new Date(Date.now() + 4 * 3600e3).toISOString() }))}'>Snooze 4h</button>`;
   }
+  const answerable = it.kind === 'job' && it.j.status === 'needs_you';
   return `<div class="q ${it.ask}"><div class="ask">${ASK[it.ask]}</div>
     <div><div class="t" ${it.kind === 'job' ? `data-side-drawer="${esc(it.id)}"` : ''}>${esc(it.title)}</div>
-    <div class="s"><span class="biz" style="background:${b.color}">${esc(b.name)}</span>${wait}<span>${esc((it.line || '').slice(0, 140))}</span></div></div>
-    <div class="btns">${btns}</div></div>`;
+    <div class="s"><span class="biz" style="background:${b.color}">${esc(b.name)}</span>${wait}${answerable ? '' : `<span>${esc((it.line || '').slice(0, 140))}</span>`}</div>
+    ${answerable ? `<div class="ans" data-ans="${esc(it.id)}">${askHtml(it.j, home.asks[it.id])}</div>` : ''}</div>
+    <div class="btns">${answerable ? `<button data-side-act='${esc(JSON.stringify({ id: it.j.id, status: 'done' }))}' title="Mark done">✓</button><button data-side-act='${esc(JSON.stringify({ id: it.j.id, snoozedUntil: new Date(Date.now() + 4 * 3600e3).toISOString() }))}' title="Snooze 4 hours">💤</button>` : btns}</div></div>`;
 }
+
+const home = { asks: {}, loading: new Set(), open: new Set() };
+
+function askHtml(j, ask) {
+  if (!ask) return '<div class="aq muted">Loading the question…</div>';
+  const opts = (ask.suggested && ask.suggested.length ? ask.suggested : ask.options) || [];
+  const q = ask.kind === 'approve' ? `${esc(ask.question)}${ask.detail ? `<code>${esc(ask.detail)}</code>` : ''}` : ask.question && ask.question.trim() !== j.title.trim() ? esc(ask.question) : '';
+  const sendNote = ask.kind === 'decision' ? '' : '<div class="note">Sending from Mission Control is waiting on a permission change. For now your answer is copied so you can paste it into the session.</div>';
+  const other = home.open.has(j.id)
+    ? `<div class="other"><textarea rows="2" placeholder="Type your answer…" data-other-text="${esc(j.id)}"></textarea><button class="go" data-answer-other="${esc(j.id)}">Send</button></div>${sendNote}`
+    : '';
+  return `${q ? `<div class="aq">${q}</div>` : ''}
+    <div class="opts">${opts.map((o, i) => `<button class="opt ${i === 0 ? 'go' : ''}" data-answer="${esc(j.id)}" data-reply="${esc(o.reply)}" title="${esc(o.reply)}"><b>${i + 1}</b> ${esc(o.label)}</button>`).join('')}
+    <button class="opt" data-answer-open="${esc(j.id)}">✍️ Other…</button></div>${other}`;
+}
+
+async function hydrateAsks(items) {
+  for (const it of items) {
+    if (it.kind !== 'job' || it.j.status !== 'needs_you' || home.asks[it.id] || home.loading.has(it.id)) continue;
+    home.loading.add(it.id);
+    api('GET', `/api/ask?id=${encodeURIComponent(it.id)}`)
+      .then((ask) => { home.asks[it.id] = ask; paintAsk(it.id); })
+      .catch(() => {})
+      .finally(() => home.loading.delete(it.id));
+  }
+}
+
+function paintAsk(id) {
+  const el = document.querySelector(`[data-ans="${CSS.escape(id)}"]`);
+  const j = allJobs().find((x) => x.id === id);
+  if (el && j) el.innerHTML = askHtml(j, home.asks[id]);
+}
+
+async function answer(id, text) {
+  const ask = home.asks[id];
+  const reply = String(text || '').trim();
+  if (!reply) return toast('Type an answer first.', 'bad');
+  if (ask && ask.kind === 'decision') {
+    await api('POST', '/api/decision', { id, answer: reply });
+    toast('Answer sent to Chief of Staff ✓', 'ok');
+    delete home.asks[id];
+    home.open.delete(id);
+    await loadBoard();
+    return renderHome();
+  }
+  try { await navigator.clipboard.writeText(reply); } catch { /* clipboard blocked */ }
+  toast('Copied your answer. Paste it into the session.', 'ok');
+}
+
+document.addEventListener('click', async (ev) => {
+  const t = ev.target.closest('[data-answer],[data-answer-open],[data-answer-other]');
+  if (!t) return;
+  try {
+    if (t.dataset.answer) return await answer(t.dataset.answer, t.dataset.reply);
+    if (t.dataset.answerOpen) { const id = t.dataset.answerOpen; home.open.has(id) ? home.open.delete(id) : home.open.add(id); paintAsk(id); const ta = document.querySelector(`[data-other-text="${CSS.escape(id)}"]`); if (ta) ta.focus(); return; }
+    if (t.dataset.answerOther) { const ta = document.querySelector(`[data-other-text="${CSS.escape(t.dataset.answerOther)}"]`); return await answer(t.dataset.answerOther, ta && ta.value); }
+  } catch (err) { toast(err.message, 'bad'); }
+});
 
 function renderHome() {
   if (!state.board) return;
@@ -463,6 +524,7 @@ function renderHome() {
 
   $('#queue-count').textContent = items.length ? `(${items.length})` : '';
   $('#queue').innerHTML = items.length ? items.map(queueHtml).join('') : `<div class="clear">✅ You're clear${state.biz === 'all' ? '' : ` in ${esc(bizInfo(state.biz).name)}`}. Nothing is waiting on you.</div>`;
+  hydrateAsks(items);
 
   const today = new Date(); today.setHours(0, 0, 0, 0);
   $('#biz-cards').innerHTML = active.map((b) => {

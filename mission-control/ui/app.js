@@ -360,7 +360,7 @@ async function loadArcade() {
   renderSide();
 }
 
-const TEAM_ORDER = { warden: 0, mech: 0, overlord: 1, dot: 2, agent: 3, crew: 4 };
+const TEAM_ORDER = { tycoon: 0, warden: 1, mech: 1, overlord: 2, dot: 3, agent: 4, crew: 5 };
 function renderTeam() {
   const el = $('#arcade-team');
   if (!el || !window.Arcade.team) return;
@@ -368,7 +368,7 @@ function renderTeam() {
   el.innerHTML = list.map((m) => {
     const key = JSON.stringify(m.spec);
     if (!portraitCache.has(key)) portraitCache.set(key, window.Sprites.portrait(m.spec).toDataURL());
-    const role = m.kind === 'overlord' ? 'Overlord' : m.kind === 'warden' || m.kind === 'mech' ? 'Mech' : m.kind === 'agent' ? 'Workforce' : m.kind === 'dot' ? 'OG Kush' : 'Hermes';
+    const role = m.kind === 'tycoon' ? 'Island owner' : m.kind === 'overlord' ? 'Overlord' : m.kind === 'warden' || m.kind === 'mech' ? 'Mech' : m.kind === 'agent' ? 'Workforce' : m.kind === 'dot' ? 'OG Kush' : 'Hermes';
     return `<div class="pcard" data-team="${esc(JSON.stringify(m.sel))}"><img src="${portraitCache.get(key)}" alt=""><div class="plate">${esc(m.name.toUpperCase().slice(0, 22))}<span>(${role.toUpperCase()})</span></div></div>`;
   }).join('');
 }
@@ -742,6 +742,17 @@ function renderSide() {
     el.innerHTML = `${back}${portraitHtml(sel, 'Dot', 'OG Kush')}<div class="chips"><span class="chip">🌿 OG Kush</span></div><h3>Dot</h3>
       <div class="why">Your voice assistant. Right now Dot is tracked as any Codex thread you started by voice. If Dot is actually a Grok bot or a Hermes agent, pick it in "Dot (OG Kush) is" above the map.</div>
       <h2>HANDED TO CODEX</h2>${mine.length ? `<ul>${mine.map(jobLi).join('')}</ul>` : '<div class="empty">No voice-started threads in the last day.</div>'}`;
+    return;
+  }
+  if (sel.type === 'tycoon') {
+    const jobs = allJobs();
+    const w = window.Arcade.weather || {};
+    const sky = (k) => ({ sun: '☀️ clear', rain: '🌧 rain: something is waiting on you', storm: '⛈ storm: something failed' })[w[k]] || '☀️ clear';
+    el.innerHTML = `${back}${portraitHtml(sel, 'The Tycoon', 'Owner of the island')}
+      <div class="why">Owns Tycoon Isle, the yacht and, by his account, everyone on it. Strolls between the castle and the Goal muttering about efficiency. The cat is not for sale.</div>
+      <h2>THE FORECAST</h2>
+      ${(window.Arcade.ISLANDS || []).map((i) => `<div class="isl-row" data-side-island="${esc(i.id)}"><b>${esc(i.name)}</b><span class="n">${sky(i.id)}</span></div>`).join('')}
+      <div class="meta">${jobs.filter((j) => j.status === 'needs_you').length} need you · ${jobs.filter((j) => j.status === 'failed').length} failed · ${jobs.filter((j) => j.status === 'working').length} working</div>`;
     return;
   }
   if (sel.type === 'warden') {

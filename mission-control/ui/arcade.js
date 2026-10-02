@@ -37,7 +37,7 @@
 
   /* ---------- islands: one big theme each ---------- */
   const ISLANDS = [
-    { id: 'main', name: 'MISSION CONTROL', c: [80, 46], r: [25, 17], theme: 'main' },
+    { id: 'main', name: 'TYCOON ISLE', c: [80, 46], r: [25, 17], theme: 'main', color: '#f8d838' },
     { id: 'backrooms', name: 'THE BACKROOMS', c: [26, 46], r: [22, 30], theme: 'backrooms', color: '#c8b45a' },
     { id: 'funpark', name: 'FUN PARK', c: [140, 48], r: [28, 36], theme: 'funpark', color: '#ff5a7a' },
     { id: 'cyber', name: 'MECH ISLAND', c: [80, 104], r: [30, 19], theme: 'cyber', color: '#ff2a3a' },
@@ -130,6 +130,10 @@
     for (const [a, b] of EDGES) { (ADJ[a] ||= []).push(b); (ADJ[b] ||= []).push(a); }
   }
 
+  // Tycoon Isle landmarks (tile coords): the striped temple, the helipad, the superyacht offshore.
+  const TEMPLE = { x: 95, base: 39 };
+  const HELIPAD = { x: 101, y: 47 };
+  const YACHT = { x: 104, y: 60 };
   // The all-seeing eye: a golden pyramid in the middle of Mech Island (tile coords of its base).
   const PYRAMID = { x: 80, base: 113 };
   // The clock tower is a landmark, not a status: it shows when scheduled agents run next.
@@ -193,6 +197,8 @@
     }
     for (let y = CLOCK.door[1] - 3; y <= CLOCK.door[1]; y += 1) for (let x = CLOCK.door[0] - 1; x <= CLOCK.door[0] + 1; x += 1) PLAZA[y][x] = true;
     for (let y = PYRAMID.base - 9; y <= PYRAMID.base + 1; y += 1) for (let x = PYRAMID.x - 7; x <= PYRAMID.x + 7; x += 1) PLAZA[y][x] = true;
+    for (let y = TEMPLE.base - 5; y <= TEMPLE.base + 1; y += 1) for (let x = TEMPLE.x - 4; x <= TEMPLE.x + 4; x += 1) PLAZA[y][x] = true;
+    for (let y = HELIPAD.y - 2; y <= HELIPAD.y + 2; y += 1) for (let x = HELIPAD.x - 2; x <= HELIPAD.x + 2; x += 1) PLAZA[y][x] = true;
     for (let y = 2; y < ROWS - 2; y += 1) {
       for (let x = 1; x < COLS - 1; x += 1) {
         if (!LAND[y][x] || PATH[y][x] || PLAZA[y][x] || !LAND[y + 1][x]) continue;
@@ -220,7 +226,8 @@
           continue;
         }
         const tree = coast ? 0.42 : 0.12;
-        if (r < tree) DECOR.push({ x, y, type: 'tree' });
+        // Tycoon Isle: palms along the beach
+        if (r < tree) DECOR.push({ x, y, type: coast || hash(x, y, 17) < 0.35 ? 'palm' : 'tree' });
         else if (r < tree + 0.06) DECOR.push({ x, y, type: 'hill' });
         else if (r < tree + 0.15) DECOR.push({ x, y, type: 'bush' });
         else if (r < tree + 0.33) DECOR.push({ x, y, type: 'flower', c: hash(x, y, 5) < 0.5 ? P.red[2] : P.gold[2] });
@@ -608,6 +615,64 @@
     text('THE EYE', cx, by + 6, '#ff3a3a', 6, 'center');
   }
 
+  /* ---------- Tycoon Isle ---------- */
+  function drawSand(x, y) {
+    const X = x * T;
+    const Y = y * T;
+    px(X, Y, T, T, '#f0d898');
+    for (let i = 0; i < 5; i += 1) px(X + Math.floor(hash(x, y, i + 3) * 15), Y + Math.floor(hash(x, y, i + 7) * 15), 1, 1, i % 2 ? '#d8bc78' : '#fff0c0');
+    if (!land(x, y + 1)) { px(X, Y + 11, T, 5, '#d8b070'); px(X, Y + 11, T, 1, '#c09a58'); }
+  }
+  const isBeach = (x, y) => ISLE[y] && ISLE[y][x] === 'main' && !isPath(x, y) && !PLAZA[y][x] && [[1, 0], [-1, 0], [0, 1], [0, -1], [1, 1], [-1, -1], [1, -1], [-1, 1], [2, 0], [-2, 0], [0, 2]].some(([dx, dy]) => !land(x + dx, y + dy));
+
+  function drawTemple(f) {
+    const cx = TEMPLE.x * T + 8;
+    const by = TEMPLE.base * T;
+    px(cx - 30, by - 2, 60, 3, 'rgba(0,0,0,.2)');
+    // stepped plinth
+    px(cx - 30, by - 8, 60, 8, '#e8e0d0'); px(cx - 30, by - 8, 60, 2, '#ffffff'); px(cx - 26, by - 12, 52, 4, '#d8d0c0');
+    // the striped cube
+    for (let i = 0; i < 10; i += 1) px(cx - 22, by - 52 + i * 4, 44, 4, i % 2 ? '#f4f4f4' : '#2a5ab8');
+    px(cx + 18, by - 52, 4, 40, 'rgba(0,0,40,.18)');
+    // arched doorway and columns
+    px(cx - 6, by - 26, 12, 14, '#14203a'); px(cx - 6, by - 28, 12, 2, '#d8b040');
+    for (const dx of [-20, -12, 10, 18]) { px(cx + dx, by - 26, 3, 14, '#ffffff'); px(cx + dx, by - 27, 3, 1, '#d8b040'); }
+    // golden dome with a finial
+    g.fillStyle = '#d8a828'; g.beginPath(); g.arc(cx, by - 52, 18, Math.PI, Math.PI * 2); g.fill();
+    g.fillStyle = '#f8d860'; g.beginPath(); g.arc(cx - 5, by - 58, 6, Math.PI, Math.PI * 2); g.fill();
+    px(cx - 20, by - 53, 40, 2, '#b88818');
+    px(cx - 1, by - 78, 2, 8, '#d8a828'); px(cx - 3, by - 80, 6, 3, Math.floor(f / 6) % 2 ? '#fff6a0' : '#f8d838');
+    // velvet ropes
+    for (let i = 0; i < 5; i += 1) { const sx = cx - 32 + i * 16; px(sx, by + 2, 2, 8, '#d8b040'); px(sx - 1, by + 1, 4, 2, '#f8d860'); if (i < 4) { g.strokeStyle = '#a01030'; g.lineWidth = 1.5; g.beginPath(); g.moveTo(sx + 1, by + 4); g.quadraticCurveTo(sx + 9, by + 9, sx + 17, by + 4); g.stroke(); } }
+    text('THE TEMPLE', cx, by + 12, '#f8d860', 5, 'center');
+  }
+
+  function drawHelipad(f) {
+    const cx = HELIPAD.x * T + 8;
+    const cy = HELIPAD.y * T + 8;
+    g.fillStyle = '#3a3a44'; g.beginPath(); g.arc(cx, cy, 30, 0, Math.PI * 2); g.fill();
+    g.strokeStyle = '#f8d838'; g.lineWidth = 2; g.beginPath(); g.arc(cx, cy, 26, 0, Math.PI * 2); g.stroke();
+    px(cx - 10, cy - 10, 3, 20, '#ffffff'); px(cx + 7, cy - 10, 3, 20, '#ffffff'); px(cx - 7, cy - 1, 14, 3, '#ffffff');
+    // a parked black helicopter with spinning rotor
+    px(cx - 16, cy - 30, 30, 12, '#14141c'); px(cx - 14, cy - 28, 10, 7, '#5ab0e0'); px(cx + 14, cy - 26, 18, 3, '#14141c'); px(cx + 30, cy - 30, 3, 8, '#14141c');
+    px(cx - 12, cy - 17, 24, 2, '#888'); 
+    const a = f * 0.9;
+    g.strokeStyle = 'rgba(30,30,40,.7)'; g.lineWidth = 2;
+    g.beginPath(); g.moveTo(cx - Math.cos(a) * 26, cy - 33 - Math.sin(a) * 4); g.lineTo(cx + Math.cos(a) * 26, cy - 33 + Math.sin(a) * 4); g.stroke();
+  }
+
+  function drawYacht(t) {
+    const x = YACHT.x * T + Math.sin(t * 0.4) * 6;
+    const y = YACHT.y * T + Math.sin(t * 1.3) * 1.5;
+    px(x - 50, y + 12, 100, 3, 'rgba(255,255,255,.35)');
+    for (let i = 0; i < 10; i += 1) px(x - 48 + i * 2, y + 10 - i, 96 - i * 2 - (i > 6 ? 10 : 0), 1, i < 2 ? '#1a2a4a' : '#f8f8f8');
+    px(x - 30, y - 6, 52, 8, '#f4f4f4'); px(x - 26, y - 4, 44, 3, '#1a2a4a');
+    px(x - 18, y - 14, 30, 8, '#f8f8f8'); px(x - 14, y - 12, 22, 3, '#1a2a4a');
+    px(x - 6, y - 22, 14, 8, '#e8e8f0'); px(x + 4, y - 30, 2, 8, '#888');
+    px(x + 6, y - 30, 7, 4, '#f8d838');
+    text('M/Y TYCOON', x - 4, y + 2, '#1a2a4a', 4, 'center', '#f8f8f8');
+  }
+
   /* ---------- Backrooms decor ---------- */
   function drawBackroomsDecor(d, f) {
     const X = d.x * T;
@@ -766,7 +831,6 @@
 
   const bannerRects = {};
   function drawIslandBanner(isl, f) {
-    if (isl.id === 'main') return;
     const x = isl.c[0] * T + 8;
     const y = (isl.c[1] - isl.r[1] + 2.2) * T;
     g.font = '8px "Press Start 2P", monospace';
@@ -1056,7 +1120,7 @@
     }
     if (a.kind === 'mech') return { kind: 'mech', robot: true, label: 'Watchdog', scene: 'gears', bg: '#2a1a1a' };
     if (a.kind === 'warden') return { kind: 'mech', robot: true, label: 'Warden', scene: 'gears', bg: a.island === 'cyber' ? '#07090f' : a.island === 'funpark' ? '#3a1028' : '#3a3010' };
-    if (a.kind === 'npc') return a.spec;
+    if (a.kind === 'npc' || a.kind === 'tycoon') return a.spec;
     if (a.kind === 'overlord') return a.spec;
     if (a.kind === 'agent') {
       const [kind, extra] = AGENT_LOOK[a.id.replace(/^agent:/, '')] || ['operator', {}];
@@ -1310,6 +1374,7 @@
       buildLayers();
       frameIsland('main', true);
       spawnLife();
+      spawnTycoon();
       built = true;
     }
     schedule = sched.filter((x) => x.nextRunAt).sort((a, b) => Date.parse(a.nextRunAt) - Date.parse(b.nextRunAt));
@@ -1317,6 +1382,7 @@
     const firstLoad = !loaded;
     loaded = true;
     const jobs = board.columns.flatMap((c) => c.jobs);
+    computeWeather(jobs);
     const seen = new Set();
     const idx = {};
     placeCounts = idx;
@@ -1439,10 +1505,179 @@
       }
       dot.title = dj ? `Dot · OG Kush · on "${dj.title}"` : 'Dot · OG Kush · chilling at HQ';
     }
-    for (const id of [...actors.keys()]) if (!seen.has(id) && !id.startsWith('npc:') && !id.startsWith('warden:')) actors.delete(id);
+    for (const id of [...actors.keys()]) if (!seen.has(id) && !id.startsWith('npc:') && !id.startsWith('warden:') && id !== 'tycoon') actors.delete(id);
+  }
+  /* ---------- the Tycoon (main island overlord) ---------- */
+  const TYCOON_LINES = ['Excellent.', 'Status report!', 'Mwahaha.', 'Faster, minions.', 'My island. My rules.', 'Release the mech.', 'Someone fetch my cat.'];
+  function spawnTycoon() {
+    const p = nodeXY('HQ');
+    actors.set('tycoon', {
+      id: 'tycoon', kind: 'tycoon', island: 'main', node: 'HQ', x: p.x + 50, y: p.y + 10, path: [], phase: 0, until: 3, line: '', lineUntil: 0,
+      title: 'The Tycoon · owns the island, watches the castle',
+      spec: { skin: '#f0c8b4', hair: '#d8d8de', hairStyle: 'bald', suit: '#f4f0e6', shirt: '#1a1a22', tie: '#d8a828', glasses: true, prop: 'mug', label: 'Tycoon', scene: 'castle', bg: '#2a2410', accent: '#f8d838' },
+    });
+  }
+  function tycoonStep(a, now) {
+    if (now > a.lineUntil) a.line = '';
+    if (a.path.length || now < a.until) return;
+    const stops = ['NY', 'WK', 'HQ', 'DN', 'FU', 'CR', 'FL', 'BC'];
+    const n = stops[Math.floor(Math.random() * stops.length)];
+    const p = nodeXY(n);
+    walkTo(a, n, { x: p.x + 40, y: p.y + 8 });
+    a.until = now + 5 + Math.random() * 6;
+    if (Math.random() < 0.45) { a.line = TYCOON_LINES[Math.floor(Math.random() * TYCOON_LINES.length)]; a.lineUntil = now + 3.5; }
+  }
+  function drawTycoon(a, t) {
+    const x = Math.round(a.x);
+    const y = Math.round(a.y);
+    const step = a.path.length > 0 && Math.floor(t * 6) % 2;
+    g.fillStyle = 'rgba(0,0,0,.3)'; g.fillRect(x + 1, y + 14, 14, 2);
+    g.drawImage(Sprites.person(a.spec, step ? 1 : 0), x, y - 12);
+    // monocle glint and the white cat at his heels
+    px(x + 9, y - 6, 1, 1, '#ffffff');
+    const cx = x - 10 + (step ? 1 : 0);
+    px(cx, y + 9, 8, 5, '#f4f4f4'); px(cx + 6, y + 6, 4, 4, '#f4f4f4'); px(cx + 6, y + 5, 1, 2, '#f4f4f4'); px(cx + 9, y + 5, 1, 2, '#f4f4f4');
+    px(cx + 7, y + 7, 1, 1, '#3a8a3a'); px(cx - 2, y + 7 + (Math.floor(t * 3) % 2), 2, 4, '#f4f4f4');
+    px(cx, y + 9, 8, 5, 'rgba(0,0,0,0)');
+    if (a.line) {
+      g.font = '5px "Press Start 2P", monospace';
+      const w = Math.ceil(g.measureText(a.line).width) + 8;
+      px(x + 8 - w / 2, y - 30, w, 11, '#ffffff'); px(x + 6, y - 19, 3, 3, '#ffffff');
+      g.strokeStyle = P.ink; g.lineWidth = 1; g.strokeRect(x + 8 - w / 2 + 0.5, y - 29.5, w - 1, 10);
+      text(a.line, x + 8, y - 27, P.ink, 5, 'center', '#ffffff');
+    }
+    text('TYCOON', x + 8, y + 18, '#f8d838', 5, 'center');
+    if (hover === a) { g.strokeStyle = 'rgba(248,216,56,.8)'; g.lineWidth = 1; g.strokeRect(x - 1.5, y - 11.5, 19, 27); }
+  }
+
+  /* ---------- weather: each island's sky shows how its work is going ---------- */
+  const weather = { main: 'sun', backrooms: 'sun', funpark: 'sun', cyber: 'sun' };
+  const homeIsland = (j) => (j.source === 'bot' ? 'cyber' : j.app && PLACES[`ride:${j.app}`] ? 'funpark' : districtOf(j) === 'funpark' ? 'funpark' : 'backrooms');
+  function computeWeather(jobs) {
+    const bad = { main: 0, backrooms: 0, funpark: 0, cyber: 0 };
+    const wait = { main: 0, backrooms: 0, funpark: 0, cyber: 0 };
+    for (const j of jobs) {
+      const isl = homeIsland(j);
+      if (j.status === 'failed') { bad[isl] += 1; bad.main += 1; }
+      if (j.status === 'needs_you') { wait[isl] += 1; wait.main += 1; }
+    }
+    for (const k of Object.keys(weather)) weather[k] = bad[k] ? 'storm' : wait[k] >= (k === 'main' ? 4 : 1) ? 'rain' : 'sun';
+  }
+  let flash = 0;
+  function drawWeather(t, dt, vis) {
+    for (const isl of ISLANDS) {
+      const w = weather[isl.id];
+      if (w === 'sun' || !vis(isl.c[0] * T, isl.c[1] * T, isl.r[0] * T)) continue;
+      const cx = isl.c[0] * T;
+      const cy = isl.c[1] * T;
+      const rx = isl.r[0] * T;
+      const ry = isl.r[1] * T;
+      g.fillStyle = w === 'storm' ? 'rgba(20,22,48,.32)' : 'rgba(40,50,80,.18)';
+      g.beginPath(); g.ellipse(cx, cy, rx * 1.05, ry * 1.05, 0, 0, Math.PI * 2); g.fill();
+      // rain
+      g.strokeStyle = w === 'storm' ? 'rgba(170,190,255,.55)' : 'rgba(170,200,255,.4)';
+      g.lineWidth = 1;
+      g.beginPath();
+      const n = w === 'storm' ? 260 : 140;
+      for (let i = 0; i < n; i += 1) {
+        const rx0 = cx - rx + ((i * 97) % (rx * 2));
+        const ry0 = cy - ry + ((t * 380 + i * 53) % (ry * 2));
+        const nx = (rx0 - cx) / rx;
+        const ny = (ry0 - cy) / ry;
+        if (nx * nx + ny * ny > 1) continue;
+        g.moveTo(rx0, ry0); g.lineTo(rx0 - 3, ry0 + 9);
+      }
+      g.stroke();
+      // dark clouds parked over the island
+      for (let i = 0; i < 5; i += 1) {
+        const ccx = cx - rx * 0.7 + i * rx * 0.35 + Math.sin(t / 4 + i) * 20;
+        const ccy = cy - ry * 0.75 + (i % 2) * 30;
+        g.fillStyle = w === 'storm' ? 'rgba(40,40,60,.75)' : 'rgba(110,120,140,.6)';
+        g.fillRect(ccx, ccy, 70, 14); g.fillRect(ccx + 10, ccy - 8, 40, 10); g.fillRect(ccx + 22, ccy - 14, 22, 8);
+      }
+      if (w === 'storm' && Math.random() < dt * 0.25) {
+        flash = 0.35;
+        const bx = cx - rx * 0.5 + Math.random() * rx;
+        let by = cy - ry * 0.7;
+        g.strokeStyle = '#fffbe0'; g.lineWidth = 2; g.beginPath(); g.moveTo(bx, by);
+        let x = bx;
+        for (let k = 0; k < 6; k += 1) { x += (Math.random() - 0.5) * 30; by += ry * 0.12; g.lineTo(x, by); }
+        g.stroke();
+      }
+    }
+  }
+
+  /* ---------- day and night from Richard's clock ---------- */
+  const glowCache = new Map();
+  function glow(color, r) {
+    const key = `${color}|${r}`;
+    if (glowCache.has(key)) return glowCache.get(key);
+    const c = document.createElement('canvas');
+    c.width = r * 2;
+    c.height = r * 2;
+    const gg = c.getContext('2d');
+    const grad = gg.createRadialGradient(r, r, 0, r, r, r);
+    grad.addColorStop(0, color);
+    grad.addColorStop(1, 'rgba(0,0,0,0)');
+    gg.fillStyle = grad;
+    gg.fillRect(0, 0, r * 2, r * 2);
+    glowCache.set(key, c);
+    return c;
+  }
+  function darkness() {
+    const d = new Date();
+    const h = typeof window.MC_HOUR === 'number' ? window.MC_HOUR : d.getHours() + d.getMinutes() / 60;
+    if (h >= 21 || h < 5) return 0.58;
+    if (h >= 18) return ((h - 18) / 3) * 0.58;
+    if (h < 7) return ((7 - h) / 2) * 0.58;
+    return 0;
+  }
+  function drawNight(t, f, tl, br, vis) {
+    const dark = darkness();
+    if (dark <= 0.01) return;
+    g.fillStyle = `rgba(8,12,40,${dark})`;
+    g.fillRect(tl.x - 50, tl.y - 50, br.x - tl.x + 100, br.y - tl.y + 100);
+    // the Backrooms get creepier: an extra murk with flicker
+    const br2 = ISLANDS.find((i) => i.id === 'backrooms');
+    if (vis(br2.c[0] * T, br2.c[1] * T, br2.r[0] * T)) {
+      g.fillStyle = `rgba(30,24,0,${dark * (0.35 + 0.15 * Math.sin(t * 13))})`;
+      g.beginPath(); g.ellipse(br2.c[0] * T, br2.c[1] * T, br2.r[0] * T, br2.r[1] * T, 0, 0, Math.PI * 2); g.fill();
+    }
+    g.globalCompositeOperation = 'lighter';
+    g.globalAlpha = Math.min(1, dark * 1.6);
+    const put = (x, y, color, r) => { if (vis(x, y, r)) g.drawImage(glow(color, r), x - r, y - r); };
+    for (const d of DECOR) {
+      const x = d.x * T + 8;
+      const y = d.y * T;
+      if (d.type === 'lamp') put(x, y - 8, 'rgba(255,230,140,.55)', 40);
+      else if (d.type === 'neon') put(x, y, 'rgba(255,80,220,.5)', 34);
+      else if (d.type === 'tower') put(x, y - d.h * 7, (d.x + d.y) % 2 ? 'rgba(40,255,210,.35)' : 'rgba(255,40,110,.35)', 36);
+      else if (d.type === 'billboard') put(x, y - 2, 'rgba(255,40,110,.45)', 30);
+      else if (d.type === 'home') put(x, y + 8, 'rgba(255,220,140,.4)', 22);
+    }
+    for (const p of Object.values(PLACES)) {
+      const x = p.door[0] * T + 8;
+      const y = p.door[1] * T;
+      if (p.kind === 'ride') put(x, y - 30, ['rgba(255,90,140,.45)', 'rgba(80,190,255,.45)', 'rgba(255,220,80,.45)'][(p.door[0] + p.door[1]) % 3], 70);
+      else if (p.kind === 'dept') put(x, y - 44, `rgba(255,250,200,${0.2 + 0.15 * (Math.floor(f / 3 + p.door[0]) % 2)})`, 50);
+      else put(x, y - 20, 'rgba(255,210,130,.4)', 44);
+    }
+    put(eyePos.x, eyePos.y, 'rgba(255,30,30,.8)', 90);
+    put(TEMPLE.x * T + 8, TEMPLE.base * T - 70, 'rgba(255,220,120,.6)', 50);
+    put(CLOCK.door[0] * T + 8, CLOCK.door[1] * T - 33, 'rgba(255,255,220,.5)', 26);
+    g.globalAlpha = 1;
+    g.globalCompositeOperation = 'source-over';
+    // stars over the sea
+    for (let i = 0; i < 60; i += 1) {
+      const x = (i * 431) % W;
+      const y = (i * 271) % H;
+      if (!vis(x, y, 0) || (ISLE[Math.floor(y / T)] && ISLE[Math.floor(y / T)][Math.floor(x / T)])) continue;
+      if ((i + Math.floor(t * 2)) % 7) px(x, y, 1, 1, `rgba(255,255,255,${dark})`);
+    }
   }
   /* ---------- drawing actors ---------- */
   function drawActor(a, t) {
+    if (a.kind === 'tycoon') return drawTycoon(a, t);
     if (a.kind === 'mech' || a.kind === 'warden') return drawMech(a, t);
     if (a.kind === 'npc') {
       const step = a.path.length > 0 && Math.floor(t * 8 + a.phase) % 2;
@@ -1541,6 +1776,7 @@
           if (theme === 'backrooms') { drawBackroomsTile(x, y); continue; }
           if (theme === 'cyber') { drawCyberTile(x, y); continue; }
           if (theme === 'funpark') { if (FLOOR[y][x] && !isPath(x, y)) drawFloor(x, y, FLOOR[y][x]); else drawParkTile(x, y); continue; }
+          if (theme === 'main' && isBeach(x, y)) { drawSand(x, y); continue; }
           drawGrass(x, y);
           if (FLOOR[y][x]) drawFloor(x, y, FLOOR[y][x]);
           else if (isPath(x, y)) drawPath(x, y);
@@ -1767,7 +2003,7 @@
     else targets = [...actors.values()].filter((x) => (x.kind === 'job' || x.kind === 'bot') && x.job && !x.carriedBy && (x.job.business === realmBiz || (realmBiz === 'apps' && x.job.business === 'syncstep')));
     targets.sort((x, y) => (y.status === 'needs_you') - (x.status === 'needs_you'));
     if (!targets.length) {
-      const nodes = a.zone ? [`backrooms_${a.zone}`, `funpark_${a.zone}`, 'NY', 'HQ'] : Object.values(PLACES).map((p) => p.node);
+      const nodes = (a.zone ? [`backrooms_${a.zone}`, 'NY', 'HQ', 'DN'] : Object.values(PLACES).map((p) => p.node)).filter((n) => NODES[n]);
       const n = nodes[(a.cursor += 1) % nodes.length];
       const d = nodeXY(n);
       walkTo(a, n, { x: d.x + 26, y: d.y + 2 });
@@ -1783,10 +2019,19 @@
   function step(dt) {
     const now = performance.now() / 1000;
     for (const a of actors.values()) {
-      if (a.kind === 'overlord') patrol(a, now);
-      if (a.kind === 'mech') mechStep(a, now);
-      else if (a.kind === 'warden') wardenStep(a, now);
-      else if (a.kind === 'npc') npcStep(a, now);
+      try {
+        if (a.kind === 'overlord') patrol(a, now);
+        if (a.kind === 'mech') mechStep(a, now);
+        else if (a.kind === 'warden') wardenStep(a, now);
+        else if (a.kind === 'npc') npcStep(a, now);
+        else if (a.kind === 'tycoon') tycoonStep(a, now);
+      } catch (err) {
+        // one confused character must never freeze the whole map
+        a.path = [];
+        a.until = now + 5;
+        a.pauseUntil = now + 5;
+        if (!a.warned) { console.warn('arcade actor', a.id, err); a.warned = true; }
+      }
       if (a.carriedBy || !a.path.length) continue;
       const p = a.path[0];
       const dx = p.x - a.x;
@@ -1820,8 +2065,19 @@
   let lastDraw = 0;
   function render(ts) {
     if (!running) return;
-    if (!landLayer) { requestAnimationFrame(render); return; }
-    if (ts - lastDraw < (document.hidden ? 2000 : FRAME_MS - 1)) { requestAnimationFrame(render); return; }
+    try {
+      frame(ts);
+    } catch (err) {
+      if (!render.warned) { console.warn('arcade frame', err); render.warned = true; }
+      g.setTransform(1, 0, 0, 1, 0, 0);
+      g.globalAlpha = 1;
+      g.globalCompositeOperation = 'source-over';
+    }
+    requestAnimationFrame(render);
+  }
+  function frame(ts) {
+    if (!landLayer) return;
+    if (ts - lastDraw < (document.hidden ? 2000 : FRAME_MS - 1)) return;
     lastDraw = ts;
     const t = ts / 1000;
     const dt = Math.min(0.05, lastT ? t - lastT : 0.016);
@@ -1863,6 +2119,9 @@
     }
     for (const isl of ISLANDS) if (vis(isl.c[0] * T, (isl.c[1] - isl.r[1]) * T, 200)) layers.push({ y: (isl.c[1] - isl.r[1] + 2) * T, draw: () => drawIslandBanner(isl, f) });
     if (vis(CLOCK.door[0] * T, CLOCK.door[1] * T)) layers.push({ y: CLOCK.door[1] * T - 2, draw: () => drawClock(f) });
+    if (vis(TEMPLE.x * T, TEMPLE.base * T, 120)) layers.push({ y: TEMPLE.base * T, draw: () => drawTemple(f) });
+    if (vis(HELIPAD.x * T, HELIPAD.y * T, 80)) layers.push({ y: HELIPAD.y * T + 20, draw: () => drawHelipad(f) });
+    if (vis(YACHT.x * T, YACHT.y * T, 120)) layers.push({ y: YACHT.y * T + 10, draw: () => drawYacht(t) });
     const look = eyeTarget();
     layers.push({ y: PYRAMID.base * T, draw: () => drawPyramid(f, t, look ? look.x + 8 : PYRAMID.x * T, look ? look.y : 0) });
     for (const a of actors.values()) if (!a.carriedBy && vis(a.x, a.y)) layers.push({ y: a.y + (a.kind === 'mech' ? 44 : 14), draw: () => drawActor(a, t) });
@@ -1877,6 +2136,8 @@
       else px(p.x, p.y, 2, 2, p.color);
     }
     matrixRain(t, vis);
+    drawWeather(t, dt, vis);
+    drawNight(t, f, tl, br, vis);
     eyeBeams(dt);
     boats(t);
     fish(t);
@@ -1890,7 +2151,7 @@
       if (p) cursor(p.door[0] * T, p.door[1] * T - (selected.id === 'clock' ? 66 : 62), t);
     }
     hud();
-    requestAnimationFrame(render);
+    if (flash > 0) { g.setTransform(dpr, 0, 0, dpr, 0, 0); g.fillStyle = `rgba(255,255,240,${flash})`; g.fillRect(0, 0, cw, ch); flash = Math.max(0, flash - dt * 2); }
   }
 
   /* ---------- input ---------- */
@@ -1930,6 +2191,7 @@
     if (a.kind === 'agent') return { type: 'agent', id: a.id.replace(/^agent:/, '') };
     if (a.kind === 'mech') return { type: 'agent', id: 'bot-watchdog' };
     if (a.kind === 'warden') return { type: 'warden', id: a.id };
+    if (a.kind === 'tycoon') return { type: 'tycoon', id: 'tycoon' };
     if (a.kind === 'crew') return { type: 'crew', id: a.id };
     if (a.kind === 'dot') return { type: 'dot', id: 'dot' };
     if (a.kind === 'overlord') return { type: 'overlord', id: a.id };
@@ -1939,7 +2201,7 @@
   function select(sel) {
     if (sel && sel.type === 'job') selected = { type: 'actor', id: `job:${sel.id}` };
     else if (sel && sel.type === 'agent') selected = { type: 'actor', id: `agent:${sel.id}` };
-    else if (sel && (sel.type === 'crew' || sel.type === 'overlord' || sel.type === 'warden')) selected = { type: 'actor', id: sel.id };
+    else if (sel && (sel.type === 'crew' || sel.type === 'overlord' || sel.type === 'warden' || sel.type === 'tycoon')) selected = { type: 'actor', id: sel.id };
     else if (sel && sel.type === 'dot') selected = { type: 'actor', id: 'agent:dot' };
     else if (sel && sel.type === 'place') selected = { type: 'place', id: sel.id };
     else if (sel && sel.type === 'island') { selected = sel; frameIsland(sel.id); }
@@ -2048,8 +2310,8 @@
     return { spec: specOf(a), kind: a.kind, realm: a.realm, businessName: a.businessName, log: a.log || [], checking: a.checking || a.scanning, title: a.title, island: a.island };
   }
   function team() {
-    return [...actors.values()].filter((a) => ['overlord', 'agent', 'crew', 'dot', 'mech', 'warden'].includes(a.kind)).map((a) => ({ id: a.id, kind: a.kind, spec: specOf(a), name: a.kind === 'overlord' ? a.realm.label : a.kind === 'mech' ? 'Watchdog Mech' : a.kind === 'warden' ? a.title.replace('The ', '') : (a.title || '').split(' · ')[0].split(' (')[0], sel: describe({ type: 'actor', id: a.id }) }));
+    return [...actors.values()].filter((a) => ['tycoon', 'overlord', 'agent', 'crew', 'dot', 'mech', 'warden'].includes(a.kind)).map((a) => ({ id: a.id, kind: a.kind, spec: specOf(a), name: a.kind === 'overlord' ? a.realm.label : a.kind === 'mech' ? 'Watchdog Mech' : a.kind === 'warden' ? a.title.replace('The ', '') : a.kind === 'tycoon' ? 'The Tycoon' : (a.title || '').split(' · ')[0].split(' (')[0], sel: describe({ type: 'actor', id: a.id }) }));
   }
 
-  window.Arcade = { mount, update, start, stop, say, select, info, team, camera, placeOf, enterIsland, PLACES, ISLANDS, ZONES, _actors: actors };
+  window.Arcade = { mount, update, start, stop, say, select, info, team, camera, placeOf, enterIsland, weather, PLACES, ISLANDS, ZONES, _actors: actors };
 })();

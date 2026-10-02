@@ -179,9 +179,12 @@ struct JobCard: View {
                 ProgressView()
                 Text(run.notes?.last ?? "The agent is working on your answer…").font(.subheadline).foregroundStyle(.secondary).lineLimit(2)
             }
-            .task(id: run.notes?.count ?? 0) {
-                try? await Task.sleep(nanoseconds: 4_000_000_000)
-                await model.loadAsk(job, force: true)
+            .task(id: job.id) {
+                // keep checking until the agent finishes, even when no new progress notes arrive
+                while !Task.isCancelled, model.asks[job.id]?.run?.status == "running" {
+                    try? await Task.sleep(nanoseconds: 4_000_000_000)
+                    await model.loadAsk(job, force: true)
+                }
             }
         } else if let ask {
             if let run = ask.run, let a = run.answer, !a.isEmpty {

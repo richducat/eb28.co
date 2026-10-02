@@ -269,10 +269,13 @@ struct TodayView: View {
             TextField("Wins, ideas, what happened today…", text: $notes, axis: .vertical)
                 .lineLimit(4...12)
                 .onChange(of: notes) { _, v in
+                    // only save what was typed, into the day it was typed on
+                    guard let shown = model.today, v != (shown.sheet?.notes ?? "") else { return }
+                    let d = shown.date
                     notesTask?.cancel()
                     notesTask = Task {
                         try? await Task.sleep(nanoseconds: 900_000_000)
-                        if !Task.isCancelled { await model.saveNotes(v) }
+                        if !Task.isCancelled { await model.saveNotes(v, for: d) }
                     }
                 }
         }
@@ -330,7 +333,7 @@ struct CalendarAgendaView: View {
             List {
                 if data == nil { ConnectionState().listRowBackground(Color.clear) }
                 ForEach(days, id: \.self) { d in
-                    let evs = (data?.events ?? []).filter { $0.day == d && !(hideRoutines && $0.recurring == true) }
+                    let evs = (data?.events ?? []).filter { $0.occurs(on: d) && !(hideRoutines && $0.recurring == true) }
                     let tks = (data?.tasks ?? []).filter { $0.due == d && $0.done != true }
                     if !evs.isEmpty || !tks.isEmpty {
                         Section {

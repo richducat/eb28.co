@@ -251,6 +251,24 @@ struct CalEvent: Decodable, Identifiable, Hashable {
 
     var startDate: Date? { allDay == true ? nil : Fmt.date(start) }
     var endDate: Date? { allDay == true ? nil : Fmt.date(end) }
+    /// Does the event touch this local day? Handles all-day, overnight and multi-day events.
+    func occurs(on d: String) -> Bool {
+        guard let dayStart = Fmt.day(d), let dayEnd = Calendar.current.date(byAdding: .day, value: 1, to: dayStart) else { return false }
+        let s: Date
+        var e: Date
+        if allDay == true {
+            guard let a = Fmt.day(String(start.prefix(10))) else { return false }
+            s = a
+            e = Fmt.day(String((end ?? start).prefix(10))) ?? a
+            if e <= s { e = s.addingTimeInterval(86400) }
+        } else {
+            guard let a = startDate else { return false }
+            s = a
+            e = max(endDate ?? a, a.addingTimeInterval(1))
+        }
+        return s < dayEnd && e > dayStart
+    }
+
     /// Local day (YYYY-MM-DD) this event starts on.
     var day: String { allDay == true ? String(start.prefix(10)) : (startDate.map(Fmt.ymd) ?? String(start.prefix(10))) }
 }

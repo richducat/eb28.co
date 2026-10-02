@@ -1,5 +1,6 @@
 /* Today (day sheet), Calendar and Tasks. Uses api/esc/toast/showTab from app.js at runtime. */
 (function () {
+  // day: null means "follow today" (so leaving the app open past midnight moves to the new day)
   const P = { day: null, today: null, cal: { view: 'week', anchor: null, data: null, hidden: new Set(), range: null }, tasks: [], taskFilter: 'all', dueTab: 'today' };
   const ymd = (d = new Date()) => new Date(d).toLocaleDateString('en-CA');
   const addDays = (day, n) => { const d = new Date(`${day}T12:00:00`); d.setDate(d.getDate() + n); return ymd(d); };
@@ -28,8 +29,8 @@
 
   /* ================= TODAY ================= */
   async function loadToday() {
-    P.day = P.day || ymd();
-    const data = await api('GET', `/api/today?date=${P.day}`);
+    if (P.day === ymd()) P.day = null;
+    const data = await api('GET', `/api/today?date=${P.day || ymd()}`);
     P.today = data;
     renderToday();
   }
@@ -57,7 +58,7 @@
       paintTracking(t);
       paintNotes(t);
       paintTomorrow(t);
-    });
+    }, { focusedOnly: true });
   }
   const chip = (icon, text, cls = '', attrs = '') => `<span class="tchip ${cls}" ${attrs}><i>${icon}</i>${esc(text)}</span>`;
   const panelHead = (title, right = '') => `<div class="panel-h"><h2>${title}</h2>${right}</div>`;
@@ -69,7 +70,7 @@
       return `<div class="focus-row ${it.done ? 'done' : ''}">
         <label class="check"><input type="checkbox" data-focus-done="${i}" ${it.done ? 'checked' : ''} ${it.text ? '' : 'disabled'} /><span></span></label>
         <span class="num">${i + 1}</span>
-        <input class="focus-in" data-focus="${i}" value="${esc(it.text)}" placeholder="${['The one thing that would make today a win', 'Second priority', 'Third priority'][i]}" />
+        <input class="focus-in" data-focus="${i}" data-focus-day="${t.date}" value="${esc(it.text)}" placeholder="${['The one thing that would make today a win', 'Second priority', 'Third priority'][i]}" />
       </div>`;
     }).join('');
     $('#focus-panel').innerHTML = panelHead('🎯 Focus for the day', '<button class="ghost small" data-focus-suggest>✨ Suggest</button>') + rows;
@@ -154,7 +155,7 @@
     const cur = document.activeElement && document.activeElement.matches('[data-day-notes]');
     if (cur) return;
     $('#notes-panel').innerHTML = panelHead('📝 Notes', '<span class="muted small" id="notes-saved"></span>')
-      + `<textarea class="notes" data-day-notes rows="6" placeholder="Wins, ideas, what happened today…">${esc(t.sheet.notes || '')}</textarea>`;
+      + `<textarea class="notes" data-day-notes="${t.date}" rows="6" placeholder="Wins, ideas, what happened today…">${esc(t.sheet.notes || '')}</textarea>`;
   }
 
   function paintTomorrow(t) {
@@ -192,7 +193,7 @@
   document.addEventListener('input', (ev) => {
     if (!ev.target.matches('[data-day-notes]')) return;
     clearTimeout(notesTimer);
-    const day = P.today.date;
+    const day = ev.target.dataset.dayNotes || P.today.date;
     const val = ev.target.value;
     const tag = $('#notes-saved');
     if (tag) tag.textContent = 'Saving…';
@@ -231,12 +232,17 @@
     if (!t) return;
     const d = t.dataset;
     try {
-      if (d.day !== undefined) { P.day = d.day === '0' ? ymd() : addDays(P.day || ymd(), Number(d.day)); if (state.tab !== 'today') showTab('today'); else await loadToday(); return; }
+      if (d.day !== undefined) { P.day = d.day === '0' ? null : addDays(P.day || ymd(), Number(d.day)); if (state.tab !== 'today') showTab('today'); else await loadToday(); return; }
       if (d.dueTab) { P.dueTab = d.dueTab; P.dueTabPicked = true; return paintDue(P.today); }
       if (d.habit) { P.today.sheet = await api('POST', '/api/day', { date: P.today.date, habit: d.habit }); return loadToday(); }
       if ('habitsSave' in d) {
         const lines = $('[data-habits-edit]').value.split('\n').map((l) => l.trim()).filter(Boolean);
-        const habits = lines.map((l) => { const m = l.match(/^(\p{Extended_Pictographic}️?|\S{1,2})\s+(.+)$/u); return m ? { emoji: m[1], name: m[2] } : { emoji: '✅', name: l }; });
+        const seg = new Intl.Segmenter(undefined, { granularity: 'grapheme' });
+        const habits = lines.map((l) => {
+          const first = [...seg.segment(l)][0]?.segment || '';
+          if (/\p{Extended_Pictographic}/u.test(first)) return { emoji: first, name: l.slice(first.length).trim() || l };
+          return { emoji: '✅', name: l };
+        }).map((h) => ({ ...h, id: (P.today.habits.find((x) => x.name.toLowerCase() === h.name.toLowerCase()) || {}).id }));
         await api('POST', '/api/habits', { habits });
         toast('Habits saved', 'ok');
         return loadToday();
@@ -295,7 +301,9 @@
     const [s, e] = rangeFor();
     P.cal.range = [s, e];
     renderCalendar(true);
-    P.cal.data = await api('GET', `/api/calendar?start=${s}&end=${e}${fresh ? '&fresh=1' : ''}`);
+    const data = await api('GET', `/api/calendar?start=${s}&end=${e}${fresh ? '&fresh=1' : ''}`);
+    if (!P.cal.range || P.cal.range[0] !== s || P.cal.range[1] !== e) return; // a newer range was asked for meanwhile
+    P.cal.data = data;
     renderCalendar();
   }
   function calTitle() {
@@ -309,8 +317,13 @@
   function eventsOn(day) {
     const d = P.cal.data;
     if (!d) return [];
-    return d.events.filter((e) => !P.cal.hidden.has(e.calendarId) && !(e.recurring && P.cal.hidden.has('routines')) && (e.allDay ? e.start <= day && (e.end > day || e.end === e.start) : ymd(e.start) === day));
+    return d.events.filter((e) => !P.cal.hidden.has(e.calendarId) && !(e.recurring && P.cal.hidden.has('routines')) && touches(e, day));
   }
+  const evStart = (e) => (e.allDay ? new Date(`${e.start}T00:00:00`).getTime() : Date.parse(e.start));
+  const evEnd = (e) => Math.max(e.allDay ? new Date(`${e.end}T00:00:00`).getTime() : Date.parse(e.end), evStart(e) + (e.allDay ? 864e5 : 1));
+  const dayStart = (day) => new Date(`${day}T00:00:00`).getTime();
+  const dayEnd = (day) => new Date(`${addDays(day, 1)}T00:00:00`).getTime();
+  const touches = (e, day) => evStart(e) < dayEnd(day) && evEnd(e) > dayStart(day);
   const tasksOn = (day) => (P.cal.data ? P.cal.data.tasks.filter((t) => t.due === day && !t.done && !P.cal.hidden.has('tasks')) : []);
 
   function renderCalendar(loading = false) {
@@ -367,8 +380,9 @@
     const cols = days.map((d) => {
       const evs = eventsOn(d).filter((e) => !e.allDay);
       const blocks = lanes(evs).map(({ e, col, cols: n }) => {
-        const st = new Date(e.start);
-        const en = new Date(e.end);
+        // clip to this day so overnight and multi-day events stay inside the column
+        const st = new Date(Math.max(Date.parse(e.start), dayStart(d)));
+        const en = new Date(Math.min(Date.parse(e.end), dayEnd(d)));
         const top = (st.getHours() * 60 + st.getMinutes()) / 60 * HOUR;
         const h = Math.max(18, ((en - st) / 3600e3) * HOUR - 2);
         return `<div class="wk-ev" data-ev-link="${esc(e.link)}" title="${esc(e.title)} · ${hm(e.start)}–${hm(e.end)}${e.location ? ` · ${esc(e.location)}` : ''}" style="top:${top}px;height:${h}px;left:calc(${(col / n) * 100}% + 2px);width:calc(${100 / n}% - 4px);--c:${esc(e.color)}"><b>${esc(e.title)}</b><small>${hm(e.start)}${h > 34 ? `–${hm(e.end)}` : ''}</small></div>`;
@@ -384,7 +398,7 @@
     const names = [...Array(7)].map((_, i) => dateOf(addDays(s, i)).toLocaleDateString(undefined, { weekday: 'short' }));
     const cells = [...Array(42)].map((_, i) => {
       const d = addDays(s, i);
-      const items = [...eventsOn(d).sort((x, y) => Number(x.recurring) - Number(y.recurring) || String(x.start).localeCompare(String(y.start))).map((e) => `<div class="mo-it" style="--c:${esc(e.color)}">${e.allDay ? '' : `<b>${hm(e.start)}</b> `}${esc(e.title)}</div>`), ...tasksOn(d).map((t) => `<div class="mo-it task">✅ ${esc(t.title)}</div>`)];
+      const items = [...eventsOn(d).sort((x, y) => Number(x.recurring) - Number(y.recurring) || evStart(x) - evStart(y)).map((e) => `<div class="mo-it" style="--c:${esc(e.color)}">${e.allDay ? '' : `<b>${hm(e.start)}</b> `}${esc(e.title)}</div>`), ...tasksOn(d).map((t) => `<div class="mo-it task">✅ ${esc(t.title)}</div>`)];
       return `<div class="mo-cell ${d.slice(0, 7) !== month ? 'other' : ''} ${d === today ? 'today' : ''}" data-cal-day="${d}"><span class="mo-n">${dateOf(d).getDate()}</span>${items.slice(0, 4).join('')}${items.length > 4 ? `<div class="mo-more">+${items.length - 4} more</div>` : ''}</div>`;
     }).join('');
     return `<div class="mo"><div class="mo-head">${names.map((n) => `<div>${n}</div>`).join('')}</div><div class="mo-grid">${cells}</div></div>`;

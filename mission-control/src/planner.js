@@ -24,11 +24,22 @@ export function addDays(day, n) {
 const DAYS = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
 const MONTHS = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
 
+/** A real calendar date in YYYY-MM-DD form (rejects 2026-02-31, 2026-24-07...). */
+export function isRealDay(s) {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(s || ''));
+  if (!m) return false;
+  const d = new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+  return d.getFullYear() === Number(m[1]) && d.getMonth() === Number(m[2]) - 1 && d.getDate() === Number(m[3]);
+}
+const isTime = (t) => /^([01]\d|2[0-3]):[0-5]\d$/.test(String(t || ''));
+
 /**
  * Quick add: "Call the VA about John tomorrow 3pm #tyfys !" ->
  * { title: 'Call the VA about John', due: <tomorrow>, time: '15:00', business: 'tyfys', priority: 'high' }.
  * Understands today, tonight, tomorrow, weekdays (this/next), "next week", "in 3 days", "eow",
- * 10/14, Oct 14, and times like 3pm, 3:30pm, 15:00, "noon". Pure; exported for tests.
+ * 10/14, Oct 14, and times like 3pm, 3:30pm, "at 15:00", "noon". Ambiguous forms (short weekday
+ * names like "sat", numeric dates like 1/2, bare 15:00) only count at the end of the text or after
+ * on/by/due/at, so "Call Sat phone provider" or "Pay 1/2 of the deposit" stay as written. Pure.
  */
 export function parseQuick(text, now = new Date()) {
   let s = ` ${String(text || '').trim()} `;
@@ -39,42 +50,64 @@ export function parseQuick(text, now = new Date()) {
   let priority = 'normal';
   const take = (re, fn) => {
     const m = s.match(re);
-    if (m) { fn(m); s = s.replace(m[0], ' '); }
+    if (!m) return false;
+    if (fn(m) === false) return false;
+    s = s.replace(m[0], ' ');
+    return true;
   };
-  take(/\s#([a-z0-9-]+)\b/i, (m) => { business = m[1].toLowerCase(); });
+  const END = '(?=\\s*$)';
+  const atEnd = (m) => /^\s*$/.test(s.slice(m.index + m[0].length));
+  const PRE = '(?:due\\s+|by\\s+|on\\s+)';
+  take(/\s#([a-z][a-z0-9-]*)\b/i, (m) => { business = m[1].toLowerCase(); });
   take(/\s!{1,3}(?=\s)/, () => { priority = 'high'; });
   take(/\s(?:at\s+)?(\d{1,2})(?::(\d{2}))?\s*(am|pm)\b/i, (m) => {
-    let h = Number(m[1]) % 12;
-    if (m[3].toLowerCase() === 'pm') h += 12;
-    time = `${String(h).padStart(2, '0')}:${m[2] || '00'}`;
+    const h12 = Number(m[1]);
+    const min = Number(m[2] || 0);
+    if (h12 < 1 || h12 > 12 || min > 59) return false;
+    time = `${String((h12 % 12) + (m[3].toLowerCase() === 'pm' ? 12 : 0)).padStart(2, '0')}:${String(min).padStart(2, '0')}`;
   });
-  if (!time) take(/\s(?:at\s+)?([01]?\d|2[0-3]):([0-5]\d)\b/, (m) => { time = `${m[1].padStart(2, '0')}:${m[2]}`; });
+  if (!time) take(/\s(at\s+)?([01]?\d|2[0-3]):([0-5]\d)(?![\d:])/i, (m) => {
+    // bare times count only from 13:00 up, or at the end on a 5-minute mark ("sync 9:30", not "chapter 3:16")
+    if (!m[1] && Number(m[2]) < 13 && !(atEnd(m) && Number(m[3]) % 5 === 0)) return false;
+    time = `${m[2].padStart(2, '0')}:${m[3]}`;
+  });
   if (!time) take(/\s(?:at\s+)?noon\b/i, () => { time = '12:00'; });
-  take(/\s(?:due\s+|by\s+|on\s+)?(today|tonight|tomorrow|tmrw|tmr)\b/i, (m) => {
+  take(new RegExp(`\\s${PRE}?(today|tonight|tomorrow|tmrw|tmr)\\b(?!['’])`, 'i'), (m) => {
     const w = m[1].toLowerCase();
     due = w === 'today' || w === 'tonight' ? today : addDays(today, 1);
     if (w === 'tonight' && !time) time = '20:00';
   });
-  if (!due) take(/\s(?:due\s+|by\s+)?in\s+(\d+)\s+(day|days|week|weeks)\b/i, (m) => { due = addDays(today, Number(m[1]) * (m[2].startsWith('week') ? 7 : 1)); });
+  if (!due) take(/\s(?:due\s+|by\s+)?in\s+(\d{1,3})\s+(day|days|week|weeks)\b/i, (m) => { due = addDays(today, Number(m[1]) * (m[2].startsWith('week') ? 7 : 1)); });
   if (!due) take(/\s(?:due\s+|by\s+)?(next week)\b/i, () => { const d = new Date(`${today}T12:00:00`).getDay(); due = addDays(today, ((8 - d) % 7) || 7); });
   if (!due) take(/\s(?:due\s+|by\s+)?(eow|end of (?:the )?week)\b/i, () => { const d = new Date(`${today}T12:00:00`).getDay(); due = addDays(today, (5 - d + 7) % 7); });
-  if (!due) take(/\s(?:due\s+|by\s+|on\s+)?(next\s+|this\s+)?(sunday|sun|monday|mon|tuesday|tues|tue|wednesday|wed|thursday|thurs|thur|thu|friday|fri|saturday|sat)\b/i, (m) => {
-    const target = DAYS.findIndex((d) => d.startsWith(m[2].toLowerCase().slice(0, 3)));
-    const cur = new Date(`${today}T12:00:00`).getDay();
-    let diff = (target - cur + 7) % 7;
-    if (diff === 0) diff = 7;
-    if (m[1] && /next/i.test(m[1]) && diff < 7) diff += 7;
-    due = addDays(today, diff);
-  });
-  if (!due) take(/\s(?:due\s+|by\s+|on\s+)?(\d{1,2})\/(\d{1,2})(?:\/(\d{2,4}))?\b/, (m) => {
-    const y = m[3] ? (m[3].length === 2 ? 2000 + Number(m[3]) : Number(m[3])) : now.getFullYear();
-    let d = `${y}-${m[1].padStart(2, '0')}-${m[2].padStart(2, '0')}`;
-    if (!m[3] && d < today) d = `${y + 1}${d.slice(4)}`;
+  if (!due) {
+    const full = '(sunday|monday|tuesday|wednesday|thursday|friday|saturday)';
+    const short = '(sun|mon|tues|tue|wed|thurs|thur|thu|fri|sat)';
+    const weekday = (m, mod, name) => {
+      const target = DAYS.findIndex((d) => d.startsWith(name.toLowerCase().slice(0, 3)));
+      const cur = new Date(`${today}T12:00:00`).getDay();
+      let diff = (target - cur + 7) % 7;
+      if (diff === 0) diff = 7;
+      if (mod && /next/i.test(mod) && diff < 7) diff += 7;
+      due = addDays(today, diff);
+    };
+    // full names anywhere; short ones only when anchored (end of text, or after on/by/due/next/this)
+    take(new RegExp(`\\s${PRE}?(next\\s+|this\\s+)?${full}\\b(?!['’])`, 'i'), (m) => weekday(m, m[1], m[2]))
+      || take(new RegExp(`\\s(?:${PRE}(next\\s+|this\\s+)?|(next\\s+|this\\s+))${short}\\b(?!['’])`, 'i'), (m) => weekday(m, m[1] || m[2], m[3]))
+      || take(new RegExp(`\\s${short}${END}`, 'i'), (m) => weekday(m, null, m[1]));
+  }
+  if (!due) take(new RegExp(`\\s(${PRE})?(\\d{1,2})\\/(\\d{1,2})(?:\\/(\\d{2,4}))?(?![\\d/])`), (m) => {
+    if (!m[1] && !atEnd(m)) return false; // "Pay 1/2 of the deposit", "24/7 coverage"
+    const y = m[4] ? (m[4].length === 2 ? 2000 + Number(m[4]) : Number(m[4])) : now.getFullYear();
+    let d = `${y}-${m[2].padStart(2, '0')}-${m[3].padStart(2, '0')}`;
+    if (!m[4] && isRealDay(d) && d < today) d = `${y + 1}${d.slice(4)}`;
+    if (!isRealDay(d)) return false;
     due = d;
   });
   if (!due) take(/\s(?:due\s+|by\s+|on\s+)?(january|february|march|april|may|june|july|august|september|october|november|december|jan|feb|mar|apr|jun|jul|aug|sept|sep|oct|nov|dec)\.?\s+(\d{1,2})(?:st|nd|rd|th)?\b/i, (m) => {
     const mo = MONTHS.indexOf(m[1].toLowerCase().slice(0, 3)) + 1;
     let d = `${now.getFullYear()}-${String(mo).padStart(2, '0')}-${m[2].padStart(2, '0')}`;
+    if (!isRealDay(d)) return false;
     if (d < today) d = `${now.getFullYear() + 1}${d.slice(4)}`;
     due = d;
   });
@@ -95,9 +128,14 @@ export function addTask(input) {
   return t;
 }
 
+/** Only well-formed task fields get through (edits from the UI or the phone). */
 function pick(o) {
   const out = {};
-  for (const k of ['due', 'time', 'business', 'priority', 'notes']) if (o[k] !== undefined) out[k] = o[k];
+  if (o.due !== undefined) { if (o.due !== null && o.due !== '' && !isRealDay(o.due)) throw new Error('Due date must be YYYY-MM-DD.'); out.due = o.due || null; }
+  if (o.time !== undefined) { if (o.time !== null && o.time !== '' && !isTime(o.time)) throw new Error('Time must be HH:MM.'); out.time = o.time || null; }
+  if (o.business !== undefined) out.business = o.business ? String(o.business).toLowerCase().slice(0, 40) : null;
+  if (o.priority !== undefined) out.priority = o.priority === 'high' ? 'high' : 'normal';
+  if (o.notes !== undefined) out.notes = String(o.notes || '').slice(0, 4000);
   return out;
 }
 
@@ -121,8 +159,20 @@ export function deleteTask(id) {
 
 /* ---------- the day sheet ---------- */
 export const habits = () => store.get('habits', DEFAULT_HABITS);
+const firstGrapheme = (s) => { const it = new Intl.Segmenter(undefined, { granularity: 'grapheme' }).segment(String(s || ''))[Symbol.iterator]().next(); return it.done ? '' : it.value.segment; };
+
+/** Save the habit list. Habits keep their ids (matched by id, then by name) so streaks survive edits. */
 export function setHabits(list) {
-  const clean = (list || []).filter((h) => h && h.name).slice(0, 12).map((h) => ({ id: h.id || crypto.randomUUID().slice(0, 6), name: String(h.name).slice(0, 40), emoji: String(h.emoji || '✅').slice(0, 4) }));
+  const prev = habits();
+  const byName = new Map(prev.map((h) => [h.name.toLowerCase(), h.id]));
+  const used = new Set();
+  const clean = (list || []).filter((h) => h && String(h.name || '').trim()).slice(0, 12).map((h) => {
+    const name = String(h.name).trim().slice(0, 40);
+    let id = (h.id && prev.some((p) => p.id === h.id) && h.id) || byName.get(name.toLowerCase()) || crypto.randomUUID().slice(0, 6);
+    if (used.has(id)) id = crypto.randomUUID().slice(0, 6);
+    used.add(id);
+    return { id, name, emoji: firstGrapheme(h.emoji) || '✅' };
+  });
   store.set('habits', clean);
   return clean;
 }
@@ -133,7 +183,7 @@ export function daySheet(day) {
 }
 
 export function updateDay(day, patch = {}) {
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(day)) throw new Error('bad date');
+  if (!isRealDay(day)) throw new Error('bad date');
   let next;
   store.update('days', {}, (all) => {
     const cur = { focus: [], notes: '', habits: {}, ...(all[day] || {}) };

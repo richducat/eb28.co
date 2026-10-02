@@ -108,6 +108,21 @@ export function resolveCwd(a) {
 const running = new Map();
 
 /**
+ * Executable for an automation's first argv. `python3`/`python` resolve to the newest
+ * python3.x on PATH (macOS ships 3.9; the repo's CI uses 3.13), or MC_PYTHON if set.
+ */
+export function resolveBin(cmd) {
+  if (cmd === 'python3' || cmd === 'python') {
+    if (process.env.MC_PYTHON && which(process.env.MC_PYTHON)) return which(process.env.MC_PYTHON);
+    for (let minor = 20; minor >= 10; minor -= 1) {
+      const hit = which(`python3.${minor}`);
+      if (hit) return hit;
+    }
+  }
+  return which(cmd);
+}
+
+/**
  * Why an automation cannot run in `cwd` (its npm script, file, module or test folder is
  * missing), or '' when it looks runnable. Lets a machine without a repo checkout show
  * "not set up here" instead of a wall of failures.
@@ -148,7 +163,7 @@ export function runAutomation(a, { trigger = 'manual', onEvent } = {}) {
   const base = { automationId: a.id, title: a.title, tier: a.tier, trigger, cwd, startedAt, status: 'running' };
   const missing = missingTarget(a, cwd);
   if (missing) return Promise.resolve(record({ ...base, ok: false, unavailable: true, status: 'finished', error: `Not set up on this machine: ${missing}.`, finishedAt: startedAt, durationMs: 0 }));
-  const bin = which(a.command[0]);
+  const bin = resolveBin(a.command[0]);
   if (!bin) {
     return Promise.resolve(record({ ...base, ok: false, status: 'finished', error: `"${a.command[0]}" was not found on PATH. Install it or add its folder to your shell PATH, then relaunch Mission Control.`, finishedAt: startedAt, durationMs: 0 }));
   }

@@ -15,7 +15,8 @@ const today = new Date().toISOString().slice(0, 10);
 
 const conceptBaseUrl = 'https://eb28.co/32940/';
 const ownerEmail = 'social@eb28.co';
-const minimumProspectCount = 100;
+// Sanity floor so a markup change that breaks parsing fails loudly; the page lists 91 concepts.
+const minimumProspectCount = 80;
 
 const verifiedContacts = {
   'arabesque-flavors-of-the-middle-east': {
@@ -681,12 +682,15 @@ function getEmailStats(directEmailProspects) {
 }
 
 function extractProspects(indexHtml) {
-  const linkPattern = /<a href="\/32940\/([^"]+)\.html">([\s\S]*?)<br><small>([\s\S]*?)<\/small><\/a>/g;
+  // Concept cards: `<span>Name</span><small>Category</small>` since the July 2026 redesign,
+  // `Name<br><small>Category</small>` before it.
+  const linkPattern = /<a href="\/32940\/([^"]+)\.html">\s*(?:<span>([\s\S]*?)<\/span>|([\s\S]*?)<br>)\s*<small>([\s\S]*?)<\/small>/g;
   const prospects = [];
   let match;
 
   while ((match = linkPattern.exec(indexHtml)) !== null) {
-    const [, slug, rawName, rawCategory] = match;
+    const [, slug, spanName, brName, rawCategory] = match;
+    const rawName = spanName ?? brName;
     const name = decodeHtml(rawName.trim());
     const category = decodeHtml(rawCategory.trim());
     prospects.push({ slug, name, category });

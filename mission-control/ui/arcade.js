@@ -845,8 +845,16 @@
     }
   }
 
+  // The art animates at ~10fps, so 30fps is plenty; skip work entirely while hidden.
+  const FRAME_MS = 1000 / 30;
+  let lastDraw = 0;
   function render(ts) {
     if (!running) return;
+    if (document.hidden || ts - lastDraw < FRAME_MS - 1) {
+      requestAnimationFrame(render);
+      return;
+    }
+    lastDraw = ts;
     const t = ts / 1000;
     const dt = Math.min(0.05, lastT ? t - lastT : 0.016);
     lastT = t;

@@ -48,12 +48,15 @@ export function parseQuick(text, now = new Date()) {
   let time = null;
   let business = null;
   let priority = 'normal';
+  // try every match in order; remove the one that is accepted, at its own position
   const take = (re, fn) => {
-    const m = s.match(re);
-    if (!m) return false;
-    if (fn(m) === false) return false;
-    s = s.replace(m[0], ' ');
-    return true;
+    const g = new RegExp(re.source, re.flags.includes('g') ? re.flags : `${re.flags}g`);
+    for (const m of s.matchAll(g)) {
+      if (fn(m) === false) continue;
+      s = `${s.slice(0, m.index)} ${s.slice(m.index + m[0].length)}`;
+      return true;
+    }
+    return false;
   };
   const END = '(?=\\s*$)';
   const atEnd = (m) => /^\s*$/.test(s.slice(m.index + m[0].length));

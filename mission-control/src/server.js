@@ -169,7 +169,11 @@ export function createServer({ orchestrator = new Orchestrator(), nativeNotify =
       const list = loadBots();
       const idx = list.findIndex((x) => (x.id || x.name) === (b.originalName || entry.name));
       // an edit replaces the entry (cleared fields stay cleared); keep only its id
-      if (idx >= 0) list[idx] = { ...(list[idx].id ? { id: list[idx].id } : {}), ...entry };
+      if (idx >= 0) {
+        // the edit form owns most fields; keep the ones it can't show (id, heartbeat, hidden, match)
+        const keep = Object.fromEntries(['id', 'heartbeat', 'hidden', 'match'].filter((k) => list[idx][k] !== undefined).map((k) => [k, list[idx][k]]));
+        list[idx] = { ...keep, ...entry };
+      }
       else list.push(entry);
       saveBots(list);
       await orchestrator.refreshBoard();
@@ -314,9 +318,11 @@ export function createServer({ orchestrator = new Orchestrator(), nativeNotify =
     if (url.pathname.startsWith('/api/')) return json(res, 404, { error: 'not found' });
     // static UI
     let file = path.join(UI_DIR, url.pathname === '/' ? 'index.html' : url.pathname);
-    if (!file.startsWith(UI_DIR) || !fs.existsSync(file)) file = path.join(UI_DIR, 'index.html');
+    const isFile = (f) => { try { return fs.statSync(f).isFile(); } catch { return false; } };
+    // only real files inside ui/ (a directory like /vendor used to crash the server)
+    if (!file.startsWith(UI_DIR + path.sep) || !isFile(file)) file = path.join(UI_DIR, 'index.html');
     res.writeHead(200, { 'Content-Type': MIME[path.extname(file)] || 'application/octet-stream', 'Cache-Control': 'no-store' });
-    fs.createReadStream(file).pipe(res);
+    fs.createReadStream(file).on('error', () => res.destroy()).pipe(res);
   };
   const server = http.createServer((req, res) => handle(req, res));
 

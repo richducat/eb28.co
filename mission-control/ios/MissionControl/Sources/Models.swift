@@ -230,6 +230,12 @@ enum Fmt {
         return f.string(from: NSNumber(value: v)) ?? "\(v)"
     }
 
+    static func tomorrowAt(hour: Int) -> String {
+        let cal = Calendar.current
+        let t = cal.date(byAdding: .day, value: 1, to: cal.startOfDay(for: Date())) ?? Date()
+        return iso.string(from: cal.date(bySettingHour: hour, minute: 0, second: 0, of: t) ?? t)
+    }
+
     static func isoNow(plusHours h: Double) -> String {
         iso.string(from: Date().addingTimeInterval(h * 3600))
     }

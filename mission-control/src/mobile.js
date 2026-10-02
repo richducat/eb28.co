@@ -128,7 +128,7 @@ export function createMobile({ handle }) {
     srv.listen(MOBILE_PORT, '0.0.0.0');
   }
   function stop() {
-    if (srv) srv.close();
+    if (srv) { srv.close(); srv.closeAllConnections(); }
     srv = null;
   }
 
@@ -154,7 +154,7 @@ export function createMobile({ handle }) {
     set({ enabled: on, rotate } = {}) {
       if (on === true) { write('enabled', '1'); lastError = ''; start(); }
       if (on === false) { write('enabled', '0'); stop(); }
-      if (rotate) ensureToken(true);
+      if (rotate) { ensureToken(true); if (srv) srv.closeAllConnections(); } // old phones must re-pair
       return this.status();
     },
     stop,

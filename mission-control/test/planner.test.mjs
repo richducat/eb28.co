@@ -129,3 +129,9 @@ test('audit 2: overnight and multi-day events count on every day they touch', as
   const b = { start: '2026-10-05T12:45:00Z' };
   assert.ok(startMs(b) < startMs(a));
 });
+
+test("audit 3: quick add removes the matched words in place and tries later candidates", () => {
+  assert.deepEqual(parseQuick("Send today's numbers today", now), { title: "Send today's numbers", due: '2026-10-01', time: null, business: null, priority: 'normal' });
+  assert.equal(parseQuick('Pay 1/2 of the deposit by 3/15', now).title, 'Pay 1/2 of the deposit');
+  assert.equal(parseQuick('Read 3:16 then call at 9:30', now).time, '09:30');
+});

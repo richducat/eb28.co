@@ -121,6 +121,9 @@ final class API: NSObject, URLSessionDelegate {
                 return data
             } catch let e as APIError {
                 throw e
+            } catch let e as URLError where body != nil && ![.cannotConnectToHost, .cannotFindHost, .notConnectedToInternet, .dnsLookupFailed, .networkConnectionLost].contains(e.code) {
+                // the Mac may have received this action (e.g. a slow restart): never send it twice
+                throw e.code == .timedOut ? APIError.server("Your Mac is taking a while. Check back in a moment before trying again.") : APIError.unreachable
             } catch {
                 lastError = APIError.unreachable
                 continue

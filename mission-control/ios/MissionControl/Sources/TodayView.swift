@@ -9,6 +9,8 @@ struct TodayView: View {
     @State private var notes = ""
     @State private var notesTask: Task<Void, Never>?
     @State private var suggesting = false
+    @State private var lastSentNotes: String?
+    @FocusState private var editing: Bool
 
     private var isToday: Bool { model.day == Fmt.ymd(Date()) }
 
@@ -40,7 +42,8 @@ struct TodayView: View {
                     Button { model.shiftDay(1) } label: { Image(systemName: "chevron.right") }
                 }
             }
-            .onChange(of: model.today?.date) { _, _ in syncFromModel() }
+            .onChange(of: model.today?.date) { _, _ in lastSentNotes = nil; syncFromModel() }
+            .onChange(of: model.lastSync) { _, _ in if !editing && notesTask == nil { syncFromModel() } }
             .onAppear { syncFromModel() }
         }
     }
@@ -107,6 +110,7 @@ struct TodayView: View {
                     }
                     .disabled(focus[i].text.isEmpty)
                     TextField(["The one thing that would make today a win", "Second priority", "Third priority"][min(i, 2)], text: $focus[i].text)
+                        .focused($editing)
                         .strikethrough(focus[i].done)
                         .foregroundStyle(focus[i].done ? .secondary : .primary)
                         .submitLabel(.done)
@@ -268,14 +272,20 @@ struct TodayView: View {
         Card(title: "Notes", icon: "note.text") { EmptyView() } content: {
             TextField("Wins, ideas, what happened today…", text: $notes, axis: .vertical)
                 .lineLimit(4...12)
+                .focused($editing)
                 .onChange(of: notes) { _, v in
-                    // only save what was typed, into the day it was typed on
-                    guard let shown = model.today, v != (shown.sheet?.notes ?? "") else { return }
-                    let d = shown.date
                     notesTask?.cancel()
+                    notesTask = nil
+                    // save only real edits (not syncs from the Mac), into the day they were typed on
+                    guard editing, let shown = model.today else { return }
+                    if v == (lastSentNotes ?? shown.sheet?.notes ?? "") { return }
+                    let d = shown.date
                     notesTask = Task {
                         try? await Task.sleep(nanoseconds: 900_000_000)
-                        if !Task.isCancelled { await model.saveNotes(v, for: d) }
+                        if Task.isCancelled { return }
+                        await model.saveNotes(v, for: d)
+                        lastSentNotes = v
+                        notesTask = nil
                     }
                 }
         }
@@ -376,7 +386,9 @@ struct CalendarAgendaView: View {
 
     private func load() async {
         loading = true
-        data = await model.calendar(from: start, days: 14)
+        let asked = start
+        let result = await model.calendar(from: asked, days: 14)
+        if asked == start { data = result } // ignore an older range that arrived late
         loading = false
     }
 }

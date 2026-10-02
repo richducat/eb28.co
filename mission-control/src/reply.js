@@ -362,7 +362,8 @@ export async function sendReply(job, text, { approve = false, tool, toolInput, o
   saveRun(run);
   const emit = (type) => onEvent && onEvent({ type, jobId: job.id, run: { ...run, notes: run.notes.slice(-6) } });
   emit('reply:progress');
-  const child = spawn(bin, args.concat(job.source === 'claude-code' ? [reply] : []), { cwd, env: { ...process.env, MC_REPLY: '1' } });
+  // `--` ends option parsing: --allowedTools takes several values and would swallow the reply
+  const child = spawn(bin, args.concat(job.source === 'claude-code' ? ['--', reply] : []), { cwd, env: { ...process.env, MC_REPLY: '1' } });
   if (job.source === 'codex') child.stdin.end(reply);
   else child.stdin.end();
   let buf = '';

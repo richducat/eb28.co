@@ -1858,7 +1858,8 @@
     if (s.totals) parts.push(`WATCHED ${money(s.totals.usd)}`, `PNL ${money(s.totals.pnl)}`);
     for (const w of s.wallets || []) if (w.ok) parts.push(`${(w.label || w.chain).toUpperCase()} ${money(w.usd)}`);
     for (const p of s.polymarket || []) if (p.ok) parts.push(`POLYMARKET ${p.open}/${p.count} OPEN ${money(p.cashPnl)}`);
-    if (s.stepn && s.stepn.snapshot) parts.push(`GST ${Math.round(s.stepn.snapshot.GST)}`, `GMT ${Math.round(s.stepn.snapshot.GMT)}`);
+    const n = (v) => (v == null || v === '' ? '—' : Math.round(v));
+    if (s.stepn && s.stepn.snapshot) parts.push(`GST ${n(s.stepn.snapshot.GST)}`, `GMT ${n(s.stepn.snapshot.GMT)}`);
     const open = (s.checklist || []).filter((c) => c.status !== 'done').length;
     if (open) parts.push(`${open} SAFETY ITEMS OPEN`);
     return parts.join('   ·   ');
@@ -2398,6 +2399,7 @@
 
   /* ---------- input ---------- */
   function hit(sx, sy) {
+    if (!built) return null; // places get their doors on the first update()
     const { x, y } = toWorld(sx, sy);
     let best = null;
     for (const a of actors.values()) {

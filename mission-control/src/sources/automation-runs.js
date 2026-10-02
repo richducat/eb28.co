@@ -1,5 +1,6 @@
 import { makeJob } from '../jobs/model.js';
 import { store } from '../store.js';
+import { loadRegistry, missingTarget, resolveCwd } from '../workforce/automations.js';
 
 export const id = 'automation';
 export const label = 'Automation';
@@ -9,7 +10,13 @@ export async function collect() {
   const runs = store.get('automation-runs', []);
   const latest = new Map();
   for (const run of runs) latest.set(run.automationId, run);
-  return [...latest.values()].map((run) =>
+  // automations whose repo is not on this machine are "not set up here", not failed jobs
+  const reg = new Map(loadRegistry().map((a) => [a.id, a]));
+  const runnable = (run) => {
+    const a = reg.get(run.automationId);
+    return !run.unavailable && !(a && missingTarget(a, resolveCwd(a)));
+  };
+  return [...latest.values()].filter(runnable).map((run) =>
     makeJob({
       id: `automation:${run.automationId}`,
       source: 'automation',

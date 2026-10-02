@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { PATHS, T } from '../config.js';
-import { deriveStatus, makeJob, titleFrom } from '../jobs/model.js';
+import { deriveStatus, describeTool, makeJob, titleFrom } from '../jobs/model.js';
 import { exists, readHeadJsonl, readTailJsonl, textOf, walk } from './util.js';
 
 export const id = 'codex';
@@ -28,7 +28,7 @@ function normalize(records) {
         if (p.role === 'user' && WRAPPER.test(text)) continue;
         events.push({ kind: p.role, text, ts });
       } else if (p.type === 'function_call' || p.type === 'local_shell_call' || p.type === 'custom_tool_call') {
-        events.push({ kind: 'tool_use', text: p.name || p.type, ts });
+        events.push({ kind: 'tool_use', text: p.name || p.type, input: p.arguments || p.input || (p.action && p.action.command ? { command: p.action.command } : undefined), ts });
       } else if (p.type === 'function_call_output' || p.type === 'local_shell_call_output' || p.type === 'custom_tool_call_output') {
         events.push({ kind: 'tool_result', ts });
       }
@@ -59,6 +59,8 @@ export function parseRollout(file, { now = Date.now(), mtime, names = new Map() 
   const lastComplete = lastIndex(events, 'task_complete');
   const lastApproval = lastIndex(events, 'approval');
   const lastError = events.slice().reverse().find((e) => e.kind === 'error');
+  const lastTool = events.slice().reverse().find((e) => e.kind === 'tool_use');
+  const activity = lastTool ? { ...describeTool(lastTool.text, lastTool.input), at: lastTool.ts ? new Date(lastTool.ts).toISOString() : null } : null;
 
   let lastKind = lastMeaningful ? lastMeaningful.kind : 'unknown';
   if (lastKind === 'tool_result') lastKind = 'user';
@@ -99,7 +101,7 @@ export function parseRollout(file, { now = Date.now(), mtime, names = new Map() 
     lastMessage: lastAssistant ? lastAssistant.text : firstUser ? firstUser.text : '',
     resumeCommand: `codex resume ${sessionId}`,
     alive,
-    meta: { sessionId, file, model: meta.model, cliVersion: meta.cli_version, originator: meta.originator, ...(viaDot ? { agent: 'Dot', alias: 'OG Kush' } : {}) },
+    meta: { sessionId, file, model: meta.model, cliVersion: meta.cli_version, originator: meta.originator, activity, ...(viaDot ? { agent: 'Dot', alias: 'OG Kush' } : {}) },
     tags: viaDot ? ['dot'] : [],
   });
 }

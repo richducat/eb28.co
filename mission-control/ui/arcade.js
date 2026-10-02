@@ -3,8 +3,8 @@
  * cliffs, dirt paths, eyed hills, trees and flowers, plus a landmark per status. Jobs are little
  * characters standing at the landmark for their status; when a status changes they walk the
  * path to the new landmark. Usage:
- *   Arcade.mount(canvas, { onOpen(jobId), onPlace(placeId) });
- *   Arcade.update(board, workforce, crew, dotCfg);  Arcade.start(); Arcade.stop();
+ *   Arcade.mount(canvas, { onSelect(selection) });  Arcade.select(selection);
+ *   Arcade.update(board, workforce, crew, dotCfg, schedule);  Arcade.start(); Arcade.stop();
  */
 (() => {
   const T = 16; // tile size
@@ -42,6 +42,8 @@
     failed: { name: 'GHOST HOUSE', blurb: 'Crashed or errored. Check these', door: [23, 19], route: [HQD, [16, 15], [21, 15], [21, 19], [23, 19]], cols: 4, kind: 'ghost', max: 8 },
     crew: { name: 'HERMES VILLAGE', blurb: 'Your Hermes profile agents', door: [10, 19], route: [HQD, [16, 15], [10, 15], [10, 19]], cols: 11, kind: 'village' },
   };
+  // The clock tower is a landmark, not a status: it shows when scheduled agents run next.
+  const CLOCK = { door: [11, 13] };
   const AGENT_TARGET = { triage: 'needs_you', 'follow-up': 'follow_up', 'bot-watchdog': 'bots', janitor: 'done', 'pr-steward': 'working', 'ops-runner': 'working', 'automation-scout': 'working', reporter: 'hq' };
 
   /* ---------- deterministic noise ---------- */
@@ -80,6 +82,7 @@
       const half = (Math.ceil(p.cols / 2) * 14) / T + 0.5;
       for (let y = dy - 3; y <= dy + 1; y += 1) for (let x = Math.floor(dx - half); x <= Math.ceil(dx + half); x += 1) if (y >= 0 && y < ROWS && x >= 0 && x < COLS) { PLAZA[y][x] = true; LAND[y][x] = true; }
     }
+    for (let y = CLOCK.door[1] - 3; y <= CLOCK.door[1]; y += 1) for (let x = CLOCK.door[0] - 1; x <= CLOCK.door[0] + 1; x += 1) PLAZA[y][x] = true;
     for (let y = 2; y < ROWS - 1; y += 1) {
       for (let x = 1; x < COLS - 1; x += 1) {
         if (!LAND[y][x] || PATH[y][x] || PLAZA[y][x] || !LAND[y + 1][x]) continue;
@@ -413,6 +416,68 @@
     }
   }
 
+  function fmtIn(ms) {
+    if (ms <= 0) return 'NOW';
+    const m = Math.round(ms / 60000);
+    if (m < 1) return `${Math.max(1, Math.round(ms / 1000))}S`;
+    if (m < 60) return `${m}M`;
+    const h = Math.floor(m / 60);
+    return h < 24 ? `${h}H` : `${Math.floor(h / 24)}D`;
+  }
+
+  function drawClock(f) {
+    const cx = CLOCK.door[0] * T + 8;
+    const by = CLOCK.door[1] * T;
+    const next = schedule[0];
+    const soon = next && Date.parse(next.nextRunAt) - Date.now() < 10e3;
+    const shake = soon ? (Math.floor(f) % 2 ? 1 : -1) : 0;
+    px(cx - 14, by - 2, 28, 3, 'rgba(0,0,0,.2)');
+    px(cx - 10, by - 46, 20, 46, P.stone[1]);
+    px(cx - 10, by - 46, 3, 46, P.stone[2]);
+    px(cx + 8, by - 46, 2, 46, P.stone[0]);
+    for (let r = 0; r < 8; r += 1) px(cx - 10, by - 44 + r * 6, 20, 1, P.stone[0]);
+    for (let i = 0; i < 9; i += 1) px(cx - 12 + i * 1.2, by - 47 - i, 24 - i * 2.4, 1, i % 2 ? P.sea[0] : P.sea[1]);
+    // bell (rings when an agent is about to run)
+    px(cx - 3 + shake, by - 60, 6, 5, P.gold[2]);
+    px(cx - 4 + shake, by - 56, 8, 1, P.gold[1]);
+    // clock face with real hands
+    const fy = by - 33;
+    g.fillStyle = P.white;
+    g.beginPath(); g.arc(cx, fy, 7, 0, Math.PI * 2); g.fill();
+    g.strokeStyle = P.ink; g.lineWidth = 1; g.stroke();
+    const now = new Date();
+    const hand = (ang, len, c) => { g.strokeStyle = c; g.beginPath(); g.moveTo(cx + 0.5, fy + 0.5); g.lineTo(cx + 0.5 + Math.sin(ang) * len, fy + 0.5 - Math.cos(ang) * len); g.stroke(); };
+    hand(((now.getHours() % 12) + now.getMinutes() / 60) * (Math.PI / 6), 3.5, P.ink);
+    hand(now.getMinutes() * (Math.PI / 30), 5.5, P.ink);
+    hand(now.getSeconds() * (Math.PI / 30), 5.5, P.red[1]);
+    px(cx - 3, by - 14, 6, 14, P.wood[0]);
+    if (soon) text('DING', cx + 12, by - 64, P.gold[2], 5, 'left');
+    Object.assign(clockRect, { x: cx - 12, y: by - 62, w: 24, h: 62 });
+    // sign
+    const label = next ? `NEXT ${fmtIn(Date.parse(next.nextRunAt) - Date.now())}` : 'IDLE';
+    g.font = '6px "Press Start 2P", monospace';
+    const w = Math.ceil(g.measureText(label).width) + 10;
+    const sx = Math.round(cx - w / 2);
+    const sy = by + 4;
+    px(sx - 1, sy - 1, w + 2, 12, P.ink);
+    px(sx, sy, w, 10, P.sea[1]);
+    px(sx, sy, w, 1, P.sea[2]);
+    text(label, cx, sy + 2, P.white, 6, 'center');
+    signRects.clock = { x: sx, y: sy, w, h: 10 };
+  }
+
+  function cursor(x, y, t) {
+    // the SMW map cursor: a bouncing arrow over whatever is selected
+    const dy = Math.round(Math.abs(Math.sin(t * 5)) * -3);
+    const ax = Math.round(x + 8);
+    const ay = Math.round(y - 14 + dy);
+    px(ax - 4, ay - 1, 9, 2, P.ink);
+    px(ax - 3, ay, 7, 2, P.gold[2]);
+    px(ax - 2, ay + 2, 5, 1, P.gold[2]);
+    px(ax - 1, ay + 3, 3, 1, P.gold[2]);
+    px(ax, ay + 4, 1, 1, P.gold[1]);
+  }
+
   const signRects = {};
   function sign(id, p, count) {
     const cx = p.door[0] * T + 8;
@@ -496,6 +561,9 @@
   let loaded = false;
   let dotTarget = 'codex-voice';
   let bgFrames = [];
+  let schedule = []; // [{ name, nextRunAt }]
+  let selected = null; // { type, id }
+  const clockRect = { x: 0, y: 0, w: 0, h: 0 };
 
   const tileXY = ([x, y]) => ({ x: x * T, y: y * T - 4 });
   function slot(placeId, i) {
@@ -528,8 +596,9 @@
   const placeOf = (j) => (j.source === 'bot' ? 'bots' : PLACES[j.status] ? j.status : 'follow_up');
   const isDot = (j) => (dotTarget === 'codex-voice' ? Boolean(j.meta && j.meta.agent === 'Dot') : j.id === dotTarget);
 
-  function update(board, workforce, crew = [], dotCfg) {
+  function update(board, workforce, crew = [], dotCfg, sched = []) {
     if (!board) return;
+    schedule = sched.filter((x) => x.nextRunAt).sort((a, b) => Date.parse(a.nextRunAt) - Date.parse(b.nextRunAt));
     if (dotCfg && dotCfg.target) dotTarget = dotCfg.target;
     const firstLoad = !loaded;
     loaded = true;
@@ -672,8 +741,7 @@
       else if (a.status === 'working' && a.kind === 'job' && Math.random() < 0.03) particles.push({ x: x + 8, y: y + 2, vx: (Math.random() - 0.5) * 20, vy: -28, life: 0.8, color: '#90ffb0', ch: Math.random() < 0.5 ? '1' : '0' });
       else if ((a.kind === 'agent' || a.kind === 'crew') && a.busy && Math.floor(t + a.phase) % 3 === 0) star(x + 13, y - 1, Math.floor(t * 10));
     }
-    if (a.kind === 'dot' || a.dotSkin) text('OG KUSH', x + 8, y - 9, '#90f090', 5, 'center');
-    if (hover === a) { g.strokeStyle = P.gold[2]; g.lineWidth = 1; g.strokeRect(x - 1.5, y - 1.5, 19, 19); }
+    if (hover === a) { g.strokeStyle = 'rgba(248,216,56,.7)'; g.lineWidth = 1; g.strokeRect(x - 1.5, y - 1.5, 19, 19); }
   }
 
   function renderBackground(f) {
@@ -789,6 +857,7 @@
     for (const d of DECOR) layers.push({ y: d.y * T + 15, draw: () => drawDecor(d, f) });
     for (const [id, p] of Object.entries(PLACES)) layers.push({ y: p.door[1] * T - 2, draw: () => drawPlace(id, p, f, counts[id] || 0) });
     for (const a of actors.values()) layers.push({ y: a.y + 14, draw: () => drawActor(a, t) });
+    layers.push({ y: CLOCK.door[1] * T - 2, draw: () => drawClock(f) });
     layers.sort((a, b) => a.y - b.y);
     for (const l of layers) l.draw();
     for (const [id, p] of Object.entries(PLACES)) sign(id, p, counts[id] || 0);
@@ -798,8 +867,14 @@
     }
     fish(t);
     clouds(t);
+    const sel = selected && selected.type === 'actor' && actors.get(selected.id);
+    if (sel) cursor(sel.x, sel.y, t);
+    else if (selected && selected.type === 'place') {
+      const p = selected.id === 'clock' ? { door: CLOCK.door } : PLACES[selected.id];
+      if (p) cursor(p.door[0] * T, p.door[1] * T - (selected.id === 'clock' ? 66 : 62), t);
+    }
     hud();
-    if (hover) tooltip(hover);
+    if (hover && !(sel && sel === hover)) tooltip(hover);
     requestAnimationFrame(render);
   }
 
@@ -810,8 +885,35 @@
     let best = null;
     for (const a of actors.values()) if (x >= a.x && x <= a.x + 16 && y >= a.y && y <= a.y + 16) best = !best || a.y > best.y ? a : best;
     if (best) return best;
-    for (const [id, s] of Object.entries(signRects)) if (x >= s.x && x <= s.x + s.w && y >= s.y && y <= s.y + s.h) return { sign: id };
+    for (const [id, r] of Object.entries(signRects)) if (x >= r.x && x <= r.x + r.w && y >= r.y && y <= r.y + r.h) return { sign: id };
+    if (x >= clockRect.x && x <= clockRect.x + clockRect.w && y >= clockRect.y && y <= clockRect.y + clockRect.h) return { sign: 'clock' };
+    for (const [id, p] of Object.entries(PLACES)) {
+      const cx = p.door[0] * T + 8;
+      const by = p.door[1] * T;
+      if (x >= cx - 28 && x <= cx + 28 && y >= by - 56 && y <= by) return { sign: id };
+    }
     return null;
+  }
+
+  /** What the sidebar needs to know about the current selection. */
+  function describe(sel) {
+    if (!sel) return null;
+    if (sel.type === 'place') return { type: 'place', id: sel.id };
+    const a = actors.get(sel.id);
+    if (!a) return null;
+    if (a.kind === 'job' || a.kind === 'bot') return { type: 'job', id: a.jobId };
+    if (a.kind === 'agent') return { type: 'agent', id: a.id.replace(/^agent:/, '') };
+    if (a.kind === 'crew') return { type: 'crew', id: a.id };
+    if (a.kind === 'dot') return { type: 'dot', id: 'dot' };
+    return null;
+  }
+
+  function select(sel) {
+    if (sel && sel.type === 'job') selected = { type: 'actor', id: `job:${sel.id}` };
+    else if (sel && sel.type === 'agent') selected = { type: 'actor', id: `agent:${sel.id}` };
+    else if (sel && sel.type === 'crew') selected = { type: 'actor', id: sel.id };
+    else if (sel && sel.type === 'place') selected = { type: 'place', id: sel.id };
+    else selected = null;
   }
 
   function mount(canvas, options = {}) {
@@ -826,18 +928,18 @@
     cv.addEventListener('mousemove', (ev) => {
       const h = hit(ev);
       hover = h && !h.sign ? h : null;
-      cv.style.cursor = h && (h.jobId || h.sign) ? 'pointer' : 'default';
+      cv.style.cursor = h ? 'pointer' : 'default';
     });
     cv.addEventListener('mouseleave', () => { hover = null; });
     cv.addEventListener('click', (ev) => {
       const h = hit(ev);
-      if (h && h.jobId && opts.onOpen) opts.onOpen(h.jobId);
-      else if (h && h.sign && opts.onPlace) opts.onPlace(h.sign);
+      selected = !h ? null : h.sign ? { type: 'place', id: h.sign } : { type: 'actor', id: h.id };
+      if (opts.onSelect) opts.onSelect(describe(selected));
     });
   }
 
   const start = () => { if (running || !cv) return; running = true; lastT = 0; requestAnimationFrame(render); };
   const stop = () => { running = false; };
 
-  window.Arcade = { mount, update, start, stop, say, PLACES, _actors: actors };
+  window.Arcade = { mount, update, start, stop, say, select, PLACES, _actors: actors };
 })();

@@ -51,6 +51,7 @@ export function listCrew({ dir = crewDir(), now = Date.now() } = {}) {
     return {
       id: `crew:${name}`,
       name,
+      dir: base,
       title: yamlField(yaml, 'title') || name,
       description: yamlField(yaml, 'description'),
       lastActive: lastActive ? new Date(lastActive).toISOString() : null,

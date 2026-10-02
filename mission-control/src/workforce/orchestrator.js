@@ -1,7 +1,7 @@
 import { EventEmitter } from 'node:events';
 import { buildBoard } from '../board.js';
 import { store } from '../store.js';
-import { loadRegistry, runAutomation, setAutomationState } from './automations.js';
+import { loadRegistry, nextRunAt, runAutomation, setAutomationState } from './automations.js';
 import { available as llmAvailable, MODEL } from './llm.js';
 import * as triage from './agents/triage.js';
 import * as followUp from './agents/follow-up.js';
@@ -172,7 +172,18 @@ export class Orchestrator extends EventEmitter {
         lastRunAt: state[a.id]?.lastRunAt || null,
         lastSummary: state[a.id]?.lastSummary || '',
         lastError: state[a.id]?.lastError || '',
+        nextRunAt: this.paused || state[a.id]?.enabled === false ? null : agentNextRun(a, state[a.id]?.lastRunAt),
       })),
     };
   }
+}
+
+/** Next time a workforce agent will run: `every` agents after their interval, clock agents at their next slot. */
+export function agentNextRun(agent, lastRunAt, now = Date.now()) {
+  if (agent.every) return nextRunAt({ kind: 'interval', ms: agent.every }, lastRunAt, now);
+  if (agent.clock) {
+    const times = agent.clock.map((c) => nextRunAt({ kind: 'clock', hour: c.hour, minute: c.minute }, lastRunAt, now)).filter(Boolean);
+    return times.sort()[0] || null;
+  }
+  return null;
 }

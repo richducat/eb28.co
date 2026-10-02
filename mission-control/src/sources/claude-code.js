@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { PATHS, T } from '../config.js';
-import { deriveStatus, isPidAlive, makeJob, titleFrom } from '../jobs/model.js';
+import { deriveStatus, describeTool, isPidAlive, makeJob, titleFrom } from '../jobs/model.js';
 import { exists, hasBlock, readHeadJsonl, readTailJsonl, textOf, walk } from './util.js';
 
 export const id = 'claude-code';
@@ -56,6 +56,14 @@ export function parseTranscript(file, { live = new Map(), now = Date.now(), mtim
   // A tool_result as the very last record means Claude is about to think again.
   if (lastKind === 'tool_result') lastKind = 'user';
 
+  // the most recent tool call becomes the "doing now" line
+  let activity = null;
+  for (let i = records.length - 1; i >= 0 && !activity; i -= 1) {
+    const r = records[i];
+    if (r.type !== 'assistant' || !Array.isArray(r.message.content)) continue;
+    const tu = r.message.content.filter((b) => b && b.type === 'tool_use').pop();
+    if (tu) activity = { ...describeTool(tu.name, tu.input), at: r.timestamp || null };
+  }
   const lastTs = last && last.timestamp ? Date.parse(last.timestamp) : 0;
   const lastActivity = Math.max(lastTs || 0, mtime || 0);
   const liveInfo = live.get(sessionId);
@@ -91,6 +99,7 @@ export function parseTranscript(file, { live = new Map(), now = Date.now(), mtim
       entrypoint: (first && first.entrypoint) || (liveInfo && liveInfo.entrypoint) || '',
       model: lastAssistant && lastAssistant.message.model,
       version: first && first.version,
+      activity,
     },
   });
 }

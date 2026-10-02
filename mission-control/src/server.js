@@ -7,7 +7,7 @@ import { APP_ROOT, HOST, PORT, MC_HOME } from './config.js';
 import { buildBoard, setOverride } from './board.js';
 import { store } from './store.js';
 import { addManual, removeManual, updateManual } from './sources/manual.js';
-import { loadRegistry, runAutomation, setAutomationState, lastRun } from './workforce/automations.js';
+import { loadRegistry, runAutomation, setAutomationState, lastRun, nextRunAt, missingTarget, resolveCwd } from './workforce/automations.js';
 import { AGENTS, Orchestrator } from './workforce/orchestrator.js';
 import { explanationFor } from './workforce/agents/triage.js';
 import { notify, messageFor } from './notify.js';
@@ -104,7 +104,12 @@ export function createServer({ orchestrator = new Orchestrator(), nativeNotify =
       store.update('custom-automations', [], (list) => [...list.filter((x) => x.id !== automation.id), automation]);
       return automation;
     },
-    'GET /api/automations': async () => loadRegistry().map((a) => ({ ...a, lastRun: lastRun(a.id) })),
+    'GET /api/automations': async () =>
+      loadRegistry().map((a) => {
+        const last = lastRun(a.id);
+        const unavailable = missingTarget(a, resolveCwd(a));
+        return { ...a, lastRun: last, unavailable, nextRunAt: a.enabled && !unavailable && !orchestrator.paused ? nextRunAt(a.schedule, last && (last.finishedAt || last.startedAt)) : null };
+      }),
     'POST /api/automations/run': async (b) => {
       const a = loadRegistry().find((x) => x.id === b.id);
       if (!a) throw new Error('unknown automation');

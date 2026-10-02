@@ -33,6 +33,7 @@ function toast(text, kind = '') {
 /* ---------- board ---------- */
 async function loadBoard() {
   state.board = await api('GET', '/api/board');
+  chime.check(state.board);
   renderBoard();
 }
 
@@ -252,12 +253,13 @@ function renderAutomations() {
     .map(([area, list]) => `<div style="grid-column:1/-1"><h2>${esc(area)}</h2></div>` + list
       .map((a) => {
         const r = a.lastRun;
-        const status = !r ? 'never run' : r.status === 'running' ? '⏳ running' : r.ok ? `✅ ok ${ago(r.finishedAt)}` : `❌ failed ${ago(r.finishedAt)}`;
+        const status = a.unavailable ? '⚪ not set up on this Mac' : !r ? 'never run' : r.status === 'running' ? '⏳ running' : r.ok ? `✅ ok ${ago(r.finishedAt)}` : `❌ failed ${ago(r.finishedAt)}`;
         return `<div class="tile">
           <div class="row"><span class="name">${esc(a.title)}</span><span class="tier ${a.tier}">${a.tier}</span></div>
           <div class="role">${esc(a.description)}</div>
+          ${a.unavailable ? `<div class="role" style="color:#b45309">${esc(a.unavailable[0].toUpperCase() + a.unavailable.slice(1))}. Clone the repo this runs in, or set MC_REPOS to its folder.</div>` : ''}
           <div class="foot"><code>${esc(a.command.join(' '))}</code></div>
-          <div class="foot"><span>${a.schedule ? `⏰ ${esc(a.schedule)}` : 'on demand'}</span><span class="${r && !r.ok && r.status !== 'running' ? 'bad' : ''}">${status}</span>${a.autoApproved ? '<span class="ok">standing approval</span>' : ''}</div>
+          <div class="foot"><span>${a.schedule ? `⏰ ${esc(a.schedule)}` : 'on demand'}</span><span class="${!a.unavailable && r && !r.ok && r.status !== 'running' ? 'bad' : ''}">${status}</span>${a.autoApproved ? '<span class="ok">standing approval</span>' : ''}</div>
           <div class="btns">
             <button class="small ${a.tier === 'manual' ? 'danger' : ''}" data-run-auto="${a.id}" data-tier="${a.tier}">${a.tier === 'manual' ? 'Run (asks first)' : 'Run now'}</button>
             ${a.schedule ? `<label class="switch"><input type="checkbox" data-auto-enabled="${a.id}" ${a.enabled ? 'checked' : ''}/> scheduled</label>` : ''}
@@ -330,33 +332,27 @@ function showTab(id) {
 }
 
 /* ---------- arcade ---------- */
-const arcade = { crew: [], dot: { target: 'codex-voice' }, mounted: false };
+const arcade = { crew: [], dot: { target: 'codex-voice' }, mounted: false, sel: null, automations: [] };
 async function loadArcade() {
   if (!arcade.mounted) {
-    window.Arcade.mount($('#arcade'), {
-      onOpen: (id) => openJob(id),
-      onPlace: (id) => {
-        const el = document.getElementById(`place-${id}`);
-        if (!el) return;
-        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        el.classList.add('flash');
-        setTimeout(() => el.classList.remove('flash'), 1600);
-      },
-    });
+    window.Arcade.mount($('#arcade'), { onSelect: (sel) => { arcade.sel = sel; renderSide(); } });
     arcade.mounted = true;
   }
-  const [board, workforce, crew, dot] = await Promise.all([
+  const [board, workforce, crew, dot, automations] = await Promise.all([
     state.board ? state.board : api('GET', '/api/board'),
     api('GET', '/api/workforce'),
     api('GET', '/api/crew').catch(() => []),
     api('GET', '/api/dot').catch(() => ({ target: 'codex-voice' })),
+    api('GET', '/api/automations').catch(() => []),
   ]);
   state.board = board;
   state.workforce = workforce;
-  Object.assign(arcade, { crew, dot });
+  Object.assign(arcade, { crew, dot, automations });
   renderDotPicker();
-  window.Arcade.update(board, workforce, crew, dot);
+  $('#chime-toggle').checked = chime.on;
+  window.Arcade.update(board, workforce, crew, dot, scheduleList());
   renderLegend(board, workforce, crew);
+  renderSide();
 }
 
 const PLACE_COLOR = { needs_you: '#f04838', working: '#48b838', bots: '#585878', follow_up: '#d8a000', hq: '#9060d8', done: '#f8d838', failed: '#787088', crew: '#d8a828' };
@@ -380,7 +376,192 @@ function renderLegend(board, workforce, crew) {
 
 document.addEventListener('click', (ev) => {
   const li = ev.target.closest('[data-open-job]');
-  if (li) openJob(li.dataset.openJob);
+  if (li) selectInArcade({ type: 'job', id: li.dataset.openJob });
+});
+
+/* ---------- arcade sidebar ---------- */
+function allJobs() {
+  return state.board ? state.board.columns.flatMap((c) => c.jobs) : [];
+}
+
+function scheduleList() {
+  const agents = ((state.workforce && state.workforce.agents) || []).map((a) => ({ name: a.name, nextRunAt: a.nextRunAt, kind: 'agent', id: a.id, cadence: a.cadence }));
+  const autos = arcade.automations.filter((a) => a.nextRunAt).map((a) => ({ name: a.title || a.id, nextRunAt: a.nextRunAt, kind: 'automation', id: a.id, cadence: a.schedule, tier: a.tier }));
+  return agents.concat(autos).filter((x) => x.nextRunAt).sort((a, b) => Date.parse(a.nextRunAt) - Date.parse(b.nextRunAt));
+}
+
+function until(iso) {
+  if (!iso) return '';
+  const ms = Date.parse(iso) - Date.now();
+  if (ms <= 30e3) return 'any moment';
+  const m = Math.round(ms / 60000);
+  if (m < 60) return `in ${m}m`;
+  const h = Math.floor(m / 60);
+  return h < 24 ? `in ${h}h ${m % 60}m` : `in ${Math.floor(h / 24)}d`;
+}
+
+function selectInArcade(sel) {
+  arcade.sel = sel;
+  window.Arcade.select(sel);
+  renderSide();
+}
+
+const placeOfJob = (j) => (j.source === 'bot' ? 'bots' : window.Arcade.PLACES[j.status] ? j.status : 'follow_up');
+const jobLi = (j) => `<li data-side-select="${esc(j.id)}">${esc(j.title)}<span class="sub">${j.meta && j.meta.activity ? `${j.meta.activity.icon} ${esc(j.meta.activity.label)}` : esc(j.reason)}</span></li>`;
+const btn = (label, attrs, cls = '') => `<button class="${cls}" ${attrs}>${label}</button>`;
+
+function renderSide() {
+  const el = $('#arcade-side');
+  if (!el || !state.board) return;
+  const sel = arcade.sel;
+  const back = sel ? '<button class="back" data-side-clear>← Your turn</button>' : '';
+  const proposals = (state.workforce && state.workforce.proposals) || [];
+  if (!sel) {
+    const needs = allJobs().filter((j) => j.status === 'needs_you');
+    const failed = allJobs().filter((j) => j.status === 'failed');
+    const next = scheduleList()[0];
+    el.innerHTML = `<h2>YOUR TURN</h2>
+      ${needs.length ? `<ul>${needs.map(jobLi).join('')}</ul>` : '<div class="empty">Nothing is waiting on you. 🎉</div>'}
+      <h2>APPROVALS</h2>
+      ${proposals.length ? proposals.map((p) => `<div class="doing"><b>${esc(p.title)}</b><div class="why">${esc(p.description || '')}</div><div class="btns">${btn('Approve', `data-side-decide="${esc(p.id)}" data-decision="approved"`, 'go')}${btn('Always allow', `data-side-decide="${esc(p.id)}" data-decision="approved" data-standing="1"`)}${btn('Not now', `data-side-decide="${esc(p.id)}" data-decision="rejected"`)}</div></div>`).join('') : '<div class="empty">No approvals pending.</div>'}
+      ${failed.length ? `<h2>IN THE GHOST HOUSE</h2><ul>${failed.map(jobLi).join('')}</ul>` : ''}
+      ${next ? `<h2>NEXT UP</h2><div class="doing">⏰ <b>${esc(next.name)}</b> runs ${until(next.nextRunAt)}</div>` : ''}
+      <div class="meta">Click anyone on the map, or a building, to see details here.</div>`;
+    return;
+  }
+  if (sel.type === 'job') {
+    const j = allJobs().concat(state.board.snoozed || []).find((x) => x.id === sel.id);
+    if (!j) { el.innerHTML = `${back}<div class="empty">That job is no longer on the board.</div>`; return; }
+    const src = sourceFor(j);
+    const act = j.meta && j.meta.activity;
+    const mine = proposals.filter((p) => p.botJobId === j.id);
+    const actions = [];
+    if (j.source === 'bot') {
+      if (j.meta.restart) actions.push(btn('↻ Restart', `data-bot-restart="${esc(j.id)}"`, 'go'));
+      if (j.meta.logFile) actions.push(btn('📄 Log', `data-side-path="${esc(j.meta.logFile)}"`));
+    } else if (j.resumeCommand) {
+      actions.push(btn(j.status === 'needs_you' ? '💬 Open & reply' : '▶ Open session', `data-side-run="${esc(j.id)}"`, 'go'));
+      actions.push(btn('Copy command', `data-side-copy="${esc(j.id)}"`));
+    }
+    if (j.source === 'automation' && j.meta.automationId) actions.push(btn('↻ Retry', `data-run-auto="${esc(j.meta.automationId)}" data-tier="${esc(j.meta.tier || '')}"`, j.status === 'failed' ? 'go' : ''));
+    if (j.link) actions.push(btn('🔗 Open link', `data-side-url="${esc(j.link)}"`));
+    if (j.cwd) actions.push(btn('📁 Folder', `data-side-path="${esc(j.cwd)}"`));
+    const status = [];
+    if (j.status !== 'done') status.push(btn('✓ Done', `data-side-act='${esc(JSON.stringify({ id: j.id, status: 'done' }))}'`));
+    status.push(btn('Snooze 4h', `data-side-act='${esc(JSON.stringify({ id: j.id, snoozedUntil: new Date(Date.now() + 4 * 3600e3).toISOString() }))}'`));
+    if (j.status !== 'follow_up') status.push(btn('Follow up later', `data-side-act='${esc(JSON.stringify({ id: j.id, status: 'follow_up' }))}'`));
+    status.push(btn('Dismiss', `data-side-act='${esc(JSON.stringify({ id: j.id, archived: true }))}'`, 'warn'));
+    el.innerHTML = `${back}
+      <div class="chips"><span class="chip ${j.status}">${STATUS_LABEL[j.status]}</span><span class="chip">${esc(src.label)}</span>${j.alive ? '<span class="chip working">live</span>' : ''}${j.meta && j.meta.alias ? `<span class="chip">🌿 ${esc(j.meta.alias)}</span>` : ''}</div>
+      <h3>${esc(j.title)}</h3>
+      ${act ? `<div class="doing"><span class="k">Doing now</span>${act.icon} ${esc(act.label)}${act.at ? ` <span class="meta">· ${ago(act.at)}</span>` : ''}</div>` : ''}
+      <div class="why">${esc(j.reason)}</div>
+      ${mine.map((p) => `<div class="doing"><span class="k">Needs your OK</span>${esc(p.title)}<div class="btns">${btn('Approve', `data-side-decide="${esc(p.id)}" data-decision="approved"`, 'go')}${btn('Always allow', `data-side-decide="${esc(p.id)}" data-decision="approved" data-standing="1"`)}${btn('Not now', `data-side-decide="${esc(p.id)}" data-decision="rejected"`)}</div></div>`).join('')}
+      <div class="btns">${actions.join('')}</div>
+      ${j.lastMessage ? `<div class="msg">${esc(j.lastMessage)}</div>` : ''}
+      <div class="meta">${[j.cwd && `📁 ${esc(j.cwd)}`, j.branch && `⎇ ${esc(j.branch)}`, j.lastActivity && `last activity ${ago(j.lastActivity)}`].filter(Boolean).join('<br>')}</div>
+      <div class="btns">${status.join('')}${btn('Full details', `data-side-drawer="${esc(j.id)}"`)}</div>`;
+    return;
+  }
+  if (sel.type === 'agent') {
+    const a = ((state.workforce && state.workforce.agents) || []).find((x) => x.id === sel.id);
+    if (!a) { el.innerHTML = back; return; }
+    el.innerHTML = `${back}<div class="chips"><span class="chip">Workforce agent</span><span class="chip">${esc(a.tier)}</span>${a.running ? '<span class="chip working">running</span>' : ''}${a.enabled ? '' : '<span class="chip failed">off</span>'}</div>
+      <h3>${esc(a.name)}</h3><div class="why">${esc(a.role)}</div>
+      <div class="doing"><span class="k">Last run ${a.lastRunAt ? ago(a.lastRunAt) : 'never'}</span>${esc(a.lastSummary || 'No runs yet.')}</div>
+      ${a.lastError ? `<div class="doing" style="border-color:#e8434f"><span class="k">Last error</span>${esc(a.lastError)}</div>` : ''}
+      <div class="meta">Runs ${esc(a.cadence)}${a.nextRunAt ? ` · next ${until(a.nextRunAt)}` : ''}</div>
+      <div class="btns">${btn('▶ Run now', `data-side-run-agent="${esc(a.id)}"`, 'go')}${btn(a.enabled ? 'Turn off' : 'Turn on', `data-side-agent-toggle="${esc(a.id)}" data-on="${a.enabled ? '0' : '1'}"`)}</div>`;
+    return;
+  }
+  if (sel.type === 'crew') {
+    const m = arcade.crew.find((x) => x.id === sel.id);
+    if (!m) { el.innerHTML = back; return; }
+    el.innerHTML = `${back}<div class="chips"><span class="chip">Hermes profile</span>${m.busy ? '<span class="chip working">active</span>' : '<span class="chip">idle</span>'}</div>
+      <h3>${esc(m.title)}</h3><div class="why">${esc(m.description || '')}</div>
+      <div class="meta">Profile: ${esc(m.name)}<br>Last active ${m.lastActive ? ago(m.lastActive) : 'unknown'}</div>
+      <div class="btns">${btn('📁 Open profile folder', `data-side-path="${esc(m.dir || '')}"`)}${btn('🌿 Make this OG Kush', `data-side-dot="${esc(m.id)}"`)}</div>`;
+    return;
+  }
+  if (sel.type === 'dot') {
+    const mine = allJobs().filter((j) => j.meta && j.meta.agent === 'Dot');
+    el.innerHTML = `${back}<div class="chips"><span class="chip">🌿 OG Kush</span></div><h3>Dot</h3>
+      <div class="why">Your voice assistant. Right now Dot is tracked as any Codex thread you started by voice. If Dot is actually a Grok bot or a Hermes agent, pick it in "Dot (OG Kush) is" above the map.</div>
+      <h2>HANDED TO CODEX</h2>${mine.length ? `<ul>${mine.map(jobLi).join('')}</ul>` : '<div class="empty">No voice-started threads in the last day.</div>'}`;
+    return;
+  }
+  if (sel.type === 'place') {
+    if (sel.id === 'clock') {
+      const list = scheduleList();
+      el.innerHTML = `${back}<h2>CLOCK TOWER</h2><div class="why">When each scheduled agent and automation runs next.${state.workforce && state.workforce.paused ? ' <b>The workforce is paused.</b>' : ''}</div>
+        <ul>${list.map((x) => `<li ${x.kind === 'agent' ? `data-side-agent="${esc(x.id)}"` : ''}>⏰ ${esc(x.name)} <b style="float:right">${until(x.nextRunAt)}</b><span class="sub">${esc(x.cadence || '')}${x.tier ? ` · ${esc(x.tier)}` : ''}</span></li>`).join('') || '<div class="empty">Nothing scheduled.</div>'}</ul>`;
+      return;
+    }
+    const P = window.Arcade.PLACES[sel.id];
+    let items = '';
+    if (sel.id === 'hq') items = ((state.workforce && state.workforce.agents) || []).map((a) => `<li data-side-agent="${esc(a.id)}">${esc(a.name)}<span class="sub">${esc(a.lastSummary || a.role)}</span></li>`).join('');
+    else if (sel.id === 'crew') items = arcade.crew.map((m) => `<li data-side-crew="${esc(m.id)}">${m.busy ? '🟢' : '⚪'} ${esc(m.title)}<span class="sub">${esc(m.name)} · ${esc(m.description || '')}</span></li>`).join('');
+    else items = allJobs().filter((j) => placeOfJob(j) === sel.id).map(jobLi).join('');
+    el.innerHTML = `${back}<h2>${esc(P.name)}</h2><div class="why">${esc(P.blurb)}</div><ul>${items || '<div class="empty">Empty right now.</div>'}</ul>`;
+  }
+}
+
+document.addEventListener('click', async (ev) => {
+  const t = ev.target.closest('[data-side-clear],[data-side-select],[data-side-act],[data-side-run],[data-side-copy],[data-side-path],[data-side-url],[data-side-drawer],[data-side-decide],[data-side-run-agent],[data-side-agent-toggle],[data-side-agent],[data-side-crew],[data-side-dot]');
+  if (!t) return;
+  const d = t.dataset;
+  const job = (id) => allJobs().concat(state.board.snoozed || []).find((x) => x.id === id);
+  try {
+    if ('sideClear' in d) return selectInArcade(null);
+    if (d.sideSelect) return selectInArcade({ type: 'job', id: d.sideSelect });
+    if (d.sideAgent) return selectInArcade({ type: 'agent', id: d.sideAgent });
+    if (d.sideCrew) return selectInArcade({ type: 'crew', id: d.sideCrew });
+    if (d.sideDrawer) return openJob(d.sideDrawer);
+    if (d.sideAct) { const { id, ...patch } = JSON.parse(d.sideAct); await api('POST', '/api/job/override', { id, ...patch }); toast('Updated', 'ok'); if (patch.archived || patch.snoozedUntil) selectInArcade(null); await loadBoard(); return loadArcade(); }
+    if (d.sideRun) { const r = await api('POST', '/api/open', { command: job(d.sideRun).resumeCommand }); return toast(r.ok ? `Opened in ${r.opened}` : r.error, r.ok ? 'ok' : 'bad'); }
+    if (d.sideCopy) { await navigator.clipboard.writeText(job(d.sideCopy).resumeCommand); return toast('Copied'); }
+    if (d.sidePath) { const r = await api('POST', '/api/open', { path: d.sidePath }); return r.ok ? null : toast(r.error, 'bad'); }
+    if (d.sideUrl) { const r = await api('POST', '/api/open', { url: d.sideUrl }); return r.ok ? null : toast(r.error, 'bad'); }
+    if (d.sideDecide) { await api('POST', '/api/workforce/proposal', { id: d.sideDecide, decision: d.decision, standing: Boolean(d.standing) }); toast(d.decision === 'approved' ? 'Approved' : 'Declined', 'ok'); return loadArcade(); }
+    if (d.sideRunAgent) { toast('Running…'); await api('POST', '/api/workforce/agent', { id: d.sideRunAgent, run: true }); return loadArcade(); }
+    if (d.sideAgentToggle) { await api('POST', '/api/workforce/agent', { id: d.sideAgentToggle, enabled: d.on === '1' }); return loadArcade(); }
+    if (d.sideDot) { arcade.dot = await api('POST', '/api/dot', { target: d.sideDot }); toast('OG Kush updated', 'ok'); return loadArcade(); }
+  } catch (err) {
+    toast(err.message, 'bad');
+  }
+});
+
+/* ---------- chime: a short 16-bit jingle when something new needs you ---------- */
+const chime = {
+  get on() { try { return localStorage.getItem('mc-chime') !== '0'; } catch { return true; } },
+  set on(v) { try { localStorage.setItem('mc-chime', v ? '1' : '0'); } catch { /* ignore */ } },
+  seen: null,
+  play() {
+    try {
+      const ctx = chime.ctx || (chime.ctx = new AudioContext());
+      const t0 = ctx.currentTime + 0.02;
+      [[988, 0], [1319, 0.09], [1976, 0.18]].forEach(([freq, at]) => {
+        const o = ctx.createOscillator();
+        const g = ctx.createGain();
+        o.type = 'square';
+        o.frequency.value = freq;
+        g.gain.setValueAtTime(0.06, t0 + at);
+        g.gain.exponentialRampToValueAtTime(0.001, t0 + at + 0.16);
+        o.connect(g).connect(ctx.destination);
+        o.start(t0 + at);
+        o.stop(t0 + at + 0.18);
+      });
+    } catch { /* audio blocked */ }
+  },
+  check(board) {
+    const ids = new Set(board.columns.flatMap((c) => c.jobs).filter((j) => j.status === 'needs_you').map((j) => j.id));
+    const fresh = chime.seen ? [...ids].filter((id) => !chime.seen.has(id)) : [];
+    chime.seen = ids;
+    if (fresh.length && chime.on) chime.play();
+  },
+};
+document.addEventListener('change', (ev) => {
+  if (ev.target.id === 'chime-toggle') { chime.on = ev.target.checked; if (chime.on) chime.play(); }
 });
 
 function renderDotPicker() {

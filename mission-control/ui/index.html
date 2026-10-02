@@ -36,11 +36,19 @@
 
   <section id="tab-arcade" class="tab">
     <div class="arcade-bar">
-      <span class="muted">Your whole operation as a game map. Each building is a status, each little person is one job or agent. When a job changes status, its person walks to the new building. Hover anyone to see who they are, click to open.</span>
-      <label class="arcade-dot">Who is Dot (OG Kush)? <select id="dot-target"><option value="codex-voice">Codex voice delegations</option></select></label>
+      <span class="muted">Your whole operation as a game map. Each building is a status, each little person is a job or agent. Click anyone to see what they're doing.</span>
+      <span class="arcade-controls">
+        <label class="switch"><input type="checkbox" id="chime-toggle" /> 🔔 Chime when something needs me</label>
+        <label class="arcade-dot">Dot (OG Kush) is <select id="dot-target"><option value="codex-voice">Codex voice delegations</option></select></label>
+      </span>
     </div>
-    <div class="arcade-frame"><canvas id="arcade" width="512" height="368"></canvas></div>
-    <div id="arcade-legend" class="legend"></div>
+    <div class="arcade-layout">
+      <div>
+        <div class="arcade-frame"><canvas id="arcade" width="512" height="368"></canvas></div>
+        <div id="arcade-legend" class="legend"></div>
+      </div>
+      <aside id="arcade-side" class="arcade-side"></aside>
+    </div>
   </section>
 
   <section id="tab-bots" class="tab">

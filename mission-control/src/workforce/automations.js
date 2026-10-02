@@ -76,6 +76,27 @@ export function isDue(a, lastRunAt, now = Date.now()) {
   return now >= slot && last < slot;
 }
 
+/**
+ * When a schedule fires next (ISO string), given the last run. Interval schedules run
+ * `ms` after the last run (or now if never run); clock schedules run at the next slot.
+ */
+export function nextRunAt(schedule, lastRunAt, now = Date.now()) {
+  const sched = typeof schedule === 'string' ? parseSchedule(schedule) : schedule;
+  if (!sched) return null;
+  if (sched.kind === 'interval') {
+    const last = lastRunAt ? Date.parse(lastRunAt) : 0;
+    return new Date(Math.max(now, last + sched.ms)).toISOString();
+  }
+  const d = new Date(now);
+  for (let i = 0; i < 8; i += 1) {
+    const slot = new Date(d.getFullYear(), d.getMonth(), d.getDate() + i, sched.hour, sched.minute);
+    const day = slot.getDay();
+    if (sched.weekdaysOnly && (day === 0 || day === 6)) continue;
+    if (slot.getTime() > now) return slot.toISOString();
+  }
+  return null;
+}
+
 export function resolveCwd(a) {
   const roots = repoRoots();
   if (!a.cwd || a.cwd === 'repo') return roots[0];
@@ -86,13 +107,47 @@ export function resolveCwd(a) {
 
 const running = new Map();
 
+/**
+ * Why an automation cannot run in `cwd` (its npm script, file, module or test folder is
+ * missing), or '' when it looks runnable. Lets a machine without a repo checkout show
+ * "not set up here" instead of a wall of failures.
+ */
+export function missingTarget(a, cwd) {
+  if (!cwd) return 'its folder is outside the allowed repo roots';
+  const [cmd, ...args] = a.command;
+  const has = (rel) => fs.existsSync(path.join(cwd, rel));
+  if (cmd === 'npm' && args.includes('run')) {
+    const script = args[args.indexOf('run') + 1 + (args[args.indexOf('run') + 1] === '--silent' ? 1 : 0)];
+    let pkg = null;
+    try {
+      pkg = JSON.parse(fs.readFileSync(path.join(cwd, 'package.json'), 'utf8'));
+    } catch {
+      return `no package.json in ${cwd}`;
+    }
+    return pkg.scripts && pkg.scripts[script] ? '' : `npm script "${script}" is not defined in ${cwd}`;
+  }
+  if (cmd === 'python3' || cmd === 'python' || cmd === 'node') {
+    const m = args.indexOf('-m');
+    if (m >= 0 && args[m + 1] && args[m + 1] !== 'unittest') {
+      const mod = args[m + 1].replace(/\./g, '/');
+      return has(`${mod}.py`) || has(mod) ? '' : `module ${args[m + 1]} is not in ${cwd}`;
+    }
+    const s = args.indexOf('-s');
+    if (s >= 0 && args[s + 1]) return has(args[s + 1]) ? '' : `${args[s + 1]} is not in ${cwd}`;
+    const file = args.find((x) => /\.(m?js|cjs|py)$/.test(x));
+    if (file) return has(file) ? '' : `${file} is not in ${cwd}`;
+  }
+  return '';
+}
+
 /** Execute an automation. Resolves with the run record; never throws. */
 export function runAutomation(a, { trigger = 'manual', onEvent } = {}) {
   if (running.has(a.id)) return Promise.resolve({ ...running.get(a.id), skipped: 'already running' });
   const cwd = resolveCwd(a);
   const startedAt = new Date().toISOString();
   const base = { automationId: a.id, title: a.title, tier: a.tier, trigger, cwd, startedAt, status: 'running' };
-  if (!cwd) return Promise.resolve(record({ ...base, ok: false, status: 'finished', error: 'cwd is outside the allowed repo roots', finishedAt: startedAt }));
+  const missing = missingTarget(a, cwd);
+  if (missing) return Promise.resolve(record({ ...base, ok: false, unavailable: true, status: 'finished', error: `Not set up on this machine: ${missing}.`, finishedAt: startedAt, durationMs: 0 }));
   const bin = which(a.command[0]);
   if (!bin) {
     return Promise.resolve(record({ ...base, ok: false, status: 'finished', error: `"${a.command[0]}" was not found on PATH. Install it or add its folder to your shell PATH, then relaunch Mission Control.`, finishedAt: startedAt, durationMs: 0 }));

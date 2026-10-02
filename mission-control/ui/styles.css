@@ -138,3 +138,31 @@ dialog menu { display: flex; justify-content: flex-end; gap: 8px; padding: 0; ma
 .legend .place li { padding: 3px 0; border-top: 1px dashed #e5e7eb; cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .legend .place li:hover { color: #2563eb; }
 .legend .swatch { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
+.arcade-controls { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+.arcade-layout { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 14px; align-items: start; }
+@media (max-width: 1100px) { .arcade-layout { grid-template-columns: 1fr; } }
+.arcade-side { position: sticky; top: 70px; max-height: calc(100vh - 90px); overflow: auto; background: #14101f; color: #f0ecff; border-radius: 10px; padding: 14px; box-shadow: inset 0 0 0 3px #3b2f5c; font-size: 13px; }
+.arcade-side h2 { font: 10px/1.6 "Press Start 2P", monospace; color: #f8d838; margin: 0 0 8px; letter-spacing: .5px; }
+.arcade-side h3 { font-size: 15px; line-height: 1.35; margin: 4px 0 8px; color: #fff; }
+.arcade-side .chips { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 4px; }
+.arcade-side .chip { background: #2a2350; color: #d8d0ff; border-radius: 999px; padding: 2px 8px; font-size: 11px; }
+.arcade-side .chip.needs_you { background: #7a1822; color: #ffd7d2; }
+.arcade-side .chip.working { background: #1d5a2c; color: #c8ffd3; }
+.arcade-side .chip.failed { background: #4a4058; color: #e6deff; }
+.arcade-side .chip.follow_up { background: #6a5200; color: #fff1b0; }
+.arcade-side .doing { background: #221c3d; border-left: 3px solid #48b838; border-radius: 6px; padding: 8px 10px; margin: 8px 0; }
+.arcade-side .doing .k { font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: #9d93c2; display: block; margin-bottom: 2px; }
+.arcade-side .why { color: #cfc8ee; margin: 6px 0; }
+.arcade-side .msg { white-space: pre-wrap; background: #0d0a17; border-radius: 6px; padding: 8px; color: #bdb5e0; font-size: 12px; max-height: 160px; overflow: auto; margin: 8px 0; }
+.arcade-side .meta { color: #8f86b8; font-size: 11px; margin: 4px 0 10px; word-break: break-all; }
+.arcade-side .btns { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0; }
+.arcade-side button { background: #2f2858; color: #fff; border: 1px solid #4a3f86; border-radius: 6px; padding: 6px 10px; font-size: 12px; cursor: pointer; }
+.arcade-side button:hover { background: #3c3370; }
+.arcade-side button.go { background: #2f7d3b; border-color: #3fa34d; }
+.arcade-side button.warn { background: #6e1c25; border-color: #a12a37; }
+.arcade-side ul { list-style: none; padding: 0; margin: 0 0 12px; }
+.arcade-side li { padding: 7px 8px; border-radius: 6px; cursor: pointer; border-bottom: 1px solid #241e40; }
+.arcade-side li:hover { background: #221c3d; }
+.arcade-side li .sub { display: block; color: #8f86b8; font-size: 11px; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.arcade-side .empty { color: #8f86b8; padding: 6px 0 12px; }
+.arcade-side .back { background: none; border: 0; color: #9d93c2; padding: 0; margin-bottom: 6px; }

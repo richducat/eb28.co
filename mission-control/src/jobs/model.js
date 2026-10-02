@@ -108,6 +108,45 @@ export function deriveStatus(s, now = Date.now()) {
   return { status: 'done', reason: 'Turn finished and the session closed.' };
 }
 
+/**
+ * A short "doing now" line for a tool call, e.g. "Editing server.js" or "Running npm test".
+ * Exported for tests; used by the Claude Code and Codex sources.
+ */
+export function describeTool(name, input = {}) {
+  const n = String(name || '');
+  let inp = input;
+  if (typeof inp === 'string') {
+    try {
+      inp = JSON.parse(inp);
+    } catch {
+      inp = { command: inp };
+    }
+  }
+  inp = inp || {};
+  const file = inp.file_path || inp.path || inp.notebook_path || '';
+  const base = file ? String(file).split(/[\\/]/).pop() : '';
+  let cmd = Array.isArray(inp.command) ? inp.command.join(' ') : inp.command || inp.cmd || inp.code || '';
+  // Codex Desktop wraps shell calls in JS: exec_command({cmd:"..."})
+  const wrapped = String(cmd).match(/exec_command\(\{\s*cmd:\s*"((?:[^"\\]|\\.)*)"/);
+  if (wrapped) cmd = wrapped[1].replace(/\\"/g, '"');
+  const clip = (t, k = 48) => (t.length > k ? `${t.slice(0, k - 1)}…` : t);
+  if (/^(Edit|MultiEdit|Write|NotebookEdit|apply_patch)$/i.test(n)) return { icon: '✏️', label: base ? `Editing ${base}` : 'Editing files' };
+  if (/^Read$/i.test(n)) return { icon: '📖', label: base ? `Reading ${base}` : 'Reading files' };
+  if (/^(Grep|Glob|LS)$/i.test(n)) return { icon: '🔎', label: `Searching${inp.pattern ? ` for ${clip(String(inp.pattern), 30)}` : ''}` };
+  if (/^(Bash|shell|exec_command|local_shell|container\.exec)$/i.test(n) || cmd) {
+    const c = String(cmd).replace(/^bash\s+-lc\s+/, '').replace(/^(cd\s+(?:'[^']*'|"[^"]*"|\S+)\s*&&\s*)+/, '').trim();
+    if (/\b(test|jest|vitest|pytest)\b/.test(c)) return { icon: '🧪', label: `Running tests: ${clip(c, 40)}` };
+    if (/\bgit\s+(commit|push)\b/.test(c)) return { icon: '📦', label: `Git: ${clip(c, 40)}` };
+    return { icon: '⚙️', label: c ? `Running ${clip(c, 44)}` : 'Running a command' };
+  }
+  if (/^(WebFetch|WebSearch|web_search)$/i.test(n)) return { icon: '🌐', label: 'Browsing the web' };
+  if (/^(Task|Agent)$/i.test(n)) return { icon: '🤝', label: `Delegating to a sub-agent${inp.description ? `: ${clip(String(inp.description), 36)}` : ''}` };
+  if (/^mcp__/.test(n)) return { icon: '🔌', label: `Using ${n.split('__')[1] || 'a connector'}` };
+  if (/^(AskUserQuestion|request_user_input)$/i.test(n)) return { icon: '❓', label: 'Asking you a question' };
+  if (/^(TodoWrite|update_plan)$/i.test(n)) return { icon: '📝', label: 'Updating its plan' };
+  return { icon: '🛠️', label: n ? `Using ${n}` : 'Working' };
+}
+
 /** Build a normalized job record. */
 export function makeJob(partial) {
   const job = {

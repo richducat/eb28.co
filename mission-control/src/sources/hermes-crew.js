@@ -28,8 +28,20 @@ function newestMtime(dir) {
 }
 
 export function yamlField(text, key) {
-  const m = String(text).match(new RegExp(`^\\s*${key}:\\s*(?:"([^"]*)"|(.+?))\\s*$`, 'm'));
-  return m ? (m[1] ?? m[2]).trim() : '';
+  const lines = String(text).split('\n');
+  const i = lines.findIndex((l) => new RegExp(`^(\\s*)${key}:\\s*`).test(l));
+  if (i < 0) return '';
+  const indent = lines[i].match(/^\s*/)[0].length;
+  const first = lines[i].replace(new RegExp(`^\\s*${key}:\\s*`), '');
+  if (/^"/.test(first)) return (first.match(/^"([^"]*)"/) || [, ''])[1].trim();
+  // plain scalars may continue on more-indented lines
+  const parts = [first];
+  for (let k = i + 1; k < lines.length; k += 1) {
+    const l = lines[k];
+    if (!l.trim() || l.match(/^\s*/)[0].length <= indent || /^\s*[\w-]+:\s/.test(l)) break;
+    parts.push(l.trim());
+  }
+  return parts.join(' ').replace(/\s+/g, ' ').trim();
 }
 
 export function listCrew({ dir = crewDir(), now = Date.now() } = {}) {

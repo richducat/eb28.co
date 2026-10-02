@@ -356,8 +356,27 @@ async function loadArcade() {
   $('#chime-toggle').checked = chime.on;
   window.Arcade.update(board, workforce, crew, dot, scheduleList());
   renderLegend(board, workforce, crew);
+  renderTeam();
   renderSide();
 }
+
+const TEAM_ORDER = { overlord: 0, dot: 1, agent: 2, crew: 3 };
+function renderTeam() {
+  const el = $('#arcade-team');
+  if (!el || !window.Arcade.team) return;
+  const list = window.Arcade.team().sort((a, b) => TEAM_ORDER[a.kind] - TEAM_ORDER[b.kind]);
+  el.innerHTML = list.map((m) => {
+    const key = JSON.stringify(m.spec);
+    if (!portraitCache.has(key)) portraitCache.set(key, window.Sprites.portrait(m.spec).toDataURL());
+    const role = m.kind === 'overlord' ? 'Overlord' : m.kind === 'agent' ? 'Workforce' : m.kind === 'dot' ? 'OG Kush' : 'Hermes';
+    return `<div class="pcard" data-team="${esc(JSON.stringify(m.sel))}"><img src="${portraitCache.get(key)}" alt=""><div class="plate">${esc(m.name.toUpperCase().slice(0, 22))}<span>(${role.toUpperCase()})</span></div></div>`;
+  }).join('');
+}
+
+document.addEventListener('click', (ev) => {
+  const c = ev.target.closest('[data-team]');
+  if (c) { selectInArcade(JSON.parse(c.dataset.team)); $('#arcade-side').scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+});
 
 const PLACE_COLOR = { needs_you: '#f04838', working: '#48b838', bots: '#585878', follow_up: '#d8a000', hq: '#9060d8', done: '#f8d838', failed: '#787088', crew: '#d8a828' };
 function renderLegend(board, workforce, crew) {
@@ -488,9 +507,9 @@ async function hydrateAsks(items) {
 }
 
 function paintAsk(id) {
-  const el = document.querySelector(`[data-ans="${CSS.escape(id)}"]`);
   const j = allJobs().find((x) => x.id === id);
-  if (el && j) el.innerHTML = askHtml(j, home.asks[id]);
+  if (!j) return;
+  for (const el of document.querySelectorAll(`[data-ans="${CSS.escape(id)}"]`)) el.innerHTML = askHtml(j, home.asks[id]);
 }
 
 async function answer(id, text, { approve = false, allow = null } = {}) {
@@ -547,8 +566,8 @@ document.addEventListener('click', async (ev) => {
     }
     if (t.dataset.runClear) { delete home.runs[t.dataset.runClear]; return paintAsk(t.dataset.runClear); }
     if (t.dataset.answer) return await answer(t.dataset.answer, t.dataset.reply, { approve: t.dataset.approve === '1' });
-    if (t.dataset.answerOpen) { const id = t.dataset.answerOpen; home.open.has(id) ? home.open.delete(id) : home.open.add(id); paintAsk(id); const ta = document.querySelector(`[data-other-text="${CSS.escape(id)}"]`); if (ta) ta.focus(); return; }
-    if (t.dataset.answerOther) { const ta = document.querySelector(`[data-other-text="${CSS.escape(t.dataset.answerOther)}"]`); return await answer(t.dataset.answerOther, ta && ta.value); }
+    if (t.dataset.answerOpen) { const id = t.dataset.answerOpen; home.open.has(id) ? home.open.delete(id) : home.open.add(id); paintAsk(id); const ta = [...document.querySelectorAll(`[data-other-text="${CSS.escape(id)}"]`)].find((x) => x.offsetParent); if (ta) ta.focus(); return; }
+    if (t.dataset.answerOther) { const ta = t.closest('.other') && t.closest('.other').querySelector('textarea'); return await answer(t.dataset.answerOther, ta && ta.value); }
   } catch (err) { toast(err.message, 'bad'); }
 });
 
@@ -632,6 +651,17 @@ const placeOfJob = (j) => (j.source === 'bot' ? 'bots' : window.Arcade.PLACES[j.
 const jobLi = (j) => `<li data-side-select="${esc(j.id)}">${esc(j.title)}<span class="sub">${j.meta && j.meta.activity ? `${j.meta.activity.icon} ${esc(j.meta.activity.label)}` : esc(j.reason)}</span></li>`;
 const btn = (label, attrs, cls = '') => `<button class="${cls}" ${attrs}>${label}</button>`;
 
+const portraitCache = new Map();
+/** Pixel portrait card (Fund Manager agents-grid style) for whatever is selected. */
+function portraitHtml(sel, name, role, big = true) {
+  const info = window.Arcade && window.Arcade.info(sel);
+  const spec = info && info.spec;
+  if (!spec || !window.Sprites) return '';
+  const key = JSON.stringify(spec);
+  if (!portraitCache.has(key)) portraitCache.set(key, window.Sprites.portrait(spec).toDataURL());
+  return `<div class="pcard ${big ? 'big' : ''}"><img src="${portraitCache.get(key)}" alt=""><div class="plate">${esc(String(name || '').toUpperCase())}${role ? `<span>(${esc(String(role).toUpperCase())})</span>` : ''}</div></div>`;
+}
+
 function renderSide() {
   const el = $('#arcade-side');
   if (!el || !state.board) return;
@@ -661,9 +691,6 @@ function renderSide() {
     if (j.source === 'bot') {
       if (j.meta.restart) actions.push(btn('↻ Restart', `data-bot-restart="${esc(j.id)}"`, 'go'));
       if (j.meta.logFile) actions.push(btn('📄 Log', `data-side-path="${esc(j.meta.logFile)}"`));
-    } else if (j.resumeCommand) {
-      actions.push(btn(j.status === 'needs_you' ? '💬 Open & reply' : '▶ Open session', `data-side-run="${esc(j.id)}"`, 'go'));
-      actions.push(btn('Copy command', `data-side-copy="${esc(j.id)}"`));
     }
     if (j.source === 'automation' && j.meta.automationId) actions.push(btn('↻ Retry', `data-run-auto="${esc(j.meta.automationId)}" data-tier="${esc(j.meta.tier || '')}"`, j.status === 'failed' ? 'go' : ''));
     if (j.link) actions.push(btn('🔗 Open link', `data-side-url="${esc(j.link)}"`));
@@ -673,22 +700,25 @@ function renderSide() {
     status.push(btn('Snooze 4h', `data-side-act='${esc(JSON.stringify({ id: j.id, snoozedUntil: new Date(Date.now() + 4 * 3600e3).toISOString() }))}'`));
     if (j.status !== 'follow_up') status.push(btn('Follow up later', `data-side-act='${esc(JSON.stringify({ id: j.id, status: 'follow_up' }))}'`));
     status.push(btn('Dismiss', `data-side-act='${esc(JSON.stringify({ id: j.id, archived: true }))}'`, 'warn'));
-    el.innerHTML = `${back}
+    const role = (window.Sprites && window.Arcade.info(sel) && window.Arcade.info(sel).spec && window.Arcade.info(sel).spec.label) || src.label;
+    el.innerHTML = `${back}${portraitHtml(sel, src.label, role)}
       <div class="chips"><span class="chip ${j.status}">${STATUS_LABEL[j.status]}</span><span class="chip">${esc(src.label)}</span>${j.alive ? '<span class="chip working">live</span>' : ''}${j.meta && j.meta.alias ? `<span class="chip">🌿 ${esc(j.meta.alias)}</span>` : ''}</div>
       <h3>${esc(j.title)}</h3>
       ${act ? `<div class="doing"><span class="k">Doing now</span>${act.icon} ${esc(act.label)}${act.at ? ` <span class="meta">· ${ago(act.at)}</span>` : ''}</div>` : ''}
       <div class="why">${esc(j.reason)}</div>
       ${mine.map((p) => `<div class="doing"><span class="k">Needs your OK</span>${esc(p.title)}<div class="btns">${btn('Approve', `data-side-decide="${esc(p.id)}" data-decision="approved"`, 'go')}${btn('Always allow', `data-side-decide="${esc(p.id)}" data-decision="approved" data-standing="1"`)}${btn('Not now', `data-side-decide="${esc(p.id)}" data-decision="rejected"`)}</div></div>`).join('')}
+      ${j.status === 'needs_you' || home.runs[j.id] ? `<div class="q side-q"><div class="ans" data-ans="${esc(j.id)}">${askHtml(j, home.asks[j.id])}</div></div>` : ''}
       <div class="btns">${actions.join('')}</div>
-      ${j.lastMessage ? `<div class="msg">${esc(j.lastMessage)}</div>` : ''}
+      ${j.lastMessage && j.status !== 'needs_you' ? `<div class="msg">${esc(j.lastMessage)}</div>` : ''}
       <div class="meta">${[j.cwd && `📁 ${esc(j.cwd)}`, j.branch && `⎇ ${esc(j.branch)}`, j.lastActivity && `last activity ${ago(j.lastActivity)}`].filter(Boolean).join('<br>')}</div>
       <div class="btns">${status.join('')}${btn('Full details', `data-side-drawer="${esc(j.id)}"`)}</div>`;
+    if (j.status === 'needs_you') hydrateAsks([{ kind: 'job', id: j.id, j }]);
     return;
   }
   if (sel.type === 'agent') {
     const a = ((state.workforce && state.workforce.agents) || []).find((x) => x.id === sel.id);
     if (!a) { el.innerHTML = back; return; }
-    el.innerHTML = `${back}<div class="chips"><span class="chip">Workforce agent</span><span class="chip">${esc(a.tier)}</span>${a.running ? '<span class="chip working">running</span>' : ''}${a.enabled ? '' : '<span class="chip failed">off</span>'}</div>
+    el.innerHTML = `${back}${portraitHtml(sel, a.name, 'Workforce')}<div class="chips"><span class="chip">Workforce agent</span><span class="chip">${esc(a.tier)}</span>${a.running ? '<span class="chip working">running</span>' : ''}${a.enabled ? '' : '<span class="chip failed">off</span>'}</div>
       <h3>${esc(a.name)}</h3><div class="why">${esc(a.role)}</div>
       <div class="doing"><span class="k">Last run ${a.lastRunAt ? ago(a.lastRunAt) : 'never'}</span>${esc(a.lastSummary || 'No runs yet.')}</div>
       ${a.lastError ? `<div class="doing" style="border-color:#e8434f"><span class="k">Last error</span>${esc(a.lastError)}</div>` : ''}
@@ -699,7 +729,7 @@ function renderSide() {
   if (sel.type === 'crew') {
     const m = arcade.crew.find((x) => x.id === sel.id);
     if (!m) { el.innerHTML = back; return; }
-    el.innerHTML = `${back}<div class="chips"><span class="chip">Hermes profile</span>${m.busy ? '<span class="chip working">active</span>' : '<span class="chip">idle</span>'}</div>
+    el.innerHTML = `${back}${portraitHtml(sel, m.title, `Hermes ${m.name}`)}<div class="chips"><span class="chip">Hermes profile</span>${m.busy ? '<span class="chip working">active</span>' : '<span class="chip">idle</span>'}</div>
       <h3>${esc(m.title)}</h3><div class="why">${esc(m.description || '')}</div>
       <div class="meta">Profile: ${esc(m.name)}<br>Last active ${m.lastActive ? ago(m.lastActive) : 'unknown'}</div>
       <div class="btns">${btn('📁 Open profile folder', `data-side-path="${esc(m.dir || '')}"`)}${btn('🌿 Make this OG Kush', `data-side-dot="${esc(m.id)}"`)}</div>`;
@@ -707,9 +737,26 @@ function renderSide() {
   }
   if (sel.type === 'dot') {
     const mine = allJobs().filter((j) => j.meta && j.meta.agent === 'Dot');
-    el.innerHTML = `${back}<div class="chips"><span class="chip">🌿 OG Kush</span></div><h3>Dot</h3>
+    el.innerHTML = `${back}${portraitHtml(sel, 'Dot', 'OG Kush')}<div class="chips"><span class="chip">🌿 OG Kush</span></div><h3>Dot</h3>
       <div class="why">Your voice assistant. Right now Dot is tracked as any Codex thread you started by voice. If Dot is actually a Grok bot or a Hermes agent, pick it in "Dot (OG Kush) is" above the map.</div>
       <h2>HANDED TO CODEX</h2>${mine.length ? `<ul>${mine.map(jobLi).join('')}</ul>` : '<div class="empty">No voice-started threads in the last day.</div>'}`;
+    return;
+  }
+  if (sel.type === 'overlord') {
+    const info = window.Arcade.info(sel);
+    const m = arcade.crew.find((x) => x.id === sel.id);
+    if (!info || !m) { el.innerHTML = back; return; }
+    const realm = info.realm || {};
+    const mine = realm.business === '*' ? allJobs() : allJobs().filter((j) => j.business === realm.business);
+    const n = (st) => mine.filter((j) => j.status === st).length;
+    const urgent = mine.filter((j) => j.status === 'needs_you' || j.status === 'failed');
+    el.innerHTML = `${back}${portraitHtml(sel, realm.label, m.title)}
+      <div class="chips"><span class="chip">${realm.grand ? '👑 Oversees every realm' : realm.liaison ? 'Grok ↔ Hermes liaison' : `Realm: ${esc(info.businessName || realm.business)}`}</span>${info.checking ? '<span class="chip working">checking in</span>' : '<span class="chip">on patrol</span>'}</div>
+      <div class="why">${esc(m.description || '')}</div>
+      <div class="doing"><span class="k">Realm right now</span>${n('needs_you')} need you · ${n('working')} working · ${n('failed')} failed · ${n('done')} done</div>
+      ${urgent.length ? `<h2>NEEDS ATTENTION</h2><ul>${urgent.map(jobLi).join('')}</ul>` : '<div class="empty">Nothing urgent in this realm.</div>'}
+      <h2>RECENT CHECK-INS</h2>${info.log.length ? `<ul>${info.log.map((l) => `<li>✓ ${esc((l.what || '').slice(0, 60))}<span class="sub">${ago(new Date(l.at).toISOString())}${l.status ? ` · ${esc(STATUS_LABEL[l.status] || l.status)}` : ''}</span></li>`).join('')}</ul>` : '<div class="empty">Just started the rounds.</div>'}
+      <div class="btns">${realm.business && realm.business !== '*' ? btn('Show this realm on Home', `data-side-realm="${esc(realm.business)}"`, 'go') : ''}${btn('📁 Profile folder', `data-side-path="${esc(m.dir || '')}"`)}</div>`;
     return;
   }
   if (sel.type === 'place') {
@@ -731,12 +778,13 @@ function renderSide() {
 const refreshViews = () => (state.tab === 'home' ? loadHome() : state.tab === 'arcade' ? loadArcade() : loadBoard());
 
 document.addEventListener('click', async (ev) => {
-  const t = ev.target.closest('[data-side-clear],[data-side-select],[data-side-act],[data-side-run],[data-side-copy],[data-side-path],[data-side-url],[data-side-drawer],[data-side-decide],[data-side-run-agent],[data-side-agent-toggle],[data-side-agent],[data-side-crew],[data-side-dot]');
+  const t = ev.target.closest('[data-side-realm],[data-side-clear],[data-side-select],[data-side-act],[data-side-run],[data-side-copy],[data-side-path],[data-side-url],[data-side-drawer],[data-side-decide],[data-side-run-agent],[data-side-agent-toggle],[data-side-agent],[data-side-crew],[data-side-dot]');
   if (!t) return;
   const d = t.dataset;
   const job = (id) => allJobs().concat(state.board.snoozed || []).find((x) => x.id === id);
   try {
     if ('sideClear' in d) return selectInArcade(null);
+    if (d.sideRealm) { state.biz = d.sideRealm; return showTab('home'); }
     if (d.sideSelect) return selectInArcade({ type: 'job', id: d.sideSelect });
     if (d.sideAgent) return selectInArcade({ type: 'agent', id: d.sideAgent });
     if (d.sideCrew) return selectInArcade({ type: 'crew', id: d.sideCrew });

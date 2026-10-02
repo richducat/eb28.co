@@ -232,3 +232,18 @@ h2.sec { font-size: 13px; text-transform: uppercase; letter-spacing: .07em; colo
 .q .deny { margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--line); }
 .q .deny code { display: block; margin: 4px 0 6px; font-size: 12px; white-space: pre-wrap; word-break: break-all; }
 .q .note .opt { margin-left: 6px; }
+
+/* portrait cards (agents-grid style) */
+.pcard { background: #0d0a17; border: 2px solid #3b2f5c; border-radius: 6px; padding: 6px; margin: 4px 0 10px; text-align: center; }
+.pcard img { width: 144px; height: 168px; image-rendering: pixelated; display: block; margin: 0 auto; border: 2px solid #241e40; }
+.pcard .plate { font: 8px/1.6 "Press Start 2P", monospace; color: #f0ecff; margin-top: 6px; letter-spacing: .5px; }
+.pcard .plate span { display: block; color: #9d93c2; }
+.arcade-side .side-q { display: block; background: transparent; border: 0; padding: 0; margin: 8px 0; }
+.arcade-side .side-q .aq { background: #221c3d; color: #e8e4ff; }
+.arcade-side .side-q .opt { background: #2f2858; border-color: #4a3f86; color: #fff; }
+.arcade-side .side-q .opt.go { background: #2f7d3b; border-color: #3fa34d; }
+.team { display: grid; grid-template-columns: repeat(auto-fill, minmax(104px, 1fr)); gap: 8px; margin: 14px 0 4px; }
+.team .pcard { margin: 0; cursor: pointer; padding: 4px; }
+.team .pcard img { width: 96px; height: 112px; }
+.team .pcard .plate { font-size: 6px; }
+.team .pcard:hover { border-color: #f8d838; }

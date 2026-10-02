@@ -45,6 +45,15 @@
   };
   // The clock tower is a landmark, not a status: it shows when scheduled agents run next.
   const CLOCK = { door: [15, 16] };
+  // Hermes chief-of-staff profiles -> the realm (business) each one oversees on the map.
+  const REALMS = {
+    cos: { business: '*', grand: true, short: 'CHIEF', label: 'Grand Chief of Staff' },
+    'hermes-cos': { business: '*', liaison: true, short: 'HERMES', label: 'Hermes Chief (Grok liaison)' },
+    'tyfys-cos': { business: 'tyfys', short: 'TYFYS', label: 'TYFYS Overlord' },
+    'eb28-cos': { business: 'eb28', short: 'EB28', label: 'EB28 Overlord' },
+    'insprent-cos': { business: 'inspection', short: 'INSPECT', label: 'Inspection Rent Overlord' },
+    'labstudio-cos': { business: 'apps', short: 'LABSTUDIO', label: 'Lab Studio Overlord' },
+  };
   const AGENT_TARGET = { triage: 'needs_you', 'follow-up': 'follow_up', 'bot-watchdog': 'bots', janitor: 'done', 'pr-steward': 'working', 'ops-runner': 'working', 'automation-scout': 'working', reporter: 'hq' };
 
   /* ---------- deterministic noise ---------- */
@@ -488,7 +497,7 @@
     const w = Math.max(30, Math.ceil(g.measureText(label).width) + 10);
     const x = Math.round(cx - w / 2);
     const rows = Math.ceil(Math.min(count, p.max || 99) / p.cols);
-    const y = Math.min(by + 8 + Math.max(1, rows) * (GAP - 1), H - 28);
+    const y = Math.min(by + 10 + Math.max(1, rows) * 24, H - 28);
     px(x - 1, y - 1, w + 2, 12, P.ink);
     px(x, y, w, 10, P.wood[2]);
     px(x, y, w, 1, P.wood[3]);
@@ -571,7 +580,7 @@
     const p = PLACES[placeId];
     const row = Math.floor(i / p.cols);
     const col = i % p.cols;
-    return { x: Math.round(p.door[0] * T + (col - (p.cols - 1) / 2) * GAP), y: p.door[1] * T + 4 + row * (GAP - 1) };
+    return { x: Math.round(p.door[0] * T + (col - (p.cols - 1) / 2) * GAP), y: p.door[1] * T + 6 + row * 24 };
   }
 
   function routeBetween(from, to) {
@@ -655,13 +664,38 @@
       Object.assign(a, { title: `${ag.name} (workforce) · ${ag.lastSummary || ag.role || ''}`, busy, enabled: ag.enabled });
     });
 
-    counts.crew = crew.length;
-    crew.forEach((m, i) => {
+    // Chiefs of staff become realm overlords; everyone else lives in the village.
+    const lords = crew.filter((m) => REALMS[m.name]);
+    const villagers = crew.filter((m) => !REALMS[m.name]);
+    counts.crew = villagers.length;
+    villagers.forEach((m, i) => {
       seen.add(m.id);
       const d = slot('crew', i);
       let a = actors.get(m.id);
       if (!a) { a = { id: m.id, kind: 'crew', x: d.x, y: d.y, path: [], place: 'crew', phase: Math.random() * 6 }; actors.set(m.id, a); }
-      Object.assign(a, { title: `${m.title} (Hermes ${m.name}) · ${m.busy ? 'working' : 'idle'}`, busy: m.busy, dotSkin: dotTarget === m.id });
+      Object.assign(a, { title: `${m.title} (Hermes ${m.name}) · ${m.busy ? 'working' : 'idle'}`, busy: m.busy, crewName: m.name, dotSkin: dotTarget === m.id });
+    });
+    const businesses = board.businesses || [];
+    lords.forEach((m, i) => {
+      seen.add(m.id);
+      const realm = REALMS[m.name];
+      const biz = businesses.find((b) => b.id === realm.business);
+      let a = actors.get(m.id);
+      if (!a) {
+        const home = { x: PLACES.hq.door[0] * T - 40 + i * 16, y: PLACES.hq.door[1] * T + 30 };
+        a = { id: m.id, kind: 'overlord', x: home.x, y: home.y, path: [], place: 'hq', phase: Math.random() * 6, pauseUntil: performance.now() / 1000 + 1 + i, log: [], cursor: i };
+        actors.set(m.id, a);
+      }
+      const cape = realm.grand ? '#f8d838' : realm.liaison ? '#d8a828' : (biz && biz.color) || '#9060d8';
+      Object.assign(a, {
+        realm,
+        lordName: m.name,
+        short: realm.short,
+        businessName: biz ? biz.full || biz.name : realm.label,
+        title: `${realm.label} · ${m.title}`,
+        busy: m.busy,
+        spec: window.Sprites ? window.Sprites.specFor('analyst', m.id, { suit: realm.grand ? '#1a1a22' : '#2a2a3a', tie: cape, cape, hat: realm.grand ? 'crown' : undefined, prop: 'clipboard', scene: 'castle', bg: Sprites.shade(cape, 0.35), accent: cape, label: realm.label }) : null,
+      });
     });
     for (const a of actors.values()) if (a.kind === 'job' || a.kind === 'bot') a.dotSkin = a.jobId === dotTarget;
 
@@ -693,56 +727,80 @@
     text(s, x + 5, y + dy + 2, color, 5, 'center', P.white);
   }
 
-  function drawActor(a, t) {
-    const moving = a.path.length > 0;
-    const stepping = moving && Math.floor(t * 8 + a.phase) % 2;
-    let img;
-    let bob = 0;
-    const hat = a.dot || a.dotSkin || a.kind === 'dot' ? LEAF_HAT : null;
+  /* ---------- who looks like what (see sprites.js) ---------- */
+  const SOURCE_ARCHETYPE = { 'claude-code': 'researcher', codex: 'engineer', gemini: 'analyst', openclaw: 'creative', hermes: 'clerk', github: 'engineer', automation: 'operator', manual: 'analyst' };
+  const AGENT_LOOK = {
+    triage: ['medic', { prop: 'clipboard' }], 'follow-up': ['clerk', { prop: 'letter' }], reporter: ['researcher', { prop: 'book' }], 'automation-scout': ['analyst', { prop: 'chart' }],
+    'ops-runner': ['operator', { prop: 'wrench' }], 'pr-steward': ['engineer', { prop: 'laptop' }], janitor: ['builder', { prop: 'broom' }], 'bot-watchdog': ['operator', { prop: 'shield' }],
+  };
+  const CREW_LOOK = {
+    finance: 'analyst', legal: 'researcher', health: 'medic', grocery: 'builder', school: 'clerk', family: 'creative', relations: 'creative', projects: 'builder', solana: 'engineer',
+    upwork: 'clerk', outbound: 'engineer', integration: 'engineer', teslaware: 'builder', 'biz-research': 'researcher', bizops: 'operator', lifeadmin: 'clerk',
+  };
+
+  /** Stable sprite spec for an actor. */
+  function specOf(a) {
+    const S = window.Sprites;
+    if (!S) return null;
+    const leaf = a.dot || a.dotSkin || a.kind === 'dot' ? { hat: 'leaf' } : {};
     if (a.kind === 'bot') {
       const m = (a.job && a.job.meta) || {};
       const body = a.status === 'failed' ? P.ghost[2] : m.provider === 'grok' ? '#383848' : m.provider === 'hermes' ? '#d8a828' : m.providerColor || '#606878';
-      img = sprite(ROBOT, pal(body, '#000000'), hat);
-      bob = a.status === 'working' ? Math.round(Math.sin(t * 5 + a.phase)) : 0;
-    } else if (a.kind === 'agent') {
-      img = sprite(stepping ? PERSON_STEP : PERSON, pal(a.enabled ? P.purple[2] : P.ghost[2], '#402060'), CAP);
-      bob = a.busy && !moving ? Math.floor(t * 8 + a.phase) % 2 : 0;
-    } else if (a.kind === 'dot') {
-      img = sprite(stepping ? PERSON_STEP : PERSON, pal(SOURCE.dot.shirt, SOURCE.dot.hair), LEAF_HAT);
-      bob = moving ? 0 : Math.round(Math.sin(t * 2.5));
-    } else if (a.kind === 'crew') {
-      img = sprite(PERSON, a.dotSkin ? pal(SOURCE.dot.shirt, SOURCE.dot.hair) : pal(a.busy ? P.gold[2] : P.gold[1], '#e8e8f0'), hat);
-      bob = a.busy ? Math.floor(t * 6 + a.phase) % 2 : 0;
-    } else {
-      const st = a.style || SOURCE.manual;
-      const p2 = pal(st.shirt, st.hair);
-      if (a.status === 'failed') Object.assign(p2, { C: P.ghost[2], c: P.ghost[1], W: P.ghost[3], S: P.ghost[3], s: P.ghost[2] });
-      img = sprite(stepping ? PERSON_STEP : PERSON, p2, hat);
-      if (!moving && a.status === 'working') bob = Math.floor(t * 8 + a.phase) % 2;
-      if (!moving && a.status === 'needs_you') bob = -Math.abs(Math.round(Math.sin(t * 5 + a.phase) * 2));
+      return { robot: true, suit: body, label: 'Bot', scene: 'gears', bg: '#20283a', ...leaf };
     }
+    if (a.kind === 'overlord') return a.spec;
+    if (a.kind === 'agent') {
+      const [kind, extra] = AGENT_LOOK[a.id.replace(/^agent:/, '')] || ['operator', {}];
+      return S.specFor(kind, a.id, { tie: '#9060d8', ...extra, ...(a.enabled ? {} : { suit: '#585868' }) });
+    }
+    if (a.kind === 'dot') return S.specFor('creative', 'dot', { shirt: '#40a848', hair: '#8050d8', hairStyle: 'messy', hat: 'leaf', label: 'OG Kush' });
+    if (a.kind === 'crew') return S.specFor(CREW_LOOK[a.crewName] || 'clerk', a.id, { tie: '#d8a828', ...leaf });
+    const kind = SOURCE_ARCHETYPE[(a.job && a.job.source) || ''] || 'analyst';
+    return S.specFor(kind, a.id, leaf);
+  }
+
+  function drawActor(a, t) {
+    const moving = a.path.length > 0;
+    const stepping = moving && Math.floor(t * 8 + a.phase) % 2;
+    let bob = 0;
+    if (a.kind === 'bot') bob = a.status === 'working' ? Math.round(Math.sin(t * 5 + a.phase)) : 0;
+    else if (a.kind === 'agent' || a.kind === 'crew') bob = a.busy && !moving ? Math.floor(t * 6 + a.phase) % 2 : 0;
+    else if (a.kind === 'dot') bob = moving ? 0 : Math.round(Math.sin(t * 2.5));
+    else if (a.kind === 'job' && !moving && a.status === 'working') bob = Math.floor(t * 8 + a.phase) % 2;
+    else if (a.kind === 'job' && !moving && a.status === 'needs_you') bob = -Math.abs(Math.round(Math.sin(t * 5 + a.phase) * 2));
+    const spec = specOf(a);
+    const img = spec ? window.Sprites.person(spec, stepping ? 1 : 0) : null;
     const x = Math.round(a.x);
     const y = Math.round(a.y) + bob;
+    const top = y - 12; // 16x28 sprite (4px hat room) with feet on the actor's ground line
     if (a.status === 'needs_you' && !moving) {
       g.fillStyle = `rgba(248,64,56,${0.25 + 0.2 * Math.sin(t * 6 + a.phase)})`;
       g.fillRect(x, Math.round(a.y) + 12, 16, 5);
       g.fillRect(x + 2, Math.round(a.y) + 11, 12, 7);
     }
+    if (a.kind === 'overlord') {
+      g.fillStyle = `${a.spec.cape}55`;
+      g.beginPath(); g.ellipse(x + 8, Math.round(a.y) + 15, 11, 4, 0, 0, Math.PI * 2); g.fill();
+    }
     g.fillStyle = 'rgba(0,0,0,.3)';
     g.fillRect(x + 3, Math.round(a.y) + 14, 10, 2);
-    if (a.status === 'failed' && a.kind === 'job' && !moving) {
-      g.save(); g.translate(x + 8, y + 10); g.rotate(-Math.PI / 2); g.drawImage(img, -8, -8); g.restore();
-    } else {
-      g.drawImage(img, x, y);
+    if (img) {
+      if (a.status === 'failed' && a.kind === 'job' && !moving) {
+        g.save(); g.globalAlpha = 0.75; g.translate(x + 12, Math.round(a.y) + 10); g.rotate(-Math.PI / 2); g.drawImage(img, -14, -8); g.restore();
+      } else {
+        g.drawImage(img, x, top);
+      }
     }
     if (!moving) {
-      if (a.status === 'needs_you') bubble(x + 9, y - 10, '!', P.red[1], t);
-      else if (a.status === 'follow_up' && a.kind === 'job') bubble(x + 9, y - 10, '?', P.gold[0], t);
-      else if (a.status === 'done' && Math.floor(t * 2 + a.phase) % 5 === 0) star(x + 13, y, Math.floor(t * 10));
-      else if (a.status === 'working' && a.kind === 'job' && Math.random() < 0.03) particles.push({ x: x + 8, y: y + 2, vx: (Math.random() - 0.5) * 20, vy: -28, life: 0.8, color: '#90ffb0', ch: Math.random() < 0.5 ? '1' : '0' });
-      else if ((a.kind === 'agent' || a.kind === 'crew') && a.busy && Math.floor(t + a.phase) % 3 === 0) star(x + 13, y - 1, Math.floor(t * 10));
+      if (a.kind === 'overlord' && a.checking) bubble(x + 9, top - 8, '✓', '#2d9c67', t);
+      else if (a.status === 'needs_you') bubble(x + 9, top - 6, '!', P.red[1], t);
+      else if (a.status === 'follow_up' && a.kind === 'job') bubble(x + 9, top - 6, '?', P.gold[0], t);
+      else if (a.status === 'done' && Math.floor(t * 2 + a.phase) % 5 === 0) star(x + 13, top + 4, Math.floor(t * 10));
+      else if (a.status === 'working' && a.kind === 'job' && Math.random() < 0.03) particles.push({ x: x + 8, y: top, vx: (Math.random() - 0.5) * 20, vy: -28, life: 0.8, color: '#90ffb0', ch: Math.random() < 0.5 ? '1' : '0' });
+      else if ((a.kind === 'agent' || a.kind === 'crew') && a.busy && Math.floor(t + a.phase) % 3 === 0) star(x + 13, top + 2, Math.floor(t * 10));
     }
-    if (hover === a) { g.strokeStyle = 'rgba(248,216,56,.7)'; g.lineWidth = 1; g.strokeRect(x - 1.5, y - 1.5, 19, 19); }
+    if (a.kind === 'overlord') text(a.short, x + 8, Math.round(a.y) + 18, a.spec.cape, 5, 'center');
+    if (hover === a) { g.strokeStyle = 'rgba(248,216,56,.7)'; g.lineWidth = 1; g.strokeRect(x - 1.5, top + 1.5, 19, 27); }
   }
 
   function renderBackground(f) {
@@ -823,8 +881,50 @@
     text(s, x + 6, y + 4, P.white, 5);
   }
 
+  /** Overlords never stop: walk to the next thing in their realm, check it, move on. */
+  function patrol(a, now) {
+    if (a.path.length || now < a.pauseUntil) return;
+    if (a.target && !a.arrived) {
+      a.arrived = true;
+      a.checking = true;
+      a.pauseUntil = now + 2.2;
+      const t = actors.get(a.target);
+      if (t) {
+        a.log.unshift({ at: Date.now(), what: t.title || t.id, status: t.status || '' });
+        a.log.length = Math.min(a.log.length, 8);
+      }
+      return;
+    }
+    a.checking = false;
+    let targets;
+    if (a.realm.grand) targets = [...actors.values()].filter((x) => x.kind === 'overlord' && x !== a);
+    else if (a.realm.liaison) targets = [...actors.values()].filter((x) => x.kind === 'bot' || x.kind === 'crew' || x.kind === 'dot');
+    else targets = [...actors.values()].filter((x) => (x.kind === 'job' || x.kind === 'bot') && x.job && x.job.business === a.realm.business);
+    // needs-you first, so the realm's urgent items get visited most
+    targets.sort((x, y) => (y.status === 'needs_you') - (x.status === 'needs_you'));
+    if (!targets.length) {
+      const keys = Object.keys(PLACES);
+      const place = keys[(a.cursor += 1) % keys.length];
+      const d = PLACES[place].door;
+      walk(a, place, { x: d[0] * T + 26, y: d[1] * T - 2 });
+      a.place = place;
+      a.target = null;
+      a.arrived = false;
+      a.pauseUntil = 0;
+      return;
+    }
+    const t = targets[(a.cursor += 1) % targets.length];
+    const place = t.place && PLACES[t.place] ? t.place : 'hq';
+    walk(a, place, { x: Math.round(t.x) + 14, y: Math.round(t.y) + 2 });
+    a.place = place;
+    a.target = t.id;
+    a.arrived = false;
+  }
+
   function step(dt) {
+    const now = performance.now() / 1000;
     for (const a of actors.values()) {
+      if (a.kind === 'overlord') patrol(a, now);
       if (!a.path.length) continue;
       const p = a.path[0];
       const dx = p.x - a.x;
@@ -834,7 +934,7 @@
         a.x = p.x; a.y = p.y; a.path.shift();
         if (!a.path.length && a.status === 'done') burst(a.x + 8, a.y, P.gold[2], 14);
       } else {
-        const m = Math.min(d, 64 * dt);
+        const m = Math.min(d, (a.kind === 'overlord' ? 80 : 64) * dt);
         a.x += (dx / d) * m;
         a.y += (dy / d) * m;
       }
@@ -877,7 +977,7 @@
     fish(t);
     clouds(t);
     const sel = selected && selected.type === 'actor' && actors.get(selected.id);
-    if (sel) cursor(sel.x, sel.y, t);
+    if (sel) cursor(sel.x, sel.y - 12, t);
     else if (selected && selected.type === 'place') {
       const p = selected.id === 'clock' ? { door: CLOCK.door } : PLACES[selected.id];
       if (p) cursor(p.door[0] * T, p.door[1] * T - (selected.id === 'clock' ? 66 : 62), t);
@@ -892,7 +992,7 @@
     const x = ((ev.clientX - r.left) / r.width) * W;
     const y = ((ev.clientY - r.top) / r.height) * H;
     let best = null;
-    for (const a of actors.values()) if (x >= a.x && x <= a.x + 16 && y >= a.y && y <= a.y + 16) best = !best || a.y > best.y ? a : best;
+    for (const a of actors.values()) if (x >= a.x && x <= a.x + 16 && y >= a.y - 10 && y <= a.y + 16) best = !best || a.y > best.y ? a : best;
     if (best) return best;
     for (const [id, r] of Object.entries(signRects)) if (x >= r.x && x <= r.x + r.w && y >= r.y && y <= r.y + r.h) return { sign: id };
     if (x >= clockRect.x && x <= clockRect.x + clockRect.w && y >= clockRect.y && y <= clockRect.y + clockRect.h) return { sign: 'clock' };
@@ -914,13 +1014,15 @@
     if (a.kind === 'agent') return { type: 'agent', id: a.id.replace(/^agent:/, '') };
     if (a.kind === 'crew') return { type: 'crew', id: a.id };
     if (a.kind === 'dot') return { type: 'dot', id: 'dot' };
+    if (a.kind === 'overlord') return { type: 'overlord', id: a.id };
     return null;
   }
 
   function select(sel) {
     if (sel && sel.type === 'job') selected = { type: 'actor', id: `job:${sel.id}` };
     else if (sel && sel.type === 'agent') selected = { type: 'actor', id: `agent:${sel.id}` };
-    else if (sel && sel.type === 'crew') selected = { type: 'actor', id: sel.id };
+    else if (sel && (sel.type === 'crew' || sel.type === 'overlord')) selected = { type: 'actor', id: sel.id };
+    else if (sel && sel.type === 'dot') selected = { type: 'actor', id: 'agent:dot' };
     else if (sel && sel.type === 'place') selected = { type: 'place', id: sel.id };
     else selected = null;
   }
@@ -950,5 +1052,17 @@
   const start = () => { if (running || !cv) return; running = true; lastT = 0; requestAnimationFrame(render); };
   const stop = () => { running = false; };
 
-  window.Arcade = { mount, update, start, stop, say, select, PLACES, _actors: actors };
+  /** Portrait spec + overlord info for the sidebar. */
+  function info(sel) {
+    if (!sel) return null;
+    const id = sel.type === 'job' ? `job:${sel.id}` : sel.type === 'agent' ? `agent:${sel.id}` : sel.type === 'dot' ? 'agent:dot' : sel.id;
+    const a = actors.get(id);
+    if (!a) return null;
+    return { spec: specOf(a), kind: a.kind, realm: a.realm, businessName: a.businessName, log: a.log || [], checking: a.checking, title: a.title };
+  }
+  function team() {
+    return [...actors.values()].filter((a) => a.kind === 'overlord' || a.kind === 'agent' || a.kind === 'crew' || a.kind === 'dot').map((a) => ({ id: a.id, kind: a.kind, spec: specOf(a), name: a.kind === 'overlord' ? a.realm.label : a.title.split(' · ')[0].split(' (')[0], sel: describe({ type: 'actor', id: a.id }) }));
+  }
+
+  window.Arcade = { mount, update, start, stop, say, select, info, team, PLACES, _actors: actors };
 })();

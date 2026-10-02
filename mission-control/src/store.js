@@ -16,24 +16,31 @@ export class Store {
     return path.join(this.root, `${name}.json`);
   }
 
+  /** File modification time, or 0 if it doesn't exist. */
+  mtime(name) {
+    try { return fs.statSync(this.file(name)).mtimeMs; } catch { return 0; }
+  }
+
   get(name, fallback) {
-    if (this.cache.has(name)) return this.cache.get(name);
+    // cached, unless another process (CLI run, second instance) has written the file since
+    const hit = this.cache.get(name);
+    if (hit && hit.mtime === this.mtime(name)) return hit.value;
     let value = fallback;
     try {
       value = JSON.parse(fs.readFileSync(this.file(name), 'utf8'));
     } catch {
       value = typeof fallback === 'function' ? fallback() : fallback;
     }
-    this.cache.set(name, value);
+    this.cache.set(name, { value, mtime: this.mtime(name) });
     return value;
   }
 
   set(name, value) {
-    this.cache.set(name, value);
     const target = this.file(name);
     const tmp = `${target}.${process.pid}.tmp`;
     fs.writeFileSync(tmp, JSON.stringify(value, null, 2));
     fs.renameSync(tmp, target);
+    this.cache.set(name, { value, mtime: this.mtime(name) });
     return value;
   }
 

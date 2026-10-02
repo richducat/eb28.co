@@ -14,18 +14,19 @@ import { APP_ROOT, HOST, PORT, MC_HOME } from './config.js';
 import { buildBoard, setOverride } from './board.js';
 import { store } from './store.js';
 import { addManual, removeManual, updateManual } from './sources/manual.js';
-import { loadRegistry, runAutomation, setAutomationState, lastRun, nextRunAt, missingTarget, resolveCwd } from './workforce/automations.js';
+import { loadRegistry, runAutomation, setAutomationState, lastRun, nextRunAt, missingTarget, resolveCwd, parseSchedule, TIERS } from './workforce/automations.js';
 import { AGENTS, Orchestrator } from './workforce/orchestrator.js';
 import { explanationFor } from './workforce/agents/triage.js';
 import { notify, messageFor } from './notify.js';
 import { readTailJsonl, textOf } from './sources/util.js';
 import { loadRegistry as loadBots, saveRegistry as saveBots, PROVIDERS } from './sources/bots.js';
 import { restartBot } from './workforce/bot-control.js';
+import { createMobile, mobileAllowed } from './mobile.js';
 
 const UI_DIR = path.join(APP_ROOT, 'ui');
 const MIME = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.svg': 'image/svg+xml', '.png': 'image/png' };
 
-export function createServer({ orchestrator = new Orchestrator(), nativeNotify = null, confirmOwner = null } = {}) {
+export function createServer({ orchestrator = new Orchestrator(), nativeNotify = null, confirmOwner = null, mobile: mobileOn = false } = {}) {
   const clients = new Set();
 
   orchestrator.on('event', (event) => {
@@ -65,7 +66,12 @@ export function createServer({ orchestrator = new Orchestrator(), nativeNotify =
     'POST /api/refresh': async () => orchestrator.refreshBoard(),
     'GET /api/job': async (_b, q) => jobDetail(q.get('id')),
     'POST /api/job/override': async (b) => {
-      if (b.id && b.id.startsWith('manual:')) updateManual(b.id, { status: b.status, notes: b.note });
+      if (b.id && b.id.startsWith('manual:')) {
+        const patch = {};
+        if (b.status !== undefined) patch.status = b.status;
+        if (b.note !== undefined) patch.notes = b.note;
+        if (Object.keys(patch).length) updateManual(b.id, patch);
+      }
       const o = setOverride(b.id, { status: b.status, reason: b.reason, note: b.note, snoozedUntil: b.snoozedUntil, archived: b.archived, followUpAt: b.followUpAt, business: b.business });
       await orchestrator.refreshBoard();
       return { ok: true, override: o };
@@ -107,6 +113,7 @@ export function createServer({ orchestrator = new Orchestrator(), nativeNotify =
     'POST /api/workforce/scout/adopt': async (b) => {
       const finding = store.get('scout-findings', { proposals: [] }).proposals.find((p) => p.id === b.id);
       if (!finding) throw new Error('finding not found');
+      if (b.tier && !TIERS.includes(b.tier)) throw new Error(`tier must be one of ${TIERS.join(', ')}`);
       const automation = { ...finding.automation, tier: b.tier || finding.automation.tier };
       store.update('custom-automations', [], (list) => [...list.filter((x) => x.id !== automation.id), automation]);
       return automation;
@@ -128,7 +135,10 @@ export function createServer({ orchestrator = new Orchestrator(), nativeNotify =
       const patch = {};
       if (typeof b.enabled === 'boolean') patch.enabled = b.enabled;
       if (typeof b.autoApproved === 'boolean') patch.autoApproved = b.autoApproved;
-      if (b.schedule !== undefined) patch.schedule = b.schedule;
+      if (b.schedule !== undefined) {
+        if (b.schedule && !parseSchedule(b.schedule)) throw new Error(`Schedule not understood: "${b.schedule}". Try "every 30m", "daily 06:00" or "weekdays 09:30".`);
+        patch.schedule = b.schedule;
+      }
       return setAutomationState(b.id, patch);
     },
     'GET /api/automations/runs': async (_b, q) => store.get('automation-runs', []).filter((r) => !q.get('id') || r.automationId === q.get('id')).slice(-50).reverse(),
@@ -149,10 +159,14 @@ export function createServer({ orchestrator = new Orchestrator(), nativeNotify =
     },
     'POST /api/bots/registry': async (b) => {
       if (!b.name) throw new Error('name required');
+      if (b.process) {
+        try { new RegExp(b.process, 'i'); } catch { throw new Error(`"Process match" is not a valid pattern: ${b.process}`); }
+      }
       const entry = cleanBotEntry(b);
       const list = loadBots();
       const idx = list.findIndex((x) => (x.id || x.name) === (b.originalName || entry.name));
-      if (idx >= 0) list[idx] = { ...list[idx], ...entry };
+      // an edit replaces the entry (cleared fields stay cleared); keep only its id
+      if (idx >= 0) list[idx] = { ...(list[idx].id ? { id: list[idx].id } : {}), ...entry };
       else list.push(entry);
       saveBots(list);
       await orchestrator.refreshBoard();
@@ -231,7 +245,17 @@ export function createServer({ orchestrator = new Orchestrator(), nativeNotify =
     'GET /api/health': async () => ({ ok: true, home: MC_HOME, pid: process.pid }),
   };
 
-  const server = http.createServer(async (req, res) => {
+  // `remote` = the iPhone app over the phone listener (already token-checked in mobile.js)
+  const handle = async (req, res, opts = {}) => {
+    try {
+      return await route(req, res, opts);
+    } catch (err) {
+      // never let one odd request (bad URL, closed socket) take the server down
+      if (!res.headersSent) json(res, 400, { error: err.message });
+      else res.end();
+    }
+  };
+  const route = async (req, res, { remote = false } = {}) => {
     const url = new URL(req.url, `http://${HOST}`);
     if (req.method === 'GET' && url.pathname === '/api/events') {
       res.writeHead(200, { 'Content-Type': 'text/event-stream', 'Cache-Control': 'no-cache', Connection: 'keep-alive' });
@@ -242,12 +266,17 @@ export function createServer({ orchestrator = new Orchestrator(), nativeNotify =
     }
     const handler = routes[`${req.method} ${url.pathname}`];
     if (handler && req.method !== 'GET') {
-      const guard = checkWrite(req);
+      const guard = remote ? jsonOnly(req) : checkWrite(req);
       if (!guard.ok) return json(res, 403, { error: guard.reason });
     }
+    if (remote && !handler) return json(res, 404, { error: 'not found' });
     if (handler) {
       try {
         const body = req.method === 'GET' ? {} : await readBody(req);
+        if (remote) {
+          const ok = mobileAllowed(req.method, url.pathname, body);
+          if (!ok.ok) return json(res, ok.code, { error: ok.reason });
+        }
         return json(res, 200, await handler(body, url.searchParams));
       } catch (err) {
         return json(res, 400, { error: err.message });
@@ -259,9 +288,18 @@ export function createServer({ orchestrator = new Orchestrator(), nativeNotify =
     if (!file.startsWith(UI_DIR) || !fs.existsSync(file)) file = path.join(UI_DIR, 'index.html');
     res.writeHead(200, { 'Content-Type': MIME[path.extname(file)] || 'application/octet-stream', 'Cache-Control': 'no-store' });
     fs.createReadStream(file).pipe(res);
-  });
+  };
+  const server = http.createServer((req, res) => handle(req, res));
+
+  // Phone access (local only: the phone listener refuses these routes)
+  const mobile = createMobile({ handle });
+  routes['GET /api/mobile'] = async () => mobile.status();
+  routes['POST /api/mobile'] = async (b) => mobile.set({ enabled: typeof b.enabled === 'boolean' ? b.enabled : undefined, rotate: Boolean(b.rotate) });
+  if (mobileOn) mobile.autostart();
+  server.on('close', () => mobile.stop());
 
   server.orchestrator = orchestrator;
+  server.mobile = mobile;
   return server;
 }
 
@@ -280,7 +318,7 @@ export function cleanBotEntry(b) {
     link: b.link || undefined,
     restart: argv(b.restart),
     expected: b.expected === undefined || b.expected === '' ? undefined : b.expected === true || b.expected === 'true',
-    autoRestart: b.autoRestart === true || b.autoRestart === 'true' || undefined,
+    autoRestart: b.autoRestart === true || b.autoRestart === 'true' ? true : b.autoRestart === undefined ? undefined : false,
     staleAfterMin: b.staleAfterMin ? Number(b.staleAfterMin) : undefined,
     hidden: b.hidden === true || undefined,
   };
@@ -386,6 +424,12 @@ export function checkWrite(req) {
   if (!allowed.has(host)) return { ok: false, reason: 'Refused: request did not come from Mission Control (host).' };
   const origin = req.headers.origin;
   if (origin && !allowed.has(origin.replace(/^https?:\/\//, ''))) return { ok: false, reason: 'Refused: request did not come from Mission Control (origin).' };
+  if (!/^application\/json\b/i.test(String(req.headers['content-type'] || ''))) return { ok: false, reason: 'Refused: write requests must be JSON.' };
+  return { ok: true };
+}
+
+/** Phone requests are token-checked and route-limited; writes must still be JSON. */
+function jsonOnly(req) {
   if (!/^application\/json\b/i.test(String(req.headers['content-type'] || ''))) return { ok: false, reason: 'Refused: write requests must be JSON.' };
   return { ok: true };
 }

@@ -16,6 +16,7 @@ async function boot() {
     // Not available in `npm run web`, so those actions are refused there.
     confirmOwner: systemPreferences && systemPreferences.canPromptTouchID && systemPreferences.canPromptTouchID() ? (reason) => systemPreferences.promptTouchID(reason) : null,
     orchestrator,
+    mobile: true,
     nativeNotify: ({ title, body }) => {
       if (Notification.isSupported()) {
         const n = new Notification({ title, body });
@@ -108,7 +109,12 @@ function createTray() {
   tray.on('click', () => win && (win.isVisible() ? win.hide() : win.show()));
 }
 
+// One Mission Control at a time: a second copy would run a second set of agents on the same state.
+if (!app.requestSingleInstanceLock()) app.quit();
+app.on('second-instance', () => { if (win) { win.show(); win.focus(); } });
+
 app.whenReady().then(async () => {
+  if (!app.hasSingleInstanceLock()) return;
   await boot();
   createWindow();
   createTray();

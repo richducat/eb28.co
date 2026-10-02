@@ -25,6 +25,7 @@
   <div class="stats" id="stats"></div>
   <div class="actions">
     <input id="search" type="search" placeholder="Search jobs  ( / )" autocomplete="off" />
+    <button id="phone-btn" title="Use Mission Control on your iPhone">📱 Phone</button>
     <button id="add-job" class="primary">+ Track a job</button>
     <button id="refresh" title="Rescan now (r)">↻</button>
   </div>
@@ -200,7 +201,15 @@
   </form>
 </dialog>
 
+<dialog id="phone-dialog">
+  <h2>📱 Mission Control on your iPhone</h2>
+  <div id="phone-body"></div>
+  <menu><button type="button" id="phone-close">Close</button></menu>
+</dialog>
+
 <div id="toasts" class="toasts"></div>
+<script src="/vendor/qrcode.js"></script>
+<script src="/keep.js"></script>
 <script src="/trading.js"></script>
 <script src="/sprites.js"></script>
 <script src="/arcade.js"></script>

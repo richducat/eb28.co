@@ -84,6 +84,7 @@ export function startClaudeLogin() {
   const bin = claudeBin();
   if (!bin) return { ok: false, error: 'Claude Code is not installed.' };
   const child = spawn(bin, ['auth', 'login', '--claudeai'], { detached: true, stdio: 'ignore' });
+  child.on('error', () => { authCache.at = 0; }); // a missing/broken binary must not crash the app
   child.unref();
   authCache.at = 0;
   return { ok: true };
@@ -387,8 +388,13 @@ export async function sendReply(job, text, { approve = false, tool, toolInput, o
     }
   });
   child.stderr.on('data', (d) => { errText = (errText + d).slice(-2000); });
-  child.on('error', (err) => { errText += err.message; });
-  child.on('close', (code) => {
+  // a stalled CLI must not lock this job forever: stop it after 30 minutes
+  const timer = setTimeout(() => { errText += '\nStopped after 30 minutes without finishing.'; child.kill('SIGTERM'); }, 30 * 60 * 1000);
+  let finished = false;
+  const finish = (code) => {
+    if (finished) return;
+    finished = true;
+    clearTimeout(timer);
     if (buf.trim()) onLine(buf);
     runs.delete(job.id);
     run.status = code === 0 && run.ok !== false ? 'done' : 'failed';
@@ -396,7 +402,9 @@ export async function sendReply(job, text, { approve = false, tool, toolInput, o
     run.finishedAt = new Date().toISOString();
     saveRun(run);
     emit('reply:done');
-  });
+  };
+  child.on('error', (err) => { errText += err.message; setTimeout(() => finish(-1), 50); });
+  child.on('close', (code) => finish(code));
   return run;
 }
 

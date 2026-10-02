@@ -587,6 +587,9 @@ document.addEventListener('click', async (ev) => {
 });
 
 function renderHome() {
+  return window.keepTyping($('#queue'), paintHome);
+}
+function paintHome() {
   if (!state.board) return;
   const all = queueItems();
   const items = state.biz === 'all' ? all : all.filter((x) => x.business === state.biz);
@@ -821,6 +824,9 @@ function portraitHtml(sel, name, role, big = true) {
 }
 
 function renderSide() {
+  return window.keepTyping($('#arcade-side'), paintSide);
+}
+function paintSide() {
   const el = $('#arcade-side');
   if (!el || !state.board) return;
   const sel = arcade.sel;
@@ -1010,9 +1016,9 @@ function wallStreetSide(sel) {
     if (p.ledger) extra.push(`Ledger: ${p.ledger.intents ?? 0} intents · ${p.ledger.orders ?? 0} orders · ${p.ledger.fills ?? 0} fills`);
     if (p.lanes) extra.push(`${p.lanes.length} lanes configured`);
     if (p.version) extra.push(`Version ${p.version}`);
-    if (d.agents && d.agents.length) extra.push(`Agents: ${d.agents.join(', ')}`);
+    if (d.agents && d.agents.length) extra.push(`Agents: ${d.agents.map((a) => (typeof a === 'string' ? a : `${a.name} (${a.state})`)).join(', ')}`);
     return `<h2>${esc(d.name.toUpperCase())}</h2><div class="chips"><span class="chip">${esc(DESK_STATE[d.state] || d.state)}</span><span class="chip">👁 watch-only</span></div>
-      <div class="why">${esc(d.detail || '')}</div>${d.alarm ? `<div class="doing" style="border-color:#e8434f"><span class="k">Alarm</span>${esc(d.alarm)}</div>` : ''}
+      <div class="why">${esc(d.detail || '')}</div>${d.alarm ? '<div class="doing" style="border-color:#e8434f"><span class="k">Alarm</span>This desk is not confirmed safe. Check it in the Trading tab.</div>' : ''}
       ${extra.length ? `<div class="meta">${extra.map(esc).join('<br>')}</div>` : ''}
       <div class="btns">${open()}</div>`;
   }
@@ -1031,6 +1037,43 @@ function wallStreetSide(sel) {
     <h2>DESKS</h2><ul>${desks.map(deskRow).join('')}</ul>
     <div class="btns">${open()}</div>`;
 }
+
+/* ---------- phone pairing ---------- */
+async function openPhone() {
+  $('#phone-dialog').showModal();
+  paintPhone(await api('GET', '/api/mobile'));
+}
+function paintPhone(m) {
+  const el = $('#phone-body');
+  if (!m.enabled) {
+    el.innerHTML = `<p class="muted">Turn this on to answer agents, chat with your chief of staff, and watch trading from the Mission Control iPhone app while you're on the same Wi-Fi as this Mac.</p>
+      <ul class="muted"><li>Encrypted, and only a phone that scanned your code can connect.</li><li>The phone can turn the trading kill switch <b>on</b>, never off.</li><li>Turn it off here any time.</li></ul>
+      <menu><button class="primary" data-phone="on">Turn on phone access</button></menu>`;
+    return;
+  }
+  let qr = '';
+  try {
+    const q = window.qrcode(0, 'M');
+    q.addData(m.pairing);
+    q.make();
+    qr = q.createSvgTag({ cellSize: 4, margin: 2, scalable: true });
+  } catch (err) { qr = `<div class="callout">Couldn't draw the code: ${esc(err.message)}</div>`; }
+  el.innerHTML = `<p>Open the Mission Control app on your iPhone and tap <b>Scan pairing code</b>.</p>
+    <div class="phone-qr">${qr}</div>
+    <div class="muted">${m.listening ? '🟢 Ready' : `⚠️ Not listening${m.error ? `: ${esc(m.error)}` : ''}`} · ${m.urls.map(esc).join(' · ')}</div>
+    <p class="muted">Works on your home Wi-Fi. If macOS asks whether Mission Control may accept incoming connections, choose Allow.</p>
+    <menu><button data-phone="rotate" title="Unpairs every phone">New code</button><button class="danger" data-phone="off">Turn off phone access</button></menu>`;
+}
+$('#phone-btn').addEventListener('click', () => openPhone().catch((e) => toast(e.message)));
+$('#phone-close').addEventListener('click', () => $('#phone-dialog').close());
+$('#phone-body').addEventListener('click', async (ev) => {
+  const b = ev.target.closest('[data-phone]');
+  if (!b) return;
+  const act = b.dataset.phone;
+  try {
+    paintPhone(await api('POST', '/api/mobile', act === 'rotate' ? { rotate: true } : { enabled: act === 'on' }));
+  } catch (e) { toast(e.message); }
+});
 
 const refreshViews = () => (state.tab === 'home' ? loadHome() : state.tab === 'arcade' ? loadArcade() : loadBoard());
 

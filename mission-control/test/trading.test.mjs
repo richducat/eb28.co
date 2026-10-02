@@ -101,3 +101,16 @@ test('bots: trading bots are never restarted from Mission Control', async () => 
   assert.match((await restartBot(bot)).error, /never restarted/);
   assert.equal(isTradingBot({ title: 'Grok Bot', meta: { restart: ['open', '-a', '/Applications/Grok Bot.app'] } }), false);
 });
+
+test('intel status verdict: names the reasons, keeps only safe fields', async () => {
+  const { intelVerdict } = await import('../src/trading/connectors/projects.js');
+  const safe = intelVerdict({ simmerLiveEnabled: false, loadedTradingAgents: [], openclawTradingJobs: [{ name: 'simmer-cycle', enabled: false }], openclawCronEnabledCount: 3, zshrcExportsSimmer: 0, envFilesWithSimmer: 0, solanaWatchLast: '2026-10-01T00:00:00Z' });
+  assert.equal(safe.state, 'safe');
+  const bad = intelVerdict({ simmerLiveEnabled: true, loadedTradingAgents: ['ai.simmer.runner'], openclawTradingJobs: [{ name: 'polymarket-scan', enabled: true }], zshrcExportsSimmer: 1, envFilesWithSimmer: 2, envFilesWithSimmerNames: ['~/.env'], extra: 'x' });
+  assert.equal(bad.state, 'unsafe');
+  assert.match(bad.detail, /live trading/);
+  assert.match(bad.detail, /polymarket-scan/);
+  assert.match(bad.detail, /plain text/);
+  assert.equal('extra' in bad.snapshot, false);
+  assert.equal('envFilesWithSimmerNames' in bad.snapshot, false);
+});

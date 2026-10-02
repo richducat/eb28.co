@@ -15,6 +15,7 @@ export async function collect() {
     makeJob({
       id: `trading:${f.text.replace(/[^a-z0-9]+/gi, '-').toLowerCase().slice(0, 60)}`,
       source: 'trading',
+      business: 'trading',
       title: `Trading: ${f.text}`,
       status: f.level === 'red' ? 'needs_you' : 'follow_up',
       reason: 'Open the Trading tab to review. Mission Control is watch-only and cannot trade.',

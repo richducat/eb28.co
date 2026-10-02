@@ -36,6 +36,10 @@
   }
 
   function render() {
+    const el = $('#trading-root');
+    return window.keepTyping(el, paint);
+  }
+  function paint() {
     const s = T.data;
     const el = $('#trading-root');
     if (!s || !el) return;

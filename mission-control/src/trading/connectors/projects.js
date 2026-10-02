@@ -76,16 +76,32 @@ export async function syncStep({ fetchImpl = fetch } = {}) {
 }
 
 /** Hermes-home (Intel) snapshot via the forced-command SSH key. Booleans, labels and counts only. */
+/** Turn the Intel Mac's status JSON into a kill-switch verdict with plain reasons. Pure; exported for tests. */
+export function intelVerdict(s) {
+  const reasons = [];
+  if (s.simmerLiveEnabled === true) reasons.push('Simmer live trading is enabled');
+  if ((s.loadedTradingAgents || []).length) reasons.push(`trading agents loaded: ${s.loadedTradingAgents.join(', ')}`);
+  const liveJobs = (s.openclawTradingJobs || []).filter((j) => j.enabled === true);
+  if (liveJobs.length) reasons.push(`trading cron jobs enabled: ${liveJobs.map((j) => j.name).join(', ')}`);
+  else if (!s.openclawTradingJobs && Number(s.openclawCronEnabledCount) > 0) reasons.push(`${s.openclawCronEnabledCount} OpenClaw cron job(s) enabled`);
+  const exposed = [];
+  if (Number(s.zshrcExportsSimmer) > 0) exposed.push('~/.zshrc');
+  if (Number(s.envFilesWithSimmer) > 0) exposed.push(`${s.envFilesWithSimmer} .env file(s)`);
+  if (exposed.length) reasons.push(`Simmer key still in plain text (${exposed.join(', ')})`);
+  const unsafe = reasons.length > 0;
+  const keep = ['generatedAt', 'openclawGatewayLoaded', 'hermesGatewayLoaded', 'rabbitLoaded', 'loadedTradingAgents', 'openclawCronEnabledCount', 'openclawTradingJobs', 'simmerLiveEnabled', 'dryRunFallback', 'zshrcExportsSimmer', 'envFilesWithSimmer', 'solanaWatchLast'];
+  const snapshot = Object.fromEntries(keep.filter((k) => k in s).map((k) => [k, s[k]]));
+  return { id: 'intel', name: 'Hermes-home (Intel Mac)', ok: true, connected: true, state: unsafe ? 'unsafe' : 'safe', detail: unsafe ? `${reasons.join('; ')}.` : `Nothing able to trade is loaded.${s.solanaWatchLast ? ` Solana watch last ran ${s.solanaWatchLast}.` : ''}`, snapshot };
+}
+
 export async function intelStatus(cfg) {
   const intel = cfg.intel || {};
   if (!intel.enabled) return { id: 'intel', name: 'Hermes-home (Intel Mac)', ok: false, connected: false, state: 'unknown', detail: 'Status link not set up yet (see the Security checklist).' };
   const identity = String(intel.identity || '').replace(/^~/, os.homedir());
   const r = await run('/usr/bin/ssh', ['-i', identity, '-o', 'BatchMode=yes', '-o', 'ConnectTimeout=5', `${intel.user}@${intel.host}`], 15000);
   try {
-    const s = JSON.parse(r.out);
-    const unsafe = s.simmerLiveEnabled === true || (s.loadedTradingAgents || []).length > 0 || Number(s.openclawCronEnabledCount) > 0 || Number(s.zshrcExportsSimmer) > 0;
-    return { id: 'intel', name: 'Hermes-home (Intel Mac)', ok: true, connected: true, state: unsafe ? 'unsafe' : 'safe', detail: unsafe ? 'Something on the Intel Mac can still trade or holds an exposed key.' : 'Nothing able to trade is loaded.', snapshot: s };
+    return intelVerdict(JSON.parse(r.out));
   } catch {
-    return { id: 'intel', name: 'Hermes-home (Intel Mac)', ok: false, connected: false, state: 'unknown', detail: 'Intel Mac unreachable (offline or link not installed).' };
+    return { id: 'intel', name: 'Hermes-home (Intel Mac)', ok: false, connected: false, state: 'unknown', detail: 'Not reachable yet: run install-mc-trading-status.command on the Intel Mac and turn on Remote Login there.' };
   }
 }

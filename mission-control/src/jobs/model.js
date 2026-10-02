@@ -168,6 +168,8 @@ export function makeJob(partial) {
     meta: partial.meta || {},
     tags: partial.tags || [],
   };
+  // a source that knows its business (e.g. trading) can say so; otherwise the board infers it
+  if (partial.business) job.business = partial.business;
   return job;
 }
 

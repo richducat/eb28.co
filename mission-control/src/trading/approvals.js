@@ -1,3 +1,4 @@
+import crypto from 'node:crypto';
 import { store } from '../store.js';
 
 /**
@@ -13,7 +14,7 @@ export function list() {
 
 export function request({ project, change, requestedBy = 'Richard', risk = '' }) {
   if (!project || !change) throw new Error('project and change are required');
-  const entry = { id: `ta:${Date.now()}`, project: String(project).slice(0, 60), change: String(change).slice(0, 200), requestedBy: String(requestedBy).slice(0, 60), risk: String(risk).slice(0, 200), at: new Date().toISOString(), decision: 'pending' };
+  const entry = { id: `ta:${crypto.randomUUID()}`, project: String(project).slice(0, 60), change: String(change).slice(0, 200), requestedBy: String(requestedBy).slice(0, 60), risk: String(risk).slice(0, 200), at: new Date().toISOString(), decision: 'pending' };
   store.append('trading-approvals', entry, 300);
   return entry;
 }

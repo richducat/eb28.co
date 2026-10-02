@@ -10,6 +10,7 @@ import { MC_HOME } from './config.js';
 export const DEFAULTS = [
   { id: 'tyfys', name: 'TYFYS', full: 'Thank You For Your Service', color: '#c8102e', match: ['tyfys', 'thank ?you ?for ?your ?service', 'veteran', '\\bva\\b', 'buddy statement', 'zoho', 'ringcentral', 'upwork'] },
   { id: 'eb28', name: 'EB28', full: 'EB28 studio', color: '#2d9c67', match: ['eb28', 'mission-control', 'growth hosting', '32940', 'social-publisher', 'fundmanager', 'buffer'] },
+  { id: 'trading', name: 'Trading', full: 'Trading (watch-only)', color: '#d4af37', match: ['simmer', 'polymarket', 'kalshi', 'stepn', 'daytradingbot', 'day trading bot'] },
   { id: 'inspection', name: 'Inspection Rent', full: 'Inspection Rent / HIP', color: '#2f6fdb', match: ['inspection', 'insprent', '\\bhip-', 'home-inspection'] },
   { id: 'syncstep', name: 'SyncStep', full: 'SyncStep', color: '#8b5cf6', match: ['sync+step', 'syncc'] },
   { id: 'apps', name: 'Apps', full: 'Other apps', color: '#f59e0b', match: ['lab ?studio', 'snapgrid', 'parentpath', 'cadetcatch', 'microfit', 'teslaware', 'cosmicchat', 'solana'] },

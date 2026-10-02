@@ -372,3 +372,7 @@ h2.sec { font-size: 13px; text-transform: uppercase; letter-spacing: .07em; colo
 .tr-feed li span { color: var(--muted); margin-right: 8px; }
 .tr-feed li.warn { color: var(--dn); } .tr-feed li.amber { color: var(--warn); }
 .small { font-size: 11px; }
+
+/* phone pairing */
+.phone-qr { background: #fff; border-radius: 12px; padding: 10px; width: 260px; height: 260px; margin: 8px auto 12px; }
+.phone-qr svg { width: 100%; height: 100%; display: block; }

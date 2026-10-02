@@ -61,8 +61,11 @@ export function askCos({ text, profile = 'hermes-cos', onEvent } = {}) {
   child.stdout.on('data', (d) => { out += d; });
   child.stderr.on('data', (d) => { out += d; });
   const timer = setTimeout(() => child.kill('SIGTERM'), 15 * 60 * 1000);
-  child.on('error', (err) => { out += err.message; });
+  let closed = false;
+  child.on('error', (err) => { out += err.message; setTimeout(() => { if (!closed) child.emit('close', -1); }, 50); });
   child.on('close', (code) => {
+    if (closed) return;
+    closed = true;
     clearTimeout(timer);
     running.delete(entry.id);
     const done = { ...entry, a: cleanAnswer(out).slice(-6000) || (code ? `Hermes exited with code ${code}.` : '(no reply)'), status: code === 0 ? 'done' : 'failed', finishedAt: new Date().toISOString() };

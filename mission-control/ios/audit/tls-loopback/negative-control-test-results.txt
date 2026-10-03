@@ -1,0 +1,16 @@
+Test Case '-[MissionControlTLSTests.TLSHandshakeTests testMatchingLeafPinSucceedsOverActualTLS]' started.
+Test Case '-[MissionControlTLSTests.TLSHandshakeTests testMatchingLeafPinSucceedsOverActualTLS]' passed (0.245 seconds).
+Test Case '-[MissionControlTLSTests.TLSHandshakeTests testMismatchedLeafPinRejectsBeforeHTTPAuthorization]' started.
+Test Case '-[MissionControlTLSTests.TLSHandshakeTests testMismatchedLeafPinRejectsBeforeHTTPAuthorization]' passed (0.042 seconds).
+Test Case '-[MissionControlTLSTests.TLSHandshakeTests testOldRequestCannotTrustBPinAfterPairB]' started.
+/tmp/mission-ios-pair-ownership/mission-control/ios/MissionControlTLSTests/TLSHandshakeTests.swift:92: error: -[MissionControlTLSTests.TLSHandshakeTests testOldRequestCannotTrustBPinAfterPairB] : XCTAssertFalse failed - B certificate must not receive A authorization
+Test Case '-[MissionControlTLSTests.TLSHandshakeTests testOldRequestCannotTrustBPinAfterPairB]' failed (1.443 seconds).
+Test Case '-[MissionControlTLSTests.TLSHandshakeTests testOldRequestRetainsAPinAfterPairB]' started.
+/tmp/mission-ios-pair-ownership/mission-control/ios/MissionControlTLSTests/TLSHandshakeTests.swift:75: error: -[MissionControlTLSTests.TLSHandshakeTests testOldRequestRetainsAPinAfterPairB] : XCTAssertTrue failed
+/tmp/mission-ios-pair-ownership/mission-control/ios/MissionControlTLSTests/TLSHandshakeTests.swift:76: error: -[MissionControlTLSTests.TLSHandshakeTests testOldRequestRetainsAPinAfterPairB] : XCTAssertTrue failed
+Test Case '-[MissionControlTLSTests.TLSHandshakeTests testOldRequestRetainsAPinAfterPairB]' failed (0.085 seconds).
+	 Executed 4 tests, with 3 failures (0 unexpected) in 1.815 (1.820) seconds
+	 Executed 4 tests, with 3 failures (0 unexpected) in 1.815 (1.820) seconds
+	 Executed 4 tests, with 3 failures (0 unexpected) in 1.815 (1.822) seconds
+ xcrun: error: unable to find utility "simctl", not a developer tool or in PATH
+** TEST FAILED **

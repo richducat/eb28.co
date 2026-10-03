@@ -1,0 +1,12 @@
+Test Case '-[MissionControlTLSTests.TLSHandshakeTests testMatchingLeafPinSucceedsOverActualTLS]' started.
+Test Case '-[MissionControlTLSTests.TLSHandshakeTests testMatchingLeafPinSucceedsOverActualTLS]' passed (0.232 seconds).
+Test Case '-[MissionControlTLSTests.TLSHandshakeTests testMismatchedLeafPinRejectsBeforeHTTPAuthorization]' started.
+Test Case '-[MissionControlTLSTests.TLSHandshakeTests testMismatchedLeafPinRejectsBeforeHTTPAuthorization]' passed (0.036 seconds).
+Test Case '-[MissionControlTLSTests.TLSHandshakeTests testOldRequestCannotTrustBPinAfterPairB]' started.
+Test Case '-[MissionControlTLSTests.TLSHandshakeTests testOldRequestCannotTrustBPinAfterPairB]' passed (0.193 seconds).
+Test Case '-[MissionControlTLSTests.TLSHandshakeTests testOldRequestRetainsAPinAfterPairB]' started.
+Test Case '-[MissionControlTLSTests.TLSHandshakeTests testOldRequestRetainsAPinAfterPairB]' passed (0.382 seconds).
+	 Executed 4 tests, with 0 failures (0 unexpected) in 0.843 (0.847) seconds
+	 Executed 4 tests, with 0 failures (0 unexpected) in 0.843 (0.848) seconds
+	 Executed 4 tests, with 0 failures (0 unexpected) in 0.843 (0.850) seconds
+** TEST SUCCEEDED **

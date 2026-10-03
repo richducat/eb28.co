@@ -1,0 +1,12 @@
+{"server": "match_a", "event": "accepted"}
+{"server": "match_a", "event": "handshake", "protocol": "TLSv1.2", "cipher": "ECDHE-RSA-CHACHA20-POLY1305"}
+{"server": "match_a", "event": "request", "synthetic_a": true, "synthetic_b": false}
+{"server": "mismatch_b", "event": "accepted"}
+{"server": "mismatch_b", "event": "rejected_or_closed", "kind": "SSLEOFError"}
+{"server": "held_b", "event": "accepted"}
+{"server": "held_b", "event": "release"}
+{"server": "held_b", "event": "rejected_or_closed", "kind": "SSLEOFError"}
+{"server": "held_a", "event": "accepted"}
+{"server": "held_a", "event": "release"}
+{"server": "held_a", "event": "handshake", "protocol": "TLSv1.2", "cipher": "ECDHE-RSA-CHACHA20-POLY1305"}
+{"server": "held_a", "event": "request", "synthetic_a": true, "synthetic_b": false}

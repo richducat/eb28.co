@@ -1,7 +1,7 @@
 # Limitless Credit GPS — iOS shell
 
 Native SwiftUI shell that bundles the built Limitless Credit GPS web app
-(`/limitless` from the eb28.co build) and serves it offline through a custom
+from its dedicated native entry and serves it offline through a custom
 `creditgps://` URL scheme handler, Capacitor-style. Profile answers, saved
 simulations, and plan progress persist via WKWebView localStorage.
 
@@ -9,15 +9,14 @@ simulations, and plan progress persist via WKWebView localStorage.
 
 ```bash
 # From the repo root
-npm run build                 # produce docs/ (web build)
-npm run limitless:ios:sync    # copy web build into ios/LimitlessCreditGPS/WebRoot
+npm run limitless:ios:sync    # build the dedicated entry into native WebRoot
 
 cd ios/LimitlessCreditGPS
 xcodegen generate             # produce LimitlessCreditGPS.xcodeproj
 open LimitlessCreditGPS.xcodeproj
 ```
 
-Run on a simulator or device from Xcode. Re-run the two npm scripts whenever
+Run on a simulator or device from Xcode. Re-run the iOS sync command whenever
 the web app changes, then rebuild in Xcode (WebRoot is a folder reference, so
 Xcode picks up new files without regenerating the project).
 

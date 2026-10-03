@@ -27,3 +27,18 @@ targets:
         TARGETED_DEVICE_FAMILY: "1"
         SUPPORTS_MACCATALYST: NO
         ENABLE_PREVIEWS: YES
+
+  MissionControlTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: MissionControlTests
+      - path: MissionControl/Sources/API.swift
+      - path: MissionControl/Sources/AppModel.swift
+      - path: MissionControl/Sources/Models.swift
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+    scheme:
+      testTargets:
+        - MissionControlTests

@@ -22,19 +22,7 @@ final class AppModel: ObservableObject {
     @Published var pinnedDay: String?
     var day: String { pinnedDay ?? Fmt.ymd(Date()) }
 
-    struct ResponseContext: Equatable {
-        let pairing: UUID
-        let selection: UUID
-        let date: String
-    }
-    var responseContext: ResponseContext {
-        ResponseContext(pairing: pairingGeneration, selection: dayGeneration, date: day)
-    }
-
     let api: API
-    private var pairingGeneration = UUID()
-    private var dayGeneration = UUID()
-    private var toastGeneration = UUID()
     private var poller: Task<Void, Never>?
 
     private let setBadge: (Int) -> Void
@@ -47,7 +35,7 @@ final class AppModel: ObservableObject {
         self.clearPairing = clearPairing
         #if DEBUG
         // simulator testing only: pair from a launch environment variable (no camera there)
-        if injectedAPI == nil, let code = ProcessInfo.processInfo.environment["MC_PAIRING"], let dp = Pairing.parse(code) { PairingStore.save(dp) }
+        if let code = ProcessInfo.processInfo.environment["MC_PAIRING"], let dp = Pairing.parse(code) { PairingStore.save(dp) }
         #endif
         let p = injectedAPI?.pairing ?? (injectedAPI == nil ? PairingStore.load() : nil)
         pairing = p
@@ -58,12 +46,10 @@ final class AppModel: ObservableObject {
 
     func pair(with text: String) -> Bool {
         guard let p = Pairing.parse(text) else { return false }
-        resetPairingState()
         savePairing(p)
         api.use(p)
         pairing = p
-        let owner = pairingGeneration
-        Task { if owns(owner) { await refresh() } }
+        Task { await refresh() }
         return true
     }
 
@@ -71,21 +57,8 @@ final class AppModel: ObservableObject {
         clearPairing()
         api.use(nil)
         pairing = nil
-        resetPairingState()
-    }
-
-    private func resetPairingState() {
-        pairingGeneration = UUID()
-        dayGeneration = UUID()
-        toastGeneration = UUID()
         board = nil; trading = nil; tyfys = nil; cos = nil; usage = nil; asks = [:]
-        today = nil; lastSync = nil; error = nil; toast = nil; busy = []
         connected = false
-        setBadge(0)
-    }
-
-    private func owns(_ generation: UUID) -> Bool {
-        pairing != nil && pairingGeneration == generation
     }
 
     // MARK: loading
@@ -107,29 +80,24 @@ final class AppModel: ObservableObject {
 
     func refresh() async {
         guard pairing != nil else { return }
-        let owner = pairingGeneration
         do {
             let b: Board = try await api.get("/api/board")
-            guard owns(owner) else { return }
             board = b
             connected = true
             error = nil
             lastSync = Date()
         } catch {
-            guard owns(owner) else { return }
             connected = false
             self.error = error.localizedDescription
             if case APIError.unauthorized = error { unpair() }
             return
         }
         await loadToday()
-        guard owns(owner) else { return }
         async let t: Trading? = try? api.get("/api/trading")
         async let y: Tyfys? = try? api.get("/api/tyfys")
         async let c: CosResponse? = try? api.get("/api/cos")
         async let u: Usage? = try? api.get("/api/usage")
         let (tt, yy, cc, uu) = await (t, y, c, u)
-        guard owns(owner) else { return }
         if let tt { trading = tt }
         if let yy { tyfys = yy }
         if let cc { cos = cc }
@@ -146,25 +114,19 @@ final class AppModel: ObservableObject {
     }
 
     func loadAsk(_ job: Job, force: Bool = false) async {
-        guard pairing != nil else { return }
-        let owner = pairingGeneration
         if !force, let a = asks[job.id], a.run?.status != "running" { return }
         let path = "/api/ask?id=" + (job.id.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed.subtracting(CharacterSet(charactersIn: "&=+:#?/"))) ?? job.id)
-        if let a: Ask = try? await api.get(path), owns(owner) { asks[job.id] = a }
+        if let a: Ask = try? await api.get(path) { asks[job.id] = a }
     }
 
     // MARK: today
 
     func loadToday() async {
-        guard pairing != nil else { return }
-        let owner = pairingGeneration, selection = dayGeneration, requestedDay = day
-        if let t: TodayData = try? await api.get("/api/today?date=\(requestedDay)"),
-           owns(owner), dayGeneration == selection, day == requestedDay { today = t }
+        if let t: TodayData = try? await api.get("/api/today?date=\(day)") { today = t }
     }
 
     func shiftDay(_ n: Int) {
         let next = n == 0 ? Fmt.ymd(Date()) : Fmt.addDays(day, n)
-        dayGeneration = UUID()
         pinnedDay = next == Fmt.ymd(Date()) ? nil : next
         today = nil
         Task { await loadToday() }
@@ -197,9 +159,7 @@ final class AppModel: ObservableObject {
 
     func saveFocus(_ items: [FocusItem]) async {
         let body = items.filter { !$0.text.trimmingCharacters(in: .whitespaces).isEmpty }.map { ["text": $0.text, "done": $0.done] as [String: Any] }
-        let owner = pairingGeneration, selection = dayGeneration, requestedDay = day
-        let _: DaySheet? = try? await api.post("/api/day", ["date": requestedDay, "focus": body])
-        guard owns(owner), dayGeneration == selection, day == requestedDay else { return }
+        let _: DaySheet? = try? await api.post("/api/day", ["date": day, "focus": body])
         await loadToday()
     }
 
@@ -209,58 +169,44 @@ final class AppModel: ObservableObject {
 
     func suggestFocus() async -> [String] {
         // the local model can take a minute; give it time
-        let owner = pairingGeneration, selection = dayGeneration, requestedDay = day
-        let result = try? await api.post("/api/today/suggest", ["date": requestedDay], as: FocusSuggestion.self, timeout: 100)
-        guard owns(owner), dayGeneration == selection, day == requestedDay else { return [] }
-        return result?.focus ?? []
+        (try? await api.post("/api/today/suggest", ["date": day], as: FocusSuggestion.self, timeout: 100))?.focus ?? []
     }
 
     func calendar(from start: String, days: Int) async -> CalendarRange? {
-        let owner = pairingGeneration
-        let result: CalendarRange? = try? await api.get("/api/calendar?start=\(start)&end=\(Fmt.addDays(start, days))")
-        return owns(owner) ? result : nil
+        try? await api.get("/api/calendar?start=\(start)&end=\(Fmt.addDays(start, days))")
     }
 
     // MARK: actions
 
     private func act(_ key: String, _ work: () async throws -> String?) async {
-        guard pairing != nil else { return }
-        let owner = pairingGeneration
         busy.insert(key)
-        defer { if owns(owner) { busy.remove(key) } }
+        defer { busy.remove(key) }
         do {
-            let msg = try await work()
-            guard owns(owner) else { return }
-            if let msg { flash(msg) }
+            if let msg = try await work() { flash(msg) }
             await refresh()
         } catch {
-            guard owns(owner) else { return }
             flash(error.localizedDescription)
         }
     }
 
     func flash(_ msg: String) {
-        toastGeneration = UUID()
-        let owner = toastGeneration
         toast = msg
         UIImpactFeedbackGenerator(style: .light).impactOccurred()
         Task {
             try? await Task.sleep(nanoseconds: 3_000_000_000)
-            if toastGeneration == owner { toast = nil }
+            if toast == msg { toast = nil }
         }
     }
 
     func answer(_ job: Job, text: String, approve: Bool = false) async {
         let reply = text.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !reply.isEmpty else { return flash("Type an answer first.") }
-        let owner = pairingGeneration
         await act("ask:\(job.id)") {
             if asks[job.id]?.kind == "decision" {
                 let _: OK = try await api.post("/api/decision", ["id": job.id, "answer": reply])
                 return "Answer sent to your Chief of Staff ✓"
             }
             let r: ReplyResult = try await api.post("/api/reply", ["id": job.id, "text": reply, "approve": approve])
-            guard owns(owner) else { throw CancellationError() }
             if r.needsLogin == true { return "Claude needs a one-time sign-in on the Mac (Home → Connect Claude)." }
             if r.ok == false { return r.error ?? "The agent didn't take the reply." }
             await loadAsk(job, force: true)

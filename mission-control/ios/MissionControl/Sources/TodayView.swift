@@ -88,7 +88,9 @@ struct TodayView: View {
             Button {
                 suggesting = true
                 Task {
+                    let owner = model.responseContext
                     let picks = await model.suggestFocus()
+                    guard model.pairing != nil, model.responseContext == owner else { suggesting = false; return }
                     var next = focus
                     var k = 0
                     for i in 0..<next.count where next[i].text.isEmpty && k < picks.count { next[i].text = picks[k]; k += 1 }
@@ -280,10 +282,12 @@ struct TodayView: View {
                     guard editing, let shown = model.today else { return }
                     if v == (lastSentNotes ?? shown.sheet?.notes ?? "") { return }
                     let d = shown.date
+                    let owner = model.responseContext
                     notesTask = Task {
                         try? await Task.sleep(nanoseconds: 900_000_000)
-                        if Task.isCancelled { return }
+                        if Task.isCancelled || model.pairing == nil || model.responseContext != owner { return }
                         await model.saveNotes(v, for: d)
+                        guard model.pairing != nil, model.responseContext == owner else { return }
                         lastSentNotes = v
                         notesTask = nil
                     }
@@ -387,8 +391,9 @@ struct CalendarAgendaView: View {
     private func load() async {
         loading = true
         let asked = start
+        let owner = model.responseContext
         let result = await model.calendar(from: asked, days: 14)
-        if asked == start { data = result } // ignore an older range that arrived late
+        if asked == start, model.pairing != nil, model.responseContext == owner { data = result } // ignore an older range that arrived late
         loading = false
     }
 }

@@ -1,0 +1,29 @@
+2026-10-02 21:34:54.039 appintentsmetadataprocessor[73071:18248283] warning: Metadata extraction skipped, no AppIntents.framework dependency found
+Test Case '-[MissionControlTests.PairingOwnershipTests testCurrentPairCanStillUseFallback]' started.
+Test Case '-[MissionControlTests.PairingOwnershipTests testCurrentPairCanStillUseFallback]' passed (0.085 seconds).
+Test Case '-[MissionControlTests.PairingOwnershipTests testCurrentRefreshAndCurrentUnauthorized]' started.
+Test Case '-[MissionControlTests.PairingOwnershipTests testCurrentRefreshAndCurrentUnauthorized]' passed (0.120 seconds).
+Test Case '-[MissionControlTests.PairingOwnershipTests testDaySelectionDiscardsPendingToday]' started.
+Test Case '-[MissionControlTests.PairingOwnershipTests testDaySelectionDiscardsPendingToday]' passed (0.021 seconds).
+Test Case '-[MissionControlTests.PairingOwnershipTests testFocusSuggestionDiscardedAfterDayChange]' started.
+Test Case '-[MissionControlTests.PairingOwnershipTests testFocusSuggestionDiscardedAfterDayChange]' passed (0.004 seconds).
+Test Case '-[MissionControlTests.PairingOwnershipTests testOldActionCannotShowSuccessAfterUnpair]' started.
+Test Case '-[MissionControlTests.PairingOwnershipTests testOldActionCannotShowSuccessAfterUnpair]' passed (0.040 seconds).
+Test Case '-[MissionControlTests.PairingOwnershipTests testOldAskDoesNotPopulateNewPair]' started.
+Test Case '-[MissionControlTests.PairingOwnershipTests testOldAskDoesNotPopulateNewPair]' passed (0.061 seconds).
+Test Case '-[MissionControlTests.PairingOwnershipTests testOldTransportCannotPreferAForB]' started.
+Test Case '-[MissionControlTests.PairingOwnershipTests testOldTransportCannotPreferAForB]' passed (0.239 seconds).
+Test Case '-[MissionControlTests.PairingOwnershipTests testOldUnauthorizedDoesNotUnpairB]' started.
+Test Case '-[MissionControlTests.PairingOwnershipTests testOldUnauthorizedDoesNotUnpairB]' passed (0.151 seconds).
+Test Case '-[MissionControlTests.PairingOwnershipTests testRePairingSameCodeStillDiscardsOldUnauthorized]' started.
+Test Case '-[MissionControlTests.PairingOwnershipTests testRePairingSameCodeStillDiscardsOldUnauthorized]' passed (0.019 seconds).
+Test Case '-[MissionControlTests.PairingOwnershipTests testStaleTransportDoesNotRetryAAfterPairB]' started.
+Test Case '-[MissionControlTests.PairingOwnershipTests testStaleTransportDoesNotRetryAAfterPairB]' passed (0.119 seconds).
+Test Case '-[MissionControlTests.PairingOwnershipTests testUnpairDiscardsPendingBoardSuccess]' started.
+Test Case '-[MissionControlTests.PairingOwnershipTests testUnpairDiscardsPendingBoardSuccess]' passed (0.020 seconds).
+Test Case '-[MissionControlTests.PairingOwnershipTests testUnpairDiscardsPendingSecondaryRefresh]' started.
+Test Case '-[MissionControlTests.PairingOwnershipTests testUnpairDiscardsPendingSecondaryRefresh]' passed (0.046 seconds).
+	 Executed 12 tests, with 0 failures (0 unexpected) in 0.925 (0.945) seconds
+	 Executed 12 tests, with 0 failures (0 unexpected) in 0.925 (0.946) seconds
+	 Executed 12 tests, with 0 failures (0 unexpected) in 0.925 (0.950) seconds
+** TEST SUCCEEDED **

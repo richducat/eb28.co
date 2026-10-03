@@ -1,0 +1,44 @@
+2026-10-02 21:35:37.313 appintentsmetadataprocessor[73544:18256471] warning: Metadata extraction skipped, no AppIntents.framework dependency found
+Test Case '-[MissionControlTests.PairingOwnershipTests testCurrentPairCanStillUseFallback]' started.
+Test Case '-[MissionControlTests.PairingOwnershipTests testCurrentPairCanStillUseFallback]' passed (0.044 seconds).
+Test Case '-[MissionControlTests.PairingOwnershipTests testCurrentRefreshAndCurrentUnauthorized]' started.
+/tmp/mission-ios-pair-ownership/mission-control/ios/MissionControlTests/PairingOwnershipTests.swift:88: error: -[MissionControlTests.PairingOwnershipTests testCurrentRefreshAndCurrentUnauthorized] : XCTAssertNil failed: "TodayData(date: "2026-10-02", events: [], tomorrowEvents: [], due: MissionControlTests.DueGroups(overdue: [], today: [], tomorrow: [], week: [], later: [], someday: []), sheet: nil, habits: [], streaks: [:], needsYou: [], stats: nil, calendarErrors: nil)"
+Test Case '-[MissionControlTests.PairingOwnershipTests testCurrentRefreshAndCurrentUnauthorized]' failed (0.512 seconds).
+Test Case '-[MissionControlTests.PairingOwnershipTests testDaySelectionDiscardsPendingToday]' started.
+/tmp/mission-ios-pair-ownership/mission-control/ios/MissionControlTests/PairingOwnershipTests.swift:110: error: -[MissionControlTests.PairingOwnershipTests testDaySelectionDiscardsPendingToday] : XCTAssertEqual failed: ("Optional("2026-10-02")") is not equal to ("Optional("2026-10-03")")
+Test Case '-[MissionControlTests.PairingOwnershipTests testDaySelectionDiscardsPendingToday]' failed (0.026 seconds).
+Test Case '-[MissionControlTests.PairingOwnershipTests testFocusSuggestionDiscardedAfterDayChange]' started.
+/tmp/mission-ios-pair-ownership/mission-control/ios/MissionControlTests/PairingOwnershipTests.swift:190: error: -[MissionControlTests.PairingOwnershipTests testFocusSuggestionDiscardedAfterDayChange] : XCTAssertTrue failed
+Test Case '-[MissionControlTests.PairingOwnershipTests testFocusSuggestionDiscardedAfterDayChange]' failed (0.011 seconds).
+Test Case '-[MissionControlTests.PairingOwnershipTests testOldActionCannotShowSuccessAfterUnpair]' started.
+/tmp/mission-ios-pair-ownership/mission-control/ios/MissionControlTests/PairingOwnershipTests.swift:209: error: -[MissionControlTests.PairingOwnershipTests testOldActionCannotShowSuccessAfterUnpair] : XCTAssertNil failed: "Added: old-A"
+Test Case '-[MissionControlTests.PairingOwnershipTests testOldActionCannotShowSuccessAfterUnpair]' failed (0.018 seconds).
+Test Case '-[MissionControlTests.PairingOwnershipTests testOldAskDoesNotPopulateNewPair]' started.
+/tmp/mission-ios-pair-ownership/mission-control/ios/MissionControlTests/PairingOwnershipTests.swift:152: error: -[MissionControlTests.PairingOwnershipTests testOldAskDoesNotPopulateNewPair] : XCTAssertNil failed: "Ask(kind: nil, question: Optional("old-A"), detail: nil, context: nil, options: nil, suggested: nil, canReply: nil, run: nil)"
+Test Case '-[MissionControlTests.PairingOwnershipTests testOldAskDoesNotPopulateNewPair]' failed (0.027 seconds).
+Test Case '-[MissionControlTests.PairingOwnershipTests testOldTransportCannotPreferAForB]' started.
+/tmp/mission-ios-pair-ownership/mission-control/ios/MissionControlTests/PairingOwnershipTests.swift:133: error: -[MissionControlTests.PairingOwnershipTests testOldTransportCannotPreferAForB] : Fulfilled inverted expectation "B token never sent to A".
+Test Case '-[MissionControlTests.PairingOwnershipTests testOldTransportCannotPreferAForB]' failed (0.012 seconds).
+Test Case '-[MissionControlTests.PairingOwnershipTests testOldUnauthorizedDoesNotUnpairB]' started.
+/tmp/mission-ios-pair-ownership/mission-control/ios/MissionControlTests/PairingOwnershipTests.swift:76: error: -[MissionControlTests.PairingOwnershipTests testOldUnauthorizedDoesNotUnpairB] : XCTAssertEqual failed: ("nil") is not equal to ("Optional(MissionControlTests.Pairing(v: 1, name: "Synthetic B", urls: ["https://b.invalid"], token: "synthetic-b", fp: "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"))")
+Test Case '-[MissionControlTests.PairingOwnershipTests testOldUnauthorizedDoesNotUnpairB]' failed (0.008 seconds).
+Test Case '-[MissionControlTests.PairingOwnershipTests testRePairingSameCodeStillDiscardsOldUnauthorized]' started.
+/tmp/mission-ios-pair-ownership/mission-control/ios/MissionControlTests/PairingOwnershipTests.swift:177: error: -[MissionControlTests.PairingOwnershipTests testRePairingSameCodeStillDiscardsOldUnauthorized] : XCTAssertEqual failed: ("nil") is not equal to ("Optional(MissionControlTests.Pairing(v: 1, name: "Synthetic A", urls: ["https://a.invalid"], token: "synthetic-a", fp: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"))")
+Test Case '-[MissionControlTests.PairingOwnershipTests testRePairingSameCodeStillDiscardsOldUnauthorized]' failed (0.005 seconds).
+Test Case '-[MissionControlTests.PairingOwnershipTests testStaleTransportDoesNotRetryAAfterPairB]' started.
+/tmp/mission-ios-pair-ownership/mission-control/ios/MissionControlTests/PairingOwnershipTests.swift:122: error: -[MissionControlTests.PairingOwnershipTests testStaleTransportDoesNotRetryAAfterPairB] : Fulfilled inverted expectation "stale A fallback forbidden".
+Test Case '-[MissionControlTests.PairingOwnershipTests testStaleTransportDoesNotRetryAAfterPairB]' failed (0.018 seconds).
+Test Case '-[MissionControlTests.PairingOwnershipTests testUnpairDiscardsPendingBoardSuccess]' started.
+/tmp/mission-ios-pair-ownership/mission-control/ios/MissionControlTests/PairingOwnershipTests.swift:63: error: -[MissionControlTests.PairingOwnershipTests testUnpairDiscardsPendingBoardSuccess] : XCTAssertNil failed: "Board(generatedAt: Optional("old-A"), columns: [], businesses: [], summary: nil)"
+/tmp/mission-ios-pair-ownership/mission-control/ios/MissionControlTests/PairingOwnershipTests.swift:64: error: -[MissionControlTests.PairingOwnershipTests testUnpairDiscardsPendingBoardSuccess] : XCTAssertFalse failed
+/tmp/mission-ios-pair-ownership/mission-control/ios/MissionControlTests/PairingOwnershipTests.swift:64: error: -[MissionControlTests.PairingOwnershipTests testUnpairDiscardsPendingBoardSuccess] : XCTAssertNil failed: "2026-10-03 01:35:45 +0000"
+Test Case '-[MissionControlTests.PairingOwnershipTests testUnpairDiscardsPendingBoardSuccess]' failed (0.010 seconds).
+Test Case '-[MissionControlTests.PairingOwnershipTests testUnpairDiscardsPendingSecondaryRefresh]' started.
+/tmp/mission-ios-pair-ownership/mission-control/ios/MissionControlTests/PairingOwnershipTests.swift:164: error: -[MissionControlTests.PairingOwnershipTests testUnpairDiscardsPendingSecondaryRefresh] : XCTAssertNil failed: "Trading(at: Optional("old-A"), watchOnly: nil, killSwitch: nil, totals: nil, wallets: nil, polymarket: nil, flags: nil, checklist: nil, alerts: nil)"
+/tmp/mission-ios-pair-ownership/mission-control/ios/MissionControlTests/PairingOwnershipTests.swift:164: error: -[MissionControlTests.PairingOwnershipTests testUnpairDiscardsPendingSecondaryRefresh] : XCTAssertNil failed: "TodayData(date: "2026-10-02", events: [], tomorrowEvents: [], due: MissionControlTests.DueGroups(overdue: [], today: [], tomorrow: [], week: [], later: [], someday: []), sheet: nil, habits: [], streaks: [:], needsYou: [], stats: nil, calendarErrors: nil)"
+Test Case '-[MissionControlTests.PairingOwnershipTests testUnpairDiscardsPendingSecondaryRefresh]' failed (0.009 seconds).
+	 Executed 12 tests, with 14 failures (0 unexpected) in 0.698 (0.719) seconds
+	 Executed 12 tests, with 14 failures (0 unexpected) in 0.698 (0.719) seconds
+	 Executed 12 tests, with 14 failures (0 unexpected) in 0.698 (0.720) seconds
+ xcrun: error: unable to find utility "simctl", not a developer tool or in PATH
+** TEST FAILED **

@@ -58,9 +58,7 @@ enum APIError: LocalizedError {
 
 /// Talks to Mission Control on the Mac over HTTPS, trusting only the certificate whose
 /// fingerprint came in the pairing code (certificate pinning).
-@MainActor
-final class API {
-    private var generation = UUID()
+final class API: NSObject, URLSessionDelegate {
     private(set) var pairing: Pairing?
     private var base: String?
     private let configuration: URLSessionConfiguration
@@ -68,16 +66,16 @@ final class API {
         let c = configuration
         c.timeoutIntervalForRequest = 120
         c.waitsForConnectivity = false
-        return URLSession(configuration: c)
+        return URLSession(configuration: c, delegate: self, delegateQueue: nil)
     }()
 
     init(pairing: Pairing?, configuration: URLSessionConfiguration = .ephemeral) {
         self.configuration = configuration
         self.pairing = pairing
+        super.init()
     }
 
     func use(_ p: Pairing?) {
-        generation = UUID()
         pairing = p
         base = nil
     }
@@ -102,12 +100,9 @@ final class API {
     /// Try the address that worked last, then every address in the pairing code.
     private func send(_ method: String, _ path: String, body: [String: Any]?, timeout: TimeInterval = 15) async throws -> Data {
         guard let p = pairing else { throw APIError.notPaired }
-        let owner = generation
-        let pin = CertificatePinningDelegate(fingerprint: p.fp)
         let candidates = ([base].compactMap { $0 } + p.urls).reduce(into: [String]()) { if !$0.contains($1) { $0.append($1) } }
         var lastError: Error = APIError.unreachable
         for b in candidates {
-            guard generation == owner else { throw CancellationError() }
             guard let url = URL(string: b + path) else { continue }
             var req = URLRequest(url: url)
             req.httpMethod = method
@@ -118,8 +113,7 @@ final class API {
                 req.httpBody = try JSONSerialization.data(withJSONObject: body)
             }
             do {
-                let (data, resp) = try await session.data(for: req, delegate: pin)
-                guard generation == owner else { throw CancellationError() }
+                let (data, resp) = try await session.data(for: req)
                 let code = (resp as? HTTPURLResponse)?.statusCode ?? 0
                 base = b
                 if code == 401 { throw APIError.unauthorized }
@@ -128,8 +122,6 @@ final class API {
                     throw APIError.server(msg ?? "The Mac answered with an error (\(code)).")
                 }
                 return data
-            } catch where generation != owner {
-                throw CancellationError()
             } catch let e as APIError {
                 throw e
             } catch let e as URLError where body != nil && ![.cannotConnectToHost, .cannotFindHost, .notConnectedToInternet, .dnsLookupFailed, .networkConnectionLost].contains(e.code) {
@@ -143,24 +135,19 @@ final class API {
         throw lastError
     }
 
-}
-
-/// Each request retains its original pairing fingerprint across suspension.
-private final class CertificatePinningDelegate: NSObject, URLSessionTaskDelegate {
-    let fingerprint: String
-    init(fingerprint: String) { self.fingerprint = fingerprint.lowercased() }
-
-    func urlSession(_ session: URLSession, task: URLSessionTask, didReceive challenge: URLAuthenticationChallenge,
+    // MARK: certificate pinning
+    func urlSession(_ session: URLSession, didReceive challenge: URLAuthenticationChallenge,
                     completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
         guard challenge.protectionSpace.authenticationMethod == NSURLAuthenticationMethodServerTrust,
               let trust = challenge.protectionSpace.serverTrust,
+              let expected = pairing?.fp.lowercased(),
               let chain = SecTrustCopyCertificateChain(trust) as? [SecCertificate],
               let leaf = chain.first else {
             return completionHandler(.cancelAuthenticationChallenge, nil)
         }
         let der = SecCertificateCopyData(leaf) as Data
         let fp = SHA256.hash(data: der).map { String(format: "%02x", $0) }.joined()
-        if fp == fingerprint {
+        if fp == expected {
             completionHandler(.useCredential, URLCredential(trust: trust))
         } else {
             completionHandler(.cancelAuthenticationChallenge, nil)

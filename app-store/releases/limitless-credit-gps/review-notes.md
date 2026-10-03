@@ -1,4 +1,4 @@
-# App Review Notes — Limitless Credit GPS 1.0.0 (build 2)
+# App Review Notes — Limitless Credit GPS 1.0.1 (build 3 candidate)
 
 No login, no account, no payment. The full experience is available immediately on first launch.
 
@@ -37,3 +37,7 @@ logic run on-device; user answers are stored locally and never uploaded.
 ## Contact
 
 Richard Ducat - support@eb28.co - +1-602-306-3920
+
+## Changes in this candidate
+
+Dedicated native packaging fixes the reproduced wrong marketing-page launch. Instant route scrolling keeps the first quiz question visible after goal selection. Current simulator evidence covers one complete 11-question quiz, credit-card simulation/save, normal relaunch persistence, one score-drop explanation/lesson, and the loaded Safari privacy link. Signed archive/export, Apple validation and upload succeeded. Build processing and review submission remain pending; signed-device runtime remains unverified.

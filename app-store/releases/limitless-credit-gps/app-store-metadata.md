@@ -4,7 +4,7 @@ App ID: 6789441976
 Bundle ID: co.eb28.limitlesscreditgps
 Subtitle in retained release configuration: Simulate credit moves first
 Current store version: 1.0, build 2, READY_FOR_SALE (verified October 3, 2026).
-Corrected source candidate: local commit e2db02c; new version and build not yet assigned or uploaded.
+Corrected source candidate: version 1.0.1, build 3, based on corrected local source. App Store version 1.0.1 created in PREPARE_FOR_SUBMISSION; build 3 not uploaded or submitted.
 
 ## Description
 
@@ -43,4 +43,10 @@ credit,score,simulator,utilization,fico,repair,builder,collections,mortgage,debt
 
 The dedicated native entry and instant route scroll replace the reproduced wrong marketing entry and offscreen quiz behavior in the retained source candidate. Simulator testing verified quiz, plan, simulation/save and retained profile/checklist/simulation after relaunch. Primary packaged resource hashes matched the native smoke build. No login, ads, subscriptions or remote API are required by the dedicated source.
 
-The existing six screenshots and release JSON are baseline artifacts, not proof of a submitted update. Physical-device verification, complete console collection and correspondence to the released binary remain unverified. Complete current release preflight before assigning/uploading the replacement.
+The existing six screenshots and release JSON are baseline artifacts, not proof of a submitted update. Physical-device verification, complete console collection and correspondence to the released binary remain unverified. Version 1.0.1/build 3 is assigned locally. Signed Release archive and local IPA export completed; bundle identity, signature, and all seven bundled web resources were verified. App Store version 1.0.1 exists; build 3 remains not uploaded or submitted. Signed-release runtime and App Store processing/attachment remain unverified.
+
+## Candidate update notes
+
+Improved app launch reliability and quiz navigation.
+
+Apple validation and upload succeeded October 3, 2026. Delivery d3736655-3e7a-4d67-a2f7-16963ea5dff1 is being monitored; build processing and review submission remain separate.

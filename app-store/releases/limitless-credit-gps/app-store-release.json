@@ -132,7 +132,7 @@
     "knownRisks": [
       "Guideline 4.2 minimum functionality: mitigated by fully on-device interactive simulator, quiz, plan tracking, and original lesson content; review notes call this out."
     ],
-    "candidateStatus": "UPLOADED_PROCESSING_PENDING",
+    "candidateStatus": "WAITING_FOR_REVIEW",
     "limits": [
       "Physical-device and signed-release runtime not yet verified.",
       "Six accepted screenshot assets were auto-cloned into version 1.0.1 by App Store Connect; images remain retained baseline captures.",
@@ -144,6 +144,11 @@
     "signedReleaseRuntimeVerified": false,
     "appleValidationPassed": true,
     "uploadSucceeded": true,
-    "deliveryId": "d3736655-3e7a-4d67-a2f7-16963ea5dff1"
+    "deliveryId": "d3736655-3e7a-4d67-a2f7-16963ea5dff1",
+    "processingState": "VALID",
+    "submissionId": "0dbb70ad-5de2-4939-a4ea-6474e1c80815",
+    "submittedAt": "2026-10-03T04:16:31.879Z",
+    "testFlightInternalState": "IN_BETA_TESTING",
+    "testFlightRuntimeLimit": "Mac locked; native install/runtime unavailable"
   }
 }

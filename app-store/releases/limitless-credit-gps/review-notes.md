@@ -40,4 +40,4 @@ Richard Ducat - support@eb28.co - +1-602-306-3920
 
 ## Changes in this candidate
 
-Dedicated native packaging fixes the reproduced wrong marketing-page launch. Instant route scrolling keeps the first quiz question visible after goal selection. Current simulator evidence covers one complete 11-question quiz, credit-card simulation/save, normal relaunch persistence, one score-drop explanation/lesson, and the loaded Safari privacy link. Signed archive/export, Apple validation and upload succeeded. Build processing and review submission remain pending; signed-device runtime remains unverified.
+Dedicated native packaging fixes the reproduced wrong marketing-page launch. Instant route scrolling keeps the first quiz question visible after goal selection. Current simulator evidence covers one complete 11-question quiz, credit-card simulation/save, normal relaunch persistence, one score-drop explanation/lesson, and the loaded Safari privacy link. Signed archive/export, Apple validation and upload succeeded. Apple processing is VALID and review submission is WAITING_FOR_REVIEW; signed-device runtime remains unverified.

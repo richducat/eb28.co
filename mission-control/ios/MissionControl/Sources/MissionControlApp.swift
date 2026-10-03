@@ -106,6 +106,10 @@ struct PairView: View {
                     .tint(.gold)
 
                     if let problem { Text(problem).foregroundStyle(Color.needs).font(.footnote) }
+
+                    VStack(alignment: .leading, spacing: 4) {
+                        SupportPrivacyLinks()
+                    }
                 }
                 .padding(24)
             }
@@ -128,6 +132,27 @@ struct PairView: View {
 
     private func tryPair(_ text: String) {
         if model.pair(with: text) { problem = nil } else { problem = "That doesn't look like a Mission Control pairing code." }
+    }
+}
+
+/// Public help and privacy information is available before and after pairing.
+struct SupportPrivacyLinks: View {
+    var body: some View {
+        Group {
+            Link(destination: URL(string: "https://eb28.co/missioncontrol/support/")!) {
+                Label("Support", systemImage: "questionmark.circle")
+                    .frame(maxWidth: .infinity, minHeight: 44, alignment: .leading)
+                    .contentShape(Rectangle())
+            }
+            .accessibilityHint("Opens Mission Control support in your browser")
+
+            Link(destination: URL(string: "https://eb28.co/missioncontrol/privacy/")!) {
+                Label("Privacy Policy", systemImage: "hand.raised")
+                    .frame(maxWidth: .infinity, minHeight: 44, alignment: .leading)
+                    .contentShape(Rectangle())
+            }
+            .accessibilityHint("Opens Mission Control privacy policy in your browser")
+        }
     }
 }
 

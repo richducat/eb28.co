@@ -24,7 +24,7 @@ struct ChatView: View {
                     ScrollView {
                         LazyVStack(alignment: .leading, spacing: 12) {
                             if chats.isEmpty {
-                                Text("Ask or assign anything. Your chief of staff runs on the free local model on your Mac and will ask before sending, paying, deleting or submitting anything.")
+                                Text("Ask or assign work to the chief of staff configured on your Mac. Available tools and services depend on that configuration.")
                                     .foregroundStyle(.secondary).padding()
                             }
                             ForEach(chats) { c in
@@ -326,6 +326,9 @@ struct MoreView: View {
                             }
                         }
                     }
+                }
+                Section("Help & Privacy") {
+                    SupportPrivacyLinks()
                 }
                 Section {
                     Button("Unpair this phone", role: .destructive) { confirmUnpair = true }

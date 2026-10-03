@@ -29,3 +29,6 @@ mission-control/dist/
 # Python bytecode
 __pycache__/
 *.pyc
+
+# Intermediate Limitless native web build
+.limitless-native-build/

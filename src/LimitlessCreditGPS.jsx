@@ -1033,7 +1033,7 @@ export default function LimitlessCreditGPS() {
     const normalized = normalizePath(path);
     window.history.pushState({}, '', normalized === BASE_PATH ? `${BASE_PATH}/` : `${normalized}/`);
     setRoute(normalized);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: 'instant' });
   };
 
   const updateProfile = (updates) => {

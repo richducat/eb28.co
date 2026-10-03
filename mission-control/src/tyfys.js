@@ -4,7 +4,8 @@ import { MC_HOME } from './config.js';
 
 /**
  * TYFYS operations: the Zoho CRM deal pipeline, read from a local snapshot
- * (~/.eb28-mission-control/tyfys-pipeline.json, initials only, no veteran details).
+ * (~/.eb28-mission-control/tyfys-pipeline.json). Case responses expose only the
+ * operational fields below; the snapshot itself is not assumed to be sanitized.
  * Stages are grouped into lanes, and each case gets an amber/red flag when it has gone
  * too long without an update for its stage.
  */
@@ -22,9 +23,25 @@ export const LOST = ['Lost'];
 
 export const snapshotFile = () => process.env.MC_TYFYS_SNAPSHOT || path.join(MC_HOME, 'tyfys-pipeline.json');
 
+// Desktop and iOS case contract. Never coerce objects into display strings or
+// forward unknown fields. This constrains the schema, not the content of strings.
+const text = (value) => typeof value === 'string' ? value : '';
+function operationalCase(c) {
+  return {
+    id: text(c.id),
+    initials: text(c.initials),
+    stage: text(c.stage),
+    owner: text(c.owner),
+    createdAt: text(c.createdAt),
+    updatedAt: text(c.updatedAt),
+    app: typeof c.app === 'string' || typeof c.app === 'boolean' ||
+      (typeof c.app === 'number' && Number.isFinite(c.app)) ? c.app : false,
+  };
+}
+
 /** Turn a snapshot into lanes, flags and KPIs. Pure; exported for tests. */
 export function summarize(snap, now = Date.now()) {
-  const cases = (snap.cases || []).filter((c) => !c.test);
+  const cases = (snap.cases || []).filter((c) => !c.test).map(operationalCase);
   const lanes = LANES.map((l) => {
     const list = cases
       .filter((c) => l.stages.includes(c.stage))

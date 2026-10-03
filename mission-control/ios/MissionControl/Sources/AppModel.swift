@@ -38,16 +38,16 @@ final class AppModel: ObservableObject {
     private var poller: Task<Void, Never>?
 
     private let setBadge: (Int) -> Void
-    private let savePairing: (Pairing) -> Void
-    private let clearPairing: () -> Void
+    private let savePairing: (Pairing) throws -> Void
+    private let clearPairing: () throws -> Void
 
-    init(api injectedAPI: API? = nil, savePairing: @escaping (Pairing) -> Void = PairingStore.save, clearPairing: @escaping () -> Void = PairingStore.clear, setBadge: @escaping (Int) -> Void = Badge.set) {
+    init(api injectedAPI: API? = nil, savePairing: @escaping (Pairing) throws -> Void = PairingStore.save, clearPairing: @escaping () throws -> Void = PairingStore.clear, setBadge: @escaping (Int) -> Void = Badge.set) {
         self.setBadge = setBadge
         self.savePairing = savePairing
         self.clearPairing = clearPairing
         #if DEBUG
         // simulator testing only: pair from a launch environment variable (no camera there)
-        if injectedAPI == nil, let code = ProcessInfo.processInfo.environment["MC_PAIRING"], let dp = Pairing.parse(code) { PairingStore.save(dp) }
+        if injectedAPI == nil, let code = ProcessInfo.processInfo.environment["MC_PAIRING"], let dp = Pairing.parse(code) { try? PairingStore.save(dp) }
         #endif
         let p = injectedAPI?.pairing ?? (injectedAPI == nil ? PairingStore.load() : nil)
         pairing = p
@@ -57,9 +57,15 @@ final class AppModel: ObservableObject {
     // MARK: pairing
 
     func pair(with text: String) -> Bool {
-        guard let p = Pairing.parse(text) else { return false }
+        guard let p = Pairing.parse(text) else {
+            error = "That doesn’t look like a Mission Control pairing code."
+            return false
+        }
+        do { try savePairing(p) } catch {
+            self.error = error.localizedDescription
+            return false
+        }
         resetPairingState()
-        savePairing(p)
         api.use(p)
         pairing = p
         let owner = pairingGeneration
@@ -67,11 +73,22 @@ final class AppModel: ObservableObject {
         return true
     }
 
-    func unpair() {
-        clearPairing()
+    @discardableResult
+    func unpair() -> Bool {
+        do { try clearPairing() } catch {
+            // Keep the persisted pairing visible, but invalidate suspended work and stop polling.
+            stopPolling()
+            api.use(pairing)
+            resetPairingState()
+            self.error = error.localizedDescription
+            toast = error.localizedDescription
+            return false
+        }
+        stopPolling()
         api.use(nil)
         pairing = nil
         resetPairingState()
+        return true
     }
 
     private func resetPairingState() {

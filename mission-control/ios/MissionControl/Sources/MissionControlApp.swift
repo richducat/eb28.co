@@ -131,7 +131,7 @@ struct PairView: View {
     }
 
     private func tryPair(_ text: String) {
-        if model.pair(with: text) { problem = nil } else { problem = "That doesn't look like a Mission Control pairing code." }
+        if model.pair(with: text) { problem = nil } else { problem = model.error ?? "That doesn't look like a Mission Control pairing code." }
     }
 }
 

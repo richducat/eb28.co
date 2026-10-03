@@ -18,29 +18,70 @@ struct Pairing: Codable, Equatable {
     }
 }
 
-/// The pairing holds a secret token, so it lives in the Keychain (this device only).
-enum PairingStore {
-    private static let service = "co.eb28.missioncontrol.pairing"
+/// Security operations are injectable so failure behavior is tested without a real credential.
+struct PairingKeychainOperations {
+    var copy: (CFDictionary, UnsafeMutablePointer<CFTypeRef?>?) -> OSStatus = { SecItemCopyMatching($0, $1) }
+    var add: (CFDictionary) -> OSStatus = { SecItemAdd($0, nil) }
+    var update: (CFDictionary, CFDictionary) -> OSStatus = { SecItemUpdate($0, $1) }
+    var delete: (CFDictionary) -> OSStatus = { SecItemDelete($0) }
+}
 
-    static func load() -> Pairing? {
-        let q: [String: Any] = [kSecClass as String: kSecClassGenericPassword, kSecAttrService as String: service,
-                                kSecReturnData as String: true, kSecMatchLimit as String: kSecMatchLimitOne]
+struct PairingStorageError: LocalizedError {
+    let operation: String
+    let status: OSStatus
+    var errorDescription: String? {
+        "Your Mac pairing could not be \(operation == "remove" ? "removed" : "saved") securely. Try again."
+    }
+}
+
+struct PairingKeychainStore {
+    let service: String
+    var operations = PairingKeychainOperations()
+    private var query: [String: Any] {
+        [kSecClass as String: kSecClassGenericPassword, kSecAttrService as String: service]
+    }
+
+    func load() -> Pairing? {
+        var q = query
+        q[kSecReturnData as String] = true
+        q[kSecMatchLimit as String] = kSecMatchLimitOne
         var out: CFTypeRef?
-        guard SecItemCopyMatching(q as CFDictionary, &out) == errSecSuccess, let data = out as? Data else { return nil }
+        guard operations.copy(q as CFDictionary, &out) == errSecSuccess, let data = out as? Data else { return nil }
         return try? JSONDecoder().decode(Pairing.self, from: data)
     }
 
-    static func save(_ p: Pairing) {
-        clear()
-        guard let data = try? JSONEncoder().encode(p) else { return }
-        let q: [String: Any] = [kSecClass as String: kSecClassGenericPassword, kSecAttrService as String: service,
-                                kSecValueData as String: data, kSecAttrAccessible as String: kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly]
-        SecItemAdd(q as CFDictionary, nil)
+    func save(_ p: Pairing) throws {
+        let data = try JSONEncoder().encode(p)
+        let attributes: [String: Any] = [kSecValueData as String: data,
+            kSecAttrAccessible as String: kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly]
+        // Update in place: a failed replacement must not erase the previous pairing.
+        let updated = operations.update(query as CFDictionary, attributes as CFDictionary)
+        if updated == errSecSuccess { return }
+        guard updated == errSecItemNotFound else { throw PairingStorageError(operation: "save", status: updated) }
+        let added = operations.add(query.merging(attributes) { _, new in new } as CFDictionary)
+        // An item could appear between update and add. Replace it once, never delete it.
+        if added == errSecDuplicateItem {
+            let retried = operations.update(query as CFDictionary, attributes as CFDictionary)
+            guard retried == errSecSuccess else { throw PairingStorageError(operation: "save", status: retried) }
+        } else if added != errSecSuccess {
+            throw PairingStorageError(operation: "save", status: added)
+        }
     }
 
-    static func clear() {
-        SecItemDelete([kSecClass as String: kSecClassGenericPassword, kSecAttrService as String: service] as CFDictionary)
+    func clear() throws {
+        let status = operations.delete(query as CFDictionary)
+        guard status == errSecSuccess || status == errSecItemNotFound else {
+            throw PairingStorageError(operation: "remove", status: status)
+        }
     }
+}
+
+/// The pairing holds a secret token, so it lives in the Keychain (this device only).
+enum PairingStore {
+    private static let store = PairingKeychainStore(service: "co.eb28.missioncontrol.pairing")
+    static func load() -> Pairing? { store.load() }
+    static func save(_ p: Pairing) throws { try store.save(p) }
+    static func clear() throws { try store.clear() }
 }
 
 enum APIError: LocalizedError {

@@ -282,6 +282,21 @@ def mismatch_diagnostics(prior, package, post):
             'decision': 'blocked_no_ledger_change_no_retry'}
 
 
+def receipt_caption_matches(prior, package, post, config):
+    expected, observed = package['caption'].strip(), post['text'].strip()
+    if observed == expected:
+        return True
+    # Observed Oct 3 TikTok receipt: LF becomes ASCII space; repeated spaces
+    # collapse. Accept only this one-way transformation on an identified sent
+    # receipt. Do not normalize observed text, Unicode, tabs, or other platforms.
+    if (not prior.get('provider_id') or post.get('id') != prior['provider_id']
+            or post.get('status') != 'sent' or package.get('platform') != 'tiktok'
+            or config['channels'][package['channelId']].get('platform') != 'tiktok'
+            or any(c.isspace() and c not in ' \n' for c in expected)):
+        return False
+    return observed == re.sub(' +', ' ', expected.replace('\n', ' '))
+
+
 def reconcile(prior, config, root=ROOT, api=None):
     package = json.loads(prior['package_json'])
     if package.get('brand') != config['brand'] or package.get('channelId') not in config['channels']:
@@ -296,7 +311,7 @@ def reconcile(prior, config, root=ROOT, api=None):
     if len(matches) != 1:
         return {'state': prior['state'], 'action': 'reconcile_only', 'reason': 'Provider match missing or ambiguous; no new write.'}
     post = matches[0]
-    if post['channelId'] != prior['channel'] or post['text'].strip() != package['caption'].strip():
+    if post['channelId'] != prior['channel'] or not receipt_caption_matches(prior, package, post, config):
         diagnostics = mismatch_diagnostics(prior, package, post)
         raise Blocked('Provider receipt does not match the stored reservation. Diagnostics: ' + json.dumps(diagnostics, sort_keys=True))
     return record_post(package, post, root)

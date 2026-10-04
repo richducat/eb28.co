@@ -9,7 +9,9 @@ import fcntl
 import hashlib
 import json
 import os
+import re
 import stat
+import unicodedata
 import sys
 import urllib.error
 import urllib.parse
@@ -237,6 +239,49 @@ def write_health(root, brand, channel_id, result):
         temporary.replace(filename)
 
 
+def mismatch_diagnostics(prior, package, post):
+    """Describe an ID-matched discrepancy without logging caption or credentials.
+
+    Equality probes identify possible normalization only. They never authorize
+    accepting the receipt, changing a reservation, or repeating a write.
+    """
+    expected = package.get('caption')
+    observed = post.get('text')
+    strings = isinstance(expected, str) and isinstance(observed, str)
+    left, right = (expected.strip(), observed.strip()) if strings else ('', '')
+    fingerprint = lambda value: {'type': type(value).__name__,
+                                 'length': len(value) if isinstance(value, str) else None,
+                                 'trimmedSha256': hashlib.sha256(value.strip().encode()).hexdigest() if isinstance(value, str) else None}
+    # Only declared public receipt hosts and paths are logged; discard query,
+    # fragments, userinfo and any unexpected URL rather than relaying them.
+    native = None
+    url = post.get('externalLink')
+    if isinstance(url, str) and len(url) <= 300:
+        try:
+            parsed = urllib.parse.urlsplit(url)
+        except ValueError:
+            parsed = None
+        if (parsed and parsed.scheme == 'https' and parsed.hostname in ('tiktok.com', 'www.tiktok.com', 'x.com', 'twitter.com', 'www.instagram.com', 'instagram.com')
+                and not parsed.query and not parsed.fragment and not parsed.username and not parsed.password):
+            native = url
+    safe_id = lambda value: value if isinstance(value, str) and re.fullmatch(r'[A-Za-z0-9_-]{1,64}', value) else None
+    status = post.get('status')
+    if status not in ('sent', 'scheduled', 'sending', 'error', 'draft', 'pending', 'failed'):
+        status = 'unrecognized'
+    return {'providerId': safe_id(post.get('id')),
+            'channelMatches': post.get('channelId') == prior.get('channel'),
+            'expectedChannelId': safe_id(prior.get('channel')),
+            'observedChannelId': safe_id(post.get('channelId')),
+            'captionMatches': strings and left == right,
+            'expectedCaption': fingerprint(expected), 'observedCaption': fingerprint(observed),
+            'possibleNormalization': {
+                'lineEndingsOnly': strings and left.replace('\r\n', '\n').replace('\r', '\n') == right.replace('\r\n', '\n').replace('\r', '\n'),
+                'unicodeCanonicalOnly': strings and unicodedata.normalize('NFC', left) == unicodedata.normalize('NFC', right),
+                'whitespaceOnly': strings and ' '.join(left.split()) == ' '.join(right.split())},
+            'observedStatus': status, 'observedNativeUrl': native,
+            'decision': 'blocked_no_ledger_change_no_retry'}
+
+
 def reconcile(prior, config, root=ROOT, api=None):
     package = json.loads(prior['package_json'])
     if package.get('brand') != config['brand'] or package.get('channelId') not in config['channels']:
@@ -252,7 +297,8 @@ def reconcile(prior, config, root=ROOT, api=None):
         return {'state': prior['state'], 'action': 'reconcile_only', 'reason': 'Provider match missing or ambiguous; no new write.'}
     post = matches[0]
     if post['channelId'] != prior['channel'] or post['text'].strip() != package['caption'].strip():
-        raise Blocked('Provider receipt does not match the stored reservation.')
+        diagnostics = mismatch_diagnostics(prior, package, post)
+        raise Blocked('Provider receipt does not match the stored reservation. Diagnostics: ' + json.dumps(diagnostics, sort_keys=True))
     return record_post(package, post, root)
 
 

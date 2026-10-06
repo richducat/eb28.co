@@ -224,3 +224,21 @@ watching trading and the TYFYS pipeline from your phone.
   the free local model and shows up on the map while it works.
 - **Replay:** the Arcade records every status change; replay today on the map.
 - **Weather and night:** each island's sky shows its health; day/night follows your clock.
+
+## Reliable desktop access and recovery
+
+Run `npm run open` from this directory to launch independently of your terminal.
+Run it again to restore and focus the existing window; closing the window hides it,
+and the tray's **Open Mission Control** brings it back. Use tray **Quit** to stop it.
+The existing workforce pause setting is preserved.
+
+While the app runs, the same dashboard is at http://127.0.0.1:47831/. If that port
+is occupied, the actual URL appears in `~/.eb28-mission-control/desktop-events.log`
+and the tray's **Open in browser** uses it. `npm run web` is also supported, but
+quit the desktop before using it so two schedulers do not share the same state.
+
+Startup failures show a dialog. Renderer exits get at most two reload attempts
+per window; repeated failure shows browser access instructions. The events log
+records startup, actual URL, renderer exits, completed loads and quit; detached
+launch stderr is in `desktop-launch.log`. Both logs rotate at 1 MiB.
+These logs distinguish an app failure from a computer-use tool disconnect.

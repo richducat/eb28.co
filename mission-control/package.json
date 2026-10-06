@@ -9,6 +9,7 @@
   "engines": { "node": ">=18" },
   "scripts": {
     "start": "electron .",
+    "open": "node bin/open-desktop.mjs",
     "web": "node bin/mission-control.mjs web",
     "scan": "node bin/mission-control.mjs scan",
     "digest": "node bin/mission-control.mjs digest",

@@ -1,16 +1,33 @@
 /* Electron shell: starts the local server in-process, opens the window, tray, and native notifications. */
-const { app, BrowserWindow, Tray, Menu, Notification, nativeImage, shell, screen, systemPreferences } = require('electron');
+const { app, BrowserWindow, Tray, Menu, Notification, nativeImage, shell, screen, systemPreferences, dialog } = require('electron');
 const path = require('node:path');
 
 let win = null;
 let tray = null;
 let server = null;
 let port = 0;
+let orchestrator = null;
+const fs = require('node:fs');
+const stateRoot = process.env.MC_HOME || path.join(require('node:os').homedir(), '.eb28-mission-control');
+function log(event, detail = {}) {
+  try {
+    fs.mkdirSync(stateRoot, { recursive: true });
+    const file = path.join(stateRoot, 'desktop-events.log');
+    if (fs.existsSync(file) && fs.statSync(file).size > 1024 * 1024) fs.renameSync(file, `${file}.previous`);
+    fs.appendFileSync(file, JSON.stringify({ at: new Date().toISOString(), event, ...detail }) + '\n');
+  } catch { /* Diagnostics must never prevent startup. */ }
+}
+function showWindow() {
+  if (!win || win.isDestroyed()) createWindow();
+  if (win.isMinimized()) win.restore();
+  win.show();
+  win.focus();
+}
 
 async function boot() {
   const { createServer, listen } = await import(path.join(__dirname, '..', 'src', 'server.js'));
   const { Orchestrator } = await import(path.join(__dirname, '..', 'src', 'workforce', 'orchestrator.js'));
-  const orchestrator = new Orchestrator();
+  orchestrator = new Orchestrator();
   server = createServer({
     // Touch ID gate for the Trading tab (disengaging the kill switch, risky approvals).
     // Not available in `npm run web`, so those actions are refused there.
@@ -26,6 +43,7 @@ async function boot() {
     },
   });
   port = await listen(server, Number(process.env.MC_PORT || 47831)).catch(() => listen(server, 0));
+  log('server-ready', { url: `http://127.0.0.1:${port}/`, paused: orchestrator.paused });
   orchestrator.start();
   orchestrator.on('event', (e) => {
     if (e.type === 'board:refresh' && tray) updateTray(e.summary);
@@ -33,7 +51,7 @@ async function boot() {
 }
 
 // Open big: fill the screen's work area the first time, then remember where Richard left it.
-const boundsFile = () => path.join(require('node:os').homedir(), '.eb28-mission-control', 'window.json');
+const boundsFile = () => path.join(stateRoot, 'window.json');
 function savedBounds() {
   try {
     const b = JSON.parse(require('node:fs').readFileSync(boundsFile(), 'utf8'));
@@ -57,7 +75,19 @@ function createWindow() {
     backgroundColor: '#0b1020',
     webPreferences: { preload: path.join(__dirname, 'preload.cjs'), contextIsolation: true, nodeIntegration: false },
   });
-  win.loadURL(`http://127.0.0.1:${port}/`);
+  const contents = win.webContents;
+  let recoveries = 0;
+  const load = () => win.loadURL(`http://127.0.0.1:${port}/`).catch((err) => log('load-error', { message: err.message }));
+  contents.on('render-process-gone', (_event, details) => {
+    log('renderer-gone', details);
+    if (app.isQuiting || details.reason === 'clean-exit') return;
+    if (recoveries++ < 2) load();
+    else dialog.showErrorBox('Mission Control renderer stopped', `Open http://127.0.0.1:${port}/ in your browser. See ${path.join(stateRoot, 'desktop-events.log')} for diagnostics.`);
+  });
+  contents.on('did-finish-load', () => log('window-loaded'));
+  win.on('unresponsive', () => log('window-unresponsive'));
+  win.on('closed', () => { win = null; });
+  load();
   const remember = () => {
     try {
       if (win.isMinimized() || win.isFullScreen()) return;
@@ -100,26 +130,30 @@ function createTray() {
   tray = new Tray(trayIcon());
   tray.setContextMenu(
     Menu.buildFromTemplate([
-      { label: 'Open Mission Control', click: () => win && win.show() },
+      { label: 'Open Mission Control', click: showWindow },
       { label: 'Open in browser', click: () => shell.openExternal(`http://127.0.0.1:${port}/`) },
       { type: 'separator' },
       { label: 'Quit', click: () => { app.isQuiting = true; app.quit(); } },
     ]),
   );
-  tray.on('click', () => win && (win.isVisible() ? win.hide() : win.show()));
+  tray.on('click', () => { if (win && !win.isDestroyed() && win.isVisible()) win.hide(); else showWindow(); });
 }
 
 // One Mission Control at a time: a second copy would run a second set of agents on the same state.
 if (!app.requestSingleInstanceLock()) app.quit();
-app.on('second-instance', () => { if (win) { win.show(); win.focus(); } });
+app.on('second-instance', () => { log('second-instance'); if (port) showWindow(); });
 
 app.whenReady().then(async () => {
   if (!app.hasSingleInstanceLock()) return;
   await boot();
   createWindow();
   createTray();
-  app.on('activate', () => win && win.show());
+  app.on('activate', showWindow);
+}).catch((err) => {
+  log('startup-failed', { message: err.message });
+  dialog.showErrorBox('Mission Control could not start', `${err.message}\nDiagnostics: ${path.join(stateRoot, 'desktop-events.log')}`);
+  app.quit();
 });
 
 app.on('window-all-closed', (e) => e && e.preventDefault && e.preventDefault());
-app.on('before-quit', () => { app.isQuiting = true; if (server) server.close(); });
+app.on('before-quit', () => { app.isQuiting = true; if (orchestrator) orchestrator.stop(); if (server) server.close(); log('quit'); });

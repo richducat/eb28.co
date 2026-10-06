@@ -77,6 +77,10 @@ def main():
   if (ROOT/'delivery.sqlite3').is_file() and delivery.ledger.status(ROOT):store.save()
  (ROOT/'cloud-result.json').write_text(json.dumps({'brand':'eb28','channelId':package['channelId'],'date':package['date'],'reconciled':reconciled,**result},indent=2)+'\n')
  print(json.dumps(result,indent=2))
+ if result['state']=='blocked' and 'isDisconnected' in str(result.get('reason','')):
+  # A disconnected Buffer channel is an account issue, not a delivery failure:
+  # warn and exit 0 so callers do not treat it as retryable.
+  print('::warning::Buffer channel disconnected; reconnect it in Buffer. Skipped, not retried.');return 0
  return 1 if result['state'] in ('failed','unknown','blocked') else 0
 
 def run():

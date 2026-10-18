@@ -5,7 +5,6 @@ import path from 'node:path';
 import process from 'node:process';
 import { assertPublishingAuthorized } from './lib/eb28-social-publish-policy.mjs';
 import { assertSocialAccountArchitecture } from './lib/eb28-social-account-policy.mjs';
-import { renderSocialAssetSet } from './lib/eb28-social-visuals.mjs';
 
 const ROOT = process.cwd();
 const OUTPUT_DIR = path.join(ROOT, 'output', 'eb28-social');
@@ -238,6 +237,7 @@ async function prepareAsset(pkg, context) {
       proofImageExists = false;
     }
   }
+  const { renderSocialAssetSet } = await import('./lib/eb28-social-visuals.mjs');
   const visualAssets = await renderSocialAssetSet({
     creative: creativeSystem,
     rootDir: ROOT,

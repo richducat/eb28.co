@@ -67,7 +67,7 @@ function isBlogHref(href) {
 }
 
 function isCoreHref(href) {
-  return /^(\/$|\/melbournewebstudio\/(?:#[a-z0-9-]+)?$|\/reconcile\/(?:#[a-z0-9-]+)?$)/i.test(
+  return /^(\/$|\/melbournewebstudio\/(?:#[a-z0-9-]+)?$|\/reconcile\/(?:#[a-z0-9-]+)?$|\/local-ai\/(?:#[a-z0-9-]+)?$)/i.test(
     String(href || ''),
   );
 }

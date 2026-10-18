@@ -40,7 +40,9 @@ def main():
      run(['node','scripts/generate-eb28-blog.mjs'],env)
      run(['node','scripts/publish-eb28-buffer.mjs','--prepare','--slot',a.slot],env)
      run(['npm','run','check:eb28-seo'],env);run(['git','diff','--check'],env)
-     run(['git','add','content/eb28/articles.json','content/eb28/content-state.json','content/eb28/topic-backlog.json','content/eb28/seo-outreach-queue.md','docs/blog','docs/data/eb28-blog-feed.json','docs/sitemap.xml','output/eb28-social'],env)
+     run(['git','add','content/eb28/articles.json','content/eb28/content-state.json','content/eb28/topic-backlog.json','content/eb28/seo-outreach-queue.md','docs/blog','docs/sitemap.xml','output/eb28-social'],env)
+     # This public generated feed lives below an otherwise ignored data directory.
+     run(['git','add','-f','docs/data/eb28-blog-feed.json'],env)
      if subprocess.call(['git','diff','--cached','--quiet'],cwd=ROOT):
       run(['git','-c','user.name=OG Kush','-c','user.email=codex@local','commit','-m','Update EB28 organic growth content'],env)
       run(['git','pull','--rebase','origin','main'],env);run(['git','push','origin','HEAD:main'],env)

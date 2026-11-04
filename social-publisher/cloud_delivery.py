@@ -5,7 +5,7 @@ The dedicated state branch persists the SQLite reservation BEFORE Buffer writes.
 Workflow concurrency serializes all EB28 delivery executions. A killed runner
 therefore leaves a reservation that the next runner reconciles, never retries.
 """
-import base64,json,os,sys,urllib.error,urllib.parse,urllib.request
+import base64,hashlib,json,os,sys,time,urllib.error,urllib.parse,urllib.request
 from pathlib import Path
 import buffer_delivery as delivery
 
@@ -13,6 +13,9 @@ ROOT=Path(__file__).resolve().parent
 REPO='richducat/eb28.co'
 BRANCH='social-delivery-state'
 STATE='social-publisher-state/delivery.sqlite3'
+
+class TransientStateError(delivery.Blocked):
+ pass
 
 class StateStore:
  def __init__(self):
@@ -22,11 +25,18 @@ class StateStore:
   req=urllib.request.Request('https://api.github.com/repos/'+REPO+'/'+path,method=method,
    data=json.dumps(payload).encode() if payload is not None else None,
    headers={'Authorization':'Bearer '+os.environ['GH_STATE_TOKEN'],'Accept':'application/vnd.github+json','Content-Type':'application/json','User-Agent':'EB28-social-delivery'})
-  try:
-   with urllib.request.urlopen(req,timeout=25) as r:return json.load(r)
-  except urllib.error.HTTPError as exc:
-   if exc.code==404:return None
-   raise delivery.Blocked(f'Cloud state HTTP {exc.code}; no unrecorded Buffer writes.') from None
+  for attempt in range(3 if method=='GET' else 1):
+   try:
+    with urllib.request.urlopen(req,timeout=25) as r:return json.load(r)
+   except urllib.error.HTTPError as exc:
+    if exc.code==404:return None
+    if exc.code not in (500,502,503,504):
+     raise delivery.Blocked(f'Cloud state HTTP {exc.code}; no unrecorded Buffer writes.') from None
+    reason=f'Cloud state HTTP {exc.code}; no unrecorded Buffer writes.'
+   except (urllib.error.URLError,TimeoutError):
+    reason='Cloud state connection unavailable; no unrecorded Buffer writes.'
+   if method!='GET' or attempt==2:raise TransientStateError(reason) from None
+   time.sleep(2**attempt)
  def load(self):
   branch=self.request('git/ref/heads/'+BRANCH);self.branch_exists=bool(branch)
   if not branch:raise delivery.Blocked('Existing cloud state branch unavailable; restore it before publishing. No empty-ledger fallback.')
@@ -42,11 +52,24 @@ class StateStore:
   if not self.branch_exists:
    main=self.request('git/ref/heads/main')
    self.request('git/refs','POST',{'ref':'refs/heads/'+BRANCH,'sha':main['object']['sha']});self.branch_exists=True
-  payload={'message':'Persist EB28 social delivery reservation or receipt','branch':BRANCH,'content':base64.b64encode((ROOT/'delivery.sqlite3').read_bytes()).decode()}
+  data=(ROOT/'delivery.sqlite3').read_bytes()
+  expected=hashlib.sha1(b'blob '+str(len(data)).encode()+b'\0'+data).hexdigest()
+  payload={'message':'Persist EB28 social delivery reservation or receipt','branch':BRANCH,'content':base64.b64encode(data).decode()}
   if self.sha:payload['sha']=self.sha
-  result=self.request('contents/'+STATE,'PUT',payload)
-  if not result:raise delivery.Blocked('Cloud state was not saved.')
-  self.sha=result['content']['sha']
+  for attempt in range(3):
+   try:
+    result=self.request('contents/'+STATE,'PUT',payload)
+   except TransientStateError:
+    # A failed response may still have committed. Read back before retrying:
+    # only identical bytes or the unchanged prior SHA are safe to accept.
+    current=self.request('contents/'+STATE+'?ref='+BRANCH)
+    if current and current['sha']==expected:
+     self.sha=current['sha'];return
+    if not current or current['sha']!=self.sha or attempt==2:raise
+    time.sleep(2**attempt)
+    continue
+   if not result:raise delivery.Blocked('Cloud state was not saved.')
+   self.sha=result['content']['sha'];return
 
 def main():
  store=StateStore();store.load()

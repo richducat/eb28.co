@@ -1,4 +1,4 @@
-import sys, unittest, urllib.error
+import io, sys, unittest, urllib.error
 from pathlib import Path
 from unittest.mock import Mock, patch
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
@@ -21,10 +21,10 @@ class MediaRecoveryTests(unittest.TestCase):
  def test_http_failure_categories(self):
   package={'mediaUrl':'https://example.test/a.jpg','mimeType':'image/jpeg'}
   for code in (404,408,429,500,503):
-   opener=Mock();opener.open.side_effect=urllib.error.HTTPError(package['mediaUrl'],code,'error',{},None)
+   opener=Mock();opener.open.side_effect=urllib.error.HTTPError(package['mediaUrl'],code,'error',{},io.BytesIO())
    with patch.object(delivery.urllib.request,'build_opener',return_value=opener),self.assertRaises(delivery.MediaNotReady):delivery.verify_media(package,b'image','https://example.test')
   for code in (301,401,403):
-   opener=Mock();opener.open.side_effect=urllib.error.HTTPError(package['mediaUrl'],code,'error',{},None)
+   opener=Mock();opener.open.side_effect=urllib.error.HTTPError(package['mediaUrl'],code,'error',{},io.BytesIO())
    with patch.object(delivery.urllib.request,'build_opener',return_value=opener),self.assertRaises(delivery.Blocked) as caught:delivery.verify_media(package,b'image','https://example.test')
    self.assertNotIsInstance(caught.exception,delivery.MediaNotReady)
 
